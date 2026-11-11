@@ -33,9 +33,15 @@ read = next(e['ts'] for e in trace if e.get('name') == 'touch' and e['ts'] > dow
 keys = metrics['input.key_delivery_ms']['count']
 detect = json.loads((ROOT / 'simulator/profiles/metalio-plus.json').read_text())['input']['touch_detect_us']
 extra = metrics['input.touch_monitor_extra_ms']['max'] * 1000
-dispatch = read - down - detect - extra
+# Other devices' traffic on the shared bus (the profile's periodic background transfer, 'fuel-gauge' in the trace) is not
+# waveform preparation: the bus time it held after the read was ready is taken out (batch gate 2026-11-11: an unrelated
+# change moved that transfer onto the read, 1.16 ms of the 1.18 ms measured).
+ready = down + detect + extra
+held = sum(max(0, min(e['ts'] + (e.get('dur') or 0), read) - max(e['ts'], ready))
+           for e in trace if e.get('name') == 'fuel-gauge')
+dispatch = read - down - detect - extra - held
 print(json.dumps({'exit': run.returncode, 'keys_delivered': keys, 'first_touch_read_us': read,
-                  'dispatch_us': dispatch,
+                  'dispatch_us': dispatch, 'bus_held_us': held,
                   'key_up_us': up, 'tools_done': metrics.get('hub.tool_results.done'),
                   'tools_stale': metrics.get('hub.tool_results.stale')}), flush=True)
 assert keys == 8, f'the cover key press and release must both arrive: {area.relative_to(ROOT)}'

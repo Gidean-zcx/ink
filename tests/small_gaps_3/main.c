@@ -53,6 +53,8 @@ static void no_backup(const char *why) {
 static void backup(void) {
     CHECK(ink_setting_get("backup.auto") == 0, "automatic backup defaults off");
     CHECK(AI("backup.open", NULL) && WAIT_FOR(at("Backup") && strstr(g_snap, "自动备份：关"), 5000), "backup page exposes the schedule setting");
+    /* the first status reply redraws the page (a tap in progress would land on a deleted button): wait for it */
+    CHECK(WAIT_FOR(at("Backup") && strstr(g_snap, "还没有备份"), 15000), "the backup page shows its first status");
     press("自动备份：关");
     CHECK(WAIT_FOR(ink_setting_get("backup.auto") == 1, 5000), "touch selects daily backup through settings.set");
     tick();

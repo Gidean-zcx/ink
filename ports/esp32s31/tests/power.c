@@ -27,6 +27,8 @@ static int mask_fail, cut_fail, keys_fail, rails_fail, sleep_rc, restarts, offs,
 static uint64_t usb_off_at;
 static int pending, resume_calls;
 static int stopped;
+static bool camera_busy;
+bool ink_s31_camera_busy(void) { return camera_busy; }
 void ink_s31_display_shutdown(void) { stopped++; }
 #define ALLOC_CAP 8
 static void *allocs[ALLOC_CAP];
@@ -43,6 +45,7 @@ static void reset(void) {
     port0 = 0;
     paused = suspended = slept = motion = haptic = low = watch = keep = cancel_sleep = late_busy = resumed_keys = false;
     cell_busy = false;
+    camera_busy = false;
     mask_fail = cut_fail = keys_fail = rails_fail = sleep_rc = pending = resume_calls = 0;
     low_after_arm = low_after_cut = wake_armed = rails_cut = false;
     usb_connected = true;
@@ -225,6 +228,8 @@ int main(void) {
         assert(mhz == 160 && usb_connected && resume_calls == 0);
         assert(hal_power_sleep(NULL) == 0);
     } else {
+    reset(); camera_busy = true;
+    assert(hal_power_sleep(&cfg) == 0 && !slept && trace_n == 0);
     reset();
     sources = 1u << ESP_SLEEP_WAKEUP_EXT1;
     wake_pins = 1ull << S31_GPIO_EXP_INT;
@@ -321,6 +326,10 @@ int main(void) {
     reset();
     cell_busy = true;
     assert(hal_power_sleep(&cfg) == 0 && !slept && !strchr(trace, 'x') && !strchr(trace, 'R'));
+    reset();
+    rails_fail = 3;
+    sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
+    assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && strchr(trace, 'C') && !strchr(trace, 'R'));
     reset();
     cfg.keep_modem = true;
     cfg.wake_mask = HAL_WAKE_AI_KEY | HAL_WAKE_MODEM;

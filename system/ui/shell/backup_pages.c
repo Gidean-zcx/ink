@@ -164,6 +164,11 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     char phase[24] = "", reason[160] = "";
     ink_json_str(j, ink_json_find(j, 0, "phase"), phase, sizeof phase);
     bool changed = strcmp(B.phase, phase) != 0;
+    /* What the page shows before this reply: the poll comes every second, and a redraw is a refresh on the panel and
+     * drops a tap in progress, so only a visible change redraws (the batch gate after small-gaps-3 merged). */
+    char was_title[sizeof B.title], was_info[sizeof B.info], was_detail[sizeof B.detail], was_preview[sizeof B.preview];
+    memcpy(was_title, B.title, sizeof was_title); memcpy(was_info, B.info, sizeof was_info);
+    memcpy(was_detail, B.detail, sizeof was_detail); memcpy(was_preview, B.preview, sizeof was_preview);
     if (!changed && (B.page == BACKUP_FAIL || B.page == RESTORE_FAIL) &&
         (!strcmp(phase, "none") || !strcmp(phase, "saved") || !strcmp(phase, "preview") || !strcmp(phase, "done"))) { osal_free(j); return; }
     snprintf(B.phase, sizeof B.phase, "%s", phase);
@@ -195,7 +200,9 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
         memcpy(B.title, title, strlen(title) + 1);
     } else snprintf(B.title, sizeof B.title, "%s", !strcmp(phase, "saved") ? TR("已备份到家庭服务器") : !strcmp(phase, "none") ? TR("还没有备份") : !strcmp(phase, "done") ? TR("上次恢复已完成") : TR("正在备份"));
     osal_free(j);
-    if (changed || summary || page != B.page) show(page);
+    bool shown_changed = strcmp(was_title, B.title) || strcmp(was_info, B.info) || strcmp(was_detail, B.detail) ||
+        strcmp(was_preview, B.preview);
+    if (changed || shown_changed || page != B.page) show(page);
     if (changed && (!strcmp(phase, "saved") || !strcmp(phase, "preview") || !strcmp(phase, "done")))
         request("backup.manifest", "{\"summary\":true}");
 }

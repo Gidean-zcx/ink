@@ -119,7 +119,7 @@ static void load_job(void *arg) { /* exec.bg */
             b = (uint8_t *)m; /* read only: searched, never written */
             mapped = true;
         } else if (m) {
-            ink_probe_count("text.dict_bad");
+            ink_probe_count("text.dict_asset_bad"); /* the pack's copy; text.dict_bad counts the card's */
             hal_asset_unmap(m);
         }
     }

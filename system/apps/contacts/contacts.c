@@ -234,7 +234,7 @@ static bool page_key(ink_key_t k, bool lng) { return P.list && ink_ui_list_key(P
 static const ink_activity_t LIST = {.name = "PhoneContacts", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static const ink_activity_t EDIT = {.name = "ContactEdit", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 extern const ink_activity_t ink_phone_page;
-static const ink_app_def_t APP = {.id = "phone", .title = "电话", .icon = INK_UI_ICON(phone), .entry = &ink_phone_page, .system_app = true, .child_ok = true};
+static const ink_app_def_t APP = {.id = "phone", .title = TR_NOOP("电话"), .icon = INK_UI_ICON(phone), .entry = &ink_phone_page, .system_app = true, .child_ok = true};
 #define ID "\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
 #define RECORD "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
 #define VERSION "\"if_revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"

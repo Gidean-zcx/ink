@@ -39,6 +39,7 @@ typedef struct { const esp_netif_inherent_config_t *base; const esp_netif_driver
 #define ESP_ERROR_CHECK(x) assert((x) == ESP_OK)
 esp_err_t gpio_config(const gpio_config_t *);
 esp_err_t gpio_set_level(int, int);
+esp_err_t gpio_pullup_en(int);
 int gpio_get_level(int);
 esp_err_t gpio_install_isr_service(int);
 esp_err_t gpio_isr_handler_add(int, void (*)(void *), void *);

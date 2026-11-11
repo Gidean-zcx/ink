@@ -67,7 +67,7 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     snprintf(p->ids[at], sizeof p->ids[at], "file:%u", (unsigned)item->id);
     snprintf(p->args[at], sizeof p->args[at], "{\"id\":%u}", (unsigned)item->id);
     *field = (ink_ui_field_spec_t){.id = p->ids[at], .role = "file", .label = item->name, .value = ready, .object = {p->ids[at], p->epoch}};
-    *action = (ink_ui_action_spec_t){.id = p->ids[at], .label = "选择", .capability = "file_picker.select", .args_json = p->args[at], .object = field->object, .enabled = !p->working && !p->error};
+    *action = (ink_ui_action_spec_t){.id = p->ids[at], .label = TR("选择"), .capability = "file_picker.select", .args_json = p->args[at], .object = field->object, .enabled = !p->working && !p->error};
 }
 static int snapshot(char *out, size_t cap) {
     if (!P || P->epoch != ink_member_epoch()) { if (cap) out[0] = 0; return -1; }

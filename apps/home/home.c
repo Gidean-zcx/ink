@@ -1,4 +1,5 @@
 /* Home is a shell surface; its data and actions use the application framework. */
+#include "ink/sys/i18n.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/ui.h"
 #include "ink/sys/time.h"
@@ -9,7 +10,7 @@ static int card(int index, ink_card_t *out) {
     ink_alarm_t alarm;
     if (index || ink_alarm_next(&cursor, INK_ALARM, &alarm) != 1) return 0;
     snprintf(out->id, sizeof out->id, "upcoming");
-    snprintf(out->title, sizeof out->title, "接下来");
+    snprintf(out->title, sizeof out->title, TR("接下来"));
     snprintf(out->text, sizeof out->text, "%s %d:%02d", alarm.title, alarm.hour, alarm.min);
     out->rev = alarm.id;
     return 1;
@@ -23,5 +24,5 @@ const ink_activity_t ink_app_home = {
     .settle = ink_shell_home_settle
 };
 const ink_app_def_t ink_appdef_home = {
-    .id = "home", .title = "主页", .entry = &ink_app_home, .system_app = true, .child_ok = true, .keep = true, .card = card
+    .id = "home", .title = TR_NOOP("主页"), .entry = &ink_app_home, .system_app = true, .child_ok = true, .keep = true, .card = card
 };

@@ -111,6 +111,7 @@ static void wake_at(uint64_t at, hal_key_t wake_key) {
     vtk_event_at(at * 1000ull, wake_down, (void *)(intptr_t)wake_key);
     vtk_event_at((at + 80000) * 1000ull, wake_up, (void *)(intptr_t)wake_key);
     wait_until(at + 300000);
+    CHECK(WAIT_FOR(!strcmp(power_state(), "active"), 2000), "the wake finishes restoring the rails");
 }
 
 static void authenticate(bool wrong_first) {

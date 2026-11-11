@@ -135,10 +135,10 @@ static void found(void *arg) { /* UI task */
             snprintf(W.found[W.nfound].args, sizeof W.found[0].args, "{\"id\":%lld}", (long long)W.found[W.nfound].id);
             W.nfound++;
         }
-        snprintf(W.status, sizeof W.status, "%s", W.nfound ? "选一个城市" : "没有找到这个城市");
+        snprintf(W.status, sizeof W.status, "%s", W.nfound ? TR_NOOP("选一个城市") : TR_NOOP("没有找到这个城市"));
         if (c) ink_cap_result(c, W.found_reply);
     } else {
-        snprintf(W.status, sizeof W.status, "%s", "没联网，找不到城市");
+        snprintf(W.status, sizeof W.status, "%s", TR_NOOP("没联网，找不到城市"));
         if (c) c->rc.status = INK_RC_FAILED;
     }
     osal_free(j);
@@ -165,7 +165,7 @@ static void run(ink_call_t *c) {
         if (W.finding || ink_args_get_str(&c->args, "name", W.query, sizeof W.query) <= 0) { c->rc.status = INK_RC_INVALID; return; }
         ink_jw_raw(&w, "{\"name\":"); ink_jw_str(&w, W.query); ink_jw_raw(&w, "}");
         ink_cap_defer(c); W.finding = true; W.find_call = c; W.found_status = INK_HUB_ERR_OFFLINE;
-        snprintf(W.status, sizeof W.status, "正在找…"); if (on_top()) ink_ui_redraw();
+        snprintf(W.status, sizeof W.status, TR_NOOP("正在找…")); if (on_top()) ink_ui_redraw();
         if (w.overflow || !online() || (ink_hub_demand(), ink_hub_call("weather/find", params, 8000000, hub_found, NULL) < 0)) found(NULL);
         return;
     }
@@ -298,7 +298,7 @@ static const ink_cap_t CAPS[] = {
     {.id = "weather.set_city", .app = "weather", .title = "从找到的城市里选一个当天气城市", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"}},\"required\":[\"id\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = false, .run = run},
 };
-static const ink_app_def_t APP = {.id = "weather", .title = "天气", .icon = INK_UI_ICON(cloudsun), .entry = &WEATHER,
+static const ink_app_def_t APP = {.id = "weather", .title = TR_NOOP("天气"), .icon = INK_UI_ICON(cloudsun), .entry = &WEATHER,
     .system_app = true, .child_ok = true, .card = card};
 int ink_weather_init(void) {
     if (ink_db_register(&DB) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP)) return -1;

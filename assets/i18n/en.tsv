@@ -91,7 +91,7 @@ AI	AI
 还没有连接	Offline
 蓝牙	Bluetooth
 已连接	Connected
-没有连接	Not connected
+没有连接	Not linked
 亮度 %lld	Brightness %lld
 音量 %lld	Volume %lld
 显示和亮度	Display
@@ -105,7 +105,7 @@ AI	AI
 存储和备份	Storage & Backup
 关于和更新	About & Updates
 语言	Language
-飞行模式	Airplane mode
+飞行模式	Airplane
 日期和时间	Date & Time
 手动设置	Set Manually
 时区	Time Zone
@@ -228,7 +228,7 @@ AI	AI
 文件	Files
 相机	Camera
 相册	Photos
-对话记录	Conversations
+对话记录	Chats
 开	On
 关	Off
 接下来	Upcoming
@@ -298,14 +298,14 @@ AI	AI
 振动	Vibration
 振动强度	Strength
 弱	Weak
-中	Medium
+中	Med
 强	Strong
 铃声	Ringtones
 来电	Calls
 清音	Clear
 双音	Double
 柔音	Soft
-%s · 点按换音试听	%s · Tap to preview
+%s · 点按换音试听	%s · Try
 SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；振动强度(audio.vibration_level)=%lld（0弱35ms、1中50ms、2强70ms）；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.get(id)、settings.set(id,value)；通知：shell.notify_settings；shell.page_next、shell.page_prev、shell.back。	SetSound; volume=%lld; DND=%lld; key sound(audio.key_tone)=%lld; vibration(audio.vibration)=%lld; strength(audio.vibration_level)=%lld (0 weak 35ms, 1 medium 50ms, 2 strong 70ms); call ringtone(audio.call_ring)=%lld; alarm ringtone(audio.alarm_ring)=%lld; ringtones: 0 clear, 1 double, 2 soft; settings.get(id), settings.set(id,value); notifications: shell.notify_settings; shell.page_next, shell.page_prev, shell.back.
 移动网络	Mobile Network
 接入点名称	APN Name
@@ -636,7 +636,7 @@ Wi-Fi 已关闭，先打开 Wi-Fi	Turn on Wi-Fi first
 加一位家人：{name}（{role}）	Add {name} ({role}) to the family
 加入请求已变化	Join request changed
 加入请求已变化，请重新查看	Join request changed. Review it again
-勿扰	Do Not Disturb
+勿扰	DND
 单词没能存下	Couldn't save the word
 发现系统更新	Update available
 发短信	Send message
@@ -644,6 +644,7 @@ Wi-Fi 已关闭，先打开 Wi-Fi	Turn on Wi-Fi first
 发短信给 {to}：{text}	Text {to}: {text}
 发送结果没能存下，请先核实	Couldn't save result. Check before resending
 取好了，没有存到相册	Captured. Not saved to Photos
+没有找到摄像头	No camera found
 叫名字（什么时候在等）	Wake word
 可以升级到 %s	%s is available
 可以把存储卡当 U 盘用	Use the SD card as USB storage
@@ -1336,3 +1337,182 @@ AI 面板	AI Panel
 离线，暂时不能朗读	Offline; reading aloud is unavailable
 离线不可用	Offline
 时间未知	Time unknown
+
+# i18n-5: remaining visible shell and application text
+\n回答太长，只显示了前面部分。	\nAnswer too long; only the start is shown.
+%d年%d月	%d-%d
+%d年%d月%d日 · %s	%d-%d-%d · %s
+%d月%d日 %02d:%02d %s · %s	%d/%d %02d:%02d %s · %s
+%d月%d日 %s · %s	%d/%d %s · %s
+%d月%d日 · %s	%d/%d · %s
+%lld 件	%lld items
+%lld 字节	%lld bytes
+%lld 小时	%lld hours
+%s的文件	%s's files
+4G 在线，切卡不用重启	4G online. Switch SIMs without restarting.
+4G 还没有连上	4G not connected
+Wi-Fi 已关闭	Wi-Fi is off
+《%.60s》第 %d 页 · %d%%	%.60s · Page %d · %d%%
+上一组	Previous
+上月	Previous month
+上移	Move up
+下月	Next month
+不含内容，暂时读不到	No content; unavailable
+不含内容；暂时读不到运行记录，也不能删除。	No content is stored here. Runtime records cannot be viewed or deleted yet.
+不限	No limit
+主页	Home
+书架	Bookshelf
+书架上有：	On your bookshelf:
+仅预览文件开头	Preview of the start only
+今天不限时	No time limit today
+今天和之后	Today and later
+今天的还没到	Nothing here yet today
+今天还能用 %lld 分钟	%lld minutes left today
+今日	Today
+今日屏放什么	Today Cards
+今日报纸	Daily News
+从相册选	Choose from Photos
+传进来的	Received Files
+位置	Location
+保存称呼	Save Name
+全部	All
+全部删除	Delete All
+其余记录暂不能删除。	Other records cannot be deleted yet.
+内置卡	Internal SIM
+刷新屏幕	Refresh Screen
+单词	Words
+卡片暂不可用	Card unavailable
+卡片没能读取	Could not read card
+叫名字	Wake
+听	Listen
+听书、AI 和提示音用这个音量	Volume for audiobooks, AI and alerts
+和 AI 说过的话	Conversations
+喇叭	Speaker
+在听	Mic On
+壁纸	Wallpaper
+壁纸暂时读不出来	Could not read wallpaper
+声音从哪里出来	Audio Output
+外置卡	External SIM
+大	Large
+大人	Adult
+大人或孩子	Adult or Child
+天黑以后，阿木背起邮包。	After dark, Amu picked up the mailbag.
+字号	Text Size
+孩子	Child
+孩子的设置	Child Settings
+家庭	Family
+小	Small
+工具	Tools
+已经找过附近的网络	Nearby networks checked
+已选锁屏壁纸	Wallpaper selected
+应用还没有提供卡片	No app cards available
+开，平放不动 3 分钟先锁屏	On; locks after 3 minutes lying still
+当前	Current
+忘掉这个网络	Forget Network
+总在最上面	Always at the top
+我	Me
+我的	My Files
+我的密码	My PIN
+所选日期	Selected Date
+打开《%s》	Opened %s
+打开文件夹	Open Folder
+打开通知	Open Notification
+找不到这个文件，请返回列表	File not found. Return to the list.
+找附近的 Wi-Fi	Find Wi-Fi
+报纸	News
+拷贝到这里	Copy Here
+拿起亮屏	Lift to Wake
+接下来的事	Upcoming
+接着做	Resume
+接着听	Keep Listening
+接着读《%s》	Continue reading %s
+改名	Rename
+改我的密码	Change My PIN
+放到今日屏	Show on Today
+放到哪里？	Destination
+放到这里	Move Here
+文件名	Filename
+文件夹	Folder
+文件夹（名称已截断）	Folder (name shortened)
+文件开头	Start of File
+文件操作	File Actions
+新家人的身份	New Member Role
+时间还没有设置	Time not set
+暂时打不开文件列表	Could not open file list
+暂时无法查看和删除记忆	View/delete unavailable
+暂时看不到	Unavailable
+暂时看不到 AI 记得的事	AI memories unavailable
+暂时读不了这个文件夹，请返回后重试	Could not read folder. Go back and try again.
+暂时读不到次数	Count unavailable
+暖光	Warmth
+最上面总是你正在读的书。下面放四张。	Your current book stays at the top. Choose four cards below.
+最多放四张，请先去掉一张再选	Four cards maximum. Remove one first.
+月历	Calendar
+有	Filled
+未选	Not selected
+查找应用	Find Apps
+正在找附近的 Wi-Fi	Finding Wi-Fi
+正在用	In Use
+正在读取	Loading
+正在读取文件夹	Reading folder
+每天能用多久	Daily Time Limit
+没有书：把 .txt 放进 /content/books	No books. Add .txt files to /content/books.
+没能完成，可以再试一次	Could not finish. Try again.
+没能完成，请检查文件后重试	Could not finish. Check the file and try again.
+活动记录：大人 1 年，孩子 180 天。	Activity: adults 1 year; children 180 days.
+爸爸妈妈可以看到你的记录	Your parents can see your records
+特大	XL
+现在是第 %d 页	Now on page %d
+看月历	Calendar
+称呼	Name
+移除壁纸	Remove Wallpaper
+移除这位家人	Remove Member
+第 %d 张	Card %d
+继续听	Keep Listening
+继续读 %s	Keep reading %s
+编辑文件名	Edit Filename
+自动锁屏	Auto Lock
+自动锁屏 %lld 分钟	Auto lock: %lld minutes
+自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G	Auto: use Wi-Fi when available, otherwise 4G
+范围	Range
+记和联系	Notes & Calls
+记录	Records
+记录暂时读不出来	Could not read records
+设置或更改	Set or change
+设置设备	Set Up Device
+请先设置时间	Set the time first
+请在设备上确认	Confirm on the device
+读和听	Read & Listen
+输入称呼，按完成保存	Name; Done to save
+运行记录	Runtime Records
+还没有在听的内容	Nothing playing
+还没有孩子家人	No child members yet
+还没有开始读书	No book started
+还没有接下来的事	Nothing upcoming
+还没有记下的词	No saved words
+还没有读到一半的书	No book in progress
+还没有连接 Wi-Fi	Wi-Fi not connected
+还没有选壁纸	No wallpaper selected
+还没有附近的网络列表	No nearby networks listed
+这一天没有提醒和闹钟	No reminders or alarms today
+这一页	This Page
+这种文件暂时打不开	This file type cannot be opened yet
+这里还没有文件	No files here yet
+连电脑	Connect to Computer
+选一天	Choose a Day
+选择	Choose
+选择卡片	Choose Card
+锁屏时显示	Lock Screen Style
+已请求确认	Confirmation requested
+没有这个控件或应用不可用	No such control, or the app is unavailable
+输入框不在当前页	That text field is not on this page
+应用没有声明这个能力或权限	The app did not declare this capability or permission
+普通输入请使用系统输入会话	Use the system text input for ordinary typing
+控件的值不在范围内	The value is out of range
+动作参数无效	Invalid action arguments
+动作参数过长或内存不足	Action arguments too long, or out of memory
+系统繁忙	The system is busy
+卸载	Uninstall
+执行结果	Result
+没有更多页面	No more pages
+夜邮（示例）	Night Mail (sample)

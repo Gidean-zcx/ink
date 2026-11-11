@@ -301,7 +301,7 @@ static void test_flash(void) {
     if (g_profile.flash_stalls_cpu) {
         CHECK(victim_gap_max >= g_profile.erase_us_typ * 9 / 10,
               "a PSRAM-stack task freezes for a whole sector erase (max gap %llu us, erase typ %u us)",
-              (unsigned long long)victim_gap_max, g_profile.erase_us_typ);
+              (unsigned long long)victim_gap_max, (unsigned)g_profile.erase_us_typ);
         CHECK(worker_gap_max >= g_profile.erase_us_typ * 9 / 10,
               "an internal-stack task freezes too: the scheduler is suspended on both cores (max gap %llu us)",
               (unsigned long long)worker_gap_max);
@@ -774,8 +774,8 @@ static void sleep_checks(void) {
     /* without answerable standby: P14 goes, and the modem and the Bluetooth chip with it */
     hal_light_set(400, 0);
     vtk_lock();
-    vtk_event_after(SIM_MS(600), sample_asleep, NULL);
-    vtk_event_after(SIM_MS(700), vol_up_release, NULL);
+    vtk_event_after(SIM_MS(600 + POWER_DISCHARGE_MOTOR_PULSE_MS), sample_asleep, NULL);
+    vtk_event_after(SIM_MS(700 + POWER_DISCHARGE_MOTOR_PULSE_MS), vol_up_release, NULL);
     vtk_unlock();
     uint64_t t0 = osal_now_us();
     uint32_t cause = hal_power_sleep(&sc);
@@ -893,10 +893,10 @@ static void sleep_checks(void) {
      * until it gets through, recording refuses to start instead of starting without the Bluetooth
      * chip's clock; afterwards it records */
     vtk_lock();
-    vtk_event_after(SIM_MS(300), power_press, (void *)1);
-    vtk_event_after(SIM_MS(301), expander_faults, (void *)1);
-    vtk_event_after(SIM_MS(350), power_press, NULL);
-    vtk_event_after(SIM_MS(900), expander_faults, NULL);
+    vtk_event_after(SIM_MS(300 + POWER_DISCHARGE_MOTOR_PULSE_MS), power_press, (void *)1);
+    vtk_event_after(SIM_MS(301 + POWER_DISCHARGE_MOTOR_PULSE_MS), expander_faults, (void *)1);
+    vtk_event_after(SIM_MS(350 + POWER_DISCHARGE_MOTOR_PULSE_MS), power_press, NULL);
+    vtk_event_after(SIM_MS(900 + POWER_DISCHARGE_MOTOR_PULSE_MS), expander_faults, NULL);
     vtk_unlock();
     cause = hal_power_sleep(&sc2);
     int rc_early = hal_audio_capture_start(board_mic, NULL);

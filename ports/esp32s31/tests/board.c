@@ -57,6 +57,7 @@ hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *d, const uint8_t *w, size_t w
 
 int main(void) {
     assert(metalio_board_init() == HAL_I2C_OK);
+    assert(now == POWER_RAIL_SETTLE_MS * 1000u);
     assert(regs[6] == 0xC0 && regs[7] == 0xE3);
     epd_power_t panel = {.ioexp = metalio_ioexp(), .io_lock = metalio_board_lock, .io_unlock = metalio_board_unlock};
     assert(metalio_board_set(0, 7, 7) == HAL_I2C_OK);
@@ -88,8 +89,11 @@ int main(void) {
     reset_trace();
     assert(metalio_board_cut_rails(false) == HAL_I2C_OK);
     expect(0, false, 2, 0);
-    expect(1, false, 3, 0x87);
-    assert(count == 2);
+    expect(1, false, 2, 0);
+    expect(2, false, 3, 0x87);
+    expect(3, false, 2, MB_P0_MOTOR);
+    expect(4, false, 2, 0);
+    assert(count == 5 && transfers[3].at == 0 && transfers[4].at == 500000 && now == 500000);
     /* The HAL latches P17 before this function; normal directions precede rail restore. */
     reset_trace();
     assert(metalio_board_restore_keys(NULL, NULL) == HAL_I2C_OK);
@@ -103,7 +107,7 @@ int main(void) {
     assert(metalio_board_restore_rails() == HAL_I2C_OK);
     expect(0, false, 3, MB_P1_SHARED_RST | MB_P1_SHARED_PWR);
     expect(1, false, 2, MB_P0_CAM_SCR);
-    assert(count == 2);
+    assert(count == 2 && transfers[0].at == 0 && transfers[1].at == 80000 && now == 160000);
     reset_trace();
     assert(metalio_board_mask_for_sleep(false) == HAL_I2C_OK);
     assert(metalio_board_arm_wake(true, false) == HAL_I2C_OK);

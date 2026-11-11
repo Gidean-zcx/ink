@@ -36,9 +36,12 @@ if(INK_SANITIZE)
   add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address,undefined)
 endif()
-add_executable(test-s31-cell ports/esp32s31/tests/cell.c ports/esp32s31/hal_cellular_s31.c drivers/chips/nt26/nt26.c)
+add_executable(test-s31-cell ports/esp32s31/tests/cell.c ports/esp32s31/s31_cell_rx.c ports/esp32s31/hal_cellular_s31.c drivers/chips/nt26/nt26.c)
 target_include_directories(test-s31-cell PRIVATE ports/esp32s31 ports/esp32s31/tests/cell_stub platform/include drivers/chips boards)
 target_compile_options(test-s31-cell PRIVATE ${INK_WARN} -UNDEBUG)
+add_executable(test-s31-camera ports/esp32s31/tests/camera.c boards/metalio_plus/metalio_board.c drivers/chips/tca9555/tca9555.c)
+target_include_directories(test-s31-camera PRIVATE ports/esp32s31 ports/esp32s31/tests/camera_stub platform/include drivers/chips boards)
+target_compile_options(test-s31-camera PRIVATE ${INK_WARN} -UNDEBUG)
 add_executable(test-s31-hal-map tests/esp32s31/hal_map.c)
 target_include_directories(test-s31-hal-map PRIVATE tests/esp32s31/stub platform/include)
 target_compile_options(test-s31-hal-map PRIVATE ${INK_WARN} -UNDEBUG)
@@ -407,6 +410,8 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
 file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
 list(APPEND INK_I18N_SOURCES ${INK_I18N_SERVICES})
+list(APPEND INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/apps/home/home.c ${CMAKE_SOURCE_DIR}/apps/reader/reader.c
+  ${CMAKE_SOURCE_DIR}/system/include/ink/sys/ai.h ${CMAKE_SOURCE_DIR}/system/ui/shell/member_pages.h ${CMAKE_SOURCE_DIR}/system/text/i18n.c)
 list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/activity_card.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/ai_chat.c
@@ -803,7 +808,16 @@ target_link_libraries(sim-i18n-shell-remaining PRIVATE ink_apps ink_system)
 add_test(NAME i18n-shell-remaining COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_shell.py
   --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:sim-i18n-shell-remaining> --out ${CMAKE_BINARY_DIR}/test-out/i18n-shell-remaining)
 set_tests_properties(i18n-shell-remaining PROPERTIES TIMEOUT 240)
+add_test(NAME i18n-bookshelf COMMAND ${CMAKE_COMMAND} -E env INK_I18N_BOOKSHELF=1 $<TARGET_FILE:sim-i18n-shell-remaining>
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/i18n_lang.script
+  --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+  --out ${CMAKE_BINARY_DIR}/test-out/i18n-bookshelf --quiet --no-random-outages)
+add_test(NAME i18n-extras COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_shell.py
+  --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:sim-i18n-shell-remaining>
+  --out ${CMAKE_BINARY_DIR}/test-out/i18n-extras --min-frames 10)
+set_tests_properties(i18n-extras PROPERTIES ENVIRONMENT "INK_I18N_EXTRAS=1" TIMEOUT 240)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
+add_test(NAME i18n-literals COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_literals.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)
@@ -1189,13 +1203,20 @@ if(INK_HAVE_FONTS)
   target_link_libraries(sim-textinput PRIVATE ink_apps ink_system ink_port_sim)
   target_compile_options(sim-textinput PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
   add_dependencies(sim-textinput ink_mini_content)
+  # The no-dictionary scenarios: the asset pack's word list is shadowed by an empty one (searched first), so only the
+  # program's small table is left, as before the word list shipped in the pack.
+  file(WRITE ${CMAKE_BINARY_DIR}/assets-noime/ime/base.ikd "")
   foreach(v main nocard baddict)
+    set(text_assets --assets ${INK_ASSETS_DIR})
+    if(NOT v STREQUAL main)
+      set(text_assets --assets ${CMAKE_BINARY_DIR}/assets-noime --assets ${INK_ASSETS_DIR})
+    endif()
     add_test(NAME integration-text-${v}
       COMMAND ${CMAKE_COMMAND} -E env INK_TEXT_PHASE=${v}
               $<TARGET_FILE:sim-textinput> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
               --budget ${CMAKE_SOURCE_DIR}/tests/integration/textinput.budget.json
               --script ${CMAKE_SOURCE_DIR}/tests/integration/textinput_${v}.script
-              --assets ${INK_ASSETS_DIR} --content ${INK_MINI_CONTENT}
+              ${text_assets} --content ${INK_MINI_CONTENT}
               --out ${CMAKE_BINARY_DIR}/test-out/text-${v} --quiet --no-random-outages)
   endforeach()
   # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).
@@ -1534,6 +1555,11 @@ add_test(NAME ai-answer-long COMMAND sim-ai-answer-long --profile ${CMAKE_SOURCE
   --script ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/ai_answer_long.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/hub.json
   --budget ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/budget.json
   --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-answer-long --quiet --no-random-outages)
+add_test(NAME ai-answer-long-en COMMAND ${CMAKE_COMMAND} -E env INK_I18N_ANSWER_EN=1 $<TARGET_FILE:sim-ai-answer-long>
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --script ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/ai_answer_long.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/hub.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/budget.json
+  --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-answer-long-en --quiet --no-random-outages)
 ink_sim_executable(sim-ai-speech-long tests/ai_speech_long/ai_speech_long.c)
 target_link_libraries(sim-ai-speech-long PRIVATE ink_apps ink_system)
 add_test(NAME ai-speech-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_speech_long/run.py --build ${CMAKE_BINARY_DIR})
@@ -1869,3 +1895,14 @@ endforeach()
 ink_sim_executable(sim-app-runtime tests/app_runtime/app.c)
 target_link_libraries(sim-app-runtime PRIVATE ink_apps ink_system)
 add_test(NAME app-runtime COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/app_runtime/run.py --build ${CMAKE_BINARY_DIR})
+set(ink_uhci_test_args)
+if(INK_SANITIZE)
+  list(APPEND ink_uhci_test_args --sanitize)
+endif()
+add_test(NAME unit-s31-uhci-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/uhci_negative.py
+  ${CMAKE_BINARY_DIR} --cc ${CMAKE_C_COMPILER} ${ink_uhci_test_args})
+add_test(NAME unit-s31-camera COMMAND test-s31-camera)
+add_test(NAME unit-s31-camera-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/camera_negative.py ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-camera-absent tests/port_camera/absent.c)
+target_link_libraries(sim-camera-absent PRIVATE ink_apps ink_system)
+add_test(NAME camera-absent COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/port_camera/run.py ${CMAKE_BINARY_DIR})

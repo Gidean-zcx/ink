@@ -246,12 +246,14 @@ static void ui_apply(void *arg) { /* UI task */
         ink_ui_hint_obj(AI.question, INK_REFRESH_FAST);
         ink_ui_cause(AI.t_release, "ai.release_to_question_visible_ms");
     } else if (p->kind == 0 || p->kind == 5) {
+        const char *cut = TR(INK_AI_ANSWER_CUT);
+        size_t cut_size = strlen(cut) + 1;
         size_t n = strlen(p->text), room = ANSWER_CAP - sizeof INK_AI_ANSWER_CUT - AI.answer_len;
         if (!AI.answer_cut && n > room) { /* cut at a whole character and say so */
             while (room && ((unsigned char)p->text[room] & 0xC0) == 0x80) room--;
             memcpy(AI.answer_text + AI.answer_len, p->text, room);
-            memcpy(AI.answer_text + AI.answer_len + room, INK_AI_ANSWER_CUT, sizeof INK_AI_ANSWER_CUT);
-            AI.answer_len += room + sizeof INK_AI_ANSWER_CUT - 1;
+            memcpy(AI.answer_text + AI.answer_len + room, cut, cut_size);
+            AI.answer_len += room + cut_size - 1;
             AI.answer_cut = true;
             ink_probe_count("ai.answer_cut");
         } else if (!AI.answer_cut) {

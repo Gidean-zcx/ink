@@ -11,6 +11,7 @@ p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
 p.add_argument('--binary', type=Path)
 p.add_argument('--out', type=Path)
+p.add_argument('--min-frames', type=int, default=25)
 a = p.parse_args()
 build = a.build.resolve()
 out = a.out.resolve() if a.out else build / 'test-out/i18n-shell'
@@ -28,7 +29,7 @@ counts = data.get('metrics', {})
 frames = sorted(out.glob('snap-*.png'))
 assert not r.returncode and counts.get('test.finished') == 1 and not counts.get('test.fail') and not data.get('warnings'), (
     r.returncode, counts.get('test.finished'), counts.get('test.fail'), r.stderr[-12000:], data.get('warnings'))
-assert len(frames) == counts.get('test.frames') and len(frames) >= 25, (len(frames), counts.get('test.frames'))
+assert len(frames) == counts.get('test.frames') and len(frames) >= a.min_frames, (len(frames), counts.get('test.frames'))
 print(f'i18n-shell: PASS {counts.get("test.pass")} checks, {len(frames)} measured frames')
 if not os.environ.get('INK_KEEP_EVIDENCE'):
     shutil.rmtree(out)

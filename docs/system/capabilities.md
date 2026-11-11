@@ -855,7 +855,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s41 — `system/ui/search`
 
-设置：`display.wallpaper_file`。
+设置：—。
 
 状态：—。
 
@@ -1166,7 +1166,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 | 事件 id | 描述 | 谁能调 / 订阅 | 风险 / effect | 确认 | 成员范围 | 关联面 | 定义 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `ai.history.changed` | 自己的对话记录已改变 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s19](#s19) | [system/services/ai/ai_history.c](../../system/services/ai/ai_history.c) |
+| `ai.history.changed` | 自己的对话记录已改变 | 不可调用；不向 AI 转发 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s19](#s19) | [system/services/ai/ai_history.c](../../system/services/ai/ai_history.c) |
 | `alarm.ended` | 闹钟停了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s35](#s35) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `alarm.fired` | 闹钟响了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s35](#s35) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `alarm.missed` | 错过了闹钟 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s35](#s35) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |

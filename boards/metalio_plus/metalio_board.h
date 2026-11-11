@@ -39,6 +39,8 @@
 #define MB_POWER_PULSES 15        /* upstream PWR_PULSE_COUNT */
 #define MB_POWER_PULSE_MS 100     /* each high and each low phase (PWR_PULSE_INTERVAL_MS) */
 #define MB_MOTOR_PULSE_MS 50      /* upstream VIBRATION_MOTOR_PULSE_MS */
+#define POWER_DISCHARGE_MOTOR_PULSE_MS 500
+#define POWER_RAIL_SETTLE_MS 80
 
 /** Set up the expander with the official directions and power-on levels (screen power, shared
  *  rails and reset high; motor, amplifier and power-off pulse low). Task context, once. */

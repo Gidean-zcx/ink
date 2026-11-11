@@ -77,7 +77,7 @@ void hal_power_request(hal_power_res_t res, bool on) {
 
 #if INK_S31_LIGHT_SLEEP
 static bool busy(void) { /* no locks: also used immediately before sleep with scheduling stopped */
-    return hal_display_pending() > 0 || s31_haptic_busy() ||
+    return hal_display_pending() > 0 || s31_haptic_busy() || ink_s31_camera_busy() ||
            __atomic_load_n(&g_refs[HAL_PWR_AUDIO_IN], __ATOMIC_ACQUIRE) > 0 ||
            __atomic_load_n(&g_refs[HAL_PWR_AUDIO_OUT], __ATOMIC_ACQUIRE) > 0;
 }
@@ -184,8 +184,9 @@ out:
         if (keys_back) osal_task_delay_us(S31_KEY_DEBOUNCE_US);
         else hal_log_write("power HAL: key restore failed; sampling stays off");
     }
-    if (cut && !restore(restore_rails)) hal_log_write("power HAL: rail restore failed");
-    if (cell_stopped) ink_s31_cell_resume();
+    bool rails_back = !cut || restore(restore_rails);
+    if (!rails_back) hal_log_write("power HAL: rail restore failed");
+    if (cell_stopped && rails_back) ink_s31_cell_resume();
     /* No SD/CNNT mux in this port yet: place USB after rails, before input resumes. */
     if (woke_at && cause != HAL_WAKE_TIMER) ink_usb_revive();
     s31_accel_resume();

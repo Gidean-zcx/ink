@@ -38,7 +38,16 @@ static bool visible(void) {
         (!strcmp(ink_ui_page_name(), "Search") || !strcmp(ink_ui_page_name(), "SearchEmpty"));
 }
 static void match(query_t *q, unsigned kind, const char *id, const char *title, const char *value, uint32_t revision) {
-    if (!strstr(title, q->query) && !strstr(value, q->query) && !strstr(id, q->query)) return;
+    bool source_match = strstr(title, q->query) != NULL;
+    if (kind < 2) {
+        for (const unsigned char *p = (const unsigned char *)title; *p; p++) {
+            if (*p >= 0x80) {
+                title = TR(title);
+                break;
+            }
+        }
+    }
+    if (!source_match && !strstr(title, q->query) && !strstr(value, q->query) && !strstr(id, q->query)) return;
     if (q->total++ < q->cursor || q->shown == 3) return;
     ink_jw_t *w = &q->writer;
     ink_jw_raw(w, q->shown++ ? ",{" : "{");
@@ -69,7 +78,7 @@ static void query(ink_call_t *c) {
         for (int i = 0; ink_setting_at(i); i++) {
             const ink_setting_def_t *d = ink_setting_at(i);
             char id[64]; snprintf(id, sizeof id, "setting:%s", d->id);
-            match(q, 1, id, !strcmp(d->id, "display.wallpaper_file") ? TR(d->title) : d->title, TR("设置"), 1);
+            match(q, 1, id, d->title, TR("设置"), 1);
         }
     }
     const char *const collections[] = {"phone.contacts", "memo.notes"};
