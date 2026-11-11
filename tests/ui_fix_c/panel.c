@@ -49,6 +49,10 @@ static bool fx_speaking(void) {
     char playing[16] = ""; ink_state_get_str(ink_state_find("audio.now_playing"), playing, sizeof playing);
     return !strcmp(playing, "voice");
 }
+static void fx_offline_event(void *ctx) { (void)ctx; sim_net_set_link("none"); }
+static void fx_offline_check(void) {
+    fx_read(); CHECK(strstr(fx_snapshot, "离线，暂时不能朗读") && !ink_ai_can_replay(), "offline snapshot retains the reason replay is unavailable");
+}
 static void run(void *ctx) {
     (void)ctx; fx_start();
     fx_ok("reader.open_book", "{\"title\":\"测试长书\"}"); fx_ok("reader.goto_page", "{\"page\":5}"); on_ui(fx_book);
@@ -59,7 +63,11 @@ static void run(void *ctx) {
     if (fx_before) fx_ok("ai.panel.listen", NULL); else fx_press("ai.panel.listen");
     CHECK(WAIT_FOR(fx_speaking(), 20000), "real synthetic speech begins"); fx_quiet(); on_ui(fx_speech_check); fx_capture("panel-speech");
     fx_press("shell.ai_stop"); CHECK(WAIT_FOR(!fx_speaking(), 5000), "stop ends speech"); fx_quiet(); on_ui(fx_replay_check);
-    fx_capture("panel-replay"); fx_ok("ai.panel.hide", NULL);
+    fx_capture("panel-replay");
+    CHECK(WAIT_FOR(sim_metric_value("ai.answers") >= 2, 30000), "spoken turn finishes before disconnecting");
+    vtk_event_at(vtk_now() + SIM_MS(1), fx_offline_event, NULL);
+    CHECK(WAIT_FOR(!ink_hub_online(), 5000), "synthetic network goes offline"); fx_quiet(); on_ui(fx_offline_check);
+    fx_ok("ai.panel.hide", NULL);
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

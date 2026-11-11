@@ -67,6 +67,8 @@ def fixtures(sd):
 def run_case(build, work, binary, case, large, before, empty):
     name = f'{case}{"-empty" if empty else ""}-{120 if large else 100}'
     folder = work / name
+    if folder.exists():
+        shutil.rmtree(folder)
     folder.mkdir()
     sd = folder / "sd"
     sd.mkdir()
@@ -99,6 +101,8 @@ def run_case(build, work, binary, case, large, before, empty):
                "--budget", str(ROOT / "tests/ui_scene.budget.json")]
     result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=180)
     (folder / "run.log").write_text(result.stdout + result.stderr)
+    for snapshot in folder.glob("*.json"):
+        json.loads(snapshot.read_text())
     data = json.loads((folder / "metrics.json").read_text()) if (folder / "metrics.json").exists() else {}
     metrics = data.get("metrics", {})
     failures = [str(w) for w in data.get("warnings", []) if "CHECK FAILED" in str(w)]

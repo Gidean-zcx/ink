@@ -35,7 +35,7 @@ int ink_shell_ai_snapshot(char *buf, size_t cap) {
     bool listening = ink_ai_chat_tapped() && strstr(A.caption, "正在听");
     ink_ui_field_spec_t fields[] = {
         {.id = "board", .role = "status", .label = TR("页面"), .value = A.speaking ? "AiSpeak" : listening ? "AiListenTap" : A.pages > 1 ? "AiLong" : "AiAsk"},
-        {.id = "status", .role = "status", .label = TR("状态"), .value = lv_label_get_text(A.status)},
+        {.id = "status", .role = "status", .label = TR("状态"), .value = !ink_hub_online() && A.words[0] && !lv_label_get_text(A.status)[0] ? TR("离线，暂时不能朗读") : lv_label_get_text(A.status)},
         {.id = "question", .role = "text", .label = TR("问题"), .value = lv_obj_has_flag(A.question, LV_OBJ_FLAG_HIDDEN) ? "" : lv_label_get_text(A.question)},
         {.id = "answer", .role = "text", .label = TR("回答"), .value = lv_obj_has_flag(A.answer, LV_OBJ_FLAG_HIDDEN) ? "" : lv_label_get_text(A.answer)},
         {.id = "page", .role = "status", .label = TR("页码"), .value = count},
@@ -102,8 +102,7 @@ static void draw_words(void) {
     char count[32]; snprintf(count, sizeof count, "%d / %d", A.page + 1, A.pages);
     lv_label_set_text(A.counter, count);
     lv_label_set_text(A.source, strstr(A.words, TR(INK_AI_ANSWER_CUT) + 1) ?
-        (A.page + 1 < A.pages ? TR("只保留前一部分 · 请翻页") : TR("只保留前一部分")) :
-        A.page + 1 < A.pages ? TR("还有下一页 · 请翻页") : TR("出自这一页"));
+        (A.page + 1 < A.pages ? TR("只保留前一部分 · 请翻页") : TR("只保留前一部分")) : TR("出自这一页"));
     if (A.page > 0) lv_obj_remove_state(A.prev, LV_STATE_DISABLED); else lv_obj_add_state(A.prev, LV_STATE_DISABLED);
     if (A.page + 1 < A.pages) lv_obj_remove_state(A.next, LV_STATE_DISABLED); else lv_obj_add_state(A.next, LV_STATE_DISABLED);
     A.revision++;
