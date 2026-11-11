@@ -112,6 +112,11 @@ static void footer_checks(void) {
     CHECK(WAIT_FOR(ink_state_get_int(ink_state_find("battery.level"),&level) && level==57,10000),"battery event reaches the power service");
     quiet(); get(); CHECK(raster==before && strstr(view,"footer_battery=57%"),"battery event updates only its footer label"); frame("footer-all");
 }
+static void clock_fits(void) {
+    ink_tm_t tm; static char clock[32]; ink_time_to_local(ink_time_now_s(),&tm); snprintf(clock,sizeof clock,"%02d:%02d",tm.hour,tm.min);
+    wanted=clock; inspect(); CHECK(found,"footer clock is visible");
+    if (found) { lv_point_t size; lv_text_get_size(&size,clock,lv_obj_get_style_text_font(found,0),0,0,LV_COORD_MAX,LV_TEXT_FLAG_NONE); CHECK(size.x<=lv_obj_get_content_width(found),"footer clock fits at 120 percent without ellipsis"); }
+}
 static void screenshots(void) {
     ok("reader.set_layout","{\"font_size\":36,\"line_spacing\":0,\"paragraph_spacing\":0,\"margins\":0,\"footer_mask\":15}"); frame("compact");
     ok("reader.set_layout","{\"font_size\":72,\"line_spacing\":3,\"paragraph_spacing\":3,\"margins\":3,\"footer_mask\":15}"); frame("large");
@@ -136,7 +141,7 @@ static void run(void *arg) {
     else if (phase && !strcmp(phase,"large-text")) {
         ok("settings.set","{\"id\":\"display.font_size\",\"value\":3}"); open_book();
         ok("reader.menu",NULL); frame("menu"); ok("reader.menu","{\"view\":\"settings\"}"); frame("settings");
-        ok("reader.menu","{\"open\":false}"); screenshots(); close_book();
+        ok("reader.menu","{\"open\":false}"); screenshots(); on_ui(clock_fits); close_book();
     } else { open_book(); position_checks(); touch_checks(); txt_checks(); footer_checks(); screenshots(); members(); }
     ink_probe_count("test.finished");
 }

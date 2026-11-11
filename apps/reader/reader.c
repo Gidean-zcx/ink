@@ -29,7 +29,7 @@
 #include "ink/sys/time.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/text.h"
-#include "vendor/metalio_prefs/presets.h"
+#include <vendor/metalio_prefs/presets.h>
 #include "ink/sys/ui.h"
 
 #include <reader_source.h>
@@ -1012,9 +1012,10 @@ static void book_create(lv_obj_t *scr, void *arg) {
     lv_obj_add_flag(RD.img,LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(RD.img,page_clicked,LV_EVENT_CLICKED,NULL);
     lv_obj_add_flag(scr,LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(scr,menu_blank,LV_EVENT_CLICKED,NULL);
+    int time_width=ink_ui_text_width("00:00",INK_FONT_NOTE,INK_WEIGHT_REGULAR)+INK_GAP_XS;
     for (int i=0;i<READER_CHOICES;i++) {
-        int x=i==0 ? INK_MARGIN : i==1 ? INK_MARGIN : i==2 ? INK_CANVAS_W/2+INK_GAP : INK_CANVAS_W-INK_MARGIN-INK_CONTROL;
-        RD.footer[i]=ink_ui_line(scr,"",INK_FONT_NOTE,INK_WEIGHT_REGULAR,x,INK_CANVAS_H-(i==0 ? 2 : 1)*ink_ui_line_height(INK_FONT_NOTE),i==0 ? INK_CANVAS_W-2*INK_MARGIN : i==1 ? INK_CANVAS_W/2-INK_MARGIN : INK_CONTROL);
+        int x=i==0 ? INK_MARGIN : i==1 ? INK_MARGIN : i==2 ? INK_CANVAS_W/2+INK_GAP : INK_CANVAS_W-INK_MARGIN-time_width;
+        RD.footer[i]=ink_ui_line(scr,"",INK_FONT_NOTE,INK_WEIGHT_REGULAR,x,INK_CANVAS_H-(i==0 ? 2 : 1)*ink_ui_line_height(INK_FONT_NOTE),i==0 ? INK_CANVAS_W-2*INK_MARGIN : i==1 ? INK_CANVAS_W/2-INK_MARGIN : i==3 ? time_width : INK_CONTROL);
     }
 
     render_into(0, RD.page);
