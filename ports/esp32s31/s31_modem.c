@@ -370,6 +370,10 @@ static hal_at_result_t ink_at_once(const char *cmd, const char *payload, char *o
         if (!private && out && cap) {
             snprintf(said, sizeof said, "%s", out);
             for (char *p = said; *p; p++) if (*p == '\r' || *p == '\n') *p = ' ';
+            if (!strncmp(cmd, "AT+CEREG", 8)) { /* keep <n>,<stat>: the area code and cell id say where the device is */
+                char *c = strchr(said, ','); c = c ? strchr(c + 1, ',') : NULL;
+                if (c) *c = 0;
+            }
             for (char *p = said; *p;) {
                 char *q = p;
                 while (*q >= '0' && *q <= '9') q++;
@@ -556,7 +560,7 @@ void ink_s31_cell_start_data(void) { /* upstream RunNormalModeInitSequence .cc:1
     unsigned epoch = ink_cell.epoch;
     CELL_UNLOCK();
     if (started || !registered || busy) return;
-    char response[96];
+    char response[512]; /* replies can list every setting: 96 overflowed into ERROR on the device (2026-11-11) */
     if (hal_modem_at("AT+ECNETCFG?", response, sizeof response, 1000) != HAL_AT_OK || !strstr(response, "\"nat\",1")) goto done;
     if (hal_modem_at("AT+ECNETDEVCTL?", response, sizeof response, 1000) != HAL_AT_OK) goto done;
     int state = 0;
@@ -578,6 +582,7 @@ void ink_s31_cell_start_data(void) { /* upstream RunNormalModeInitSequence .cc:1
         osal_task_delay_us(1000);
         CELL_LOCK(); started = ink_cell.handshake; CELL_UNLOCK();
     } while (!started && osal_now_us() < end);
+    hal_log_write(started ? "cell: data link started (handshake answered)" : "cell: data link handshake not answered in 5 s");
 done:
     CELL_LOCK(); ink_cell.starting = false; CELL_UNLOCK();
 }

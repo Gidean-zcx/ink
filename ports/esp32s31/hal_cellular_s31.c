@@ -37,6 +37,10 @@ static void log_modem_once(void) {
         char response[512] = "", line[200];
         hal_at_result_t r = hal_modem_at(QUERIES[i], response, sizeof response, 1000);
         for (char *p = response; *p; p++) if (*p == '\r' || *p == '\n') *p = ' ';
+        if (!strncmp(QUERIES[i], "AT+CEREG", 8)) { /* keep <n>,<stat>: the area code and cell id say where the device is */
+            char *c = strchr(response, ','); c = c ? strchr(c + 1, ',') : NULL;
+            if (c) *c = 0;
+        }
         mask_ids(response);
         snprintf(line, sizeof line, "cell: %s -> %s %.150s", QUERIES[i],
                  r == HAL_AT_OK ? "OK" : r == HAL_AT_ERROR ? "ERROR" : "no answer", response);

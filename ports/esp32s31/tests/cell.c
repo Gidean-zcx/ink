@@ -127,10 +127,11 @@ bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
     if (drop_probes > 0 && !strcmp(cmd, "AT")) { drop_probes--; return true; }
     if (!strcmp(cmd, "AT+CMGS=1")) { prompt = true; reply("\r\n> "); }
     else if (!strcmp(cmd, "AT+ECSIMCFG?")) reply("\r\n+ECSIMCFG: \"SimSlot\",0\r\nOK\r\n");
-    else if (!strcmp(cmd, "AT+CEREG?")) reply(unregistered ? "\r\n+CEREG: 0,2\r\nOK\r\n" : "\r\n+CEREG: 0,1\r\nOK\r\n");
+    else if (!strcmp(cmd, "AT+CEREG?")) reply(unregistered ? "\r\n+CEREG: 0,2\r\nOK\r\n" : "\r\n+CEREG: 2,1,\"1A2B\",\"0C3D4E5F\",7\r\nOK\r\n"); /* n=2: where the cell is */
     else if (!strcmp(cmd, "AT+CPIN?")) reply(missing ? "\r\n+CME ERROR: 10\r\n" : "\r\n+CPIN: READY\r\nOK\r\n");
     else if (!strcmp(cmd, "AT+CSQ")) { char text[64]; snprintf(text, sizeof text, "\r\n+CSQ: %d,99\r\nOK\r\n", csq); reply(text); }
-    else if (!strcmp(cmd, "AT+ECNETCFG?")) reply("\r\n+ECNETCFG: \"nat\",1\r\nOK\r\n");
+    else if (!strcmp(cmd, "AT+ECNETCFG?")) reply("\r\n+ECNETCFG: \"nat\",1,\"192.168.10.2\",,\"255.255.255.0\",,\r\n+ECNETCFG: \"ipv6\",1\r\n"
+                   "+ECNETCFG: \"dns\",\"0.0.0.0\",\"0.0.0.0\"\r\n+ECNETCFG: \"mtu\",1500\r\n+ECNETCFG: \"lease\",86400\r\nOK\r\n"); /* as long as the device's: past 96 bytes */
     else if (!strcmp(cmd, "AT+ECNETDEVCTL?")) reply(net_started ? "\r\n+ECNETDEVCTL: 2,1,1,1\r\nOK\r\n" : "\r\n+ECNETDEVCTL: 2,1,1,0\r\nOK\r\n");
     else if (!strcmp(cmd, "AT+ECNETDEVCTL=2,1,1")) { net_started = true; reply("\r\nOK\r\n"); }
     else if (!strcmp(cmd, "AT+CGMR")) reply("\r\nFAKE_R1 123456789012345\r\nOK\r\n"); /* an IMEI-length run */
@@ -271,7 +272,8 @@ int main(void) {
     assert(strstr(logged, "cell: AT+CIREG? -> OK") && !strstr(logged, "cell: ATI"));
     assert(hal_cell_status(&st)); /* the summary once (the per-command link lines go on for the first 90 s) */
     { unsigned n = 0; for (const char *p = logged; (p = strstr(p, "cell: AT+CGMM")); p++) n++; assert(n == 1); }
-    assert(handshakes == 1 && ink_cell.handshake && netif.connected);
+    assert(handshakes == 1 && ink_cell.handshake && netif.connected && strstr(logged, "cell: data link started"));
+    assert(strstr(logged, "cell: AT+CEREG? -> OK +CEREG: 2,1") && !strstr(logged, "1A2B") && !strstr(logged, "0C3D4E5F")); /* no location */
     ip_event_got_ip_t ip = {.esp_netif = &netif}; ink_ip(NULL, IP_EVENT, IP_EVENT_ETH_GOT_IP, &ip);
     hal_link_status_t link; assert(ink_s31_cell_link(&link) && link.up && link.signal_dbm == -67);
     assert(ink_s31_cell_available()); ink_s31_cell_use(true);
