@@ -1,0 +1,57 @@
+# Kept separate so both builds compile the same pinned engines.
+set(reader_dir ${CMAKE_CURRENT_LIST_DIR})
+set(reader_vendor ${reader_dir}/vendor)
+set(reader_third_party ${reader_dir}/../../third_party)
+file(GLOB reader_metalio ${reader_vendor}/metalio_core/*.cc)
+file(GLOB reader_crosspoint ${reader_vendor}/crosspoint/*.cpp)
+set(reader_engines ${reader_metalio} ${reader_crosspoint}
+    ${reader_third_party}/reader_miniz/miniz.c ${reader_third_party}/reader_expat/xmlparse.c
+    ${reader_third_party}/reader_expat/xmlrole.c ${reader_third_party}/reader_expat/xmltok.c)
+function(ink_reader_translations variable)
+  set(tables)
+  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/reader-i18n)
+  foreach(table ${${variable}})
+    get_filename_component(name ${table} NAME)
+    if(EXISTS ${reader_dir}/${name})
+      file(READ ${table} base)
+      file(READ ${reader_dir}/${name} extra)
+      set(table ${CMAKE_BINARY_DIR}/reader-i18n/${name})
+      file(WRITE ${table} "${base}\n${extra}")
+    endif()
+    list(APPEND tables ${table})
+  endforeach()
+  set(${variable} ${tables} PARENT_SCOPE)
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${reader_dir}/en.tsv)
+endfunction()
+function(ink_reader_build app_target system_target lvgl_target)
+  add_library(ink_reader_vendor STATIC ${reader_engines})
+  target_include_directories(ink_reader_vendor PUBLIC ${reader_vendor}/metalio_core ${reader_third_party}
+    ${reader_third_party}/reader_expat ${reader_vendor}/crosspoint ${reader_vendor}/shim)
+  target_include_directories(ink_reader_vendor PRIVATE $<TARGET_PROPERTY:${system_target},INTERFACE_INCLUDE_DIRECTORIES>)
+  target_link_libraries(ink_reader_vendor PRIVATE ${lvgl_target})
+  target_compile_features(ink_reader_vendor PRIVATE cxx_std_17)
+  target_compile_options(ink_reader_vendor PRIVATE -w)
+  target_compile_definitions(ink_reader_vendor PUBLIC MINIZ_NO_ARCHIVE_APIS MINIZ_NO_STDIO MINIZ_NO_TIME MINIZ_NO_DEFLATE_APIS
+    tinfl_decompress=ink_tinfl_decompress tinfl_decompress_mem_to_heap=ink_tinfl_decompress_mem_to_heap
+    tinfl_decompress_mem_to_mem=ink_tinfl_decompress_mem_to_mem tinfl_decompress_mem_to_callback=ink_tinfl_decompress_mem_to_callback
+    mz_crc32=ink_mz_crc32 mz_adler32=ink_mz_adler32 mz_free=ink_mz_free)
+  target_compile_definitions(ink_reader_vendor PRIVATE XML_GE=0 XML_CONTEXT_BYTES=0 BYTEORDER=1234)
+  set_source_files_properties(${reader_metalio} PROPERTIES
+    COMPILE_OPTIONS "-include;${reader_vendor}/shim/reader_runtime.h")
+  set_source_files_properties(${reader_third_party}/reader_miniz/miniz.c ${reader_third_party}/reader_expat/xmlparse.c PROPERTIES
+    COMPILE_OPTIONS "-include;${reader_vendor}/shim/engine_alloc.h")
+  add_library(ink_reader_port STATIC ${reader_vendor}/shim/reader_port.cc)
+  target_include_directories(ink_reader_port PRIVATE ${reader_dir}/../../platform/include
+    $<TARGET_PROPERTY:${system_target},INTERFACE_INCLUDE_DIRECTORIES>)
+  target_compile_options(ink_reader_port PRIVATE ${INK_WARN})
+  target_sources(${app_target} PRIVATE ${reader_dir}/epub_source.cc)
+  target_include_directories(${app_target} PRIVATE ${reader_dir} ${reader_dir}/../../system/ui)
+  target_link_libraries(${app_target} PRIVATE ink_reader_vendor ink_reader_port)
+  if(NOT ESP_PLATFORM)
+    target_compile_definitions(ink_reader_vendor PRIVATE EBOOK_EMULATOR)
+    target_include_directories(ink_reader_vendor BEFORE PRIVATE ${reader_vendor}/shim/host)
+    target_include_directories(ink_reader_port PRIVATE ${CMAKE_SOURCE_DIR}/simulator/kernel/vtk)
+    find_package(Iconv REQUIRED)
+    target_link_libraries(ink_reader_vendor PRIVATE Iconv::Iconv)
+  endif()
+endfunction()

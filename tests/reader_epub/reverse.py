@@ -1,0 +1,31 @@
+"""Remove just the EPUB hook in a temporary object; source files and history stay untouched."""
+import argparse
+import json
+from pathlib import Path
+import shlex
+import shutil
+import subprocess
+import tempfile
+from run import ROOT, run
+
+p=argparse.ArgumentParser(description=__doc__); p.add_argument('--build',type=Path,required=True); a=p.parse_args(); build=a.build.resolve()
+source=ROOT/'apps/reader/reader.c'
+entry=next(x for x in json.loads((build/'compile_commands.json').read_text()) if Path(x['file'])==source)
+with tempfile.TemporaryDirectory(prefix='reader-epub-control-',dir=build) as temp:
+    temp=Path(temp); mutant=temp/source.name; obj=temp/'reader.c.o'
+    original=source.read_text(); changed=original.replace('return load_section(0,0);','return false; /* EPUB hook removed by the reverse control. */')
+    assert changed!=original
+    mutant.write_text(changed)
+    args=shlex.split(entry['command']); compile_args=[]; skip=False
+    for arg in args:
+        if skip: skip=False; continue
+        if arg in ('-o','-MT','-MF','-MQ'): skip=True
+        elif arg!='-MD': compile_args.append(str(mutant) if arg==str(source) else arg)
+    subprocess.run(compile_args+['-o',str(obj)],cwd=entry['directory'],check=True,capture_output=True)
+    library=temp/'libink_apps.a'; shutil.copyfile(build/library.name,library)
+    subprocess.run(['ar','r',str(library),str(obj)],check=True,capture_output=True)
+    binary=temp/'sim-reader-epub'
+    link=shlex.split((build/'CMakeFiles/sim-reader-epub.dir/link.txt').read_text()); link[link.index('-o')+1]=str(binary)
+    link=[str(library) if Path(x).name==library.name else x for x in link]
+    subprocess.run(link,cwd=build,check=True,capture_output=True)
+    run(build,binary,reverse=True)
