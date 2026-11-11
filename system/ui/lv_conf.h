@@ -63,6 +63,8 @@
 #define LV_USE_THORVG_EXTERNAL 0
 #define LV_USE_LOTTIE 0
 #define LV_USE_QRCODE 1
+#define LV_USE_KEYBOARD 1
+#define LV_USE_IME_PINYIN 0
 #define LV_USE_SYSMON 0
 #define LV_USE_PROFILER 0
 

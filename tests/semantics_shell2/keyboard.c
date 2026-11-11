@@ -14,15 +14,16 @@ void ink_test_shell2_keyboard(void) {
     ink_text_key('x'); ink_text_key('i'); ink_text_key('a'); ink_text_key('n');
     view("Keyboard");
     CHECK(strstr(test_snapshot, "composing") && strstr(test_snapshot, "xian") && strstr(test_semantic, "candidate:") && strstr(test_semantic, "模式="), "pinyin, candidates and mode remain available");
-    lv_obj_t *b = find_button(K.root, "删除");
+    lv_obj_t *b = K.board;
+    for (int i = 0; i < K.buttons; i++) if (K.codes[i] == KEY_BACKSPACE) lv_buttonmatrix_set_selected_button(b, (uint32_t)i);
     event(b, LV_EVENT_PRESSED);
     stale("home", "keyboard.key");
-    event(b, LV_EVENT_CLICKED);
+    event(b, LV_EVENT_VALUE_CHANGED);
     CHECK(!strcmp(ink_text_composing(), "xian"), "stale physical key does not edit the input");
     ink_receipt_t receipt;
     CHECK(ink_cap_invoke_json("keyboard.key", "{\"code\":8}", INK_SRC_AI, test_page_version, &receipt) == INK_RC_STALE,
           "the actual keyboard capability rejects an old AI page version");
-    event(b, LV_EVENT_PRESSED); event(b, LV_EVENT_CLICKED);
+    event(b, LV_EVENT_PRESSED); event(b, LV_EVENT_VALUE_CHANGED);
     CHECK(!strcmp(ink_text_composing(), "xia"), "fresh physical key still works");
     event(K.more, LV_EVENT_PRESSED);
     CHECK(ink_cap_invoke_json("keyboard.candidates", "{}", INK_SRC_TOUCH, 0, &receipt) == INK_RC_DONE, "expand candidates through the bus");

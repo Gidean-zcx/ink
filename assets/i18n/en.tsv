@@ -1071,6 +1071,9 @@ PowerOffEmpty：已关机。没电了，%s	PowerOffEmpty: Powered off. Battery e
 用键盘	Keyboard
 空格	Space
 符号	Symbols
+全键	QWERTY
+九键	9-key
+九宫格拼音	Nine-key pinyin
 说完了	Done
 请说，停一下就结束	Speak. Pause to finish
 键盘；类型=普通文字；内容=%s；组合=%s；光标=%zu；选区=%zu..%zu；展开=%d；候选起点=%d；	Keyboard; type=plain text; content=%s; composing=%s; cursor=%zu; selection=%zu..%zu; expanded=%d; first candidate=%d;

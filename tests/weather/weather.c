@@ -6,6 +6,7 @@
 #include "../../system/boot/main.c"
 #undef ink_main
 #include "../integration/whole_product.h"
+#include "../keyboard_matrix.h"
 #include "ink/sys/hub.h"
 const char *ink_weather_city(void);
 
@@ -49,10 +50,13 @@ static lv_obj_t *label_in(lv_obj_t *o, const char *text) {
 }
 static void locate_key(void) {
     lv_obj_update_layout(lv_layer_sys());
-    lv_obj_t *label = label_in(lv_layer_sys(), key_label);
-    key_seen = label != NULL;
-    if (!label) return;
-    lv_area_t a; lv_obj_get_coords(lv_obj_get_parent(label), &a);
+    lv_area_t a;
+    key_seen = ink_test_matrix_key(lv_layer_sys(), key_label, &a);
+    if (!key_seen) {
+        lv_obj_t *label = label_in(lv_layer_sys(), key_label);
+        if (!label) return;
+        key_seen = true; lv_obj_get_coords(lv_obj_get_parent(label), &a);
+    }
     key_point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
 }
 static void press(const char *label) {

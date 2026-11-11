@@ -18,6 +18,7 @@
 #include "../system/boot/main.c"
 #undef ink_main
 #include "integration/whole_product.h"
+#include "keyboard_matrix.h"
 #include "ui_borders.h"
 
 static char scene[32];
@@ -40,7 +41,14 @@ static void label_at(lv_obj_t *root) {
         label_at(c);
     }
 }
-static void find_label(void) { found_label = NULL; label_x = label_y = -1; label_at(lv_screen_active()); label_at(lv_layer_sys()); }
+static void find_label(void) {
+    found_label = NULL; label_x = label_y = -1;
+    label_at(lv_screen_active()); label_at(lv_layer_sys());
+    lv_area_t key;
+    if (ink_test_matrix_key(lv_layer_sys(), wanted, &key)) {
+        label_x = (key.x1 + key.x2) / 2; label_y = (key.y1 + key.y2) / 2;
+    }
+}
 static bool press_label(const char *label) { wanted = label; on_ui(find_label); if (label_x < 0) return false; tap(label_x, label_y); return true; }
 
 static void pin_result(void *ctx, int result, uint32_t wait_s) { (void)ctx; (void)result; (void)wait_s; pin_done++; }

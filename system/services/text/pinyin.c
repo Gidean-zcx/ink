@@ -21,6 +21,7 @@
 #include "ink/sys/res.h"
 #include "ink/sys/svc.h"
 #include "text_internal.h"
+#include "vendor/kiikoread/nine_key.h"
 
 #define DICT_MAX (1024u * 1024u)
 
@@ -196,6 +197,42 @@ int py_lookup(const char *composing, py_cand_t *out, int max) {
                 if (strlen(SMALL[i].key) == n && !memcmp(SMALL[i].key, composing, n))
                     out[got++] = (py_cand_t){.word = SMALL[i].word, .word_len = (uint16_t)strlen(SMALL[i].word), .consumed = (uint8_t)n, .freq = SMALL[i].freq};
         }
+    }
+    return got;
+}
+
+/* Keep the same bounded candidate list, longest consumed prefix then frequency. */
+static int nine_add(py_cand_t *out, int got, int max, py_cand_t candidate) {
+    int at = 0;
+    while (at < got && (out[at].consumed > candidate.consumed ||
+           (out[at].consumed == candidate.consumed && out[at].freq >= candidate.freq))) at++;
+    if (at >= max) return got;
+    if (got < max) got++;
+    memmove(out + at + 1, out + at, (size_t)(got - at - 1) * sizeof *out);
+    out[at] = candidate;
+    return got;
+}
+
+int py_lookup_nine(const char *composing, py_cand_t *out, int max) {
+    size_t len = strlen(composing);
+    if (!len || max <= 0) return 0;
+    int got = 0;
+    uint32_t count = PY.block ? PY.nkeys : (uint32_t)(sizeof SMALL / sizeof *SMALL);
+    for (uint32_t i = 0; i < count; i++) {
+        const char *key = PY.block ? PY.text + PY.keys[i].text_off : SMALL[i].key;
+        size_t length = PY.block ? PY.keys[i].key_len : strlen(key);
+        size_t n = length < len ? length : len;
+        char roman[41];
+        if (!n || n >= sizeof roman) continue;
+        memcpy(roman, key, n); roman[n] = 0;
+        if (!prefix(composing, roman, true)) continue;
+        if (PY.block) {
+            const dict_key_t *k = &PY.keys[i];
+            for (uint32_t e = 0; e < k->count; e++) {
+                const dict_entry_t *d = &PY.entries[k->first + e];
+                got = nine_add(out, got, max, (py_cand_t){PY.text + d->text_off, d->word_len, (uint8_t)n, d->freq});
+            }
+        } else got = nine_add(out, got, max, (py_cand_t){SMALL[i].word, (uint16_t)strlen(SMALL[i].word), (uint8_t)n, SMALL[i].freq});
     }
     return got;
 }

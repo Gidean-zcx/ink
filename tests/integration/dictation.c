@@ -20,6 +20,7 @@
 #undef ink_main
 
 #include "whole_product.h"
+#include "../keyboard_matrix.h"
 #include "../../system/services/text/text_internal.h"
 
 /* ---- a session, on the UI task ---- */
@@ -83,6 +84,10 @@ static void find_in(lv_obj_t *o) {
 static void do_find(void) {
     g_found = false;
     find_in(lv_layer_sys());
+    lv_area_t key;
+    if (!g_found && ink_test_matrix_key(lv_layer_sys(), g_find, &key)) {
+        g_found_x = (key.x1 + key.x2) / 2; g_found_y = (key.y1 + key.y2) / 2; g_found = true;
+    }
 }
 static bool there(const char *label) {
     g_find = label;

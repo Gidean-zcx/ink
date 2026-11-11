@@ -1,0 +1,122 @@
+[
+  {
+    "file": "before-pinyin-normal.png",
+    "bytes": 28003,
+    "sha256": "fe531dd85cd908fb512330e7fa5a5e9500b4cbecff6339c883247e6c3d1eb929"
+  },
+  {
+    "file": "before-pinyin-large.png",
+    "bytes": 29708,
+    "sha256": "b9b4e96ae071b041eef088c36e0a4a475574198ddd0e4e573025889574fc28a8"
+  },
+  {
+    "file": "before-english-normal.png",
+    "bytes": 24460,
+    "sha256": "ef57e5af496df0e2e7088855bdce01a019f8805e9085f525abe5f5ebf1402110"
+  },
+  {
+    "file": "before-english-large.png",
+    "bytes": 26452,
+    "sha256": "20023ec870a8028c355b5dfb218d7d44e7d117489655ffcbf0cca2408d2be027"
+  },
+  {
+    "file": "before-symbols-normal.png",
+    "bytes": 23853,
+    "sha256": "de6f4d835ea587006eb353d92f9fb1c4479553080f4b66e7100d869678f5dfde"
+  },
+  {
+    "file": "before-symbols-large.png",
+    "bytes": 25768,
+    "sha256": "63042a01775b74268904a3900ef3115901bd9d5ee3c6d6478e85986f1c31c05e"
+  },
+  {
+    "file": "before-number-normal.png",
+    "bytes": 18607,
+    "sha256": "e8fff0d627055c7ab94457d87b54fbf541926a39e2487de90f1bea50be6482f4"
+  },
+  {
+    "file": "before-number-large.png",
+    "bytes": 19538,
+    "sha256": "297d0e8f54405c8039e1a698f2fe9bdbe21875affb2bac78ac4256aaef98cfd5"
+  },
+  {
+    "file": "before-nine-normal.png",
+    "bytes": 28003,
+    "sha256": "fe531dd85cd908fb512330e7fa5a5e9500b4cbecff6339c883247e6c3d1eb929"
+  },
+  {
+    "file": "before-nine-large.png",
+    "bytes": 29708,
+    "sha256": "b9b4e96ae071b041eef088c36e0a4a475574198ddd0e4e573025889574fc28a8"
+  },
+  {
+    "file": "before-password-normal.png",
+    "bytes": 22567,
+    "sha256": "34c53455f0f8c42345b69323bcc9f3607102500850596a2008bf468c8528a4bd"
+  },
+  {
+    "file": "before-password-large.png",
+    "bytes": 24367,
+    "sha256": "42613049fff08a7a6a364258b7feb8cfeb40010bdd505196e01a2762333206f8"
+  },
+  {
+    "file": "after-pinyin-normal.png",
+    "bytes": 27056,
+    "sha256": "0d34c016c7bd7e94fb1f40501fe63fcfeb3a49e4206de53a3fff9b30e8e73cd7"
+  },
+  {
+    "file": "after-pinyin-large.png",
+    "bytes": 29392,
+    "sha256": "cdf24e2a8d0ab1cf52f0ca68dc68d0a5b611962e5495b45f49c611b7467afa24"
+  },
+  {
+    "file": "after-english-normal.png",
+    "bytes": 23640,
+    "sha256": "0f2477141189498fd77f57ff5c0bd00a174265392e0cad8991e562bc4cd3b977"
+  },
+  {
+    "file": "after-english-large.png",
+    "bytes": 25520,
+    "sha256": "f894ae4db58a8488a9680c51db06a2de7e7a71f82bc2d6bf3265171a356b9639"
+  },
+  {
+    "file": "after-symbols-normal.png",
+    "bytes": 24141,
+    "sha256": "e5335f1c98c73d6736863315671cc2f9800f18f6e8701d481994d4191215d7c8"
+  },
+  {
+    "file": "after-symbols-large.png",
+    "bytes": 26165,
+    "sha256": "2122ac952bfb7280594ed5c3a07d06818274ad4cb669aa53fe83d455f3797abc"
+  },
+  {
+    "file": "after-number-normal.png",
+    "bytes": 15871,
+    "sha256": "31d2d648bf5531bdaf0851b19ce6bec780eb3d427657296e177e7d9856d245b3"
+  },
+  {
+    "file": "after-number-large.png",
+    "bytes": 15834,
+    "sha256": "7f2d1c8ab232546f6d5f00b64dce1365ef6017abb0429519733d2cfcb52d1c60"
+  },
+  {
+    "file": "after-nine-normal.png",
+    "bytes": 28105,
+    "sha256": "1d16b215291badd63b52ee84b8dd093c7711cd980f2ba1fced68236e8406a1bc"
+  },
+  {
+    "file": "after-nine-large.png",
+    "bytes": 26502,
+    "sha256": "3826fbba4b8e7d46ec21f45cb5bfa60044ecfcafcd033c7d90ee1bb12815005a"
+  },
+  {
+    "file": "after-password-normal.png",
+    "bytes": 21817,
+    "sha256": "fa61ed009f4d007ccd830779cd754dc59397dfabb70891a4de586299c96440a2"
+  },
+  {
+    "file": "after-password-large.png",
+    "bytes": 22191,
+    "sha256": "29fc55eb736aceb675c9e28acfb15923e8c53292877526815109a7a7b58f2bd6"
+  }
+]

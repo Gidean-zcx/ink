@@ -5,6 +5,7 @@
 #include "../system/boot/main.c"
 #undef ink_main
 #include "integration/whole_product.h"
+#include "keyboard_matrix.h"
 
 static ink_ui_field_spec_t spec = {.id = "query", .role = "textbox", .label = "搜索", .object = {"example:query", 1}};
 static const ink_ui_action_spec_t action = {
@@ -92,12 +93,11 @@ static lv_point_t key_point;
 static bool key_visible;
 static void locate_key(void) {
     lv_obj_update_layout(lv_layer_sys());
-    lv_obj_t *label = find_label(lv_layer_sys(), key_label);
-    key_visible = label && lv_obj_is_visible(label);
+    lv_area_t button, keyboard;
+    key_visible = ink_test_matrix_key(lv_layer_sys(), key_label, &button);
     CHECK(key_visible, "the visible keyboard has the requested key: %s", key_label);
     if (!key_visible) return;
-    lv_area_t button, keyboard;
-    lv_obj_get_coords(lv_obj_get_parent(label), &button); ink_shell_keyboard_area(&keyboard);
+    ink_shell_keyboard_area(&keyboard);
     CHECK(button.x1 >= keyboard.x1 && button.x2 <= keyboard.x2 && button.y1 >= keyboard.y1 && button.y2 <= keyboard.y2,
           "the actual key is inside the fixed keyboard: %s", key_label);
     key_point = (lv_point_t){(button.x1 + button.x2) / 2, (button.y1 + button.y2) / 2};
@@ -137,15 +137,15 @@ static void inspect_focus(void) {
           "snapshot geometry matches LVGL and surrounding content stays in place");
     CHECK(lv_obj_has_state(field, LV_STATE_FOCUSED) && lv_obj_get_style_outline_width(field, 0) == ink_ui_px(INK_STROKE),
           "the real focused field has a visible black outline using the standard stroke");
-    lv_obj_t *space = find_label(lv_layer_sys(), "空格");
+    lv_obj_t *space = ink_test_matrix(lv_layer_sys());
     CHECK(space != NULL, "the real system keyboard has a space key");
     if (space) {
         lv_obj_t *root = space;
-        for (int i = 0; i < 4; i++) root = lv_obj_get_parent(root);
+        for (int i = 0; i < 2; i++) root = lv_obj_get_parent(root);
         lv_obj_get_coords(root, &actual); ink_shell_keyboard_area(&other);
         CHECK(same_area(&actual, &other) && actual.y1 == keyboard_y,
-              "keyboard actual=%d,%d,%d,%d declared=%d,%d,%d,%d snapshot-y=%lld", actual.x1, actual.y1, actual.x2, actual.y2,
-              other.x1, other.y1, other.x2, other.y2, (long long)keyboard_y);
+              "keyboard actual=%d,%d,%d,%d declared=%d,%d,%d,%d snapshot-y=%lld", (int)actual.x1, (int)actual.y1, (int)actual.x2, (int)actual.y2,
+              (int)other.x1, (int)other.y1, (int)other.x2, (int)other.y2, (long long)keyboard_y);
         if (!fixed_keyboard.y2) fixed_keyboard = actual;
         CHECK(same_area(&actual, &fixed_keyboard), "keyboard position stays fixed across input and mode changes");
     }
@@ -188,7 +188,7 @@ static void inspect_long_url(void) {
     lv_obj_get_content_coords(field, &content); lv_obj_get_coords(label, &area);
     int width = lv_font_get_glyph_width(lv_obj_get_style_text_font(label, 0), '|', 0);
     CHECK(area.x1 + point.x >= content.x1 && area.x1 + point.x + width <= content.x2 + 1,
-          "the complete caret at x=%d fits the visible field %d..%d", area.x1 + point.x, content.x1, content.x2);
+          "the complete caret at x=%d fits the visible field %d..%d", (int)(area.x1 + point.x), (int)content.x1, (int)content.x2);
 }
 static void handoff(void) {
     char before[128]; snprintf(before, sizeof before, "%s", ink_textfield_text(field));

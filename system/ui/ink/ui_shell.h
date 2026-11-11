@@ -53,6 +53,8 @@ void ink_shell_ai_closed(void);
 void ink_shell_ai_status(const char *status, ink_ai_error_t error);
 void ink_shell_ai_words(const char *text);
 bool ink_shell_ai_hide(void);
+/** The AI panel's root on the system layer, or NULL: the keyboard keeps itself above it while a field is focused. */
+lv_obj_t *ink_shell_ai_panel_root(void);
 void ink_shell_ai_reveal(void);
 void ink_ai_tap(void);
 int ink_shell_ai_snapshot(char *buf, size_t cap);

@@ -1,0 +1,143 @@
+{
+  "keyboard": {
+    "case": "current",
+    "exit": 0,
+    "passes": 2178,
+    "failures": 0,
+    "frames": 18,
+    "expected_result": true,
+    "query_us": [
+      [
+        1.0,
+        0.12,
+        2.0,
+        520.38,
+        599.0
+      ],
+      [
+        2.0,
+        0.22,
+        1.0,
+        317.07,
+        378.0
+      ],
+      [
+        3.0,
+        0.35,
+        1.0,
+        242.97,
+        285.0
+      ],
+      [
+        4.0,
+        0.4,
+        1.0,
+        245.65,
+        296.0
+      ],
+      [
+        5.0,
+        0.53,
+        1.0,
+        246.84,
+        286.0
+      ],
+      [
+        6.0,
+        0.66,
+        1.0,
+        253.93,
+        302.0
+      ]
+    ]
+  },
+  "restart": {
+    "case": "verify",
+    "exit": 0,
+    "passes": 10,
+    "failures": 0,
+    "frames": 0,
+    "expected_result": true,
+    "query_us": []
+  },
+  "reverse": [
+    {
+      "case": "no-nine-matching",
+      "exit": 1,
+      "passes": 2167,
+      "failures": 3,
+      "frames": 18,
+      "expected_result": true
+    },
+    {
+      "case": "english-pinyin",
+      "exit": 1,
+      "passes": 2165,
+      "failures": 5,
+      "frames": 18,
+      "expected_result": true
+    },
+    {
+      "case": "lost-composing",
+      "exit": 1,
+      "passes": 2176,
+      "failures": 2,
+      "frames": 18,
+      "expected_result": true
+    },
+    {
+      "case": "same-punctuation",
+      "exit": 1,
+      "passes": 2176,
+      "failures": 2,
+      "frames": 18,
+      "expected_result": true
+    }
+  ],
+  "full_ctest": {
+    "passed": 383,
+    "failed": 5,
+    "skipped": 3,
+    "total": 391,
+    "summary": "99% tests passed, 5 tests failed out of 391",
+    "failed_tests": [
+      "i18n-shell-remaining",
+      "i18n-extras",
+      "i18n-literals",
+      "capability-table-doc",
+      "integration-dictation"
+    ]
+  },
+  "s31_host": {
+    "total": 51,
+    "failed": 0
+  },
+  "asan_ubsan": {
+    "total": 8,
+    "passed": 7,
+    "failed": [
+      "integration-dictation"
+    ],
+    "memory_diagnostics": 0,
+    "leak_detection": false
+  },
+  "gcccheck": {
+    "compiled": 12,
+    "findings": 0
+  },
+  "product_sha256": {
+    "system/ui/shell/keyboard.c": "340e7218f200a7f90492fc49dd032827218c3f8143affd30c62a0859575e2b06",
+    "system/services/text/pinyin.c": "18b555b3abeae82179bdbead76f72870c1113d0b5ebdf5908eedb0d78cd4cf83",
+    "system/services/text/text_service.c": "2ebf55aa1484903fd78f771f47a694fedf0610a610a66eed6e467ddc845b287a",
+    "system/services/text/text_internal.h": "0c5978250cef0b3d73b100fcad6e6a547205479747746c1ae6bbb0fb347bc0db",
+    "system/ui/ink/ui_theme.h": "2b07630bc26d15feb55171ea561070581c5633349460f2a3f51cbf6110171544",
+    "system/ui/lv_conf.h": "ff3181f802465e37063a60bdd33499ac32c763b1ecb9b6b5d5bc2dd9f6034340"
+  },
+  "s31_firmware": {
+    "exit": 0,
+    "compiler_diagnostics": 0,
+    "source_commit": "85b61173",
+    "keyboard_symbol": true,
+    "lv_ime_pinyin_symbol": false
+  }
+}

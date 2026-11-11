@@ -111,6 +111,7 @@ void ink_shell_ai_words(const char *text) {
     audio_changed(NULL, 0, NULL);
 }
 
+lv_obj_t *ink_shell_ai_panel_root(void) { return A.root; }
 bool ink_shell_ai_hide(void) {
     if (!A.root || A.hidden) return false;
     ink_ui_hint_obj(A.root, INK_REFRESH_FLASH_UI);
