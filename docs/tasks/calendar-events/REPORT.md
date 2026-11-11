@@ -42,3 +42,7 @@
 
 - 【实测】工作区开工干净，HEAD 与指定基线一致；已读总规则、任务书及相关项目资料。
 - 构建与测试用 `taskpolicy -c utility`，并行上限 2。环境变量使用任务指定目录，不把本机绝对路径写入提交。
+- 【实测】首轮定向通过：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/calendar_events/run.py --build build`，创建 159 项、重启 31 项检查，均零失败。证据：`build/test-out/calendar-events-a0d1bxfw/`；日志：`work/calendar-events/target-test.log`。
+- 【实现】既有记录尾部扩展静默、全天、时长字段；旧长度记录按默认响铃读取。静默日程不进入排程唤醒或通知路径，开始后保留；有时长的已响提醒也保留供跨天查询。没有新增存储集合或后台任务。
+- 【实现】`calendar.list` 使用本地日期的左闭右开范围，列出重叠日程和提醒并展开重复；结果超过原 4 KiB 缓冲时报错，请求缩小范围。`reminder.add/update` 接受 `ring`、`all_day`、`end`；未传的新提醒默认响铃，更新未传的新字段保留，空结束字符串清除时长。
+- 【实测】初次 gcccheck 原话 `gcccheck: 5 compiled, 0 with findings`；ui-scale 原话 `ui-scale: 51 files, 0 violations`。最终检查和反向对照待补齐。

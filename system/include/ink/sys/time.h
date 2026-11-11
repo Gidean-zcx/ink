@@ -89,6 +89,8 @@ typedef struct {
     int64_t snooze_until;
     char owner[16];        /* whose it is; it rings whoever is using the device */
     char title[48];
+    bool silent, all_day;  /* zero keeps legacy reminders audible */
+    int64_t duration_s;    /* exclusive end, relative to each occurrence; 0 = a point */
 } ink_alarm_t;
 
 /** Add: fills id and next_s. > 0 the id, < 0 refused (table full, not valid). */
@@ -107,7 +109,7 @@ int ink_alarm_dismiss(uint32_t id);
 /** Ring again in `minutes` (0: 9). */
 int ink_alarm_snooze(uint32_t id, int minutes);
 
-/** Read-only projection of an enabled schedule at or after from_s; one-shots use their saved next time. */
+/** First enabled occurrence overlapping or following from_s; ends are exclusive. */
 int64_t ink_alarm_occurrence(const ink_alarm_t *alarm, int64_t from_s);
 
 #ifdef __cplusplus

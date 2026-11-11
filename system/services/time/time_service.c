@@ -293,6 +293,8 @@ static int64_t rule_next(const ink_alarm_t *a, int64_t now) {
 }
 
 static int64_t next_of(const ink_alarm_t *a, int64_t now) {
+    if (a->silent && a->repeat == INK_REPEAT_NONE)
+        return a->at_utc ? a->at_utc : at_local(a->year, a->month, a->day, a->hour, a->min);
     int64_t s = rule_next(a, now);
     if (a->snooze_until > now && (!s || a->snooze_until < s)) return a->snooze_until;
     return s;
@@ -318,7 +320,7 @@ static void reschedule(void) {
     int64_t next = 0;
     ink_svc_lock();
     for (int i = 0; i < T.n; i++)
-        if (T.a[i].enabled && T.a[i].next_s && (!next || T.a[i].next_s < next)) next = T.a[i].next_s;
+        if (T.a[i].enabled && !T.a[i].silent && T.a[i].next_s && (!next || T.a[i].next_s < next)) next = T.a[i].next_s;
     bool rtc_changed = T.rtc_next_s != next;
     T.rtc_next_s = next;
     ink_svc_unlock();
@@ -442,7 +444,7 @@ static void due_cb(void *arg) { /* timer task */
     ink_svc_lock();
     for (int i = T.n - 1; i >= 0 && n < MAX_FIRE_BATCH; i--) {
         ink_alarm_t *a = &T.a[i];
-        if (!a->enabled || !a->next_s || a->next_s > now) continue;
+        if (!a->enabled || a->silent || !a->next_s || a->next_s > now) continue;
         late[n] = now - a->next_s > LATE_OK_S;
         ink_probe_value(a->kind == INK_ALARM ? "time.alarm_late_ms" : "time.reminder_late_ms", (double)(osal_wall_us() - a->next_s * 1000000) / 1000.0);
         if (!late[n] && a->kind == INK_ALARM) ring_add(a->id, now_us);
@@ -450,10 +452,10 @@ static void due_cb(void *arg) { /* timer task */
         a->next_s = a->repeat == INK_REPEAT_NONE ? 0 : rule_next(a, now);
         if (!a->next_s && a->kind == INK_ALARM) a->enabled = false; /* a single alarm stays in the list, off */
         alarm_changed(i);
-        saved[n] = a->kind == INK_ALARM || a->next_s; /* a single reminder is over */
+        saved[n] = a->kind == INK_ALARM || a->next_s || a->duration_s;
         fired[n] = *a;
         n++;
-        if (!a->next_s && a->kind == INK_REMINDER) remove_at(i);
+        if (!a->next_s && a->kind == INK_REMINDER && !a->duration_s) remove_at(i);
     }
     ink_svc_unlock();
     for (int i = 0; i < n; i++) {
@@ -707,7 +709,7 @@ int ink_time_forget_member(const char *member, int64_t timeout_us) {
     ink_alarm_t alarm;
     int more;
     while ((more = ink_db_next(T.db, &cursor, &rec, &alarm, sizeof alarm)) == 1) {
-        if (rec.len != sizeof alarm) { ok = false; break; }
+        if (rec.len != sizeof alarm && rec.len != offsetof(ink_alarm_t, silent)) { ok = false; break; }
         if (strcmp(alarm.owner, member)) continue;
         if (ink_db_del(T.db, rec.id, INK_SRC_SYSTEM) != INK_DB_OK) { ok = false; break; }
         ink_svc_lock();
@@ -832,8 +834,9 @@ static void load_alarms(void) {
     ink_rec_t r;
     while (T.n < MAX_ALARMS) {
         ink_alarm_t *a = &T.a[T.n];
+        memset(a, 0, sizeof *a);
         if (ink_db_next(T.db, &cur, &r, a, sizeof *a) != 1) break;
-        if (r.len != sizeof *a || a->id != r.id) { /* another version's: not guessed at */
+        if ((r.len != sizeof *a && r.len != offsetof(ink_alarm_t, silent)) || a->id != r.id) {
             ink_probe_count("time.alarm_record_skipped");
             continue;
         }
@@ -883,6 +886,11 @@ int ink_time_init(void) {
 
 int64_t ink_alarm_occurrence(const ink_alarm_t *alarm, int64_t from_s) {
     if (!alarm->enabled) return 0;
-    if (alarm->repeat == INK_REPEAT_NONE) return alarm->next_s >= from_s ? alarm->next_s : 0;
-    return next_of(alarm, from_s - 1);
+    int64_t earliest = from_s - (alarm->duration_s > 0 ? alarm->duration_s - 1 : 0);
+    if (alarm->repeat == INK_REPEAT_NONE) {
+        int64_t at = alarm->next_s;
+        if (!at && alarm->duration_s) at = alarm->at_utc ? alarm->at_utc : at_local(alarm->year, alarm->month, alarm->day, alarm->hour, alarm->min);
+        return at >= earliest ? at : 0;
+    }
+    return next_of(alarm, earliest - 1);
 }

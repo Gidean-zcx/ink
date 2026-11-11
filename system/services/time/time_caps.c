@@ -178,6 +178,23 @@ static void cap_reminder_add(ink_call_t *c) {
         return;
     }
     a.repeat = INK_REPEAT_NONE; a.weekdays = 0; a.at_utc = 0; a.enabled = true; a.src = (uint8_t)c->src;
+    bool ring = !a.silent;
+    ink_args_get_bool(&c->args, "ring", &ring); a.silent = !ring;
+    bool was_all_day = a.all_day;
+    ink_args_get_bool(&c->args, "all_day", &a.all_day);
+    if (a.all_day && !was_all_day) a.duration_s = 0;
+    if (a.all_day) a.hour = a.min = 0;
+    ink_tm_t start = {.year = a.year, .month = a.month, .day = a.day, .hour = a.hour, .min = a.min};
+    char end[32] = "";
+    if (ink_args_get_str(&c->args, "end", end, sizeof end) >= 0) {
+        ink_alarm_t finish = {0};
+        if (end[0] && !parse_at(end, &finish)) { fail(c, INK_RC_INVALID, "end: YYYY-MM-DD HH:MM"); return; }
+        ink_tm_t stop = {.year = finish.year, .month = finish.month, .day = finish.day, .hour = finish.hour, .min = finish.min};
+        if (a.all_day) stop.hour = stop.min = 0;
+        a.duration_s = end[0] ? ink_time_from_local(&stop) - ink_time_from_local(&start) : 0;
+        if (end[0] && a.duration_s <= 0) { fail(c, INK_RC_INVALID, "end must follow at (exclusive)"); return; }
+    }
+    if (a.all_day && !a.duration_s) { start.day++; a.duration_s = ink_time_from_local(&start) - ink_time_from_local(&(ink_tm_t){.year = a.year, .month = a.month, .day = a.day}); }
     if (!strcmp(repeat, "monthly")) a.repeat = INK_REPEAT_MONTHLY;
     else if (!strcmp(repeat, "yearly")) a.repeat = INK_REPEAT_YEARLY;
     else if (!strcmp(repeat, "lunar_yearly")) {
@@ -224,6 +241,20 @@ static void cap_alarm_update(ink_call_t *c) {
 
 static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
     const char *member = ink_cap_call_member(c);
+    bool ranged = !strcmp(c->cap->id, "calendar.list");
+    int64_t from = 0, until = 0;
+    if (ranged) {
+        const char *keys[] = {"from", "until"};
+        int64_t *bounds[] = {&from, &until};
+        for (int i = 0; i < 2; i++) {
+            char date[16] = "", at[32]; ink_alarm_t a = {0};
+            ink_args_get_str(&c->args, keys[i], date, sizeof date);
+            snprintf(at, sizeof at, "%.10s 00:00", date);
+            if (strlen(date) != 10 || !parse_at(at, &a)) { fail(c, INK_RC_INVALID, "range: YYYY-MM-DD"); return; }
+            *bounds[i] = ink_time_from_local(&(ink_tm_t){.year = a.year, .month = a.month, .day = a.day});
+        }
+        if (until <= from) { fail(c, INK_RC_INVALID, "until must follow from (exclusive)"); return; }
+    }
     char *out = osal_malloc(4096, OSAL_MEM_EXTERNAL);
     ink_alarm_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (!out || !a) {
@@ -239,8 +270,11 @@ static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
     bool first = true;
     int got;
     while ((got = ink_time_alarm_next_for(&cursor, kind, a, member)) == 1) {
+      int64_t at = ranged ? ink_alarm_occurrence(a, from) : a->next_s;
+      do {
+        if (ranged && (!at || at >= until)) break;
         char next[24] = "";
-        if (a->next_s) local_text(a->next_s, next, sizeof next);
+        if (at) local_text(at, next, sizeof next);
         size_t before = w.len;
         ink_jw_raw(&w, first ? "{\"id\":" : ",{\"id\":");
         ink_jw_int(&w, a->id);
@@ -252,17 +286,31 @@ static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
         ink_jw_str(&w, next);
         ink_jw_raw(&w, ",\"repeat\":");
         ink_jw_int(&w, a->repeat);
+        if (kind == INK_REMINDER) {
+            char end[24] = "";
+            if (at && a->duration_s) local_text(at + a->duration_s, end, sizeof end);
+            ink_jw_raw(&w, ",\"at\":"); ink_jw_str(&w, next);
+            ink_jw_raw(&w, ",\"end\":"); ink_jw_str(&w, end);
+            ink_jw_raw(&w, a->silent ? ",\"ring\":false" : ",\"ring\":true");
+            ink_jw_raw(&w, a->all_day ? ",\"all_day\":true" : ",\"all_day\":false");
+        }
         ink_jw_raw(&w, "}");
         if (w.overflow) {
+            if (ranged) { fail(c, INK_RC_FAILED, "too many occurrences; narrow the range"); goto done; }
             w.overflow = false;
             w.len = before;
             break;
         }
         first = false;
+        if (!ranged) break;
+        at = ink_alarm_occurrence(a, at + (a->duration_s > 0 ? a->duration_s : 1));
+      } while (at && at < until);
     }
     ink_jw_raw(&w, "]");
     if (got < 0) c->rc.status = INK_RC_STALE;
+    else if (w.overflow) fail(c, INK_RC_FAILED, "too many occurrences; narrow the range");
     else ink_cap_result(c, out);
+done:
     osal_free(out);
     osal_free(a);
 }
@@ -296,7 +344,7 @@ static void cap_snooze(ink_call_t *c) {
 }
 
 #define ID_ARG "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}"
-#define REMINDER_FIELDS "\"at\":{\"type\":\"string\",\"maxLength\":20},\"title\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":15},\"repeat\":{\"type\":\"string\",\"enum\":[\"none\",\"daily\",\"weekly\",\"workdays\",\"monthly\",\"yearly\",\"lunar_yearly\"]}"
+#define REMINDER_FIELDS "\"at\":{\"type\":\"string\",\"maxLength\":20},\"title\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":15},\"repeat\":{\"type\":\"string\",\"enum\":[\"none\",\"daily\",\"weekly\",\"workdays\",\"monthly\",\"yearly\",\"lunar_yearly\"]},\"ring\":{\"type\":\"boolean\"},\"all_day\":{\"type\":\"boolean\"},\"end\":{\"type\":\"string\",\"maxLength\":20}"
 
 static const ink_cap_t TIME_CAPS[] = {
     {.id = "time.now", .title = "现在几点（含时区和农历）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_now},
@@ -346,15 +394,18 @@ static const ink_cap_t TIME_CAPS[] = {
      .exec = INK_EXEC_DIRECT,
      .run = cap_snooze},
     {.id = "reminder.add", .app = "clock",
-     .title = "加提醒（at 本地时间 YYYY-MM-DD HH:MM；repeat: none daily weekly workdays monthly yearly lunar_yearly）",
+     .title = "加提醒或日程（at/end 本地时间 YYYY-MM-DD HH:MM；ring 默认 true，false 为日程；all_day 全天，end 不含；repeat: none daily weekly workdays monthly yearly lunar_yearly）",
      .input = "{\"type\":\"object\",\"properties\":{" REMINDER_FIELDS "},\"required\":[\"at\",\"title\"]}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true,
      .exec = INK_EXEC_DIRECT,
      .run = cap_reminder_add},
-    {.id = "reminder.update", .app = "clock", .title = "修改我的提醒（内容、时间和重复）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_reminder_add,
+    {.id = "reminder.update", .app = "clock", .title = "修改我的提醒或日程（ring/all_day/end 可选；end 空串清除，不传则保留时长）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_reminder_add,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}," REMINDER_FIELDS "},\"required\":[\"id\",\"at\",\"title\",\"repeat\"]}"},
     {.id = "reminder.list", .app = "clock", .title = "我的提醒", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_reminder_list},
+    {.id = "calendar.list", .app = "upcoming", .title = "按本地日期列出我的日程和提醒（from 含当天，until 不含当天；日程 ring=false；end 为结束时间，不含）", .output = "{\"type\":\"array\"}",
+     .input = "{\"type\":\"object\",\"properties\":{\"from\":{\"type\":\"string\",\"maxLength\":10},\"until\":{\"type\":\"string\",\"maxLength\":10}},\"required\":[\"from\",\"until\"]}",
+     .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_reminder_list},
     {.id = "reminder.cancel", .app = "clock", .title = "删提醒", .input = ID_ARG, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_cancel},
     {.id = "alarm.fired", .app = "clock", .title = "闹钟响了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "alarm.ended", .app = "clock", .title = "闹钟停了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
