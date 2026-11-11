@@ -23,7 +23,8 @@ static scan_t *result;
 static lv_obj_t *scan_root;
 static int scanning;
 static int scan_page, scan_pages;
-static char scan_text[301], url_json[640];
+static char scan_text[301] INK_PSRAM_BSS;
+static char url_json[640] INK_PSRAM_BSS;
 static const ink_activity_t SCAN;
 static void discard(scan_t *p) { if (p) { memset(p, 0, sizeof *p); osal_free(p); } }
 /* Escaped delimiters in MECARD/WIFI and newline-separated vCard fields. */

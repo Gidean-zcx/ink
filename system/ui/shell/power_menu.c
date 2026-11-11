@@ -124,7 +124,13 @@ static void open_job(void *arg) { /* UI task */
     lv_obj_set_height(M.card.panel, ink_ui_px(h + INK_RADIUS_PANEL));
     power_tile(TR("关机"), "power", 0, "system.shutdown", true);
     power_tile(TR("重启"), "update", 1, "system.reboot", false);
-    power_tile(TR("锁屏"), "lock", 2, "shell.lock", false);
+    lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * cell + (cell - INK_CIRCLE_APP) / 2, INK_MARGIN,
+                                   INK_CIRCLE_APP, INK_ICON_APP, INK_SURFACE_WHITE, on_button, "shell.lock");
+    lv_obj_add_event_cb(lock, pressed, LV_EVENT_PRESSED, NULL);
+    ink_shell_bind(lock, "shell.lock", NULL);
+    lv_obj_t *word = ink_ui_label(M.card.panel, TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + 2 * cell,
+                                  INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M, cell);
+    lv_obj_set_style_text_align(word, LV_TEXT_ALIGN_CENTER, 0);
     ink_ui_label(M.card.panel, TR("帮助排查"), INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, diagnostics, INK_CANVAS_W - 2 * INK_MARGIN);
     const char *labels[] = {TR("记录问题"), TR("导出日志")};
     const char *caps[] = {"system.report_problem", "system.export_logs"};
