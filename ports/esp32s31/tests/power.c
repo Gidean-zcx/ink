@@ -21,7 +21,7 @@ static uint32_t sources, resumed_cause;
 #define RTC_IDLE_P1 ((uint8_t)(MB_RTC_INT_ACTIVE_HIGH ? (uint8_t)~MB_P1_RTC_INT : 0xFF))
 #define RTC_PENDING_P1 ((uint8_t)(MB_RTC_INT_ACTIVE_HIGH ? 0xFF : (uint8_t)~MB_P1_RTC_INT))
 static uint8_t pre_p1, wake_p1, port0;
-static bool paused, suspended, slept, motion, haptic, low, watch, keep, cancel_sleep, late_busy, resumed_keys;
+static bool paused, suspended, slept, motion, haptic, low, watch, keep, cancel_sleep, late_busy, resumed_keys, cell_busy;
 static bool low_after_arm, low_after_cut, wake_armed, rails_cut, usb_connected;
 static int mask_fail, cut_fail, keys_fail, rails_fail, sleep_rc, restarts, offs, mhz;
 static uint64_t usb_off_at;
@@ -42,6 +42,7 @@ static void reset(void) {
     pre_p1 = wake_p1 = RTC_IDLE_P1;
     port0 = 0;
     paused = suspended = slept = motion = haptic = low = watch = keep = cancel_sleep = late_busy = resumed_keys = false;
+    cell_busy = false;
     mask_fail = cut_fail = keys_fail = rails_fail = sleep_rc = pending = resume_calls = 0;
     low_after_arm = low_after_cut = wake_armed = rails_cut = false;
     usb_connected = true;
@@ -234,6 +235,7 @@ int main(void) {
     assert(pos('d') < pos('p') && pos('p') < pos('a') && pos('a') < pos('m') && pos('m') < pos('w'));
     assert(pos('m') < pos('g') && pos('g') < pos('U') && pos('U') < pos('N') && pos('N') < pos('w'));
     assert(pos('w') < pos('x') && pos('x') < pos('h') && pos('h') < pos('s'));
+    assert(pos('C') < pos('x') && pos('r') < pos('R') && pos('R') < pos('i'));
     assert(pos('c') < pos('k') && pos('v') < pos('k') && pos('k') < pos('r') && pos('r') < pos('i'));
     assert(!paused && !suspended && resume_calls == 1 && !armed_low && !armed_high && !timer_us);
     assert(pos('r') < pos('b') && pos('b') < pos('-') && pos('-') < pos('D') && pos('D') < pos('+') && pos('+') < pos('i'));
@@ -317,11 +319,15 @@ int main(void) {
     assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && !resumed_keys && resume_calls == 1);
 
     reset();
+    cell_busy = true;
+    assert(hal_power_sleep(&cfg) == 0 && !slept && !strchr(trace, 'x') && !strchr(trace, 'R'));
+    reset();
     cfg.keep_modem = true;
     cfg.wake_mask = HAL_WAKE_AI_KEY | HAL_WAKE_MODEM;
     sources = 1u << ESP_SLEEP_WAKEUP_GPIO;
     wake_pins = 1ull << S31_GPIO_MODEM_SRDY;
     assert(hal_power_sleep(&cfg) == HAL_WAKE_MODEM && keep);
+    assert(!strchr(trace, 'C') && !strchr(trace, 'R'));
     assert(saved_high == (1ull << S31_GPIO_MODEM_SRDY) && !saved_low);
     reset();
     cfg.wake_mask = HAL_WAKE_AI_KEY;
@@ -337,5 +343,5 @@ int main(void) {
     return 0;
 }
 
-bool ink_s31_cell_suspend(void) { return true; }
-void ink_s31_cell_resume(void) { }
+bool ink_s31_cell_suspend(void) { mark('C'); return !cell_busy; }
+void ink_s31_cell_resume(void) { mark('R'); }

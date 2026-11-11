@@ -229,6 +229,8 @@ int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms
     if (!ssid || !*ssid || strlen(ssid) > 32 || !password || strlen(password) > 64 || !ink_pause(timeout_ms, true)) return HAL_WIFI_ERR_TIMEOUT;
     hal_wifi_known_t k = {0};
     memcpy(k.ssid, ssid, strlen(ssid)); memcpy(k.password, password, strlen(password));
+    ink_s31_cell_use(false);
+    ESP_ERROR_CHECK(esp_netif_set_default_netif(ink_wifi.netif));
     INK_LOCK(); ink_wifi.mode = INK_JOIN; ink_wifi.link.type = HAL_LINK_WIFI;
     xEventGroupClearBits(ink_wifi.events, INK_JOIN_BIT);
     ink_join(&k); memset(&k, 0, sizeof k);

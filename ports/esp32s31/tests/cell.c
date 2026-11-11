@@ -24,7 +24,7 @@ static size_t rx_head, rx_tail, split = 256;
 static int mrdy = 1, srdy = 1;
 static bool pumping, no_wake, no_ack, no_response, prompt, missing, unregistered, corrupt_rx;
 static unsigned writes, bad_headers, handshakes, receives, acks, changed, data_tx, radio_commands;
-static bool net_started;
+static bool net_started, drop_rx;
 static int csq = 23;
 static esp_netif_t netif;
 static esp_netif_driver_ifconfig_t net_driver;
@@ -140,7 +140,9 @@ void esp_netif_action_start(void *n, esp_event_base_t b, int32_t id, void *p) { 
 void esp_netif_action_connected(void *n, esp_event_base_t b, int32_t id, void *p) { (void)b; (void)id; (void)p; ((esp_netif_t *)n)->connected = true; }
 void esp_netif_action_disconnected(void *n, esp_event_base_t b, int32_t id, void *p) { (void)b; (void)id; (void)p; ((esp_netif_t *)n)->connected = false; }
 esp_err_t esp_netif_receive(esp_netif_t *n, void *data, size_t len, void *ctx) {
-    assert(n == &netif && !ctx && len == sizeof ethernet && !memcmp(data, ethernet, len)); receives++; net_driver.driver_free_rx_buffer(NULL, data); return ESP_OK;
+    assert(n == &netif && !ctx && len == sizeof ethernet && !memcmp(data, ethernet, len));
+    if (!drop_rx) receives++;
+    net_driver.driver_free_rx_buffer(NULL, data); return drop_rx ? ESP_FAIL : ESP_OK;
 }
 esp_err_t esp_event_handler_register(esp_event_base_t b, int32_t id, esp_event_handler_t fn, void *p) { (void)b; (void)id; (void)fn; (void)p; return ESP_OK; }
 static void drain(void) { for (unsigned i = 0; i < 200 && (rx_head < rx_tail || ink_cell.tx->count); i++) tick(); }
@@ -159,7 +161,7 @@ int main(void) {
     assert(hal_cell_apn(&apn) < 0 && hal_cell_select_sim(HAL_CELL_SLOT_INTERNAL, 0) < 0);
     assert(hal_modem_at_payload("AT+CMGS=1", "00\032AT&W", response, sizeof response, 1000) == HAL_AT_ERROR);
     assert(writes == before);
-    assert(hal_cell_dial("10000") == 0 && hal_cell_answer() == 0 && hal_cell_hangup() == 0 && hal_cell_dtmf('5') == 0);
+    assert(hal_cell_dial("00000000000") == 0 && hal_cell_answer() == 0 && hal_cell_hangup() == 0 && hal_cell_dtmf('5') == 0);
     inject(0, ethernet, sizeof ethernet); drain(); assert(!receives && !ink_cell.handshake);
     ink_s31_cell_use(true);
     hal_cell_status_t st;
@@ -173,7 +175,9 @@ int main(void) {
     unsigned ack_before = acks;
     corrupt_rx = true; inject(0, ethernet, sizeof ethernet); corrupt_rx = false; drain(); assert(receives == 1 && acks == ack_before);
     uint64_t in, out; assert(hal_net_lte_bytes(&in, &out) && in == sizeof ethernet && out >= sizeof ethernet);
-    reply("\r\nRING\r\n+CLIP: \"10000\",129\r\nNO CARRIER\r\n"); drain();
+    drop_rx = true; inject(0, ethernet, sizeof ethernet); drain(); drop_rx = false;
+    assert(receives == 1 && hal_net_lte_bytes(&in, &out) && in == sizeof ethernet);
+    reply("\r\nRING\r\n+CLIP: \"00000000000\",129\r\nNO CARRIER\r\n"); drain();
     assert(hal_modem_urc(response, sizeof response, 0) > 0 && !strcmp(response, "RING"));
     assert(hal_modem_urc(response, sizeof response, 0) > 0 && strstr(response, "+CLIP:"));
     assert(hal_modem_urc(response, sizeof response, 0) > 0 && !strcmp(response, "NO CARRIER"));

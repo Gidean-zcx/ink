@@ -50,6 +50,10 @@ static void change_world(bool present, bool covered, int dbm) {
     card = present; coverage = covered; cell_dbm = dbm;
     vtk_event_at(vtk_now() + SIM_MS(1), world, NULL); delay_ms(800);
 }
+static void inspect_readonly(void) {
+    CHECK(ink_ui_snapshot(g_result, sizeof g_result, NULL) > 0 && strstr(g_result, "暂不能更改") &&
+        strstr(g_result, "\"enabled\":false"), "readonly mobile actions and explanation are exposed to AI");
+}
 static bool set(const char *id, int value) {
     char args[96]; snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%d}", id, value);
     return BY_HAND("settings.set", args) && g_rc.status == INK_RC_DONE && ink_setting_get(id) == value;
@@ -71,6 +75,10 @@ static void run(void *arg) {
     CHECK(set("net.airplane", 0), "leave airplane"); delay_ms(1500);
     change_world(false, true, -99); CHECK(WAIT_FOR(state("cell.sim_missing"), 5000), "missing SIM is explicit");
     frame("cell-no-sim", "无卡", 0);
+    ink_state_set_bool(ink_state_find("cell.config_readonly"), true); /* S31 metadata fixture */
+    CHECK(BY_HAND("shell.mobile", NULL) && g_rc.status == INK_RC_DONE, "open readonly mobile page");
+    CHECK(WAIT_FOR(settled(), 10000), "readonly mobile page settles"); on_ui(inspect_readonly);
+    CHECK(BY_HAND("shell.mobile_edit", NULL) && g_rc.status == INK_RC_REJECTED, "AI and buttons cannot enter readonly APN editing");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

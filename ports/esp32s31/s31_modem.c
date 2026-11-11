@@ -153,8 +153,8 @@ static void ink_dispatch(void) {
             CELL_UNLOCK();
             esp_err_t r = esp_netif_receive(netif, copy, n, NULL);
             CELL_LOCK();
-            if (r != ESP_OK) osal_free(copy);
-            else ink_cell.rx_bytes += n;
+            /* ethernetif_input owns the buffer even when it rejects the packet. */
+            if (r == ESP_OK) ink_cell.rx_bytes += n;
         }
     }
     CELL_UNLOCK();
@@ -312,7 +312,10 @@ static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, s
     }
     CELL_LOCK();
     hal_at_result_t result = queued ? ink_cell.result : HAL_AT_ERROR;
-    if (ink_cell.waiting) { ink_cell.desynced = queued; ink_cell.waiting = false; }
+    if (ink_cell.waiting) {
+        ink_cell.desynced = queued; ink_cell.waiting = false;
+        if (queued) ink_link_down();
+    }
     if (out && cap) {
         if (ink_cell.response_n >= cap) result = HAL_AT_ERROR;
         else memcpy(out, ink_cell.response, ink_cell.response_n + 1);
@@ -356,8 +359,9 @@ void ink_s31_cell_netif_init(void) { /* same ETH/DHCP flags as upstream InitIotE
     base.if_key = "INK_NT26"; base.if_desc = "nt26"; base.route_prio = 10;
     esp_netif_driver_ifconfig_t driver = {.transmit = ink_eth_tx, .driver_free_rx_buffer = ink_eth_free};
     esp_netif_config_t cfg = {.base = &base, .driver = &driver, .stack = ESP_NETIF_NETSTACK_DEFAULT_ETH};
-    ink_cell.netif = esp_netif_new(&cfg);
-    if (!ink_cell.netif) return;
+    esp_netif_t *netif = esp_netif_new(&cfg);
+    if (!netif) return;
+    CELL_LOCK(); ink_cell.netif = netif; CELL_UNLOCK();
     uint8_t mac[6]; /* same derivation as upstream .cc:25-26; never logged */
     ESP_ERROR_CHECK(esp_read_mac(mac, ESP_MAC_ETH));
     mac[5] ^= 1;
