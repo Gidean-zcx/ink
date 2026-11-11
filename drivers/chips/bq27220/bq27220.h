@@ -28,7 +28,7 @@ typedef struct {
 } bq27220_reading_t;
 
 hal_i2c_status_t bq27220_read(hal_i2c_dev_t *dev, uint8_t cmd, int *value); /* signed for CURRENT */
-/** Voltage, current and state of charge (three reads). */
+/** Voltage/current and reported percent (S31: vendor voltage curve; raw SOC uses bq27220_read). */
 hal_i2c_status_t bq27220_reading(hal_i2c_dev_t *dev, bq27220_reading_t *out);
 
 #endif

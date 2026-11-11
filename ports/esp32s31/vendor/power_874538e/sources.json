@@ -1,0 +1,46 @@
+[
+  {
+    "path": "LICENSE",
+    "sha256": "0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05"
+  },
+  {
+    "path": "main/boards/common/power/cx25601n.h",
+    "sha256": "6b5f4a44caf0cbf5a5459d49ad99fe598aabb733ecd355c9037194a0113f3412"
+  },
+  {
+    "path": "main/boards/common/power/cx25601n.cc",
+    "sha256": "8af78da4b8e806c406b783a0185f85559f771d5c8196a9cf548a1b89474dee3b"
+  },
+  {
+    "path": "main/boards/common/power/power_i2c.h",
+    "sha256": "1712c125dc9c244848d3919d67bfe8980e103698d39ab8cb92eed8efcc8c5bc7"
+  },
+  {
+    "path": "main/boards/common/power/power_i2c.c",
+    "sha256": "f174f1d9c635ec7799ec9696004fb11e81f17df405c1b2f73e0ec224547d2a29"
+  },
+  {
+    "path": "main/boards/common/power/bq27220_gauge.h",
+    "sha256": "c2b3e5788e523855b3d7fe1237e06e08f2f952014a74a13ec5ad70de9aacaae2"
+  },
+  {
+    "path": "main/boards/common/power/bq27220_gauge.cc",
+    "sha256": "1c36f177d417a3028eeb16a3f501c6689062001b588a1e211d54cf0e1e2cce8a"
+  },
+  {
+    "path": "main/boards/common/sensor/pcf8563.h",
+    "sha256": "803b8b36f7a4e5dd2c35f9bec95a016c8eb5c22afae6f9dbec2ef2e087a9ebf6"
+  },
+  {
+    "path": "main/boards/common/sensor/pcf8563.cc",
+    "sha256": "90dc8b9c33a58de27ff258841e0a7d83da54908e3bf2744dd1f426102ff71e71"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/periph/metalio_rtc.h",
+    "sha256": "37dd69271f01245ec213a402cd161f7df18e1cba30b14fa222295c252d609e05"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/periph/metalio_rtc.cc",
+    "sha256": "0a0837c2fa934509fdf7aa097eabcfe2008d74c234db6607b992d430fdacc5b7"
+  }
+]
