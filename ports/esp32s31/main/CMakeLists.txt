@@ -37,7 +37,9 @@ ink_reader_build(__idf_ink_apps __idf_ink_system __idf_ink_lvgl)
 file(GLOB reader_tables ${root}/assets/i18n/*.tsv)
 ink_reader_translations(reader_tables)
 execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${reader_tables}
-    --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
+    --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
+    --sources ${root}/system/apps/memory/memory.c ${root}/system/apps/snake/snake.c
+    WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 endif()
 # The vendor file manager needs IDF's own components: not in the early expansion pass.
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
