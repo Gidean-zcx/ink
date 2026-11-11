@@ -6,14 +6,17 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| UX08（T16～T25） | 中文专项通过 | 【实测】每档 35 项；不支持叫名字时无可点档位并显示原因；备份行含自动备份当前值；读数失败可重读；放大后清空动作和后果可见；翻页恢复可用状态 | C1 |
+| UX08（T16～T25） | 中文专项通过 | 【实测】每档 39 项；不支持叫名字时无可点档位并显示原因；备份行含自动备份当前值；读数失败可重读；放大后清空动作和后果可见；翻页恢复可用状态 | C1 |
 | UX10（T26～T29） | 中文专项通过 | 【实测】每档 63 项；禁用原因、短标题、单选勾；年、月、日、时、分均直接输入，保留加减和最后保存 | C1 |
 | UX16（S19～S26） | 中文专项通过 | 【实测】每档 36 项；验证对象、4～8 位规则、3×4 键盘右下确认；真正三次错误触发既有冷却并禁用数字及确认，秘密仍掩码 | C1 |
 | UX24（T14～T15） | 中文专项通过 | 【实测】每档 20 项呈现检查；发现、已配对、连接中分组；原有蓝牙测试新增实际点按“忘记”并核对删除配对记录，原长按检查保留 | C1、C3 |
-| 普通与 120% 前后截图、反向对照 | 通过 | 【实测】[74 张图](SCREENSHOTS.md)，最大 35,880 B；基线四组分别触发 5、4、6、4 项失败，两档字号均如此；[结构化结果](EVIDENCE.json) | C1 |
+| 普通与 120% 前后截图、反向对照 | 通过 | 【实测】[74 张图](SCREENSHOTS.md)，最大 35,880 B；基线四组分别触发 6、4、6、4 项失败，两档字号均如此；[结构化结果](EVIDENCE.json) | C1 |
 | 普通全量 ctest（含 ui-scale） | 未全过；修复复测剩 2 项共享收尾 | 【实测】首轮原话 `98% tests passed, 8 tests failed out of 401`，1140.88 秒，3 项中枢跳过；随后 14 项复测 12 过、仅 `i18n-literals` 和 `capability-table-doc` 未过；`ui-scale` 已过 | C2、C3 |
-| 内存检查、S31、gcccheck | 待执行 | 待补 | 待补 |
-| 范围、行数与隐私检查 | 待执行 | 产品代码预算 280 行 | 待补 |
+| ASan/UBSan 专项 | 通过 | 【实测】四组两档共 8 场景，均无失败或 sanitizer 报告 | C4 |
+| ASan/UBSan 全量 | 运行中 | 待补最终输出 | C4 |
+| S31 固件 | 未编 | 仅跑主工程包含的 S31 宿主机单测，未交付目标固件 | C2 |
+| gcccheck | 通过 | 【实测】`gcccheck: 7 compiled, 0 with findings`，无跳过；这是编译检查，未在 Linux 运行测试 | C5 |
+| 范围、行数与隐私检查 | 通过，收尾再核 | 【实测】产品增删共 188 行，预算 280；隐私匹配两处合成地址，无本机绝对路径 | C6 |
 
 ## 没做到的
 
@@ -35,7 +38,7 @@
 
 ## 要用户定的
 
-暂无。
+部分截图状态栏存在既有残留，未定位原因；本任务未修改状态栏或屏幕输出。
 
 ## 顺手发现
 
@@ -56,6 +59,15 @@
 - C1：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/ui_fix_b/run.py --build build --reverse --screenshots docs/tasks/ui-fix-b/screenshots`。
 - C2：按任务书配置与 `cmake --build build -j2` 后，`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。
 - C3：C2 加 `-R '^(ui-scale|i18n-shell|i18n-literals|capability-table-doc|integration-ai-surface|settings-b|storage-usage|file-index-3|time-settings|bluetooth-settings|settings-a|ui-scene-Pin|ui-scene-big-Pin|semantics-shell2-member)$'`。
+- C4：按相同配置换 `build-asan`、只加 `-DINK_SANITIZE=ON`，构建 `-j2`；C1 去掉 `--reverse` 和截图参数并换构建目录，然后按 C2 跑该目录的全量 ctest。
+- C5：`taskpolicy -c utility python3 ../../tools/gcccheck.py build system/ui/shell/settings_pages.c system/ui/shell/time_settings.c system/ui/shell/member_pages.c system/ui/shell/pinpad.c system/ui/shell/bluetooth_page.c tests/settings_a.c tests/bluetooth.c`。
+- C6：`git diff 7bb9386a0330eb6be71301a06579e7f26aad73a2..HEAD --stat`、`--numstat`；隐私扫描匹配绝对路径与六段十六进制地址，结果仅本任务蓝牙夹具的两处合成地址。
 - 专项测试直接编译相应呈现文件，基线对照用临时对象替换，不改工作区、不切历史提交；仅 `--reverse` 需要 Git 历史。没有改共享 CMake 或公共测试。
 - 截图和错误状态用合成输入；蓝牙分组／连接中是呈现夹具，密码等待由三次真实错误密码触发。完整业务由原有时间、蓝牙、成员测试补充。
 - 完整命令输出留在忽略的 `work/ui-fix-b/` 和 `build/ui-fix-b/`，不提交构建产物。
+
+## 为什么不能更小
+
+188 行按新增加删除的口径统计（不含测试、文档）。四组各有独立根因；最大的是时间页，必须补数字输入绑定、草稿范围校验和单选反馈。看过只改提示、保留旧确认位置及只保留长按的方案，都无法满足指定验收。保留已有能力、公共组件、分页和服务算法；没有修改共享主题或增加公共接口。
+
+截图的存储失败在请求处注入确定的错误，避免被晚到成功回执覆盖；存储页每页最多三行，给失败文案及 120% 字号留足空间。初版错误截图已替换，最终图与实际错误状态对应。

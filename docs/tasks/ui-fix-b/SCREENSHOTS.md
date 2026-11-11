@@ -24,4 +24,4 @@
 | time／time-input | [查看](screenshots/time-100-before-time-edit.png) | [查看](screenshots/time-100-after-time-input.png) | [查看](screenshots/time-120-before-time-edit.png) | [查看](screenshots/time-120-after-time-input.png) |
 | time／zones | [查看](screenshots/time-100-before-zones.png) | [查看](screenshots/time-100-after-zones.png) | [查看](screenshots/time-120-before-zones.png) | [查看](screenshots/time-120-after-zones.png) |
 
-共 74 张；最大 35880 B；合计 1791416 B。
+共 74 张；最大 35880 B；合计 1765648 B。

@@ -349,7 +349,7 @@ static void create(lv_obj_t *screen, void *arg) {
     int room = INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - 2 * INK_GAP;
     for (size_t i = 0; i < PAGES[S.page].count; i++) value(i);
     /* Keep the voice controls together; every F4 page must fit the measured text. */
-    for (S.capacity = S.page == VOICE ? 3 : (unsigned)PAGES[S.page].count; S.capacity > 1; S.capacity--) {
+    for (S.capacity = S.page == VOICE || S.page == STORAGE ? 3 : (unsigned)PAGES[S.page].count; S.capacity > 1; S.capacity--) {
         bool fits = true; int y = 0;
         for (size_t i = 0; i < PAGES[S.page].count; i++) {
             if (!(i % S.capacity)) y = 0;

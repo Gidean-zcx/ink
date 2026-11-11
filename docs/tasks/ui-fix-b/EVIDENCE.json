@@ -4,7 +4,7 @@
     "mode": "after",
     "font": "100",
     "exit": 0,
-    "pass": 35,
+    "pass": 39,
     "fail": 0,
     "accepted": true
   },
@@ -13,7 +13,7 @@
     "mode": "after",
     "font": "120",
     "exit": 0,
-    "pass": 35,
+    "pass": 39,
     "fail": 0,
     "accepted": true
   },
@@ -76,8 +76,8 @@
     "mode": "before",
     "font": "100",
     "exit": 1,
-    "pass": 30,
-    "fail": 5,
+    "pass": 33,
+    "fail": 6,
     "accepted": true
   },
   {
@@ -85,8 +85,8 @@
     "mode": "before",
     "font": "120",
     "exit": 1,
-    "pass": 30,
-    "fail": 5,
+    "pass": 33,
+    "fail": 6,
     "accepted": true
   },
   {

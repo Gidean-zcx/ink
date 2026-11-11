@@ -17,6 +17,7 @@ static void test_choices(void) {
 }
 static int test_part;
 static const char *const test_numbers[] = {"2032", "12", "25", "23", "59"};
+_Static_assert(sizeof test_numbers / sizeof *test_numbers == TIME_FIELDS_MAX, "numeric fixtures cover all date parts");
 static void test_numeric(void) {
     CHECK(ink_text_type() == INK_TEXT_NUMBER && ink_text_focused(), "UX10 direct entry uses the existing numeric input");
     ink_text_select(0, 4); ink_text_commit_utf8(test_numbers[test_part]); ink_text_enter();

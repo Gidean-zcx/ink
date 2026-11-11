@@ -2,9 +2,16 @@
 #ifndef INK_TEST_SOURCE
 #define INK_TEST_SOURCE "../../system/ui/shell/settings_pages.c"
 #endif
+static bool test_fail_storage;
+static int test_cap_call(const char *id, const ink_args_t *args, const ink_call_opts_t *opts) {
+    if (test_fail_storage && (!strcmp(id, "file.usage") || !strcmp(id, "file.cleanup_preview"))) return -1;
+    return ink_cap_call(id, args, opts);
+}
+#define ink_cap_call test_cap_call
 #define key test_source_key
 #include INK_TEST_SOURCE
 #undef key
+#undef ink_cap_call
 
 static void test_voice(void) {
     ink_ui_field_spec_t f; ink_ui_action_spec_t a;
@@ -15,10 +22,11 @@ static void test_voice(void) {
     lv_obj_delete(slot);
 }
 static void test_storage_failure(void) {
-    U.generation = S.generation; U.state[0] = U.state[1] = 2; refresh();
     ink_ui_action_spec_t a = {0}; storage_action(2, &a);
     CHECK(a.enabled && a.capability && !strcmp(a.capability, "shell.storage"), "UX08 storage failure offers a read retry");
     value(2); CHECK(strstr(S.values[2], "再试一次"), "UX08 failed storage tells the person how to retry");
+    lv_obj_t *retry = test_label(S.body, S.values[2]);
+    CHECK(test_fits(retry), "UX08 failure and retry text fit at both sizes");
 }
 static void test_backup(void) {
     value(0); CHECK(strstr(S.values[0], "每天"), "UX08 backup row shows the automatic backup value");
@@ -45,7 +53,9 @@ static void test_run(void *arg) {
     CHECK(AI("shell.settings_next", NULL), "turn past disabled voice rows"); test_quiet(); on_ui(test_voice_paging);
     CHECK(AI("settings.set", "{\"id\":\"backup.auto\",\"value\":1}"), "set synthetic backup preference");
     CHECK(AI("shell.storage", NULL), "open storage settings"); test_quiet(); on_ui(test_backup); test_frame("storage");
+    test_fail_storage = true; CHECK(AI("shell.storage", NULL), "open storage with deterministic read failures"); test_quiet();
     on_ui(test_storage_failure); test_frame("storage-error");
+    CHECK(strstr(test_snapshot, "再试一次"), "UX08 captured storage error state stays visible"); test_fail_storage = false;
     CHECK(AI("shell.about", NULL), "open About"); test_quiet(); test_frame("about"); on_ui(test_about); test_frame("about-reset");
     ink_probe_count("test.finished");
 }

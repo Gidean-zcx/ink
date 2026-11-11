@@ -134,6 +134,7 @@ static void create(lv_obj_t *screen, void *arg) {
             P.action[a] = (ink_ui_action_spec_t){.id = P.ids[a], .label = TR(PARTS[i]), .capability = "shell.time_step", .args_json = P.args[a], .enabled = true};
             lv_obj_t *target = ink_ui_box(screen, INK_MARGIN + INK_PRIMARY + INK_GAP_M, y + i * (INK_CONTROL + INK_GAP_M),
                 w - 2 * (INK_PRIMARY + INK_GAP_M), INK_CONTROL, INK_RADIUS_KEY, INK_SURFACE_WHITE, true);
+            lv_obj_set_style_border_side(target, LV_BORDER_SIDE_BOTTOM, 0); lv_obj_set_style_radius(target, 0, 0);
             lv_obj_set_style_bg_opa(target, LV_OPA_TRANSP, 0); ink_shell_bind(target, "shell.time_step", P.args[a]);
         }
         ink_tm_t t = {.year = P.part[0], .month = P.part[1], .day = P.part[2], .hour = P.part[3], .min = P.part[4]};
