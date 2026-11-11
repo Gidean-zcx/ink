@@ -14,6 +14,16 @@
 - `0x1abin/crossmux`（中日韩优化，已支持 Metalio E-Ink 4：微信读书、OPDS、WebDAV、Calibre 无线、OTA、阅读统计和热力图、时钟和老黄历待机、小游戏）
 - 原厂仓库 `CloudZao/Metalio-E-INK4-Plus` 874538e（本机只读副本见 codex-rules 第 10 节；原厂阅读器在 `main/reader`、`main/display/screen/book_screen` 等）和 `CloudZao/Metalio-E-INK4`（E-Ink4 的阅读统计、WorkBuddy 等，公开仓库）
 - LVGL 9.5 自带的 `lv_keyboard` 和 `lv_ime_pinyin`（含九宫格模式；我们的依赖里已有，`lv_conf.h` 没开）
+- 固件仓库页面里所有带源码的仓库（用户：“我给你的固件页中也有大量开源仓库链接 你都可以薅出来看看有什么可以复用的”）：
+  - `CloudZao/Metalio-E-INK4-Plus`、`CloudZao/Metalio-E-INK4`、`CloudZao/MetalioClaw4`（原厂三块板，Gitee 上有同名镜像）
+  - `wegooo-cell/Metalio-S31-kiikoread`（Plus 上的阅读固件，分范围授权：Apache-2.0 的文件可用，个人学习许可的部分不用）、`wegooo-cell/read-pico-reader`、`oouu00/Metalio-S31-kiikoread-xiugai`、`dephia31/dpreader31`（kiikoread 系，分范围授权）
+  - `TaoRone/Metalio-E-Ink4-Plus-TingQuS1`（MIT，微信读书书架和记录、KOReader 同步、局域网剪贴板；其中逆向的部分不用）
+  - `Changkai9888/CloudZao-Projects`（固件口袋协议、亮证、`plus-noto-font`）
+  - `AlayaElla/MetalioClaw4-AgentUI`、`AlayaElla/CodexRemote`（语音遥控电脑上的 AI）
+  - `446599/Metalio-WhiteAI`、`WMnologo/xingzhi-ai`
+  - `andjiang0083/retro-go-tab5`（retro-go 是 GPL-2.0，只记录不复用）
+  - CrossLink 官网 `crosslink-reader.top` 的固件：找它对应的开源仓库（可能就是 `DaisonChun/crosslink` 或其它 CrossPoint 分支），找不到照实写
+  调研报告 `docs/tasks/registry-research-1/REPORT.md` 和 `source-audit.json` 已经核过其中一部分的许可证和固定提交，直接用，不重复。
 - 必要时补充其它成熟开源实现（例如农历库、MP3/FLAC 解码、Game Boy 模拟器 peanut-gb、BLE HID 主机例程），一律先核许可证。
 
 ## 要做的
