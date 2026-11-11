@@ -150,7 +150,7 @@ void ink_ui_surface_style(lv_obj_t *obj, ink_ui_surface_t surface, bool border) 
     lv_obj_set_style_border_width(obj, border || frame ? ink_ui_px(INK_STROKE) : 0, 0);
     lv_obj_set_style_border_post(obj, surface == INK_SURFACE_STATIC, 0);
     /* A new frame must not move the old contents or be covered by its rows. */
-    if (surface == INK_SURFACE_STATIC) lv_obj_set_style_pad_all(obj, frame ? 0 - ink_ui_px(INK_STROKE) : 0, 0);
+    if (surface == INK_SURFACE_STATIC) lv_obj_set_style_pad_all(obj, frame && !border ? 0 - ink_ui_px(INK_STROKE) : 0, 0);
 }
 
 /* 字号 moves all text by one factor; a child reads one step above the middle (docs/product/legibility.md).

@@ -48,7 +48,7 @@ static bool fully_visible(void) {
         lv_obj_get_coords(p, &clip);
         if (a.x1 < clip.x1 || a.x2 > clip.x2 || a.y1 < clip.y1 || a.y2 > clip.y2) {
             CHECK(false, "clipped %s: [%d,%d,%d,%d] outside [%d,%d,%d,%d]", wanted,
-                a.x1, a.y1, a.x2, a.y2, clip.x1, clip.y1, clip.x2, clip.y2);
+                (int)a.x1, (int)a.y1, (int)a.x2, (int)a.y2, (int)clip.x1, (int)clip.y1, (int)clip.x2, (int)clip.y2);
             return false;
         }
     }

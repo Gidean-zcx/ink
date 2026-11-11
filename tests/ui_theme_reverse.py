@@ -39,7 +39,7 @@ mutations = [
      '        lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&\n'
      '        ink_ui_surface_kind(obj) == INK_SURFACE_WHITE)\n'
      '        lv_obj_set_style_border_width(obj, ink_ui_px(INK_STROKE), 0);\n', ''),
-    ('settings-divider', 'shell/settings_pages.c', '            ink_ui_group_divider(bg, 0, w);\n', ''),
+    ('settings-divider', 'shell/settings_pages.c', '            ink_ui_group_divider(bg, 0, w);\n', '            (void)0;\n'),
     ('settings-row-gap', 'shell/settings_pages.c', 'S.y += h + (join_next ? 0 : INK_STROKE);', 'S.y += h + INK_STROKE;'),
 ]
 results = []
