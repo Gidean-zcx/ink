@@ -53,7 +53,7 @@ static void ack(void *arg) {
     snprintf(path, sizeof path, "%s/ack-%u", g_sim.out_dir, sequence); acknowledged = stat(path, &st) == 0;
 }
 static void exchange(const char *name) {
-    CHECK(AI("transfer.status", NULL), "query session for external client");
+    CHECK(BY_HAND("transfer.status", NULL), "human session for external client");
     stage = name; sequence++; acknowledged = false; vtk_host_call(announce, NULL);
     uint64_t end = osal_now_us() + 30000000;
     while (!acknowledged && osal_now_us() < end) { delay_ms(20); vtk_host_call(ack, NULL); }
@@ -122,7 +122,8 @@ static void unavailable_wireless(void) {
 static bool active(void) { return AI("transfer.status", NULL) && strstr(g_result, "\"active\":true"); }
 static bool stopped(void) { return AI("transfer.status", NULL) && strstr(g_result, "\"active\":false"); }
 static void remember_wireless(void) {
-    CHECK(AI("transfer.status", NULL) && g_rc.status == INK_RC_DONE, "read current wireless status");
+    CHECK(AI("transfer.status", NULL) && strstr(g_result, "\"code\":\"000000\""), "AI status hides authorization digits");
+    CHECK(BY_HAND("transfer.status", NULL) && g_rc.status == INK_RC_DONE, "human reads current wireless status");
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t port = 0; char host[64] = "", actual[64] = "";
     CHECK(j && !ink_json_parse(j, g_result, strlen(g_result)), "parse service status");
     if (j) {
