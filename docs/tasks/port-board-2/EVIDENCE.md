@@ -40,13 +40,30 @@ baseline exit=1 warnings=1
 
 【实测】基线对照没有切换本分支：`git show 281dbe71:drivers/chips/<name>/<name>.c` 取 tca9555、ft6336u、sc7a20h 三个在主模拟器实际编入且本次修改的源文件，按 `build/compile_commands.json` 的原命令编译，替换临时 `libink_drivers.a` 中的同名对象，再按 `build/CMakeFiles/sim-races.dir/link.txt` 的原参数链接。其余对象、脚本、资源、预算不动。当前和基线均使用全新 `--out`，两者相同失败；没有修改失败断言、等待时长或通知产品代码。完整基线检出可直接用任务构建命令与 `ctest -R '^integration-races$'` 复核。
 
-三项 skip 原因是所选 Python 缺少 Hub 锁定依赖。已发现 `$INK_DEPS/hub/.venv/bin/python` 可用，补跑结果待补。
+三项 skip 原因是所选 Python 缺少 Hub 锁定依赖。使用已存在的 `$INK_DEPS/hub/.venv/bin/python`，没有安装或升级依赖，补跑如下：
+
+```sh
+cmake -S . -B build -DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python
+cmake --build build -j2
+$INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2 -R '^hub-(contract|json-crosscheck|simulator-e2e)$|^selftest-metalio-plus$|determin'
+```
+
+【实测】`100% tests passed out of 7`，`Total Test time (real) = 58.08 sec`，退出 0。包含自动 fixture `hub-export-caps`、三个 Hub 用例、自检与两个确定性用例。累计 390 个主工程用例通过，仍有 `integration-races` 一个基线驱动也复现的失败；不把补跑称作同轮全量全过。
 
 ## GCC、S31、内存检查
 
 【实测】`ink-codex/tools/gcccheck.py build` 检查三个共享芯片源：`gcccheck: 3 compiled, 0 with findings`。同工具对 `build-s31-host` 中板级、I2C、IRQ 测试翻译单元和 `hal_device_s31.c`：`gcccheck: 4 compiled, 0 with findings`；这些翻译单元实际包含端口板级、输入、总线和启动清理代码。首次发现的加速度计 unused-value 已修正并重跑通过。
 
-S31 完整编译首轮退出 0，编入原厂 `690a023` 屏幕输出层，未使用显示桩；编译器 warning 0，配置阶段有 5 条 SDK 内 Wi-Fi 私有 include 关系提示。最后的按键恢复错误状态改动仍需增量编译确认。
+最终产品源码提交 `31153eab` 的 S31 完整／增量构建退出 0。环境与命令：
+
+```sh
+export INK_UPSTREAM=$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus
+export INK_S31_BUILD=$PWD/build-s31
+export IDF_PY_BUILD_JOBS=2 CMAKE_BUILD_PARALLEL_LEVEL=2
+taskpolicy -c utility bash ports/esp32s31/build.sh
+```
+
+【实测】编入原厂 `690a023` 屏幕输出层，未使用显示桩；编译器 warning 0，配置阶段有 5 条 SDK 内 Wi-Fi 私有 include 关系提示。构建最后输出 `ink-s31.bin binary size 0x428a10 bytes. Smallest app partition is 0x500000 bytes. 0xd75f0 bytes (17%) free.`；输入对象的时间戳晚于最后按键恢复源码变更，最终 ELF／镜像已重新链接。大小／组件／栈报告均由 build.sh 输出，未连接设备。
 
 ```sh
 cmake -S ports/esp32s31/tests -B build-s31-host-asan -DINK_SANITIZE=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON

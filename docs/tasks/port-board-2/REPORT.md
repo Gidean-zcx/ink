@@ -20,8 +20,8 @@
 | 1.6 马达 | 通过【实现／实测】 | 原厂 20 ms PWM、14/18/20 ms 三档与脉冲定时器；放电脉冲先于普通引擎创建 | `ctest --test-dir build-s31-host -R 'vendor-board-(vibe|reset)'` |
 | 1 来源与规模 | 通过【实测】 | 23 份原文 SHA-256 一致；胶水 342/350 行 | `python3 ports/esp32s31/tests/vendor_sources.py --baseline 281dbe71` |
 | 2 宿主机／反向对照 | 通过【实测】 | 普通全量 47/47；18 次撤修均编译 0、断言退出 -6 | `ctest --test-dir build-s31-host --output-on-failure -j2`；`python3 ports/esp32s31/tests/vendor_negative.py --out build-s31-host/reverse` |
-| 2 主工程普通全量 | 未通过【实测】 | 原话 `99% tests passed, 1 tests failed out of 391`；唯一失败 `integration-races`，基线驱动对照同样失败；3 项 Hub 补跑待记录 | `ctest --test-dir build --output-on-failure -j2`；[基线证据](EVIDENCE.md) |
-| 2 S31 编译 | 首轮通过【实测】，最终增量待核 | 完整屏幕输出层编入；编译器 warning 0；最后按键恢复改动需增量核对 | `bash ports/esp32s31/build.sh` |
+| 2 主工程普通全量 | 未通过【实测】 | 原话 `99% tests passed, 1 tests failed out of 391`；唯一失败 `integration-races`，基线驱动对照同样失败；3 项 Hub 已用现有锁定环境补跑通过，连同自检／确定性共 7/7 | `ctest --test-dir build --output-on-failure -j2`；[基线证据](EVIDENCE.md) |
+| 2 S31 编译 | 通过【实测】 | 最终代码 `31153eab` 完整屏幕输出层编入；编译器 warning 0；镜像 `0x428a10`，应用分区剩余 17% | `bash ports/esp32s31/build.sh` |
 | 2 内存／GCC | 通过【实测】 | S31 宿主机 ASan＋UBSan 全量 47/47；gcccheck 两组 3＋4 翻译单元均无发现 | 见 [EVIDENCE.md](EVIDENCE.md) |
 | 3 上机核对清单 | 已写，未上机【实现】 | 下表给出日志和通过条件 | 本次禁止操作设备 |
 
@@ -33,7 +33,7 @@
 
 ## 和设计不一致的
 
-【实现】按任务保留系统策略：不搬原厂前光 NVS／第二套渐变，不搬按键 3 s 自动关机；按键／加速度计任务接既有 input-hal，不另启动原厂任务。C++ 类作 C 单实例与回调绑定；原文和全部适配行已列 SOURCE.md。保留严格 ID／配置失败状态，未照搬加速度计 Configure 失败仍 ready；触摸只取应用就绪读取阶段，未读 ID2、未进入升级。P14 复位仅在消费者启动前调用，不新增运行时复位能力。以上是接口／策略适配，无本次实机偏差证据。
+【实现】按任务保留系统策略：不搬原厂前光 NVS／第二套渐变，不搬按键 3 s 自动关机；按键／加速度计任务接既有 input-hal，不另启动原厂任务。C++ 类作 C 单实例与回调绑定；原文和全部适配行已列 SOURCE.md。保留严格 ID／配置失败状态，未照搬加速度计 Configure 失败仍 ready；触摸只取应用就绪读取阶段，未读 ID2、未进入升级。P14 复位仅在消费者启动前调用，不新增运行时复位能力。共享电源复位失败时通过既有 `osal_panic` 停止本次启动；该安全检查未做真机故障验证。以上接口／策略适配和验证边界均保留给复核者。
 
 ## 改过的已有测试
 
@@ -82,4 +82,8 @@
 
 ## 最终检查
 
-最终增量编译、Hub 补跑和最终隐私／范围检查结果待补；前一里程碑的隐私扫描匹配 0 行，原厂克隆 HEAD 保持 `690a023c66862af103a3187464373ee7c5efcd14`。
+【实测】最终 S31 增量编译退出 0；普通宿主机 47/47、ASan/UBSan 47/47、18 条反向对照、7 项补跑均通过；主工程全量的基线驱动对照失败如实保留。源码只在本任务允许的 70 个文件中，无构建产物、设计稿、设备数据或共享文档修改；`git diff --stat 281dbe71..HEAD` 已核对。
+
+- 隐私：`git diff 281dbe71..HEAD | grep -nE '[/]Users/|[/]private/tmp|[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}'` 匹配 0 行（grep 退出 1）。
+- 文件／链接／来源：本地 Markdown 链接、23 份原文 SHA-256、适配副本在 SOURCE.md 中的哈希均有效。全范围 `git diff --check` 退出 2，仅原厂 `pca9555.h:24` 一条行尾空格；为保持逐字节原文而保留。排除原文副本后该检查退出 0。
+- 原厂克隆 HEAD 保持 `690a023c66862af103a3187464373ee7c5efcd14`。各里程碑已本地提交；未 push、未建 PR、未操作设备。
