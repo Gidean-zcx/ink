@@ -10,6 +10,10 @@
 #include <stdlib.h>
 
 static int style = -1;
+static char control[16];
+static void host_control(void *arg) {
+    (void)arg; const char *p = getenv("INK_LOCK_FACES_CASE"); snprintf(control, sizeof control, "%.15s", p ? p : "");
+}
 static int64_t renderer_setting(const char *id) { return style >= 0 && !strcmp(id, "display.lock_style") ? style : ink_setting_get(id); }
 #define ink_setting_get renderer_setting
 #ifndef INK_TEST_LOCK_SOURCE
@@ -156,10 +160,17 @@ static void run(void *arg) {
           "documented scope gap: live settings still reject new enum values");
     CHECK(AI("settings.set", "{\"id\":\"display.lock_todo\",\"value\":1}") && g_rc.status == INK_RC_DONE, "AI uses the existing settings capability for widget selection");
     date(2026, 11, 11, 8, 30); seed(); CHECK(BY_HAND("shell.lock", NULL), "lock the real device model"); quiet();
+    if (control[0]) {
+        setting("display.lock_todo", 1); setting("display.lock_reading", 1);
+        if (!strcmp(control, "minute")) { style = INK_LOCK_SIMPLE; on_ui(render); on_ui(unchanged); }
+        else if (!strcmp(control, "day")) calendar_dates();
+        else privacy_and_reading();
+        ink_probe_count("test.finished"); return;
+    }
     matrix(); calendar_dates(); privacy_and_reading(); ink_probe_count("test.finished");
 }
 void ink_main(void) {
-    product_main();
+    vtk_host_call(host_control, NULL); product_main();
     osal_task_cfg_t cfg = {.name = "lock-faces-test", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "start lock renderer fixture");
 }

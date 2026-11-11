@@ -1,19 +1,25 @@
 # lock-faces-1 执行报告
 
-基线：`69cc9868a5e6b95c8376293b385308431fef92a0`。2026-11-11；里程碑 1：范围内实现与针对性测试已落地，最终检查进行中。
+基线：`69cc9868a5e6b95c8376293b385308431fef92a0`。2026-11-11～12；范围内实现、截图、普通全量和反向对照已完成检查，ASan/UBSan 进行中。**完整验收未通过。**
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 待验证 | 各表盘、字号、壁纸和组件截图待生成 | 待填 |
-| 2 | 待验证 | 分钟、跨日、农历、隐私、继续阅读与反向对照待运行 | 待填 |
-| 3 | 待验证 | 普通全量、ASan、ui-scale、gcccheck 待运行；S31 按任务书留给合并主会话 | 待填 |
-| 4 | 进行中 | 已读取 CrossMux 固定副本；布局映射和上机清单在收尾时补齐 | 见下文 |
+| 1 | 部分完成【实测】 | [40 张截图](SCREENSHOTS.md)，最大 53,874 字节；新枚举为绘制替身，真实设置入口未接通 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces.py --build build` |
+| 2 | 部分完成【实测】 | 339 条正向断言过；分钟不变、成员隔离、继续读的反向断言均触发；跨日反向未到预期断言；节气和锁屏自动调度未做 | 同上；反向命令见下文 |
+| 3 | 未通过【实测】 | 普通全量 5 失败、3 跳过；其中 S31 独立复跑过，4 项国际化／文档失败仍在；ui-scale、gcccheck 过；ASan 进行中；S31 固件未编 | 见“检查结果” |
+| 4 | 已完成文档【实现】 | 布局出处、宜忌缺口和上机核对清单见下文 | `SOURCE.md`、本报告 |
 
 ## 没做到的
 
 - 宜忌按任务书不显示；CrossMux 按日支循环选词不能作为准确黄历。
+- 新表盘真实设置枚举、设置页入口和锁屏自动分钟／跨日调度：受文件范围限制，未接通，不能当作可交付的完整锁屏功能。
+- 节气：本地历法没有接口；没有把 CrossMux 近似公式包装成与 `lunar.c` 一致的结果。
+- 锁屏句子：已选功能中有这一项，但现有阅读器和公开接口未提供当前成员明确选句的来源；本任务未自建摘录格式或存储。
+- S31 固件编译和真机刷新、残影：按任务书由合并主会话跑，本任务没有碰设备。
+- 新文案的英文翻译与 TR 标记未完成：现有翻译表不在允许修改范围，国际化检查未过；没有绕过检查或另建翻译机制。
+- 跨日反向：三次尝试后仍停在等待新日期，900 秒模拟上限结束时 `test.finished` 未记录、未触发预期跨日断言；按规则停下，不把超时当成断言型对照通过。
 
 ## 和设计不一致的
 
@@ -24,6 +30,8 @@
 - `time_service.c:197–209` 锁屏时取消分钟调度。本任务消费已有 `time.minute`，没有新增定时循环或改电源、睡眠代码；不能承诺锁屏自动走时。
 
 上述三个文件不在允许修改范围；没有通过改写只读元数据或偷偷加循环绕过限制。
+
+新增页面还未符合既有英文接入合同；国际化失败是实际缺口，不能只当文档检查问题。
 
 ## 改过的已有测试
 
@@ -38,6 +46,8 @@
 ## 顺手发现
 
 - 【实现】`lunar.c` 和 `ink/sys/time.h` 没有节气接口。CrossMux 节气是世纪常数近似公式，源码自己注明有一天误差；未混入第二套未经核定的历法。
+- 【实测】普通全量 `unit-s31-cell` 报 ACK 超时并在 `cell.c:16` 断言 `r==HAL_AT_OK` 失败；单独复跑 `100% tests passed out of 1`。该目标未链接本次 UI 文件，未改模组代码；尚未证明整轮为什么失败。
+- 【实现】公用 `WAIT_FOR` 只累计轮次内的 20ms 延迟，未计条件中 `on_ui()` 的等待时间；跨日反向因此未在模拟上限内到达超时断言。本任务未改公用测试辅助。
 
 ## 新增的机制
 
@@ -49,15 +59,27 @@
 
 共享文档由主会话合并时更新；本任务不改：界面规范的表盘枚举和开关、能力文档的设置项说明、锁屏分钟／跨日调度契约。
 
+还需主会话更新 `assets/i18n/en.tsv` 并完成新文案的 TR 接入；`docs/system/capabilities.md` 要按 38 个设置项重新生成（原来 35）。
+
+## 检查结果
+
+- 【实测】普通构建成功；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` 原话：`99% tests passed, 5 tests failed out of 402`；`Total Test time (real) = 1298.31 sec`。失败：`unit-s31-cell`、`i18n-shell-remaining`、`i18n-extras`、`i18n-literals`、`capability-table-doc`。
+- 【实测】3 个跳过：`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`。缺本检出的锁定中枢 Python 环境及其生成消息；没有安装／升级依赖。
+- 【实测】国际化原文：`i18n-literals: 31 unmarked Chinese literals`；另两项分别报剩余壳文案缺 6 次翻译、日历／文件页的缺翻译计数非 0。能力文档检查报 `capability catalogue is stale`。
+- 【实测】`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces_reverse.py --build build --case minute`：撤掉分钟相等保护后触发 `same minute does not refresh`；`--case member`：撤掉成员变化时重建锁屏后触发 `child pixels contain no adult memo label`；`--case reading`：撤掉 `reader.continue` 调用后触发 `unlock resumes the reader`。三项均在构建目录编译替身，不改产品文件、不依赖 Git 历史。
+- 【实测】恢复实现后重新运行正向：`lock-faces: exit=0, pass=339, fail=0, finished=1`。跨日反向的未完成情况见上文。
+- ASan/UBSan：进行中，收尾补结果。
+- 【实测】指定隐私正则扫描基线至当前提交：0 命中，grep 返回 1；`git diff --check` 无输出。最终提交后再核一次。
+
 ## 布局、边界与阶段证据
 
 - 简约：取 CrossMux `SloppyClockFace.cpp:58–67` 的上下两行时分；加公历、星期、农历和原有电量栏。待机：时间放上方，下面两行给待办和继续读。
 - 月历：取 `ChineseCalendarFace.cpp:177–244` 的公历、农历、干支、生肖层次和按日更新条件。上游实际为单日黄历；月格是任务书要求的扩展，每格公历＋农历，初一显示月名，今天黑底。
 - 来源、固定提交、SHA-256 与 MIT 许可见 `system/ui/lock_faces/SOURCE.md` 和 `LICENSE`；没有拷待机循环、随机字形引擎或历法表。
-- 【实测】首轮针对性测试经过前置条件修正后：`lock-faces: exit=0, pass=334, fail=0, finished=1`。截图随后发现 120% 月历组件挤页脚，已压为单行，等待最终回归。
+- 【实测】最终针对性场景：`test.pass=339, test.fail=0, test.finished=1`，内部 RAM 最小空闲 50,088 字节，外部 RAM 分配失败 0；120% 月历组件已压为单行并复测通过。
 - 【实测】`ui-scale: 54 files, 0 violations`；`gcccheck: 4 compiled, 0 with findings`。
 - 【实现】壁纸透明度处理沿用 `system/services/media/image.c:39–45`，透明像素合成到纸白后抖动，不新增解码器。测试只造合成 PNG。
-- 为什么不能更小：三个表盘、月格、两个异步／按成员组件、快照和设置预览是独立验收项；只扩旧分钟时钟或搬上游循环均不满足合同。复用了农历、备忘数据集合、阅读卡片、异步打开集合、图片服务和设置能力，未加通用框架。最终产品代码行数在收尾时填写。
+- 产品代码：新增 253 行、删除 8 行、净增 245 行（含头文件，排除测试、文档、CMake），小于 450 行预算。为什么不能更小：三个表盘、月格、两个异步／按成员组件、快照和设置预览是独立验收项；只扩旧分钟时钟或搬上游循环均不满足合同。复用了农历、备忘数据集合、阅读卡片、异步打开集合、图片服务和设置能力，未加通用框架。
 
 ## 上机核对清单
 
