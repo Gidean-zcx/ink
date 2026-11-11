@@ -8,15 +8,46 @@
 #include <string.h>
 
 #include "ink/hal_cellular.h"
+#include "ink/hal_device.h"
 #include "ink/hal_net.h"
 #include "nt26/nt26.h"
 #include "ink/osal.h"
 #include "s31_cell.h"
 
+/* Any run of ten or more digits becomes '#': no IMEI, IMSI or ICCID reaches the log. */
+static void mask_ids(char *s) {
+    for (char *p = s; *p;) {
+        char *q = p;
+        while (*q >= '0' && *q <= '9') q++;
+        if (q - p >= 10) memset(p, '#', (size_t)(q - p));
+        p = q > p ? q : p + 1;
+    }
+}
+
+/* Once per boot, when the AT channel first answers: what the modem is and what it can do, by read-only queries from the
+ * allowlist (trial 2026-11-11: can it send SMS, can it call over VoLTE). Not ATI: some modems put the IMEI in it. */
+static void log_modem_once(void) {
+    static bool done;
+    if (done) return;
+    done = true;
+    static const char *const QUERIES[] = {"AT+CGMM", "AT+CGMR", "AT+CPIN?", "AT+CEREG?", "AT+CSQ",
+                                          "AT+CSMS=?", "AT+CMGF=?", "AT+CNMI?", "AT+CIREG?", "AT+CIREG=?"};
+    for (size_t i = 0; i < sizeof QUERIES / sizeof *QUERIES; i++) {
+        char response[96] = "", line[160];
+        hal_at_result_t r = hal_modem_at(QUERIES[i], response, sizeof response, 1000);
+        for (char *p = response; *p; p++) if (*p == '\r' || *p == '\n') *p = ' ';
+        mask_ids(response);
+        snprintf(line, sizeof line, "cell: %s -> %s %s", QUERIES[i],
+                 r == HAL_AT_OK ? "OK" : r == HAL_AT_ERROR ? "ERROR" : "no answer", response);
+        hal_log_write(line);
+    }
+}
+
 bool hal_cell_status(hal_cell_status_t *out) {
     *out = (hal_cell_status_t){.config_readonly = true};
     nt26_slot_t slot;
     if (nt26_sim_slot(&slot) != NT26_OK || nt26_registration(&out->registered, &out->roaming) != NT26_OK) return false;
+    log_modem_once();
     out->slot = slot == NT26_INTERNAL_CARD ? HAL_CELL_SLOT_INTERNAL : HAL_CELL_SLOT_EXTERNAL;
     char response[96];
     hal_at_result_t r = hal_modem_at("AT+CPIN?", response, sizeof response, 1000);
