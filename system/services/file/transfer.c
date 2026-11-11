@@ -257,7 +257,9 @@ static void poll_upload(void *arg) {
             if (!r) r = fs_move_for(&T.actor, T.part, T.path, 0, NULL);
             if (!r) {
                 T.part[0] = 0; T.files++;
-                snprintf(T.received_name, sizeof T.received_name, "%.63s", strrchr(T.path, '/') + 1);
+                char filename[INK_FS_NAME_MAX];
+                snprintf(filename, sizeof filename, "%.63s", strrchr(T.path, '/') + 1);
+                memcpy(T.received_name, filename, strlen(filename) + 1);
             }
             reply(r ? 500 : 201, r ? "文件保存失败" : "文件已收到", false);
         }
