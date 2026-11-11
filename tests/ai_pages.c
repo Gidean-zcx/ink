@@ -208,7 +208,7 @@ static void cold_records(void) {
 static void real_receipts(void) {
     int64_t before = ink_setting_get("display.light");
     CHECK(AI("settings.set", "{\"id\":\"display.light\",\"value\":3}") && g_rc.status == INK_RC_DONE && g_rc.undo_ms == 10000, "real brightness change returns undo window");
-    char undo[160]; snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, g_rc.revision);
+    char undo[160]; snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, (unsigned)g_rc.revision);
     CHECK(WAIT_FOR(log_count() == 1, 12000), "real operation is in activity log");
     CHECK(AI("shell.ai_receipts", "{\"id\":1}"), "open real receipt"); capture("RealReceipt"); on_ui(check_real_receipt);
     press("system.undo");

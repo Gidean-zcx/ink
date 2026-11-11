@@ -127,7 +127,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     age = osal_wall_us() / 1000000 - when_s;
     bool undo = !strcmp(L.member, ink_member_current()->id) && L.receipts && object[0] && undo_ms > 0 && age >= 0 && age * 1000 < undo_ms;
     const ink_cap_t *definition = ink_cap_find(cap);
-    const char *name = TR("对象名未记录"), *operation = definition ? TR(definition->title) : TR("未记录的操作");
+    const char *name = TR("对象名未记录"), *operation = definition ? TR(definition->title) : cap; /* a stale record of a capability no longer registered: its id says more than a blank */
     for (int at = 0; !strncmp(object, "setting:", 8) && ink_setting_at(at); at++)
         if (!strcmp(ink_setting_at(at)->id, object + 8)) { name = TR(ink_setting_at(at)->title); break; }
     const char *reason = !L.receipts || undo ? "" : !undo_ms || !object[0] ? TR("\n此操作不支持撤销") :
