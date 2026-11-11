@@ -10,9 +10,9 @@
 | B04 | 部分完成【实测＋实现】 | 已知 CONNECT SUCCESS、mode1 和 SCO 汇合到 HAL；未知离线协议、无地址回连无法完成服务同步，见下 | `build-port-tests/test-s31-audio B04` |
 | B05 | HAL 部分通过，整链未完成【实测＋实现】 | 有 ACK 才报 LOST；失败保留最后确认状态；void HAL 不能阻止范围外服务无条件改状态/删记录 | `build-port-tests/test-s31-audio B05` |
 | C19 | 模式重设通过【实测】 | 合成 BH 保持模式 2、UART 有旧应答且丢首个模式 ACK，首次播放仍确认模式 1；P14 复位留给 port-board-2 | `build-port-tests/test-s31-audio C19` |
-| T01 | 普通版通过【实测】 | 42/42；含已有 audio/bt 负向脚本、9 个新增变异，另手动基线 6/6 失败 | 下方验证命令 |
-| T02 | 全量命令通过，补跑中枢依赖项中【实测】 | `100% tests passed out of 391`，388 通过，3 个中枢测试因默认 Python 缺依赖跳过；正用共享现成环境补跑 | 下方验证命令 |
-| T03 | 待验证 | S31 固件编译、警告、gcccheck、隐私检查 | 待运行 |
+| T01 | 普通、内存检查通过【实测】 | 两版各 42/42；含已有 audio/bt 负向脚本、9 个新增变异，另手动基线 6/6 失败 | 下方验证命令 |
+| T02 | 通过【实测】 | 首轮 `100% tests passed out of 391`（388 通过、3 跳过）；共享依赖补跑中枢及其 fixture 4/4，无遗留未跑项 | 下方验证命令 |
+| T03 | 通过【实测】 | S31 构建 exit 0、0 编译器警告；gcccheck 4/4 无问题；隐私扫描仅 4 行虚构地址 | 下方验证命令、按总规 §6 扫描 |
 
 ## 没做到的
 
@@ -35,9 +35,11 @@
 
 ## 要用户定的
 
-建议由合并主会话另开最小接口配合任务：让 BT 服务在 mode1 确认失败时保留状态/配对库，且回连事件能带经过验证的地址；当前任务不改 HAL 头文件和系统服务。另需取得真实离线报文后才能补物理断连。这里不自行扩范围。
+建议由合并主会话另开最小接口配合任务：让 BT 服务在 mode1 确认失败时保留状态/配对库，给现有 UART 接收任务接好报告唤醒，且回连事件能带经过验证的地址；当前任务不改 HAL 头文件和系统服务。另需取得真实离线报文后才能补物理断连。这里不自行扩范围。
 
 ## 顺手发现
+
+【实现】`hal_input_s31.c:87-114` 仅在已连接或按键/触摸/马达活动时周期轮询，否则无限等输入通知；现有 UART1 没接到该通知。所以无其他输入的主动回连报告可能一直留在缓冲里。直接调用 poll 的宿主测试不能证明生产环境自动接收及时性；修入口需改范围外的接收唤醒衔接，不新增任务。
 
 【实现】`ports/esp32s31/s31_hal_map.h:34-47` 只以 LF 结束行，原厂 OnUartData 接受 CR 或 LF。当前 HAL 能处理拆包和 CRLF，CR 单独结束的模式 ACK 仍不能处理；共享 UART 行接口超范围，未修改。上机先确认真实固件的应答行结束符。
 
@@ -66,7 +68,7 @@
 ## 里程碑
 
 - 已导入原厂整文件原文、MIT 与 SHA-256，接好 C HAL 适配。
-- S31 宿主机最终普通版 42/42 通过；新 9 个变异、已有音频 14 个/蓝牙 3 个反向控制均未放宽断言。手动把基线的三份产品 C 文件接到新测试，B02-write/ack/limit、B04、B05、C19 六项全以断言退出 -6；临时源码和二进制自动清理。主工程普通全量结束，内存检查、S31 构建进行中。
+- S31 宿主机最终普通版 42/42 通过；新 9 个变异、已有音频 14 个/蓝牙 3 个反向控制均未放宽断言。手动把基线的三份产品 C 文件接到新测试，B02-write/ack/limit、B04、B05、C19 六项全以断言退出 -6；临时源码和二进制自动清理。主工程普通全量和中枢补跑结束；S31 宿主机 ASan/UBSan 42/42（29.31 s）通过，S31 固件完整构建 exit 0，编译器警告 0；最终范围和隐私检查通过。
 
 ## 架构与 AI 原生审视
 
@@ -85,6 +87,24 @@ cmake --build build -j2
 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
 
-基线模式仅手动运行；ctest 的新反向测试不依赖 Git 历史。普通全量输出：`100% tests passed out of 391`，耗时 630.55 s；未运行 186 hub-contract、187 hub-json-crosscheck、188 hub-simulator-e2e，原因分别为缺 pytest/异步/YAML 等依赖、缺生成消息、缺锁定 Python 环境。已有共享虚拟环境可用，补跑结果待填。
+基线模式仅手动运行；ctest 的新反向测试不依赖 Git 历史。普通全量输出：`100% tests passed out of 391`，耗时 630.55 s；未运行 186 hub-contract、187 hub-json-crosscheck、188 hub-simulator-e2e，原因分别为缺 pytest/异步/YAML 等依赖、缺生成消息、缺锁定 Python 环境。已有共享虚拟环境可用，重新指定 `INK_HUB_PYTHON` 后补跑含 fixture 的 4 项全部通过，耗时 58.43 s。未安装/升级任何依赖。
 
 主工程编译没有本次产品代码警告；仍有 SDL2 的 macOS 弃用/扩展警告和重复静态库链接警告，未改第三方依赖或链接设置。
+
+补跑与内存检查（同样由 taskpolicy 包装、顺序运行）：
+
+```sh
+cmake -S . -B build -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"
+"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^hub-(contract|json-crosscheck|simulator-e2e)$'
+cmake -S ports/esp32s31/tests -B build-port-tests-asan -DINK_SANITIZE=ON -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"
+cmake --build build-port-tests-asan -j2
+"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-port-tests-asan --output-on-failure -j2
+"$INK_DEPS/build-deps/pyenv/bin/python" "$INK_DEPS/../ink-codex/tools/gcccheck.py" build ports/esp32s31/hal_audio_s31.c ports/esp32s31/hal_bt_s31.c drivers/chips/bh1098g/bh1098g.c ports/esp32s31/tests/audio.c
+INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" bash ports/esp32s31/build.sh
+```
+
+内存检查范围：独立 S31 宿主机全部 42 项，含音频生命周期、故障分支、并发锁、PCM、Opus、单 UART 负向和新增 6 个场景的正向执行。新 9 个源码变异副本用普通宿主 CC 编译，正向被测程序使用 ASan/UBSan；已有 audio/bt 负向副本沿用编译数据库里的 sanitizer 标志。主工程 ASan 按 vendor-common §7 免跑。`gcccheck: 4 compiled, 0 with findings`（exit 0）；没有以此冒充 Linux CI 已运行。
+
+S31 固件：`bash ports/esp32s31/build.sh` 完整执行成功（exit 0），生成程序 `0x428010` 字节，最小应用分区余 `0xd7ff0`（17%）。`idf.py size`：Flash 4,238,282 B，DIRAM 静态占用 151,008 B，External RAM BSS 683,688 B；这些不是实机可用堆或运行峰值。现有 PSRAM PCM 缓冲 4,800 B、DMA 4×240 帧/方向保持；无新增任务，仅新增原厂 completed 周期字段。S31 编译器 `warning:` 数量为 0；配置阶段仍有 5 条 SDK esp_wifi/wpa_supplicant 互用私有 include 的提示，未修改 SDK。
+
+最终检查：`git diff --check` 通过；按总规 §6 对基线至 HEAD 的隐私正则扫描命中 4 行，全部为规定的虚构蓝牙地址，没有本机绝对路径或真实地址。逐项检查 diff，22 个文件均在任务范围、原厂副本/来源许可和本报告内，未夹带构建产物、设计稿或共享文档。6 份原厂文件再次与指定提交逐字比对，原文 SHA-256 6/6、活动适配 SHA-256 4/4 一致。全部变异临时目录已自动清理，日志与构建产物只在忽略目录内；未连接设备、未 push/开 PR。
