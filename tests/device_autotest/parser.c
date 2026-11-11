@@ -27,7 +27,7 @@ int main(void) {
     assert(script.actions[13].line == 42);
     parse("@1m end"); assert(script.has_end && script.actions[14].t == 60000000000ull);
     const char *denied[] = {"sms.send", "message.send", "phone.dial", "phone.emergency_call", "file.delete", "member.remove",
-        "member.set_pin", "factory.reset", "hub/paid", "test.password", "test.payment", "confirm.accept"};
+        "member.set_pin", "factory.reset", "hub/paid", "test.password", "test.payment", "confirm.accept", "remote.open", "remote.submit", "remote.pointer"};
     for (size_t i = 0; i < sizeof denied / sizeof *denied; i++) {
         ink_cap_t cap = {.id = denied[i], .effect = INK_FX_READ};
         assert(!ink_script_cap_allowed(&cap));

@@ -278,7 +278,7 @@ return 0;
 bool ink_script_cap_allowed(const ink_cap_t *c) {
     static const char *const denied[] = {"member.", "kid.", "pairing.", "restore.", "backup.", "factory.", "pin.",
         "shell.pin", "shell.member", "shell.kid", "shell.confirm", "confirm.", "system.undo", "data.", "file.",
-        "message.", "sms.", "phone.", "call.", "hub/", "ai.", "text.submit", "text.enter"};
+        "message.", "sms.", "phone.", "call.", "hub/", "remote.", "ai.", "text.submit", "text.enter"};
     if (!c || c->effect >= INK_FX_LOCAL_DESTRUCTIVE || c->parent_pin || c->ask_by_hand || (c->expose & INK_EXPOSE_OWNER)) return false;
     if (strstr(c->id, "delete") || strstr(c->id, "remove") || strstr(c->id, "password") || strstr(c->id, "reset") || strstr(c->id, "pay")) return false;
     for (size_t i = 0; i < sizeof denied / sizeof *denied; i++)

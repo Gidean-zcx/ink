@@ -1,6 +1,6 @@
 @0 net wifi
 @6s cap app.open {"id": "camera"}
-+0 cap phone.emergency_call {"to": "FAKE_PRIVATE_NUMBER"}
++0 cap phone.emergency {"number": "FAKE_PRIVATE_NUMBER"}
 +0 cap message.send {"text": "FAKE_PRIVATE_BODY"}
 +0 cap member.set_pin {"pin": "FAKE_PRIVATE_PIN"}
 +0 cap file.delete {"path": "FAKE_PRIVATE_FILE"}

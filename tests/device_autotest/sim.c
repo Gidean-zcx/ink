@@ -14,7 +14,7 @@ static void options(void *unused) {
 static void labels(lv_obj_t *obj) {
     if (lv_obj_check_type(obj, &lv_label_class)) {
         lv_area_t a; lv_obj_get_coords(obj, &a);
-        sim_note("test label %.20s at %d %d", lv_label_get_text(obj), (a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2);
+        sim_note("test label %.20s at %d %d", lv_label_get_text(obj), (int)((a.x1 + a.x2) / 2), (int)((a.y1 + a.y2) / 2));
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) labels(lv_obj_get_child(obj, i));
 }

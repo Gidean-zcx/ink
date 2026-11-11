@@ -50,13 +50,13 @@ python tools/device/trial_run.py \
 ## 看日志
 
 - `autotest: <行号> <动词> executed`：该源代码行已交给输入服务／处理器。一次 tap 或 swipe 展开的多个触摸边沿只计一步。
-- `autotest: <行号> cap source=test result=<数字>`：走 `ink_cap_invoke_json`，其内部复用 `ink_cap_invoke` 的同一调用实现；0 为完成、2 为已排队，其余回执按现有枚举解释。
+- `autotest: <行号> cap source=test result=<数字>`：走 `ink_cap_invoke_json`，其内部复用 `ink_cap_invoke` 的同一调用实现；0 为完成、2 为已排队、-1 为测试执行器拒绝，其余为现有回执状态。
 - `skipped/rejected`、`parse-error`：未执行；模拟器环境动词在设备上跳过，未知行也跳过。cap 参数、note/mark 正文均不回显，用行号对照原脚本。
 - `autotest: 0 cap rejected source=test`：测试版全局安全包装拦截了页面或后台发起的危险能力；不包含参数或未知能力名。
 - `autotest: summary executed=N skipped=N elapsed_ms=N`：脚本结束；没有此行或出现 `home-timeout` 都不能认定完成。
 - 刷新仍看原有 `display refresh_us=... ok=...`，资源仍看 `health`；这些不受本任务修改。测试脚本完成不表示实机帧率已达标。
 
-拒绝规则集中在 `ink_script_cap_allowed`：风险为破坏性本地操作、外发、系统级的全部拒绝；需密码、需手动确认、只对本人开放的也拒绝。另拦截身份／家长／配对／恢复／备份／确认、短信电话（含紧急呼叫）、文件和通用数据能力、中枢及 AI 转发；名称含删除、移除、密码、重置、付费也拒绝。设备测试版还包装全部三个能力入口和确认决定，防止点按绕过；密码或隐藏输入框、AI 键不注入。调用沿用 `INK_SRC_APP` 的现有权限约束，日志单独标 `source=test`，不冒充真实触摸或已确认来源。
+拒绝规则集中在 `ink_script_cap_allowed`：风险为破坏性本地操作、外发、系统级的全部拒绝；需密码、需手动确认、只对本人开放的也拒绝。另拦截身份／家长／配对／恢复／备份／确认、短信电话（含紧急呼叫）、文件和通用数据能力、中枢、远程网页及 AI 转发；名称含删除、移除、密码、重置、付费也拒绝。设备测试版还包装全部三个能力入口和确认决定，防止点按绕过；密码或隐藏输入框、AI 键不注入。调用沿用 `INK_SRC_APP` 的现有权限约束，日志单独标 `source=test`，不冒充真实触摸或已确认来源。
 
 ## 宿主机复核
 
