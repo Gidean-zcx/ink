@@ -18,6 +18,7 @@
 
 enum { SMS_ROWS = 4, SMS_VISIBLE = 8, SMS_LIMIT = 512 };
 extern int ink_contacts_match(const char *query, bool exact, char *name, char *number);
+extern ink_source_t ink_shell_keyboard_enter_source(void);
 static const ink_activity_t LIST, THREAD, COMPOSE, LONG;
 static struct {
     ink_db_t *db;
@@ -124,8 +125,8 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     else if (rc->status == INK_RC_DONE) ink_ui_redraw(); else if (S.notice) lv_label_set_text(S.notice, S.result);
     ink_shell_airplane_card(rc);
 }
-static void request(const char *cap, const ink_args_t *args) {
-    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = S.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
+static void request(const char *cap, const ink_args_t *args, ink_source_t src) {
+    ink_call_opts_t o = {.src = src, .member = S.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
     if (ink_cap_call(cap, args, &o) != 0) { if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED); if (S.notice) lv_label_set_text(S.notice, TR("没有完成，请重试")); }
 }
 static void selected(void *ctx, const ink_receipt_t *rc) {
@@ -170,7 +171,7 @@ static void navigate(ink_call_t *c) {
 static void send_clicked(lv_event_t *e);
 static void entered(void *ctx, const char *value) { (void)ctx; S.draft_ref.id = 0; snprintf(S.draft, sizeof S.draft, "%s", value); send_clicked(NULL); }
 static void send_clicked(lv_event_t *e) {
-    (void)e; ink_args_t *a = ink_app_alloc(sizeof *a, true); if (!a) return;
+    ink_args_t *a = ink_app_alloc(sizeof *a, true); if (!a) return;
     ink_args_init(a); ink_args_str(a, "to", S.to);
     if (ink_args_str(a, "text", ink_textfield_text(S.field)) != 0) {
         const char *page = S.draft_ref.id && !strcmp(S.to, S.draft_ref.to) && !strcmp(S.draft, ink_textfield_text(S.field)) ? LONG.name : COMPOSE.name;
@@ -185,7 +186,7 @@ static void send_clicked(lv_event_t *e) {
     }
     lv_obj_add_state(S.send, LV_STATE_DISABLED); ink_ui_busy_control(S.send, true); lv_label_set_text(S.notice, TR("发送中"));
     if (S.thread_slot) lv_label_set_text(S.parts, "");
-    request("message.send", a); ink_app_free(a);
+    request("message.send", a, e ? INK_SRC_TOUCH : ink_shell_keyboard_enter_source()); ink_app_free(a);
 }
 static size_t text_end(const char *text, size_t start) {
     size_t end = start, len = strlen(text); char *scratch = S.scratch;
@@ -369,7 +370,7 @@ static void create(lv_obj_t *screen, void *arg) {
             S.suggestion = ink_ui_pill(screen, "", INK_MARGIN, top + INK_LINE_NOTE + INK_CONTROL + 2 * INK_GAP, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL); recipient_edited(NULL);
             if (ink_contacts_match("", false, S.match_name, S.match_number) < 0) {
                 ink_args_t *a = ink_app_alloc(sizeof *a, true);
-                if (a) { ink_args_init(a); ink_args_str(a, "collection", "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a); }
+                if (a) { ink_args_init(a); ink_args_str(a, "collection", "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a, INK_SRC_TOUCH); ink_app_free(a); }
             }
             return;
         }
@@ -380,7 +381,7 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_args_t *a = ink_app_alloc(sizeof *a, true);
         if (a) {
             ink_args_init(a); ink_args_str(a, "collection", !S.db ? "sms.messages" : "phone.contacts");
-            ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a);
+            ink_args_int(a, "limit", 1); request("data.list", a, INK_SRC_TOUCH); ink_app_free(a);
             /* Coalesce a quick cold inbox read with the first screen refresh. */
             if (!compose && !thread) lv_timer_reset(lv_display_get_refr_timer(lv_obj_get_display(screen)));
         }

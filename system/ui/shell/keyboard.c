@@ -41,6 +41,9 @@ static struct {
 static const lv_font_t *font(void) { return ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR); }
 
 static void sync(void);
+static const ink_call_t *enter_call;
+/* Text clients have no source argument; unknown submissions keep the AI policy. */
+ink_source_t ink_shell_keyboard_enter_source(void) { return enter_call ? enter_call->src : INK_SRC_AI; }
 
 static int key_height(bool digits) {
     return ink_ui_line_height(INK_FONT_LIST) * (digits ? INK_KB_DIGIT : INK_KB_KEY) / INK_LINE_LIST;
@@ -78,7 +81,11 @@ static void press_key(ink_call_t *call) {
     char c = (char)code;
     switch (c) {
     case KEY_BACKSPACE: ink_text_backspace(); break;
-    case KEY_ENTER: ink_text_enter(); break;
+    case KEY_ENTER:
+        enter_call = call;
+        ink_text_enter();
+        enter_call = NULL;
+        break;
     case KEY_SWITCH:
         K.symbols = !K.symbols;
         ink_ui_content_changed();

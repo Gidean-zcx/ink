@@ -12,9 +12,12 @@ DEST = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--build", type=Path, required=True)
 parser.add_argument("--baseline", action="store_true")
+parser.add_argument("--source-control", action="store_true", help="restore touch attribution to check the confirmation regression")
 args = parser.parse_args()
+if args.baseline and args.source_control:
+    parser.error("choose one reverse control")
 build = args.build.resolve()
-stage = "before" if args.baseline else "after"
+stage = "source-control" if args.source_control else "before" if args.baseline else "after"
 area = build / "test-out" / f"polish-1-{stage}"
 area.mkdir(parents=True, exist_ok=True)
 baseline = "2587faa2fca29425bf913127c3e6914daa576e8e"
@@ -29,12 +32,19 @@ checks = {
 }
 summaries = []
 for target, (test, product, include, shots, expected) in checks.items():
+    if args.source_control and target != "sms":
+        continue
     case = area / target
     case.mkdir(parents=True, exist_ok=True)
     binary = build / f"sim-{target}"
-    if args.baseline:
-        original = subprocess.check_output(["git", "show", f"{baseline}:{product}"], cwd=ROOT, text=True)
-        source = (ROOT / test).read_text().replace(f'#include "{include}"', original)
+    if args.baseline or args.source_control:
+        source = (ROOT / test).read_text()
+        if args.baseline:
+            original = subprocess.check_output(["git", "show", f"{baseline}:{product}"], cwd=ROOT, text=True)
+            source = source.replace(f'#include "{include}"', original)
+            if target == "ime-keyboard1":
+                # Only the current SMS object needs this symbol; keyboard tests never send SMS.
+                source += "\nink_source_t ink_shell_keyboard_enter_source(void) { return INK_SRC_AI; }\n"
         entry = next(e for e in entries if Path(e["file"]) == ROOT / test)
         command = shlex.split(entry["command"])
         obj = case / "baseline.o"
@@ -47,6 +57,20 @@ for target, (test, product, include, shots, expected) in checks.items():
         subprocess.run(command, input=source, cwd=entry["directory"], text=True, check=True, capture_output=True)
         link = shlex.split((build / f"CMakeFiles/sim-{target}.dir/link.txt").read_text())
         link = [str(obj) if part.endswith(test + ".o") else part for part in link]
+        if args.source_control:
+            keyboard = ROOT / "system/ui/shell/keyboard.c"
+            original = keyboard.read_text()
+            before = "return enter_call ? enter_call->src : INK_SRC_AI;"
+            assert original.count(before) == 1
+            mutant = case / "keyboard.c"
+            mutant.write_text(original.replace(before, "return INK_SRC_TOUCH;"))
+            entry = next(e for e in entries if Path(e["file"]) == keyboard)
+            command = shlex.split(entry["command"])
+            obj = case / "keyboard.o"
+            command[command.index("-o") + 1] = str(obj)
+            command[command.index(str(keyboard))] = str(mutant)
+            subprocess.run(command, cwd=entry["directory"], check=True, capture_output=True)
+            link.insert(1, str(obj))
         binary = case / "sim-baseline"
         link[link.index("-o") + 1] = str(binary)
         subprocess.run(link, cwd=build, check=True, capture_output=True)
@@ -68,7 +92,9 @@ for target, (test, product, include, shots, expected) in checks.items():
     metrics = data["metrics"]
     warnings = "\n".join(data.get("warnings", []))
     passed = metrics.get("test.finished") == 1
-    if args.baseline:
+    if args.source_control:
+        passed = passed and result.returncode == 1 and metrics.get("test.fail", 0) > 0 and "AI enter keeps external-send confirmation" in warnings
+    elif args.baseline:
         passed = passed and result.returncode == 1 and metrics.get("test.fail", 0) > 0 and all(s in warnings for s in expected)
     else:
         passed = passed and result.returncode == 0 and metrics.get("test.fail", 0) == 0 and not warnings
@@ -79,6 +105,8 @@ for target, (test, product, include, shots, expected) in checks.items():
     if not passed:
         print(warnings, result.stderr[-3000:])
         raise SystemExit(1)
+    if args.source_control:
+        continue
     (DEST / "screenshots").mkdir(exist_ok=True)
     for source, name in shots.items():
         picture = out / f"snap-{source}.png"

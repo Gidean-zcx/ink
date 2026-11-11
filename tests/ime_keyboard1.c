@@ -358,7 +358,11 @@ static void run(void *arg) {
             CHECK(BY_HAND("system.home", NULL) && WAIT_FOR(!ink_text_focused(), 10000), "close screenshot host");
         }
         CHECK(BY_HAND("shell.network", NULL), "open real network settings");
-        for (int i = 0; i < 4; i++) { on_ui(scan_wifi); if (scan_button) break; CHECK(BY_HAND("shell.page_next", NULL), "find network scan control"); }
+        for (int i = 0; i < 4; i++) {
+            on_ui(scan_wifi);
+            if (scan_button) break;
+            CHECK(BY_HAND("shell.page_next", NULL), "find network scan control");
+        }
         CHECK(WAIT_FOR(wifi_scanned(), 10000), "synthetic Wi-Fi appears in the real scan results");
         CHECK(BY_HAND("shell.wifi_pick", "{\"index\":0}") && WAIT_FOR(ink_text_focused(), 10000), "open real Wi-Fi password field");
         capture(large ? "WifiPassword-large" : "WifiPassword-normal"); on_ui(wifi_layout);

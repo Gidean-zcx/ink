@@ -326,7 +326,11 @@ static void polish_acceptance(void) {
         CHECK(AI("sms.thread", "{\"peer\":\"00000000990\"}") && g_rc.status == INK_RC_DONE, "open actual dated conversation"); quiet();
         polish_scene(large ? "SmsThread-large" : "SmsThread-normal");
         dates_seen = 0;
-        do { on_ui(inspect_dates); if (!S.position.page) break; CHECK(AI("sms.prev", NULL) && g_rc.status == INK_RC_DONE, "inspect older dated messages"); quiet(); } while (S.position.page < S.thread_pages);
+        do {
+            on_ui(inspect_dates);
+            if (!S.position.page) break;
+            CHECK(AI("sms.prev", NULL) && g_rc.status == INK_RC_DONE, "inspect older dated messages"); quiet();
+        } while (S.position.page < S.thread_pages);
         CHECK(dates_seen == 15, "today, yesterday, older and cross-year labels are all rendered");
     }
     static const int gaps[] = {0, 240, 480, 779, 1079, 1380};
@@ -345,6 +349,15 @@ static void polish_acceptance(void) {
         CHECK(WAIT_FOR(sim_net_sms_sent() == before + 1 && !strcmp(ink_ui_page_name(), "SmsThread") && S.result[0] && settled(), 10000), "keyboard enter sends exactly once and shows its result"); quiet();
         CHECK(sim_net_sent_sms(logical, sent_number, sizeof sent_number, sent_text, sizeof sent_text) == logical + 1 && !strcmp(sent_number, "00000000992") && !strcmp(sent_text, inline_reply ? "合成回车回复" : "合成回车新建"), "keyboard enter preserves exact recipient and body");
         CHECK(!strcmp(S.result, "已发出") && !ink_text_focused(), "enter-send uses the existing receipt and ends input");
+    }
+    for (int submit = 0; submit < 2; submit++) {
+        CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE && AI("text.insert", "{\"text\":\"合成未请求外发\"}"), "AI prepares a synthetic reply");
+        int before = sim_net_sms_sent();
+        CHECK(AI(submit ? "text.submit" : "keyboard.key", submit ? NULL : "{\"code\":10}") && g_rc.status == INK_RC_DONE, "AI submits through either input entry point");
+        ink_confirm_view_t pending[1];
+        CHECK(WAIT_FOR(ink_confirm_list(pending, 1) == 1, 10000) && sim_net_sms_sent() == before, "AI enter keeps external-send confirmation");
+        if (ink_confirm_list(pending, 1) == 1) CHECK(ink_confirm_decide(pending[0].token, false, INK_SRC_TOUCH) == 0, "decline the synthetic AI send");
+        quiet(); CHECK(sim_net_sms_sent() == before, "declining AI enter sends nothing");
     }
 }
 static bool review_phase(void) {
