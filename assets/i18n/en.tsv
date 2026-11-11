@@ -1316,3 +1316,11 @@ AI 面板	AI Panel
 日程	Event
 全天	All day
 响铃提醒	Audible reminder
+打开示例，按住 AI 键问“夜邮是什么意思”。	Open the sample. Hold the AI key and ask what night mail means.
+看看示例	Read a sample
+示例离线也能读。AI 还要等家庭服务器设置好。	The sample works offline. AI will be ready after the family server is set up.
+自动备份	Automatic backup
+只备份这位家人；自动备份须连 Wi-Fi、充电且无人使用。	Only this member is backed up. Automatic backup needs Wi-Fi, charging and an idle device.
+自动备份：%s	Automatic backup: %s
+更新已完成。	Update complete.
+更新说明	Release notes

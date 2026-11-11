@@ -6,6 +6,7 @@
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
 #include "ink/sys/app.h"
+#include "ink/hal_assets.h"
 
 uint64_t ink_now_us(void) { return osal_now_us(); }
 
@@ -32,6 +33,15 @@ int ink_panel_dpi(void) {
 }
 
 int64_t ink_file_size(const char *path) { return hal_fs_size(path); }
+int64_t ink_app_asset_read(const char *name, void *out, size_t cap) {
+    size_t len = 0;
+    const void *data = hal_asset_map(name, &len);
+    if (!data) return -1;
+    bool fits = !out || cap >= len;
+    if (out && fits) { hal_asset_access(data, len); memcpy(out, data, len); }
+    hal_asset_unmap(data);
+    return fits ? (int64_t)len : -1;
+}
 ink_file_t *ink_file_open(const char *path) { return (ink_file_t *)hal_fs_open(path, HAL_O_READ); }
 int64_t ink_file_read(ink_file_t *f, void *buf, size_t n) { return hal_fs_read((hal_file_t *)f, buf, n); }
 void ink_file_close(ink_file_t *f) { hal_fs_close((hal_file_t *)f); }

@@ -8,6 +8,7 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/data.h"
 #include "ink/sys/i18n.h"
+#include "ink/sys/hub.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/pairing.h"
@@ -203,8 +204,9 @@ static void create(lv_obj_t *screen, void *arg) {
         if (B.preview[0]) bottom(TR("放回来"), "restore.apply", B.preview, true);
         else bottom(TR("再查一次"), "shell.launch", "boot.restore", true);
     } else if (B.page == HELLO) {
-        snprintf(B.message, sizeof B.message, TR("还没有打开阅读内容。把书传进来，再按住 AI 键问这一页。"));
-        bottom(TR("跳过"), "system.home", "", false); bottom(TR("打开书架"), "shell.launch", "reader", true);
+        snprintf(B.message, sizeof B.message, "%s", ink_hub_online() ?
+            TR("打开示例，按住 AI 键问“夜邮是什么意思”。") : TR("示例离线也能读。AI 还要等家庭服务器设置好。"));
+        bottom(TR("跳过"), "system.home", "", false); bottom(TR("看看示例"), "reader.open_sample", "", true);
     } else if (B.page == JOIN_FAIL) {
         bottom(TR("换个网络"), "shell.launch", "boot.wifi", false); bottom(TR("重新输入"), "shell.launch", "boot.password", true);
     } else if (B.page == NO_HUB) {

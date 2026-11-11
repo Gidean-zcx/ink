@@ -23,6 +23,10 @@
 #include "ink/sys/res.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/task.h"
+#include "ink/sys/settings.h"
+#include "ink/sys/state.h"
+#include "ink/sys/power.h"
+#include "ink/sys/time.h"
 
 #define ITEMS 128
 #define CHUNK 16384u
@@ -83,6 +87,7 @@ static struct {
         char member[INK_MEMBER_ID_MAX];
         bool pending;
     } known[INK_MEMBERS_MAX];
+    int64_t auto_after[INK_MEMBERS_MAX];
     bool started;
 } B INK_PSRAM_BSS;
 
@@ -1047,7 +1052,8 @@ static bool active(void) {
            B.j.phase == PH_CHECK || B.j.phase == PH_RESTORE;
 }
 static void schedule(void) {
-    if (pending_for(NULL)) ink_svc_at(&B.retry, osal_now_us() + RETRY_US, wake, NULL);
+    if (pending_for(NULL) || ink_setting_get("backup.auto"))
+        ink_svc_at(&B.retry, osal_now_us() + (pending_for(NULL) ? RETRY_US : 60000000u), wake, NULL);
 }
 
 static void mark_failed(const char *reason) {
@@ -1238,12 +1244,45 @@ installed:
     return rc < 0 ? rc : 1;
 }
 
+static void auto_backup(void) {
+    int64_t mode = ink_setting_get("backup.auto"), now = ink_time_now_s(), charging = 0, online = 0;
+    if (!mode || !ink_time_valid() || !ink_member_space_open()) return;
+    ink_probe_count("backup.auto_checks");
+    const char *member = ink_member_current()->id;
+    remember(member, pending_for(member));
+    int slot = 0;
+    while (slot < INK_MEMBERS_MAX && strcmp(B.known[slot].member, member)) slot++;
+    if (slot == INK_MEMBERS_MAX) return;
+    if (!B.auto_after[slot]) {
+        if (!load_journal(member)) return;
+        B.auto_after[slot] = B.j.saved_s > 0 ? B.j.saved_s : now;
+    }
+    char type[8] = "";
+    ink_state_get_str(ink_state_find("net.type"), type, sizeof type);
+    ink_state_get_int(ink_state_find("battery.charging"), &charging);
+    ink_state_get_int(ink_state_find("net.online"), &online);
+    if (!charging || !online || strcmp(type, "wifi") || ink_power_state() == INK_PWR_ACTIVE ||
+        ink_jobs_held() || ink_storage_writes_held() || !load_journal(member) || active()) return;
+    int64_t after = B.j.saved_s > B.auto_after[slot] ? B.j.saved_s : B.auto_after[slot];
+    if (now - after < (mode == 1 ? 86400 : 7 * 86400)) return;
+    B.auto_after[slot] = now;
+    ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .member = member};
+    ink_cap_call("backup.now", NULL, &opts);
+}
+
+static void auto_changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id;
+    memset(B.auto_after, 0, sizeof B.auto_after);
+    if (B.started) wake(NULL);
+}
+
 static void step(void *arg) {
     (void) arg;
     const char *member = ink_member_current()->id;
     if (C && (strcmp(C->member, member) || !ink_member_exists(member) || ink_jobs_held() || !ink_member_space_open()))
         free_capture();
     if (!pending_for(member)) {
+        auto_backup();
         net_reset();
         schedule();
         return;
@@ -1682,6 +1721,10 @@ static const ink_cap_t CAPS[] = {
 };
 
 int ink_backup_init(void) {
+    static const char *const choices[] = {TR_NOOP("关"), TR_NOOP("每天"), TR_NOOP("每周"), NULL};
+    static const ink_setting_def_t automatic = {.id = "backup.auto", .title = TR_NOOP("自动备份"),
+        .type = INK_SET_ENUM, .choices = choices, .system = true};
+    if (ink_settings_define(&automatic, 1) || ink_settings_watch("backup.auto", auto_changed, NULL, INK_EXEC_BG)) return -1;
     ink_hub_on_blob(blob_frame, NULL);
     if (ink_hub_subscribe("blob/put.ack", ack, NULL) != 0) return -1;
     return ink_cap_register(CAPS, sizeof CAPS / sizeof CAPS[0]);
@@ -1695,5 +1738,5 @@ void ink_backup_start(void) {
         char path[INK_LAYOUT_PATH_MAX];
         if (state_path(path, m->id) && ink_storage_size(path) > 0) remember(m->id, true);
     }
-    if (pending_for(NULL)) wake(NULL);
+    wake(NULL);
 }

@@ -103,6 +103,7 @@ static struct {
     char offer_blob[BLOB_MAX]; /* which package exactly: the hub's newest can change during a download */
     uint32_t offer_code;
     uint32_t offer_size;
+    char *notes;
     uint64_t looked_at_us;
     /* what the card offers: told once */
     uint32_t card_told_code;
@@ -558,6 +559,7 @@ typedef struct {
     int status;
     char version[24];
     char blob[BLOB_MAX];
+    char *notes;
     uint32_t code, size;
 } answer_t;
 
@@ -571,15 +573,6 @@ static bool on_wifi(void) {
 
 static void check_answered(void *arg) { /* exec.bg: the notification waits for the flash */
     answer_t *a = arg;
-    if (a->call) {
-        if (a->status != INK_HUB_OK) fail(a->call, INK_RC_FAILED, "the hub cannot be reached");
-        else {
-            char out[128];
-            snprintf(out, sizeof out, "{\"current\":\"%s\",\"latest\":\"%.23s\",\"newer\":%s,\"size\":%u}", U.me.version, a->version, is_newer(a->code) ? "true" : "false", (unsigned)a->size);
-            ink_cap_result(a->call, out);
-        }
-        ink_cap_done(a->call);
-    }
     if (a->status == INK_HUB_OK && is_newer(a->code)) {
         bool first = a->code != U.offer_code;
         ink_svc_lock();
@@ -587,7 +580,10 @@ static void check_answered(void *arg) { /* exec.bg: the notification waits for t
         snprintf(U.offer_blob, sizeof U.offer_blob, "%s", a->blob);
         U.offer_code = a->code;
         U.offer_size = a->size;
+        char *old_notes = U.notes;
+        U.notes = a->notes; a->notes = NULL;
         ink_svc_unlock();
+        osal_free(old_notes);
         if (first) {
             if (!U.job) set_state("available");
             offer_notification(a->version, "update.download");
@@ -603,6 +599,16 @@ static void check_answered(void *arg) { /* exec.bg: the notification waits for t
             if (ink_setting_get("update.auto_download") && on_wifi()) start_download();
         }
     }
+    if (a->call) {
+        if (a->status != INK_HUB_OK) fail(a->call, INK_RC_FAILED, "the hub cannot be reached");
+        else {
+            char out[128];
+            snprintf(out, sizeof out, "{\"current\":\"%s\",\"latest\":\"%.23s\",\"newer\":%s,\"size\":%u}", U.me.version, a->version, is_newer(a->code) ? "true" : "false", (unsigned)a->size);
+            ink_cap_result(a->call, out);
+        }
+        ink_cap_done(a->call);
+    }
+    osal_free(a->notes);
     osal_free(a);
 }
 
@@ -623,9 +629,16 @@ static void on_check_reply(void *ctx, int status, const ink_json_t *j, int resul
         if (status == INK_HUB_OK) {
             ink_json_str(j, ink_json_find(j, result, "version"), a->version, sizeof a->version);
             if (ink_json_str(j, ink_json_find(j, result, "blob"), a->blob, sizeof a->blob) < 0) a->blob[0] = 0;
+            int note = ink_json_find(j, result, "notes");
+            if (note >= 0 && j->tok[note].type == 4) {
+                size_t cap = (size_t)(j->tok[note].end - j->tok[note].start) + 1;
+                a->notes = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+                if (!a->notes || ink_json_str(j, note, a->notes, cap) < 0) a->status = INK_HUB_ERR_NOMEM;
+            }
         }
     }
     if (!a || ink_exec_post(INK_EXEC_BG, &a->job, check_answered, a) != 0) {
+        if (a) osal_free(a->notes);
         osal_free(a);
         if (c) {
             fail(c, INK_RC_FAILED, "out of memory");
@@ -1154,4 +1167,12 @@ void ink_update_page_info(char *version, size_t cap, uint32_t *bytes, int *task)
     *bytes = downloaded ? U.dl_size : U.offer_size;
     *task = U.task;
     ink_svc_unlock();
+}
+
+size_t ink_update_page_notes(char *out, size_t cap) {
+    ink_svc_lock();
+    size_t len = U.notes ? strlen(U.notes) : 0;
+    if (out && cap > len) memcpy(out, U.notes ? U.notes : "", len + 1);
+    ink_svc_unlock();
+    return len;
 }

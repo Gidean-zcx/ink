@@ -608,6 +608,8 @@ static void update_request(struct hal_ws *ws, uint64_t t, const cJSON *req, cons
             size = ftell(f);
         }
         cJSON_AddStringToObject(r, "version", version);
+        const char *notes = getenv("INK_SIM_UPDATE_NOTES");
+        if (notes) cJSON_AddStringToObject(r, "notes", notes);
         cJSON_AddNumberToObject(r, "version_code", code);
         cJSON_AddNumberToObject(r, "size", (double)size);
         char blob[48];

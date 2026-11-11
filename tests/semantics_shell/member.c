@@ -17,5 +17,16 @@ void ink_test_shell_member(void) {
     stale("member_gate", "kid");
     click(G.card.panel, "小");
     CHECK(!strcmp(ink_member_current()->id, "owner"), "stale member touch cannot change identity");
+    const ink_cap_t *select = ink_cap_find("shell.member_select");
+    CHECK(select && !ink_cap_ai_callable(select), "member selection is registered and human-only");
+    ink_receipt_t rc;
+    CHECK(ink_cap_invoke_json("shell.member_select", "{\"id\":\"kid\"}", INK_SRC_AI,
+        ink_ui_content_version(), &rc) != INK_RC_DONE && !strcmp(ink_member_current()->id, "owner"), "AI cannot select an identity");
+    double before_select = sim_metric_value("action.user.shell.member_select");
+    if (member) lv_obj_send_event(member, LV_EVENT_PRESSED, NULL);
+    click(G.card.panel, "小");
+    CHECK(sim_metric_value("action.user.shell.member_select") == before_select + 1 &&
+        !strcmp(ink_member_current()->id, "kid"), "avatar tap goes through the atomic selection capability");
+    CHECK(ink_member_switch("owner") == 0, "return to the synthetic adult");
     G.requested = false; sync_gate(NULL);
 }

@@ -182,7 +182,7 @@ static void first_run(void) {
           "the longest first-boot message fits in English");
     press("Start now");
     capture("BootHello", "BootHello-en");
-    CHECK(shows("Just ask") && shows("Skip") && shows("Bookshelf"), "the welcome page is English");
+    CHECK(shows("Just ask") && shows("Skip") && shows("Read a sample"), "the welcome page is English");
 
     /* A key without a translation shows in Chinese, never blank, and is counted. */
     double before = sim_metric_value("i18n.missing");

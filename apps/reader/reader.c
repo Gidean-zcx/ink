@@ -38,7 +38,7 @@ typedef struct {
 } book_t;
 
 static struct {
-    book_t books[MAX_BOOKS];
+    book_t books[MAX_BOOKS + 1];
     int nbooks;
     int open; /* index of the open book */
 } LIB INK_PSRAM_BSS;
@@ -203,6 +203,12 @@ static void act_list(ink_call_t *c) {
 }
 
 static bool last_book(char *book, size_t cap, int *page, int *percent);
+static void act_sample(ink_call_t *c) {
+    snprintf(LIB.books[MAX_BOOKS].name, sizeof LIB.books[MAX_BOOKS].name, "夜邮（示例）");
+    snprintf(LIB.books[MAX_BOOKS].path, sizeof LIB.books[MAX_BOOKS].path, "sample/welcome.txt");
+    ink_ui_push(&ink_app_book, (void *)(intptr_t)MAX_BOOKS);
+    snprintf(c->rc.object, sizeof c->rc.object, "book:sample");
+}
 
 /* Straight back to the book read last, at its saved page (the card on home and the AI). */
 static void act_continue(ink_call_t *c) {
@@ -211,6 +217,7 @@ static void act_continue(ink_call_t *c) {
     int page;
     scan_library();
     bool have = last_book(book, sizeof book, &page, NULL);
+    if (have && !strcmp(book, "夜邮（示例）")) { act_sample(c); return; }
     for (int i = 0; have && i < LIB.nbooks; i++)
         if (!strcmp(LIB.books[i].name, book)) {
             ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
@@ -239,6 +246,7 @@ static void act_open(ink_call_t *c) {
 }
 
 static const ink_cap_t SHELF_ACTIONS[] = {
+    {.id = "reader.open_sample", .app = "reader", .title = "打开离线原创阅读示例", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = act_sample},
     {.id = "reader.list_books", .app = "reader", .title = "书架上有哪些书", .effect = INK_FX_READ, .child_ok = true, .run = act_list},
     {.id = "reader.open_book", .app = "reader",
      .title = "打开一本书",
@@ -470,12 +478,18 @@ static void page_clicked(lv_event_t *e) {
 }
 
 static bool load_text(const char *path) {
-    int64_t size = ink_file_size(path);
+    bool sample = !strcmp(path, "sample/welcome.txt");
+    int64_t size = sample ? ink_app_asset_read(path, NULL, 0) : ink_file_size(path);
     if (size <= 0 || size > MAX_BOOK_BYTES) return false;
     const char *prev = ink_app_tag("reader-text");
     RD.text = ink_app_alloc((size_t)size + 1, true);
     ink_app_tag(prev);
     if (!RD.text) return false;
+    if (sample) {
+        if (ink_app_asset_read(path, RD.text, (size_t)size) != size) return false;
+        RD.len = (size_t)size; RD.text[size] = 0;
+        return true;
+    }
     ink_file_t *f = ink_file_open(path);
     if (!f) return false;
     size_t got = 0;
@@ -614,6 +628,7 @@ static bool last_book(char *book, size_t cap, int *page, int *percent) {
     if (strcmp(LAST.member, member)) return false; /* still being read */
     snprintf(path, sizeof path, "/content/books/%.95s.txt", LAST.book);
     int64_t bytes = LAST.book[0] ? ink_file_size(path) : 0;
+    if (!strcmp(LAST.book, "夜邮（示例）")) bytes = ink_app_asset_read("sample/welcome.txt", NULL, 0);
     if (bytes <= 0) return false; /* deleted, or the card is out */
     snprintf(book, cap, "%s", LAST.book);
     *page = LAST.page;

@@ -25,6 +25,16 @@ class AssetPackTest(unittest.TestCase):
                 self.assertEqual(struct.unpack_from('<II', data, 108), (116, 4))
                 self.assertEqual(data[116:], value)
 
+    def test_original_sample_is_packed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'sample').mkdir()
+            sample = Path(__file__).resolve().parents[3] / 'assets/sample/welcome.txt'
+            (root / 'sample/welcome.txt').write_bytes(sample.read_bytes())
+            a, _ = pack.split(root)
+            self.assertEqual(a, pack.pack([('sample/welcome.txt', sample.read_bytes())]))
+            self.assertIn(b'CC0 1.0', a)
+
     def test_overflow_reports_exact_excess(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
