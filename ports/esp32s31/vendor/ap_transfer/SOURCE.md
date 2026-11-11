@@ -1,5 +1,11 @@
 # 原厂无线传书来源
 
+## fw-size-1 解压接线（2026-11-12）
+
+S31 不再编入下列 zlib 源文件，改为与阅读器共用既有的 miniz 3.1.2（`third_party/reader_miniz/`，原许可证不变）。原 zlib 文件和许可证保留作来源及宿主机对照，不随固件链接。`main/CMakeLists.txt` 从阅读器源表取出 `miniz.c`，只构建一次 `ink_miniz`；保留阅读器的编译宏、分配接线和符号前缀。传书通过既有 `apps/reader/vendor/shim/zlib.h` 接入。
+
+相对本文件原先记录的适配版，`ap_transfer.cc:624` 仅将分配器赋值换成无捕获泛型 lambda：兼容 zlib 的 `uInt` 和 miniz 的 `size_t` 回调参数；仍调用同一个 `UploadZalloc`，其 PSRAM 分配和释放不变。新 SHA-256：`fad8a9b10a42a276188366eeb9f818ebd9dbb4a4fd89f998adfd9670b8945180`。上传协议、帧间字典、解压输出批次和错误处理均未改动。原厂上传实现的来源仍为下文提交 `874538e`；更换解压库由 fw-size-1 任务书明确要求。
+
 来源：[CloudZao/Metalio-E-INK4-Plus](https://github.com/CloudZao/Metalio-E-INK4-Plus)，提交 `874538e`，查阅日期 2026-11-11。路径 `main/display/screen/cloud_screen/ap/`。
 
 整文件复制后做下列适配，MIT；二维码文件另有 Nayuki MIT 声明，保留文件头。

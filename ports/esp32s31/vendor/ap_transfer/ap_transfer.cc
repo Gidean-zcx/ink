@@ -621,7 +621,7 @@ int InflateUploadData(UploadSession* session, uint8_t* input, size_t size) {
     }
     auto& z = session->inflater;
     if (z.state == nullptr) {
-        z.zalloc = UploadZalloc;
+        z.zalloc = [](voidpf opaque, auto items, auto bytes) { return UploadZalloc(opaque, items, bytes); };
         z.zfree = UploadZfree;
         const int result = inflateInit(&z);
         if (result != Z_OK) return result;

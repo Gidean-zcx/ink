@@ -103,5 +103,44 @@
       "total": 64,
       "flash": 60
     }
+  },
+  {
+    "label": "shared-inflate",
+    "firmware": 4625088,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "84336c2ee94ca0cb2b844689b17863358286e545f0ace5193c049149979e4906",
+    "libink_system.a": {
+      "total": 1550938,
+      "flash": 846475
+    },
+    "libink_platform.a": {
+      "total": 1503671,
+      "flash": 1481856
+    },
+    "libesp_stdio.a": {
+      "total": 341559,
+      "flash": 341519
+    },
+    "libink_lvgl.a": {
+      "total": 277004,
+      "flash": 276432
+    },
+    "libink_reader_vendor.a": {
+      "total": 136029,
+      "flash": 135793
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libink_miniz.a": {
+      "total": 9427,
+      "flash": 9427
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
   }
 ]
