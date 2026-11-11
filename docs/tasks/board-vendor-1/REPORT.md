@@ -12,10 +12,11 @@
 | 1b 前光 | 【实测】单元通过 | 每 5 ms 一级、升降/改目标、暖光、到位停表、关屏/锁屏立即到零且不复亮 | 同上 |
 | 1c 反向对照 | 【实测】4/4 预期失败 | `usb-cut`、`uv-3200`、`busy-kick`、`instant-light` 各退出 1，命中对应断言；`work/reverse.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build` |
 | 1d 浅睡暂停、恢复与实际电源任务节奏 | 【实测】通过 | `board-vendor-power`：18 项检查，`test.finished=1`，无警告；覆盖清醒 2/10 秒、锁屏但保持清醒、让出 CPU 的 15 秒浅睡期间零调用及醒后恢复；`work/board-vendor-tests.log` | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2` |
+| 1e 开机日志 | 【实现】完成；未上机读日志 | `ports/esp32s31/s31_board.c:28,80-83` 在首次写充电寄存器前和写后分别读取 VREG、ITERM、EN_TERM 与 BQ 电压，并标 I²C 状态；S31 编译通过 | 源码核对与下列 S31 编译 |
 | 2a 普通构建与全量 | 【实测】构建退出 0；全量未通过 | 原话 `97% tests passed, 11 tests failed out of 379`；退出 8，3 项跳过；1105.62 秒；`work/ctest.log` | `taskpolicy -c utility cmake --build build -j2`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 | 2b ASan/UBSan 全量 | 【实测】构建退出 0；全量未通过 | 原话 `97% tests passed, 11 tests failed out of 379`；退出 8，823.30 秒；同普通版的 11 项失败、3 项跳过；`work/ctest-asan.log` | 同普通构建，仅换 `build-asan` 并加 `-DINK_SANITIZE=ON`；`ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
-| 2c S31 编译、gcccheck | 【实测】宿主 gcccheck 通过；S31 待编译 | `gcccheck: 7 compiled, 0 with findings`，无跳过；`work/gcccheck.log` | `taskpolicy -c utility python3 ../../tools/gcccheck.py build drivers/chips/cx25601n/cx25601n.c simulator/models/dev_power_chips.c system/services/display/light.c system/services/power/power_service.c tests/board_vendor/charger.c tests/board_vendor/light.c tests/board_vendor/power.c` |
-| 2d 隐私与差异范围 | 待执行 | 待补 | 待补 |
+| 2c S31 编译、gcccheck | 【实测】通过 | S31 退出 0；`INK_S31_LIGHT_SLEEP=1`、`-Werror` 已核对，日志 `warning:`/`error:` 均 0；`work/s31-build.log`。gcccheck 原话 `gcccheck: 7 compiled, 0 with findings`，无跳过；`work/gcccheck.log` | `INK_S31_LIGHT_SLEEP=ON taskpolicy -c utility bash ports/esp32s31/build.sh`；`taskpolicy -c utility python3 ../../tools/gcccheck.py build drivers/chips/cx25601n/cx25601n.c simulator/models/dev_power_chips.c system/services/display/light.c system/services/power/power_service.c tests/board_vendor/charger.c tests/board_vendor/light.c tests/board_vendor/power.c` |
+| 2d 隐私与差异范围 | 【实测】通过 | 总规则第 6 节的路径/MAC 正则扫描 0 匹配；`git diff --check` 无错误；15 个改动文件均在本任务范围，没有设计稿、固件或其他构建产物 | 总规则第 6 节隐私扫描；`git diff 40d965f5b4b5d8d510064396dc59e3ae7e96855c..HEAD --stat`；`git diff --check` |
 | 3 原厂差异与上机核对 | 【实现】完成记录 | 见下方原厂行号、哈希、差异与主会话核对顺序；未做实机测试 | 核查原厂只读源码及 `git diff` |
 
 ## 没做到的
