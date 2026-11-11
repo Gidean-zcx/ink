@@ -2,7 +2,7 @@
 
 查阅日期：2026-11-11。原文整文件复制，不修改。
 
-## kiikoread-xiugai @ 746ce31
+## kiikoread-xiugai @ 746ce316faf61ce5228eceee618eacb50a02a395
 
 - `main/music/music_tags.c` → `music_tags.c`：SHA-256 `70e39c3be789f88567e14dcc7721cee1aca201b2c48dbef034b3464837192f0f`
 - `main/music/music_tags.h` → `music_tags.h`：SHA-256 `1318da3a58203f5c9d01e3718967636157b17c49fbe721be1af6014480c3286b`
@@ -20,3 +20,5 @@
 - `music_lyrics.c` 的原始 68,736 字节歌词池保留，切成员时清空可见行；不带入播放任务。
 - 播放页参考 `main/apps/app_music.c`（同提交）：曲名、进度、切歌、单行歌词、收藏、分页和目录；使用本项目 LVGL 主题重现，没有复制其帧缓冲、播放器、NVS 或蓝牙逻辑。
 - Apache-2.0 全文另附 `Apache-2.0.txt`，取自同一固定副本的 `licenses/Apache-2.0.txt`。文件头许可优先于根目录的其他新增内容许可；未复制受个人学习许可约束的其他产品代码。
+
+- `licenses/Apache-2.0.txt` → `Apache-2.0.txt`：SHA-256 `c2ede378097fb1fcdcd128c47880c918663f475eba53e1e2dc59d95b537c8809`
