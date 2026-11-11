@@ -8,8 +8,8 @@
 | --- | --- | --- | --- |
 | 1a 分段及前后对比 | 【实测，模拟器】完成，保留两处有收益的修改 | 下表、[汇总](measurements.json)、[逐样本数据](samples.ndjson) | A |
 | 1b 反向对照 | 【实测，模拟器】通过，两处分别撤回均触发新断言 | 远程更新恢复 GC16；录音期间恢复额外 GC16，均退出 1 | B |
-| 1c 确定性 | 待完整验证 | 原有两项确定性测试未改 | C、D |
-| 2a 普通全量 | 待完整验证 | 待补 | C |
+| 1c 确定性 | 【实测】普通版通过，ASan 待验证 | 原有两项确定性测试未改 | C、D |
+| 2a 普通全量 | 【实测】通过 | 391/391，无跳过，665.27 s | C |
 | 2b 内存检查 | 待完整验证 | 待补 | D |
 | 2c S31 编译 | 待完整验证 | 只编译 ELF | E |
 | 2d gcccheck | 待完整验证 | 两个产品 C 文件 | F |
@@ -59,20 +59,20 @@
 
 ### 保留的改动及无收益部分
 
-- **远程脏区溢出。**【实现】原先超过 `DIRTY_MAX=32` 就置 `repaint`，`show_update` 随即采用 FULL；现将溢出区域合入最后一格并保留最强刷新意图。首次连接、重连及中枢明确要求 FULL 的行为照旧。没有扩大数组、增设缓存或放宽预算。【实测】三次更新均从全屏 GC16 改为 GL16；原有成员、重连及整张图片一致性测试仍须由全量验证。
+- **远程脏区溢出。**【实现】原先超过 `DIRTY_MAX=32` 就置 `repaint`，`show_update` 随即采用 FULL；现将溢出区域合入最后一格并保留最强刷新意图。首次连接、重连及中枢明确要求 FULL 的行为照旧。没有扩大数组、增设缓存或放宽预算。【实测】三次更新均从全屏 GC16 改为 GL16；原有成员、重连及整张图片一致性测试在普通全量中通过。
 - **AI 提示层细化。**【实现】删除打开后立即投递的整层清刷，初始 FAST 反馈与后续真实文字更新保留。【实测】PQ-BN 提示更早完成；ai_ask 的刷新请求 36→34，EPDiy 总数 32→32、GC16 9→6；remote_browse 总数 18→16、GC16 7→3。EPDiy 录音提示没有收益，这处修改保留的依据是 PQ-BN 收益和减少清刷。
 - **可见反馈、翻页、解锁。**未修改。分段没有证明一个同等小、无需新机制或硬件参数调整的改动可缩短这些路径。没有保留无收益的产品改动，没有调刷新相数、频率、预算或建议值。
 
 ## 复现与验证记录
 
-先按任务书普通构建命令配置，ASan 仅换 `build-asan` 并加 `-DINK_SANITIZE=ON`。命令均使用 `taskpolicy -c utility`，构建和 CTest 最多 `-j2`，采样串行。本任务未启动其它构建或测试来与采样并跑。
+复现时选择新的输出目录。先按任务书普通构建命令配置，ASan 仅换 `build-asan` 并加 `-DINK_SANITIZE=ON`。命令均使用 `taskpolicy -c utility`，构建和 CTest 最多 `-j2`，采样串行。本任务未启动其它构建或测试来与采样并跑。
 
 ```sh
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages"
 py="$INK_DEPS/build-deps/pyenv/bin/python"
 bench=tests/perf_latency_2/run.py
-out=work/perf-latency-2
+out=work/perf-latency-2/reproduce
 # A：手工模式才读取基线历史；CI 的默认回归模式不依赖历史。
 taskpolicy -c utility "$py" "$bench" --build build --runs 20 --reverse all --out "$out/before-final"
 taskpolicy -c utility "$py" "$bench" --build build --runs 20 --regression --compare "$out/before-final/summary.json" --out "$out/after-final"
@@ -87,12 +87,15 @@ taskpolicy -c utility "$py" "$INK_DEPS/../ink-codex/tools/gcccheck.py" build sys
 # G：完成所有提交后再扫描提交差异；0 命中时 rg 退出 1。
 git diff --check
 git diff --stat 6fbe0c4051843810a3252769ab34d150ac4c6097..HEAD
-git diff 6fbe0c4051843810a3252769ab34d150ac4c6097..HEAD | rg -n '/Users/|/private/tmp|[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}'
+private_paths='/''Users/|/private/''tmp'
+git diff 6fbe0c4051843810a3252769ab34d150ac4c6097..HEAD | rg -n "${private_paths}|[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}"
 ```
 
 【实测】A 前后各 120 次进程均退出 0，原场景预算均通过。B 恢复远程代码后三次更新全部恢复 GC16，退出 1；只恢复提示层代码，三次录音各多一次 GC16，退出 1。正向全组回归通过。数值和原始日志在 `work/perf-latency-2/`，汇总和逐样本数据已纳入报告目录。
 
-C、D、E、F、G 结果待补。
+【实测】C 普通构建退出 0；全量 CTest 退出 0，原话 `100% tests passed out of 391`，665.27 s，无跳过。`determinism`、`determinism-reader` 和新回归均通过。日志：`work/perf-latency-2/{build-final,ctest}.log`。
+
+D、E、F、G 结果待补。
 
 ## 没做到的
 
