@@ -87,11 +87,11 @@ static void fx_fits(lv_obj_t *label, lv_obj_t *parent) {
     CHECK(label && parent, "text and container exist");
     if (!label || !parent) return;
     lv_obj_update_layout(parent); lv_area_t a, b; lv_obj_get_coords(label, &a); lv_obj_get_coords(parent, &b);
-    CHECK(a.x1 >= b.x1 && a.x2 <= b.x2 && a.y1 >= b.y1 && a.y2 <= b.y2, "text fits container: %.60s", lv_label_get_text(label));
+    CHECK(a.x1 >= b.x1 && a.x2 <= b.x2 && a.y1 >= b.y1 && a.y2 <= b.y2, "text fits container (bottom=%d limit=%d)", (int)a.y2, (int)b.y2);
     lv_point_t need;
     lv_text_get_size(&need, lv_label_get_text(label), lv_obj_get_style_text_font(label, 0),
         lv_obj_get_style_text_letter_space(label, 0), lv_obj_get_style_text_line_space(label, 0), lv_obj_get_width(label), LV_TEXT_FLAG_NONE);
-    CHECK(lv_obj_get_height(label) >= need.y, "text is not clipped: %.60s", lv_label_get_text(label));
+    CHECK(lv_obj_get_height(label) >= need.y, "text is not clipped (height=%d need=%d)", (int)lv_obj_get_height(label), (int)need.y);
 }
 #define FX_MAIN(task_name) \
     void ink_main(void) { \

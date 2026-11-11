@@ -32,6 +32,10 @@ static void long_check(void) {
     if (have + n < sizeof collected) memcpy(collected + have, lv_label_get_text(label), n + 1);
 }
 static void retry_check(void) { CHECK(fx_bound(scan_root, "camera.scan"), "V06 failure preserves manual rescan"); }
+static void old_scroll_end(void) {
+    lv_obj_t *label = fx_label(scan_root, "测试行");
+    if (label) lv_obj_scroll_to_y(lv_obj_get_parent(label), LV_COORD_MAX, LV_ANIM_OFF);
+}
 static void privacy_check(void) {
     CHECK(!fx_label(scan_root, "是否执行下面的操作"), "V08 names the action instead of a universal confirmation question");
 }
@@ -65,6 +69,8 @@ static void run(void *ctx) {
         CHECK(!strcmp(collected, payload), "V07 page concatenation preserves every UTF-8 byte and newline");
         fx_capture("scan-long-last");
         CHECK(AI("camera.scan_prev", NULL) && g_rc.status == INK_RC_DONE, "V07 AI can turn the same pages");
+    } else {
+        on_ui(old_scroll_end); fx_capture("scan-long-last");
     }
     failed = true; on_ui(inject); fx_capture("scan-failed"); on_ui(retry_check);
     fx_press("再扫一次"); CHECK(WAIT_FOR(!__atomic_load_n(&scanning, __ATOMIC_ACQUIRE), 10000), "V06 retry finishes on existing MEDIA executor");
