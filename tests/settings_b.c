@@ -210,7 +210,7 @@ static void run(void *arg) {
         bool picker_ready = false;
         for (int i = 0; i < 200; i++) { on_ui(read_snapshot); if (strstr(snapshot, "\"status\":\"\"")) { picker_ready = true; break; } delay_ms(20); }
         CHECK(picker_ready && strstr(snapshot, "SYNTH_WALL"), "F9 shows the real indexed image");
-        snprintf(args, sizeof args, "{\"id\":%u}", image);
+        snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)image);
         CHECK(AI("file_picker.select", args) && g_rc.status == INK_RC_DONE, "AI selects the same image as touch");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "image decode and dithering reach the UI"); quiet(); capture("WallpaperSelected");
         CHECK(ink_setting_get("display.lock_style") == 0, "selecting an image does not force the clock style");
@@ -235,7 +235,7 @@ static void run(void *arg) {
         CHECK(WAIT_FOR(!ink_wallpaper_ready(), 10000), "unavailable image is released"); quiet();
         CHECK(BY_HAND("shell.lock", NULL), "lock when the wallpaper is unavailable"); quiet(); on_ui(inspect_lock);
         CHECK(!clock_label && !lock_image && lock_strip, "unavailable wallpaper falls back to the current-page mark"); capture("LockFallback"); wake();
-        snprintf(args, sizeof args, "{\"id\":\"display.wallpaper_file\",\"value\":%u}", image);
+        snprintf(args, sizeof args, "{\"id\":\"display.wallpaper_file\",\"value\":%u}", (unsigned)image);
         CHECK(AI("settings.set", args) && g_rc.status == INK_RC_DONE, "restore the indexed source for restart");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "restored wallpaper loads"); quiet();
         test_records();

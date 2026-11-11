@@ -14,6 +14,6 @@
 
 `bg-0` 指表盘叠加开关关闭；壁纸样式（2）仍按原规则显示已选择的图片，尚未选图时回退到“这一页”。矩阵先跑 100% 再跑 120%，后者已经有前一轮加载的合成图片。
 
-补充：[跨日进入闰二月](screenshots/leap-month.png)、[换到孩子](screenshots/child.png)、[成人空间关闭](screenshots/adult-closed.png)、[本人验证后继续第 5 页](screenshots/reading-resumed.png)、[英文月历和节气](screenshots/calendar-en.png)、[英文选择页](screenshots/picker-en.png)。
+补充：[跨日进入闰二月](screenshots/leap-month.png)、[换到孩子](screenshots/child.png)、[成人空间关闭](screenshots/adult-closed.png)、[本人验证后继续第 5 页](screenshots/reading-resumed.png)、[英文月历和节气](screenshots/calendar-en.png)、[英文选择页](screenshots/picker-en.png)（英文补充为 100%）。
 
 20 张，单张最大 53,583 字节，均小于 300 KB。证明模拟器绘制与接线结果；设备残影和刷新耗时仍需实机核对。
