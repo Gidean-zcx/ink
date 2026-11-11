@@ -304,6 +304,8 @@ target_sources(ink_system PRIVATE system/apps/gomoku/gomoku.c system/apps/gomoku
   system/apps/gomoku/vendor/crossmux/GomokuBoard.cpp system/apps/gomoku/vendor/crossmux/GomokuAI.cpp)
 target_include_directories(ink_system PRIVATE system/apps/gomoku/compat)
 target_compile_features(ink_system PRIVATE cxx_std_20)
+# Keep C-only host test drivers on the C compiler when they consume the gomoku engine.
+set(CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES FALSE)
 set_source_files_properties(system/apps/gomoku/vendor/crossmux/GomokuAI.cpp PROPERTIES COMPILE_OPTIONS -Wno-shadow)
 
 add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
