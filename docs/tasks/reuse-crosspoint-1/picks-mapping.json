@@ -805,14 +805,14 @@
   {
     "id": "weread_notes",
     "name": "微信读书：划线、想法、书评",
-    "source": "S15 `lib/WeReadWebApi/src/WeReadBrowse.cpp` 只见浏览基础；ThingOS 无授权源",
+    "source": "S15 `lib/WeReadWebApi/src/WeReadBrowse.h/.cpp` 的 PopularHighlights/MyHighlights/PopularReviews",
     "license": "MIT（仅独立文件）",
-    "conclusion": "缺完整来源",
+    "conclusion": "条件复用（只读部分）",
     "effort": "更多",
     "depends_on": [
       "weread_online"
     ],
-    "limits": "MIT 基础不代表已有热门划线/想法/书评；TingQu 逆向部分不用；需账号/接口选择",
+    "limits": "已有热门划线、本人划线、书评解析和分页；想法分类未单独核实；取只读DTO不带逆向解码，账号/接口/TLS仍须选择",
     "queue": "O03"
   },
   {

@@ -10,8 +10,8 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 进行中：许可证已核，模块/选择对照/输入法/队列正在整理 | 下面的固定版本、许可边界；最终见全部专题 | C1、C2 |
-| 2 | 进行中：仅任务目录新增，最终扫描待执行 | 基线工作区干净，原厂克隆 HEAD 未移动 | C3 |
+| 1 | 完成：许可表、47组模块、全部选择、输入法与47个任务均有结论 | 源表实际72个ID，零遗漏/零增加；缺源码/许可/接口的项明确列缺口；见机器表与来源哈希 | C1、C2 |
+| 2 | 完成：仅新增本目录6个文件，产品/测试/构建0行；隐私扫描0命中 | 源码哈希、文件清单及verification.txt；原厂克隆HEAD未移动 | C2、C3 |
 
 ## 没做到的
 
@@ -79,6 +79,10 @@ S01～S16 的固定提交与根许可证据沿用 [registry-research-1 的审计
 | S23 dr_libs | [`f12e197fd462`](https://github.com/mackron/dr_libs/tree/f12e197fd462e4c22873fbd70d11b1d2f2c1dc3c)／2026-11-11 | 根和 `dr_mp3.h`、`dr_flac.h`、`dr_wav.h` 给出公有领域或 MIT-0 选择 | 不含 AAC/M4A/M4B 章节解码器；本次默认分支头含未发布版本字样 | 锁定提交后选 MIT-0，保留来源；先做 S31 性能/预算验证，不把桌面性能当实机证据 |
 | S24 stb（Vorbis） | [`4e9b368bfc07`](https://github.com/nothings/stb/tree/4e9b368bfc071e97206ea5c6adba68dd0cbf8897)／2026-11-07 | 根及 `stb_vorbis.c` 末尾允许 MIT 或公有领域，选择 MIT | Ogg Vorbis 与现有 Ogg Opus 是两种编码；不能用同一个解码器冒充 | 只取 Vorbis 解码器，不重复引入我们已有的 stb 图像代码 |
 
+
+| S25 webdav4（补充） | [`e656d7d04f7e`](https://github.com/skshetry/webdav4/tree/e656d7d04f7e7ce732dd743666a3cad3314293e1)／日期未取到 | 根 MIT，client.py 无另一许可头 | HTTPX、python-dateutil；HTTPX→HTTPCore/AnyIO 等及 dateutil 的最终版本/许可证闭包未在本次逐包固定 | 仅候选；接中枢前由 O02/C00 锁依赖并逐包核许可，retry=False，TLS校验保留，不把Python放设备 |
+| S26 LVGL 9.5.0（本地已有） | [`85aa60d18b3d`](https://github.com/lvgl/lvgl/tree/85aa60d18b3d5e5588d7b247abf90198f07c8a63) | 根 LICENCE.txt 为 MIT；keyboard/ime 文件无另行许可头 | 不启用无关第三方库，字库仍按现有来源/许可 | 直接用键盘控件；保留MIT，词库与会话不换，九键建议见专节 |
+
 ### 许可处置要点
 
 1. **MIT 文件可以从 GPL 完整固件中单独抽取，前提是该文件本身及带入的依赖确实有宽松许可。** 不能通过删掉许可证文字、仅不编译某个符号或换个目录消除 GPL 依赖。本次不带 wolfSSL/wolfCrypt、LCP/DRM、ContentProtection，也不取 LGPL 绘图层；TLS 由我们的安全网络实现承接。此为源码筛选结论，落地仍要核对最终链接闭包。
@@ -122,7 +126,7 @@ S01～S16 的固定提交与根许可证据沿用 [registry-research-1 的审计
 | S15 阅读统计、热力图、连续打卡 | [src/ReadingStatsStore.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/ReadingStatsStore.cpp)（1181 行）<br>[src/util/ReadingStatsAnalytics.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/util/ReadingStatsAnalytics.cpp)（127 行）<br>[src/activities/apps/reading-stats/ReadingHeatmapActivity.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/reading-stats/ReadingHeatmapActivity.cpp)（565 行） | HalClock、全局 READING_STATS、GfxRenderer；计算低、存储/绘制中至高 | 复用汇总/连续日计算，替换时钟、成员作用域和存储；热力图用 LVGL 静态格子，按变化重画 |
 | S15 待机时钟、农历、宜忌 | [src/activities/apps/standby/SloppyClockFace.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/SloppyClockFace.cpp)（79 行）<br>[src/activities/apps/standby/ChineseAlmanac.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/ChineseAlmanac.cpp)（691 行）<br>[src/activities/apps/standby/ChineseCalendarFace.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/ChineseCalendarFace.cpp)（409 行） | 纯历法/字符串低；待机绘制依赖 GfxRenderer 高 | 农历用我们已有代码。宜忌是按日支循环选词池，不是已核权威黄历；可以借显示方式，不能冒充准确算法 |
 | S15 五子棋 | [src/activities/apps/gomoku/GomokuBoard.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuBoard.cpp)（160 行）<br>[src/activities/apps/gomoku/GomokuAI.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuAI.cpp)（510 行）<br>[src/activities/apps/gomoku/GomokuGameActivity.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuGameActivity.cpp)（829 行） | 棋盘/胜负算法低；GfxRenderer/存档/输入高 | 直接复用棋盘和 AI，薄接能力/坐标输入、成员存档与 LVGL；没有查到同版本的贪吃蛇/记忆测试独立实现，不能合写“全有” |
-| S15 微读 | [lib/WeReadWebApi/src/WeReadClient.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadClient.cpp)（4373 行）<br>[lib/WeReadWebApi/src/WeReadBrowse.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadBrowse.cpp)（785 行）<br>[lib/WeReadWebApi/src/WeReadHttpClient.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadHttpClient.cpp)（696 行）<br>[lib/WeReadWebApi/src/WeReadXhtmlCodec.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadXhtmlCodec.cpp)（1001 行） | 非官方 HTTP、Cookie、JSON、可能的 wolfSSL；高耦合 | 可见登录/书架/下载/进度编排；不搬逆向解码。设备客户端明确不校验证书/主机名，必须走安全 Transport；此项需用户选择且接口本次未实调 |
+| S15 微读 | [lib/WeReadWebApi/src/WeReadClient.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadClient.cpp)（4373 行）<br>[lib/WeReadWebApi/src/WeReadBrowse.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadBrowse.cpp)（785 行）<br>[lib/WeReadWebApi/src/WeReadHttpClient.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadHttpClient.cpp)（696 行）<br>[lib/WeReadWebApi/src/WeReadXhtmlCodec.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadXhtmlCodec.cpp)（1001 行） | 非官方 HTTP、Cookie、JSON、可能的 wolfSSL；高耦合 | 可见登录/书架/下载/进度及三类划线/书评解析；不搬逆向解码。设备客户端明确不校验证书/主机名，必须走安全 Transport；此项需用户选择且接口本次未实调 |
 | S15 书架主题 | [src/components/themes/inx/InxTheme.cpp](https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/components/themes/inx/InxTheme.cpp)（478 行） | GfxRenderer、封面缓存、设置；高耦合 | 可复用元数据需求和封面取用逻辑；不照搬 UI/缓存机制；按本项目视觉规范重接 |
 | S01 EPUB、HTML、ZIP | [main/reader/epub_document.cc](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/epub_document.cc)（418 行）<br>[main/reader/html_content.cc](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/html_content.cc)（308 行）<br>[main/reader/zip_reader.cc](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/zip_reader.cc)（520 行） | C++ STL、zlib、ESP 日志/PSRAM、FILE；中耦合 | 同硬件原厂优先。原文保留，文件与分配接 OSAL/文件服务；提供 C 边界给阅读器。当前 EPUB 类有 spine/正文/封面，不能当它已有完整 NCX/NAV 和 CSS 支持 |
 | S01 阅读排版与渲染 | [main/reader/book_session.cc](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/book_session.cc)（3933 行）<br>[main/reader/page_text_raster.cc](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/page_text_raster.cc)（419 行）<br>[main/display/screen/book_screen/reader/book_reader_body.cc](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/book_screen/reader/book_reader_body.cc)（551 行） | BookSession 3933 行，字体/页面类型/工作任务/SD 锁/刷新，高耦合 | 不能在 1～2 小时里整搬这几千行；保留我们的分页/刷新调度，分取正文块与光栅函数，缺 CSS 单列补齐 |
@@ -153,7 +157,7 @@ S01～S16 的固定提交与根许可证据沿用 [registry-research-1 的审计
 
 ### 输入法和键盘的单独结论
 
-【实现】本地依赖 LVGL `v9.5.0`，源码提交 `85aa60d18b3d5e5588d7b247abf90198f07c8a63`，根 `LICENCE.txt` 为 MIT。`src/widgets/keyboard/lv_keyboard.c` **501 行**，`src/widgets/ime/lv_ime_pinyin.c` **1202 行**。配置文件实际为 `system/ui/lv_conf.h`：没有显式设置这两个开关；LVGL 默认键盘开、拼音关，不能笼统写“两个都没开”。接口已经在依赖中，不必另找键盘库。
+【实现】本地依赖 LVGL `v9.5.0`，源码提交 `85aa60d18b3d5e5588d7b247abf90198f07c8a63`，根 `LICENCE.txt` 为 MIT。`src/widgets/keyboard/lv_keyboard.c` **501 行**，`src/widgets/ime/lv_ime_pinyin.c` **1202 行**。配置文件实际为 `system/ui/lv_conf.h`：没有显式设置这两个开关；宿主机默认键盘开、拼音关（`lv_conf_internal.h:2435,3809`；S31的Kconfig宏仍应按端口构建核对），不能笼统写“两个都没开”。接口已经在依赖中，不必另找键盘库。
 
 | 方案 | 已有能力 | 限制 | 改动量【估算】 |
 | --- | --- | --- | --- |
@@ -243,7 +247,7 @@ S01～S16 的固定提交与根许可证据沿用 [registry-research-1 的审计
 | `vertical` 竖排阅读 | S01 `main/reader/vertical_text.h`、`page_text_raster.cc` | MIT；**复用** | 1～2 天 | `typeset` | MIT；复用竖排标点旋转和列排列；不把整屏旋转当古籍竖排 | R06 |
 | `vibe` 振动反馈和强度 | 本地触感服务；`port-board-2` | 现有项目实现；**保留** | 小于半天 | 无新增依赖 | 已有触感与强度，不重造驱动；只校验新输入动作经过现有反馈路径 | 已有任务 |
 | `wallpaper` 锁屏和待机壁纸 | 本地 `system/ui/shell/wallpaper.c`；S01 `main/reader/image_stream.cc` | MIT；**合并** | 1～2 天 | `files` | MIT；已有壁纸选择/绘制；补库与透明 PNG 合成，按成员授权可见，不换锁屏安全模型 | L01 |
-| `weread_notes` 微信读书：划线、想法、书评 | S15 `lib/WeReadWebApi/src/WeReadBrowse.cpp` 只见浏览基础；ThingOS 无授权源 | MIT（仅独立文件）；**缺完整来源** | 更多 | `weread_online` | MIT 基础不代表已有热门划线/想法/书评；TingQu 逆向部分不用；需账号/接口选择 | O03 |
+| `weread_notes` 微信读书：划线、想法、书评 | S15 `lib/WeReadWebApi/src/WeReadBrowse.h/.cpp` 的 PopularHighlights/MyHighlights/PopularReviews | MIT（仅独立文件）；**条件复用（只读部分）** | 更多 | `weread_online` | 已有热门划线、本人划线、书评解析和分页；想法分类未单独核实；取只读DTO不带逆向解码，账号/接口/TLS仍须选择 | O03 |
 | `weread_online` 微信读书：在线读和搜书 | S15 `lib/WeReadWebApi/src/WeReadClient.cpp`；在线内容完整链路含非官方/解码 | MIT（仅独立文件）；**仅条件候选** | 更多 | `weread_shelf` | 不复制逆向解码；不把离线 EPUB 下载当在线搜索加入书架；完整源码/服务协议尚缺，接口与 TLS 风险要用户定 | O03 |
 | `weread_outline` 微信读书：读书大纲 | 听趣的说明，未找到可直接复用且排除逆向后的大纲生成源码 | 未取得可用授权；**没有可用来源** | 更多 | `weread_online` | TingQu 微读逆向链路明确排除；本地 AI 总结当前书不等于微读账号读书大纲 | O03 |
 | `weread_progress` 微信读书：进度和时长同步 | S15 `lib/WeReadWebApi/src/WeReadClient.cpp`、`src/activities/apps/weread/webapi/WeReadProgressSyncActivity.cpp` | MIT（仅独立文件）；**条件复用** | 更多 | `weread_shelf`, `stats` | MIT；有进度请求编排，时长与手机一致性未实调；只上传本人选的微读书籍，失败不猜成功 | O03 |
@@ -251,3 +255,123 @@ S01～S16 的固定提交与根许可证据沿用 [registry-research-1 的审计
 | `weread_write` 微信读书：自己划线写想法 | S16 `src/ClippingStore.cpp` 仅本地书摘；未找到许可明确的微读云端写接口 | MIT（仅独立文件）；**没有完整来源** | 更多 | `excerpt`, `weread_notes` | 不把本地书摘冒充微读划线同步；发送私人想法需用户选服务与范围，不从 ThingOS 功能页推导实现 | O03 |
 | `wifi_transfer` Wi-Fi 网页传书 | 本地 `system/services/file/transfer.c`；S16 `src/network/CrossPointWebServer.cpp` | MIT（仅独立文件）；**保留并补端口** | 1～2 天 | `files` | 已有一次授权码/成员 epoch/空间校验；先补真机 HAL，再择取断线/分块上传协议，不整换服务器 | T01 |
 | `workbuddy` 电脑助理 WorkBuddy | S01 `main/workbuddy/workbuddy_client.cc`、`workbuddy_voice_stream.cc`、README | MIT；**条件复用** | 更多 | 无新增依赖 | MIT；现有设备侧可复用，依赖 CloudZao 服务＋百度 ASR＋电脑在线；中枢默认不改接它；用户选择后经同一能力网关 | A02 |
+
+## 现有模块是否推倒重来
+
+【实测】以下现有文件均取本次基线，不按旧 README 的“尚未实现”判断；主要文件最近一次提交日期均为 2026-11-11。行数按 `wc -l`。上游的维护日期见固定来源表：CrossPoint 11-11、CrossMux 11-06、原厂 Plus 11-07、CrossInk 10-04、GitHub crosslink 05-24；这只说明可追踪的代码新旧，不能证明无缺陷。S04/S12 活跃到本日但 HEAD 已前进，本次仍锁旧审计版本。
+
+真机证据边界：`docs/project.md` 记录本项目试用版已上机，但本任务未逐模块复测。原厂/社区 README 的支持板卡与截图属于【文档】，不等于移植到我们系统后的【实测】。没有对 CrossPoint 系列跑过一次构建，因此以下不以“成熟”替代适配验收。
+
+| 模块 | 我们现在【实现】 | 可移植版本与成熟度证据【实现／文档】 | 建议【估算】 | 理由与最小变化 |
+| --- | --- | --- | --- | --- |
+| 阅读器 | `apps/reader/reader.c` 666 行；TXT、16 本上限、2 MiB 整本限制、预渲染/合并翻页、按成员续读、页面快照/能力已接；正文 `layout.c` 156＋`linebreak.c` 75 行 | S01 EPUB 418＋ZIP 520＋HTML 308 行，同硬件；其 BookSession 3933 行，渲染/异步/缓存强耦合。S16 阅读页 3500＋HTML parser 3284＋CSS 1842 行，功能多但 Arduino/GfxRenderer/内容保护；S05 C EPUB 2247＋ZIP 437 行，有 NAV/NCX 和边界 | **合并；局部换掉 TXT 限定的内容源/书架模型** | 原厂解析原文优先；保留我们的翻页调度、能力和显示接缝。不要同时维护三套解析器，也不因为我们现在小就整搬数千行的系统会话/任务。长书流式来源选定后替代整本装载；保留 TXT 旧位置可恢复 |
+| 书架/详情 | 与上行共用 reader.c，不重复计 666；目前是列表，缺封面分类和 EPUB 元数据 | S01 `book_detail.cc` 395 行及 shelf 分组，S15/S17 多种封面主题；更多状态/布局不是更多权限能力；S01 同硬件，其他非 Plus | **换内容模型、合并界面** | 封面/作者/简介从原厂内容源读取；自己的列表/分页/分类、成员许可和继续读卡保留。换掉16本限制；不照搬活动管理器和主题资源 |
+| 键盘/输入法 | 手工键盘 566、拼音 228、文本服务 737、文本框 503 行；已有 IKD1 词组/简拼、成员学习、语音、撤销和秘密字段策略 | LVGL 键盘 501／IME 1202 行，有独立测试源码和 26/9 键；S05 九键509＋组词189行，Apache，可检查现成算法 | **换手工控件，保留输入会话和词库，合并九键** | 不能为了复用控件退化成只有单字、没有词组/成员学习。最小桥在 keyboard、查询选择处；不重写编辑器、不引第二套词库格式 |
+| 文件/传书 | 文件 app 445、文件服务2089、传书219行；有成员/actor、准入、一次授权、借卡、原子落盘；S31 listener/USB仍缺实接 | S16 HTTP 服务3492＋WebDAV848行；直接 SD、Arduino，账号/成员语义不兼容 | **保留我们的，摘传输片段** | 不推倒准入和成员隔离，只补 HAL/少量协议与前端；不把裸 WebDAV 根目录暴露给网络。网页源码不是文件服务替代品 |
+| 锁屏/待机/壁纸 | lock_mark167、wallpaper67行；已有分钟时钟、快照、锁屏相机入口、图片绘制/选择 | S15 StandbyActivity633、日历脸409、时钟脸79、黄历691行；专门适配 GfxRenderer 和待机任务，只有 E-Ink4 支持声明 | **合并样式，保留安全与电源** | 取字段组合/纯历法小函数；沿用分钟变化事件、现有锁屏所有权和 D-127。原厂待机流程归 port-power-2，不再造睡眠循环 |
+| 时钟/农历 | clock523、lunar158行；闹钟/定时器/秒表/世界时钟/农历已有 | 社区待机钟偏画面；黄历宜忌是循环词池；原厂 Claw4 日历UI 是另一硬件 | **保留我们的** | 补锁屏呈现即可；宜忌缺可信来源单列，不替换已经有边界和来源说明的农历计算 |
+| 短信/电话/联系人 | sms246、contacts255、phone466、comm828行；已有能力与成员服务；UI/底层任务在改 | AgentUI/原厂含电话/消息界面，但 P4/另一页面栈；并不能代替 Plus 模组正确流程 | **保留，等 comm-ux-2 和 port-cell-3** | 不重复重做页面/号码规则/串口协议。上游驱动按已派任务原文接，AI 能力保持兼容 |
+| 音乐/录音/蓝牙 | media930、bt258行；已有 Opus、位置、暂停/打断/录音与成员、路由 | S11 player1628＋tags559行，支持更多格式但又带一个任务/缓冲/NVS；S23/S24 解码器成熟独立，尚无 S31 预算证据 | **合并解码与元数据，保留媒体/路由** | 摘源码算法，用现有流/分配接口，不复制第二套播放任务和384 KiB常驻环；原厂蓝牙音频模块仍由端口任务接 |
+| 小游戏 | 无本地棋盘/模拟器；已有应用框架/成员应用名单 | S15 GomokuBoard160＋AI510行，UI829行；S22 GB4045行纯C；均有明确许可；前者社区硬件说明不包含 Plus | **引入算法，界面/AI/存储接我们** | 不引入游戏运行框架、GPL retro-go、ROM包。先规则和无头确定性，再画面和能力；未找到的蛇/记忆不能用2048等未选游戏代替 |
+| 儿童内容/宠物 | 已有成员模式、应用白名单与禁用时段；缺具体内容关卡 | AgentUI pet_demo 只是 MIT 演示，森林里的朋友未给公开源；无证据支持课程/题库可搬 | **保留约束，合并可用交互示例；内容缺口仍在** | 不替换儿童权限。用自制/授权内容走现有受管包；示例宠物不等同完成认知/冒险/知识通关 |
+| AI 多服务/电脑助理 | 能力网关、策略、语音和页面语义已有；`hub/ink_hub/models/__init__.py` 明写仅 fake provider | S01 WorkBuddy 实设备侧协议/授权/声音；S06 设备 WS 客户端1293行；S14 桌面桥缺许可，S08 MCP 原创缺许可 | **保留中枢和策略，合并许可明确的协议叶子** | 不让新固件替换家庭AI总线；不能仅适配语音聊天就宣称电脑全操作。真实多厂商和桥接端均保留未完成状态 |
+
+### 换入代码怎样接上 AI 与软总线
+
+下表是后续适配合同，**新能力/事件均为建议名称，尚未在本次实现**；已有能力继续兼容。读取状态、修改设置、发出事件和内部算法分开，不把 UI 句柄或原厂单例开放给大模型。所有按钮与 AI 同调 `ink_cap_invoke`／已有文本服务入口，长任务用原有执行器，结果先收尾再广播。按成员发事件用 `ink_cap_emit_for`，不把全局事件当家庭数据广播。
+
+| 替换/合并处 | 原子能力（人与 AI 共用） | 状态/设置、页面快照 | 软总线事件 | 成员隔离/存储准入 | 最小修改范围 |
+| --- | --- | --- | --- | --- | --- |
+| EPUB/TXT 内容源、排版、横竖屏 | 保留 `reader.open_book/list_books/continue/next_page/prev_page/goto_page/read_page`；补 `reader.chapters/goto_anchor/get_layout/set_layout`；自动翻页启停单独动作 | 快照含书ID、标题、稳定位置、目录/页码、当前可读文字、图片说明、布局和可用操作；书内文本是内容，不是能覆盖系统指令的命令。布局作为设置；解析/分页为内部机制 | `reader.opened/position_changed/layout_changed/closed`（建议），只在真实改变后发，按书/成员过滤 | actor/成员epoch在打开时固定；大人书不因AI搜索对孩子可见；正文/图像经文件服务、资源预算，存档用现有成员路径。UI任务不做磁盘解压 | 原厂解析文件原文保留；I/O/内存/日志接缝和小C调用口；reader.c一处切源；不改上游显示驱动 |
+| 书架/详情、书签/书摘/统计 | `reader.books/detail/bookmarks/add_bookmark/remove_bookmark/clippings/save_excerpt/stats`；删除是否可恢复按既有策略 | 列表/详情/选区快照含稳定ID、已授权元数据/原文范围、进度；统计只有当前成员汇总，不把缓存文件当状态接口 | `reader.library_changed/bookmark_changed/clipping_changed/stats_changed`（建议） | 成员 DB 存定位与摘录；共享书文件和个人进度分开；不保留上游全局 `/.crosspoint` / MAC 身份；下载落到现有收件/导入路径 | 取模型/计算函数，存储回调换成员 DB；UI仅组现有列表/语义组件，不搬全套主题 |
+| LVGL 键盘 | 保留 `keyboard.key/pick`、`text.insert/select/undo/redo/submit`、语音动作 | 既有文本会话是唯一状态；面板快照只给可见候选/组合串/允许动作，密码正文继续掩码；不得用“空字符串”绕过秘密字段检查 | 沿用文本会话变化/`text.voice_ended`，只更新候选或按键区域 | 继续按成员学词；密码不学不上传；AI不得代输秘密、验证码或代点确认 | 键盘默认 textarea 事件改为能力事件桥；九键匹配接 py_lookup；不改所有页面调用方 |
+| 传书/云盘/在线目录 | 保留 `transfer.start/stop/status`、`file.*`；补受控书源 `source.list/search/download`，不能给任意 URL 和任意目录的网络写文件工具 | 展示目标服务、书ID/大小、接收进度、可取消、实际结果；快照排除授权码/密码/Cookie/含签名URL；临时/失败不是“已导入” | 沿用 `file.changed`、现有任务事件；`source.downloaded/failed`（建议）只对当前 actor；不每个分块整页刷新 | 凭据按人归属，成员切换取消/拒绝旧结果；借卡/空间/校验经 file_service；云端Python在中枢，设备只收被授权的内容。第三方不默认读家庭资料 | 保留219行传书核心；HAL listener补端口；HTTP/TLS适配和解析叶子替换；不复制原厂全局NVS账号 |
+| 锁屏/时钟 | 沿用时钟/备忘能力；新增的样式和选句走设置/选择能力，解锁动作仅本人密码 | 快照区分锁定公共时间/成员可见内容；私密书摘、待办、进度不因为渲染到锁屏就向AI或孩子公开；保留结构化可见字段 | 订阅现有时间、成员、备忘变化，按分钟/实际内容变化重画；没有自循环刷新线程 | 当前锁屏所有者决定数据可见，换成员撤掉旧小组件；图像读取走现有壁纸准入 | 只取画面数据/小函数；lock_mark接视图槽；电源生命周期不换 |
+| 棋类/GB/宠物 | 棋类 `games.start/state/move/undo/reset`；GB `games.start/pause/key/stop`；宠物 `pet.state/act`，不是任意内存读写 | 快照给棋盘、合法着法、当前回合；GB给游戏标识/暂停状态/屏幕图像而非虚构游戏语义；宠物给可见状态 | `games.changed/finished`、`pet.changed`（建议），帧不进持久总线日志；大模型只取需要的图像/状态 | 走现有孩子应用名单/时段；存档在成员DB/现有文件准入；ROM只读自制/授权，后台不用游戏时间维持“活跃” | 规则/CPU核心原文；仅回调层接输入、帧、时间和文件；不搬活动管理器/全局存档 |
+| AI供应商、WorkBuddy、电脑遥控 | 中枢用已有工具注册/策略，暴露 `assistant.connect/status/send/cancel/history`（建议）及限定电脑目标；参数包含目标与范围 | 进度/工具结果/远端目标是结构化状态；快照只给当前成员获准的会话，不把远端电脑所有历史纳入全家搜索 | `assistant.progress/tool_result/disconnected`（建议）；经现有设备协议返回，每个动作有来源与结果 | 凭据/扫码授权本人做；电脑目录与账号按授权范围；高风险/家庭资料外发走 D-105，非高风险/本人原话范围内不加逐卡确认；不代替用户确认密码/权限 | 只取 S01/S06 消息编解码/设备协议，接 hub bus/agent tools；S14未获许可不复制，S08未授权MCP不复制 |
+
+这回答了架构审视的三点：模块边界仍以内容源/业务服务/界面分开；AI 和按钮共享动作及结构化结果；缺口（第三方未授权、秘密输入、GB无语义）明示，不用通用“点击屏幕”掩盖能力缺失。
+
+## 移植任务队列（建议，尚未派工）
+
+排序依据：阅读核心先做、再传书、在线书源、锁屏、声音/蓝牙、AI及其它；键盘在阅读底座后，作为搜索/书源等输入的前置。相同优先级先选同硬件、独立小模块、许可清楚的来源。下面不是批准同时启用全部第三方服务；来源/账号闸门只做可逆的源码/合成数据工作，遇缺口照样报告，不擅自取消功能。
+
+**不重复已派任务**：port-cell-3、port-display-3、port-board-2、ui-audit-2、comm-ux-2、port-wifi-2、port-bt-audio-2、port-power-2；另查到 ui-input-2 也已派，I01必须等它。保留这些任务的源码写集。底层原厂替换是先行依赖，不拆一个同名或同功能替代任务。
+
+每行只交一个有边界的成果，预计1～2小时（不含等待其它分支、远端CI和用户实机验收）。原文拷贝行数与胶水新增行数分别记；完整功能超过两天的，不靠缩短任务描述变成已完成。若一行仍超时，交当前切片和缺口，主会话继续拆，不新增框架填坑。
+
+**文件所有权**：`port-queue.json` 列每个任务唯一写集。叶子不得改其它任务源码；R01先冻结调用合同，R10唯一改reader.c，L03唯一改lock_mark.c，M03唯一改media_service.c，C00唯一改公共构建/装配/应用注册/依赖锁和移除HAL桩。需要改合同则回到其唯一所有者串行处理；不让两个任务同时抢公共文件。新增文件目录是建议位置，落地前由根执行者对仓库布局作最终核对；不预先创建空模块。
+
+叶子可用独立宿主机桩/编译命令验证自己，不为了注册测试各改根CMake；C00收口后做整合验证。未落地的解码、接口、第三方用户选择等闸门不能靠自动超时当同意。
+
+| 顺序／任务 | 预计小时 | 前置 | 唯一可改源码/文档 | 本次切片成果 | 验收证据（未来实施，非本次已跑） |
+| --- | ---: | --- | --- | --- | --- |
+| 01 `R01` 阅读 | 2 | 无 | `apps/reader/vendor/metalio_core/**`<br>`apps/reader/reuse_contract.h` | 原厂 EPUB/ZIP/HTML/TXT 章节原文和版权入库；冻结小C调用口与 I/O/内存接缝，先只开元数据 | 假 EPUB 的标题/作者/spine；宿主机桩；不得引 IDF 头进 app 公共头；S01 SHA/差异清单 |
+| 02 `R02` 阅读 | 2 | `R01` | `apps/reader/epub_source.cc` | 正文块流式读取与旧 TXT 来源适配；一书一来源，不做全功能UI | 分块正文顺序/稳定偏移、坏ZIP/取消；无整章大栈；不走主机时间 |
+| 03 `R03` 阅读 | 2 | `R01` | `apps/reader/vendor/crosspoint_nav/**`<br>`apps/reader/reader_toc.c` | 复用 NAV/NCX 与 TXT 中文章名，输出目录/锚点，不碰 reader.c | EPUB2/3 各一例、中文章号和实际跳转位置；缺目录明确回落 |
+| 04 `R04` 阅读 | 2 | `R02` | `apps/reader/vendor/crosspoint_css/**`<br>`apps/reader/reader_layout.cc` | 仅先接可解析的样式、忽略书内样式、阅读布局与抗锯齿开关；强度档位做源码差距清单 | 同段不同布局/样式开关的像素与锚点回归；不凭空定 2.0.78 强度曲线；完整排版仍可能要后续切片 |
+| 05 `R05` 阅读 | 2 | `R02` | `apps/reader/vendor/metalio_images/**`<br>`apps/reader/reader_images.cc` | 原厂图片流/L8和单图页；先一张 EPUB 插图/漫画页 | 大图资源准入、透明PNG合成、取消/释放；没有预算证据不宣称高清漫画完成 |
+| 06 `R06` 阅读 | 2 | `R04` | `apps/reader/vendor/metalio_orient/**`<br>`apps/reader/reader_orientation.c` | 横屏/竖排标点与定时翻页的一个最小贯通切片，复用现有时间/方向事件 | 触点/文字方向/锚点一致，锁屏来电停自动翻页；完整自动旋转另由实测决定是否加切片 |
+| 07 `R07` 阅读 | 2 | `R02` | `apps/reader/reader_marks.cc` | 原厂位置模型＋CrossPoint 选区/书摘模型，写成员DB，不带上游存档格式 | 两成员同书不串；改字号后锚点可找；保存摘录的原文一致 |
+| 08 `R08` 阅读 | 2 | `R01` | `apps/reader/reader_library.c` | 封面/分类/详情的数据模型，先目录分页和一张封面，替代16本上限的模型 | 多于16本、缺封面/损坏封面、成员可见范围；不添加新缓存格式 |
+| 09 `R09` 阅读 | 2 | `R02` | `apps/reader/reader_stats.cc` | 摘 CrossMux 日汇总/连续天算法，接现有时间/成员DB；不搬MAC身份 | 跨日/锁屏/两成员与重复事件不多计；目标阈值显式说明 |
+| 10 `R11` 阅读 | 2 | `R03`, `R04`, `R07`, `R08` | `apps/reader/reader_preferences.c` | 目录/详情/书签/阅读设置作为独立页面和动作；先能从能力到页面 | 每页快照、设置回执与页面一致；隐藏页脚能恢复；不改现有系统字号规则 |
+| 11 `R12` 阅读 | 2 | `R07`, `R09` | `apps/reader/reader_stats_page.c` | 复用统计汇总，画日/周/热力图与手账的首个只读页面 | 实际数据与快照相等、成员切换；像素手账不是上游现成源码，缺的样式另记 |
+| 12 `R10` 阅读 | 2 | `R02`, `R03`, `R04`, `R05`, `R06`, `R07`, `R08`, `R09`, `R11`, `R12` | `apps/reader/reader.c` | 唯一阅读器接入点，接已完成模块/页面；先保持 TXT 和已有能力，再开放已达标的 EPUB 动作 | 旧TXT续读/快速翻页/AI读页兼容；每个未贯通分项仍记没做，不把一次收口当全部阅读功能验收 |
+| 13 `I01` 输入 | 1 | `ui-input-2` | `system/ui/shell/keyboard.c`<br>`system/ui/lv_conf.h` | 把现有手工按键控件换 LVGL map/事件桥，暂保留全拼，不改各app | 所有既有键盘状态、语音入口/密码、快照与新令牌一致；默认textarea回调移除 |
+| 14 `I02` 输入 | 2 | `R01` | `system/services/text/pinyin.c`<br>`system/services/text/text_internal.h` | 摘 S05 九键数字映射/匹配，接 IKD1；只做引擎与查询耗时 | 全拼结果不变；九键中文/词组和不命中；明确测量遍历成本，超预算停此处不造缓存 |
+| 15 `I03` 输入 | 2 | `I01`, `I02` | `system/services/text/text_service.c` | 输入会话选择九键查询，布局通过既有会话模式驱动 I01 预留map，保留成员学习 | 中英/九键切换、剩余拼音、词频、撤销、语音；AI不能写秘密输入；不得回头各app加补丁 |
+| 16 `T01` 传书 | 2 | `port-wifi-2` | `ports/esp32s31/hal_transfer_s31.c` | 给现有 transfer.c 接 S31 listener；不搬 CrossPoint WebServer | 合成客户端上传/断开/超额/换成员；沿用授权和原子导入；设备测试留给用户 |
+| 17 `T02` 传书 | 2 | `port-board-2` | `ports/esp32s31/hal_usb_s31.c` | 先核原厂/IDF TinyUSB MSC，补 USB HAL，沿用系统借卡/归还 | 宿主机桩证明借卡后本地拒绝写、退出可恢复；S31编译；不在本任务做USB实机联调 |
+| 18 `T03` 传书 | 2 | `T01`, `port-wifi-2` | `ports/esp32s31/hal_ap_s31.c`<br>`platform/include/ink/hal_ap.h` | 先核原厂 AP 源码/许可；已有wifi生命周期之下最小接热点传书；没有明确接缝则只交spike并再拆 | AP退出/飞行模式/恢复STA的桩证据；不并行改 hal_wifi_s31.c，不新建网络状态机 |
+| 19 `T04` 升级 | 2 | `port-board-2` | `system/services/update/update_source.c` | 保留现有验签/准入，统一联网/卡文件的输入适配；写设备之前的安装范围只做清单 | 伪签名/错误板型/卡缺失；同一校验入口；分区写入未获选择时不能启用或声称完成 |
+| 20 `O01` 在线书源 | 2 | `R02`, `T01` | `system/services/content/opds.cc`<br>`system/services/content/vendor/opds/**` | 锁 FreeInk OPDS 解析闭包；先本地假书库的目录/搜索/下载 | Atom命名空间/相对链接/分页/下载到准入；无公网默认源，隐式认证wolfSSL不入库 |
+| 21 `O02` 在线书源 | 2 | `T01` | `hub/ink_hub/content/webdav_source.py` | 中枢 webdav4 适配，保留TLS验证，retry=False，按成员导入 | 假WebDAV目录/下载、换成员/路径范围、凭据不进结果；许可与依赖锁归 C00 |
+| 22 `O03` 第三方来源闸门 | 1 | 无 | `docs/tasks/reuse-online-gates/REPORT.md` | 只核微读各读/写接口、网易云和封面元数据的源码/许可/用户范围；不实现一大串客户端 | 每项能取/排除文件及差距；不调真实账号，不搬逆向解码；给后续小任务，不把“闸门通过”当功能完成 |
+| 23 `O04` 第三方来源闸门 | 1 | 无 | `docs/tasks/reuse-cloud-gates/REPORT.md` | 只核原厂App推送与数据胶囊当前公开源码/协议；列缺口和授权选项 | 不登录Gitee或原厂云；未公开的源码不搬；已有下载器仅作基础 |
+| 24 `O05` 格式来源闸门 | 1 | 无 | `docs/tasks/reuse-mobi-gate/REPORT.md` | 只找设备可用且非GPL/AGPL的MOBI来源；原厂电脑工具不冒充设备支持 | 有根/文件/依赖许可和内存接口；没有则明确没做，不接未审的Python mobi库 |
+| 25 `O06` 条件在线切片 | 2 | `O03` | `hub/ink_hub/content/weread_browse.py` | 仅在来源/用户服务范围明确后，摘热门划线/本人划线/书评的JSON解析；只跑合成fixture | 不含Cookie样本、逆向编解码和默认全量同步；先只读快照 |
+| 26 `O07` 条件在线切片 | 2 | `O03`, `R09` | `hub/ink_hub/content/weread_progress.py` | 仅在闸门允许后，进度/时长请求编排接已有动作与结果；离线不伪报成功 | 合成应答/冲突/失败；无证书绕过；完整手机一致性要单独用户账号验收 |
+| 27 `L01` 锁屏 | 2 | `port-power-2` | `system/ui/shell/wallpaper.c`<br>`system/ui/lock_clock_face.c` | 当前分钟时钟保留，合并样式/透明壁纸图库，不搬待机任务 | 静止分钟不刷、透明PNG、锁屏相机入口保留；私人壁纸不暴露 |
+| 28 `L02` 锁屏 | 2 | `L01` | `system/ui/lock_calendar_face.c` | 用现有lunar加日历视图；宜忌只交权威来源差距，不照抄循环词池冒充真实黄历 | 真实日期与现有农历一致、超范围明确；没有来源则宜忌仍未完成 |
+| 29 `L03` 锁屏 | 2 | `L01`, `L02`, `R07`, `R09`, `R12` | `system/ui/lock_mark.c`<br>`system/ui/lock_reading_widgets.c` | 唯一锁屏接入点；接读书/待办/选句只读视图，阅读小票时机先由主会话核定 | 锁住大人空间/切孩子时快照不泄漏；实际内容变化才刷，不碰电源驱动 |
+| 30 `M01` 声音 | 2 | `port-bt-audio-2` | `system/services/audio/codec_formats.c`<br>`third_party/audio_formats/**` | 锁 dr_libs/stb 许可与回调；先MP3/WAV/FLAC/Vorbis宿主机解码切片 | 自制短音频PCM比对、释放/seek/预算；不带AAC许可证不明的实现 |
+| 31 `M02` 声音 | 2 | `M01` | `system/services/audio/media_tags.c` | 摘S11标签/歌词只读解析，保留现有播放器，不搬NVS/解码任务 | 短/坏ID3/FLAC/M4A标签；M4A标签不算M4A解码或M4B章节 |
+| 32 `M03` 声音 | 2 | `M01`, `M02` | `system/services/audio/media_service.c`<br>`system/apps/music/music.c` | 现有媒体服务唯一接入点；增加已验证解码格式和最小播放器 | 旧Ogg Opus/进度/录音打断不回退；每个未支持格式继续列缺口 |
+| 33 `M04` 声音来源闸门 | 1 | `M02` | `docs/tasks/reuse-audiobook-gate/REPORT.md` | 单独找M4A/AAC及M4B章节定位来源；不把标签解析变成章节 | 许可/格式/seek准确性方案；没有则记录没做并继续其它任务 |
+| 34 `M05` 蓝牙 | 2 | `port-bt-audio-2`, `M03` | `system/services/bt/bt_service.c` | 在现有连接机制里验证/补用户三次重连与同位置外放切换 | 合成断连/三次失败/成功、播放位置一致；不另建后台重试任务或状态机 |
+| 35 `M06` 蓝牙输入 | 2 | `port-bt-audio-2`, `I03` | `ports/esp32s31/ble_hid_input_s31.c`<br>`system/services/input/ble_keyboard.c` | 先移植MIT HID键码解码并验证IDF主机接缝，完整连接超时另拆 | 合成HID报告中英文输入/修饰键/断开；不能把stub分支当真机BLE主机完成 |
+| 36 `M07` 声音 | 2 | `M03` | `system/apps/radio/radio.c` | 摘原厂/AgentUI网络广播控制，接media；FM只核硬件公开实现，不冒充网络广播 | 本地假HTTP音频流、停止/换台/成员切换；节目源须用户选择 |
+| 37 `M08` 声音 | 2 | `M03` | `system/apps/recorder/recorder.c` | 独立录音页面复用已有Opus/语音备忘；锁屏AI键路由接现有所有权 | 录音/保存/回放/锁屏/通话打断；没有第二录音线程 |
+| 38 `A01` AI | 1 | 无 | `docs/tasks/reuse-ai-provider-gates/REPORT.md` | 先找各家官方SDK/固定许可和中枢接口；原厂公开树缺四家切换实现 | 逐家可用SDK与未公开协议，fake provider不冒充上线；真实付费调用不执行 |
+| 39 `A02` AI | 2 | `O04` | `hub/ink_hub/assistants/workbuddy.py` | 摘S01 WorkBuddy消息/音频协议，接现有hub gateway，仅合成请求 | 成员/设备/目标范围、取消、回执、外发策略；真实绑定前停在用户服务选择 |
+| 40 `A09` AI | 2 | 无 | `hub/ink_hub/assistants/codex_remote.py` | 摘S06设备协议，只对假桌面端；S14主程序无授权不复制 | 进度/问答/断开/工具结果；不注入真实桌面、不改本机证书信任 |
+| 41 `A03` AI与网页 | 2 | 无 | `docs/tasks/reuse-browser-gate/REPORT.md` | 核现有remote与缺失browser node，找允许的浏览器端依赖，不造MCU浏览器 | 明确现有仅界面/协议；浏览器引擎、节点与账号边界清单；完整节点要再拆任务 |
+| 42 `A04` 应用 | 2 | `O01` | `system/apps/app_market/app_market.c` | 只把可审的在线目录接已有受管应用安装；不当浏览器JS执行器 | 合成目录＋现有包验签/卸载；不修改现有校验策略 |
+| 43 `A05` AI资料来源闸门 | 1 | `M08` | `docs/tasks/reuse-ima-gate/REPORT.md` | 核ima官方可用接口/SDK授权；ThingOS未公开源码不复制 | 录音外发的目标/范围/用户选择与缺口；没有来源则明确未完成 |
+| 44 `A06` 其它 | 2 | 无 | `system/apps/gameboy/gameboy.c`<br>`third_party/peanut_gb/**` | 先原文导入MIT核心与无头ROM/帧/输入回调，不一次承诺全应用 | 自制ROM固定帧/CPU步骤确定性、内存预算；完整声音/存档/设备输入须后续切片 |
+| 45 `A07` 儿童内容 | 2 | 无 | `system/apps/pet/pet.c` | 只摘MIT pet_demo可用动作，受现有儿童应用名单；课程/图像另授权 | 状态/AI动作/成员隔离；演示与完整认知闯关分开验收 |
+| 46 `A08` 其它 | 2 | 无 | `system/apps/gomoku/gomoku.c`<br>`system/apps/gomoku/vendor/**` | 原文取Gomoku棋盘/AI，接同一move/state能力；缺蛇和记忆仍列差距 | 胜负/禁非法步/悔棋、AI合法步、两人/人机；未知游戏不替换 |
+| 47 `C00` 单一收口 | 2 | `R10`, `I03`, `T01`, `T02`, `T03`, `T04`, `O01`, `O02`, `L03`, `M03`, `M05`, `M06`, `M07`, `M08`, `A04`, `A06`, `A07`, `A08`, `port-cell-3`, `port-display-3`, `comm-ux-2`, `ui-audit-2` | `CMakeLists.txt`<br>`ports/esp32s31/components/ink_apps/CMakeLists.txt`<br>`ports/esp32s31/components/ink_system/CMakeLists.txt`<br>`ports/esp32s31/components/ink_platform/CMakeLists.txt`<br>`ports/esp32s31/hal_stubs.c`<br>`system/boot/main.c`<br>`system/ui/app_registry.c`<br>`hub/pyproject.toml`<br>`hub/uv.lock`<br>`hub/requirements.lock` | 主会话一次性登记已达标叶子/新app、移除对应HAL桩和锁依赖；未达标叶子不启用，后续集成另开批次 | 每个里程碑原有普通测试/必要ASan/S31/gcc检查由实施任务按范围跑；不得在本调研跑或提前标通过 |
+
+不能直接开产品移植任务的完整缺口：`capsule`、原厂App推送账户链路、MOBI设备解析、M4A/M4B章节/AAC、ima、网易云、微读在线搜索加书/大纲/云端写想法、贪吃蛇/记忆与儿童完整课程、FM硬件、真实浏览器节点。上表给来源/接口闸门，不假设已经有许可或现成代码。微读只读浏览/进度等候选在O06/O07单独列出；涉及逆向解码的链路仍不复制。
+
+建议第一轮只取 R01～R03 和已派端口/UI任务的完成结果；先证明真实EPUB正文/目录能经我们的系统边界读出，再推进图片/样式/书架等叶子。这个推进建议不降低72个选择的目标，也不改变既有需求文档。
+
+## 本次命令、验证与证据
+
+- C1【实测】：公开 `git ls-remote <仓库URL> HEAD`、匿名 GitHub 树/固定 raw 文件；原厂仅 `git show 874538e:<相对路径>`；LVGL 只读已有依赖。取回 **26个固定来源、1036个文件的哈希/行数**，清单在 [source-evidence.json](source-evidence.json)。这是取回范围，不声称逐行审计了1036个文件；报告引用的模块做了头部/依赖/关键调用核查。S09沿用前次GPL许可证据；S25补取提交日期时触及匿名API限额，已停止，不换账号绕过。
+- C2【实测】：`taskpolicy -c utility python3 docs/tasks/reuse-crosspoint-1/verify_report.py --baseline 6bf4b0014b963558d747c2a4cc2a7bc3e2ca167c`。仅检查文档/JSON/任务DAG/文件写集/范围/隐私，不联网，不执行产品或上游代码，不注册进ctest，不依赖浅检出有基线历史的CI。
+- C3【实测】：`git diff --check`、`git diff --stat <基线>..HEAD`、`git diff --name-status <基线>..HEAD`；基线至HEAD的隐私模式扫描由C2执行（本机路径、MAC形态与常见令牌前缀）。最终输出见 [verification.txt](verification.txt)。原厂只读克隆的HEAD前后均为 `690a023c66862af103a3187464373ee7c5efcd14`。
+
+| 检查 | 本次结果原话/边界 |
+| --- | --- |
+| 普通全量ctest | **未运行（调研任务明确禁止）** |
+| 内存检查/ASan | **未运行（调研任务明确禁止）**，没有可报告的内存通过结论 |
+| S31编译 | **未编译（仅文档调研）** |
+| gcccheck.py | **未运行（产品代码0行，任务禁止产品构建/测试）** |
+| 产品代码/测试/构建改动 | **0行**；只新增本任务目录内的报告、机器表、来源证据和离线文档检查工具 |
+| 修改已有测试期望/反向修复对照 | **无/不适用**；本次未修产品问题，没有放宽任何断言或预算 |
+| 文档/数据校验 | **通过**：72选择全覆盖，47任务依赖有序、写集零重叠，92固定源码链接有取回证据；本次结论仅限文档/数据，不是移植功能或性能通过 |
+
+本报告与机器表是建议，不把候选、工期或临时方案升级为用户需求。公网源码查询只读取了公开项目，没有使用账号、真实密钥、付费接口或设备；没有push、PR或远端设置变更。
