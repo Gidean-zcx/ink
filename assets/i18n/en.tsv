@@ -715,7 +715,7 @@ Wi-Fi 已关闭，先打开 Wi-Fi	Turn on Wi-Fi first
 文件操作失败	File operation failed
 文件长度不符	File length mismatch
 无线连接已断开	Wi-Fi disconnected
-日志已导出到存储卡 ink-logs	Logs exported to ink-logs on SD card
+日志已导出到存储卡的隐藏文件夹 .ink-logs	Logs exported to the hidden .ink-logs folder on the SD card
 日志未导出，请检查存储卡或稍后重试	Export failed. Check SD card or try later
 旧备份没有成员身份记录，请重新备份	Old backup has no user identity. Back up again
 时间改好了	Time set

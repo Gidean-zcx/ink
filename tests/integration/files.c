@@ -100,7 +100,7 @@ static void paths(void) {
     static const char *const BAD[] = {
         "", "/", "me", "/user/settings.json", "/user/sys/x", "/content/books/a.txt", "/me/../x", "/me/./x", "/me//x", "/me/x/",
         "/me/.hidden", "/me/a\\b", "/me/a:b", "/me/a*b", "/me/a?b", "/me/a\"b", "/me/a<b", "/me/a|b", "/me/a\tb", "/me/\xC0\xAF", "/me/\xE4\xB8", "/nowhere/x",
-        "/family/.m/owner/secret", "/me/trailing.", "/me/trailing "};
+        "/family/.m/owner/secret", "/family/.ink-logs/1-b1-2/logs.bin", "/me/trailing.", "/me/trailing "};
     char buf[8];
     for (size_t i = 0; i < sizeof BAD / sizeof BAD[0]; i++) {
         ink_fs_file_t *f = NULL;

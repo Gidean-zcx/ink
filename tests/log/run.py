@@ -28,9 +28,10 @@ def run(binary):
                         str(root / "logs.bin"), "--output", str(Path(d) / "decoded")], check=True)
         exported, = (Path(d) / "decoded").glob("*/logs.txt")
         assert exported.read_text() == decoded
-        sd_log, = root.glob("content/ink-logs/*/logs.bin")
+        sd_log, = root.glob("content/.ink-logs/*/logs.bin")  # a dot folder: no file capability reaches it (phone-gap-3 G1)
+        assert not (root / "content/ink-logs").exists()
         assert "问题 #300001" in pull.decode(sd_log.read_bytes())
-        sd_core, = root.glob("content/ink-logs/*/coredump.bin")
+        sd_core, = root.glob("content/.ink-logs/*/coredump.bin")
         assert sd_core.stat().st_size == 65536
         # Decode ignores a torn payload and rejects tampering with sequence/boot metadata too.
         import struct

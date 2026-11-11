@@ -205,12 +205,16 @@ static void report(ink_call_t *c) {
     format(c->rc.say, sizeof c->rc.say, ok ? TR("已记录问题 #%u") : TR("问题 #%u 尚未保存，请稍后重试"), n);
     format(c->rc.object, sizeof c->rc.object, "problem:%u", n);
 }
+/* Raw logs and the core dump go to a dot folder: the file service reaches no dot segment, so no member, child or AI
+ * reads them through the file capabilities (in /content they were /family, open to anyone: phone-gap-3 G1). A
+ * computer still sees the card's folder. */
+#define EXPORT_DIR "/content/.ink-logs"
 static void export_raw(void *arg) {
     bool *ok = arg; *ok = false;
     if (!writable() || !hal_fs_card_present()) return;
     char dir[112], path[144];
-    format(dir, sizeof dir, "/content/ink-logs/%lld-b%u-%llu", (long long)(osal_wall_us() / 1000000), L.tail->boot, (unsigned long long)(osal_now_us() / 1000));
-    if ((hal_fs_mkdir("/content/ink-logs") && hal_fs_exists("/content/ink-logs") != 1) || hal_fs_mkdir(dir)) return;
+    format(dir, sizeof dir, EXPORT_DIR "/%lld-b%u-%llu", (long long)(osal_wall_us() / 1000000), L.tail->boot, (unsigned long long)(osal_now_us() / 1000));
+    if ((hal_fs_mkdir(EXPORT_DIR) && hal_fs_exists(EXPORT_DIR) != 1) || hal_fs_mkdir(dir)) return;
     for (int core = 0; core < 2; core++) {
         format(path, sizeof path, "%s/%s.bin", dir, core ? "coredump" : "logs");
         hal_file_t *f = hal_fs_open(path, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
@@ -229,7 +233,7 @@ static void export_logs(ink_call_t *c) {
     bool ok = ink_log_flush();
     if (ok) ink_storage_run(export_raw, &ok, true);
     c->rc.status = ok ? INK_RC_DONE : INK_RC_FAILED;
-    format(c->rc.say, sizeof c->rc.say, "%s", ok ? TR("日志已导出到存储卡 ink-logs") : TR("日志未导出，请检查存储卡或稍后重试"));
+    format(c->rc.say, sizeof c->rc.say, "%s", ok ? TR("日志已导出到存储卡的隐藏文件夹 .ink-logs") : TR("日志未导出，请检查存储卡或稍后重试"));
 }
 static const ink_cap_t CAPS[] = {
     {.id = "system.report_problem", .title = "记录问题", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG,
