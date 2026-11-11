@@ -63,6 +63,9 @@ const char *ink_text_hint(void);
 bool ink_text_ai_hidden(void);
 
 /* What the keyboard (or a test) feeds in. */
+#define INK_TEXT_KEY_LANGUAGE '\3' /* plain fields: commit composing, then switch Chinese/English */
+bool ink_text_english(void); /* retained across fields, reset on boot */
+const char *ink_text_punctuation(char c); /* Chinese key label/insertion, or NULL for ASCII */
 void ink_text_key(char c);
 void ink_text_backspace(void);
 /** A candidate, by its place in the whole list. */
