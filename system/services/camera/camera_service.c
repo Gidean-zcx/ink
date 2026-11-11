@@ -24,6 +24,19 @@ static struct {
     int busy; /* allocation may ask this task to reclaim its own frame */
 } CAM;
 
+/* Optional retained-session HAL hook; the simulator still supplies single frames. */
+__attribute__((weak)) void hal_camera_session(const int *active) { (void)active; }
+static int preview_active;
+static ink_exec_job_t session_job;
+static void session_update(void *arg) {
+    (void)arg;
+    hal_camera_session(&preview_active);
+}
+void ink_camera_session(bool active) { /* UI; cleanup follows pending MEDIA work. */
+    __atomic_store_n(&preview_active, active, __ATOMIC_RELEASE);
+    ink_exec_post(INK_EXEC_MEDIA, &session_job, session_update, NULL);
+}
+
 static size_t reclaim(void *ctx, size_t want) { /* the resource manager, any task */
     (void)ctx;
     (void)want;
@@ -77,6 +90,7 @@ static const ink_cap_t CAMERA_CAPS[] = {
 
 int ink_camera_init(void) {
     if (!hal_camera_info(&CAM.info)) return 0; /* no camera: no capability (apps check ink_cap_available) */
+    if (CAM.lock) return 0;
     CAM.lock = osal_mutex_create();
     if (!CAM.lock) return -1;
     ink_mem_budget("camera", INK_MEM_PSRAM, CAM.info.frame_bytes);

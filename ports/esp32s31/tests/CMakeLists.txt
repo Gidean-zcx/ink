@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-project(s31_io_tests C)
+project(s31_io_tests C CXX)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(INK_SANITIZE "Address and undefined behavior sanitizers" OFF)
@@ -36,11 +37,27 @@ target_include_directories(test-s31-display PRIVATE display_stub ${root}/drivers
 target_link_libraries(test-s31-display PRIVATE Threads::Threads m)
 add_executable(test-s31-wifi wifi.c)
 target_include_directories(test-s31-wifi PRIVATE wifi_stub)
-add_executable(test-s31-cell cell.c ${port}/s31_cell_rx.c ${port}/hal_cellular_s31.c ${root}/drivers/chips/nt26/nt26.c)
+set(ink_cell_vendor ${root}/vendor/uart-eth-modem)
+set(ink_cell_port ${port})
+add_executable(test-s31-cell cell.c cell_host.cc ${ink_cell_port}/s31_modem.c ${ink_cell_port}/s31_uhci.cc
+  ${ink_cell_port}/s31_cell_rx.c ${ink_cell_port}/hal_cellular_s31.c ${root}/drivers/chips/nt26/nt26.c
+  ${ink_cell_vendor}/uart_eth_modem.cc ${ink_cell_vendor}/nt26_lifecycle.cc
+  ${root}/vendor/iot_eth/iot_eth.c ${root}/vendor/iot_eth/iot_eth_netif_glue.c)
+target_include_directories(test-s31-cell PRIVATE ${ink_cell_vendor} ${root}/vendor/iot_eth/include ${root}/vendor/iot_eth/interface)
+target_compile_definitions(test-s31-cell PRIVATE IOT_ETH_VER_MAJOR=0 IOT_ETH_VER_MINOR=1 IOT_ETH_VER_PATCH=0)
+set_source_files_properties(${root}/vendor/iot_eth/iot_eth.c ${root}/vendor/iot_eth/iot_eth_netif_glue.c
+    PROPERTIES COMPILE_OPTIONS "-std=gnu2x;-Wno-old-style-declaration;-Wno-unknown-warning-option")
+target_compile_options(test-s31-cell PRIVATE -Wno-unused-parameter -Wno-unused-variable)
+target_link_libraries(test-s31-cell PRIVATE Threads::Threads)
 target_include_directories(test-s31-cell PRIVATE cell_stub)
 enable_testing()
 add_test(NAME unit-s31-camera COMMAND test-s31-camera)
 add_test(NAME unit-s31-cell COMMAND test-s31-cell)
+foreach(case nat baud started silent dhcp throttle detect privacy)
+  add_test(NAME unit-s31-cell-${case} COMMAND test-s31-cell ${case})
+endforeach()
+set_tests_properties(unit-s31-cell unit-s31-cell-nat unit-s31-cell-baud unit-s31-cell-started
+    unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120)
 add_test(NAME unit-s31-wifi COMMAND test-s31-wifi)
 add_executable(test-s31-log ${root}/tests/log/s31.c ${port}/hal_log_s31.c)
 target_include_directories(test-s31-log PRIVATE ${root}/tests/log/s31_stub)

@@ -16,17 +16,19 @@ resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 port = ROOT / 'ports/esp32s31'
 tests = port / 'tests'
 sources = {name: path.read_text() for name, path in {
-    'rx': port / 's31_cell_rx.c', 'board': ROOT / 'boards/metalio_plus/metalio_board.c',
+    'board': ROOT / 'boards/metalio_plus/metalio_board.c',
     'power': port / 'hal_power_s31.c'}.items()}
 mutations = [
-    ('no-return', 'rx', 'ink_s31_uhci_return(buffer.token);', '(void)buffer.token;'),
-    ('ignore-overflow', 'rx', 'if (ink_s31_uhci_recovered() && lost) lost();', '(void)lost;'),
     ('no-rail-settle', 'board',
      '    if (s == HAL_I2C_OK) osal_task_delay_us(POWER_RAIL_SETTLE_MS * 1000u);\n    if (s == HAL_I2C_OK) s = metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);',
      '    if (s == HAL_I2C_OK) s = metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);'),
     ('late-cell-notify', 'power', '    cut = true;\n',
      '    metalio_board_cut_rails(cfg->keep_modem);\n    cut = true;\n'),
 ]
+cell_args = [sys.executable, str(tests / 'cell_negative.py'), str(a.build), '--case', 'dma-return', '--case', 'rx-gap']
+if a.sanitize:
+    cell_args.append('--sanitize')
+subprocess.run(cell_args, check=True)
 # Move the existing notification block as a single mutation, rather than add a second call.
 notify = '''    if (!cfg->keep_modem) {
         if (!ink_s31_cell_suspend()) goto out;
@@ -53,12 +55,10 @@ with tempfile.TemporaryDirectory(prefix='uhci-negative-', dir=a.build.resolve())
             command += ['-isysroot', subprocess.check_output(['xcrun', '--show-sdk-path'], text=True).strip()]
         if a.sanitize:
             command += ['-fsanitize=address,undefined', '-fno-omit-frame-pointer']
-        stub = 'cell_stub' if kind == 'rx' else 'stub'
+        stub = 'stub'
         for folder in [port, tests / stub, ROOT / 'platform/include', ROOT / 'drivers/chips', ROOT / 'boards']:
             command += ['-I', str(folder)]
-        if kind == 'rx':
-            units = [tests / 'cell.c', copy, port / 'hal_cellular_s31.c', ROOT / 'drivers/chips/nt26/nt26.c']
-        elif kind == 'power':
+        if kind == 'power':
             command += ['-DINK_S31_LIGHT_SLEEP=1']
             units = [tests / 'power.c', copy]
         else:
@@ -73,4 +73,4 @@ with tempfile.TemporaryDirectory(prefix='uhci-negative-', dir=a.build.resolve())
             raise SystemExit(f'{name}: unexpected test={result.returncode}\n{result.stdout}\n{result.stderr}')
         evidence = result.stderr.strip().splitlines()
         print(f'{name}: compile=0 test={result.returncode}' + (f'; {evidence[-1]}' if evidence else ''), flush=True)
-print('UHCI/rails reverse controls: 4/4 rejected; three baselines passed')
+print('UHCI/rails reverse controls: 4/4 rejected; vendor/HAL and rail baselines passed')

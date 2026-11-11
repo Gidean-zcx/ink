@@ -6,16 +6,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef struct { const uint8_t *data; size_t len; void *token; } ink_s31_uhci_buffer_t;
-bool ink_s31_uhci_init(void);
-bool ink_s31_uhci_active(bool active);
-bool ink_s31_uhci_receiving(void);
-void ink_s31_uhci_flush(void);
-bool ink_s31_uhci_take(ink_s31_uhci_buffer_t *buffer);
-void ink_s31_uhci_return(void *token);
-bool ink_s31_uhci_recovered(void);
-bool ink_s31_uhci_transmit(const uint8_t *data, size_t len);
-bool ink_s31_cell_rx(void (*feed)(const uint8_t *, size_t), void (*lost)(void));
+bool ink_s31_at_allowed(const char *command);
+bool ink_s31_at_urc(const char *line);
+void ink_s31_urc_init(void);
+void ink_s31_at_log(const char *command, bool ok, size_t length);
 #ifdef __cplusplus
 }
 #endif
