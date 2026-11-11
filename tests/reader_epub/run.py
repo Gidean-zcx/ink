@@ -8,8 +8,8 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 
-def run(build, binary=None, reverse=False):
-    area = build / 'test-out' / ('reader-epub-reverse' if reverse else 'reader-epub')
+def run(build, binary=None, reverse=False, name=None, expected='reader.open_book returns done'):
+    area = build / 'test-out' / (name or ('reader-epub-reverse' if reverse else 'reader-epub'))
     if area.exists(): shutil.rmtree(area)
     content = area / 'content'
     shutil.copytree(build/'test-content', content)
@@ -26,7 +26,7 @@ def run(build, binary=None, reverse=False):
         data=json.loads((out/'metrics.json').read_text()) if (out/'metrics.json').exists() else {}
         counts=data.get('metrics',{}); failures=counts.get('test.fail',0)
         if reverse:
-            assert result.returncode and failures and any('reader.open_book returns done' in str(w) for w in data.get('warnings',[])), result.stderr[-5000:]
+            assert result.returncode and failures and any(expected in str(w) for w in data.get('warnings',[])), result.stderr[-5000:]
             print(f'reverse: expected failure exit={result.returncode}, failed assertions={failures}',flush=True)
         elif result.returncode or counts.get('test.finished')!=1 or failures:
             raise SystemExit(f'{phase}: FAIL exit={result.returncode}, finished={counts.get("test.finished")}\n{result.stderr[-7000:]}\n{data.get("warnings",[])}')

@@ -11,6 +11,7 @@
 #include <TocNcxParser.h>
 #include <Epub/BookMetadataCache.h>
 #include <algorithm>
+#include <cctype>
 #include <cstring>
 #include <new>
 
@@ -131,11 +132,11 @@ extern "C" ink_reader_error_t ink_reader_source_open(const char *path, ink_reade
                     zip.GetUncompressedSize(container.fullPath.c_str(),&size); ContentOpfParser opf(cache,base,size,nullptr);
                     if (ink_parse(zip,container.fullPath,opf)) {
                         BookMetadataCache toc;
-                        auto parse_toc = [&](const std::string& path, bool nav) {
-                            if (path.empty() || !zip.GetUncompressedSize(path.c_str(),&size)) return false;
-                            std::string dir = path.substr(0,path.find_last_of('/')+1);
-                            if (nav) { TocNavParser p(dir,size,&toc); return ink_parse(zip,path,p); }
-                            TocNcxParser p(dir,size,&toc); return ink_parse(zip,path,p);
+                        auto parse_toc = [&](const std::string& toc_path, bool nav) {
+                            if (toc_path.empty() || !zip.GetUncompressedSize(toc_path.c_str(),&size)) return false;
+                            std::string dir = toc_path.substr(0,toc_path.find_last_of('/')+1);
+                            if (nav) { TocNavParser p(dir,size,&toc); return ink_parse(zip,toc_path,p); }
+                            TocNcxParser p(dir,size,&toc); return ink_parse(zip,toc_path,p);
                         };
                         if (!parse_toc(opf.tocNavPath,true)) { toc.entries.clear(); parse_toc(opf.tocNcxPath,false); }
                         for (const auto& t : toc.entries) for (int c = 0; c < s->info.chapters; ++c)

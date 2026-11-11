@@ -11,6 +11,14 @@
 #include "ink/sys/layout.h"
 
 static char view[8192], before[8192];
+static const char *wanted;
+static lv_obj_t *found;
+static void locate(lv_obj_t *obj) {
+    if (!lv_obj_is_visible(obj)) return;
+    if (lv_obj_check_type(obj,&lv_label_class) && strstr(lv_label_get_text(obj),wanted)) found=obj;
+    for (uint32_t i=0;i<lv_obj_get_child_count(obj);i++) locate(lv_obj_get_child(obj,(int32_t)i));
+}
+static void find_label(void) { found=NULL; lv_obj_update_layout(lv_screen_active()); locate(lv_screen_active()); }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(),15000),"reader settles"); }
 static void ok(const char *cap, const char *args) {
@@ -20,6 +28,12 @@ static void inspect(void) { CHECK(ink_ui_snapshot(view,sizeof view,NULL)>0,"page
 static void home(void) { ink_ui_home(); }
 static void back(void) { ink_ui_pop(); }
 static void close_book(void) { on_ui(home); quiet(); CHECK(WAIT_FOR(!ink_storage_pending(),15000),"position durable"); }
+static void touch(const char *text) {
+    wanted=text; on_ui(find_label); CHECK(found,"touch target %s exists",text);
+    if (!found) return;
+    lv_area_t area; lv_obj_get_coords(found,&area);
+    tap((area.x1+area.x2)/2,(area.y1+area.y2)/2); quiet();
+}
 static bool cancel_now(void *ctx) { (void)ctx; return true; }
 static void source_checks(void) {
     const char *books[]={"epub2.epub","epub3.epub"};
@@ -77,17 +91,29 @@ static void reader_checks(void) {
     ok("reader.open_book","{\"title\":\"山间来信\"}");
     ok("reader.chapters",NULL); CHECK(strstr(g_result,"第一章 山路") && strstr(g_result,"中途码头"),"AI sees real TOC: %.150s",g_result);
     ok("reader.read_page",NULL); CHECK(strstr(g_rc.say,"山间来信") && strstr(g_rc.say,"第一章 山路"),"AI page includes book and chapter");
+    unsigned previous=g_rc.revision; bool crossed=false;
+    for (int i=0;i<40;i++) {
+        ok("reader.next_page",NULL); ok("reader.read_page",NULL);
+        if (strstr(g_rc.say,"第二章 海边")) { crossed=true; break; }
+        CHECK(g_rc.revision==previous+1,"chapter page count continues across bounded segments"); previous=g_rc.revision;
+    }
+    CHECK(crossed && g_rc.revision==1,"next-page flow reaches the next chapter");
     ok("reader.goto_chapter","{\"chapter\":2}"); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第二章 海边"),"next chapter body");
     ok("reader.prev_page",NULL); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第一章 山路") && g_rc.revision>1,"previous chapter last page");
     ok("reader.next_page",NULL); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第二章 海边") && g_rc.revision==1,"forward across chapter returns to first page");
-    ok("reader.show_chapters",NULL); on_ui(inspect);
+    ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.show_chapters",NULL); on_ui(inspect);
     CHECK(!strcmp(ink_ui_top_name(),"chapters") && strstr(view,"中途码头"),"contents page and AI snapshot agree");
-    ok("reader.goto_chapter","{\"entry\":3}"); ok("reader.read_page",NULL);
+    touch("中途码头"); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第二章 海边"),"TOC tap route returns to reading page");
+    close_book(); ok("reader.continue",NULL);
+    CHECK(!strcmp(ink_ui_top_name(),"book"),"continue finds EPUB by stored file identity");
+    ok("reader.read_page",NULL); CHECK(strstr(g_rc.say,"第二章 海边"),"TOC navigation persists across close and continue");
     ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.goto_page","{\"page\":2}"); on_ui(inspect); snprintf(before,sizeof before,"%s",view);
+    CHECK(AI("reader.goto_page","{\"page\":1000000}") && g_rc.status==INK_RC_FAILED,"out-of-range chapter page rejected"); quiet(); on_ui(inspect);
+    CHECK(!strcmp(before,view),"failed seek preserves current chapter page");
     close_book(); ok("reader.open_book","{\"title\":\"山间来信\"}"); on_ui(inspect);
     CHECK(!strcmp(before,view),"close and reopen restores chapter and offset"); close_book();
     CHECK(!ink_member_switch("kid"),"child member"); quiet(); ok("reader.open_book","{\"title\":\"山间来信\"}"); ok("reader.goto_chapter","{\"chapter\":2}"); close_book();

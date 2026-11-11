@@ -3,6 +3,7 @@ from pathlib import Path
 import io
 import struct
 import zipfile
+import zlib
 from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parent / 'fixtures'
@@ -21,21 +22,27 @@ def book(name, version=2, toc=True, long=False):
     with zipfile.ZipFile(target, 'w', compression=zipfile.ZIP_DEFLATED) as z:
         def put(path, text, stored=False):
             item = zipfile.ZipInfo(path, (2020,1,1,0,0,0)); item.compress_type = zipfile.ZIP_STORED if stored else zipfile.ZIP_DEFLATED
-            z.writestr(item, text.encode('utf-8'))
+            z.writestr(item, text.encode('utf-8') if isinstance(text,str) else text)
         put('mimetype', 'application/epub+zip', True)
-        put('META-INF/container.xml', '<container><rootfiles><rootfile full-path="OPS/book.opf" media-type="application/oebps-package+xml"/></rootfiles></container>')
+        put('META-INF/container.xml', '<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container" version="1.0"><rootfiles><rootfile full-path="OPS/book.opf" media-type="application/oebps-package+xml"/></rootfiles></container>')
         navpath = 'navigation/contents.xhtml' if version == 3 else 'contents.ncx'
         manifest = ''.join(f'<item id="c{i+1}" href="{p}" media-type="application/xhtml+xml"/>' for i,p in enumerate(paths))
+        manifest += '<item id="drawing" href="drawing.png" media-type="image/png"/>'
         if toc: manifest += f'<item id="toc" href="{navpath}" media-type="'+('application/xhtml+xml" properties="nav' if version == 3 else 'application/x-dtbncx+xml')+'"/>'
-        put('OPS/book.opf', f'<package version="{version}.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><metadata><dc:title>{title}</dc:title><dc:creator>{author}</dc:creator></metadata><manifest>{manifest}</manifest><spine toc="toc"><itemref idref="c1"/><itemref idref="c2"/></spine></package>')
-        for path, text in zip(paths, [ch1, ch2]): put('OPS/'+path, '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>测试章节</title></head><body>'+text+'<p><img src="drawing.png"/></p></body></html>')
+        identifier = f'urn:example:ink-epub-test-{version}'
+        modified = '<meta property="dcterms:modified">2020-01-01T00:00:00Z</meta>' if version == 3 else ''
+        put('OPS/book.opf', f'<package xmlns="http://www.idpf.org/2007/opf" version="{version}.0" unique-identifier="book-id" xmlns:dc="http://purl.org/dc/elements/1.1/"><metadata><dc:identifier id="book-id">{identifier}</dc:identifier><dc:language>zh-CN</dc:language><dc:title>{title}</dc:title><dc:creator>{author}</dc:creator>{modified}</metadata><manifest>{manifest}</manifest><spine'+(' toc="toc"' if toc and version == 2 else '')+'><itemref idref="c1"/><itemref idref="c2"/></spine></package>')
+        def png_chunk(kind, data):
+            return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data))
+        put('OPS/drawing.png',b'\x89PNG\r\n\x1a\n'+png_chunk(b'IHDR',struct.pack('>IIBBBBB',1,1,8,0,0,0,0))+png_chunk(b'IDAT',zlib.compress(b'\x00\xff'))+png_chunk(b'IEND',b''))
+        for path, text in zip(paths, [ch1, ch2]): put('OPS/'+path, '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>测试章节</title></head><body>'+text+'<p><img alt="测试插图" src="'+('../' if version == 3 else '')+'drawing.png"/></p></body></html>')
         if toc:
             if version == 3:
                 links = ''.join(f'<li><a href="../{p}">{t}</a></li>' for t,p in entries)
-                put('OPS/'+navpath, f'<html xmlns:epub="http://www.idpf.org/2007/ops"><body><nav epub:type="toc"><ol>{links}</ol></nav></body></html>')
+                put('OPS/'+navpath, f'<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"><body><nav epub:type="toc"><ol>{links}</ol></nav></body></html>')
             else:
                 links = ''.join(f'<navPoint id="p{i}"><navLabel><text>{t}</text></navLabel><content src="{p}"/></navPoint>' for i,(t,p) in enumerate(entries))
-                put('OPS/'+navpath, f'<ncx><navMap>{links}</navMap></ncx>')
+                put('OPS/'+navpath, f'<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1"><head><meta name="dtb:uid" content="{identifier}"/><meta name="dtb:depth" content="1"/><meta name="dtb:totalPageCount" content="0"/><meta name="dtb:maxPageNumber" content="0"/></head><docTitle><text>{title}</text></docTitle><navMap>{links}</navMap></ncx>')
     data = target.getvalue(); (ROOT/name).write_bytes(data)
     return data
 

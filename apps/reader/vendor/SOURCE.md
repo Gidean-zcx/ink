@@ -71,11 +71,11 @@ Metalio：CloudZao/Metalio-E-INK4-Plus（MIT，`metalio_core/LICENSE`）。Cross
 
 - `reader_runtime.h` 在编译时把原厂 stdio 名称接到 `reader_port.cc` 的只读 HAL 文件句柄；不修改原厂 ZIP 代码。兼容端口单独构建，不向应用暴露 HAL 或模拟器头。
 - 宿主机独用 `shim/host` 中 IDF 兼容头，GB18030 双字节映射走 iconv；固件使用真实 IDF / FatFS。宿主机 C++ 解析通过 `vtk_host_call` 执行，不读宿主时间；主正文与 miniz/expat 工作内存走应用 PSRAM 分配。
-- miniz 保留 zlib API，禁用归档、写入、时间、压缩 API；为规避 ESP ROM 固定符号，将 tinfl 与 CRC/Adler 导出名加 ink 前缀。同一配置用于固件和宿主机。
+- miniz 保留 zlib API，禁用归档、写入、时间、压缩 API；为规避 ESP ROM 固定符号，将 tinfl 与 CRC/Adler 导出名加 ink 前缀。同一配置用于固件和宿主机。兼容头把 FINISH 换成流式 NO_FLUSH，避免 miniz 首次调用要求输出缓冲能装下整个条目。
 - CrossPoint 的 Print、日志、BookMetadataCache 用小兼容头接 TOC 结果；ContentOpfParser 只以 cache=nullptr 调用，因此其磁盘缓存分支不执行。ContainerParser、ContentOpfParser、NCX/NAV 解析器都保持原文。
-- expat 按 CrossPoint 配置禁用一般实体，输入上下文为 0；锚点绑定使用 expat 回调和原厂 HtmlBlockParser。
+- expat 按 CrossPoint 配置禁用一般实体，输入上下文为 0；宿主机在首次解析前固定 hash salt，避免其熵初始化读取宿主时间；锚点绑定使用 expat 回调和原厂 HtmlBlockParser。
 - 不编译原厂 image_stream 解码链；占位接口明确返回不支持，正文以“［图片］”表示，未宣称图片解码完成。
-- 原厂 vendor 目标独用 -w；内容源、阅读器和端口胶水沿用项目完整警告选项。
+- 原厂 vendor 目标独用 -w；上游头文件标为 SYSTEM；内容源、阅读器和端口胶水沿用项目完整警告选项，固件胶水也启用 -Wshadow。
 
 ## 证据边界
 

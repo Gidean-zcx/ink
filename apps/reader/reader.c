@@ -55,6 +55,7 @@ static struct {
     ink_reader_source_t *source;
     ink_reader_info_t info;
     int chapter;
+    int page_base;
     uint64_t chunk;
     bool more;
     ink_reader_error_t error;
@@ -79,6 +80,15 @@ static struct {
 } RD;
 static bool book_ready(void);
 static const char *source_error(ink_reader_error_t error);
+static void book_object(ink_receipt_t *rc, const char *name, const char *suffix) {
+    size_t tail=strlen(suffix), limit=sizeof rc->object-6;
+    if (tail > limit) tail=limit;
+    size_t n=strlen(name);
+    if (n > limit-tail) n=limit-tail;
+    while (n && ((unsigned char)name[n]&0xc0)==0x80) n--;
+    memcpy(rc->object,"book:",5); memcpy(rc->object+5,name,n);
+    memcpy(rc->object+5+n,suffix,tail); rc->object[5+n+tail]=0;
+}
 
 /* Reading positions are kept per member (foundation §5.5, D-03): one small file per member and book,
  * in the member's data area, named after the book's checksum (titles can be long). */
@@ -96,6 +106,7 @@ static struct {
     int page;
     unsigned offset;
     char file[96];
+    int chapter;
 } LAST;
 
 /* A flash read must not hold up drawing home: the file is prefetched into the read cache and read a little
@@ -116,6 +127,8 @@ static void last_read(lv_timer_t *t) {
     if (offset) sscanf(offset, "\noffset=%u", &LAST.offset);
     const char *file = strstr(data, "\nfile=");
     if (file) sscanf(file, "\nfile=%95[^\n]", LAST.file);
+    const char *chapter = strstr(data,"\nchapter=");
+    if (chapter) sscanf(chapter,"\nchapter=%d",&LAST.chapter);
     ink_app_card_changed("reader");
 }
 
@@ -130,15 +143,16 @@ static void last_load(const char *member) {
 static void last_save(const char *member, const char *book, int page) {
     char path[200], data[320];
     unsigned offset = RD.starts[RD.page];
-    int n = snprintf(data, sizeof data, "page=%d\nbook=%.95s\noffset=%u\nfile=%.95s\n", page, book, offset, LIB.books[LIB.open].key);
+    int n = snprintf(data, sizeof data, "page=%d\nbook=%.95s\noffset=%u\nfile=%.95s\nchapter=%d\n", page, book, offset, LIB.books[LIB.open].key,RD.chapter);
     if (ink_layout_member(path, sizeof path, member, "reader.last") < 0 || n <= 0 || (size_t)n >= sizeof data) return;
-    if (!strcmp(LAST.member, member) && !strcmp(LAST.book, book) && LAST.page == page && !RD.dirty_pos) return; /* as it is on the card */
+    if (!strcmp(LAST.member,member) && !strcmp(LAST.book,book) && LAST.page==page && LAST.chapter==RD.chapter && !strcmp(LAST.file,LIB.books[LIB.open].key)) return;
     ink_probe_count("reader.last_saved");
     if (ink_storage_write_member_atomic(path, data, (size_t)n) != 0) return;
     snprintf(LAST.member, sizeof LAST.member, "%s", member);
     snprintf(LAST.book, sizeof LAST.book, "%s", book);
     LAST.page = page;
     LAST.offset = offset;
+    LAST.chapter = RD.chapter;
     snprintf(LAST.file, sizeof LAST.file, "%s", LIB.books[LIB.open].key);
     ink_app_card_changed("reader");
 }
@@ -185,9 +199,10 @@ static struct {
     ink_ui_list_position_t position;
     ink_reader_source_t *source;
     ink_reader_info_t info;
-    char ids[LIST_ROWS][96], args[LIST_ROWS][80], titles[LIST_ROWS][128];
+    char ids[LIST_ROWS][96], args[LIST_ROWS][640], titles[LIST_ROWS][128], values[LIST_ROWS][64];
     char member[16]; bool toc;
 } LIST;
+_Static_assert(LIST_ROWS <= 16,"list capacity exceeds the shared component");
 static void command(lv_event_t *e) {
     ink_receipt_t rc; ink_cap_invoke(lv_event_get_user_data(e),NULL,INK_SRC_TOUCH,0,&rc);
 }
@@ -195,16 +210,25 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     (void)ctx; unsigned row = (unsigned)(index % LIST_ROWS); ink_reader_entry_t entry = {0};
     if (LIST.toc) ink_reader_source_toc(LIST.source,(int)index,&entry);
     snprintf(LIST.titles[row],sizeof LIST.titles[row],"%s",LIST.toc ? entry.title : LIB.books[index].name);
-    snprintf(LIST.ids[row],sizeof LIST.ids[row],"reader:%u",(unsigned)index);
-    snprintf(LIST.args[row],sizeof LIST.args[row],"{\"%s\":%u}",LIST.toc ? "entry" : "index",(unsigned)index + (LIST.toc ? 1u : 0u));
+    const char *path=LIST.toc ? LIB.books[LIB.open].path : LIB.books[index].path;
+    uint32_t identity=ink_crc32(0,path,strlen(path));
+    snprintf(LIST.ids[row],sizeof LIST.ids[row],"reader:%08x:%d:%llu",(unsigned)identity,LIST.toc ? entry.chapter : 0,(unsigned long long)(LIST.toc ? entry.offset : 0));
+    if (LIST.toc) snprintf(LIST.args[row],sizeof LIST.args[row],"{\"entry\":%u}",(unsigned)index+1);
+    else {
+        ink_jw_t w; ink_jw_init(&w,LIST.args[row],sizeof LIST.args[row]); ink_jw_raw(&w,"{\"title\":"); ink_jw_str(&w,LIB.books[index].name);
+        ink_jw_raw(&w,",\"index\":"); ink_jw_int(&w,(int64_t)index); ink_jw_raw(&w,"}");
+    }
     if (!lv_obj_get_child_count(slot)) {
-        ink_ui_line(slot,"",INK_FONT_LIST,INK_WEIGHT_MEDIUM,INK_GAP,INK_GAP_S,INK_CANVAS_W - 2*INK_MARGIN - 2*INK_GAP);
-        ink_ui_line(slot,"",INK_FONT_NOTE,INK_WEIGHT_REGULAR,INK_GAP,INK_GAP_S+ink_ui_line_height(INK_FONT_LIST),INK_CANVAS_W - 2*INK_MARGIN - 2*INK_GAP);
+        ink_ui_line(slot,"",INK_FONT_LIST,INK_WEIGHT_MEDIUM,INK_GAP,INK_GAP_L,INK_CANVAS_W/2-2*INK_GAP);
+        ink_ui_line(slot,"",INK_FONT_NOTE,INK_WEIGHT_REGULAR,INK_CANVAS_W/2,INK_GAP_L,INK_CANVAS_W/2-2*INK_MARGIN-INK_GAP);
     }
     lv_label_set_text(lv_obj_get_child(slot,0),LIST.titles[row]);
     const char *note = LIST.toc ? TR("点按跳到这里") : !strcmp(LAST.book,LIB.books[index].name) && !strcmp(LAST.member,ink_member_current()->id) ? TR("最近在读") : TR("打开阅读");
+    if (!LIST.toc && !strcmp(LAST.book,LIB.books[index].name) && !strcmp(LAST.member,ink_member_current()->id)) {
+        snprintf(LIST.values[row],sizeof LIST.values[row],TR("第 %d 页"),LAST.page); note=LIST.values[row];
+    }
     lv_label_set_text(lv_obj_get_child(slot,1),note);
-    *field = (ink_ui_field_spec_t){.id=LIST.ids[row],.role="book",.label=LIST.titles[row],.value=note,.object={LIST.ids[row],ink_member_epoch()}};
+    *field = (ink_ui_field_spec_t){.id=LIST.ids[row],.role=LIST.toc ? "chapter" : "book",.label=LIST.titles[row],.value=note,.object={LIST.ids[row],ink_member_epoch()}};
     *action = (ink_ui_action_spec_t){.id=LIST.ids[row],.label=TR("打开"),.capability=LIST.toc ? "reader.goto_chapter" : "reader.open_book",.args_json=LIST.args[row],.object=field->object,.enabled=true};
 }
 static void list_create(lv_obj_t *scr, void *arg) {
@@ -215,13 +239,15 @@ static void list_create(lv_obj_t *scr, void *arg) {
     if (LIST.toc) ink_reader_source_open(LIB.books[LIB.open].path,&LIST.source,&LIST.info);
     else scan_library();
     const char *title = LIST.toc ? TR("目录") : TR("书架");
-    ink_ui_circle(scr,"back",INK_MARGIN,INK_STATUS_BAR,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,command,"system.back");
+    ink_ui_circle(scr,"back",INK_MARGIN,INK_STATUS_BAR,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,command,"shell.back");
     ink_ui_line(scr,title,INK_FONT_TITLE,INK_WEIGHT_BOLD,INK_MARGIN+INK_CONTROL+INK_GAP,INK_STATUS_BAR+INK_GAP_S,INK_CANVAS_W-2*INK_MARGIN-INK_CONTROL-INK_GAP);
-    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS;
+    int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_XS;
     lv_obj_t *body = ink_ui_box(scr,0,y,INK_CANVAS_W,INK_CANVAS_H-y,0,INK_SURFACE_WHITE,false);
-    ink_ui_action_spec_t actions[] = {{.id="prev",.label=TR("上一页"),.capability="reader.list_prev"},{.id="next",.label=TR("下一页"),.capability="reader.list_next"}};
-    ink_ui_page_spec_t page = {.id=LIST.toc ? "chapters" : "reader",.title=title,.object={"reader",ink_member_epoch()},.actions=actions,.action_count=2};
-    LIST.view = ink_ui_list_create(body,&page,&LIST.position,LIST_ROWS,1,INK_ROW_DOUBLE+INK_GAP_L,LIST.toc ? TR("没有目录，按章节阅读") : TR("还没有书，请先从文件传入 TXT 或 EPUB"),bind_row,NULL);
+    ink_ui_action_spec_t actions[] = {{.id="prev",.label=TR("上一页"),.capability="reader.list_prev"},{.id="next",.label=TR("下一页"),.capability="reader.list_next"},
+        {.id="files",.label=TR("文件"),.capability="app.open",.args_json="{\"id\":\"files\"}",.enabled=true}};
+    _Static_assert(sizeof actions/sizeof actions[0] <= LIST_ROWS,"page actions exceed row storage");
+    ink_ui_page_spec_t page = {.id=LIST.toc ? "chapters" : "reader",.title=title,.object={"reader",ink_member_epoch()},.actions=actions,.action_count=LIST.toc ? 2 : 3};
+    LIST.view = ink_ui_list_create(body,&page,&LIST.position,LIST_ROWS,1,INK_CONTROL,LIST.toc ? TR("没有目录，按章节阅读") : TR("还没有书，请先从文件传入 TXT 或 EPUB"),bind_row,NULL);
     ink_ui_list_refresh(LIST.view,LIST.toc ? (size_t)LIST.info.entries : (size_t)LIB.nbooks);
     if (LIST.toc && LIST.info.fallback) ink_ui_notice(scr,TR("没有目录，按章节阅读"),INK_STATUS_BAR+INK_PRIMARY);
 }
@@ -252,7 +278,7 @@ static void act_sample(ink_call_t *c) {
     if (!books) { c->rc.status=INK_RC_FAILED; return; }
     LIB.books=books;
     snprintf(LIB.books[LIB.nbooks].name,sizeof LIB.books[LIB.nbooks].name,TR("夜邮（示例）"));
-    snprintf(LIB.books[LIB.nbooks].key,sizeof LIB.books[LIB.nbooks].key,"夜邮（示例）");
+    snprintf(LIB.books[LIB.nbooks].key,sizeof LIB.books[LIB.nbooks].key,TR_NOOP("夜邮（示例）"));
     snprintf(LIB.books[LIB.nbooks].path,sizeof LIB.books[LIB.nbooks].path,"sample/welcome.txt");
     ink_ui_push(&ink_app_book,(void *)(intptr_t)LIB.nbooks);
     snprintf(c->rc.object, sizeof c->rc.object, "book:sample");
@@ -269,7 +295,7 @@ static void act_continue(ink_call_t *c) {
     for (int i = 0; have && i < LIB.nbooks; i++)
         if (!strcmp(LIB.books[i].name, book)) {
             ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
-            snprintf(rc->object, sizeof rc->object, "book:%s", LIB.books[i].name);
+            book_object(rc,LIB.books[i].name,"");
             snprintf(rc->say, sizeof rc->say, TR("接着读《%s》"), LIB.books[i].name);
             return;
         }
@@ -284,10 +310,10 @@ static void act_open(ink_call_t *c) {
     if (!LIB.nbooks) scan_library();
     int64_t index = -1; ink_args_get_int(&c->args,"index",&index);
     for (int i = 0; i < LIB.nbooks; i++)
-        if (i == index || (title[0] && (strstr(LIB.books[i].name, title) || strstr(title, LIB.books[i].name)))) {
+        if (index >= 0 ? i == index : (title[0] && (strstr(LIB.books[i].name, title) || strstr(title, LIB.books[i].name)))) {
             ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
             if (!book_ready()) { rc->status=INK_RC_FAILED; snprintf(rc->say,sizeof rc->say,"%s",source_error(RD.error)); return; }
-            snprintf(rc->object, sizeof rc->object, "book:%s", LIB.books[i].name);
+            book_object(rc,LIB.books[i].name,"");
             snprintf(rc->say, sizeof rc->say, TR("打开《%s》"), LIB.books[i].name);
             return;
         }
@@ -302,7 +328,7 @@ static const ink_cap_t SHELF_ACTIONS[] = {
     {.id = "reader.list_books", .app = "reader", .title = "书架上有哪些书", .effect = INK_FX_READ, .child_ok = true, .run = act_list},
     {.id = "reader.open_book", .app = "reader",
      .title = "打开一本书",
-     .input = "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"index\":{\"type\":\"integer\",\"minimum\":0}}}",
+     .input = "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"index\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"title\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = act_open},
@@ -362,9 +388,9 @@ static void show_slot(int slot) {
     lv_image_set_src(RD.img, &RD.dsc);
     ink_ui_hint_obj(RD.img, INK_REFRESH_TEXT);
     lv_obj_invalidate(RD.img);
-    int total_known = RD.nstarts > 0 && RD.starts[RD.nstarts - 1] >= RD.len ? RD.nstarts - 1 : -1;
-    if (total_known > 0) lv_label_set_text_fmt(RD.footer, "%d / %d", RD.page + 1, total_known);
-    else lv_label_set_text_fmt(RD.footer, "%d", RD.page + 1);
+    int total_known = !RD.more && RD.nstarts > 0 && RD.starts[RD.nstarts - 1] >= RD.len ? RD.page_base + RD.nstarts - 1 : -1;
+    if (total_known > 0) lv_label_set_text_fmt(RD.footer, "%d / %d", RD.page_base + RD.page + 1, total_known);
+    else lv_label_set_text_fmt(RD.footer, "%d", RD.page_base + RD.page + 1);
     ink_ui_hint_obj(RD.footer, INK_REFRESH_TEXT);
 }
 
@@ -383,7 +409,7 @@ static void ahead_cb(lv_timer_t *t) {
 static void save_cb(lv_timer_t *t) {
     (void)t;
     if (!ink_member_exists(RD.member)) return;
-    last_save(RD.member, LIB.books[LIB.open].name, RD.page + 1); /* also the book just opened */
+    last_save(RD.member, LIB.books[LIB.open].name, RD.page_base + RD.page + 1);
     if (!RD.dirty_pos) return;
     char path[200], data[96];
     pos_path(path,sizeof path,RD.member,LIB.books[LIB.open].key);
@@ -437,9 +463,12 @@ static bool not_open(ink_receipt_t *rc) {
 }
 
 static void page_receipt(ink_receipt_t *rc) {
-    snprintf(rc->object, sizeof rc->object, "book:%.20s#c=%d,p=%d",LIB.books[LIB.open].name,RD.chapter+1,RD.page+1);
-    rc->revision = (uint32_t)RD.page + 1;
-    snprintf(rc->say, sizeof rc->say, TR("现在是第 %d 页"), RD.page + 1);
+    char suffix[40];
+    if (RD.info.epub) snprintf(suffix,sizeof suffix,"#c=%d,p=%d",RD.chapter+1,RD.page_base+RD.page+1);
+    else snprintf(suffix,sizeof suffix,"#page=%d",RD.page+1);
+    book_object(rc,LIB.books[LIB.open].name,suffix);
+    rc->revision = (uint32_t)(RD.page_base + RD.page + 1);
+    snprintf(rc->say, sizeof rc->say, TR("现在是第 %d 页"), RD.page_base + RD.page + 1);
 }
 
 static void act_next(ink_call_t *c) {
@@ -462,6 +491,7 @@ static void act_prev(ink_call_t *c) {
     page_receipt(rc);
 }
 
+static bool seek_page(int page);
 static void act_goto(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     int64_t page;
@@ -471,7 +501,7 @@ static void act_goto(ink_call_t *c) {
         snprintf(rc->detail, sizeof rc->detail, "page must be an integer >= 1");
         return;
     }
-    if (!go_to((int)page - 1)) {
+    if (!seek_page((int)page - 1)) {
         rc->status = INK_RC_FAILED;
         snprintf(rc->detail, sizeof rc->detail, "the book has fewer pages");
     }
@@ -550,7 +580,7 @@ static bool load_section(int chapter, uint64_t offset) {
     size_t n=0; bool more=false;
     RD.error=ink_reader_source_read(RD.source,chapter,offset,RD.text,MAX_BOOK_BYTES+1,&n,&more,NULL,NULL);
     if (RD.error != INK_READER_OK || !n) return false;
-    RD.chapter=chapter; RD.chunk=offset; RD.len=n; RD.more=more; RD.page=0; RD.nstarts=1;
+    RD.chapter=chapter; RD.chunk=offset; RD.len=n; RD.more=more; RD.page=0; RD.page_base=0; RD.nstarts=1;
     if (RD.starts) RD.starts[0]=0;
     RD.buf_page[0]=RD.buf_page[1]=-1; RD.shown=-1;
     snprintf(RD.chapter_title,sizeof RD.chapter_title,TR("第 %d 章"),chapter+1);
@@ -560,17 +590,22 @@ static bool load_section(int chapter, uint64_t offset) {
     return true;
 }
 static bool section_at(int chapter, uint64_t offset) {
-    uint64_t start=0;
+    uint64_t start=0; int base=0;
     do {
         if (!load_section(chapter,start)) return false;
+        RD.page_base=base;
         if (!RD.more || offset < start+RD.len) return true;
+        int page=0; while (find_page_start(page+1) >= 0) page++;
+        base+=page+1;
         start+=RD.len;
     } while (true);
 }
 static bool change_section(int *target) {
     if (*target >= 0) {
         if (!RD.more && RD.chapter+1 >= RD.info.chapters) return false;
+        int base=RD.more ? RD.page_base+RD.nstarts-1 : 0;
         if (!load_section(RD.more ? RD.chapter : RD.chapter+1,RD.more ? RD.chunk+RD.len : 0)) return false;
+        RD.page_base=base;
         *target=0;
     } else {
         if (!RD.chapter && !RD.chunk) return false;
@@ -579,6 +614,21 @@ static bool change_section(int *target) {
         *target=RD.page;
     }
     return true;
+}
+static bool seek_page(int target) {
+    if (!RD.info.epub) return go_to(target);
+    uint64_t saved=RD.chunk+RD.starts[RD.page]; int chapter=RD.chapter;
+    if (target < RD.page_base && !section_at(chapter,0)) return false;
+    while (find_page_start(target-RD.page_base) < 0 && RD.more) {
+        int next=0; if (!change_section(&next)) break;
+    }
+    if (find_page_start(target-RD.page_base) >= 0) return go_to(target-RD.page_base);
+    if (section_at(chapter,saved)) {
+        int page=0;
+        while (find_page_start(page+1) >= 0 && RD.chunk+RD.starts[page+1] <= saved) page++;
+        go_to(page);
+    }
+    return false;
 }
 static bool ensure_source(void) {
     if (RD.source) return true;
@@ -663,7 +713,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
         lv_obj_t *l = lv_label_create(scr);
         lv_obj_set_width(l,lv_pct(90)); lv_obj_set_style_text_font(l,ink_ui_font(2),0);
         lv_label_set_text(l,source_error(RD.error)); lv_obj_center(l);
-        ink_ui_circle(scr,"back",INK_MARGIN,INK_STATUS_BAR,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,command,"system.back");
+        ink_ui_circle(scr,"back",INK_MARGIN,INK_STATUS_BAR,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,command,"shell.back");
         lv_obj_add_flag(scr,LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(scr,page_clicked,LV_EVENT_CLICKED,NULL);
         return;
     }
@@ -679,7 +729,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     RD.layout.indent_em = 2;
     const char *prev = ink_app_tag("reader-pages");
     RD.cap = 256;
-    RD.starts = ink_app_alloc((size_t)RD.cap * sizeof(uint32_t), false);
+    RD.starts = ink_app_alloc((size_t)RD.cap * sizeof(uint32_t), true);
     RD.buf[0] = ink_app_alloc((size_t)RD.bw * RD.bh, true);
     RD.buf[1] = ink_app_alloc((size_t)RD.bw * RD.bh, true);
     ink_app_tag(prev);
@@ -692,7 +742,10 @@ static void book_create(lv_obj_t *scr, void *arg) {
     pos_path(path,sizeof path,RD.member,LIB.books[LIB.open].key);
     unsigned long long saved=0; int chapter=0;
     if (path[0] && ink_storage_read(path,data,sizeof data-1) > 0) sscanf(data,"offset=%llu\nchapter=%d",&saved,&chapter);
-    if (JUMP.pending) { saved=JUMP.offset; chapter=JUMP.chapter; JUMP.pending=false; }
+    if (JUMP.pending) {
+        saved=JUMP.offset; chapter=JUMP.chapter; JUMP.pending=false;
+        RD.dirty_pos=true; RD.dirty_since_us=ink_now_us();
+    }
     if (RD.info.epub && chapter >= 0 && chapter < RD.info.chapters) section_at(chapter,saved);
     if (saved >= RD.chunk) saved-=RD.chunk;
     while (saved && find_page_start(RD.page + 1) >= 0 && RD.starts[RD.page + 1] <= saved) RD.page++;
@@ -700,7 +753,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
 
     RD.title = lv_label_create(scr);
     lv_obj_set_style_text_font(RD.title, ink_ui_font(2), 0);
-    lv_label_set_text(RD.title, LIB.books[LIB.open].name);
+    lv_label_set_text_fmt(RD.title,"%s · %s",LIB.books[LIB.open].name,TR("目录"));
     lv_obj_align(RD.title, LV_ALIGN_TOP_MID, 0, ink_dp(6));
     lv_obj_add_flag(RD.title,LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(RD.title,command,LV_EVENT_CLICKED,"reader.show_chapters");
 
@@ -746,7 +799,7 @@ static void book_destroy(void) {
 static int book_snapshot(char *buf, size_t cap) {
     if (!cap) return 0;
     if (!book_ready()) return snprintf(buf,cap,"%s",source_error(RD.error));
-    int header=snprintf(buf,cap,"%s · %s · %s %d\n",LIB.books[LIB.open].name,RD.chapter_title,TR("章内页"),RD.page+1);
+    int header=snprintf(buf,cap,"%s · %s · %s %d\n",LIB.books[LIB.open].name,RD.chapter_title,TR("章内页"),RD.page_base+RD.page+1);
     if (header < 0 || (size_t)header >= cap) { buf[0]=0; return 0; }
     size_t a = RD.starts[RD.page];
     size_t b = RD.page + 1 < RD.nstarts ? RD.starts[RD.page + 1] : RD.len;
@@ -773,7 +826,7 @@ static bool last_book(char *book, size_t cap, int *page, int *percent) {
     const char *member = ink_member_current()->id;
     if (book_ready() && !strcmp(RD.member, member)) {
         snprintf(book, cap, "%s", LIB.books[LIB.open].name);
-        *page = RD.page + 1;
+        *page = RD.page_base + RD.page + 1;
         if (percent) *percent = (int)(RD.starts[RD.page] * 100ull / RD.len);
         return true;
     }
@@ -799,6 +852,8 @@ static int reader_card(int index, ink_card_t *out) {
     snprintf(out->id, sizeof out->id, "reading");
     snprintf(out->title, sizeof out->title, TR("继续读"));
     snprintf(out->text, sizeof out->text, TR("《%.60s》第 %d 页 · %d%%"), book, page, percent);
+    if (book_ready() ? RD.info.epub : strstr(LAST.file,".epub") != NULL)
+        snprintf(out->text,sizeof out->text,TR("《%.60s》第 %d 章 · 第 %d 页"),book,(book_ready() ? RD.chapter : LAST.chapter)+1,page);
     snprintf(out->action, sizeof out->action, "reader.continue");
     snprintf(out->member, sizeof out->member, "%s", ink_member_current()->id);
     out->value = page;
