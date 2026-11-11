@@ -13,7 +13,7 @@
 | 1c 反向对照 | 【实测】4/4 预期失败 | `usb-cut`、`uv-3200`、`busy-kick`、`instant-light` 各退出 1，命中对应断言；`work/reverse.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build` |
 | 1d 浅睡暂停、恢复与实际电源任务节奏 | 【实测】通过 | `board-vendor-power`：18 项检查，`test.finished=1`，无警告；覆盖清醒 2/10 秒、锁屏但保持清醒、让出 CPU 的 15 秒浅睡期间零调用及醒后恢复；`work/board-vendor-tests.log` | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2` |
 | 2a 普通构建与全量 | 【实测】构建退出 0；全量未通过 | 原话 `97% tests passed, 11 tests failed out of 379`；退出 8，3 项跳过；1105.62 秒；`work/ctest.log` | `taskpolicy -c utility cmake --build build -j2`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
-| 2b ASan/UBSan 全量 | 待执行 | 待补 | 待补 |
+| 2b ASan/UBSan 全量 | 【实测】插桩构建退出 0；全量运行中 | 四个改动产品 C 单元及三个新测试的编译命令全部含 `-fsanitize=address,undefined`；最终结果待补 | 同普通构建，仅换 `build-asan` 并加 `-DINK_SANITIZE=ON`；`ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
 | 2c S31 编译、gcccheck | 【实测】宿主 gcccheck 通过；S31 待编译 | `gcccheck: 7 compiled, 0 with findings`，无跳过；`work/gcccheck.log` | `taskpolicy -c utility python3 ../../tools/gcccheck.py build drivers/chips/cx25601n/cx25601n.c simulator/models/dev_power_chips.c system/services/display/light.c system/services/power/power_service.c tests/board_vendor/charger.c tests/board_vendor/light.c tests/board_vendor/power.c` |
 | 2d 隐私与差异范围 | 待执行 | 待补 | 待补 |
 | 3 原厂差异与上机核对 | 【实现】完成记录 | 见下方原厂行号、哈希、差异与主会话核对顺序；未做实机测试 | 核查原厂只读源码及 `git diff` |
@@ -36,6 +36,7 @@
 
 - 【实现】保留 1 A（芯片量化 960 mA），直接初始化，不经过原厂驱动的 500 mA 临时值；原厂板级最终同样恢复默认 1 A。
 - 【实现】原厂独立任务改接现有电源任务；浅睡调用期间同一任务不执行充电检查，返回后恢复，无新常驻任务。
+- 【实现】当前首轮启动及浅睡返回后立即检查，后续按 2/10 秒间隔；原厂启动时先延后 2/10 秒再检查。首轮相位未完全照搬，列为未达完整一致，不能将周期单测通过理解成所有调度时序相同。
 - 【实现】按任务要求每轮重写 VREG；原厂 `apply_vreg_fixed` 对相同缓存值会提前返回，不能纠正寄存器漂移。
 - 【实现】前光只移植渐变与立即关闭/恢复；保留现有暖光混合与 PWM 映射，未移植原厂 10% 输出上限（任务未要求改变曲线）。
 - 【实现】私有寄存器解锁或写入失败会返回失败并由板级记录，原厂部分写入忽略返回值；不新增重试，解锁最多十次沿原厂。
@@ -48,8 +49,9 @@
 
 - 是否开放可选充电电流不在本任务范围，保持 1 A。
 - 上机前核对实际电芯/标签的最高充电电压是否支持 4400 mV、1 A（量化 960 mA）、终止 60 mA、预充代码 12；3.1 V 断电和有效采样下限 2.5 V 也需结合电池保护规格确认。原厂电池测试曲线仅充至 4.3 V，不能据此证明 4.4 V 适用。
-- 后续修复范围需由主会话定：现有语音场景只有 8 B 内部 RAM 余量，前光新增同步对象需回收 208 B；不能提高预算。检查可用的更小方案时，延迟创建不能消除亮度过渡与语音重叠的峰值，借用刷屏锁会阻塞 5 ms 回调，新增 OSAL 外部内存创建接口超出任务范围，均未擅自实施。
+- 后续修复范围需由主会话定：现有语音场景只有 8 B 内部 RAM 余量，前光新增同步对象需回收 208 B；不能提高预算。检查可用的更小方案时，测试准备阶段都设置了 40% 亮度，单纯延迟创建仍会占用这两项对象；借用刷屏锁会阻塞 5 ms 回调；新增 OSAL 外部内存创建接口超出任务范围，均未擅自实施。
 - 【实现】原厂 kick 的 200 ms + 500 ms 等待目前发生在现有电源任务，期间该任务不能处理下一次状态通知；【估算】可能影响上述时序场景。若改为分段非阻塞控制或额外执行器调度，需要新增状态/调度机制；总规则不允许本任务自行扩大，故记录待主会话确定，未逐个场景补丁、加 sleep 或放宽测试。
+- 【实测】待机场景的唤醒到可见最大值从基线 822.765 ms 增为 1432.102 ms，超过原有 1200 ms；原基线有一次 `power.sleep_cancelled`，本分支未记录到。这是明确回归，不修改脚本点按时刻掩盖。
 
 ## 顺手发现
 
