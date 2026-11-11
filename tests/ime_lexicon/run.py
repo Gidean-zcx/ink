@@ -33,15 +33,19 @@ for item in (build / "assets").iterdir():
         (bare / item.name).symlink_to(item)
 (bare / "ime").mkdir()
 (bare / "ime/base.ikd").write_bytes(b"")
+# flash: the card's copy is rubbish, so the engine falls through to the pack's.
+spoilt = work / "spoilt-content"
+(spoilt / ".system/ime").mkdir(parents=True)
+(spoilt / ".system/ime/base.ikd").write_bytes(b"IKD1" + bytes(60))
 summary = {"cases": len(corpus), "bytes": shipping.stat().st_size,
            "sha256": hashlib.sha256(shipping.read_bytes()).hexdigest(), "reproducible": True}
-# flash: no card copy, the asset pack's word list mapped in place: the same answers, and no RAM for it.
+# flash: no usable card copy, the asset pack's word list mapped in place: the same answers, and no RAM for it.
 for phase in ("dictionary", "flash", "fallback", "reverse"):
     output = work / phase
     result = subprocess.run([str(build / "sim-ime-lexicon"),
                              "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
                              "--assets", str(bare if phase in ("fallback", "reverse") else build / "assets"),
-                             "--content", str(build / "test-content" if phase == "dictionary" else empty),
+                             "--content", str(build / "test-content" if phase == "dictionary" else spoilt if phase == "flash" else empty),
                              "--out", str(output), "--end", "60s", "--quiet", "--no-random-outages",
                              "--budget", str(ROOT / "tests/integration/textinput.budget.json")],
                             env={**os.environ, **({"INK_IME_FALLBACK": "1"} if phase == "fallback" else {}),

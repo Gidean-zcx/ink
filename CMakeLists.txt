@@ -1175,13 +1175,20 @@ if(INK_HAVE_FONTS)
   target_link_libraries(sim-textinput PRIVATE ink_apps ink_system ink_port_sim)
   target_compile_options(sim-textinput PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
   add_dependencies(sim-textinput ink_mini_content)
+  # The no-dictionary scenarios: the asset pack's word list is shadowed by an empty one (searched first), so only the
+  # program's small table is left, as before the word list shipped in the pack.
+  file(WRITE ${CMAKE_BINARY_DIR}/assets-noime/ime/base.ikd "")
   foreach(v main nocard baddict)
+    set(text_assets --assets ${INK_ASSETS_DIR})
+    if(NOT v STREQUAL main)
+      set(text_assets --assets ${CMAKE_BINARY_DIR}/assets-noime --assets ${INK_ASSETS_DIR})
+    endif()
     add_test(NAME integration-text-${v}
       COMMAND ${CMAKE_COMMAND} -E env INK_TEXT_PHASE=${v}
               $<TARGET_FILE:sim-textinput> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
               --budget ${CMAKE_SOURCE_DIR}/tests/integration/textinput.budget.json
               --script ${CMAKE_SOURCE_DIR}/tests/integration/textinput_${v}.script
-              --assets ${INK_ASSETS_DIR} --content ${INK_MINI_CONTENT}
+              ${text_assets} --content ${INK_MINI_CONTENT}
               --out ${CMAKE_BINARY_DIR}/test-out/text-${v} --quiet --no-random-outages)
   endforeach()
   # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).

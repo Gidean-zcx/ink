@@ -97,6 +97,10 @@ static const ink_cap_t CAPS[] = {
     {.id = "ai.history.open", .app = "ai", .title = "打开自己的一条对话记录", .input = HISTORY_ID, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_BG, .run = history},
     {.id = "ai.history.delete", .app = "ai", .title = "删除自己的一条对话记录", .input = HISTORY_ID, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = history},
     {.id = "ai.history.clear", .app = "ai", .title = "清空自己的全部对话记录", .ask = "清空全部对话记录，删了找不回。", .ask_by_hand = true, .effect = INK_FX_LOCAL_DESTRUCTIVE, .child_ok = true, .exec = INK_EXEC_BG, .run = history},
-    {.id = "ai.history.changed", .app = "ai", .title = "自己的对话记录已改变", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true}
+    /* Device-only (INK_EXPOSE_APP): it refreshes the history page. Sent to the hub it left a member event queued at
+     * every answer, so a member switch after an answer cancelled the link instead of a light identity sync
+     * (device-events, batch gate 2026-11-11); the hub answered the turn and has nothing to learn from it. */
+    {.id = "ai.history.changed", .app = "ai", .title = "自己的对话记录已改变", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true,
+     .expose = INK_EXPOSE_APP}
 };
 int ink_ai_history_init(void) { return ink_db_register(&HISTORY) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS); }
