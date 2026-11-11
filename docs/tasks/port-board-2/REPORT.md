@@ -8,7 +8,7 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1.1 I2C／B12 | 通过【实现／实测】 | 原厂整文件编入；100 kHz、10 ms stretch、启动恢复脉冲 | `ctest --test-dir build-s31-host -R 'vendor-i2c-(recovery|stretch)'` |
+| 1.1 I2C／B12 | 通过【实现／实测】 | 原厂整文件编入；100 kHz、10 ms stretch、启动恢复脉冲；分器件读预算 200/100 ms | `ctest --test-dir build-s31-host -R 'vendor-i2c-(recovery|stretch)'` |
 | 1.1 Flash 排空 | 没完成【实现】 | 原厂 drain 原语编入且单测通过，现有存储入口未接它 | `ctest --test-dir build-s31-host -R vendor-i2c-flash`；见“没做到的” |
 | 1.1 TCA／B13 | 通过【实现／实测】 | 原厂同锁 STOP 读；power_i2c repeated START 失败后 STOP 回退 | `ctest --test-dir build-s31-host -R 'vendor-i2c-(stop|fallback)'` |
 | 1.2 开机清理／C10 | 通过【实现／实测】 | GPIO IRQ／唤醒、UHCI 和 EPD／SD／I2C／前光 hold 清理；boot guard 最早 getter 只触发一次 | `ctest --test-dir build-s31-host -R vendor-board-boot`；入口顺序经代码核对 |
@@ -19,10 +19,10 @@
 | 1.6 加速度计／B11 | 通过【实现／实测】 | 原厂配置／mg 换算／静默；0x19→0x18，配置失败仍清 AOI1_SRC、关闭共享 INT | `ctest --test-dir build-s31-host -R 'vendor-board-accel-'` |
 | 1.6 马达 | 通过【实现／实测】 | 原厂 20 ms PWM、14/18/20 ms 三档与脉冲定时器；放电脉冲先于普通引擎创建 | `ctest --test-dir build-s31-host -R 'vendor-board-(vibe|reset)'` |
 | 1 来源与规模 | 通过【实测】 | 23 份原文 SHA-256 一致；胶水 342/350 行 | `python3 ports/esp32s31/tests/vendor_sources.py --baseline 281dbe71` |
-| 2 宿主机／反向对照 | 通过【实测】 | 普通全量 47/47；18 次撤修均编译 0、断言退出 -6 | `ctest --test-dir build-s31-host --output-on-failure -j2`；`python3 ports/esp32s31/tests/vendor_negative.py --out build-s31-host/reverse` |
+| 2 宿主机／反向对照 | 通过【实测】 | 普通全量 48/48；19 次撤修均编译 0、断言退出 -6 | `ctest --test-dir build-s31-host --output-on-failure -j2`；`python3 ports/esp32s31/tests/vendor_negative.py --out build-s31-host/reverse` |
 | 2 主工程普通全量 | 未通过【实测】 | 原话 `99% tests passed, 1 tests failed out of 391`；唯一失败 `integration-races`，基线驱动对照同样失败；3 项 Hub 已用现有锁定环境补跑通过，连同自检／确定性共 7/7 | `ctest --test-dir build --output-on-failure -j2`；[基线证据](EVIDENCE.md) |
-| 2 S31 编译 | 通过【实测】 | 最终代码 `31153eab` 完整屏幕输出层编入；编译器 warning 0；镜像 `0x428a10`，应用分区剩余 17% | `bash ports/esp32s31/build.sh` |
-| 2 内存／GCC | 通过【实测】 | S31 宿主机 ASan＋UBSan 全量 47/47；gcccheck 两组 3＋4 翻译单元均无发现 | 见 [EVIDENCE.md](EVIDENCE.md) |
+| 2 S31 编译 | 通过【实测】 | 最终代码 `a0ab3315` 完整屏幕输出层编入；编译器 warning 0；镜像 `0x428a10`，应用分区剩余 17% | `bash ports/esp32s31/build.sh` |
+| 2 内存／GCC | 通过【实测】 | S31 宿主机 ASan＋UBSan 全量 48/48；gcccheck 两组 3＋4 翻译单元均无发现 | 见 [EVIDENCE.md](EVIDENCE.md) |
 | 3 上机核对清单 | 已写，未上机【实现】 | 下表给出日志和通过条件 | 本次禁止操作设备 |
 
 ## 没做到的
@@ -82,7 +82,7 @@
 
 ## 最终检查
 
-【实测】最终 S31 增量编译退出 0；普通宿主机 47/47、ASan/UBSan 47/47、18 条反向对照、7 项补跑均通过；主工程全量的基线驱动对照失败如实保留。源码只在本任务允许的 70 个文件中，无构建产物、设计稿、设备数据或共享文档修改；`git diff --stat 281dbe71..HEAD` 已核对。
+【实测】最终 S31 增量编译退出 0；普通宿主机 48/48、ASan/UBSan 48/48、19 条反向对照、7 项补跑均通过；主工程全量的基线驱动对照失败如实保留。源码只在本任务允许的 70 个文件中，无构建产物、设计稿、设备数据或共享文档修改；`git diff --stat 281dbe71..HEAD` 已核对。
 
 - 隐私：`git diff 281dbe71..HEAD | grep -nE '[/]Users/|[/]private/tmp|[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}'` 匹配 0 行（grep 退出 1）。
 - 文件／链接／来源：本地 Markdown 链接、23 份原文 SHA-256、适配副本在 SOURCE.md 中的哈希均有效。全范围 `git diff --check` 退出 2，仅原厂 `pca9555.h:24` 一条行尾空格；为保持逐字节原文而保留。排除原文副本后该检查退出 0。
@@ -90,4 +90,4 @@
 
 ## 最后参数核对
 
-【实现／实测】按原厂 `bq27220_gauge.cc:13` 将 HAL 电量计寄存器读取预算由误用的 1000 ms 改为 200 ms；来源及哈希补入 SOURCE.md。新增精确预算断言后，普通 S31 宿主机为 48/48、反向对照 19 条全部通过、gcccheck 4 个翻译单元通过。该最后修正的 ASan 与 S31 增量结果待补。
+【实现／实测】按原厂 `bq27220_gauge.cc:13` 将 HAL 电量计寄存器读取预算由误用的 1000 ms 改为 200 ms；来源及哈希补入 SOURCE.md。新增精确预算断言后，普通 S31 宿主机为 48/48、反向对照 19 条全部通过、gcccheck 4 个翻译单元通过。该最后修正已通过 ASan/UBSan 全量 48/48 和 S31 增量编译；19 条反向对照中包含将 200 ms 撤回误值后断言失败。
