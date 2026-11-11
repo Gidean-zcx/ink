@@ -72,6 +72,10 @@ static void check_snapshot(void) {
 }
 static void check_recovered(void) { CHECK(!strcmp(ink_text_value(), "SYNTH_SAVED_AND_UNSAVED草稿"), "power cut restores edited draft"); }
 static void failed_write(void) {
+    lv_obj_t *editing = F.field; F.field = NULL;
+    operation_done((void *)((uintptr_t)F.serial << 3), &(ink_receipt_t){.status = INK_RC_FAILED, .say = "SYNTH_READ_FAILURE"});
+    CHECK(!strcmp(lv_label_get_text(F.notice), "SYNTH_READ_FAILURE"), "a read failure before opening the editor does not claim text was retained");
+    F.field = editing;
     operation_done((void *)((uintptr_t)F.serial << 3), &(ink_receipt_t){.status = INK_RC_FAILED});
     CHECK(F.mode == EDIT && !strcmp(ink_text_value(), "SYNTH_SAVED") && strstr(lv_label_get_text(F.notice), "文件没有更新"), "failed file write retains text and identifies the unsaved file");
     lv_area_t keyboard, notice; ink_shell_keyboard_area(&keyboard); lv_obj_update_layout(F.notice); lv_obj_get_coords(F.notice, &notice);

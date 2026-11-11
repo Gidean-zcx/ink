@@ -58,7 +58,7 @@ static void operation_done(void *ctx, const ink_receipt_t *rc) {
     if (!current(ctx)) return;
     F.busy = F.multi && rc->status == INK_RC_PENDING_CONFIRMATION;
     if (rc->status == INK_RC_DONE && (F.mode == NAME || F.mode == EDIT)) { if (F.mode == EDIT) { ink_db_t *db = ink_db_open_cached_member(&DRAFT_REFS, F.member); if (db) { ink_db_del(db, F.ref, INK_SRC_TOUCH); ink_db_flush(db); ink_db_close(db); } snprintf(F.result, sizeof F.result, "%s", TR("文件已更新")); } ink_ui_pop(); return; }
-    if (F.mode == EDIT && rc->status != INK_RC_DONE) {
+    if (F.mode == EDIT && F.field && rc->status != INK_RC_DONE) {
         lv_area_t keyboard; ink_shell_keyboard_area(&keyboard); status(TR("文件没有更新，文字仍在这里"));
         lv_obj_set_width(F.notice, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_CONTROL - INK_CIRCLE_SMALL - 2 * INK_GAP_S));
         lv_obj_set_y(F.notice, keyboard.y1 - ink_ui_px(2 * ink_ui_line_height(INK_FONT_NOTE) + INK_GAP));

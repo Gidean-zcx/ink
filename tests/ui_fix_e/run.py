@@ -86,3 +86,5 @@ if a.baseline and not a.capture:
     print("PASS: removing all four UI fixes fails UX09, UX15 and UX18", flush=True)
 else:
     assert r.returncode == 0 and counts.get("test.finished") == 1 and not counts.get("test.fail", 0), summary
+if r.returncode == 0 and not os.environ.get("INK_KEEP_EVIDENCE"):
+    shutil.rmtree(work)
