@@ -703,7 +703,7 @@ static void bad_dictionaries(void) {
             uint16_t word_len, freq;
         } entry;
         char text[4];
-    } bad = {.magic = "IKD1", .nkeys = 1, .nentries = 1, .keys_off = 32, .entries_off = 44, .text_off = 52, .text_len = 4, .key = {0, 2, 1, 0}, .entry = {0x7fffffff, 2000, 1}, .text = "dede"};
+    } bad = {.magic = {'I', 'K', 'D', '1'}, .nkeys = 1, .nentries = 1, .keys_off = 32, .entries_off = 44, .text_off = 52, .text_len = 4, .key = {0, 2, 1, 0}, .entry = {0x7fffffff, 2000, 1}, .text = {'d', 'e', 'd', 'e'}};
     bad.crc = ink_crc32(0, &bad.key, sizeof bad - 32);
     write_card_file(&bad, sizeof bad);
     focus_as(INK_TEXT_PLAIN, NULL, 0);

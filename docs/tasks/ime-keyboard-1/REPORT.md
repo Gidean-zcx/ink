@@ -6,13 +6,31 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过 | `ime-keyboard1` 531 次检查，0 失败；现有 `semantics-shell2-keyboard` 通过；三处单点反向变异均检出预期失败 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(ime-keyboard1\|semantics-shell2-keyboard)$'`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ime_keyboard1.py --build build --reverse` |
-| 2 | 【实测】部分完成，继续验证 | 普通版首轮原话 `99% tests passed, 3 tests failed out of 375`，1013.41 秒；3 项中枢依赖测试跳过。中文标点旧期望已更新，文字输入三项重跑全部通过；清单过期及备份失败另列下文。gcccheck 为 `3 compiled, 0 with findings`，ui-scale 通过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；`-R '^integration-text-(main\|nocard\|baddict)$'` |
-| 3 | 【实测】通过 | 六张 684×1216 模拟屏截图已逐张目视核对；键盘文字、图标无裁切、遮挡，布局边界断言通过 | 同 `ime-keyboard1`，证据在 `build/test-out/ime-keyboard1-current/` |
+| 1.1 英文直输与空格 | 【实测】通过 | 按真实控件得到 `niab c`，没有组合串 | C1 |
+| 1.2 切回中文 | 【实测】通过 | `ni` 重新进入组合串并出现真实候选 | C1 |
+| 1.3 未提交拼音 | 【实测】通过 | 点“中”后 `ni` 原样上屏且组合串清空 | C1 |
+| 1.4 中英文标点 | 【实测】通过 | 中文 `，。？`，英文 `,.?`；符号页键面与输入一致 | C1 |
+| 1.5 特殊输入框 | 【实测】通过 | 密码、网址、数字、电话没有模式键，保留原有输入过滤；密码拒绝 AI 操作并遮蔽内容 | C1 |
+| 1.6 模式保持与默认值 | 【实测】通过 | 换普通框及经过特殊框后保持英文；每次新进程默认中文 | C1 |
+| 1.7 AI 切换与快照 | 【实测】通过 | `keyboard.key(code=3)` 返回完成，快照同步显示 `输入=中文/英文` | C1 |
+| 1.8 反向对照 | 【实测】通过 | 三处独立单点变异均触发指定失败，每次模拟器退出 1，对照脚本退出 0 | C2 |
+| 2.1 普通版全量 | 【实测】部分通过 | 原话 `99% tests passed, 3 tests failed out of 375`，1013.41 秒；3 项跳过。标点旧期望更新后文字输入三项重跑全部通过，余下两项基线失败见下文 | C3、C4 |
+| 2.2 ASan + UBSan 全量 | 待验证 | 独立 `build-asan` 已配置，正在构建 | C3，目录改为 `build-asan` |
+| 2.3 S31 | 【实测】通过 | 完整构建、资源打包、size/stack 报告退出 0；两份修改的产品 C 均编入；镜像 3302304 B；产品 C 代码 0 警告，另有 5 条 SDK CMake 配置警告及 1 条 shell 补全警告 | C5；`work/ime-keyboard-1/s31.log`、`build-s31/export.log` |
+| 2.4 gcccheck | 【实测】通过 | `gcccheck: 4 compiled, 0 with findings`，无跳过 | C6 |
+| 2.5 ui-scale | 【实测】通过 | `ui-scale: 51 files, 0 violations` | C7 |
+| 2.6 能力清单 | 【实测】运行时通过，文档未通过 | 生成文件检查通过：`Runtime matches: 452 capabilities, 34 settings`；运行时及策略 ctest 通过；提交的共享文档在基线已过期 | C8 |
+| 3 截图与图标 | 【实测】通过 | 中/英文界面各三张 684×1216 图已逐张目视核对；键盘文字、图标无裁切、遮挡，几何断言通过；图标保留读屏标签 | C1；`build/test-out/ime-keyboard1-current/` |
+
+`ime-keyboard1` 共 531 次检查，0 失败；既有 `semantics-shell2-keyboard` 同样通过。配置参数与总规则 §5 一致，所有构建/测试限制为 `-j2`，ASan 只更换目录并增加 `-DINK_SANITIZE=ON`。
 
 ## 没做到的
 
-ASan、S31 尚在执行。能力清单文档检查已发现基线过期（452 项能力/事件、34 项设置，文档还是 448、31）；本次生成清单与基线逐字相同，不修改规则禁止改的共享文档。`small-gaps-3-backup` 在自动备份设置点按后失败，正在用基线源码独立核查。
+ASan 尚在执行，普通版全量没有全部通过：
+
+- `capability-table-doc`：基线文档仍为 448 项能力/事件、31 项设置，代码已有 452、34。本次生成清单与基线逐字相同；规则禁止修改这份共享文档。
+- `small-gaps-3-backup`：在 `tests/small_gaps_3/main.c:57` 首先失败，共 16 个失败。用基线的 `keyboard.c`、`text_service.c` 重新编译并链接原测试后，同样 16 个失败、首个失败及其虚拟时刻一致；不修改任务外备份代码。命令和证据：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B work/ime-keyboard-1/baseline_backup.py`、`work/ime-keyboard-1/baseline-backup.log`。
+- `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 因给定 Python 环境缺中枢测试依赖按原脚本跳过，未算作通过。
 
 ## 和设计不一致的
 
@@ -35,13 +53,15 @@ ASan、S31 尚在执行。能力清单文档检查已发现基线过期（452 �
 | 368 | `ab,.` → `ab，。` |
 | 370 | `开头ab,.` → `开头ab，。` |
 
+同文件 706 行：二进制夹具的 `.magic = "IKD1"` 和 `.text = "dede"` 改为逐字节初始化。原来两个数组都只有 4 字节，GCC 15 报 `unterminated-string-initialization`，挡住必需的 gcccheck；改后字节、布局和校验内容不变。修前 gcccheck 退出 1、报告两处错误，修后四个文件全部通过；未禁用告警。证据：`work/ime-keyboard-1/gcccheck-before-fixture.log`、`gcccheck-final.log`。
+
 ## 要用户定的
 
 无。
 
 ## 顺手发现
 
-无。
+备份基线失败、能力文档过期和旧二进制测试夹具告警均见上文；除阻挡 gcccheck 的夹具写法外未扩大修复范围。
 
 ## 新增的机制
 
@@ -57,3 +77,28 @@ ASan、S31 尚在执行。能力清单文档检查已发现基线过期（452 �
 - 反向对照（临时副本，每次仅改一处）：英文仍走拼音、切换丢拼音、标点忽略模式，各产生 2 个断言失败，模拟器退出码均为 1；对照脚本均确认命中指定断言，退出码为 0。恢复正常实现后 531 次检查通过。
 - 六张截图：`snap-ImePinyin-zh.png`、`snap-ImeEnglish-zh.png`、`snap-ImeSymbols-zh.png`、`snap-ImePinyin-en.png`、`snap-ImeEnglish-en.png`、`snap-ImeSymbols-en.png`。中文/英文输入均使用同一模式键和标点入口；图标按 `INK_ICON_MEDIUM` 与主题间距缩放，并保留读屏文字和语义标签。
 - 架构审视：【实现】模式与标点归文字服务，界面只显示和调能力；按钮和 AI 均走 `keyboard.key`；模式、图标文字和切换键值在快照可读；密码内容继续遮蔽且 AI 不能操作。
+- 规模：【实测】产品代码新增 52、删除 12，净增 40 行；另有 5 行 CMake 注册，不超过 200 行预算。
+
+## 复核命令
+
+以下从仓库根目录运行，`PY="$INK_DEPS/build-deps/pyenv/bin/python"`、`CTEST="$INK_DEPS/build-deps/pyenv/bin/ctest"`，构建配置按任务书。
+
+```sh
+# C1：保留本任务截图及断言证据
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$CTEST" --test-dir build --output-on-failure -j2 -R 'ime-keyboard1|semantics-shell2-keyboard'
+# C2：三处反向对照，只在构建目录生成副本，不依赖 Git 历史
+taskpolicy -c utility "$PY" -B tests/ime_keyboard1.py --build build --reverse
+# C3：全量，ASan 对应 build-asan
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$CTEST" --test-dir build --output-on-failure -j2
+# C4：中文标点旧期望更新后的既有回归
+taskpolicy -c utility "$CTEST" --test-dir build --output-on-failure -j2 -R '^integration-text-(main|nocard|baddict)$'
+# C5：只编译
+INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh
+# C6
+taskpolicy -c utility "$PY" -B ../../tools/gcccheck.py build system/services/text/text_service.c system/ui/shell/keyboard.c tests/ime_keyboard1.c tests/integration/textinput.c
+# C7
+taskpolicy -c utility "$PY" -B tools/ui_scale_check.py
+# C8：不改共享文档；另用 ctest 的 capability-table 系列检查运行时和策略
+taskpolicy -c utility "$PY" -B tools/capabilities.py --output work/ime-keyboard-1/capabilities.generated.md
+taskpolicy -c utility "$PY" -B tools/capabilities.py --output work/ime-keyboard-1/capabilities.generated.md --check --runtime build/test-out/capability-table/capability-inventory.json
+```
