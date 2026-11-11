@@ -232,7 +232,7 @@ static void decode_region(region_job_t *j) { /* exec.media */
     int x = 0, y = 0, w = 0, h = 0, hint = 0;
     if (!current) ink_probe_count("remote.stale_regions");
     else if (j->len >= 10) {
-        x = p[0] | p[1] << 8, y = p[2] | p[3] << 8, w = p[4] | p[5] << 8, h = p[6] | p[7] << 8, hint = p[9];
+        x = p[0] | p[1] << 8, y = p[2] | p[3] << 8, w = p[4] | p[5] << 8, h = p[6] | p[7] << 8, hint = p[9] < 3 ? p[9] : 1;
         int enc = p[8];
         size_t px = (size_t)w * (size_t)h, packed = (px + 1) / 2;
         if (w > 0 && h > 0 && x + w <= RS.w && y + h <= RS.h) {
@@ -264,7 +264,14 @@ static void decode_region(region_job_t *j) { /* exec.media */
                 RS.dirty[RS.ndirty].a = (lv_area_t){x, y, x + w - 1, y + h - 1};
                 RS.dirty[RS.ndirty].hint = (uint8_t)hint;
                 RS.ndirty++;
-            } else RS.repaint = true; /* too many: show all of it */
+            } else { /* Keep the overflow in one region without upgrading its waveform. */
+                lv_area_t *a = &RS.dirty[DIRTY_MAX - 1].a;
+                if (x < a->x1) a->x1 = x;
+                if (y < a->y1) a->y1 = y;
+                if (x + w - 1 > a->x2) a->x2 = x + w - 1;
+                if (y + h - 1 > a->y2) a->y2 = y + h - 1;
+                if (hint > RS.dirty[DIRTY_MAX - 1].hint) RS.dirty[DIRTY_MAX - 1].hint = (uint8_t)hint;
+            }
         }
         show = j->flags & INK_RT_F_LAST;
         if (show) RS.holding = true;

@@ -26,7 +26,6 @@ static struct {
     bool pressed;
     bool hidden, speaking, expanded;
     const ink_ui_overlay_t *overlay;
-    ink_exec_job_t refine;
 } A INK_PSRAM_BSS;
 static void audio_changed(void *ctx, int handle, const char *id);
 
@@ -45,14 +44,6 @@ static bool key(ink_key_t k, bool lng) {
     return true;
 }
 static const ink_ui_overlay_t OVERLAY = {.name = "Ai", .level = -1, .on_key = key, .snapshot = ink_shell_ai_snapshot};
-
-static void refine(void *arg) {
-    (void)arg;
-    if (!A.root || A.hidden) return;
-    ink_ui_cause(0, NULL);
-    ink_ui_hint_obj(A.root, INK_REFRESH_FLASH_UI);
-    lv_obj_invalidate(A.root);
-}
 
 /* Pages from page `from` on: the pages before it end where they did (a streamed answer only grows). */
 static void paginate(int from) {
@@ -264,7 +255,6 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     draw_words();
     A.overlay = &OVERLAY; ink_ui_overlay_add(A.overlay, A.root);
     ink_ui_hint_obj(A.root, INK_REFRESH_FAST);
-    ink_exec_post(INK_EXEC_UI, &A.refine, refine, NULL);
     *root = A.root; *status = A.status; *question = A.question; *answer = A.answer;
 }
 
