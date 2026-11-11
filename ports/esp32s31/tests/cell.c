@@ -189,7 +189,9 @@ esp_netif_t *esp_netif_new(const esp_netif_config_t *cfg) {
 }
 esp_err_t esp_netif_set_mac(esp_netif_t *n, uint8_t *mac) { assert(n == &netif && mac[0] == 2 && mac[5] == 1); return ESP_OK; }
 esp_err_t esp_netif_set_default_netif(esp_netif_t *n) { assert(n == &netif); return ESP_OK; }
-void esp_netif_action_start(void *n, esp_event_base_t b, int32_t id, void *p) { (void)b; (void)id; (void)p; assert(n == &netif); }
+/* As esp_netif_config_sanity_check in the tcpip task: no driver handle, transmit or free -> ESP_ERROR_CHECK aborts. */
+void esp_netif_action_start(void *n, esp_event_base_t b, int32_t id, void *p) { (void)b; (void)id; (void)p; assert(n == &netif);
+    assert(net_driver.handle && net_driver.transmit && net_driver.driver_free_rx_buffer); }
 void esp_netif_action_connected(void *n, esp_event_base_t b, int32_t id, void *p) { (void)b; (void)id; (void)p; ((esp_netif_t *)n)->connected = true; }
 void esp_netif_action_disconnected(void *n, esp_event_base_t b, int32_t id, void *p) { (void)b; (void)id; (void)p; ((esp_netif_t *)n)->connected = false; }
 esp_err_t esp_netif_receive(esp_netif_t *n, void *data, size_t len, void *ctx) {

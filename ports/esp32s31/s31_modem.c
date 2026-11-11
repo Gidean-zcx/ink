@@ -382,7 +382,9 @@ void ink_s31_cell_netif_init(void) { /* same ETH/DHCP flags as upstream InitIotE
     esp_netif_inherent_config_t base = ESP_NETIF_INHERENT_DEFAULT_ETH();
     base.flags &= ~ESP_NETIF_FLAG_GARP;
     base.if_key = "INK_NT26"; base.if_desc = "nt26"; base.route_prio = 10;
-    esp_netif_driver_ifconfig_t driver = {.transmit = ink_eth_tx, .driver_free_rx_buffer = ink_eth_free};
+    /* esp_netif_start checks for a driver handle in the tcpip task and aborts without one (first device run
+     * 2026-11-11: a panic in tcpip at boot, three times, then the fallback). The callbacks ignore it. */
+    esp_netif_driver_ifconfig_t driver = {.handle = &ink_cell, .transmit = ink_eth_tx, .driver_free_rx_buffer = ink_eth_free};
     esp_netif_config_t cfg = {.base = &base, .driver = &driver, .stack = ESP_NETIF_NETSTACK_DEFAULT_ETH};
     esp_netif_t *netif = esp_netif_new(&cfg);
     if (!netif) return;
