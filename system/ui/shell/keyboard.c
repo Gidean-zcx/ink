@@ -1,5 +1,5 @@
 /* LVGL keyboard maps feed the existing text capabilities; the service owns all edits. */
-/* ui-scale-runtime: dimension area.y1,key_height,keyboard_height Theme-derived keyboard geometry scales with the current text line. */
+/* ui-scale-runtime: dimension area.y1,key_height,keyboard_height,make_board,height Theme-derived keyboard geometry scales with the current text line. */
 #include <stdio.h>
 #include <string.h>
 
@@ -22,7 +22,7 @@
 enum { KEYBOARD_FIELDS_MAX = 9 + INK_TEXT_PAGE, KEYBOARD_BUTTON_MAX = 48, KEYBOARD_MAP_MAX = KEYBOARD_BUTTON_MAX + 6 };
 
 static struct {
-    lv_obj_t *root, *keys, *board, *cands, *composing, *edit, *fold;
+    lv_obj_t *root, *keys, *board, *footer, *cands, *composing, *edit, *fold;
     lv_obj_t *cand_btn[INK_TEXT_PAGE], *cand_label[INK_TEXT_PAGE], *more, *mic;
     lv_obj_t *cand_icon[INK_TEXT_PAGE];
     lv_obj_t *icons[3];
@@ -49,8 +49,9 @@ static int keyboard_height(void) {
     ink_text_type_t type = ink_text_type();
     bool number = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE;
     bool nine = type == INK_TEXT_PLAIN && !ink_text_english() && !K.symbols && ink_setting_get("text.nine_key");
-    int top = number ? 0 : ink_ui_line_height(INK_FONT_LIST) + key_height(false) + 2 * INK_KB_GAP;
-    return top + (number ? 5 : 4) * key_height(number || nine) + (number ? 4 : 3) * INK_KB_GAP;
+    int top = ink_ui_line_height(INK_FONT_LIST) + key_height(false) + 2 * INK_KB_GAP;
+    return top + (number ? 3 * key_height(true) + 2 * key_height(false) + 4 * INK_KB_GAP :
+                          4 * key_height(nine) + 3 * INK_KB_GAP);
 }
 void ink_shell_keyboard_area(lv_area_t *area) {
     int height = ink_ui_px(keyboard_height() + 2 * INK_KB_PAD_Y + 2 * INK_STROKE);
@@ -146,6 +147,7 @@ static void invoke(const char *id, const char *json) {
 }
 static void on_key(lv_event_t *e) {
     uint32_t id = lv_keyboard_get_selected_button(lv_event_get_target_obj(e));
+    if (lv_event_get_target_obj(e) == K.footer) id += 9;
     if (id >= (uint32_t)K.buttons || !K.codes[id]) return;
     char args[40]; snprintf(args, sizeof args, "{\"code\":%d}", (int)K.codes[id]);
     invoke("keyboard.key", args);
@@ -269,24 +271,29 @@ static void map_install(int kind) {
     } else {
         map_row(kind == 2 ? (K.shift ? "[]{}<>+*\\|" : "1234567890") : "qwertyuiop");
         map_key(" ", 0, INK_KB_HALF);
-        map_row(kind == 2 ? (K.shift ? "@$^~`:;!?" : "-/:;()@&\"") : "asdfghjkl");
+        map_row(kind == 2 ? (K.shift ? "@$^~`:;!?" : "-/:;()@&'") : "asdfghjkl");
         K.map_size--; map_key(" ", 0, INK_KB_HALF); K.map[K.map_size++] = "\n";
         map_key(kind == 2 ? (K.shift ? "1/2" : "2/2") : TR("大写"), KEY_SHIFT, INK_KB_FUNCTION);
-        map_row(kind == 2 ? (K.shift ? "'=_%#.," : "'?!_=%,") : "zxcvbnm");
+        map_row(kind == 2 ? (K.shift ? "'=_%#.," : "#?!_=%,") : "zxcvbnm");
         K.map_size--; map_key(TR("删除"), KEY_BACKSPACE, INK_KB_FUNCTION); K.map[K.map_size++] = "\n";
     }
     if (kind != 3) {
-        map_key(K.symbols ? "字母" : "符号", KEY_SWITCH, INK_KB_FUNCTION);
+        map_key(K.symbols ? TR("字母") : !strcmp(ink_lang_code(), "zh") ? TR("符号") : "123", KEY_SWITCH, INK_KB_FUNCTION);
         if (K.plain) {
-            map_key(K.english ? "英" : "中", INK_TEXT_KEY_LANGUAGE, INK_KB_UNIT);
+            map_key(K.english ? TR("英") : "中", INK_TEXT_KEY_LANGUAGE, INK_KB_UNIT);
             map_key(ink_setting_get("text.nine_key") ? "全键" : "九键", KEY_LAYOUT, INK_KB_FUNCTION);
             if (kind != 4) map_key(ink_text_punctuation(',') ? ink_text_punctuation(',') : ",", ',', INK_KB_UNIT);
         }
-        map_key("空格", ' ', K.plain ? INK_KB_SPACE + (kind == 4 ? INK_KB_HALF : 0) : INK_KB_SPACE + 2 * INK_KB_UNIT + INK_KB_FUNCTION);
+        map_key(TR("空格"), ' ', K.plain ? INK_KB_SPACE + (kind == 4 ? INK_KB_HALF : 0) : INK_KB_SPACE + 2 * INK_KB_UNIT + INK_KB_FUNCTION);
         map_key(kind == 4 ? TR("删除") : ink_text_punctuation('.') ? ink_text_punctuation('.') : ".", kind == 4 ? KEY_BACKSPACE : '.', kind == 4 ? INK_KB_FUNCTION : INK_KB_UNIT);
         map_key(enter_label(), KEY_ENTER, INK_KB_FUNCTION);
     }
     K.map[K.map_size] = "";
+    if (kind == 3) {
+        K.map[11] = "";
+        lv_keyboard_set_map(K.footer, LV_KEYBOARD_MODE_USER_2, K.map + 12, K.control + 9);
+        lv_keyboard_set_mode(K.footer, LV_KEYBOARD_MODE_USER_2);
+    }
     lv_keyboard_set_map(K.board, LV_KEYBOARD_MODE_USER_1, K.map, K.control);
     lv_keyboard_set_mode(K.board, LV_KEYBOARD_MODE_USER_1);
     K.drawn_shift = K.shift;
@@ -296,7 +303,8 @@ static void draw_key_icon(lv_event_t *e) {
     lv_draw_task_t *task = lv_event_get_draw_task(e);
     lv_draw_label_dsc_t *label = lv_draw_task_get_label_dsc(task);
     if (!label || label->base.id1 >= (uint32_t)K.buttons) return;
-    char code = K.codes[label->base.id1];
+    unsigned index = label->base.id1 + (lv_event_get_target_obj(e) == K.footer ? 9 : 0);
+    char code = K.codes[index];
     bool enter_icon = code == KEY_ENTER && ink_ui_text_width(enter_label(), INK_FONT_LIST, INK_WEIGHT_REGULAR) > INK_KB_FUNCTION_WIDTH;
     if (!enter_icon && code != KEY_BACKSPACE && (code != KEY_SHIFT || K.symbols)) return;
     lv_area_t a; lv_draw_task_get_area(task, &a);
@@ -309,6 +317,30 @@ static void draw_key_icon(lv_event_t *e) {
     image.scale_x = image.scale_y = size * LV_SCALE_NONE / INK_ICON_MEDIUM;
     label->opa = LV_OPA_TRANSP;
     lv_draw_image(label->base.layer, &image, &icon_area);
+}
+
+static lv_obj_t *make_board(int height) {
+    lv_obj_t *board = lv_keyboard_create(K.keys);
+    lv_obj_remove_event_cb(board, lv_keyboard_def_event_cb);
+    lv_obj_remove_style_all(board);
+    lv_obj_remove_flag(board, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_size(board, LV_PCT(100), ink_ui_px(height));
+    lv_obj_set_style_pad_row(board, ink_ui_px(INK_KB_GAP), 0);
+    lv_obj_set_style_pad_column(board, ink_ui_px(INK_KB_GAP), 0);
+    lv_obj_set_style_bg_opa(board, LV_OPA_COVER, LV_PART_ITEMS);
+    lv_obj_set_style_bg_color(board, ink_ui_paper(), LV_PART_ITEMS);
+    lv_obj_set_style_border_width(board, ink_ui_px(INK_STROKE), LV_PART_ITEMS);
+    lv_obj_set_style_border_color(board, ink_ui_ink(), LV_PART_ITEMS);
+    lv_obj_set_style_radius(board, ink_ui_px(INK_RADIUS_KEY), LV_PART_ITEMS);
+    lv_obj_set_style_text_font(board, font(), LV_PART_ITEMS);
+    lv_obj_set_style_text_color(board, ink_ui_ink(), LV_PART_ITEMS);
+    lv_obj_set_style_bg_color(board, ink_ui_ink(), LV_PART_ITEMS | LV_STATE_PRESSED);
+    lv_obj_set_style_text_color(board, ink_ui_paper(), LV_PART_ITEMS | LV_STATE_PRESSED);
+    lv_obj_add_event_cb(board, on_key, LV_EVENT_VALUE_CHANGED, NULL);
+    lv_obj_add_event_cb(board, pressed, LV_EVENT_PRESSED, NULL);
+    lv_obj_add_flag(board, LV_OBJ_FLAG_SEND_DRAW_TASK_EVENTS);
+    lv_obj_add_event_cb(board, draw_key_icon, LV_EVENT_DRAW_TASK_ADDED, NULL);
+    return board;
 }
 
 static void build(int kind) {
@@ -369,6 +401,10 @@ static void build(int kind) {
         lv_obj_center(K.cand_label[i]);
         lv_obj_add_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN);
     }
+    lv_obj_t *space = lv_obj_create(K.cands);
+    lv_obj_remove_style_all(space);
+    lv_obj_set_size(space, 0, 0);
+    lv_obj_set_flex_grow(space, 1);
     K.more = lv_button_create(K.cands);
     ink_ui_style_button(K.more);
     lv_obj_set_style_pad_all(K.more, ink_ui_px(INK_GAP_XS), 0);
@@ -401,37 +437,14 @@ static void build(int kind) {
     lv_obj_t *mic_icon = ink_ui_icon(K.mic, "mic", INK_ICON_LIST, INK_ICON_SOLID, 0, 0, true);
     lv_obj_center(mic_icon);
     lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
-    K.board = lv_keyboard_create(K.keys);
-    lv_obj_remove_event_cb(K.board, lv_keyboard_def_event_cb);
-    lv_obj_remove_style_all(K.board);
-    lv_obj_remove_flag(K.board, LV_OBJ_FLAG_SCROLLABLE);
-    int height = keyboard_height() - (kind == 3 ? 0 : ink_ui_line_height(INK_FONT_LIST) + key_height(false) + 2 * INK_KB_GAP);
-    lv_obj_set_size(K.board, LV_PCT(100), ink_ui_px(height));
-    lv_obj_set_style_pad_row(K.board, ink_ui_px(INK_KB_GAP), 0);
-    lv_obj_set_style_pad_column(K.board, ink_ui_px(INK_KB_GAP), 0);
-    lv_obj_set_style_bg_opa(K.board, LV_OPA_COVER, LV_PART_ITEMS);
-    lv_obj_set_style_bg_color(K.board, ink_ui_paper(), LV_PART_ITEMS);
-    lv_obj_set_style_border_width(K.board, ink_ui_px(INK_STROKE), LV_PART_ITEMS);
-    lv_obj_set_style_border_color(K.board, ink_ui_ink(), LV_PART_ITEMS);
-    lv_obj_set_style_radius(K.board, ink_ui_px(INK_RADIUS_KEY), LV_PART_ITEMS);
-    lv_obj_set_style_text_font(K.board, font(), LV_PART_ITEMS);
-    lv_obj_set_style_text_color(K.board, ink_ui_ink(), LV_PART_ITEMS);
-    lv_obj_set_style_bg_color(K.board, ink_ui_ink(), LV_PART_ITEMS | LV_STATE_PRESSED);
-    lv_obj_set_style_text_color(K.board, ink_ui_paper(), LV_PART_ITEMS | LV_STATE_PRESSED);
-    lv_obj_add_event_cb(K.board, on_key, LV_EVENT_VALUE_CHANGED, NULL);
-    lv_obj_add_event_cb(K.board, pressed, LV_EVENT_PRESSED, NULL);
+    K.board = make_board(kind == 3 ? 3 * key_height(true) + 2 * INK_KB_GAP : 4 * key_height(kind == 4) + 3 * INK_KB_GAP);
+    K.footer = kind == 3 ? make_board(2 * key_height(false) + INK_KB_GAP) : NULL;
     static const char *const enter_icons[] = {"check", "send", "search", "next"};
     for (int i = 0; i < 3; i++) {
         K.icons[i] = ink_ui_icon(K.board, i == 2 ? enter_icons[ink_text_enter_kind()] : i ? "del" : "shift", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false);
         lv_obj_add_flag(K.icons[i], LV_OBJ_FLAG_HIDDEN);
     }
-    lv_obj_add_flag(K.board, LV_OBJ_FLAG_SEND_DRAW_TASK_EVENTS);
-    lv_obj_add_event_cb(K.board, draw_key_icon, LV_EVENT_DRAW_TASK_ADDED, NULL);
     map_install(kind);
-    if (kind == 3) {
-        lv_obj_add_flag(K.composing, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
-    }
     K.panel = lv_obj_create(K.root);
     lv_obj_remove_style_all(K.panel);
     lv_obj_set_width(K.panel, LV_PCT(100));
@@ -571,7 +584,7 @@ static void sync(void) { /* UI task */
     if (editing) { lv_obj_remove_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
     else {
         lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
-        if (kind != 3) lv_obj_remove_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(K.keys); i++) {
         lv_obj_t *row = lv_obj_get_child(K.keys, (int32_t)i);
@@ -583,7 +596,7 @@ static void sync(void) { /* UI task */
     lv_obj_set_height(K.cands, K.expanded ? LV_SIZE_CONTENT : ink_ui_px(key_height(false)));
     lv_obj_update_layout(K.cands);
     int gap = ink_ui_px(INK_GAP_XS);
-    int remaining = lv_obj_get_content_width(K.cands) - ink_ui_px(key_height(false));
+    int remaining = lv_obj_get_content_width(K.cands) - ink_ui_px(key_height(false)) - gap;
     if (ink_text_voice_possible()) remaining -= ink_ui_px(INK_KB_FUNCTION_WIDTH) + gap;
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         lv_obj_set_flex_grow(K.cand_btn[i], !K.expanded && i == 0 ? 1 : 0);

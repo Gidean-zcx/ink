@@ -144,8 +144,8 @@ static void inspect_focus(void) {
         for (int i = 0; i < 2; i++) root = lv_obj_get_parent(root);
         lv_obj_get_coords(root, &actual); ink_shell_keyboard_area(&other);
         CHECK(same_area(&actual, &other) && actual.y1 == keyboard_y,
-              "keyboard actual=%d,%d,%d,%d declared=%d,%d,%d,%d snapshot-y=%lld", actual.x1, actual.y1, actual.x2, actual.y2,
-              other.x1, other.y1, other.x2, other.y2, (long long)keyboard_y);
+              "keyboard actual=%d,%d,%d,%d declared=%d,%d,%d,%d snapshot-y=%lld", (int)actual.x1, (int)actual.y1, (int)actual.x2, (int)actual.y2,
+              (int)other.x1, (int)other.y1, (int)other.x2, (int)other.y2, (long long)keyboard_y);
         if (!fixed_keyboard.y2) fixed_keyboard = actual;
         CHECK(same_area(&actual, &fixed_keyboard), "keyboard position stays fixed across input and mode changes");
     }
@@ -188,7 +188,7 @@ static void inspect_long_url(void) {
     lv_obj_get_content_coords(field, &content); lv_obj_get_coords(label, &area);
     int width = lv_font_get_glyph_width(lv_obj_get_style_text_font(label, 0), '|', 0);
     CHECK(area.x1 + point.x >= content.x1 && area.x1 + point.x + width <= content.x2 + 1,
-          "the complete caret at x=%d fits the visible field %d..%d", area.x1 + point.x, content.x1, content.x2);
+          "the complete caret at x=%d fits the visible field %d..%d", (int)(area.x1 + point.x), (int)content.x1, (int)content.x2);
 }
 static void handoff(void) {
     char before[128]; snprintf(before, sizeof before, "%s", ink_textfield_text(field));

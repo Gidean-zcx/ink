@@ -13,6 +13,7 @@
 #include "configured_boot.c"
 #undef ink_main
 #include "integration/whole_product.h"
+#include "keyboard_matrix.h"
 
 static const char *picture;
 static volatile bool captured;
@@ -25,6 +26,14 @@ static bool at(const char *name) { on_ui(read_screen); return !strcmp(g_top, nam
 static void walk(lv_obj_t *o) {
     /* Sliders paint the same title twice, clipping the white copy to the filled bar. */
     if (!lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN) || lv_obj_has_flag(o, LV_OBJ_FLAG_USER_1)) return;
+    if (lv_obj_check_type(o, &lv_keyboard_class)) {
+        lv_buttonmatrix_t *matrix = (lv_buttonmatrix_t *)o;
+        for (uint32_t i = 0; i < matrix->btn_cnt; i++) {
+            if (lv_buttonmatrix_has_button_ctrl(o, i, LV_BUTTONMATRIX_CTRL_HIDDEN)) continue;
+            size_t n = strlen(labels);
+            snprintf(labels + n, sizeof labels - n, "%s|", lv_keyboard_get_button_text(o, i));
+        }
+    }
     if (lv_obj_check_type(o, &lv_label_class) && lv_label_get_text(o)[0]) {
         const char *t = lv_label_get_text(o);
         size_t n = strlen(labels); snprintf(labels + n, sizeof labels - n, "%s|", t);

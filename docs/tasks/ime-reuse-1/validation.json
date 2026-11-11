@@ -1,0 +1,97 @@
+{
+  "keyboard": {
+    "case": "current",
+    "exit": 0,
+    "passes": 2178,
+    "failures": 0,
+    "frames": 18,
+    "expected_result": true,
+    "query_us": [
+      [
+        1.0,
+        0.18,
+        3.0,
+        2795.16,
+        49797.0
+      ],
+      [
+        2.0,
+        0.76,
+        38.0,
+        877.66,
+        6617.0
+      ],
+      [
+        3.0,
+        0.31,
+        1.0,
+        1613.16,
+        69653.0
+      ],
+      [
+        4.0,
+        0.45,
+        5.0,
+        1634.98,
+        40251.0
+      ],
+      [
+        5.0,
+        0.51,
+        1.0,
+        405.8,
+        2433.0
+      ],
+      [
+        6.0,
+        0.58,
+        2.0,
+        1564.48,
+        103720.0
+      ]
+    ]
+  },
+  "restart": {
+    "case": "verify",
+    "exit": 0,
+    "passes": 10,
+    "failures": 0,
+    "frames": 0,
+    "expected_result": true,
+    "query_us": []
+  },
+  "reverse": [
+    {
+      "case": "no-nine-matching",
+      "exit": 1,
+      "passes": 2167,
+      "failures": 3,
+      "frames": 18,
+      "expected_result": true
+    },
+    {
+      "case": "english-pinyin",
+      "exit": 1,
+      "passes": 2165,
+      "failures": 5,
+      "frames": 18,
+      "expected_result": true
+    },
+    {
+      "case": "lost-composing",
+      "exit": 1,
+      "passes": 2176,
+      "failures": 2,
+      "frames": 18,
+      "expected_result": true
+    },
+    {
+      "case": "same-punctuation",
+      "exit": 1,
+      "passes": 2176,
+      "failures": 2,
+      "frames": 18,
+      "expected_result": true
+    }
+  ]
+}

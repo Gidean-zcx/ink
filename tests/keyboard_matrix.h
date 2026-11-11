@@ -23,6 +23,9 @@ static bool ink_test_matrix_key(lv_obj_t *root, const char *text, lv_area_t *are
         area->y1 += bounds.y1; area->y2 += bounds.y1;
         return true;
     }
+    if (board == root) return false;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++)
+        if (ink_test_matrix_key(lv_obj_get_child(root, (int32_t)i), text, area)) return true;
     return false;
 }
 #endif
