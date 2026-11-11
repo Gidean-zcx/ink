@@ -1,0 +1,2169 @@
+{
+  "retrieved_at": "2026-11-11T09:43:48.281398+00:00",
+  "scope": "Public unauthenticated GET metadata; no firmware downloads",
+  "total": 52,
+  "requests": [
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all",
+      "http": 200,
+      "code": 0,
+      "sha256": "aa9f876db5bf29e48db6f31f1cb02fe8ca24e37c2bb5467895d1723f528c0cd8",
+      "total": 52,
+      "count": 52
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=2&limit=100&sourceType=all",
+      "http": 200,
+      "code": 0,
+      "sha256": "25971c75dbc3d7ef9a956b83b74ab3e63a940ffd2695b3f1fdc43954b4340e00",
+      "total": 52,
+      "count": 0
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=33&sourceType=all&featured=true",
+      "http": 200,
+      "code": 0,
+      "sha256": "b901eb183de1f2422e9bcefc10bd4d5c0f516527916ed4acf3a0fbdbe92cbc8f",
+      "total": 3,
+      "count": 3
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=33&sourceType=official",
+      "http": 200,
+      "code": 0,
+      "sha256": "26d2ab063933db16bb53d37be9acc775a2a981f02fed3ca71f261e38ee957150",
+      "total": 1,
+      "count": 1
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=33&sourceType=community",
+      "http": 200,
+      "code": 0,
+      "sha256": "24c75e078ad98ac141438ca32439aa1ff0d032ebf021554c16890d337a82319d",
+      "total": 3,
+      "count": 3
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=33&sourceType=all",
+      "http": 200,
+      "code": 0,
+      "sha256": "7a4f871d4f4d9f2b46bab0a981d6459ab6ca886b121f42d3622591413f65a921",
+      "total": 4,
+      "count": 4
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=35&sourceType=all&featured=true",
+      "http": 200,
+      "code": 0,
+      "sha256": "feddbfbd26bf9789690881c067011321be91dbbff19b4692140454423178388a",
+      "total": 0,
+      "count": 0
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=35&sourceType=official",
+      "http": 200,
+      "code": 0,
+      "sha256": "feddbfbd26bf9789690881c067011321be91dbbff19b4692140454423178388a",
+      "total": 0,
+      "count": 0
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=35&sourceType=community",
+      "http": 200,
+      "code": 0,
+      "sha256": "d3015848fb3174756121bfd72103111b23fcbeb8fcaa58b4a5ce4599dd24e95f",
+      "total": 1,
+      "count": 1
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=35&sourceType=all",
+      "http": 200,
+      "code": 0,
+      "sha256": "d3015848fb3174756121bfd72103111b23fcbeb8fcaa58b4a5ce4599dd24e95f",
+      "total": 1,
+      "count": 1
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=36&sourceType=all&featured=true",
+      "http": 200,
+      "code": 0,
+      "sha256": "feddbfbd26bf9789690881c067011321be91dbbff19b4692140454423178388a",
+      "total": 0,
+      "count": 0
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=36&sourceType=official",
+      "http": 200,
+      "code": 0,
+      "sha256": "1d0a5d153c282cdf04c6afa173f593ebc37e014bf6791889451305e31f417513",
+      "total": 1,
+      "count": 1
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=36&sourceType=community",
+      "http": 200,
+      "code": 0,
+      "sha256": "feddbfbd26bf9789690881c067011321be91dbbff19b4692140454423178388a",
+      "total": 0,
+      "count": 0
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=36&sourceType=all",
+      "http": 200,
+      "code": 0,
+      "sha256": "1d0a5d153c282cdf04c6afa173f593ebc37e014bf6791889451305e31f417513",
+      "total": 1,
+      "count": 1
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=38&sourceType=all&featured=true",
+      "http": 200,
+      "code": 0,
+      "sha256": "3c9acd47547e4654a613218d46f52ab78954f395d9dd87fdbcc0fbd6e6dfd310",
+      "total": 9,
+      "count": 9
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=38&sourceType=official",
+      "http": 200,
+      "code": 0,
+      "sha256": "d53bc466f79f9260952c30a21742e446cf154d4232e073737a0ea54202780c39",
+      "total": 1,
+      "count": 1
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=38&sourceType=community",
+      "http": 200,
+      "code": 0,
+      "sha256": "81f2d6ffd5f8de0d92f7574e978aa1dbe8be4f35585192589c790102094c6de1",
+      "total": 21,
+      "count": 21
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=38&sourceType=all",
+      "http": 200,
+      "code": 0,
+      "sha256": "990f8436d7a4d64693a7824a7fc6be67c1caa255a9c402eac5e1a7c10e13c79e",
+      "total": 22,
+      "count": 22
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=44&sourceType=all&featured=true",
+      "http": 200,
+      "code": 0,
+      "sha256": "ab6e8485a425f3ea3678eb0f69c1ba34d65d02f09fcbdee3272668e61ae291c6",
+      "total": 12,
+      "count": 12
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=44&sourceType=official",
+      "http": 200,
+      "code": 0,
+      "sha256": "5893a808fd9daef91851b72f8276227897eaa993b26b667a54e94dffb673fe0a",
+      "total": 1,
+      "count": 1
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=44&sourceType=community",
+      "http": 200,
+      "code": 0,
+      "sha256": "ad7d27d8f5562171fb79bb4f7d9d9c7d407611eec2272b18a0900d50a07e3f45",
+      "total": 23,
+      "count": 23
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&hardwareModelId=44&sourceType=all",
+      "http": 200,
+      "code": 0,
+      "sha256": "c0330584aef4aaecb25b0607d6a3599f47aac70dbccb5297ba298ba6f290cbc7",
+      "total": 24,
+      "count": 24
+    }
+  ],
+  "filters": [
+    {
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "filter": "featured",
+      "total": 3,
+      "ids": [
+        "4a86a7934a9fc5c2b96295a92e7966e0",
+        "4d45ca7e57e235b067a0753877232d0a",
+        "810ce64e8e7e58a21843dcd0cfafcee6"
+      ]
+    },
+    {
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "filter": "official",
+      "total": 1,
+      "ids": [
+        "810ce64e8e7e58a21843dcd0cfafcee6"
+      ]
+    },
+    {
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "filter": "community",
+      "total": 3,
+      "ids": [
+        "4a86a7934a9fc5c2b96295a92e7966e0",
+        "4d45ca7e57e235b067a0753877232d0a",
+        "bfcb9610aefbedd1b9c3f718cccd5fcc"
+      ]
+    },
+    {
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "filter": "all",
+      "total": 4,
+      "ids": [
+        "4a86a7934a9fc5c2b96295a92e7966e0",
+        "4d45ca7e57e235b067a0753877232d0a",
+        "810ce64e8e7e58a21843dcd0cfafcee6",
+        "bfcb9610aefbedd1b9c3f718cccd5fcc"
+      ]
+    },
+    {
+      "board_id": "35",
+      "board": "Metalio 1.54",
+      "filter": "featured",
+      "total": 0,
+      "ids": []
+    },
+    {
+      "board_id": "35",
+      "board": "Metalio 1.54",
+      "filter": "official",
+      "total": 0,
+      "ids": []
+    },
+    {
+      "board_id": "35",
+      "board": "Metalio 1.54",
+      "filter": "community",
+      "total": 1,
+      "ids": [
+        "d4d65b5755d72436962217644c87cc80"
+      ]
+    },
+    {
+      "board_id": "35",
+      "board": "Metalio 1.54",
+      "filter": "all",
+      "total": 1,
+      "ids": [
+        "d4d65b5755d72436962217644c87cc80"
+      ]
+    },
+    {
+      "board_id": "36",
+      "board": "AI玩具盒",
+      "filter": "featured",
+      "total": 0,
+      "ids": []
+    },
+    {
+      "board_id": "36",
+      "board": "AI玩具盒",
+      "filter": "official",
+      "total": 1,
+      "ids": [
+        "25dc29688ee3b504bbab9df18e77eea1"
+      ]
+    },
+    {
+      "board_id": "36",
+      "board": "AI玩具盒",
+      "filter": "community",
+      "total": 0,
+      "ids": []
+    },
+    {
+      "board_id": "36",
+      "board": "AI玩具盒",
+      "filter": "all",
+      "total": 1,
+      "ids": [
+        "25dc29688ee3b504bbab9df18e77eea1"
+      ]
+    },
+    {
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "filter": "featured",
+      "total": 9,
+      "ids": [
+        "115a7819e14f902deda0f085e5a502db",
+        "4fea71b49b8bf6fa4a22dc1798423be4",
+        "630bc329e6ca929d99907209e05824b6",
+        "64795eef17390ae50771ef0e564baac0",
+        "a743751c5a6ad3d2f2d6066a223770cd",
+        "b3f2d73a185865867bc5cea29caa18e0",
+        "d343fb172427c7418e0d90f6361f757c",
+        "de8a2e4c73ff82fd5bacc9ce81dcacc2",
+        "f4576587b25c738295eb196468c20307"
+      ]
+    },
+    {
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "filter": "official",
+      "total": 1,
+      "ids": [
+        "64795eef17390ae50771ef0e564baac0"
+      ]
+    },
+    {
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "filter": "community",
+      "total": 21,
+      "ids": [
+        "05e5348f7de0541d608b2304a4aef839",
+        "095cb50f66803ac98b4ba2b1f149067d",
+        "10833b0d56572c7d2ad525122dea3d1c",
+        "115a7819e14f902deda0f085e5a502db",
+        "1c8740d464481571da51c61bad9880fd",
+        "2c1297cb3a6c846e7d1345b78039221e",
+        "2c220821474d3b922f6aa2367037edc1",
+        "4fea71b49b8bf6fa4a22dc1798423be4",
+        "630bc329e6ca929d99907209e05824b6",
+        "70f1b605d2619ed18663264729e7d933",
+        "80cb722919f9f1439f5f8d72703ed04e",
+        "8751908357ff9fa272b7678fcaef17e6",
+        "a743751c5a6ad3d2f2d6066a223770cd",
+        "b3f2d73a185865867bc5cea29caa18e0",
+        "bd72665970facddcc7beff3b9fc13d72",
+        "c08c65e5a4ec74f2025efb64c9a56594",
+        "d343fb172427c7418e0d90f6361f757c",
+        "d7828a3721330a505de95599560e2af7",
+        "de8a2e4c73ff82fd5bacc9ce81dcacc2",
+        "f4576587b25c738295eb196468c20307",
+        "f6d56eb1d84e723014012b0d87e4fcb8"
+      ]
+    },
+    {
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "filter": "all",
+      "total": 22,
+      "ids": [
+        "05e5348f7de0541d608b2304a4aef839",
+        "095cb50f66803ac98b4ba2b1f149067d",
+        "10833b0d56572c7d2ad525122dea3d1c",
+        "115a7819e14f902deda0f085e5a502db",
+        "1c8740d464481571da51c61bad9880fd",
+        "2c1297cb3a6c846e7d1345b78039221e",
+        "2c220821474d3b922f6aa2367037edc1",
+        "4fea71b49b8bf6fa4a22dc1798423be4",
+        "630bc329e6ca929d99907209e05824b6",
+        "64795eef17390ae50771ef0e564baac0",
+        "70f1b605d2619ed18663264729e7d933",
+        "80cb722919f9f1439f5f8d72703ed04e",
+        "8751908357ff9fa272b7678fcaef17e6",
+        "a743751c5a6ad3d2f2d6066a223770cd",
+        "b3f2d73a185865867bc5cea29caa18e0",
+        "bd72665970facddcc7beff3b9fc13d72",
+        "c08c65e5a4ec74f2025efb64c9a56594",
+        "d343fb172427c7418e0d90f6361f757c",
+        "d7828a3721330a505de95599560e2af7",
+        "de8a2e4c73ff82fd5bacc9ce81dcacc2",
+        "f4576587b25c738295eb196468c20307",
+        "f6d56eb1d84e723014012b0d87e4fcb8"
+      ]
+    },
+    {
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "filter": "featured",
+      "total": 12,
+      "ids": [
+        "32b9b8d0790fe483d8b24a9909c5bdac",
+        "5580fff7f2e8b382283557fa37080944",
+        "71addc365d3f31a53ed5dacca7855582",
+        "722e1e8f7ab139c77e5d3cbe540f73f8",
+        "759b008fdff7a846affd925f928dee90",
+        "92c82de9caa4249c4270e76bb10290c8",
+        "abaa819e9eec5e0c390ffb66cf63d7f8",
+        "b9909c6fbbb253f105cc65befbb89ee5",
+        "b9df44db099418cd836cb32d74941b05",
+        "d339eb28f76779495b909d1129ce994f",
+        "d932f06a5906b6a283c38c37d031a8f3",
+        "f5c35ac9c523aac3bd307090a0fded68"
+      ]
+    },
+    {
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "filter": "official",
+      "total": 1,
+      "ids": [
+        "32b9b8d0790fe483d8b24a9909c5bdac"
+      ]
+    },
+    {
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "filter": "community",
+      "total": 23,
+      "ids": [
+        "0946fcb2f2dddbf7021d56a65e3a4338",
+        "144740d278df42d7cf22863139326a9a",
+        "15905a3185d83b9892dc250d413a8199",
+        "180b786c0fcee631ae05234a46f8b8f5",
+        "2b8842ea27543007d9512228e7e0029b",
+        "3f4432cb94f3ac6426c732bec3009370",
+        "5580fff7f2e8b382283557fa37080944",
+        "71addc365d3f31a53ed5dacca7855582",
+        "722e1e8f7ab139c77e5d3cbe540f73f8",
+        "759b008fdff7a846affd925f928dee90",
+        "7a938d02f2d778d9da494a4cc67e4816",
+        "7e591796e0c3c512e9376e5b259778ee",
+        "83ecfee765f538299e850d41b0509674",
+        "8fa583addfc017c28cd3451dbe830227",
+        "92c82de9caa4249c4270e76bb10290c8",
+        "abaa819e9eec5e0c390ffb66cf63d7f8",
+        "b9909c6fbbb253f105cc65befbb89ee5",
+        "b9df44db099418cd836cb32d74941b05",
+        "d339eb28f76779495b909d1129ce994f",
+        "d3aa1246e9a9f567f8e34e4f854828a0",
+        "d932f06a5906b6a283c38c37d031a8f3",
+        "e806162c097a7cacfba6d1a15e4a1a27",
+        "f5c35ac9c523aac3bd307090a0fded68"
+      ]
+    },
+    {
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "filter": "all",
+      "total": 24,
+      "ids": [
+        "0946fcb2f2dddbf7021d56a65e3a4338",
+        "144740d278df42d7cf22863139326a9a",
+        "15905a3185d83b9892dc250d413a8199",
+        "180b786c0fcee631ae05234a46f8b8f5",
+        "2b8842ea27543007d9512228e7e0029b",
+        "32b9b8d0790fe483d8b24a9909c5bdac",
+        "3f4432cb94f3ac6426c732bec3009370",
+        "5580fff7f2e8b382283557fa37080944",
+        "71addc365d3f31a53ed5dacca7855582",
+        "722e1e8f7ab139c77e5d3cbe540f73f8",
+        "759b008fdff7a846affd925f928dee90",
+        "7a938d02f2d778d9da494a4cc67e4816",
+        "7e591796e0c3c512e9376e5b259778ee",
+        "83ecfee765f538299e850d41b0509674",
+        "8fa583addfc017c28cd3451dbe830227",
+        "92c82de9caa4249c4270e76bb10290c8",
+        "abaa819e9eec5e0c390ffb66cf63d7f8",
+        "b9909c6fbbb253f105cc65befbb89ee5",
+        "b9df44db099418cd836cb32d74941b05",
+        "d339eb28f76779495b909d1129ce994f",
+        "d3aa1246e9a9f567f8e34e4f854828a0",
+        "d932f06a5906b6a283c38c37d031a8f3",
+        "e806162c097a7cacfba6d1a15e4a1a27",
+        "f5c35ac9c523aac3bd307090a0fded68"
+      ]
+    }
+  ],
+  "firmwares": [
+    {
+      "id": "32b9b8d0790fe483d8b24a9909c5bdac",
+      "name": "Metalio E-Ink4 Plus",
+      "author": "CLOUDZAO",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "official",
+      "featured": true,
+      "updated": "2026-11-10T19:46:22+08:00",
+      "version_total": 16,
+      "versions": [
+        {
+          "version": "2.0.78",
+          "versionStatus": "latest",
+          "createDate": "2026-11-10T19:45:58+08:00",
+          "updateDate": "2026-11-10T19:46:22+08:00"
+        },
+        {
+          "version": "2.0.77",
+          "versionStatus": "latest",
+          "createDate": "2026-11-07T20:46:30+08:00",
+          "updateDate": "2026-11-09T18:58:46+08:00"
+        },
+        {
+          "version": "2.0.76",
+          "versionStatus": "test",
+          "createDate": "2026-11-06T21:23:38+08:00",
+          "updateDate": "2026-11-07T21:16:05+08:00"
+        },
+        {
+          "version": "2.0.75",
+          "versionStatus": "test",
+          "createDate": "2026-11-06T19:41:09+08:00",
+          "updateDate": "2026-11-06T19:41:09+08:00"
+        },
+        {
+          "version": "2.0.74",
+          "versionStatus": "latest",
+          "createDate": "2026-11-04T20:03:29+08:00",
+          "updateDate": "2026-11-05T09:40:02+08:00"
+        },
+        {
+          "version": "2.0.73",
+          "versionStatus": "latest",
+          "createDate": "2026-11-03T19:32:49+08:00",
+          "updateDate": "2026-11-03T19:32:49+08:00"
+        },
+        {
+          "version": "2.0.72",
+          "versionStatus": "latest",
+          "createDate": "2026-11-02T20:30:49+08:00",
+          "updateDate": "2026-11-02T20:30:49+08:00"
+        },
+        {
+          "version": "2.0.71",
+          "versionStatus": "latest",
+          "createDate": "2026-10-30T23:21:27+08:00",
+          "updateDate": "2026-10-30T23:21:27+08:00"
+        },
+        {
+          "version": "2.0.70",
+          "versionStatus": "latest",
+          "createDate": "2026-10-29T17:27:08+08:00",
+          "updateDate": "2026-10-29T17:27:08+08:00"
+        },
+        {
+          "version": "2.0.69",
+          "versionStatus": "latest",
+          "createDate": "2026-10-28T20:53:48+08:00",
+          "updateDate": "2026-10-28T20:53:48+08:00"
+        },
+        {
+          "version": "2.0.68",
+          "versionStatus": "latest",
+          "createDate": "2026-10-26T20:18:04+08:00",
+          "updateDate": "2026-10-26T20:18:04+08:00"
+        },
+        {
+          "version": "2.0.67",
+          "versionStatus": "latest",
+          "createDate": "2026-10-24T19:40:26+08:00",
+          "updateDate": "2026-10-24T19:40:26+08:00"
+        },
+        {
+          "version": "2.0.66",
+          "versionStatus": "latest",
+          "createDate": "2026-10-23T21:21:50+08:00",
+          "updateDate": "2026-10-23T21:26:01+08:00"
+        },
+        {
+          "version": "2.0.65",
+          "versionStatus": "latest",
+          "createDate": "2026-10-20T02:36:11+08:00",
+          "updateDate": "2026-10-20T02:36:11+08:00"
+        },
+        {
+          "version": "2.0.64",
+          "versionStatus": "test",
+          "createDate": "2026-10-18T11:18:53+08:00",
+          "updateDate": "2026-10-18T11:18:53+08:00"
+        },
+        {
+          "version": "2.0.63",
+          "versionStatus": "test",
+          "createDate": "2026-10-17T13:28:58+08:00",
+          "updateDate": "2026-10-17T13:28:58+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://gitee.com/cloudzao/metalio-e-ink4-plus",
+        "https://github.com/CloudZao/Metalio-E-INK4-Plus"
+      ]
+    },
+    {
+      "id": "92c82de9caa4249c4270e76bb10290c8",
+      "name": "CrossLink Pixel 4.7",
+      "author": "风眼",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-08T22:06:12+08:00",
+      "version_total": 9,
+      "versions": [
+        {
+          "version": "v4.3.0T",
+          "versionStatus": "latest",
+          "createDate": "2026-11-08T22:06:12+08:00",
+          "updateDate": "2026-11-08T22:06:12+08:00"
+        },
+        {
+          "version": "v4.2.5T-beta",
+          "versionStatus": "test",
+          "createDate": "2026-11-03T23:43:41+08:00",
+          "updateDate": "2026-11-04T23:27:34+08:00"
+        },
+        {
+          "version": "v4.2.4-1101",
+          "versionStatus": "latest",
+          "createDate": "2026-11-01T19:29:57+08:00",
+          "updateDate": "2026-11-04T23:26:50+08:00"
+        },
+        {
+          "version": "v4.2.4T",
+          "versionStatus": "latest",
+          "createDate": "2026-10-30T20:29:37+08:00",
+          "updateDate": "2026-11-04T23:26:50+08:00"
+        },
+        {
+          "version": "v4.2.3.2T",
+          "versionStatus": "latest",
+          "createDate": "2026-10-29T23:00:33+08:00",
+          "updateDate": "2026-11-04T23:26:50+08:00"
+        },
+        {
+          "version": "v4.2.3T",
+          "versionStatus": "latest",
+          "createDate": "2026-10-28T21:44:28+08:00",
+          "updateDate": "2026-11-04T23:26:50+08:00"
+        },
+        {
+          "version": "v4.2.2T",
+          "versionStatus": "latest",
+          "createDate": "2026-10-25T16:31:11+08:00",
+          "updateDate": "2026-11-04T23:26:50+08:00"
+        },
+        {
+          "version": "v0.9.10",
+          "versionStatus": "test",
+          "createDate": "2026-10-20T00:21:18+08:00",
+          "updateDate": "2026-11-04T23:26:50+08:00"
+        },
+        {
+          "version": "v0.9.9",
+          "versionStatus": "test",
+          "createDate": "2026-10-17T20:55:29+08:00",
+          "updateDate": "2026-11-04T23:26:50+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "64795eef17390ae50771ef0e564baac0",
+      "name": "Metalio E-Ink4",
+      "author": "CLOUDZAO",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "official",
+      "featured": true,
+      "updated": "2026-11-05T21:21:10+08:00",
+      "version_total": 12,
+      "versions": [
+        {
+          "version": "2.0.65",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T21:19:25+08:00",
+          "updateDate": "2026-11-05T21:21:10+08:00"
+        },
+        {
+          "version": "2.0.64",
+          "versionStatus": "latest",
+          "createDate": "2026-10-31T00:07:45+08:00",
+          "updateDate": "2026-11-05T09:02:41+08:00"
+        },
+        {
+          "version": "2.0.63",
+          "versionStatus": "test",
+          "createDate": "2026-10-13T20:59:53+08:00",
+          "updateDate": "2026-10-13T20:59:53+08:00"
+        },
+        {
+          "version": "2.0.61",
+          "versionStatus": "test",
+          "createDate": "2026-09-22T19:24:11+08:00",
+          "updateDate": "2026-09-22T19:24:11+08:00"
+        },
+        {
+          "version": "2.0.60",
+          "versionStatus": "test",
+          "createDate": "2026-09-20T23:45:32+08:00",
+          "updateDate": "2026-09-20T23:46:00+08:00"
+        },
+        {
+          "version": "2.0.59",
+          "versionStatus": "test",
+          "createDate": "2026-09-18T22:26:31+08:00",
+          "updateDate": "2026-09-19T12:50:06+08:00"
+        },
+        {
+          "version": "2.0.58",
+          "versionStatus": "test",
+          "createDate": "2026-09-16T22:58:03+08:00",
+          "updateDate": "2026-09-18T01:07:53+08:00"
+        },
+        {
+          "version": "2.0.57",
+          "versionStatus": "test",
+          "createDate": "2026-09-11T21:02:24+08:00",
+          "updateDate": "2026-09-12T16:22:36+08:00"
+        },
+        {
+          "version": "2.0.56",
+          "versionStatus": "test",
+          "createDate": "2026-09-10T22:15:22+08:00",
+          "updateDate": "2026-09-10T22:15:33+08:00"
+        },
+        {
+          "version": "2.0.55",
+          "versionStatus": "test",
+          "createDate": "2026-09-09T21:43:41+08:00",
+          "updateDate": "2026-09-09T21:43:41+08:00"
+        },
+        {
+          "version": "2.0.53",
+          "versionStatus": "latest",
+          "createDate": "2026-09-08T09:27:29+08:00",
+          "updateDate": "2026-09-08T14:11:16+08:00"
+        },
+        {
+          "version": "2.0.54",
+          "versionStatus": "test",
+          "createDate": "2026-09-07T20:32:13+08:00",
+          "updateDate": "2026-09-08T13:57:32+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://gitee.com/cloudzao/metalio-e-ink4",
+        "https://github.com/CloudZao/Metalio-E-INK4",
+        "https://github.com/test/ai"
+      ]
+    },
+    {
+      "id": "5580fff7f2e8b382283557fa37080944",
+      "name": "Mogo E4p",
+      "author": "常暗",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-11T07:56:17+08:00",
+      "version_total": 16,
+      "versions": [
+        {
+          "version": "v1.0.10",
+          "versionStatus": "latest",
+          "createDate": "2026-11-11T07:56:17+08:00",
+          "updateDate": "2026-11-11T07:56:17+08:00"
+        },
+        {
+          "version": "v1.0.9",
+          "versionStatus": "latest",
+          "createDate": "2026-11-10T11:05:19+08:00",
+          "updateDate": "2026-11-10T11:05:19+08:00"
+        },
+        {
+          "version": "v1.0.8",
+          "versionStatus": "latest",
+          "createDate": "2026-11-08T14:58:24+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.7",
+          "versionStatus": "latest",
+          "createDate": "2026-11-08T07:40:55+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.6",
+          "versionStatus": "latest",
+          "createDate": "2026-11-06T12:27:34+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.5",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T13:31:00+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.4",
+          "versionStatus": "latest",
+          "createDate": "2026-11-04T20:55:14+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.3",
+          "versionStatus": "latest",
+          "createDate": "2026-11-04T07:18:42+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.2",
+          "versionStatus": "latest",
+          "createDate": "2026-11-02T15:57:41+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.1",
+          "versionStatus": "latest",
+          "createDate": "2026-10-30T21:20:56+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "v1.0.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-27T15:14:28+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "rc101",
+          "versionStatus": "test",
+          "createDate": "2026-10-26T01:35:03+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "rc100",
+          "versionStatus": "test",
+          "createDate": "2026-10-24T18:26:14+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "rc99",
+          "versionStatus": "test",
+          "createDate": "2026-10-24T12:23:55+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "rc98",
+          "versionStatus": "test",
+          "createDate": "2026-10-22T10:02:25+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        },
+        {
+          "version": "rc97",
+          "versionStatus": "test",
+          "createDate": "2026-10-22T07:27:05+08:00",
+          "updateDate": "2026-11-10T10:54:45+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/wegooo-cell/read-pico-reader"
+      ]
+    },
+    {
+      "id": "f6d56eb1d84e723014012b0d87e4fcb8",
+      "name": "Crossslink_2.0（Metalio E-Ink4）",
+      "author": "周默の周末",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-10T08:52:40+08:00",
+      "version_total": 9,
+      "versions": [
+        {
+          "version": "10.10 修复BUG最新版",
+          "versionStatus": "test",
+          "createDate": "2026-10-10T08:51:43+08:00",
+          "updateDate": "2026-10-10T08:52:40+08:00"
+        },
+        {
+          "version": "10.02 Bug修复更新版",
+          "versionStatus": "test",
+          "createDate": "2026-10-02T17:21:41+08:00",
+          "updateDate": "2026-10-02T17:21:41+08:00"
+        },
+        {
+          "version": "09.24(翻页动画)更新版",
+          "versionStatus": "test",
+          "createDate": "2026-09-24T07:23:18+08:00",
+          "updateDate": "2026-09-26T23:56:44+08:00"
+        },
+        {
+          "version": "09.22(语音控制)更新版",
+          "versionStatus": "test",
+          "createDate": "2026-09-22T08:28:23+08:00",
+          "updateDate": "2026-09-22T08:28:23+08:00"
+        },
+        {
+          "version": "09.18(AI键自定义)更新版",
+          "versionStatus": "test",
+          "createDate": "2026-09-18T09:23:01+08:00",
+          "updateDate": "2026-09-18T09:23:01+08:00"
+        },
+        {
+          "version": "09.17(阅星瞳同步)更新版",
+          "versionStatus": "test",
+          "createDate": "2026-09-18T06:27:18+08:00",
+          "updateDate": "2026-09-18T09:05:02+08:00"
+        },
+        {
+          "version": "09.16(自动旋转)更新版",
+          "versionStatus": "test",
+          "createDate": "2026-09-16T23:17:50+08:00",
+          "updateDate": "2026-09-18T09:05:02+08:00"
+        },
+        {
+          "version": "09.15更新版",
+          "versionStatus": "test",
+          "createDate": "2026-09-16T08:40:57+08:00",
+          "updateDate": "2026-09-18T09:05:02+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-09-15T09:56:43+08:00",
+          "updateDate": "2026-09-18T09:05:02+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "f5c35ac9c523aac3bd307090a0fded68",
+      "name": "RickyOS",
+      "author": "Ricky AI Studio",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-02T23:35:05+08:00",
+      "version_total": 4,
+      "versions": [
+        {
+          "version": "v1.2.14",
+          "versionStatus": "latest",
+          "createDate": "2026-11-02T23:35:05+08:00",
+          "updateDate": "2026-11-02T23:35:05+08:00"
+        },
+        {
+          "version": "v1.2.13",
+          "versionStatus": "latest",
+          "createDate": "2026-11-01T21:16:24+08:00",
+          "updateDate": "2026-11-01T21:16:24+08:00"
+        },
+        {
+          "version": "v1.2.11",
+          "versionStatus": "latest",
+          "createDate": "2026-10-29T17:43:57+08:00",
+          "updateDate": "2026-10-29T17:43:57+08:00"
+        },
+        {
+          "version": "v1.2.5",
+          "versionStatus": "latest",
+          "createDate": "2026-10-22T23:51:57+08:00",
+          "updateDate": "2026-10-24T18:54:06+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "b9df44db099418cd836cb32d74941b05",
+      "name": "kiikoread · Metalio EINK 4 Plus",
+      "author": "Kiiko厂长",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-05T22:15:18+08:00",
+      "version_total": 3,
+      "versions": [
+        {
+          "version": "rc110",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T22:15:18+08:00",
+          "updateDate": "2026-11-05T22:15:18+08:00"
+        },
+        {
+          "version": "rc107",
+          "versionStatus": "test",
+          "createDate": "2026-10-29T21:05:44+08:00",
+          "updateDate": "2026-10-29T21:05:44+08:00"
+        },
+        {
+          "version": "rc100",
+          "versionStatus": "latest",
+          "createDate": "2026-10-24T14:39:56+08:00",
+          "updateDate": "2026-10-24T15:38:00+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "d932f06a5906b6a283c38c37d031a8f3",
+      "name": "Crosslink2 无名4.7",
+      "author": "whimco",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-09T09:25:41+08:00",
+      "version_total": 8,
+      "versions": [
+        {
+          "version": "4.2.9",
+          "versionStatus": "latest",
+          "createDate": "2026-11-09T09:25:41+08:00",
+          "updateDate": "2026-11-09T09:25:41+08:00"
+        },
+        {
+          "version": "4.2.8",
+          "versionStatus": "latest",
+          "createDate": "2026-11-07T22:51:19+08:00",
+          "updateDate": "2026-11-07T22:51:19+08:00"
+        },
+        {
+          "version": "4.2.7",
+          "versionStatus": "latest",
+          "createDate": "2026-11-07T13:11:59+08:00",
+          "updateDate": "2026-11-07T13:11:59+08:00"
+        },
+        {
+          "version": "4.2.6",
+          "versionStatus": "latest",
+          "createDate": "2026-11-03T22:11:03+08:00",
+          "updateDate": "2026-11-03T22:11:03+08:00"
+        },
+        {
+          "version": "4.2.5",
+          "versionStatus": "latest",
+          "createDate": "2026-11-02T17:01:42+08:00",
+          "updateDate": "2026-11-02T17:01:42+08:00"
+        },
+        {
+          "version": "4.2.4",
+          "versionStatus": "latest",
+          "createDate": "2026-11-02T14:13:36+08:00",
+          "updateDate": "2026-11-02T14:13:36+08:00"
+        },
+        {
+          "version": "4.2.3",
+          "versionStatus": "latest",
+          "createDate": "2026-10-30T14:33:28+08:00",
+          "updateDate": "2026-10-30T14:33:28+08:00"
+        },
+        {
+          "version": "4.22",
+          "versionStatus": "test",
+          "createDate": "2026-10-28T15:18:50+08:00",
+          "updateDate": "2026-10-28T15:18:50+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "de8a2e4c73ff82fd5bacc9ce81dcacc2",
+      "name": "Crosslink2 无名3.97寸",
+      "author": "whimco",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-30T15:38:54+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v1.2.10",
+          "versionStatus": "latest",
+          "createDate": "2026-10-30T15:38:54+08:00",
+          "updateDate": "2026-10-30T15:38:54+08:00"
+        },
+        {
+          "version": "v1.2.9",
+          "versionStatus": "latest",
+          "createDate": "2026-10-28T15:25:55+08:00",
+          "updateDate": "2026-10-28T16:01:27+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "4fea71b49b8bf6fa4a22dc1798423be4",
+      "name": "CrossLink Pixel",
+      "author": "风眼",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-10T00:00:19+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v4.3.0T",
+          "versionStatus": "latest",
+          "createDate": "2026-11-10T00:00:19+08:00",
+          "updateDate": "2026-11-10T00:00:19+08:00"
+        },
+        {
+          "version": "v4.2.0T",
+          "versionStatus": "latest",
+          "createDate": "2026-10-04T00:18:33+08:00",
+          "updateDate": "2026-10-22T10:46:09+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "b9909c6fbbb253f105cc65befbb89ee5",
+      "name": "ThingOS",
+      "author": "flowflic",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-11T12:31:44+08:00",
+      "version_total": 6,
+      "versions": [
+        {
+          "version": "v0.1.7",
+          "versionStatus": "latest",
+          "createDate": "2026-11-11T12:31:44+08:00",
+          "updateDate": "2026-11-11T12:31:44+08:00"
+        },
+        {
+          "version": "v0.1.6",
+          "versionStatus": "test",
+          "createDate": "2026-11-09T12:37:14+08:00",
+          "updateDate": "2026-11-09T12:37:14+08:00"
+        },
+        {
+          "version": "v0.1.5",
+          "versionStatus": "latest",
+          "createDate": "2026-11-03T00:51:49+08:00",
+          "updateDate": "2026-11-03T00:51:49+08:00"
+        },
+        {
+          "version": "v0.1.4",
+          "versionStatus": "latest",
+          "createDate": "2026-11-02T09:57:13+08:00",
+          "updateDate": "2026-11-02T09:57:13+08:00"
+        },
+        {
+          "version": "v0.1.3",
+          "versionStatus": "latest",
+          "createDate": "2026-11-01T20:50:36+08:00",
+          "updateDate": "2026-11-01T20:51:08+08:00"
+        },
+        {
+          "version": "v0.1.2",
+          "versionStatus": "test",
+          "createDate": "2026-10-31T22:45:10+08:00",
+          "updateDate": "2026-11-01T20:51:08+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "abaa819e9eec5e0c390ffb66cf63d7f8",
+      "name": "lnkboot",
+      "author": "wenbos058",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-03T15:36:44+08:00",
+      "version_total": 7,
+      "versions": [
+        {
+          "version": "v1.0.6",
+          "versionStatus": "latest",
+          "createDate": "2026-11-03T15:35:33+08:00",
+          "updateDate": "2026-11-03T15:35:33+08:00"
+        },
+        {
+          "version": "v1.0.5-bev",
+          "versionStatus": "latest",
+          "createDate": "2026-11-02T01:53:58+08:00",
+          "updateDate": "2026-11-02T01:53:58+08:00"
+        },
+        {
+          "version": "v1.0.4-bev",
+          "versionStatus": "latest",
+          "createDate": "2026-10-31T00:44:27+08:00",
+          "updateDate": "2026-10-31T00:44:27+08:00"
+        },
+        {
+          "version": "v1.0.3-bev",
+          "versionStatus": "latest",
+          "createDate": "2026-10-30T03:24:48+08:00",
+          "updateDate": "2026-10-30T03:24:48+08:00"
+        },
+        {
+          "version": "v1.0.2-bev",
+          "versionStatus": "latest",
+          "createDate": "2026-10-29T02:46:44+08:00",
+          "updateDate": "2026-10-29T02:46:44+08:00"
+        },
+        {
+          "version": "v1.0.1-bev",
+          "versionStatus": "test",
+          "createDate": "2026-10-28T13:04:04+08:00",
+          "updateDate": "2026-10-28T13:04:04+08:00"
+        },
+        {
+          "version": "v1.0.0-bev",
+          "versionStatus": "test",
+          "createDate": "2026-10-27T15:51:10+08:00",
+          "updateDate": "2026-10-28T02:18:28+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "810ce64e8e7e58a21843dcd0cfafcee6",
+      "name": "Metalio Claw4",
+      "author": "zzz",
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "source": "official",
+      "featured": true,
+      "updated": "2026-11-05T09:52:56+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "2.0.5.2",
+          "versionStatus": "latest",
+          "createDate": "2026-08-20T15:54:01+08:00",
+          "updateDate": "2026-11-05T09:52:56+08:00"
+        },
+        {
+          "version": "2.0.5.1",
+          "versionStatus": "test",
+          "createDate": "2026-08-18T00:58:08+08:00",
+          "updateDate": "2026-08-18T15:15:27+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://gitee.com/cloudzao/metalioclaw4",
+        "https://github.com/CloudZao/MetalioClaw4"
+      ]
+    },
+    {
+      "id": "d343fb172427c7418e0d90f6361f757c",
+      "name": "CrossMux_Metalio E-ink4 (倾斜翻页增强版）",
+      "author": "Eric",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-17T17:56:02+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v1.6.5",
+          "versionStatus": "test",
+          "createDate": "2026-10-17T17:56:02+08:00",
+          "updateDate": "2026-10-17T17:56:02+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "630bc329e6ca929d99907209e05824b6",
+      "name": "墨集",
+      "author": "paouke",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-14T18:20:15+08:00",
+      "version_total": 3,
+      "versions": [
+        {
+          "version": "v0.1.3",
+          "versionStatus": "latest",
+          "createDate": "2026-10-14T18:20:15+08:00",
+          "updateDate": "2026-10-14T18:20:15+08:00"
+        },
+        {
+          "version": "v0.1.2",
+          "versionStatus": "latest",
+          "createDate": "2026-10-03T12:28:38+08:00",
+          "updateDate": "2026-10-03T12:28:38+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-10-03T00:31:19+08:00",
+          "updateDate": "2026-10-03T00:35:00+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "4a86a7934a9fc5c2b96295a92e7966e0",
+      "name": "AgentUI",
+      "author": "AlayaElla",
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-09-18T01:46:25+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v0.2.0",
+          "versionStatus": "latest",
+          "createDate": "2026-08-22T15:39:53+08:00",
+          "updateDate": "2026-09-18T01:46:25+08:00"
+        },
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "createDate": "2026-08-09T15:44:41+08:00",
+          "updateDate": "2026-09-18T01:46:25+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/AlayaElla/CodexRemote",
+        "https://github.com/AlayaElla/MetalioClaw4-AgentUI"
+      ]
+    },
+    {
+      "id": "d339eb28f76779495b909d1129ce994f",
+      "name": "固件口袋",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-05T12:55:31+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v1.0.8-plus.15",
+          "versionStatus": "latest",
+          "createDate": "2026-11-01T20:36:20+08:00",
+          "updateDate": "2026-11-05T12:55:31+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/Changkai9888/CloudZao-Projects"
+      ]
+    },
+    {
+      "id": "71addc365d3f31a53ed5dacca7855582",
+      "name": "PageRest",
+      "author": "风城",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-04T22:01:42+08:00",
+      "version_total": 5,
+      "versions": [
+        {
+          "version": "v0.7.103",
+          "versionStatus": "latest",
+          "createDate": "2026-11-04T22:01:42+08:00",
+          "updateDate": "2026-11-04T22:01:42+08:00"
+        },
+        {
+          "version": "v0.7.102",
+          "versionStatus": "latest",
+          "createDate": "2026-11-03T13:47:00+08:00",
+          "updateDate": "2026-11-03T13:47:00+08:00"
+        },
+        {
+          "version": "v0.7.91",
+          "versionStatus": "latest",
+          "createDate": "2026-11-01T19:58:40+08:00",
+          "updateDate": "2026-11-01T19:58:40+08:00"
+        },
+        {
+          "version": "v0.7.69",
+          "versionStatus": "test",
+          "createDate": "2026-10-29T21:30:17+08:00",
+          "updateDate": "2026-11-01T19:57:25+08:00"
+        },
+        {
+          "version": "v0.7.68",
+          "versionStatus": "latest",
+          "createDate": "2026-10-28T22:49:59+08:00",
+          "updateDate": "2026-11-01T19:57:25+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "115a7819e14f902deda0f085e5a502db",
+      "name": "Metalio E-Ink4微信读书适配自用",
+      "author": "卡卡罗特",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-14T00:19:55+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "test",
+          "createDate": "2026-10-14T00:19:55+08:00",
+          "updateDate": "2026-10-14T00:19:55+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-10-11T10:55:46+08:00",
+          "updateDate": "2026-10-11T10:55:46+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "8751908357ff9fa272b7678fcaef17e6",
+      "name": "Metalio-WhiteAI",
+      "author": "Michael",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-09-23T13:54:55+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v2.0.51",
+          "versionStatus": "test",
+          "createDate": "2026-09-23T13:54:55+08:00",
+          "updateDate": "2026-09-23T13:54:55+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/446599/Metalio-WhiteAI"
+      ]
+    },
+    {
+      "id": "c08c65e5a4ec74f2025efb64c9a56594",
+      "name": "固件口袋",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T12:55:11+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "1.0.7-s3.20",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T00:57:56+08:00",
+          "updateDate": "2026-11-05T12:55:11+08:00"
+        },
+        {
+          "version": "1.0.7",
+          "versionStatus": "test",
+          "createDate": "2026-10-22T23:48:26+08:00",
+          "updateDate": "2026-11-05T12:55:11+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/Changkai9888/CloudZao-Projects"
+      ]
+    },
+    {
+      "id": "f4576587b25c738295eb196468c20307",
+      "name": "布丁",
+      "author": "paouke",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-14T18:26:23+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-10-14T18:16:17+08:00",
+          "updateDate": "2026-10-14T18:26:23+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "722e1e8f7ab139c77e5d3cbe540f73f8",
+      "name": "boboos-前往官网 https://bobo.sh.creativone.cn",
+      "author": "树莓和派",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-07T23:02:41+08:00",
+      "version_total": 3,
+      "versions": [
+        {
+          "version": "v0.2.3.1",
+          "versionStatus": "latest",
+          "createDate": "2026-11-07T23:02:41+08:00",
+          "updateDate": "2026-11-07T23:02:41+08:00"
+        },
+        {
+          "version": "v0.2.3",
+          "versionStatus": "latest",
+          "createDate": "2026-11-07T23:00:07+08:00",
+          "updateDate": "2026-11-07T23:00:07+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-10-24T21:40:24+08:00",
+          "updateDate": "2026-10-24T21:40:24+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "b3f2d73a185865867bc5cea29caa18e0",
+      "name": "Eink4Boy",
+      "author": "paouke",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-14T22:03:30+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-14T22:03:30+08:00",
+          "updateDate": "2026-10-14T22:03:30+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "10833b0d56572c7d2ad525122dea3d1c",
+      "name": "BoBoOS--AIOS 用AI重塑你的生活 建议前往官网https://bobo.sh.creativone.cn完成刷写",
+      "author": "树莓和派",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-07T23:01:37+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-10-08T15:11:26+08:00",
+          "updateDate": "2026-11-07T23:01:37+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "bfcb9610aefbedd1b9c3f718cccd5fcc",
+      "name": "Metalio_Claw4_2.0.51_gba_full",
+      "author": "zuochen.luo",
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-09-03T16:56:24+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-09-02T10:36:10+08:00",
+          "updateDate": "2026-09-03T16:56:24+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "2c1297cb3a6c846e7d1345b78039221e",
+      "name": "黑猩猩测试——黑猩猩发起对人类的智力挑战",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-12T11:02:43+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-11T22:46:31+08:00",
+          "updateDate": "2026-10-12T11:02:43+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "83ecfee765f538299e850d41b0509674",
+      "name": "森林里的朋友——简单的认识",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T13:04:22+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-27T15:08:28+08:00",
+          "updateDate": "2026-11-05T13:04:22+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "bd72665970facddcc7beff3b9fc13d72",
+      "name": "五子棋",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T10:43:22+08:00",
+      "version_total": 3,
+      "versions": [
+        {
+          "version": "v0.0.2",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T10:40:36+08:00",
+          "updateDate": "2026-11-05T10:43:22+08:00"
+        },
+        {
+          "version": "v0.0.1",
+          "versionStatus": "latest",
+          "createDate": "2026-10-23T01:25:59+08:00",
+          "updateDate": "2026-10-30T10:38:11+08:00"
+        },
+        {
+          "version": "v0.0.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-19T09:29:49+08:00",
+          "updateDate": "2026-10-23T23:51:09+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "759b008fdff7a846affd925f928dee90",
+      "name": "ModernClassicOS",
+      "author": "wenbos058",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-11-11T13:01:03+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "createDate": "2026-11-11T13:01:03+08:00",
+          "updateDate": "2026-11-11T13:01:03+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-11-07T14:33:20+08:00",
+          "updateDate": "2026-11-07T14:37:03+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "2c220821474d3b922f6aa2367037edc1",
+      "name": "小智畅享版",
+      "author": "数字昵称（已隐去）",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-06T21:31:36+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-06T21:31:36+08:00",
+          "updateDate": "2026-10-06T21:31:36+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "70f1b605d2619ed18663264729e7d933",
+      "name": "记事本",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T10:42:42+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T10:42:42+08:00",
+          "updateDate": "2026-11-05T10:42:42+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-22T02:48:51+08:00",
+          "updateDate": "2026-10-30T10:38:50+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "4d45ca7e57e235b067a0753877232d0a",
+      "name": "retro-go-gba",
+      "author": "黄埔大道西",
+      "board_id": "33",
+      "board": "Metalio Claw4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-16T03:30:07+08:00",
+      "version_total": 3,
+      "versions": [
+        {
+          "version": "0.4.13",
+          "versionStatus": "latest",
+          "createDate": "2026-10-16T03:30:07+08:00",
+          "updateDate": "2026-10-16T03:30:07+08:00"
+        },
+        {
+          "version": "0.4.11",
+          "versionStatus": "latest",
+          "createDate": "2026-10-14T18:11:14+08:00",
+          "updateDate": "2026-10-14T18:11:14+08:00"
+        },
+        {
+          "version": "v0.4.10",
+          "versionStatus": "latest",
+          "createDate": "2026-10-14T17:53:02+08:00",
+          "updateDate": "2026-10-14T17:53:02+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/andjiang0083/retro-go-tab5"
+      ]
+    },
+    {
+      "id": "80cb722919f9f1439f5f8d72703ed04e",
+      "name": "天气查询",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T10:43:13+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T10:41:11+08:00",
+          "updateDate": "2026-11-05T10:43:13+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-22T02:41:42+08:00",
+          "updateDate": "2026-10-30T10:40:27+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "0946fcb2f2dddbf7021d56a65e3a4338",
+      "name": "录音机",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-30T10:39:25+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-25T19:52:06+08:00",
+          "updateDate": "2026-10-30T10:39:25+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "1c8740d464481571da51c61bad9880fd",
+      "name": "贪吃蛇",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-19T21:42:27+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-19T14:51:47+08:00",
+          "updateDate": "2026-10-19T21:42:27+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "a743751c5a6ad3d2f2d6066a223770cd",
+      "name": "ardmos",
+      "author": "paouke",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": true,
+      "updated": "2026-10-14T20:00:37+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-14T20:00:37+08:00",
+          "updateDate": "2026-10-14T20:00:37+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "095cb50f66803ac98b4ba2b1f149067d",
+      "name": "浏览器",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T10:42:55+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T10:41:54+08:00",
+          "updateDate": "2026-11-05T10:42:55+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-23T22:21:46+08:00",
+          "updateDate": "2026-10-30T10:39:12+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "7e591796e0c3c512e9376e5b259778ee",
+      "name": "Crosspoint (自用非官方）",
+      "author": "郁闷",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-30T18:38:50+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "createDate": "2026-10-30T18:32:11+08:00",
+          "updateDate": "2026-10-30T18:38:50+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "2b8842ea27543007d9512228e7e0029b",
+      "name": "亮证",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-31T22:14:28+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-31T20:39:35+08:00",
+          "updateDate": "2026-10-31T22:14:28+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/Changkai9888/CloudZao-Projects"
+      ]
+    },
+    {
+      "id": "8fa583addfc017c28cd3451dbe830227",
+      "name": "浏览器",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-30T10:39:08+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-25T12:07:35+08:00",
+          "updateDate": "2026-10-30T10:39:08+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "e806162c097a7cacfba6d1a15e4a1a27",
+      "name": "天气查询",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-30T10:39:37+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-25T00:24:05+08:00",
+          "updateDate": "2026-10-30T10:39:37+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "15905a3185d83b9892dc250d413a8199",
+      "name": "五子棋",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-30T10:37:40+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-25T14:43:52+08:00",
+          "updateDate": "2026-10-30T10:37:40+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "05e5348f7de0541d608b2304a4aef839",
+      "name": "测试固件",
+      "author": "zzz",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T17:34:02+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T17:34:02+08:00",
+          "updateDate": "2026-11-05T17:34:02+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "3f4432cb94f3ac6426c732bec3009370",
+      "name": "点读机",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-31T13:01:28+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-31T12:57:49+08:00",
+          "updateDate": "2026-10-31T13:01:28+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "d4d65b5755d72436962217644c87cc80",
+      "name": "默认版本",
+      "author": "数字昵称（已隐去）",
+      "board_id": "35",
+      "board": "Metalio 1.54",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-08-20T19:08:22+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v1.8.2",
+          "versionStatus": "latest",
+          "createDate": "2026-08-20T19:08:22+08:00",
+          "updateDate": "2026-08-20T19:08:22+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/WMnologo/xingzhi-ai"
+      ]
+    },
+    {
+      "id": "180b786c0fcee631ae05234a46f8b8f5",
+      "name": "kiikoread xiugai",
+      "author": "zhu_yue2008",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-02T14:16:25+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "rc109.1",
+          "versionStatus": "test",
+          "createDate": "2026-11-01T21:27:40+08:00",
+          "updateDate": "2026-11-02T14:16:25+08:00"
+        },
+        {
+          "version": "rc107.1",
+          "versionStatus": "test",
+          "createDate": "2026-11-01T13:10:01+08:00",
+          "updateDate": "2026-11-01T13:13:38+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai",
+        "https://github.com/wegooo-cell/Metalio-S31-kiikoread"
+      ]
+    },
+    {
+      "id": "7a938d02f2d778d9da494a4cc67e4816",
+      "name": "dpReader",
+      "author": "dephia3188",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-01T12:22:09+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v1.2.1",
+          "versionStatus": "latest",
+          "createDate": "2026-10-30T18:36:07+08:00",
+          "updateDate": "2026-11-01T12:22:09+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/dephia31/dpreader31"
+      ]
+    },
+    {
+      "id": "d3aa1246e9a9f567f8e34e4f854828a0",
+      "name": "记事本",
+      "author": "开哥",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-10-30T10:38:46+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-10-25T00:25:19+08:00",
+          "updateDate": "2026-10-30T10:38:46+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "144740d278df42d7cf22863139326a9a",
+      "name": "听趣S1-E4P",
+      "author": "taorperson",
+      "board_id": "44",
+      "board": "Metalio E-Ink4 Plus",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-08T16:52:49+08:00",
+      "version_total": 2,
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "test",
+          "createDate": "2026-11-08T16:52:49+08:00",
+          "updateDate": "2026-11-08T16:52:49+08:00"
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-11-08T02:55:08+08:00",
+          "updateDate": "2026-11-08T02:56:48+08:00"
+        }
+      ],
+      "source_repositories": [
+        "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1"
+      ]
+    },
+    {
+      "id": "d7828a3721330a505de95599560e2af7",
+      "name": "森林里的朋友——简单的认识",
+      "author": "开哥",
+      "board_id": "38",
+      "board": "Metalio E-Ink4",
+      "source": "community",
+      "featured": false,
+      "updated": "2026-11-05T13:04:06+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "createDate": "2026-11-05T11:21:44+08:00",
+          "updateDate": "2026-11-05T13:04:06+08:00"
+        }
+      ],
+      "source_repositories": []
+    },
+    {
+      "id": "25dc29688ee3b504bbab9df18e77eea1",
+      "name": "测试",
+      "author": "zzz",
+      "board_id": "36",
+      "board": "AI玩具盒",
+      "source": "official",
+      "featured": false,
+      "updated": "2026-08-29T18:13:43+08:00",
+      "version_total": 1,
+      "versions": [
+        {
+          "version": "1.0.1",
+          "versionStatus": "latest",
+          "createDate": "2026-08-29T18:13:43+08:00",
+          "updateDate": "2026-08-29T18:13:43+08:00"
+        }
+      ],
+      "source_repositories": []
+    }
+  ]
+}
