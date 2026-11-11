@@ -152,7 +152,13 @@ esp_err_t UartUhci::Init(const Config& c) {
     return ESP_OK;
 }
 void UartUhci::Deinit() { assert(!counts[N_HELD]); running=false; controller=nullptr; }
-esp_err_t UartUhci::StartReceive() { assert(!counts[N_HELD]); if (!running.exchange(true)) counts[N_STARTS]++; return ESP_OK; }
+esp_err_t UartUhci::StartReceive() {
+    /* The real driver remounts every buffer, so the consumer must have returned what it borrowed. The vendor's
+     * modem task normally has; on a slow host (a CI runner) it may be a little late: wait for it, bounded, and
+     * still fail on a buffer that is never returned. */
+    { std::unique_lock lock(pool_mu); pool_cv.wait_for(lock, std::chrono::seconds(2), []{ return !counts[N_HELD]; }); }
+    assert(!counts[N_HELD]); if (!running.exchange(true)) counts[N_STARTS]++; return ESP_OK;
+}
 esp_err_t UartUhci::StopReceive() { if (running.exchange(false)) counts[N_STOPS]++; return ESP_OK; }
 void UartUhci::ReturnBuffer(RxBuffer *b) {
     std::lock_guard lock(pool_mu); assert(b->index<4 && held[b->index]); held[b->index]=false;
