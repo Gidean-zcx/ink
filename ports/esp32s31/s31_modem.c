@@ -52,7 +52,7 @@ static bool ink_allowed(const char *cmd) {
         "AT", "ATI", "AT+CGMM", "AT+CGMR", "AT+CPIN?", "AT+CEREG?", "AT+CSQ",
         "AT+ECSIMCFG?", "AT+ECNETCFG?", "AT+ECNETDEVCTL?", "AT+CMGF?", "AT+CMGF=?",
         "AT+CSMS=?", "AT+CNMI?", "AT+CIREG?", "AT+CIREG=?", "AT+CLCC", "AT+CMUT?",
-        "AT+CFUN=1", "AT+CFUN=4", "AT+ECNETDEVCTL=2,1,1", "AT+CMGF=0",
+        "AT+CFUN?", "AT+CFUN=1", "AT+CFUN=4", "AT+ECNETDEVCTL=2,1,1", "AT+CMGF=0",
         "ATA", "AT+CHUP", "AT+CMUT=0", "AT+CMUT=1"
     };
     if (!cmd) return false;
@@ -360,14 +360,28 @@ static hal_at_result_t ink_at_once(const char *cmd, const char *payload, char *o
     bool sent = ink_cell.at_sent, desynced = ink_cell.desynced;
     CELL_UNLOCK();
     osal_mutex_unlock(ink_cell.at);
-    if (ink_cell.at_logged < 6 || (result == HAL_AT_TIMEOUT && ink_cell.at_logged < 12)) { /* first device runs */
+    /* First device runs: every command in the first 90 s after boot, with the start of its answer (no reply text for
+     * commands that may carry a number or a message; digit runs of ten or more masked), then only timeouts. */
+    bool early = osal_now_us() < 90000000ull;
+    if (early || (result == HAL_AT_TIMEOUT && ink_cell.at_logged < 12)) {
         ink_cell.at_logged++;
         bool private = !strncmp(cmd, "ATD", 3) || !strncmp(cmd, "AT+CMG", 6);
-        char line[160];
-        snprintf(line, sizeof line, "cell link: %.32s -> %s (sent=%d desync=%d) rx=%u B frames=%u bad=%u forced=%u SRDY=%d",
+        char said[64] = "";
+        if (!private && out && cap) {
+            snprintf(said, sizeof said, "%s", out);
+            for (char *p = said; *p; p++) if (*p == '\r' || *p == '\n') *p = ' ';
+            for (char *p = said; *p;) {
+                char *q = p;
+                while (*q >= '0' && *q <= '9') q++;
+                if (q - p >= 10) memset(p, '#', (size_t)(q - p));
+                p = q > p ? q : p + 1;
+            }
+        }
+        char line[220];
+        snprintf(line, sizeof line, "cell link: %.32s -> %s (sent=%d desync=%d) rx=%u B frames=%u forced=%u SRDY=%d %s",
                  private ? "(private)" : cmd, result == HAL_AT_OK ? "OK" : result == HAL_AT_ERROR ? "ERROR" :
                  result == HAL_AT_TIMEOUT ? "timeout" : "no modem", sent, desynced, ink_cell.rx_raw, ink_cell.frames,
-                 ink_cell.bad_headers, ink_cell.forced, gpio_get_level(S31_GPIO_MODEM_SRDY));
+                 ink_cell.forced, gpio_get_level(S31_GPIO_MODEM_SRDY), said);
         hal_log_write(line);
     }
     return result;

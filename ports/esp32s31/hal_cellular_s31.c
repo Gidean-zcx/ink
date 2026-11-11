@@ -31,7 +31,7 @@ static void log_modem_once(void) {
     static bool done;
     if (done) return;
     done = true;
-    static const char *const QUERIES[] = {"AT+CGMM", "AT+CGMR", "AT+CPIN?", "AT+CEREG?", "AT+CSQ", "AT+ECSIMCFG?",
+    static const char *const QUERIES[] = {"AT+CGMM", "AT+CGMR", "AT+CFUN?", "AT+CPIN?", "AT+CEREG?", "AT+CSQ", "AT+ECSIMCFG?",
                                           "AT+CSMS=?", "AT+CMGF=?", "AT+CNMI?", "AT+CIREG?", "AT+CIREG=?"};
     for (size_t i = 0; i < sizeof QUERIES / sizeof *QUERIES; i++) {
         char response[512] = "", line[200];

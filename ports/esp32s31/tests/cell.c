@@ -74,7 +74,7 @@ osal_err_t osal_queue_recv(osal_queue_t *q, void *item, int64_t us) {
 void *osal_malloc(size_t n, uint32_t mem) { assert(mem == OSAL_MEM_EXTERNAL); return malloc(n); }
 void osal_free(void *p) { free(p); }
 void osal_panic(const char *fmt, ...) { (void)fmt; abort(); }
-static char logged[2048]; /* what the port wrote to the log, line after line */
+static char logged[16384]; /* what the port wrote to the log, line after line */
 void hal_log_write(const char *s) { size_t n = strlen(logged); snprintf(logged + n, sizeof logged - n, "%s\n", s); }
 osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
     (void)out; assert(cfg->fn == ink_io && cfg->stack_bytes == 4096 && cfg->flags == OSAL_TASK_STACK_EXTERNAL); return OSAL_OK;
@@ -269,7 +269,8 @@ int main(void) {
     /* the once-per-boot modem summary: read-only queries, long digit runs masked */
     assert(strstr(logged, "cell: AT+CGMR -> OK") && strstr(logged, "FAKE_R1 ###############") && !strstr(logged, "123456789012345"));
     assert(strstr(logged, "cell: AT+CIREG? -> OK") && !strstr(logged, "cell: ATI"));
-    size_t summary = strlen(logged); assert(hal_cell_status(&st) && strlen(logged) == summary); /* once */
+    assert(hal_cell_status(&st)); /* the summary once (the per-command link lines go on for the first 90 s) */
+    { unsigned n = 0; for (const char *p = logged; (p = strstr(p, "cell: AT+CGMM")); p++) n++; assert(n == 1); }
     assert(handshakes == 1 && ink_cell.handshake && netif.connected);
     ip_event_got_ip_t ip = {.esp_netif = &netif}; ink_ip(NULL, IP_EVENT, IP_EVENT_ETH_GOT_IP, &ip);
     hal_link_status_t link; assert(ink_s31_cell_link(&link) && link.up && link.signal_dbm == -67);
