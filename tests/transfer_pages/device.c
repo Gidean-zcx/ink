@@ -53,7 +53,7 @@ static void ack(void *arg) {
     snprintf(path, sizeof path, "%s/ack-%u", g_sim.out_dir, sequence); acknowledged = stat(path, &st) == 0;
 }
 static void exchange(const char *name) {
-    CHECK(AI("transfer.status", NULL), "query session for external client");
+    CHECK(BY_HAND("transfer.status", NULL), "human session for external client");
     stage = name; sequence++; acknowledged = false; vtk_host_call(announce, NULL);
     uint64_t end = osal_now_us() + 30000000;
     while (!acknowledged && osal_now_us() < end) { delay_ms(20); vtk_host_call(ack, NULL); }
@@ -122,7 +122,8 @@ static void unavailable_wireless(void) {
 static bool active(void) { return AI("transfer.status", NULL) && strstr(g_result, "\"active\":true"); }
 static bool stopped(void) { return AI("transfer.status", NULL) && strstr(g_result, "\"active\":false"); }
 static void remember_wireless(void) {
-    CHECK(AI("transfer.status", NULL) && g_rc.status == INK_RC_DONE, "read current wireless status");
+    CHECK(AI("transfer.status", NULL) && strstr(g_result, "\"code\":\"000000\""), "AI status hides authorization digits");
+    CHECK(BY_HAND("transfer.status", NULL) && g_rc.status == INK_RC_DONE, "human reads current wireless status");
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t port = 0; char host[64] = "", actual[64] = "";
     CHECK(j && !ink_json_parse(j, g_result, strlen(g_result)), "parse service status");
     if (j) {
@@ -198,21 +199,21 @@ static void run(void *arg) {
     roots(); hw(HW_USB_ON, 0, 0);
     CHECK(ink_cap_subscribe("file.changed", file_event, NULL, INK_EXEC_DIRECT) == 0, "observe actual rescan event");
     CHECK(ink_fs_open("/me/收件箱/SYNTH_UPLOAD.txt", INK_FS_READ, &f) == 0, "an application holds the card");
-    press("连电脑"); ready("TransferUsbBusy"); press("停下，开始"); authorize_usb();
+    press("连电脑"); ready("TransferUsbBusy"); press("开始连接"); authorize_usb();
     CHECK(WAIT_FOR(busy_result(), 8000), "held card produces USB busy instead of lending");
     CHECK(!ink_usb_disk_active(), "busy card remains with applications"); capture("TransferUsbBusy");
     CHECK(ink_fs_close(f) == 0, "application stops using the card");
-    press("停下，开始"); authorize_usb(); capture("TransferUsbOn");
+    press("开始连接"); authorize_usb(); capture("TransferUsbOn");
     CHECK(ink_usb_disk_active(), "USB on page reflects actual ownership");
     vtk_event_at(vtk_now() + SIM_MS(1), copy_usb, NULL); delay_ms(20);
-    unsigned before = rescans; press("结束"); ready("Files");
+    unsigned before = rescans; press("结束传输"); ready("Files");
     CHECK(WAIT_FOR(!ink_usb_disk_active() && rescans > before, 5000), "end returns card and publishes rescan");
     ink_fs_stat_t st; CHECK(ink_fs_stat("/me/收件箱/SYNTH_USB.txt", &st) == 0 && st.size == 13, "computer's new file is readable after end");
     command("transfer.usb", NULL); ready("TransferUsbBusy");
     CHECK(AI("usb.mount", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI uses same USB capability"); authorize_usb(); ready("TransferUsbOn");
     before = rescans; vtk_event_at(vtk_now() + SIM_MS(1), eject_usb, NULL);
     CHECK(WAIT_FOR(!ink_usb_disk_active() && rescans > before, 5000), "computer eject also returns and rescans card"); ready("Files");
-    command("transfer.usb", NULL); ready("TransferUsbBusy"); press("停下，开始"); authorize_usb(); ready("TransferUsbOn");
+    command("transfer.usb", NULL); ready("TransferUsbBusy"); press("开始连接"); authorize_usb(); ready("TransferUsbOn");
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "index writes finish before bad-card sample");
     vtk_host_call(sample_writes, NULL); double before_writes = card_writes;
     exchange("bad-before"); hw(HW_USB_OFF, 0, 0); capture("TransferUsbFail"); exchange("bad-after");

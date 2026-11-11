@@ -159,9 +159,10 @@ static void create_detail(lv_obj_t *screen, void *arg) {
     action(4, TR_NOOP("输入名称"), "clock.focus", NULL, true);
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = C.draft.title, .hint = TR("闹钟名称"), .max = sizeof C.draft.title - 1};
     C.name = ink_textfield_create(screen, &cfg, NULL, NULL, false);
-    lv_obj_set_pos(C.name, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_width(C.name, ink_ui_px(w));
+    lv_obj_set_y(C.name, ink_ui_px(y));
+    ink_textfield_style(C.name, INK_FIELD_SINGLE, TR("闹钟名称"));
     ink_textfield_bind_short(C.name, &EDIT, &C.fields[2], &C.actions[4]); lv_obj_add_event_cb(C.name, name_changed, LV_EVENT_VALUE_CHANGED, NULL);
-    y += INK_CONTROL + INK_GAP;
+    y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
     const char *presets[] = {TR_NOOP("只响一次"), TR_NOOP("每天"), TR_NOOP("工作日")}; const int masks[] = {0, 127, 62};
     for (int i = 0; i < 3; i++) {
         char args[48]; snprintf(args, sizeof args, "{\"weekdays\":%d}", masks[i]); action(5 + i, presets[i], "clock.draft", args, true);

@@ -146,7 +146,7 @@ static void prepare(bool clear) {
     file("/me/after-backup.txt", "test-only-unbacked-file");
     CHECK(WAIT_FOR(at("FactoryReset") && strstr(g_snap, "之后有东西还没备份"), 6000), "new file after backup is unbacked");
     capture("FactoryReset");
-    press("继续"); uint32_t token = confirmation();
+    press("验证并清空"); uint32_t token = confirmation();
     CHECK(ink_confirm_decide(token, true, INK_SRC_AI) != 0, "AI cannot approve reset");
     int before = pin_done;
     CHECK(!ink_confirm_accept_with_pin(token, "0000", pin_reply, NULL) && WAIT_FOR(pin_done > before, 5000) && pin_result == INK_PIN_WRONG, "wrong parent password is rejected");
@@ -166,7 +166,7 @@ static void prepare(bool clear) {
         CHECK(at("FactoryReset") && strstr(g_snap, "\\\"clear_media\\\":false"), "real switch and AI use the same selection path");
         CHECK(AI("factory.media", "{\"clear_media\":true}") && g_rc.status == INK_RC_DONE, "select card wipe for this reset");
     }
-    press("继续"); token = confirmation();
+    press("验证并清空"); token = confirmation();
     ink_db_flush_all(); CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "fixtures are durable before reset");
     ink_probe_count("test.finished");
     CHECK(!ink_confirm_accept_with_pin(token, "1234", NULL, NULL), "correct parent password authorizes reset");
@@ -182,7 +182,7 @@ static void after(bool clear) {
     exists("/family/books/test-only.txt", !clear); exists("/family/books/nested/another.txt", !clear); exists("/family/audio/test-only.opus", !clear);
     exists("/family/other/test-only.txt", true);
     capture("FactoryDone");
-    press("知道了"); CHECK(ready("FirstBoot"), "acknowledgement enters existing boot flow");
+    press("重新设置设备"); CHECK(ready("FirstBoot"), "explicit setup action enters existing boot flow");
     ink_probe_count("test.finished");
 }
 static void run(void *arg) {

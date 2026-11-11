@@ -349,6 +349,10 @@ void ink_ui_cause(uint64_t t_us, const char *tag) {
     UI.cause_tag = tag;
 }
 
+void ink_ui_cause_tag(const char *tag) {
+    if (UI.cause_us) UI.cause_tag = tag;
+}
+
 const char *ink_ui_page_name(void) {
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     return top && top->name ? top->name : "";

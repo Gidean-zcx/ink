@@ -168,7 +168,13 @@ static void check_search_layout(void) {
     CHECK(label, "the real Apps search field is visible");
     if (!label) return;
     lv_obj_t *field = lv_obj_get_parent(label);
-    CHECK(count_icons(field) == 1, "search includes exactly one search icon");
+    int icons = 0;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(field); i++) {
+        lv_obj_t *child = lv_obj_get_child(field, (int32_t)i);
+        if (lv_obj_is_visible(child) && lv_obj_check_type(child, &lv_image_class)) icons++;
+    }
+    CHECK(icons == 1, "search includes exactly one visible search icon");
+    label = lv_textarea_get_label(lv_obj_get_child(field, 1));
     lv_area_t text, bounds; lv_obj_get_coords(label, &text); lv_obj_get_coords(field, &bounds);
     for (uint32_t i = 0; i < lv_obj_get_child_count(field); i++) {
         lv_obj_t *icon = lv_obj_get_child(field, (int32_t)i);
@@ -580,17 +586,30 @@ static void snapshot_tests(void) {
     wanted = "今日报纸"; on_ui(read_view); CHECK(label_x >= 0, "Today labels today's newspaper explicitly");
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "open Apps with a two-page tool fixture"); quiet(); on_ui(read_context);
     on_ui(check_search_layout);
-    /* Which page the fixture lands on depends on how many system tools this device registers. */
-    CHECK(strstr(context, "工具页=1/2") && strstr(context, "时钟（clock）") && strstr(context, "短信（message）"), "Apps includes the visible registered, built-in and fixed-group entries");
-    CHECK(!strstr(context, "设置（settings）") && strstr(context, "对话记录（ai）"), "Apps includes registered AI and omits settings on the next page");
-    bool tool_first = strstr(context, "工具甲（tool_a）") != NULL;
-    if (!tool_first) { CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn to the page with the tool fixture"); quiet(); }
-    wanted = "工具甲"; on_ui(read_view); CHECK(label_x >= 0, "the advertised tool is visible"); if (label_x >= 0) tap(label_x, label_y); quiet();
-    CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch launches the advertised stable id");
-    on_ui(ink_ui_home); quiet();
-    if (tool_first) { CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn the tools page through the same capability"); quiet(); }
-    on_ui(read_context);
-    CHECK(strstr(context, "工具页=2/2") && strstr(context, "设置（settings）") && !strstr(context, "时钟（clock）") && !strstr(context, "短信（message）") && (strstr(context, "工具甲（tool_a）") != NULL) != tool_first, "the next-page snapshot matches only its visible tools");
+    const char *names[] = {"时钟", "短信", "设置", "对话记录", "工具甲", "工具乙"};
+    const char *entries[] = {"时钟（clock）", "短信（message）", "设置（settings）", "对话记录（ai）", "工具甲（tool_a）", "工具乙（tool_b）"};
+    unsigned seen = 0; bool tool_touched = false;
+    for (int turn = 0; turn < 4; turn++) {
+        on_ui(read_context);
+        int current = 0, total = 0; const char *at = strstr(context, "工具页=");
+        CHECK(at && sscanf(at, "工具页=%d/%d", &current, &total) == 2 && current == turn + 1 && total <= 4,
+              "Apps exposes the actual page after the input label reflows it");
+        for (unsigned i = 0; i < sizeof names / sizeof *names; i++) {
+            wanted = names[i]; on_ui(read_view);
+            bool advertised = strstr(context, entries[i]) != NULL;
+            CHECK(advertised == (label_x >= 0), "only visible entries occur in the page snapshot: %s", names[i]);
+            if (advertised) seen |= 1u << i;
+        }
+        wanted = "工具甲"; on_ui(read_view);
+        if (label_x >= 0 && !tool_touched) {
+            tap(label_x, label_y); quiet();
+            CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch launches the advertised stable id");
+            tool_touched = true; on_ui(ink_ui_home); quiet();
+        }
+        if (current >= total) break;
+        CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn to the next actual tool page"); quiet();
+    }
+    CHECK(seen == 63 && tool_touched, "all registered, built-in and fixed-group entries remain visible and callable across pages");
     CHECK(AI("shell.launch", "{\"id\":\"settings\"}") && g_rc.status == INK_RC_DONE, "AI can use the visible settings id"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "Settings"), "the advertised id opens actual settings");
     on_ui(ink_ui_home); quiet();
     CHECK(AI("shell.search", "{\"query\":\"工具甲\"}") && g_rc.status == INK_RC_DONE, "filter Apps through its capability"); quiet(); on_ui(read_context);

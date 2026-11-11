@@ -5,7 +5,10 @@
 #
 #   cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 cmake_minimum_required(VERSION 3.16)
-project(ink C)
+project(ink C CXX)
+set(CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES OFF) # C fixtures reuse the executable's compiler driver.
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Tests that recompile one source with its real flags for a reverse control (emergency-call, among others)
 # read the compile database; CI configures without asking for it (2026-11-11), so it is always written.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -134,6 +137,9 @@ target_compile_options(ink_stb PRIVATE -w)
 # The simulated device: the port (OSAL and HAL on the models), the chip models, the environment
 # (hub, signals), the runner's metrics, trace and scripts, the desktop bridge. One library while
 # models and HAL implementations still call each other (see the layout doc).
+add_library(ink_script STATIC system/autotest/script.c)
+target_include_directories(ink_script PUBLIC system/autotest system/include platform/include)
+target_compile_options(ink_script PRIVATE ${INK_WARN})
 add_library(ink_port_sim STATIC
   ports/sim/osal/osal_sim.c
   ports/sim/hal/hal_i2c_sim.c
@@ -170,7 +176,7 @@ add_library(ink_port_sim STATIC
   simulator/runtime/script.c
   simulator/desktop/sim_gui.c)
 target_include_directories(ink_port_sim PUBLIC simulator simulator/desktop)
-target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb ink_lz4 ink_sha256)
+target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb ink_lz4 ink_sha256 ink_script)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
 
 # An executable = the simulator runner + the code under test (which provides ink_main()).
@@ -302,6 +308,12 @@ target_compile_options(ink_system PRIVATE ${INK_WARN})
 add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
 target_link_libraries(ink_apps PUBLIC ink_system)
 target_compile_options(ink_apps PRIVATE ${INK_WARN})
+include(apps/reader/reader_build.cmake)
+ink_reader_build(ink_apps ink_system ink_lvgl)
+add_executable(sim-reader-epub simulator/runtime/sim_main.c tests/reader_epub/device.c)
+target_include_directories(sim-reader-epub PRIVATE tests apps/reader)
+target_link_libraries(sim-reader-epub PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-reader-epub PRIVATE ${INK_WARN})
 
 # The product: ink_main() starts the services and the apps (the composition root).
 add_library(ink_boot STATIC system/boot/main.c)
@@ -317,7 +329,12 @@ add_custom_target(ink_sample ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/sample
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/assets/sample/welcome.txt ${INK_ASSETS_DIR}/sample/welcome.txt)
 find_package(Python3 COMPONENTS Interpreter)
+add_test(NAME reader-epub COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME reader-epub-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME reader-epub-segments COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR} --segments)
+add_test(NAME reader-epub-toc-save-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR} --unsaved-toc)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
+ink_reader_translations(INK_I18N_TABLES)
 set(INK_HAVE_FONTS OFF)
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
@@ -854,7 +871,7 @@ add_test(NAME i18n-extras COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/t
   --out ${CMAKE_BINARY_DIR}/test-out/i18n-extras --min-frames 10)
 set_tests_properties(i18n-extras PROPERTIES ENVIRONMENT "INK_I18N_EXTRAS=1" TIMEOUT 240)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
-add_test(NAME i18n-literals COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_literals.py)
+add_test(NAME i18n-literals COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_literals.py --root ${CMAKE_BINARY_DIR}/reader-i18n-check)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)
@@ -1789,6 +1806,13 @@ ink_sim_executable(sim-factory-pages tests/factory_pages.c)
 target_link_libraries(sim-factory-pages PRIVATE ink_apps ink_system)
 add_test(NAME factory-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/factory_pages.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(factory-pages PROPERTIES TIMEOUT 420)
+foreach(ui_fix_a_case backup confirm transfer factory)
+  ink_sim_executable(sim-ui-fix-a-${ui_fix_a_case} tests/ui_fix_a/${ui_fix_a_case}.c)
+  target_link_libraries(sim-ui-fix-a-${ui_fix_a_case} PRIVATE ink_apps ink_system)
+  add_test(NAME ui-fix-a-${ui_fix_a_case} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ui_fix_a/run.py
+    --build ${CMAKE_BINARY_DIR} --case ${ui_fix_a_case})
+  set_tests_properties(ui-fix-a-${ui_fix_a_case} PROPERTIES TIMEOUT 180)
+endforeach()
 
 target_sources(ink_system PRIVATE system/ui/shell/ai_pages.c)
 ink_sim_executable(sim-ai-pages tests/ai_pages.c)
@@ -1959,3 +1983,20 @@ ink_sim_executable(sim-comm-ux2 tests/comm_ux2/comm_ux2.c)
 target_link_libraries(sim-comm-ux2 PRIVATE ink_apps ink_system)
 add_test(NAME comm-ux2 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/comm_ux2/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(comm-ux2 PROPERTIES TIMEOUT 120)
+add_executable(test-autotest-parser tests/device_autotest/parser.c)
+target_link_libraries(test-autotest-parser PRIVATE ink_script)
+target_compile_options(test-autotest-parser PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME autotest-parser COMMAND test-autotest-parser)
+file(READ ${CMAKE_SOURCE_DIR}/tests/device_autotest/device.script device_script HEX)
+string(REGEX REPLACE "(..)" "0x\\1," device_script "${device_script}")
+file(WRITE ${CMAKE_BINARY_DIR}/autotest-test/autotest_script.h "static const char ink_autotest_script[] = {${device_script}0};\n")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/tests/device_autotest/device.script)
+add_executable(test-autotest-device tests/device_autotest/device.c)
+target_include_directories(test-autotest-device PRIVATE ${CMAKE_BINARY_DIR}/autotest-test)
+target_link_libraries(test-autotest-device PRIVATE ink_script ink_lvgl)
+target_compile_options(test-autotest-device PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME autotest-device COMMAND test-autotest-device)
+ink_sim_executable(sim-autotest tests/device_autotest/sim.c)
+target_link_libraries(sim-autotest PRIVATE ink_apps ink_system)
+add_test(NAME autotest-cap COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_autotest/run.py ${CMAKE_BINARY_DIR})
+add_test(NAME autotest-build-switch COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_autotest/build_switch.py ${CMAKE_BINARY_DIR})

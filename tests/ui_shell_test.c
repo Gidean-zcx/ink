@@ -87,7 +87,9 @@ static void test_task(void *arg) {
     CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "settings opens"); quiet();
     swipe(20, 400, 250, 400); quiet(); CHECK(!strcmp(ink_ui_page_name(), "home"), "left edge returns one level");
     swipe(500, 500, 200, 500); quiet(); CHECK(!strcmp(ink_shell_board(), "Apps"), "foreground swipe turns only on release");
-    on_ui(find_clock); CHECK(clock_tile, "Apps initially shows its Clock tile");
+    on_ui(find_clock);
+    if (!clock_tile) { CHECK(BY_HAND("home.next", NULL) && g_rc.status == INK_RC_DONE, "page past the taller search field"); quiet(); on_ui(find_clock); }
+    CHECK(clock_tile, "Apps shows its Clock tile on the appropriate page");
     tap(300, INK_STATUS_BAR + INK_PRIMARY + INK_CONTROL / 2);
     CHECK(ink_text_focused(), "application search takes the input focus");
     CHECK(AI("text.insert", "{\"text\":\"阅读\"}") && g_rc.status == INK_RC_DONE, "the AI can fill the same application query");
@@ -97,7 +99,9 @@ static void test_task(void *arg) {
     on_ui(find_clock); CHECK(!clock_tile, "the nonmatching Clock tile is absent from the rendered tree");
     CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "global search returns to the original Apps page");
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "clearing the same query restores Apps");
-    on_ui(find_clock); CHECK(clock_tile, "clearing the query restores the rendered tile");
+    on_ui(find_clock);
+    if (!clock_tile) { CHECK(BY_HAND("home.next", NULL) && g_rc.status == INK_RC_DONE, "reach the restored Clock page"); quiet(); on_ui(find_clock); }
+    CHECK(clock_tile, "clearing the query restores the rendered tile");
     key(HAL_KEY_PREV); quiet();
     on_ui(open_input); quiet();
     swipe(300, 1200, 300, 900); quiet(); CHECK(ink_text_focused() && !strcmp(ink_ui_page_name(), "test.input"), "keyboard owns the bottom edge");

@@ -213,7 +213,11 @@ static void inspect_backup_started(void) {
     read_snapshot();
     CHECK(strstr(snapshot, "备份或恢复正在进行") && !strstr(snapshot, "还没有备份"),
         "accepted backup refreshes the visible page and its AI snapshot");
-    wanted = "备份或恢复正在进行"; find_label();
+    char label[160], automatic[64];
+    int mode = (int)ink_setting_get("backup.auto");
+    snprintf(automatic, sizeof automatic, "自动备份：%s", mode == 1 ? "每天" : mode == 2 ? "每周" : "关");
+    snprintf(label, sizeof label, "备份或恢复正在进行 · %s", automatic);
+    wanted = label; find_label();
     CHECK(x >= 0 && y >= 0, "the running backup is visible on screen");
 }
 static void press(const char *label) {

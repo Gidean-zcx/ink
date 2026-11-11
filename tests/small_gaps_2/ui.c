@@ -87,7 +87,8 @@ static bool compare;
 static int buttons;
 static void inspect_buttons(lv_obj_t *obj) {
     const char *cap = ink_shell_bound_cap(obj);
-    if (cap && !strcmp(cap, compare ? "reminder.draft" : "shell.time_step")) {
+    if (cap && !strcmp(cap, compare ? "reminder.draft" : "shell.time_step") &&
+        lv_obj_get_width(obj) == ink_ui_px(INK_PRIMARY)) {
         CHECK(buttons < PICKER_BUTTONS, "picker has ten step buttons");
         if (buttons < PICKER_BUTTONS) {
             lv_area_t a; lv_obj_get_coords(obj, &a);

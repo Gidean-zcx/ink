@@ -8,7 +8,7 @@
 #include "ink/ui_theme.h"
 
 typedef struct { char key[80]; lv_image_dsc_t dsc; } icon_asset_t;
-static icon_asset_t cache[128] INK_PSRAM_BSS;
+static icon_asset_t cache[256] INK_PSRAM_BSS; /* every icon variant the pages use stays decoded (a full cache panics): headroom as pages add sizes */
 static int used;
 
 static bool unpack(const uint8_t *in, size_t n, uint8_t *out, size_t want) {

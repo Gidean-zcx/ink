@@ -101,6 +101,12 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(page_has("已完成"), 5000), "long press finishes forgetting");
     CHECK(AI("bt.list", NULL) && !strstr(g_result, ADDR), "forget removes the saved headset");
     CHECK(AI("bt.connect", ARGS) && g_rc.status == INK_RC_FAILED, "forgotten headset cannot connect without pairing");
+    press("搜索耳机");
+    CHECK(WAIT_FOR(page_has("我的耳机"), 5000), "find the headset again for visible forget");
+    press("我的耳机"); CHECK(WAIT_FOR(connected(), 7000), "pair again before explicit forget");
+    quiet(); press("忘记");
+    CHECK(WAIT_FOR(page_has("已完成"), 5000), "visible forget button completes without a long press");
+    CHECK(AI("bt.list", NULL) && !strstr(g_result, ADDR), "visible forget removes the saved headset");
     quiet(); press("搜索耳机");
     CHECK(AI("settings.set", "{\"id\":\"bt.enabled\",\"value\":0}") && g_rc.status == INK_RC_DONE, "disable during a scan");
     CHECK(WAIT_FOR(page_has("蓝牙已关闭"), 5000), "in-flight scan is discarded after disabling");

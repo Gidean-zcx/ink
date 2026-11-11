@@ -264,9 +264,10 @@ static void editor_create(lv_obj_t *screen, void *arg) {
         editor_bind(NULL, TR("输入内容"), "reminder.focus", "{}");
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = E.draft.title, .hint = TR("提醒内容"), .max = sizeof E.draft.title - 1};
         E.name = ink_textfield_create(screen, &cfg, NULL, NULL, false);
-        lv_obj_set_pos(E.name, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_width(E.name, ink_ui_px(w));
+        lv_obj_set_y(E.name, ink_ui_px(y));
+        ink_textfield_style(E.name, INK_FIELD_SINGLE, TR("提醒内容"));
         ink_textfield_bind_short(E.name, &E.page, &E.fields[0], &E.actions[0]); lv_obj_add_event_cb(E.name, editor_name, LV_EVENT_VALUE_CHANGED, NULL);
-        y += INK_CONTROL + INK_GAP;
+        y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
         editor_bind(ink_ui_pill(screen, E.at, INK_MARGIN, y, w, INK_CONTROL, false, NULL, NULL), TR("日期和时间"), "reminder.time", "{}");
         y += INK_CONTROL + INK_GAP_S;
         editor_bind(ink_ui_pill(screen, E.end_label, INK_MARGIN, y, w - INK_CONTROL - INK_GAP_M, INK_CONTROL, false, NULL, NULL), TR("结束时间"), "reminder.time", "{\"end\":true}");

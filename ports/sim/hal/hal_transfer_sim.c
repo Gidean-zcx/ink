@@ -8,6 +8,12 @@
 #include <unistd.h>
 
 static int listener = -1, client = -1;
+int hal_transfer_server_start(const hal_transfer_policy_t *policy, uint16_t *port) { (void)policy; (void)port; return 0; }
+void hal_transfer_server_stop(void) {}
+bool hal_transfer_hotspot(void) { return false; }
+int hal_transfer_qr(const char *url, const char *code, void (*pixel)(void *, int, int, bool), void *ctx) {
+    (void)url; (void)code; (void)pixel; (void)ctx; return -1;
+}
 typedef struct { int op, result; uint16_t port; void *data; size_t len; } request_t;
 
 static void on_host(void *arg) {

@@ -14,7 +14,7 @@
 #include "ink/ui_shell.h"
 #include "ai_pages.h"
 
-static const char *const TITLES[] = {TR_NOOP("暂时问不了 AI，书还能继续读"), TR_NOOP("等得太久，先停了"), TR_NOOP("今天的额度用完了")};
+static const char *const TITLES[] = {TR_NOOP("暂时问不了 AI，书还能继续读"), TR_NOOP("等得太久，先停了"), TR_NOOP("额度用完了")};
 static struct { lv_obj_t *root; int kind; ink_ui_page_spec_t page; } E;
 static ink_ui_field_spec_t error_fields[2];
 static ink_ui_action_spec_t error_actions[] = {
@@ -43,7 +43,7 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
     bool kid = ink_member_current()->role == INK_ROLE_CHILD, one = kind == 2 || (plane && kid); /* the switch is not a child's */
     const char *title = plane ? TR("飞行模式已打开") : TR(TITLES[kind]);
     const char *detail = plane ? (kid ? TR("请家长关闭飞行模式。书还能继续读。") : TR("关闭飞行模式后再问。书还能继续读。")) : kind == 0 ? (lost ? TR("网络断了，回答没收全，不会自动重试。") : TR("连不上家庭服务器。")) : kind == 1 ? TR("没有收到结果，不会自动重试。") :
-        kid ? TR("可以问爸爸妈妈。书还能继续读。") : TR("明天恢复，也可以在手机上加。书还能继续读。");
+        kid ? TR("可以问爸爸妈妈。书还能继续读。") : TR("恢复时间还不确定。书还能继续读。");
     int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_GAP_L + INK_CONTROL + INK_GAP_XXL;
     int title_h = ink_ui_text_height(title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
     int detail_h = ink_ui_text_height(detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w);
@@ -78,13 +78,14 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
     return &ERROR_OVERLAYS[kind];
 }
 
+enum { AI_ROWS_MAX = 8 };
 static struct {
     ink_db_t *db; ink_ui_list_t *list; ink_ui_list_position_t position[2];
-    char member[16]; int64_t keep_s;
+    char member[16], heading[128]; int64_t keep_s;
     bool receipts; unsigned capacity; uint32_t version, generation, epoch, selected;
     lv_obj_t *notice; const char *status;
     ink_json_t json;
-    char row[512], ids[8][64], args[8][256], titles[8][128], values[8][192];
+    char row[512], ids[AI_ROWS_MAX][64], args[AI_ROWS_MAX][256], titles[AI_ROWS_MAX][128], values[AI_ROWS_MAX][512];
 } L INK_PSRAM_BSS;
 static const char *receipt_text(const char *status) {
     static const char *const names[] = {"done", "partial", "queued", "pending_confirmation", "rejected", "stale", "invalid", "failed", "cancelled", "undone"};
@@ -126,6 +127,12 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     age = osal_wall_us() / 1000000 - when_s;
     bool undo = !strcmp(L.member, ink_member_current()->id) && L.receipts && object[0] && undo_ms > 0 && age >= 0 && age * 1000 < undo_ms;
     const ink_cap_t *definition = ink_cap_find(cap);
+    const char *name = TR("对象名未记录"), *operation = definition ? TR(definition->title) : cap; /* a stale record of a capability no longer registered: its id says more than a blank */
+    for (int at = 0; !strncmp(object, "setting:", 8) && ink_setting_at(at); at++)
+        if (!strcmp(ink_setting_at(at)->id, object + 8)) { name = TR(ink_setting_at(at)->title); break; }
+    const char *reason = !L.receipts || undo ? "" : !undo_ms || !object[0] ? TR("\n此操作不支持撤销") :
+        strcmp(L.member, ink_member_current()->id) ? TR("\n只能由操作的家人撤销") :
+        when_s <= 0 || age < 0 ? TR("\n时间不明，无法判断撤销期限") : TR("\n已过撤销期限");
     snprintf(L.ids[i], sizeof L.ids[i], "activity:%u", (unsigned)rec.id);
     char member[16]; snprintf(member, sizeof member, "%s", L.member);
     snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u,\"member\":\"%s\"}", (unsigned)rec.id, member);
@@ -134,21 +141,22 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
         ink_jw_raw(&w, "{\"object\":"); ink_jw_str(&w, object);
         ink_jw_raw(&w, ",\"revision\":"); ink_jw_int(&w, revision); ink_jw_raw(&w, "}");
     }
-    snprintf(L.titles[i], sizeof L.titles[i], "%s", L.receipts ? receipt_text(status) : definition ? definition->title : cap);
+    snprintf(L.titles[i], sizeof L.titles[i], "%s", L.receipts ? receipt_text(status) : operation);
     char when[32]; snprintf(when, sizeof when, "%s", TR("时间未记录"));
     if (rec.sort > 0) { ink_tm_t tm; ink_time_to_local(rec.sort, &tm); snprintf(when, sizeof when, "%02d-%02d %02d:%02d", tm.month, tm.day, tm.hour, tm.min); }
-    snprintf(L.values[i], sizeof L.values[i], "%s · %s%s%s", when,
-        L.receipts ? (definition ? definition->title : cap) : receipt_text(status), L.receipts && object[0] ? "\n" : "", L.receipts ? object : "");
+    int bytes = snprintf(L.values[i], sizeof L.values[i], "%s · %s\n%s%s%s%s%s", when,
+        L.receipts ? operation : receipt_text(status), name, object[0] ? "（" : "", object, object[0] ? "）" : "", reason);
+    if (bytes < 0 || (size_t)bytes >= sizeof L.values[i]) snprintf(L.values[i], sizeof L.values[i], "%s\n%s", when, TR("记录太长，请查看原始回执"));
     *field = (ink_ui_field_spec_t){.id = L.ids[i], .role = "listitem", .label = L.titles[i], .value = L.values[i], .object = {L.ids[i], rec.ver}};
     *action = (ink_ui_action_spec_t){.id = L.ids[i], .label = L.receipts ? TR("撤销") : TR("查看回执"), .capability = L.receipts ? "system.undo" : "shell.ai_receipts", .args_json = L.args[i], .enabled = !L.receipts || undo, .object = {L.ids[i], rec.ver}};
     int w = INK_CANVAS_W - 4 * INK_MARGIN;
     if (!lv_obj_get_child_count(slot)) {
-        (L.receipts ? ink_ui_label : ink_ui_line)(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_M, w);
-        (L.receipts ? ink_ui_label : ink_ui_line)(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), w);
+        ink_ui_label(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_M, w);
+        ink_ui_label(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), w);
     }
     lv_label_set_text(lv_obj_get_child(slot, 0), L.titles[i]); lv_label_set_text(lv_obj_get_child(slot, 1), L.values[i]);
+    lv_obj_set_y(lv_obj_get_child(slot, 1), ink_ui_px(INK_GAP_M + ink_ui_text_height(L.titles[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM, w)));
     if (L.receipts) {
-        lv_obj_set_y(lv_obj_get_child(slot, 1), ink_ui_px(INK_GAP_M + ink_ui_text_height(L.titles[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM, w)));
         if (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
         if (undo) {
             lv_obj_t *b = ink_ui_pill(slot, TR("撤销"), INK_MARGIN, 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_M, INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
@@ -181,12 +189,16 @@ static void list_create(lv_obj_t *screen, void *arg) {
     bool self = !strcmp(L.member, ink_member_current()->id);
     const char *title = L.receipts ? (self ? TR("AI 做事的结果") : TR("孩子的 AI 做事结果")) : (self ? TR("AI 替你做过的事") : TR("孩子的 AI 活动记录"));
     ink_shell_topbar(screen, title);
-    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
-    int row_h = L.receipts ? 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + INK_CONTROL + 3 * INK_GAP_M : ink_ui_row_double();
+    const char *name = L.member;
+    for (int at = 0; ink_member_at(at); at++) if (!strcmp(ink_member_at(at)->id, L.member)) { name = ink_member_at(at)->name; break; }
+    snprintf(L.heading, sizeof L.heading, TR("%s · %s"), title, name);
+    ink_ui_line(screen, name, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN);
+    int y = INK_STATUS_BAR + INK_PRIMARY + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+    int row_h = 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + (L.receipts ? INK_CONTROL + 3 * INK_GAP_M : 2 * INK_GAP_M);
     L.capacity = (INK_CANVAS_H - y - INK_CONTROL - 2 * INK_GAP - INK_MARGIN) / (row_h + INK_GAP_M);
-    if (L.capacity > 8) L.capacity = 8;
+    if (L.capacity > AI_ROWS_MAX) L.capacity = AI_ROWS_MAX;
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
-    ink_ui_page_spec_t page = {.id = ink_ui_page_name(), .title = title, .object = {"activity:log", L.version},
+    ink_ui_page_spec_t page = {.id = ink_ui_page_name(), .title = L.heading, .object = {"activity:log", L.version},
         .actions = list_actions, .action_count = 3};
     (void)arg; uint32_t selected = L.selected;
     if (selected && L.db) {

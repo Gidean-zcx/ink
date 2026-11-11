@@ -301,13 +301,14 @@ static void draw(void) {
         RP.actions[i] = (ink_ui_action_spec_t){.id = n->id, .label = n->label, .capability = "app.page_action", .args_json = RP.action_args[i],
             .enabled = !strcmp(n->kind, "input") || (permitted && ink_cap_ai_callable(binding))};
         if (i < RP.offset || i >= RP.offset + 4) continue;
-        int h = !strcmp(n->kind, "segments") ? INK_SEGMENT : !strcmp(n->kind, "slider") ? INK_SLIDER : INK_CONTROL;
+        int h = !strcmp(n->kind, "input") ? ink_textfield_height(INK_FIELD_SINGLE) : !strcmp(n->kind, "segments") ? INK_SEGMENT : !strcmp(n->kind, "slider") ? INK_SLIDER : INK_CONTROL;
         if (y + h > INK_CANVAS_H - INK_STATUS_BAR - 3 * INK_PRIMARY - 3 * INK_GAP) continue;
         lv_obj_t *obj = NULL;
         if (!strcmp(n->kind, "input")) {
             ink_text_cfg_t cfg = {.initial = n->value, .hint = n->label, .max = sizeof n->value - 1};
             obj = ink_textfield_create(RP.body, &cfg, entered, (void *)(intptr_t)i, false);
-            lv_obj_set_pos(obj, 0, ink_ui_px(y)); lv_obj_set_size(obj, ink_ui_px(w), ink_ui_px(h));
+            lv_obj_set_y(obj, ink_ui_px(y));
+            ink_textfield_style(obj, INK_FIELD_SINGLE, n->label);
             ink_textfield_bind_short(obj, &RP.spec, &RP.fields[i], &RP.actions[i]);
         } else if (!strcmp(n->kind, "toggle")) obj = ink_ui_toggle(RP.body, n->label, !strcmp(n->value, "true"), 0, y, w, control, (void *)(intptr_t)i);
         else if (!strcmp(n->kind, "slider")) obj = ink_ui_slider(RP.body, n->label, atoi(n->value), 0, y, w, control, (void *)(intptr_t)i);

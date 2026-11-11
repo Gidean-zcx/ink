@@ -399,12 +399,17 @@ static void cards(void) {
 }
 
 static int g_home_x, g_home_y, g_home_buttons;
+static unsigned g_home_seen;
 static void home_labels(lv_obj_t *o) {
+    if (lv_obj_check_type(o, &lv_textarea_class)) return;
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) {
         lv_obj_t *c = lv_obj_get_child(o, (int32_t)i);
         if (lv_obj_check_type(c, &lv_label_class)) {
             const char *text = lv_label_get_text(c);
-            if (!strcmp(text, "甲") || !strcmp(text, "乙") || !strcmp(text, "丁") || !strcmp(text, "阅读")) g_home_buttons++;
+            if (!strcmp(text, "甲") || !strcmp(text, "乙") || !strcmp(text, "丁") || !strcmp(text, "阅读")) {
+                g_home_buttons++;
+                g_home_seen |= !strcmp(text, "甲") ? 1u : !strcmp(text, "乙") ? 2u : !strcmp(text, "丁") ? 4u : 8u;
+            }
             if (!strcmp(text, "甲")) {
                 lv_area_t a; lv_obj_update_layout(c); lv_obj_get_coords(c, &a);
                 g_home_x = (a.x1 + a.x2) / 2;
@@ -421,8 +426,16 @@ static void look_at_home(void) {
 }
 
 static void home_by_hand(void) {
+    g_home_seen = 0;
     on_ui(look_at_home);
-    CHECK(g_home_buttons == 4, "Apps lists alpha, beta, delta and reader (%d)", g_home_buttons);
+    for (int page = 0; page < 3 && g_home_seen != 15; page++) {
+        CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "page through the reflowed application grid");
+        CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "application grid settles"); on_ui(look_at_home);
+    }
+    CHECK(g_home_seen == 15, "Apps lists alpha, beta, delta and reader across its pages (%u)", g_home_seen);
+    CHECK(AI("shell.search", "{\"query\":\"甲\"}") && g_rc.status == INK_RC_DONE, "locate the same application by its visible title");
+    CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "filtered application grid settles"); on_ui(look_at_home);
+    CHECK(g_home_buttons == 1, "the filtered grid renders only alpha");
     LOG_CLEAR();
     tap(g_home_x, g_home_y);
     CHECK(WAIT_FOR(!strcmp(fg_state(), "alpha"), 2000), "a finger opens it the same way (%s)", fg_state());

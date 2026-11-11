@@ -17,11 +17,10 @@ static void inspect(void) {
     field_t *f=lv_obj_get_user_data(obj);
     ink_text_select(0,75);
     char line[256]; compose_line(f,value,"",line,sizeof line);
-    CHECK(f->window==0&&line[0]=='[',"long selection never subtracts pointers before its window");
+    CHECK(f->window==0 && !strcmp(line,value),"native selection keeps the full text without marker characters");
     ink_text_select(60,65); compose_line(f,value,"",line,sizeof line);
-    char *closing=strchr(line,']');
-    CHECK(closing!=NULL,"closing selection mark");
-    if(closing) CHECK(field_index(f,(uint32_t)(closing-line)+1)==65,"both selection marks map back to original cursor");
+    CHECK(!strcmp(line,value),"selection is rendered by native label styles");
+    CHECK(field_index(f,65)==65,"selection does not alter text coordinates");
     ink_text_select(80,80); compose_line(f,value,"nihao",line,sizeof line);
     char *compose=strstr(line,"nihao");
     CHECK(compose!=NULL,"composition shown");
