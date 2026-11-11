@@ -11,6 +11,7 @@
 
 static char mode[32], snapshot[8192], raw[INK_DB_RECORD_MAX + 1], long_answer[INK_AI_ANSWER_MAX];
 static uint32_t first, photo_id;
+static photo_question_t *prepared_photo;
 static bool ready;
 static int replay_x, replay_y;
 static lv_obj_t *replay_button(lv_obj_t *root) {
@@ -111,6 +112,18 @@ static void replay(void) {
 }
 static void inspect_ready(void) { ready = G.path[0] && G.box && lv_obj_get_child_count(G.box); }
 static void oversized_photo(void) { ink_ai_ask_photo("{\"width\":513,\"height\":1,\"gray4\":\"f\"}"); }
+static void prepare_photo(void) {
+    prepared_photo = osal_malloc(sizeof *prepared_photo, OSAL_MEM_EXTERNAL);
+    CHECK(prepared_photo, "prepare an owned thumbnail callback");
+    if (prepared_photo) *prepared_photo = (photo_question_t){ink_member_epoch(), ink_ui_generation(), G.photo, ink_fs_revision()};
+}
+static void deliver_photo(void) {
+    ink_receipt_t rc = {.status = INK_RC_DONE, .result = "{\"width\":1,\"height\":1,\"gray4\":\"f\"}"};
+    double n = sim_metric_value("hub.requests.ai.ask");
+    if (prepared_photo) photo_question_ready(prepared_photo, &rc);
+    prepared_photo = NULL;
+    CHECK(!AI.asking && sim_metric_value("hub.requests.ai.ask") == n, "real member switch discards the prepared photo before sending");
+}
 static void stale_photo(void) {
     photo_question_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL); CHECK(p, "allocate prepared photo callback"); if (!p) return;
     *p = (photo_question_t){ink_member_epoch(), ink_ui_generation(), G.photo, ink_fs_revision()};
@@ -129,6 +142,9 @@ static void photo(void) {
     CHECK(AI("photo.open", args) && g_rc.status == INK_RC_DONE, "open authorized photo");
     for (int i = 0; i < 1000; i++) { on_ui(inspect_ready); if (ready) break; delay_ms(20); }
     CHECK(ready, "photo pixels loaded"); quiet();
+    if (!strcmp(mode, "photo-switch")) {
+        on_ui(prepare_photo); CHECK(ink_member_switch("kid") == 0, "switch member after thumbnail preparation"); quiet(); on_ui(deliver_photo); return;
+    }
     if (strcmp(mode, "photo")) { on_ui(stale_photo); return; }
     CHECK(AI("photo.ask", NULL) && g_rc.status == INK_RC_DONE, "ask with current photo");
     CHECK(WAIT_FOR(sim_metric_value("hub.photo.valid") == 1, 20000), "simulated hub validates received gray attachment");

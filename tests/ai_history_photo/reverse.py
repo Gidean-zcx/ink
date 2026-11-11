@@ -15,7 +15,7 @@ root = Path(__file__).resolve().parents[2]
 log = a.build / "verification/reverse"
 log.mkdir(parents=True, exist_ok=True)
 for name in ("write", "limit", "bytes", "order", "paging", "member", "clear", "delete",
-             "replay", "offline", "photo", "photo-member", "photo-changed", "photo-id", "photo-display"):
+             "replay", "offline", "photo", "photo-member", "photo-changed", "photo-id", "photo-display", "photo-switch"):
     case = "photo" if name == "photo-display" else name if name.startswith("photo") else "replay" if name in ("replay", "offline") else "history"
     r = subprocess.run([os.sys.executable, "-B", str(root / "tests/ai_history_photo/run.py"),
                         "--build", str(a.build), "--mutant", name, "--case", case],

@@ -33,6 +33,7 @@ mutations = {
     "photo-changed": ("gallery", "p->revision && p->revision == ink_fs_revision()", "true"),
     "photo-id": ("gallery", "p->photo == G.photo", "true"),
     "photo-display": ("gallery", " || G.revision != ink_fs_revision()", ""),
+    "photo-switch": ("gallery", 'if (p->epoch == ink_member_epoch() && p->generation == ink_ui_generation() && p->photo == G.photo &&\n        p->revision && p->revision == ink_fs_revision() && ink_ui_page_current() && !strcmp(ink_ui_page_name(), "Photo") && rc->status == INK_RC_DONE && rc->result)', 'if (rc->status == INK_RC_DONE && rc->result)'),
 }
 if a.mutant:
     name, old, new = mutations[a.mutant]
@@ -69,7 +70,7 @@ hub.write_text(json.dumps({"rules": [
 ]}, ensure_ascii=False))
 script = work / "run.script"
 script.write_text("@0 net wifi\n@300s end\n")
-cases = [a.case] if a.case else ["history", "restart", "replay", "photo", "photo-member", "photo-changed", "photo-id"]
+cases = [a.case] if a.case else ["history", "restart", "replay", "photo", "photo-member", "photo-changed", "photo-id", "photo-switch"]
 ok = True
 for case in cases:
     folder = work / case
