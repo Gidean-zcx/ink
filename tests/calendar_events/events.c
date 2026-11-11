@@ -65,7 +65,7 @@ static void range(const char *from, const char *until) {
 static void fixtures(void) {
     call_ok("reminder.add", "{\"at\":\"2026-11-11 23:00\",\"end\":\"2026-11-12 02:00\",\"title\":\"跨天日程\",\"ring\":false}");
     ink_alarm_t a = {0}; CHECK(get("跨天日程", &a) && a.silent && a.duration_s == 10800, "AI creates silent event with end");
-    call_ok("reminder.add", "{\"at\":\"2026-11-11 23:00\",\"title\":\"响铃对照\"}");
+    call_ok("reminder.add", "{\"at\":\"2026-11-11 23:00\",\"end\":\"2026-11-11 23:01\",\"title\":\"响铃对照\"}");
     CHECK(get("响铃对照", &a) && !a.silent, "legacy add defaults to audible");
     call_ok("reminder.add", "{\"at\":\"2026-11-13 09:00\",\"title\":\"全天日程\",\"ring\":false,\"all_day\":true}");
     CHECK(get("全天日程", &a) && a.all_day && a.hour == 0 && a.duration_s == 86400, "all-day is local midnight to next midnight");
@@ -95,6 +95,10 @@ static void silent_deadline(void) {
     CHECK(WAIT_FOR(__atomic_load_n(&fired, __ATOMIC_ACQUIRE) >= 1, 5000), "audible control fires");
     CHECK(__atomic_load_n(&fired, __ATOMIC_ACQUIRE) == 1, "silent event emits no fired event");
     ink_alarm_t a = {0}; CHECK(get("跨天日程", &a), "silent event survives its start");
+    CHECK(get("响铃对照", &a) && a.next_s == 0 && a.duration_s == 60, "fired timed reminder stays recorded");
+    char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)a.id); call_ok("reminder.open", args);
+    expect("2026-11-11 23:00"); expect("2026-11-11 23:01"); call_ok("reminder.save", NULL);
+    CHECK(get("响铃对照", &a) && a.next_s == 0 && a.duration_s == 60, "saving fired reminder preserves its date without ringing again");
     ink_time_set(at(12, 1, 0), false); quiet(); call_ok("calendar.select", "{\"day\":12}"); expect("跨天日程");
     range("2026-11-12", "2026-11-13"); CHECK(strstr(g_result, "跨天日程"), "ongoing event remains queryable after start");
 }

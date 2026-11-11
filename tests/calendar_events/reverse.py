@@ -38,6 +38,12 @@ CASES = [
     ('ai-add', 'system/services/time/time_caps.c',
      [('a.silent = !ring;', 'a.silent = false;')],
      'AI creates silent event with end'),
+    ('fired-editor', 'system/apps/calendar/calendar.c',
+     [('if (id && !a.next_s) E.date = (ink_tm_t){.year = a.year, .month = a.month, .day = a.day, .hour = a.hour, .min = a.min};', '')],
+     'page contains 2026-11-11 23:00'),
+    ('fired-update', 'system/services/time/time_service.c',
+     [('!now || a->next_s || a->duration_s)', '!now || a->next_s)')],
+     'reminder.save completes'),
 ]
 for name, relative, changes, expected in CASES:
     source_path = ROOT / relative
@@ -68,4 +74,4 @@ for name, relative, changes, expected in CASES:
     (area / f'{name}-test.log').write_text(result.stdout + result.stderr)
     assert result.returncode != 0 and expected in result.stdout, (name, result.stdout[-2500:], result.stderr[-1000:])
     print(f'{name}: compile=0 link=0 test={result.returncode}; expected failure: {expected}', flush=True)
-print('PASS: all seven controls fail at the required assertions; product sources and executable unchanged')
+print('PASS: all nine controls fail at the required assertions; product sources and executable unchanged')

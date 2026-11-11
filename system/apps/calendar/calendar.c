@@ -300,6 +300,7 @@ static void reminder_action(ink_call_t *call) {
         if (!ink_time_valid() || (id && !find_reminder((uint32_t)id, &a))) { call->rc.status = INK_RC_STALE; return; }
         memset(&E, 0, sizeof E); E.draft = a; snprintf(E.owner, sizeof E.owner, "%s", ink_member_current()->id);
         ink_time_to_local(a.next_s ? a.next_s : ink_time_now_s() + 86400, &E.date);
+        if (id && !a.next_s) E.date = (ink_tm_t){.year = a.year, .month = a.month, .day = a.day, .hour = a.hour, .min = a.min};
         if (!id) { E.date.hour = 8; E.date.min = 0; }
         E.has_end = a.duration_s > 0;
         ink_time_to_local(ink_time_from_local(&E.date) + (a.duration_s ? a.duration_s : 3600), &E.end_date);
