@@ -309,9 +309,9 @@ static void someone_else_while_the_background_is_busy(void) {
 }
 
 static bool cell_registered(void) {
-    bool on = false;
-    ink_state_get_bool(ink_state_find("cell.registered"), &on);
-    return on;
+    int64_t on = 0;
+    ink_state_get_int(ink_state_find("cell.registered"), &on);
+    return on != 0;
 }
 static void test_task(void *arg) {
     (void)arg;
