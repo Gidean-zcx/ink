@@ -309,6 +309,8 @@ target_sources(ink_system PRIVATE system/apps/clock/clock.c)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
 target_sources(ink_system PRIVATE system/apps/gomoku/gomoku.c system/apps/gomoku/engine.cpp
   system/apps/gomoku/vendor/crossmux/GomokuBoard.cpp system/apps/gomoku/vendor/crossmux/GomokuAI.cpp)
+target_sources(ink_system PRIVATE system/apps/memory/memory.c system/apps/memory/engine.c
+  system/apps/snake/snake.c system/apps/snake/engine.c)
 target_include_directories(ink_system PRIVATE system/apps/gomoku/compat)
 target_compile_features(ink_system PRIVATE cxx_std_20)
 # Keep C-only host test drivers on the C compiler when they consume the gomoku engine.
@@ -441,6 +443,7 @@ add_custom_target(ink_ui_resource_check ALL
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
 set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard.c
+  ${CMAKE_SOURCE_DIR}/system/apps/memory/memory.c ${CMAKE_SOURCE_DIR}/system/apps/snake/snake.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/mobile_network.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
@@ -2026,3 +2029,8 @@ add_test(NAME music-product COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}
 set_tests_properties(music-product PROPERTIES TIMEOUT 180)
 
 add_dependencies(sim-music ink_fonts ink_ui_fonts ink_icons ink_test_content)
+
+ink_sim_executable(sim-games2 tests/games2/device.c)
+target_link_libraries(sim-games2 PRIVATE ink_apps ink_system)
+add_dependencies(sim-games2 ink_fonts ink_test_content)
+add_test(NAME games2 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/games2/run.py --build ${CMAKE_BINARY_DIR})

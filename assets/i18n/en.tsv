@@ -1736,3 +1736,29 @@ Wi-Fi 已关闭	Wi-Fi is off
 请把音乐放到文件中的“音乐”文件夹	Put songs in the Music folder in Files
 /me/音乐	/me/音乐
 播放	Play
+%d 步 · %d/8 对 · %u 秒	%d moves · %d/8 pairs · %u s
+12×12 棋盘，@ 蛇头，o 蛇身，* 食物	12×12 board: @ head, o body, * food
+上	Up
+下	Down
+卡牌，? 未翻开，A 到 H 为配对图案	Cards: ? hidden, A to H matching patterns
+右	Right
+左	Left
+已通关	Completed
+开始 / 重开	Start / New game
+当前状态	Current state
+得分	Score
+得分 %d · 最高 %u	Score %d · Best %u
+成绩未保存，请重试	Score not saved. Please try again
+按开始玩一局	Press Start to play
+暂时不能操作，请重试	Cannot do that now. Please try again
+暂时不能翻牌，请重试	Cannot flip now. Please try again
+最好成绩	Best result
+最好：%u 步 · %u 秒	Best: %u moves · %u s
+本局结束	Game over
+步数和用时	Moves and time
+每半秒前进一步	One step every half second
+翻牌	Flip a card
+记忆翻牌	Memory cards
+贪吃蛇	Snake
+转向	Turn
+配成八对就通关	Match all eight pairs to finish

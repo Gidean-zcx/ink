@@ -1,0 +1,12 @@
+diff --git a/system/policy/cap.c b/system/policy/cap.c
+--- a/system/policy/cap.c
++++ b/system/policy/cap.c
+@@ -27,7 +27,7 @@
+ #include "ink/sys/sha256.h"
+ #include "ink/sys/storage.h"
+
+-#define MAX_CAPS 512 /* pointers in PSRAM; 256 filled up on 2026-11-09 as the system apps arrived */
++#define MAX_CAPS 544 /* pointers in PSRAM; leave room for app and test registrations */
+
+ static const ink_cap_t *REG[MAX_CAPS] INK_PSRAM_BSS;
+ static int nreg;

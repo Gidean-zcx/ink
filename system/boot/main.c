@@ -122,6 +122,8 @@ void ink_main(void) {
     if (ink_calculator_init() != 0) osal_panic("calculator failed to start");
     extern int ink_gomoku_init(void);
     if (ink_gomoku_init() != 0) osal_panic("gomoku failed to start");
+    extern int ink_memory_init(void), ink_snake_init(void);
+    MUST(ink_memory_init(), "memory failed to start"); MUST(ink_snake_init(), "snake failed to start");
     extern int ink_weather_init(void);
     if (ink_weather_init() != 0) osal_panic("weather failed to start");
     extern int ink_music_init(void);
