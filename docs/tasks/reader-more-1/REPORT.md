@@ -13,7 +13,8 @@
 | 5.1 普通全量 | 待验证 | — | — |
 | 5.2 内存检查 | 通过【实测】 | ASan + UBSan：`100% tests passed out of 24`，61.90 秒；包括临时对象对照和分段测试 | 相同阅读回归集合，目录换为 `build-asan`，加 `-DINK_SANITIZE=ON` |
 | 5.3 GCC | 通过【实测】 | `gcccheck: 6 compiled, 0 with findings`，含 C++ 胶水 | `python "$INK_DEPS/../ink-codex/tools/gcccheck.py" build apps/reader/reader.c apps/reader/bookmarks.cc apps/reader/epub_source.cc tests/reader_more/device.c tests/reader_more/model.cc tests/integration/ai_surface.c` |
-| 6 S31 宿主机和固件大小 | 待验证 | — | — |
+| 6.1 S31 宿主机 | 通过【实测】 | `100% tests passed out of 75`，153.17 秒 | `cmake -S ports/esp32s31/tests -B build-s31-tests`；构建和 ctest 均为 utility、`-j2` |
+| 6.2 S31 固件 | 通过【实测】 | bin **4,907,616 字节**；5 MiB 分区余 **335,264 字节（6.39%）**。编译器告警 0；SDK CMake 提示 6 条，数量与首轮相同 | `INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 7 常规及 120% 截图 | 通过【实测】 | 六张 clean 帧；最大 50,243 字节；逐张检查，120% 删除按钮完整 | `INK_KEEP_EVIDENCE=1 ctest --test-dir build -R '^reader-more$' --output-on-failure` |
 
 ## 没做到的
