@@ -7,7 +7,7 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 棋局、能力、存档及反向对照 | 专项通过 | 【实测】main 296、reboot 18、big 83 条检查，0 失败；五组反向对照均 exit=1，含只读零刷新及成员切换首帧隔离 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/gomoku/run.py --build build`；同解释器运行 `tests/gomoku/reverse.py --build build` |
-| 2 全量测试、内存检查、S31 | 普通全量未全过；其余待完成 | 【实测】原话：`97% tests passed, 12 tests failed out of 406`，`Total Test time (real) = 941.56 sec`；C++ 接入影响的五项回归修正后全部通过，UHCI 单独重跑通过 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2`；详见验证记录 |
+| 2 全量测试、内存检查、S31 | 全量未全过；最终专项内存检查、S31 通过 | 【实测】普通全量 12/406 失败，随后五项 C++ 接入回归和 UHCI 复测通过；ASan/UBSan 全量剩六项共享同步失败；最终五子棋内存专项通过。S31 bin +13,440 字节，新增警告 0 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2`；内存目录换 `build-asan`；`taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 3 截图与上机清单 | 模拟器截图通过，真机未测 | 【实测】菜单/对局/胜负各 100% 和 120% 六张，22,800～35,169 字节，已逐张查看；普通/120% 落子最大区域分别 54,696 / 66,768 px | 专项测试自动截图；见下方链接 |
 
 ## 没做到的
@@ -62,12 +62,15 @@
 ## 验证记录
 
 - 普通全量原始日志：`work/ctest.log`（12 失败、3 跳过；跳过为三项中枢 Python 环境测试，未改跳过条件）。
+- 普通全量原话：`97% tests passed, 12 tests failed out of 406`，`Total Test time (real) = 941.56 sec`。这是修正 C++ 链接驱动前的完整一轮；后续复测结果单列，不把它改写成全绿。
 - C++ 链接驱动修正后，`ctest --test-dir build --output-on-failure -j1 -R '^(services-mid-regressions|file-index-regressions|confirm-durable|thumb-wiring|index-durable)$'` 原话：`100% tests passed out of 5`，51.16 秒；日志 `work/ctest-link-2.log`。
 - 最终专项：`work/gomoku-final2.log`；反向对照：`work/gomoku-final2-reverse.log`、`build/gomoku-reverse/summary.json`，分别提前发布新成员、恢复只读刷新、移除判胜、禁用能力落子、取消换成员重载，测试都确实失败，工作源码哈希未变。
 - ASan/UBSan 全量原话：`99% tests passed, 6 tests failed out of 406`，`Total Test time (real) = 1441.66 sec`；同上述六项共享同步失败，另有同样三项中枢环境跳过；日志 `work/asan-ctest.log`。
 - 成员装载修正后补跑最终内存专项（完整全量轮之后）：`tests/gomoku/run.py --build build-asan`，普通/重启/120% 三场景分别 296/18/83，0 失败，没有 sanitizer 诊断；日志 `work/asan-final2.log`。原有全部内存构建目标已构建，最后修改只补编五子棋目标并重跑其全部专项。
-- S31 基线和五子棋版均曾编译通过，暂测 bin 为 4,441,760→4,455,200 字节（+13,440）；两版均无编译器警告，均有相同六条 SDK 组件依赖 CMake 警告。局刷修正后的最终复编及增量待收尾更新；构建脚本始终 `-j2`、`taskpolicy -c utility`，未连接设备。
+- S31 基线和最终代码均编译通过（exit=0），bin 为 **4,441,760→4,455,200 字节（+13,440，约 13.13 KiB）**。两版编译器警告均为 0，均有相同六条 SDK 组件依赖 CMake 警告，新增 0；日志 `work/s31-baseline.log`、`work/s31-complete.log`，比较结果 `work/s31-final-summary.json`。基线比较在同一构建目录，临时恢复基线注册源码并排除五子棋源文件，随后恢复并校验源码，再编译最终版本；未移动依赖副本 HEAD、未连接设备。
+- S31 `.su` 静态帧：引擎胶水各 496 字节、`chooseMove` 832 字节、递归 `alphaBeta` 每层 336 字节；这不是实机高水位。没有增加既有 8192 字节 PSRAM 后台执行器栈。
 - `ui-scale: 52 files, 0 violations`；四个原文文件逐字比较一致。日志和构建目录均在忽略范围，未提交产物。
+- 最后文件/链接检查通过，六张截图均小于 300 KB；`git diff --check` 无问题。按总规则第 6 节对基线至提交末尾执行隐私扫描：0 命中（grep exit=1，表示无匹配），未发现本机绝对路径或 MAC；所有修改均在任务允许范围内。
 
 ## 上机核对清单
 
