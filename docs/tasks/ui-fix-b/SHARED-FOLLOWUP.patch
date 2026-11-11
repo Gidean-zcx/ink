@@ -17,14 +17,14 @@
 --- a/docs/system/capabilities.md
 +++ b/docs/system/capabilities.md
 @@ -1022,7 +1022,7 @@
- 
+
  ### s57 — `system/ui/shell/settings_pages`
- 
+
 -设置：`ai.read_clipboard`、`system.language`、`text.assist`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`。
 +设置：`ai.read_clipboard`、`backup.auto`、`system.language`、`text.assist`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`。
- 
+
  状态：`battery.level`、`storage.card`、`storage.free`、`storage.mode`、`update.state`、`update.version`。
- 
+
 --- a/system/ui/shell/bluetooth_page.c
 +++ b/system/ui/shell/bluetooth_page.c
 @@ -118,7 +118,7 @@
