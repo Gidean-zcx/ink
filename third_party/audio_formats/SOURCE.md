@@ -13,7 +13,7 @@
 
 ## stb @ 4e9b368bfc071e97206ea5c6adba68dd0cbf8897
 
-- `stb_vorbis.c` → `stb_vorbis.c`：SHA-256 `b11d4a3c16996c2e6d63bd96c8da5e929f2c2ab8fc99788414a09e41ba50561f`
+- `stb_vorbis.c` → `stb_vorbis.c`：SHA-256 `2bd4dbbf10b7e3e28f5c3d4f1df10469facbdd1f520acbf2c3eb46487ea13777`
 - `LICENSE` → `stb-LICENSE`：SHA-256 `bebfe904b14301657e4e5d655c811d51fd31b97c455b9cc2d8600d6bac6cff63`
 
 许可证选择：MIT。
@@ -28,4 +28,4 @@
 - 上面的映射哈希是当前项目文件；原始哈希另列，来源提交和许可证不变。
 - `dr_flac.h`：原打开函数移到带 `drflac_init_info *` 的内部函数；原入口通过同一分配回调分配初始化状态，返回前释放，所有错误出口同样释放。不改解码、协议或 seek 算法。
 - `dr_wav.h`：4 KiB 读取工作区成为 `drwav` 的成员，由外部内存中的 `ink_format` 持有，关闭时随实例释放。打开时的未知长度扫描、读取时的跳过缓冲、seek 的丢弃缓冲和四种 s16 转换路径复用它，原容量不变。
-- `stb_vorbis.c`：只将文件打开函数的临时 `stb_vorbis` 状态通过现有 `malloc/free` 接缝放到外部内存，成功复制到解码器或失败清理后释放。不改解码算法；原 512 KiB arena 仍由实例关闭时释放。
+- `stb_vorbis.c`：只将文件打开函数的临时 `stb_vorbis` 状态通过现有 `malloc/free` 接缝放到外部内存，成功复制到解码器或失败清理后释放；分配失败时仍遵守 close_on_free 的文件所有权。不改解码算法；原 512 KiB arena 仍由实例关闭时释放。

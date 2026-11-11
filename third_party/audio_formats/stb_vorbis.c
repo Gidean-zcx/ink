@@ -5054,6 +5054,7 @@ stb_vorbis * stb_vorbis_open_file_section(FILE *file, int close_on_free, int *er
    /* ink: the temporary decoder lives in PSRAM, like the returned decoder. */
    stb_vorbis *f, *p = (stb_vorbis *) malloc(sizeof(*p));
    if (!p) {
+      if (close_on_free) fclose(file);
       if (error) *error = VORBIS_outofmem;
       return NULL;
    }

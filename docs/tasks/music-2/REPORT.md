@@ -6,14 +6,17 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1：普通全量、音乐连跑三次、栈余量 | 定向通过，全量待验证 | 四格式栈均低于 8192；原版场景与快进回归通过；三次连跑进行中 | C1、C2、C3 |
-| 2：S31 宿主机与固件编译 | 待验证 | 未运行 | 待填 |
+| 1：普通全量、音乐连跑三次、栈余量 | 定向通过，全量正在运行 | 音乐连续 3 次通过（13.21s）；四格式最小栈余量 1552；原版场景与快进回归通过 | C1、C2、C3 |
+| 2：S31 宿主机与固件编译 | 通过 | 宿主机原话 `100% tests passed out of 75`，160.65s；固件 5077984 字节，应用分区余量 164896（3.15%）；编译 warning/error 均 0 | C4 |
 | 3：栈、超时根因、上机清单 | 已记录，未接设备 | 见下文、measurements.tsv；原版场景和三组反向对照已运行 | C2、C3 |
+| 补充：ASan/UBSan、确定性与原 Opus | 通过定向 5 项 | 原话 `100% tests passed out of 5`，19.06s；格式、产品、media、两项确定性；没有 sanitizer 错误 | C5 |
+| 补充：能力、翻译、应用数、GCC、尺寸 | 静态检查通过，运行覆盖随全量验 | 9 个能力清单；22 条英文键；原表/预算不放宽；`gcccheck: 7 compiled, 0 with findings`；`ui-scale: 1 files, 0 violations` | C6 |
 
 ## 没做到的
 
-- 普通全量、S31 和 ASan 尚在执行。
+- 普通全量尚在执行。
 - 真机声音、解码时长和实际栈高水位留给主会话验证；本次不接设备。
+- ASan 只跑表中的定向 5 项，未跑 ASan 全量；未在 Linux 上执行测试，GCC 检查是 RISC-V 交叉编译。
 
 ## 和设计不一致的
 
@@ -29,11 +32,12 @@
 
 ## 要用户定的
 
-- `show_values` 原来每次刷新都会给播放/暂停按钮追加绑定；本次仅修任务书指定的快进按钮，未扩大修改范围。
+- 本任务没有新增待定项；music-1 的输出格式取舍仍由主会话处理。
 
 ## 顺手发现
 
-- 暂无。
+- 【实现】`show_values` 原来每次刷新都会给播放/暂停按钮追加绑定；本次仅修任务书指定的快进按钮，未扩大修改范围。
+- S31 留有 SDK 自身的 6 条 CMake 组件依赖建议和 Kconfig NOTE；实际 C/C++ 编译 warning/error 均为 0。
 
 ## 新增的机制
 
@@ -59,6 +63,8 @@
 
 【实现】FLAC 的初始化结构改走原分配回调；Vorbis 文件打开时的完整临时解码状态改走现有 malloc/free 接缝；WAV 的 4 KiB 打开、读取、转换和 seek 工作区移进外存实例。仅改工作区位置，未改解码或 seek 算法。补丁、原始及当前哈希见 [SOURCE.md](../../../third_party/audio_formats/SOURCE.md)。
 
+【实测】S31 `.su` 单帧：FLAC 打开 384、WAV 初始化 368、read_raw 48、seek 80、Vorbis 文件打开 32、格式 PCM 分发 48 字节。它们不是完整调用链上界；真实 Opus 编码器和 RTOS 高水位仍须上机核对。
+
 【实测】基线重现 `24.940s ... music.play: failed timed out, it may still finish` 和媒体栈估算 10496。临时埋点/trace：请求约 21.900s 发起，处理函数约 24.794s 才开始；文件打开约 24.930s 完成、进度恢复约 24.938s 完成，音频预填到约 25.265s 才返回。主要是换人后的存储等待占住后台执行器，再叠加同步预填，超过原 3 秒交互回执期限；没有发现权限或路径拒绝。
 
 【实现】音乐状态、能力及完成事件改由已有媒体执行器串行处理，避免后台存储工作的队头阻塞；无曲目时不打开收藏集合；播放预填排到已有 pump_job，设置状态后返回。仅移动执行器仍会卡在空页面的收藏加载；仅推迟预填仍会等后台回调，均实测不足以解决。
@@ -81,7 +87,26 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 taskpolicy -c utility ./build/test-music-formats tests/music/fixtures
 # C3：原版场景对照；--case 依次取 original、timeout、stack、skip
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/music/regressions.py --build build --baseline b66a4a8d6b5e476e2768d926d4f54237fb05ba99 --case original
+# C4：S31，只有编译和宿主机测试
+INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" taskpolicy -c utility bash ports/esp32s31/build.sh
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-tests
+taskpolicy -c utility cmake --build build-s31-tests -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-tests --output-on-failure -j2
+# C5：相同配置的 build-asan，额外开启 INK_SANITIZE
+taskpolicy -c utility cmake --build build-asan --target sim-music test-music-formats sim-media sim-selftest sim-configured -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -R '^(music-formats|music-product|integration-media|determinism|determinism-reader)$' -j2
+# C6：生成文档、原文哈希、GCC 和 UI 尺寸
+taskpolicy -c utility python3 tools/capabilities.py --check
+taskpolicy -c utility python3 tests/music/verify_vendor.py
+taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build system/apps/music/music.c system/services/audio/media_service.c system/services/audio/codec_formats.c tests/music/product.c tests/music/formats.c tests/integration/ai_surface.c tests/integration/apps.c
+taskpolicy -c utility python3 tools/ui_scale_check.py system/apps/music/music.c
 ```
+
+## 规模与检查
+
+【实测】相对指定基线，产品 C/H 新增 126 行、删除 90 行，低于 200 行预算；测试和文档另计。为什么不能更小：86 行属于三个解码库的工作区位置补丁，40 行属于调度、快进与翻译。已经试过只改执行器、只推迟预填，两者单独都不足以修超时；没有采用任务书禁止的加栈或加超时。
+
+【实测】相对基线的改动仅在任务允许路径。报告相对链接、12 个 vendor 哈希、`git diff --check` 已核对；隐私扫描当前零匹配，提交收尾时再次检查。构建产物和原设计稿没有提交。
 
 ## 上机核对清单
 
@@ -94,3 +119,4 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/music/reg
 
 - 已核对 HEAD 等于指定基线，工作区干净；已读取总规则和任务书。
 - 栈、冷播放、翻译、能力表、应用数和快进回归已实现；GCC 检查 `7 compiled, 0 with findings`，UI 尺寸 `1 files, 0 violations`，12 个 vendor 哈希通过。完整构建与最终检查继续执行。
+- S31 编译及 75 项宿主机测试、最终 ASan/UBSan 定向 5 项均通过；普通全量正在运行。
