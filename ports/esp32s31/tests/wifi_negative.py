@@ -17,15 +17,27 @@ tests = Path(__file__).resolve().parent
 port, root = tests.parent, tests.parents[2]
 args.build.mkdir(parents=True, exist_ok=True)
 source = (port / "hal_wifi_s31.c").read_text()
+station = (port / "vendor/wifi_station/station.inc").read_text()
 mutations = [
     ("nvs-disabled", "cfg.nvs_enable = 0;", "cfg.nvs_enable = 1;"),
     ("ram-storage", "esp_wifi_set_storage(WIFI_STORAGE_RAM)", "esp_wifi_set_storage(1)"),
     ("dhcp-link", "ink_wifi.link.up = ink_wifi.available = true;", "ink_wifi.available = true;"),
     ("known-copy", "memcpy(ink_known, list, (size_t)ink_wifi.n * sizeof *list)", "memset(ink_known, 0, sizeof ink_known)"),
-    ("reconnect", "if (ink_wifi.mode == INK_AUTO) ink_rejoin();\n        ESP_LOGI(\"ink_wifi\", \"link down", "if (false && ink_wifi.mode == INK_AUTO) ink_rejoin();\n        ESP_LOGI(\"ink_wifi\", \"link down"),
+    ("reconnect", "if (ink_wifi.mode == INK_AUTO) ink_station_disconnected();", "if (false && ink_wifi.mode == INK_AUTO) ink_station_disconnected();"),
     ("sntp-delivery", "if (cb && utc > 0) cb(ctx, utc);", "if (false && cb && utc > 0) cb(ctx, utc);"),
     ("scan-bound", "bool full = ink_wifi.count == ink_wifi.max;", "bool full = false;"),
     ("scan-result", "int result = done ? ink_wifi.count : HAL_WIFI_ERR_TIMEOUT;", "int result = done ? ink_wifi.result : HAL_WIFI_ERR_TIMEOUT;"),
+    ("W02-tx-power", "esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower)", "esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower - 1)"),
+    ("W03-discovery", "base == INK_WIFI_CHANGED && id == 1", "false && base == INK_WIFI_CHANGED && id == 1"),
+]
+station_mutations = [
+    ("W02-power-save", "esp_wifi_set_ps(WIFI_PS_NONE)", "esp_wifi_set_ps(WIFI_PS_MIN_MODEM)"),
+    ("W02-protocol", "WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N", "WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G"),
+    ("W03-retry-limit", "#define MAX_RECONNECT_COUNT 5", "#define MAX_RECONNECT_COUNT 0"),
+    ("W03-retry-delay", "10ULL * 1000 * 1000", "10ULL * 1000"),
+    ("W03-retry-notice", "ink_wifi.scan_due = true;", "ink_wifi.scan_due = false;"),
+    ("W04-radio-stop", "esp_err_t err = esp_wifi_stop();", "esp_err_t err = esp_wifi_disconnect();"),
+    ("W04-profile-resume", "    ApplyWifiProfile();", "    /* profile removed for reverse control */"),
 ]
 
 
@@ -45,19 +57,23 @@ def expect(name, compiled, command, baseline=False, cwd=None):
 
 with tempfile.TemporaryDirectory(prefix="wifi-negative-", dir=args.build.resolve()) as temp:
     work = Path(temp)
-    for name, old, new in [("baseline-wifi", "", ""), *mutations]:
+    vendor = work / "vendor/wifi_station"
+    vendor.mkdir(parents=True)
+    for name, old, new in [("baseline-wifi", "", ""), *mutations, *station_mutations]:
+        in_station = name in {item[0] for item in station_mutations}
         if old:
-            assert source.count(old) == 1, name
+            assert (station if in_station else source).count(old) == 1, name
         target = work / "hal_wifi_s31.c"
-        text = source.replace(old, new) if old else source
+        text = source.replace(old, new) if old and not in_station else source
+        (vendor / "station.inc").write_text(station.replace(old, new) if in_station else station)
         if name == "scan-result":
-            anchor = "if (((wifi_event_sta_scan_done_t *)data)->status) ink_wifi.count = HAL_WIFI_ERR_TIMEOUT;"
+            anchor = "if (((wifi_event_sta_scan_done_t *)data)->status) {"
             assert text.count(anchor) == 1
-            text = text.replace(anchor, "ink_wifi.result = ((wifi_event_sta_scan_done_t *)data)->status ? HAL_WIFI_ERR_TIMEOUT : ink_wifi.count;")
+            text = text.replace(anchor, "ink_wifi.result = ((wifi_event_sta_scan_done_t *)data)->status ? HAL_WIFI_ERR_TIMEOUT : ink_wifi.count;\n        " + anchor)
         target.write_text(text)
         binary = work / name
         command = ["cc", "-std=gnu11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG",
-                   "-I", str(tests / "wifi_stub"), "-I", str(root / "platform/include"),
+                   "-I", str(tests / "wifi_stub"), "-I", str(root / "platform/include"), "-I", str(port),
                    f'-DINK_TEST_WIFI_SOURCE="{target}"', str(tests / "wifi.c"), "-o", str(binary)]
         expect(name, run(command), [str(binary)], baseline=not old, cwd=work)
     if args.sim_build:

@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <sys/time.h>
 typedef int esp_err_t;
+typedef int wifi_mode_t;
 typedef void esp_netif_t;
 esp_err_t esp_netif_set_default_netif(esp_netif_t *);
 typedef const char *esp_event_base_t;
@@ -13,12 +14,14 @@ typedef void (*esp_event_handler_t)(void *, esp_event_base_t, int32_t, void *);
 typedef unsigned EventBits_t;
 typedef struct { unsigned bits; } *EventGroupHandle_t;
 typedef struct { bool nvs_enable; } wifi_init_config_t;
-typedef struct { struct { uint8_t ssid[32], password[64]; int scan_method, sort_method; } sta; } wifi_config_t;
+typedef struct { struct { uint8_t ssid[32], password[64], bssid[6], channel; bool bssid_set; int scan_method, sort_method; } sta; } wifi_config_t;
 typedef struct { uint8_t ssid[33]; int rssi, authmode; } wifi_ap_record_t;
 typedef struct { int reason; } wifi_event_sta_disconnected_t;
 typedef struct { int status; } wifi_event_sta_scan_done_t;
 typedef struct { struct timeval tv; } esp_netif_sntp_time_sync_t;
 typedef struct { bool start, wait_for_sync; const char *servers[1]; } esp_sntp_config_t;
+typedef struct ink_test_timer *esp_timer_handle_t;
+typedef struct { void (*callback)(void *); void *arg; int dispatch_method; const char *name; bool skip_unhandled_events; } esp_timer_create_args_t;
 #define ESP_OK 0
 #define ESP_FAIL -1
 #define ESP_ERR_INVALID_STATE -2
@@ -29,6 +32,7 @@ extern const char ink_test_wifi_base[], ink_test_ip_base[], ink_test_sntp_base[]
 #define NETIF_SNTP_EVENT ink_test_sntp_base
 #define WIFI_EVENT_STA_DISCONNECTED 1
 #define WIFI_EVENT_SCAN_DONE 2
+#define WIFI_EVENT_STA_START 7
 #define IP_EVENT_STA_GOT_IP 3
 #define IP_EVENT_STA_LOST_IP 5
 #define IP_EVENT_ETH_GOT_IP 6
@@ -39,8 +43,15 @@ extern const char ink_test_wifi_base[], ink_test_ip_base[], ink_test_sntp_base[]
 #define WIFI_REASON_NO_AP_FOUND 201
 #define WIFI_STORAGE_RAM 0
 #define WIFI_MODE_STA 1
+#define WIFI_MODE_NULL 0
+#define WIFI_MODE_AP 2
 #define WIFI_IF_STA 0
 #define WIFI_PS_MIN_MODEM 1
+#define WIFI_PS_NONE 0
+#define WIFI_PROTOCOL_11B 1
+#define WIFI_PROTOCOL_11G 2
+#define WIFI_PROTOCOL_11N 4
+#define ESP_TIMER_TASK 0
 #define WIFI_ALL_CHANNEL_SCAN 1
 #define WIFI_CONNECT_AP_BY_SIGNAL 1
 #define WIFI_AUTH_OPEN 0
@@ -49,6 +60,8 @@ extern const char ink_test_wifi_base[], ink_test_ip_base[], ink_test_sntp_base[]
 #define ESP_EVENT_DEFINE_BASE(name) esp_event_base_t name = #name
 #define ESP_ERROR_CHECK(expr) assert((expr) == ESP_OK)
 #define ESP_LOGI(...) ((void)0)
+#define ESP_LOGW(...) ((void)0)
+#define ESP_LOGE(...) ((void)0)
 #define EXT_RAM_BSS_ATTR
 #define pdTRUE 1
 #define pdFALSE 0
@@ -63,8 +76,15 @@ esp_err_t esp_event_post(esp_event_base_t base, int32_t id, const void *data, si
 esp_err_t esp_netif_sntp_init(const esp_sntp_config_t *cfg);
 esp_err_t esp_netif_sntp_start(void);
 esp_err_t esp_wifi_set_mode(int mode);
+esp_err_t esp_wifi_get_mode(wifi_mode_t *mode);
 esp_err_t esp_wifi_start(void);
+esp_err_t esp_wifi_stop(void);
 esp_err_t esp_wifi_set_ps(int ps);
+esp_err_t esp_wifi_set_protocol(int iface, unsigned protocol);
+esp_err_t esp_wifi_set_max_tx_power(int8_t power);
+esp_err_t esp_timer_create(const esp_timer_create_args_t *args, esp_timer_handle_t *timer);
+esp_err_t esp_timer_start_once(esp_timer_handle_t timer, uint64_t us);
+esp_err_t esp_timer_stop(esp_timer_handle_t timer);
 esp_err_t esp_wifi_set_config(int iface, const wifi_config_t *cfg);
 esp_err_t esp_wifi_connect(void);
 esp_err_t esp_wifi_disconnect(void);

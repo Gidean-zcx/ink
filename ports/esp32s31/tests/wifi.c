@@ -19,6 +19,12 @@ static bool cell_available, cell_up, cell_selected;
 static unsigned nhandlers, head, tail, connect_calls, sntp_starts, scan_stops, clears;
 static int response, scan_status;
 static bool scan_timeout, radio_busy, scan_drop;
+static bool radio_on, ap_visible = true;
+static unsigned radio_starts, radio_stops, scan_calls, ps_calls, protocol_calls, power_calls;
+struct ink_test_timer { esp_timer_create_args_t args; bool active; uint64_t us; };
+static struct ink_test_timer retry_timer;
+static esp_netif_t *default_netif;
+static int fake_cell_netif;
 static wifi_config_t config;
 static wifi_ap_record_t aps[] = {{{"FAKE-AP-TWO"}, -65, 0}, {{"FAKE-NEIGHBOR"}, -30, 1}, {{"FAKE-AP-ONE"}, -42, 1}};
 static unsigned ap_next;
@@ -64,19 +70,52 @@ EventBits_t xEventGroupWaitBits(EventGroupHandle_t group, EventBits_t bits, int 
 }
 esp_err_t esp_netif_init(void) { assert(init_step++ == 0); return ESP_OK; }
 esp_err_t esp_event_loop_create_default(void) { assert(init_step++ == 1); return ESP_OK; }
-esp_err_t esp_wifi_init(const wifi_init_config_t *cfg) { assert(init_step++ == 2 && !cfg->nvs_enable); return ESP_OK; }
-esp_err_t esp_wifi_set_storage(int storage) { assert(init_step++ == 3 && storage == WIFI_STORAGE_RAM); return ESP_OK; }
-void *esp_netif_create_default_wifi_sta(void) { assert(init_step++ == 4); return &config; }
+esp_err_t esp_wifi_init(const wifi_init_config_t *cfg) { assert(init_step++ == 3 && !cfg->nvs_enable); return ESP_OK; }
+esp_err_t esp_wifi_set_storage(int storage) { assert(init_step++ == 4 && storage == WIFI_STORAGE_RAM); return ESP_OK; }
+void *esp_netif_create_default_wifi_sta(void) { assert(init_step++ == 2); return &config; }
 esp_err_t esp_netif_sntp_init(const esp_sntp_config_t *cfg) { assert(!cfg->start && !cfg->wait_for_sync && !strcmp(cfg->servers[0], "pool.ntp.org")); return ESP_OK; }
 esp_err_t esp_wifi_set_mode(int mode) { assert(init_step++ == 5 && mode == WIFI_MODE_STA); return ESP_OK; }
-esp_err_t esp_wifi_start(void) { assert(init_step++ == 6); return ESP_OK; }
-esp_err_t esp_wifi_set_ps(int ps) { (void)ps; assert(!"keep the SDK's power-save default"); return ESP_FAIL; }
+esp_err_t esp_wifi_get_mode(wifi_mode_t *mode) { *mode = WIFI_MODE_STA; return ESP_OK; }
+esp_err_t esp_wifi_start(void) {
+    assert(init_step == 6 && !radio_on && ps_calls > radio_starts && protocol_calls > radio_starts);
+    radio_on = true; radio_starts++;
+    return esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_START, NULL, 0, 0);
+}
+esp_err_t esp_wifi_stop(void) {
+    assert(radio_on);
+    radio_on = radio_busy = false; radio_stops++;
+    return ESP_OK;
+}
+esp_err_t esp_wifi_set_ps(int ps) { assert(ps == WIFI_PS_NONE); ps_calls++; return ESP_OK; }
+esp_err_t esp_wifi_set_protocol(int iface, unsigned protocol) {
+    assert(iface == WIFI_IF_STA && protocol == (WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N));
+    protocol_calls++; return ESP_OK;
+}
+esp_err_t esp_wifi_set_max_tx_power(int8_t power) { assert(radio_on && power == 48); power_calls++; return ESP_OK; }
+esp_err_t esp_timer_create(const esp_timer_create_args_t *args, esp_timer_handle_t *timer) {
+    assert(!retry_timer.args.callback && args->skip_unhandled_events && args->dispatch_method == ESP_TIMER_TASK);
+    retry_timer.args = *args; *timer = &retry_timer; return ESP_OK;
+}
+esp_err_t esp_timer_stop(esp_timer_handle_t timer) { assert(timer == &retry_timer); timer->active = false; return ESP_OK; }
+esp_err_t esp_timer_start_once(esp_timer_handle_t timer, uint64_t us) {
+    assert(timer == &retry_timer && !timer->active && us == 10000000);
+    timer->active = true; timer->us = us; return ESP_OK;
+}
+static void retry_due(void) {
+    assert(retry_timer.active && !mutex.held);
+    retry_timer.active = false;
+    retry_timer.args.callback(retry_timer.args.arg);
+    pump_all();
+}
 esp_err_t esp_netif_sntp_start(void) { sntp_starts++; return ESP_OK; }
 esp_err_t esp_wifi_set_config(int iface, const wifi_config_t *cfg) {
-    assert(iface == WIFI_IF_STA && cfg->sta.scan_method == WIFI_ALL_CHANNEL_SCAN && cfg->sta.sort_method == WIFI_CONNECT_AP_BY_SIGNAL);
+    assert(radio_on && iface == WIFI_IF_STA && cfg->sta.scan_method == WIFI_ALL_CHANNEL_SCAN && cfg->sta.sort_method == WIFI_CONNECT_AP_BY_SIGNAL);
+    assert(!cfg->sta.bssid_set && !cfg->sta.channel);
+    for (size_t i = 0; i < sizeof cfg->sta.bssid; i++) assert(!cfg->sta.bssid[i]);
     config = *cfg; return ESP_OK;
 }
 esp_err_t esp_wifi_connect(void) {
+    assert(radio_on);
     connect_calls++; radio_busy = true;
     int r = response; response = 0;
     if (r == 1) return esp_event_post(IP_EVENT, IP_EVENT_STA_GOT_IP, NULL, 0, 0);
@@ -89,12 +128,13 @@ esp_err_t esp_wifi_disconnect(void) {
 }
 esp_err_t esp_wifi_sta_get_ap_info(wifi_ap_record_t *ap) { *ap = aps[2]; return ESP_OK; }
 esp_err_t esp_wifi_scan_get_ap_record(wifi_ap_record_t *ap) {
-    if (ap_next == sizeof aps / sizeof *aps) return ESP_FAIL;
+    if (!ap_visible || ap_next == sizeof aps / sizeof *aps) return ESP_FAIL;
     *ap = aps[ap_next++]; return ESP_OK;
 }
 esp_err_t esp_wifi_clear_ap_list(void) { clears++; ap_next = sizeof aps / sizeof *aps; return ESP_OK; }
 esp_err_t esp_wifi_scan_start(const void *cfg, bool block) {
-    assert(!cfg && !block);
+    assert(radio_on && !cfg && !block);
+    scan_calls++;
     ap_next = 0;
     if (scan_timeout) return ESP_OK;
     wifi_event_sta_scan_done_t ev = {.status = scan_status};
@@ -112,17 +152,23 @@ static hal_link_status_t observed;
 static void on_link(void *ctx, const hal_link_status_t *st) { assert(!mutex.held); (*(int *)ctx)++; observed = *st; }
 static int64_t utc_seen;
 static void on_time(void *ctx, int64_t utc) { assert(!mutex.held && ctx == &utc_seen); utc_seen = utc; }
-static void link_is(hal_link_type_t type, bool up) { hal_link_status_t st; hal_net_link_status(&st); assert(st.type == type && st.up == up); }
+static void link_is(hal_link_type_t type, bool up) {
+    hal_link_status_t st; hal_net_link_status(&st); assert(st.type == type && st.up == up);
+    if (up) assert(default_netif == (type == HAL_LINK_WIFI ? (void *)&config : (void *)&fake_cell_netif));
+}
 int main(void) {
     link_is(HAL_LINK_NONE, false);
     for (int i = 0; i < 4; i++) hal_net_set_link_callback(on_link, &changes[i]);
     hal_net_set_link_callback(on_link, &changes[0]);
-    assert(init_step == 7 && !hal_net_available(HAL_LINK_LTE));
+    assert(init_step == 6 && !radio_on && !hal_net_available(HAL_LINK_LTE));
     hal_wifi_known_t known[] = {{"FAKE-AP-ONE", "fake-password-one"}, {"FAKE-AP-TWO", "fake-password-two"}};
     hal_wifi_set_known(known, 2);
     memset(known, 0, sizeof known);
     pump_all();
+    assert(!hal_net_available(HAL_LINK_WIFI)); /* the enabled system asks for discovery */
+    pump_all();
     assert(hal_net_available(HAL_LINK_WIFI));
+    assert(!radio_on && radio_starts == 1 && radio_stops == 1 && power_calls == 1);
     response = 1; hal_net_use(HAL_LINK_WIFI); pump_all();
     link_is(HAL_LINK_WIFI, true);
     assert(observed.up && observed.signal_dbm == -42 && changes[0] == changes[3] && sntp_starts == 0);
@@ -135,7 +181,7 @@ int main(void) {
     wifi_event_sta_disconnected_t down = {.reason = WIFI_REASON_NO_AP_FOUND};
     unsigned calls = connect_calls;
     esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &down, sizeof down, 0); pump_all();
-    assert(connect_calls == calls + 1 && !strcmp((char *)config.sta.ssid, "FAKE-AP-TWO"));
+    assert(connect_calls == calls + 1 && !strcmp((char *)config.sta.ssid, "FAKE-AP-ONE"));
     assert(!hal_net_available(HAL_LINK_WIFI));
     response = 1;
     esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &down, sizeof down, 0); pump_all();
@@ -152,7 +198,7 @@ int main(void) {
     calls = connect_calls;
     response = WIFI_REASON_AUTH_FAIL;
     assert(hal_wifi_connect("FAKE-WRONG", "fake-wrong-password", 100) == HAL_WIFI_ERR_AUTH);
-    assert(connect_calls == calls + 2); /* failed manual attempt resumes the known list */
+    assert(connect_calls == calls + 1 && retry_timer.active); /* resume discovery after the manual failure */
     esp_event_post(IP_EVENT, IP_EVENT_STA_GOT_IP, NULL, 0, 0); pump_all();
     assert(sntp_starts == 4);
     hal_wifi_ap_t seen[2];
@@ -161,7 +207,8 @@ int main(void) {
     assert(hal_wifi_scan(seen, 2, 100) == 2); /* disconnect must not replace the scan's result */
     pump_all(); link_is(HAL_LINK_WIFI, true);
     scan_timeout = true;
-    assert(hal_wifi_scan(seen, 2, 100) == HAL_WIFI_ERR_TIMEOUT && scan_stops == 1 && clears > 0);
+    unsigned stopped_scans = scan_stops;
+    assert(hal_wifi_scan(seen, 2, 100) == HAL_WIFI_ERR_TIMEOUT && scan_stops == stopped_scans + 1 && clears > 0);
     scan_timeout = false;
     hal_net_use(HAL_LINK_LTE); pump_all(); link_is(HAL_LINK_LTE, false);
     int notices = changes[0];
@@ -192,23 +239,74 @@ int main(void) {
     calls = connect_calls;
     hal_wifi_set_known(NULL, 0); pump_all();
     assert(connect_calls == calls && !radio_busy); /* forgetting also cancels an in-flight automatic join */
+    /* W03: five retries per AP, then a delayed scan; LTE discovery never joins. */
+    hal_wifi_set_known(&retry, 1); pump_all();
+    calls = connect_calls;
+    ap_visible = false;
+    for (unsigned i = 0; i < 6; i++) {
+        radio_busy = false;
+        esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &down, sizeof down, 0);
+        pump_all();
+    }
+    assert(connect_calls == calls + 5 && retry_timer.active && !hal_net_available(HAL_LINK_WIFI));
+    unsigned scans = scan_calls;
+    retry_due();
+    assert(scan_calls == scans); /* timer only asks policy; it cannot turn Wi-Fi on */
+    assert(!hal_net_available(HAL_LINK_WIFI)); pump_all();
+    assert(scan_calls == scans + 1 && retry_timer.active && !hal_net_available(HAL_LINK_WIFI));
     cell_available = cell_up = true;
     assert(hal_net_available(HAL_LINK_LTE));
     hal_net_use(HAL_LINK_LTE); pump_all(); link_is(HAL_LINK_LTE, true); assert(cell_selected);
+    assert(!radio_on && retry_timer.active);
+    ap_visible = true;
+    calls = connect_calls; scans = scan_calls;
+    retry_due();
+    assert(!radio_on && scan_calls == scans); /* Wi-Fi disabled or fixed LTE: no availability query */
+    assert(!hal_net_available(HAL_LINK_WIFI)); pump_all();
+    assert(hal_net_available(HAL_LINK_WIFI) && scan_calls == scans + 1 && connect_calls == calls && !radio_on);
     hal_link_status_t cellular; hal_net_link_status(&cellular); assert(cellular.signal_dbm == -83);
     unsigned before_time = sntp_starts;
     hal_net_set_time_callback(on_time, &utc_seen); assert(sntp_starts == before_time + 1);
     ink_s31_net_changed(); pump_all(); assert(sntp_starts == before_time + 1);
     esp_event_post(IP_EVENT, IP_EVENT_ETH_GOT_IP, NULL, 0, 0); pump_all(); assert(sntp_starts == before_time + 2);
+    response = 1;
+    hal_net_use(HAL_LINK_WIFI); pump_all(); link_is(HAL_LINK_WIFI, true);
+    assert(radio_on && !cell_selected && sntp_starts == before_time + 3);
+    assert(power_calls == radio_starts && ps_calls == protocol_calls && ps_calls == radio_starts + 1);
     hal_net_use(HAL_LINK_NONE); pump_all(); link_is(HAL_LINK_NONE, false); assert(!cell_selected);
-    puts("wifi: init/RAM, scan, DHCP, failures, known-list reconnect, callbacks and SNTP passed");
+    assert(!radio_on);
+    scans = scan_calls; retry_due();
+    assert(!radio_on && scan_calls == scans); /* airplane/off: a timer never restarts RF */
+    response = 1;
+    hal_net_use(HAL_LINK_WIFI); pump_all(); link_is(HAL_LINK_WIFI, true);
+    hal_net_use(HAL_LINK_LTE); pump_all(); link_is(HAL_LINK_LTE, true);
+    assert(!radio_on && power_calls == radio_starts && radio_stops == radio_starts);
+    /* The original candidate queue tries the strongest AP before the next one. */
+    hal_wifi_known_t candidates[] = {{"FAKE-AP-TWO", "fake-password-two"}, {"FAKE-AP-ONE", "fake-password-one"}};
+    hal_wifi_set_known(candidates, 2);
+    hal_net_use(HAL_LINK_WIFI); pump_all();
+    calls = connect_calls;
+    assert(!strcmp((char *)config.sta.ssid, "FAKE-AP-ONE"));
+    for (unsigned i = 0; i < 6; i++) {
+        radio_busy = false;
+        esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &down, sizeof down, 0); pump_all();
+        assert(!strcmp((char *)config.sta.ssid, i < 5 ? "FAKE-AP-ONE" : "FAKE-AP-TWO"));
+    }
+    assert(connect_calls == calls + 6);
+    for (unsigned i = 0; i < 6; i++) {
+        radio_busy = false;
+        esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &down, sizeof down, 0); pump_all();
+    }
+    assert(connect_calls == calls + 11 && retry_timer.active);
+    hal_net_use(HAL_LINK_LTE); pump_all(); assert(!radio_on);
+    puts("wifi: W02/W03/W04, RAM, scan, DHCP, failures, callbacks, dual routes and SNTP passed");
     return 0;
 }
 
 /* The cellular transport is independently exercised by cell.c. */
 void ink_s31_cell_netif_init(void) { }
 void ink_s31_cell_sync(void) { }
-void ink_s31_cell_use(bool on) { cell_selected = on; }
+void ink_s31_cell_use(bool on) { cell_selected = on; if (on) default_netif = &fake_cell_netif; }
 bool ink_s31_cell_link(hal_link_status_t *out) { *out = (hal_link_status_t){.type = HAL_LINK_LTE, .up = cell_up && cell_selected, .signal_dbm = -83}; return true; }
 bool ink_s31_cell_available(void) { return cell_available; }
-esp_err_t esp_netif_set_default_netif(esp_netif_t *n) { (void)n; return ESP_OK; }
+esp_err_t esp_netif_set_default_netif(esp_netif_t *n) { default_netif = n; return ESP_OK; }
