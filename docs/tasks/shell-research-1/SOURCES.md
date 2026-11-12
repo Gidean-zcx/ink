@@ -34,7 +34,7 @@
 
 ## S06 Mudita Kompakt
 
-- [官方产品页](https://mudita.com/products/phones/mudita-kompakt/) 的两张图已下载、实看：`work/refs/mudita-kompakt-home.jpg`（时钟、电话/短信等少量入口）与 `work/refs/mudita-kompakt-overview.jpg`（静态待机画面）。这是产品照片，固件构建号未知。
+- [官方产品页](https://mudita.com/products/phones/mudita-kompakt/) 的两张图已下载、实看：`work/refs/mudita-kompakt-home.jpg`（时钟、电话/短信等少量入口；[下载图](https://images.ctfassets.net/isxmxtc67n72/1kcxpZnMR8Zy35ShI8CPnL/0fdb1d3e42d4f2242024cc605c8e1bb6/Column.jpg?w=670&h=671&fl=progressive&q=90&fm=jpg)）与 `work/refs/mudita-kompakt-overview.jpg`（静态待机画面；[下载图](https://images.ctfassets.net/isxmxtc67n72/1PfonTBArwxrGY4jPNTzQh/5c897ff9a891e7b19003eee71806e70c/Frame_198.jpg?w=1200&h=680&fl=progressive&q=90&fm=jpg)）。这是产品照片，固件构建号未知。
 - [官方第三方应用说明](https://support.mudita.com/en/support/solutions/articles/77000577356-does-mudita-kompakt-support-third-party-apps-)：**MuditaOS K 基于 AOSP**。下一个条目的 MuditaOS 不能冒充 Kompakt 的现成外壳代码。
 - [官方首次设置](https://support.mudita.com/en/support/solutions/articles/77000579071)：分步设置、可跳过教程。借流程秩序，不套用指纹硬件。
 - [官方 1.4.0 说明](https://support.mudita.com/en/support/solutions/articles/77000589204)：锁屏音乐控件与充电信息按场景出现。不能推出 Plus 的锁屏音频权限相同。
@@ -88,7 +88,7 @@
 
 ## 本地参考图清单
 
-下面都是不跟踪的 `work/refs/` 文件，**没有第三方图片进入本次提交**。本项目既有截图只在只读的 `$INK_DESIGN/shots-20261111/` 查看，也没有复制进提交。
+下面都是不跟踪的 `work/refs/` 文件，**没有第三方图片进入本次提交**。本项目既有截图只在只读的 `$INK_DESIGN/shots-20261111/` 查看，也没有复制进提交；它们是 2026-11-11 留存图，不是本次对给定基线重跑的结果。
 
 | 文件名 | SHA-256 | 出处 |
 | --- | --- | --- |
