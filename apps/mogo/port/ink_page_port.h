@@ -3,6 +3,7 @@
 #include <settings.h>
 #include <esp_heap_caps.h>
 #include <esp_log.h>
+#include <esp_timer.h>
 #include <reader_open.h>
 #include <reader_chapter.h>
 #include <reader_turn.h>
@@ -12,6 +13,12 @@
 #include <ttf_font.h>
 #include <book_file_path.h>
 #include <page.h>
+#include <nvs.h>
+#include <book_bookmark_format.h>
+#include <book_toc.h>
+#include <ui_kit.h>
+#include <book_shelf_model.h>
+#include <book_reader_input.h>
 #define READER_WIDTH ink_mogo_page_width
 #define READER_HEIGHT ink_mogo_page_height
 #define READER_FULLSCREEN_PROGRESS_TOP (READER_HEIGHT - 12)
@@ -19,9 +26,7 @@
 #define READER_FOOTER_PROGRESS_SPACE 19
 #define READER_HEADING_BAND_HEIGHT 214
 #define UI_BAR_H 120
-#define UI_GRAY_BLACK 0
-#define UI_GRAY_LIGHT 0xc0
-#define BOOK_TOC_ROWS 10
+#undef BOOK_STORE_FLASH_FILE_MAX
 #define BOOK_STORE_FLASH_FILE_MAX (1024 * 1024)
 enum { MARGIN_LEFT, MARGIN_RIGHT, MARGIN_TOP, MARGIN_BOTTOM };
 enum { SHELF, READING, TOC, READER_PANEL_NONE = 0, APP_REDRAW_NONE = 0, APP_REDRAW_PAGE, APP_REDRAW_AREA,
@@ -61,12 +66,21 @@ static void *s_page_images;
 static reader_dims_ctx_t s_reader_dims_ctx;
 static ink_mogo_selection_t s_dictionary_selection;
 static app_ctx_t ink_mogo_context;
+static int s_bookmark_page;
+static bool s_bookmark_edit, s_bookmark_delete_confirm, s_bookmark_delete_error;
+static uint32_t s_bookmark_selected;
+static int64_t s_reader_notice_until;
+static void fit_text(char *s,int px,int width) {
+    size_t n=strlen(s);
+    while (n && ttf_text_width_px(ui_text_effective_px(px),s)>width) { do { --n; } while (n && ((unsigned char)s[n]&0xc0)==0x80); s[n]=0; }
+}
 static void free_book(void) { reader_session_close(&s_reader_session); s_text = NULL; }
+static unsigned percent(size_t page);
 static void save_progress(void) {
     if (!s_text || !book_layout_page_count()) return;
     book_progress_t p = {.file_size=s_reader_session.book.file_size,
         .chapter=(uint16_t)s_reader_session.position.chapter,
-        .byte_off=(uint32_t)book_layout_page_start_offset(s_reader_session.position.page),.px=(uint8_t)s_px};
+        .byte_off=(uint32_t)book_layout_page_start_offset(s_reader_session.position.page),.px=ink_mogo_settings.px,.pct=(uint8_t)percent(s_reader_session.position.page)};
     s_save_failed = book_progress_save(s_reader_session.book.path,&p) != ESP_OK;
 }
 static void copy_text(char *out, size_t cap, const char *s) {
@@ -110,14 +124,12 @@ static bool pending_reserve(const char *p) { (void)p; return true; }
 #define TD_LOGI(...) ((void)0)
 #define TD_TIME(n,c) (c)
 #define ui_text_set_system_scale(b) ((void)0)
-#define ui_clear_page(fb) memset(fb,255,(size_t)READER_WIDTH*READER_HEIGHT)
 #define ui_nav_status(fb) ((void)0)
 #define draw_reader_header(fb) ((void)0)
 #define draw_vertical_heading(fb,b) ((void)0)
 #define draw_reader_title_style(...) ((void)0)
 #define ui_reader_background_paint(...) ((void)0)
 #define draw_reader_images(...) ((void)0)
-#define ui_fill_round_rect(fb,r,rad,g) epd_fill_rect(r,g,fb)
 #define reader_chrome_data_t int
 #define reader_chrome_data(p) (*(p) = 0)
 #define reader_chrome_draw_footer_row(...) ((void)0)

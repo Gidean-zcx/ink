@@ -1,0 +1,125 @@
+{
+  "commit": "864f2f9dc75980a67d2d6b67b17365020b7a50ce",
+  "files": [
+    {
+      "path": "main/apps/book_toc.c",
+      "sha256": "17d83ba1a40ed232e2a4f338762ba15128c4b1b0e427a88bc3394c5e00b1740c"
+    },
+    {
+      "path": "main/apps/book_toc.h",
+      "sha256": "358cf9b2b4000d66c15a8e70a479e447310d95110871ab9533cd4f6f28b73c13"
+    },
+    {
+      "function": "bookmark_key",
+      "source": "main/apps/app_book.c",
+      "line": 1772,
+      "sha256": "f2c872a356e6964bcec528dac414786e2ec0e7375dad2fa6887dc33a0f8ccd45",
+      "source_chars": 278
+    },
+    {
+      "function": "bookmark_read_handle",
+      "source": "main/apps/app_book.c",
+      "line": 1844,
+      "sha256": "ca5e736bbc74b12d42a8e69fcf86c4d0484b291dc010d97363c9adfa78e431af",
+      "source_chars": 1306
+    },
+    {
+      "function": "bookmark_load",
+      "source": "main/apps/app_book.c",
+      "line": 1870,
+      "sha256": "78cb7448fdcc4eb8fa8fd3e66d1d70f616f4eb436da41689464bd7b9f769786b",
+      "source_chars": 292
+    },
+    {
+      "function": "bookmark_is_current",
+      "source": "main/apps/app_book.c",
+      "line": 1878,
+      "sha256": "180a2b2854330fec06c2018ef79e1c4eeda35fe396d9ad488d3b791098321223",
+      "source_chars": 391
+    },
+    {
+      "function": "bookmark_count",
+      "source": "main/apps/app_book.c",
+      "line": 1886,
+      "sha256": "5ee7b71e7f30535376034fb36b6d4085db039e8e22d3c6eb5890e439acda8c02",
+      "source_chars": 121
+    },
+    {
+      "function": "bookmark_row_step",
+      "source": "main/apps/app_book.c",
+      "line": 1890,
+      "sha256": "01d0caa66bb4c55bf07c6585fc4e4a58bb9b089d2c6203abe546047bfeecae0d",
+      "source_chars": 171
+    },
+    {
+      "function": "bookmark_rows",
+      "source": "main/apps/app_book.c",
+      "line": 1896,
+      "sha256": "159dc934977af7d9307ce30ff6e86def7a7804d9a54ebc2c8f0a5678b282a2ee",
+      "source_chars": 89
+    },
+    {
+      "function": "bookmark_row_rect",
+      "source": "main/apps/app_book.c",
+      "line": 1897,
+      "sha256": "5c876f38bbac903109a99c7e8a1e328839aedf6d1aba88a16248990694200d61",
+      "source_chars": 131
+    },
+    {
+      "function": "bookmark_pages",
+      "source": "main/apps/app_book.c",
+      "line": 1901,
+      "sha256": "98e1cc23c138d3b0671b0cb5add2169492916f90e0bbc87cebb6b400dfaeed0b",
+      "source_chars": 121
+    },
+    {
+      "function": "bookmark_selected_count",
+      "source": "main/apps/app_book.c",
+      "line": 1904,
+      "sha256": "a73b419bfa79e3ea21058378cb602cd923722bff2659d47cea59c0ee34924b36",
+      "source_chars": 195
+    },
+    {
+      "function": "bookmark_toggle",
+      "source": "main/apps/app_book.c",
+      "line": 1935,
+      "sha256": "c5cb036b081d132c556d48528c0d5bcebd9ac1e7fe65c5b6ff1fbc5d14bae419",
+      "source_chars": 2187
+    },
+    {
+      "function": "draw_sheet",
+      "source": "main/apps/app_book.c",
+      "line": 2011,
+      "sha256": "41cdf35d768c37f5ef00e54c5d53f93f96737e0754f94f5f9b269f2a260400c5",
+      "source_chars": 508
+    },
+    {
+      "function": "reader_panel_text_vc",
+      "source": "main/apps/app_book.c",
+      "line": 1998,
+      "sha256": "78f0667f34e21150f2968e2225ce402a2a4a77318a67ab120557afd08700aec1",
+      "source_chars": 441
+    },
+    {
+      "function": "draw_reader_bookmarks",
+      "source": "main/apps/app_book.c",
+      "line": 2906,
+      "sha256": "eb0809e9cc138ceb503f3428b928bf001a196ca3876460f004dfa14c2fd44483",
+      "adapted_sha256": "bc33be7d07143e78a541478c82e7475ced179756136aa57bf220a3615efa95a6",
+      "source_chars": 3980
+    },
+    {
+      "function": "current_toc_position",
+      "source": "main/apps/app_book.c",
+      "line": 3589,
+      "sha256": "b57baef7163c2d53bf738724a4cd143bfd707a7545e26571580169894a959411",
+      "source_chars": 580
+    },
+    {
+      "path": "main/book/ink_reader_open.c",
+      "source": "main/book/reader_open.c",
+      "sha256": "8345a3de77db8b81aeb8230347fa3c65269d80a1701a1127c8f52cad30b98f64",
+      "adapted_sha256": "06404aa33b1d34e7cbb090d993633eb505e1af90bcea678366c2c7953a312efd"
+    }
+  ]
+}

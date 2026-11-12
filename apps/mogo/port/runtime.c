@@ -4,6 +4,9 @@
 #include <book_progress.h>
 #include <epdiy.h>
 #include <stdarg.h>
+#include <settings.h>
+#include <nvs.h>
+#include "ink/sys/time.h"
 typedef struct { ink_fs_file_t *file; bool error; } ink_mogo_stream_t;
 static ink_member_identity_t ink_mogo_member;
 static ink_fs_file_t *ink_mogo_fds[4];
@@ -20,8 +23,31 @@ void *ink_mogo_calloc(size_t n, size_t s) {
 size_t ink_mogo_free(void) { size_t p; ink_app_mem_free(NULL, NULL, &p); return p; }
 void ink_mogo_owner(const ink_member_identity_t *o) { ink_mogo_member = *o; }
 const ink_member_identity_t *ink_mogo_current_owner(void) { return &ink_mogo_member; }
-void ink_mogo_dimensions(int w, int h, int px) { ink_mogo_w = w; ink_mogo_h = h; ink_mogo_px = px; }
-int app_settings_book_px(void) { return ink_mogo_px; }
+void ink_mogo_dimensions(int w, int h, int px) { ink_mogo_w = w; ink_mogo_h = h; ink_mogo_px = px; ink_mogo_canvas(w,h); }
+ink_mogo_settings_t ink_mogo_settings;
+int ink_mogo_scaled(int px) { return (px * ink_mogo_px + 50) / 100; }
+int app_settings_system_font_size(void) { return ink_mogo_px; }
+int app_settings_book_px(void) { return ink_mogo_scaled(ink_mogo_settings.px); }
+void ink_mogo_settings_load(void) {
+    ink_mogo_settings = (ink_mogo_settings_t){.px=48,.line=150,.paragraph=50,.margin={36,36,0,0},.indent=2};
+    nvs_handle_t h;
+    if (nvs_open("reading",NVS_READONLY,&h)) return;
+    ink_mogo_settings_t p;
+    size_t n = sizeof p;
+    if (!nvs_get_blob(h,"layout",&p,&n) && n == sizeof p && p.px >= 18 && p.px <= 90 &&
+        p.line >= 110 && p.line <= 150 && p.paragraph <= 100 && p.indent <= 3 &&
+        p.margin[0] <= 96 && p.margin[1] <= 96 && p.margin[2] <= 96 && p.margin[3] <= 96 &&
+        p.header <= 1 && p.footer <= 1 && p.weight >= -32 && p.weight <= 32) ink_mogo_settings = p;
+    nvs_close(h);
+}
+bool ink_mogo_settings_save(void) {
+    nvs_handle_t h;
+    if (nvs_open("reading",NVS_READWRITE,&h)) return false;
+    int err = nvs_set_blob(h,"layout",&ink_mogo_settings,sizeof ink_mogo_settings);
+    if (!err) err = nvs_commit(h);
+    nvs_close(h);
+    return !err;
+}
 const char *app_settings_fonts_dir(void) { return "/me/fonts"; }
 const char *app_settings_font_path(void) { return "/me/fonts/InkSC.ttf"; }
 FILE *ink_mogo_fopen(const char *path, const char *mode) {
@@ -88,3 +114,10 @@ bool book_index_cache_prepare(const char *p, const char *tag, uint32_t v, char *
 FILE *book_index_cache_open_read(const char *p, const book_index_cache_header_t *h) { (void)p; (void)h; return NULL; }
 FILE *book_index_cache_open_write(const char *p, const book_index_cache_header_t *h, char *t, size_t n) { (void)p; (void)h; (void)t; (void)n; return NULL; }
 bool book_index_cache_finish_write(FILE *f, const char *t, const char *p, bool ok) { (void)f; (void)t; (void)p; (void)ok; return false; }
+
+time_t ink_mogo_time(time_t *out) { time_t now=(time_t)ink_time_now_s(); if (out) *out=now; return now; }
+typedef struct { void *base; size_t count,size; int (*compare)(const void *,const void *); } ink_mogo_sort_t;
+static void ink_mogo_host_sort(void *arg) { ink_mogo_sort_t *s=arg; qsort(s->base,s->count,s->size,s->compare); }
+void ink_mogo_qsort(void *base,size_t count,size_t size,int (*compare)(const void *,const void *)) {
+    ink_mogo_sort_t sort={base,count,size,compare}; ink_reader_host_call(ink_mogo_host_sort,&sort);
+}

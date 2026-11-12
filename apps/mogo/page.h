@@ -8,3 +8,7 @@ void ink_mogo_page_turn(int direction);
 void ink_mogo_page_draw(uint8_t *pixels);
 void ink_mogo_page_close(void);
 int ink_mogo_page_snapshot(char *out, size_t cap);
+
+bool ink_mogo_page_shelf(const ink_member_identity_t *,int,int,int);
+bool ink_mogo_page_command(const char *action,int value);
+const char *ink_mogo_page_hit(int x,int y,int *value);
