@@ -11,7 +11,7 @@
 | 3 cnlunar 对照 | 【实测】已列差异 | 50/50 天有差异，完整表见 [CNLUNAR-DIFF.md](CNLUNAR-DIFF.md) | `python -B tests/almanac/run.py --binary build/almanac-model --mode compare --cnlunar "$INK_DEPS/../ink-hw/upstream/oss/cnlunar" --out docs/tasks/almanac-2` |
 | 4 现有农历逐日对照 | 【实测】已列差异 | 36,495 天一致，30 天不一致，全部日期见 [LUNAR-DIFF.md](LUNAR-DIFF.md)；没有修改旧实现 | `python -B tests/almanac/run.py --binary build/almanac-model --mode oracle --out docs/tasks/almanac-2` |
 | 5 AI、孩子、范围与时区 | 【实测】通过 | 模拟器 216 项检查；AI 与 C 接口全部字段相同，孩子可调、不确认，跨时区切换当天，1999 年如实报不在范围 | `INK_KEEP_EVIDENCE=1 ctest --test-dir build -R almanac-capability --output-on-failure` |
-| 6 构建、全量、ASan、S31、资源 | 待验证 | — | — |
+| 6 构建、全量、ASan、S31、资源 | 【实测】部分通过；预算与全量未通过，内存及 S31 宿主测试进行中 | 普通构建、S31 固件、GCC 和本任务 4 个测试通过；完整全量有 2 个失败，详见下文 | `taskpolicy -c utility ctest --test-dir build --output-on-failure -j2` |
 
 ## 没做到的
 
@@ -19,13 +19,17 @@
 
 没有实机测试，S31 上的真实查询耗时待主会话核对。
 
+全量测试发现 `services-mid-capability-doc` 失败：服务设计 §1.3 尚未登记新能力。该设计文件不在本任务允许修改范围，没有越界修改或跳过检查；具体同步补丁见“要改的文档”。
+
+完整全量的 `backup-restore-recovery` 在 240.26 秒被原有 240 秒上限终止；已完成的备份/恢复子场景没有失败断言，最后日志到 `collect-cut PASS`，留下的 `collect-resume` 指标为 `test.pass=276/test.fail=0/test.finished=1`。不能凭这些中间结果认定整个测试通过或断定根因，本次未改备份模块及超时上限。
+
 ## 和设计不一致的
 
 没有改规则或旧农历。系统时区代替上游固定北京时间，是本任务明确要求的差异，见 [SOURCE.md](../../../system/services/time/vendor/mogo-calendar/SOURCE.md)。预算超限见上，不改任务书迁就实现。
 
 ## 改过的已有测试
 
-无。
+仅在 `tests/integration/ai_surface.c` 的 `FOR_AI` 表末尾追加 `{"time.almanac", ""}`：该能力给 AI，日期参数全为可选。没有改已有期望、断言或预算；没有在 `NOT_FOR_AI` 重复登记。
 
 ## 要用户定的
 
@@ -35,7 +39,7 @@
 
 ## 顺手发现
 
-无。
+【实测】`asset_pack` 当前 `font_data` 为 4,718,343 / 4,718,592 B，仅余 249 B；本次相对基线增长 513 B。未改分区、裁剪字体或扩大上限，后续加字需留意该现有限制。
 
 ## 新增的机制
 
@@ -43,7 +47,11 @@
 
 ## 要改的文档
 
-任务书明确允许生成并提交 `docs/system/capabilities.md`；其它共享文档不修改。
+已按任务书明确许可生成并提交 `docs/system/capabilities.md`。
+
+主会话需在 [服务设计](../../system/system-services-design.md) §1.3 的“时间”行 AI 能力列补 `time.almanac`，并注明日期可选、当地公历 YYYY-MM-DD、2000–2099、只读、孩子可用。已准备 [SERVICE-DESIGN.patch](SERVICE-DESIGN.patch)，没有应用到共享文档。
+
+【实测】原设计的检查输出 `FOR_AI: checked=148 missing=1` / `FOR_AI: time.almanac`。仅在临时副本应用上述一行补丁，再以原检查器 `tests/services_mid/check_capability_doc.py --design work/almanac-2/system-services-design-proposed.md` 核对，输出 `missing=0` 并通过；没有修改测试、断言或默认检查对象。这是定位证据，不能替代仓库原文件的全量测试结果。
 
 ## 接口与证据边界
 
@@ -84,3 +92,18 @@
 Flash 复核：使用 ESP-IDF 的 Python（含 pyelftools）运行 `python -B docs/tasks/almanac-2/measure_flash.py --before work/almanac-2/s31-before.bin`；它按 ELF 指针取字符串并做地址区间并集，检查对象与字符串均在 Flash。基线源码与指定提交一致，首次基线构建只有报告提交，无产品代码改动；前后均运行原 `ports/esp32s31/build.sh`。构建产物留在忽略目录，没有提交。
 
 【实测】`taskpolicy -c utility bash ports/esp32s31/build.sh` 前后两次退出 0，无新增编译器警告。`taskpolicy -c utility python "$INK_DEPS/../ink-codex/tools/gcccheck.py" build system/services/time/almanac.c system/services/time/time_caps.c system/services/time/vendor/mogo-calendar/main/time/calendar.c tests/almanac/model.c tests/almanac/device.c tests/integration/ai_surface.c` 输出：`gcccheck: 6 compiled, 0 with findings`。
+
+最早一次 S31 配置因本工作区尚无宿主字体资源失败；补齐任务指定依赖中的构建资源后，基线与改后完整脚本均成功。宿主全构建有上游 SDL 的 macOS 废弃 API 警告及既有重复库链接警告；没有修改上游依赖。Linux 全量未运行，GCC 核查不能冒充 Linux CI 结果。
+
+## 上机核对清单
+
+- 本任务未烧录、未开串口。预算问题处理后，由主会话核对设备能力清单和显式 `2026-02-17` 的完整输出，期望与固定夹具一致，成人和孩子均无需确认。
+- 读取设备当前时间、系统时区，核对无日期查询的当地日期；未校准时应如实提示校准。
+- 真机测量单日查询耗时和查询前后 PSRAM 回收；本次仅有宿主耗时与编译内存布局证据。
+
+## 构建与测试记录
+
+- 【实测】普通 `INK_WERROR=ON` 全构建退出 0；全量原话为 `99% tests passed, 2 tests failed out of 443`，耗时 1822.90 秒，退出 8。失败：`backup-restore-recovery (Timeout)`、`services-mid-capability-doc (Failed)`。
+- 【实测】原有 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 跳过（未配置中枢 Python 依赖），`memo-save-busy` 原本禁用；本次没有改这些设置或跳过规则。
+- 【实测】最后一次新测试运行：`100% tests passed out of 4`，18.04 秒；覆盖固定 50 天、全量 36,525 天、宜忌反向对照和真实能力调用。没有 node 的单独核查显示 `almanac-oracle (Skipped)` 并输出缺少 node 的原因；固定夹具测试仍可独立运行。
+- ASan、S31 宿主机测试：进行中。

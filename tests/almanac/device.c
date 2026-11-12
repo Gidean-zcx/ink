@@ -9,7 +9,7 @@
 static const char *case_name;
 static void report(void *arg) {
     (void)arg;
-    printf("ALMANAC %s status=%d say=%s detail=%s json=%s\n", case_name, g_rc.status, g_rc.say, g_rc.detail, g_result);
+    printf("ALMANAC %s status=%d say=%s detail=%s json=%.4095s\n", case_name, g_rc.status, g_rc.say, g_rc.detail, g_result);
 }
 static void compare(int y, int m, int day) {
     ink_almanac_t d;
