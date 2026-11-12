@@ -15,12 +15,13 @@ static void locate(lv_obj_t *o) {
     }
     for (uint32_t i=0;i<lv_obj_get_child_count(o);++i) locate(lv_obj_get_child(o,(int32_t)i));
 }
-static void inspect(void) { ink_graft_snapshot(view,sizeof view); raster = 0; locate(lv_screen_active()); }
+static void inspect(void) { ink_graft_snapshot(view,sizeof view); }
+static void pixels(void) { raster = 0; locate(lv_screen_active()); }
 static bool page(int n) {
     char expected[32]; snprintf(expected,sizeof expected,"页=%d/",n);
     for (int i=0;i<2400;++i) {
         on_ui(inspect);
-        if (strstr(view,expected) && !ink_ui_busy() && !ink_display_busy()) return true;
+        if (strstr(view,expected) && !ink_ui_busy() && !ink_display_busy()) { on_ui(pixels); return true; }
         delay_ms(50);
     }
     return false;
@@ -30,7 +31,7 @@ static void frame(const char *name) {
     captured=false; vtk_event_at(vtk_now()+SIM_MS(1),capture,(void *)name);
     CHECK(WAIT_FOR(captured,2000),"capture native reader frame");
 }
-static void close_reader(void) { CHECK(!ink_app_close("mogo"),"close native reader"); }
+static void close_reader(void) { sim_note("Mogo: closing"); CHECK(!ink_app_close("mogo"),"close native reader"); sim_note("Mogo: closed"); }
 static void run(void *arg) {
     (void)arg;
     ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK);
@@ -52,8 +53,9 @@ static void run(void *arg) {
     CHECK(!strcmp(view,first) && raster==first_raster,"round trip restores first page number, text and pixels"); frame("gbk-return");
     CHECK(AI("mogo.open","{\"path\":\"/me/books/星星邮差.epub\"}") && g_rc.status==INK_RC_DONE,"open EPUB through native path");
     CHECK(page(1) && strstr(view,"邮筒"),"EPUB body is laid out: %.150s",view); frame("epub-page-1");
-    on_ui(close_reader); delay_ms(1000);
-    ink_probe_count("test.finished");
+    sim_note("Mogo: GBK round trip and EPUB assertions completed");
+    on_ui(close_reader); sim_note("Mogo: UI close returned"); delay_ms(1000);
+    sim_note("Mogo: test finished"); ink_probe_count("test.finished");
 }
 void ink_main(void) {
     product_main(); test_start_home();

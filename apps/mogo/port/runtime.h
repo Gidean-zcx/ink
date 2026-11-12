@@ -14,6 +14,9 @@ FILE *ink_mogo_fopen(const char *path, const char *mode);
 size_t ink_mogo_fread(void *p, size_t s, size_t n, FILE *f);
 size_t ink_mogo_fwrite(const void *p, size_t s, size_t n, FILE *f);
 int ink_mogo_fclose(FILE *f);
+int ink_mogo_ferror(FILE *f);
+void ink_mogo_clearerr(FILE *f);
+int ink_mogo_fgetc(FILE *f);
 int ink_mogo_fseek(FILE *f, long off, int whence);
 long ink_mogo_ftell(FILE *f);
 int ink_mogo_stat(const char *path, struct stat *st);
@@ -33,6 +36,9 @@ void ink_mogo_dimensions(int w, int h, int px);
 #define fread ink_mogo_fread
 #define fwrite ink_mogo_fwrite
 #define fclose ink_mogo_fclose
+#define ferror ink_mogo_ferror
+#define clearerr ink_mogo_clearerr
+#define fgetc ink_mogo_fgetc
 #define fseek ink_mogo_fseek
 #define ftell ink_mogo_ftell
 #define stat(p,s) ink_mogo_stat(p,s)

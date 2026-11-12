@@ -7,7 +7,7 @@
 static struct {
     const ink_graft_client_t *client;
     ink_member_identity_t member;
-    lv_obj_t *image, *status;
+    lv_obj_t *image;
     lv_image_dsc_t descriptor;
     uint8_t *pixels;
     int width, height, top;
@@ -40,7 +40,6 @@ void ink_graft_detach(void) {
     if (G.image) {
         lv_obj_delete(G.image);
     }
-    if (G.status) lv_obj_delete(G.status);
     osal_free(G.pixels);
     memset(&G, 0, sizeof G);
 }
@@ -76,7 +75,8 @@ int ink_graft_attach(lv_obj_t *screen, const ink_graft_client_t *client) {
     lv_obj_add_flag(G.image, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(G.image, touched, LV_EVENT_SHORT_CLICKED, NULL);
     lv_obj_add_event_cb(G.image, touched, LV_EVENT_LONG_PRESSED, NULL);
-    G.status = ink_shell_statusbar(screen, true);
+    /* The shell rebuilds its status bar; its screen owns that lifetime. */
+    ink_shell_statusbar(screen, true);
     return 0;
 }
 

@@ -4,6 +4,7 @@
 #include "book_progress.h"
 #include "epdiy.h"
 #include <stdarg.h>
+typedef struct { ink_fs_file_t *file; bool error; } ink_mogo_stream_t;
 static ink_member_identity_t ink_mogo_member;
 static ink_fs_file_t *ink_mogo_fds[4];
 static int ink_mogo_w, ink_mogo_h, ink_mogo_px;
@@ -25,17 +26,25 @@ const char *app_settings_font_path(void) { return "/me/fonts/InkSC.ttf"; }
 FILE *ink_mogo_fopen(const char *path, const char *mode) {
     ink_fs_file_t *f = NULL;
     if (strcmp(mode, "rb") || ink_graft_file_open(&ink_mogo_member, path, INK_FS_READ, &f)) return NULL;
-    return (FILE *)f;
+    ink_mogo_stream_t *stream = ink_mogo_malloc(sizeof *stream);
+    if (!stream) { ink_fs_close(f); return NULL; }
+    *stream = (ink_mogo_stream_t){.file = f};
+    return (FILE *)stream;
 }
 size_t ink_mogo_fread(void *p, size_t s, size_t n, FILE *f) {
     if (!s || n > SIZE_MAX / s) return 0;
-    int64_t got = ink_fs_read((ink_fs_file_t *)f, p, s * n);
+    ink_mogo_stream_t *stream = (ink_mogo_stream_t *)f;
+    int64_t got = ink_fs_read(stream->file, p, s * n);
+    if (got < 0) stream->error = true;
     return got > 0 ? (size_t)got / s : 0;
 }
 size_t ink_mogo_fwrite(const void *p, size_t s, size_t n, FILE *f) { (void)p; (void)s; (void)n; (void)f; return 0; }
-int ink_mogo_fclose(FILE *f) { return ink_fs_close((ink_fs_file_t *)f); }
-int ink_mogo_fseek(FILE *f, long off, int whence) { return ink_fs_seek((ink_fs_file_t *)f, off, whence); }
-long ink_mogo_ftell(FILE *f) { return (long)ink_fs_tell((ink_fs_file_t *)f); }
+int ink_mogo_fclose(FILE *f) { ink_mogo_stream_t *s = (ink_mogo_stream_t *)f; int r = ink_fs_close(s->file); ink_app_free(s); return r; }
+int ink_mogo_ferror(FILE *f) { return ((ink_mogo_stream_t *)f)->error; }
+void ink_mogo_clearerr(FILE *f) { ((ink_mogo_stream_t *)f)->error = false; }
+int ink_mogo_fgetc(FILE *f) { unsigned char c; return ink_mogo_fread(&c,1,1,f) == 1 ? c : EOF; }
+int ink_mogo_fseek(FILE *f, long off, int whence) { ink_mogo_stream_t *s = (ink_mogo_stream_t *)f; int r = ink_fs_seek(s->file, off, whence); if (r) s->error = true; return r; }
+long ink_mogo_ftell(FILE *f) { return (long)ink_fs_tell(((ink_mogo_stream_t *)f)->file); }
 int ink_mogo_stat(const char *path, struct stat *st) {
     ink_fs_file_t *f;
     if (ink_graft_file_open(&ink_mogo_member, path, INK_FS_READ, &f)) return -1;
