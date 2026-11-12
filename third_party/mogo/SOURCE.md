@@ -30,3 +30,29 @@
 
 其余上游文件保持逐字节一致。新增 `CMakeLists.txt` 和本来源记录由 ink 项目编写；
 测试入口和反向对照在 `tests/graft_mogo/`，通用承载接口在 `system/graft/`。
+
+## graft-mogo-2 字体补充
+
+固定来源仍为 `864f2f9`（v1.1.0），查阅日期 2026-11-12。新增的十个字体文件及其原始 SHA-256 见 [font-upstream-files.json](font-upstream-files.json)，从该提交的 Git 对象复制。`ttf_font.c`、字节源、块缓存、字形缓存、字重过滤及其头文件使用文件头声明的 Apache-2.0；`stb_truetype.h` 选择其文件末尾完整保留的 MIT 许可证。既有 [Apache 许可证](licenses/Apache-2.0.txt)继续随附。
+
+仅两个文件适配，文件内均标明修改日期：`ttf_font.h` 增加会话关闭声明；`ttf_font.c` 末尾增加 `ink_mogo_font_shutdown()`，在绘制和预绘已经停止后交还所有字体槽、保留块缓冲、共享工作区和目录，并清除借用 run 与回调。原 `ttf_font_unload()` 保留原语义。清理入口尚未连接产品生命周期，不能据此宣称换成员隔离完成。适配后的哈希也记在清单里，其余八个文件逐字节保持原文。
+
+这些文件目前只进入 `mogo-font-file` 宿主兼容性测试，没有接入产品应用或设备固件。测试平台头明确放在 `tests/`；不把它们当成生产 HAL、NVS 或成员文件适配。
+
+`tools/mogo_font.py` 使用现有 Noto Sans CJK SC 字面进行子集化和 CFF→TrueType 轮廓转换，保留 OFL/版权记录并将修改版改名为 Ink Reader Sans SC。完整 OFL 随生成字体复制；字体和许可证仅生成到内容目录，不提交字体、不下载资源、不嵌入应用分区。
+
+## graft-mogo-3 正文页面接线
+
+固定来源仍为 `864f2f9`（v1.1.0），查阅日期 2026-11-12。
+新增 `reader_open.c/.h`、`reader_chapter.c/.h` 四个完整原文件；
+`main/apps/ink_book_page.c` 从同一提交的 `app_book.c` 整函数复制开书、章节交接、
+几何、正文绘制和翻页路径，函数本身逐字保留，不编译原文件里尚未接入的书架和设置。
+原路径、行号和每个函数的 SHA-256 见 [page-upstream-files.json](page-upstream-files.json)。
+原文件 `app_book.c` 保持不变，既有主机抽取测试继续使用它。
+
+本方胶水在 `apps/mogo/`：`port/ink_page_port.h` 提供当前阶段的页面上下文和外围空实现，
+`ink_page_exports.h` 只暴露同步开书、翻页、绘制、关闭和快照；`runtime.c` 将书和字体读入
+当前成员的 `ink_graft_file_open`，分配走系统 PSRAM，格式化走已有宿主调用出口。
+帧缓冲改由 L8 平台绘图原语承接，再经 `ink_graft_present` 交给同一个 UI 和显示服务。
+未接入功能及空实现表见 [本轮报告](../../docs/tasks/graft-mogo-3/REPORT.md)。
+不改排版、TXT、EPUB、字形栅格化算法。新增原函数仅链接模拟器应用，不进入 S31 固件。

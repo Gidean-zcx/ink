@@ -1,0 +1,130 @@
+{
+  "baseline": "d703befe3e5e7b3e51c0483862c7feb2ef44aa61",
+  "native_page": {
+    "assertions": 47,
+    "finished": true,
+    "gbk_forward": 10,
+    "gbk_backward": 10,
+    "default_body_px": 48,
+    "same_first_text_and_pixels": true,
+    "epub_open": true
+  },
+  "screenshots": {
+    "epub-page-1.png": {
+      "bytes": 55299,
+      "sha256": "16d5381b0f176bf7b3874fdf144e830336ed8a988a1144b83633ecf3cb162d79"
+    },
+    "gbk-page-1.png": {
+      "bytes": 59365,
+      "sha256": "8ac1a4fbc56abf246489eeb8344aea8100797ec961b73b95fbe67b47b9fbc9ac"
+    },
+    "gbk-page-10.png": {
+      "bytes": 54391,
+      "sha256": "0bf230bbc60ef3e8706451531883059eb1de02fae1237f70c41a199a99672550"
+    },
+    "gbk-return.png": {
+      "bytes": 58314,
+      "sha256": "acfc435875f88e8259f0dfdf48db88754c2e074bd5f81778da9af655eb9338fb"
+    }
+  },
+  "fixtures": {
+    "/me/books/星星邮差GBK.txt": {
+      "bytes": 17777,
+      "sha256": "b0f4a4c3612e2dbe6acc8fd326aed6ef78f8af8d3db25ace8c22b4d10009967d"
+    },
+    "/me/books/星星邮差.epub": {
+      "bytes": 4044,
+      "sha256": "925ba5889ff8748a5e5aee474691c3427a458f874dd1c20ac1feb5ad035d876a"
+    },
+    "/me/fonts/InkSC.ttf": {
+      "bytes": 3897328,
+      "sha256": "15ffa9ea43e5d6aec1cae8c1b1347c7390f29b5cb3cde97b185e7d7482bfa778"
+    },
+    "/me/fonts/InkSC.OFL.txt": {
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    }
+  },
+  "reverse_input": {
+    "exit": 1,
+    "failed_as_expected": true
+  },
+  "reverse_close": {
+    "timeout_s": 15,
+    "failed_as_expected": true
+  },
+  "tests": {
+    "normal_full": {
+      "total": 439,
+      "failed": [
+        "i18n-literals",
+        "capability-table-doc",
+        "capability-table-runtime",
+        "sdk-boundary"
+      ],
+      "skipped": [
+        "hub-contract",
+        "hub-json-crosscheck",
+        "hub-simulator-e2e"
+      ],
+      "seconds": 1544.7,
+      "exit": 8
+    },
+    "followup": {
+      "native_page": "pass",
+      "capability_table_runtime": "pass",
+      "sdk_boundary": "pass",
+      "i18n_literals": "pass",
+      "capability_table_doc": "not_updated_by_task_rule"
+    },
+    "asan": {
+      "total": 15,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 27.44
+    },
+    "s31_host": {
+      "total": 77,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 120.93
+    },
+    "s31_firmware": {
+      "current_bytes": 4268080,
+      "baseline_bytes": 4268416,
+      "delta_bytes": -336,
+      "slot_bytes": 5242880,
+      "slot_remaining_bytes": 974800,
+      "current_exit": 0,
+      "baseline_exit": 0,
+      "compiler_warnings_current": 0,
+      "compiler_warnings_baseline": 0,
+      "cmake_warnings_each": 6,
+      "mogo_translation_units": 0,
+      "initial_current_exit": 2,
+      "initial_failure": "S31 app glob included the host-only Mogo module; excluded in its CMake file",
+      "mogo_symbols": 0
+    },
+    "gcc": {
+      "compiled": 7,
+      "findings": 0
+    },
+    "focused_final": {
+      "total": 10,
+      "failed": [
+        "capability-table-doc"
+      ],
+      "seconds": 40.09
+    }
+  },
+  "normal_final": {
+    "assertions": 47,
+    "finished": 1,
+    "failed": 0
+  },
+  "asan_final": {
+    "assertions": 47,
+    "finished": 1,
+    "failed": 0
+  }
+}

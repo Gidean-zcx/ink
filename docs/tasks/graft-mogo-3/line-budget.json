@@ -1,0 +1,33 @@
+{
+  "own_wiring": {
+    "apps/mogo/en.tsv": 3,
+    "apps/mogo/mogo.c": 139,
+    "apps/mogo/mogo.cmake": 27,
+    "apps/mogo/page.h": 10,
+    "apps/mogo/port/epdiy.h": 6,
+    "apps/mogo/port/esp_err.h": 6,
+    "apps/mogo/port/esp_heap_caps.h": 12,
+    "apps/mogo/port/esp_log.h": 5,
+    "apps/mogo/port/esp_timer.h": 3,
+    "apps/mogo/port/ink_page_exports.h": 25,
+    "apps/mogo/port/ink_page_port.h": 126,
+    "apps/mogo/port/runtime.c": 90,
+    "apps/mogo/port/runtime.h": 52,
+    "apps/mogo/port/settings.h": 17,
+    "apps/mogo/translations.cmake": 10
+  },
+  "own_lines": 531,
+  "registration_lines": 5,
+  "root_cmake_lines": 3,
+  "carrier_diff": {
+    "added": 3,
+    "removed": 3
+  },
+  "native_functions": 21,
+  "native_function_lines": 445,
+  "native_subset_wrapper_lines": 28,
+  "native_original_modifications": 0,
+  "own_with_root_and_carrier": 547,
+  "all_authored_lines": 575,
+  "s31_cmake_lines": 2
+}

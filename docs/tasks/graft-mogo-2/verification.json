@@ -1,0 +1,63 @@
+{
+  "task_delivered": false,
+  "baseline": "36473cc4933e6fea2f2a78a4fbec16186d3be3f4",
+  "ordinary_full": {
+    "summary": "99% tests passed, 2 tests failed out of 438",
+    "seconds": 1616.86,
+    "skipped": [
+      "hub-contract",
+      "hub-json-crosscheck",
+      "hub-simulator-e2e"
+    ]
+  },
+  "ordinary_failed_recheck": {
+    "summary": "100% tests passed out of 2",
+    "seconds": 13.88,
+    "skipped": []
+  },
+  "asan_mogo_modules": {
+    "summary": "100% tests passed out of 13",
+    "seconds": 34.56,
+    "skipped": []
+  },
+  "s31_host": {
+    "summary": "100% tests passed out of 77",
+    "seconds": 123.4,
+    "skipped": []
+  },
+  "final_font_normal": {
+    "summary": "100% tests passed out of 1",
+    "seconds": 34.58,
+    "skipped": []
+  },
+  "final_font_asan": {
+    "summary": "100% tests passed out of 1",
+    "seconds": 41.08,
+    "skipped": []
+  },
+  "firmware": {
+    "current": {
+      "bytes": 4268080,
+      "compiler_warnings": 0,
+      "cmake_warnings": 6
+    },
+    "baseline": {
+      "bytes": 4268416,
+      "compiler_warnings": 0,
+      "cmake_warnings": 6
+    },
+    "delta_bytes": -336,
+    "slot_bytes": 5242880,
+    "current_slot_free_bytes": 974800,
+    "new_font_symbols": [],
+    "application_linked": false,
+    "comparison_limit": "Separate checkout paths and build version metadata; not the footprint of the missing Mogo application."
+  },
+  "font_sources_verified": 10,
+  "gcccheck": "gcccheck: 5 compiled, 0 with findings",
+  "shutdown_reverse": "reverse close: original unload fails live == 0, exit -6; source unchanged",
+  "privacy_matches": 0,
+  "scope_check": "Only task paths; no font, firmware, design or shared document committed.",
+  "diff_check": "passed",
+  "old_reader_and_shell_diff_lines": 0
+}

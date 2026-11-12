@@ -1,0 +1,18 @@
+{
+  "bytes": 3897328,
+  "codepoints": 7319,
+  "han": 6763,
+  "glyphs": 13140,
+  "source_sha256": "b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a",
+  "sha256": "15ffa9ea43e5d6aec1cae8c1b1347c7390f29b5cb3cde97b185e7d7482bfa778",
+  "fonttools": "4.60.2",
+  "cu2qu_max_error_font_units": 1.0,
+  "missing": "未收录的字符由 Mogo 绘制 glyph 0（原字体的缺字方框）",
+  "native_host_result": "native file font: Chinese/Latin/size/missing-glyph/unload passed; host heap peak=12215443",
+  "scope": "Original file font engine in a host harness; not a product reading session or simulator RAM measurement.",
+  "content_path": "fonts/InkSC.ttf",
+  "license_path": "fonts/InkSC.OFL.txt",
+  "source_font_version": "Version 2.004;hotconv 1.0.118;makeotfexe 2.5.65603",
+  "source_face": 2,
+  "license_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+}
