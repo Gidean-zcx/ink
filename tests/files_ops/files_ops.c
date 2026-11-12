@@ -85,7 +85,7 @@ static void check_partial(void) { CHECK(F.notice && strstr(lv_label_get_text(F.n
 static bool row_marked;
 static void check_row(void) {
     target();
-    if (found) { lv_obj_t *row = lv_obj_get_parent(found); CHECK(lv_obj_get_style_border_width(row, 0) == ink_ui_px(INK_STROKE) && lv_obj_get_style_outline_width(row, 0) == 0 && lv_obj_get_style_text_decor(found, 0) == LV_TEXT_DECOR_NONE && lv_obj_has_flag(lv_obj_get_child(row, 7), LV_OBJ_FLAG_HIDDEN) != row_marked, "selection shows a check while retaining one row frame"); }
+    if (found) { lv_obj_t *row = lv_obj_get_parent(found); CHECK(lv_obj_get_style_border_width(row, 0) == 0 && lv_obj_get_style_outline_width(row, 0) == 0 && lv_obj_get_style_text_decor(found, 0) == LV_TEXT_DECOR_NONE && lv_obj_has_flag(lv_obj_get_child(row, 7), LV_OBJ_FLAG_HIDDEN) != row_marked, "selection shows a check on an unframed row"); }
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, row_marked ? "\"selected_count\":1" : "\"selected_count\":0"), "touch toggles the public selected count");
 }
 static void read_file(const char *path) {

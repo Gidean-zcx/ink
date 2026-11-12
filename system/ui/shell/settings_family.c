@@ -1,5 +1,6 @@
 /* Family settings use the existing member, settings and activity capabilities. */
 /* ui-scale-runtime: dimension y,w,h Layout derives from theme rows and the available page body. */
+/* ui-scale-runtime: dimension delete_h The translated action wraps to complete theme lines. */
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
@@ -145,7 +146,9 @@ static void records_create(void) {
     ink_ui_label(S.body, TR(RETENTION), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     ink_ui_label(S.body, TR(DELETE_NOTE), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
         y + ink_ui_text_height(TR(RETENTION), INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_XS, w);
-    lv_obj_t *del = ink_ui_pill(S.body, TR("删除这位家人的活动记录"), INK_MARGIN, INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, false, NULL, NULL);
+    int delete_h = LV_MAX(INK_CONTROL, ink_ui_text_height(TR("删除这位家人的活动记录"), INK_FONT_LIST,
+        INK_WEIGHT_MEDIUM, w - 2 * (INK_GAP_XS + INK_STROKE)) + 2 * INK_GAP_XS);
+    lv_obj_t *del = ink_ui_pill(S.body, TR("删除这位家人的活动记录"), INK_MARGIN, INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_MARGIN - delete_h, w, delete_h, false, NULL, NULL);
     ink_shell_bind(del, "activity.clear", R.args);
     R.fields[4] = (ink_ui_field_spec_t){.id = "retention", .role = "text", .label = TR(RETENTION), .value = TR(DELETE_NOTE)};
     R.fields[5] = (ink_ui_field_spec_t){.id = "member", .role = "status", .label = TR("家人"), .value = !strcmp(R.member, ink_member_current()->id) ? labels[0] : labels[1]};

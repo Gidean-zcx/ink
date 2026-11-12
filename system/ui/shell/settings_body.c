@@ -532,16 +532,16 @@ static void notify_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field
     int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
     int delete_w = ink_ui_text_width(TR("删除"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP;
     if (delete_w < INK_PRIMARY) delete_w = INK_PRIMARY;
-    int text_w = width() - INK_ROW_DOUBLE - delete_w - 2 * INK_GAP_L;
+    int left = INK_CIRCLE_SMALL + INK_GAP, text_w = width() - left - delete_w - 2 * INK_GAP_M;
     if (!lv_obj_get_child_count(slot)) {
-        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, text_w);
-        ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE,
+        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_BOLD, left, text_y, text_w);
+        ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, left,
             text_y + ink_ui_line_height(INK_FONT_LIST), text_w);
     }
     lv_label_set_text(lv_obj_get_child(slot, 0), n->title); lv_label_set_text(lv_obj_get_child(slot, 1), n->body);
     while (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
-    ink_ui_circle(slot, !strcmp(n->channel, "message") ? "message" : "bell", INK_GAP, (h - INK_CIRCLE) / 2,
-        INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
+    ink_ui_circle(slot, !strcmp(n->channel, "message") ? "message" : "bell", INK_GAP_XS, (h - INK_CIRCLE_SMALL) / 2,
+        INK_CIRCLE_SMALL, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
     ink_shell_bind(ink_ui_pill(slot, TR("删除"), width() - delete_w - INK_GAP_M, (h - INK_CONTROL) / 2,
         delete_w, INK_CONTROL, false, NULL, NULL), "notify.dismiss", N.notify_args[at]);
 }

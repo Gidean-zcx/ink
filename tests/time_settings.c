@@ -143,6 +143,8 @@ static void zones(void) {
     ink_alarm_t reminder = {.kind = INK_REMINDER, .at_utc = local(2026, 11, 10, 12, 0, 0)};
     snprintf(reminder.title, sizeof reminder.title, "SYNTH_UTC");
     CHECK(ink_alarm_add(&reminder) > 0, "seed a UTC reminder for calendar projection");
+    CHECK(WAIT_FOR(page_has("\"total\":2"), 3000), "calendar includes the alarm and UTC reminder");
+    CHECK(AI("calendar.next", NULL) && g_rc.status == INK_RC_DONE, "visit the UTC reminder on its own calendar page");
     CHECK(WAIT_FOR(page_has("12:00"), 3000), "calendar shows UTC reminder in Tokyo time");
     setting("time.zone", 0);
     CHECK(WAIT_FOR(page_has("11:00"), 3000), "visible calendar follows changed zone through service notification");

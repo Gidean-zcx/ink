@@ -38,6 +38,12 @@ static void press(const char *cap, int index) {
     if (found) tap(point.x, point.y);
     quiet();
 }
+static void press_day(const char *day) {
+    wanted_cap = NULL; wanted_label = day; pick = 0; on_ui(locate_target);
+    CHECK(found, "visible day %s can be touched", day);
+    if (found) tap(point.x, point.y);
+    quiet();
+}
 static void visible(const char *label) {
     wanted_cap = NULL; wanted_label = label; pick = 0; on_ui(locate_target); CHECK(found, "visible label: %s", label);
 }
@@ -66,9 +72,14 @@ static void expect(const char *text) { on_ui(read_snapshot); CHECK(strstr(snapsh
 static void absent(const char *text) { on_ui(read_snapshot); CHECK(!strstr(snapshot, text), "snapshot excludes %s", text); }
 static lv_area_t month_buttons[2], month_title;
 static unsigned month_found[2];
+static bool form_fits(lv_obj_t *obj);
 static void check_month_tree(lv_obj_t *obj) {
     if (!lv_obj_is_visible(obj)) return;
     const char *cap = ink_shell_bound_cap(obj);
+    if (lv_obj_check_type(obj, &lv_label_class) && lv_label_get_text(obj)[0])
+        CHECK(form_fits(obj), "calendar label is complete and unclipped: %.90s", lv_label_get_text(obj));
+    if (cap && (!strcmp(cap, "calendar.grid_prev") || !strcmp(cap, "calendar.grid_next")))
+        CHECK(lv_obj_get_width(obj) >= ink_ui_px(INK_CONTROL) && lv_obj_get_height(obj) >= ink_ui_px(INK_CONTROL), "grid paging keeps a full touch target");
     if (cap && (!strcmp(cap, "calendar.month_prev") || !strcmp(cap, "calendar.month_next"))) {
         unsigned i = !strcmp(cap, "calendar.month_next"); month_found[i]++;
         lv_area_t *a = &month_buttons[i]; lv_obj_get_coords(obj, a);
@@ -184,8 +195,9 @@ static void run(void *arg) {
     call_ok("calendar.prev", NULL); expect("\"page\":1");
     press("calendar.open", 0); CHECK(!strcmp(ink_ui_page_name(), "Calendar"), "the real month button opens Calendar");
     expect("2026年11月4日"); expect("今晚读书"); absent("带作业本"); capture("Calendar");
-    press("calendar.select", 4); expect("2026年11月5日"); expect("起床"); expect("带作业本"); absent("今晚读书");
-    call_ok("calendar.next", NULL); expect("放学取快递");
+    press("calendar.select", 4); expect("2026年11月5日"); expect("起床"); absent("带作业本"); absent("今晚读书");
+    call_ok("calendar.next", NULL); expect("带作业本"); expect("\"page\":2");
+    call_ok("calendar.next", NULL); expect("放学取快递"); expect("\"page\":3");
     call_ok("calendar.select", "{\"day\":6}"); expect("家长会"); expect("\"page\":1");
     call_ok("calendar.select", "{\"day\":7}"); expect("\"total\":0"); visible("这一天没有提醒和闹钟");
     press("calendar.month_next", 0); expect("2026年12月1日");
@@ -195,7 +207,12 @@ static void run(void *arg) {
     CHECK(AI("calendar.select", "{\"day\":0}") && g_rc.status == INK_RC_INVALID, "day zero is rejected by the shared schema"); quiet();
     call_ok("calendar.month_prev", NULL); expect("2026年10月1日");
     call_ok("calendar.month_prev", NULL); call_ok("calendar.month_prev", NULL); expect("2026年8月1日");
-    press("calendar.select", 30); expect("2026年8月31日"); on_ui(check_month_controls);
+    expect("\"id\":\"weeks\""); expect("1/2"); on_ui(check_month_controls);
+    CHECK(AI("calendar.grid_prev", NULL) && g_rc.status == INK_RC_INVALID, "the first grid page has no previous page"); quiet();
+    press("calendar.grid_next", 0); expect("2/2"); on_ui(check_month_controls);
+    CHECK(AI("calendar.grid_next", NULL) && g_rc.status == INK_RC_INVALID, "the last grid page has no next page"); quiet();
+    press_day("31"); expect("2026年8月31日"); expect("2/2"); on_ui(check_month_controls);
+    call_ok("calendar.select", "{\"day\":1}"); expect("1/2"); visible("1");
     add(INK_ALARM, 4, 7, "每天合成闹钟", true); quiet();
     call_ok("calendar.month_next", NULL); call_ok("calendar.month_next", NULL); call_ok("calendar.month_next", NULL);
     call_ok("calendar.select", "{\"day\":7}"); expect("每天合成闹钟");
@@ -207,12 +224,18 @@ static void run(void *arg) {
     on_ui(check_month_controls); capture("ChildCalendar");
     press("calendar.month_prev", 0); call_ok("calendar.month_prev", NULL); call_ok("calendar.month_prev", NULL);
     expect("2026年8月1日"); on_ui(check_month_controls); capture("ChildSixRows");
+    press("calendar.grid_next", 0); on_ui(check_month_controls); capture("ChildSixRowsEnd");
     CHECK(ink_member_switch(owner) == 0, "return to the original member"); quiet();
     call_ok("app.open", "{\"id\":\"upcoming\"}"); absent("孩子的合成提醒"); expect("今晚读书");
     ink_time_set(local_time(2026, 11, 5, 6, 0), false); quiet(); absent("今晚读书"); expect("起床");
     call_ok("settings.set", "{\"id\":\"display.font_size\",\"value\":3}");
     call_ok("calendar.open", NULL); call_ok("calendar.select", "{\"day\":5}");
     on_ui(check_month_controls); capture("LargeFontCalendar");
+    for (int i = 0; i < 3; i++) call_ok("calendar.month_prev", NULL);
+    expect("2026年8月1日"); on_ui(check_month_controls); capture("LargeSixRows");
+    press("calendar.grid_next", 0); on_ui(check_month_controls); capture("LargeSixRowsEnd");
+    press_day("31"); expect("2026年8月31日");
+    for (int i = 0; i < 3; i++) call_ok("calendar.month_next", NULL);
     press("calendar.month_next", 0); expect("2026年12月1日"); call_ok("calendar.month_prev", NULL);
     call_ok("calendar.select", "{\"day\":5}");
     ink_time_set(local_time(2026, 11, 5, 6, 1) + 55, false); quiet();

@@ -1,0 +1,362 @@
+[
+  {
+    "scene": "Main",
+    "size": 1,
+    "before_sha256": "a571add02192eb08fe6d24e9ed9f3686c5f62bd3581c26bd77186855b9489ee8",
+    "after_sha256": "ce4bebdb8d604de2f19db3e20983b70a64c015faf7060601f788d5a4f7e6433f"
+  },
+  {
+    "scene": "Today",
+    "size": 1,
+    "before_sha256": "c989cf7fc0a806f68e799802542c8f54704b6e3b7e077a75a96e86c8d4784cde",
+    "after_sha256": "1d10697e16bab551cfb1dd172894935723e836c26121a8b18f4c870964590fbb"
+  },
+  {
+    "scene": "Apps",
+    "size": 1,
+    "before_sha256": "2a6c4c407e651c130a092fa934cd7cece24b76a58389dcd09bf6649aaec198d8",
+    "after_sha256": "a4122c1602588c4ff769b4611d3c60423c541ad821a63afc3ba2ea840fdddc65"
+  },
+  {
+    "scene": "Control",
+    "size": 1,
+    "before_sha256": "09482aa4a4180d090224ad39aef8e9a6ae59e1519681c3948e97fcfdc4a28e74",
+    "after_sha256": "09482aa4a4180d090224ad39aef8e9a6ae59e1519681c3948e97fcfdc4a28e74"
+  },
+  {
+    "scene": "Lock",
+    "size": 1,
+    "before_sha256": "d8573b4be43a95cc5000ca7957772e164528b63d72ab4471f1d8673bfb04c423",
+    "after_sha256": "d8573b4be43a95cc5000ca7957772e164528b63d72ab4471f1d8673bfb04c423"
+  },
+  {
+    "scene": "Settings",
+    "size": 1,
+    "before_sha256": "2ac4adece0736078971db4a852b9934fbc0a1f849e8b6aca311ddd8811c73b9c",
+    "after_sha256": "2ac4adece0736078971db4a852b9934fbc0a1f849e8b6aca311ddd8811c73b9c"
+  },
+  {
+    "scene": "SetDisplay",
+    "size": 1,
+    "before_sha256": "2611c9b89f0878f33f08057ca57ff8431f1b63ba88b403a7ef3d043c52066870",
+    "after_sha256": "2611c9b89f0878f33f08057ca57ff8431f1b63ba88b403a7ef3d043c52066870"
+  },
+  {
+    "scene": "SetSound",
+    "size": 1,
+    "before_sha256": "38c3e75cf9b8cc2e149d237b9ccee89b18f7b5220b6fd39b86124444eaf1e56f",
+    "after_sha256": "38c3e75cf9b8cc2e149d237b9ccee89b18f7b5220b6fd39b86124444eaf1e56f"
+  },
+  {
+    "scene": "SetNetwork",
+    "size": 1,
+    "before_sha256": "4543ad764073262b4237571bbaaf1587793d22b38e6046443894e48d965f7fb3",
+    "after_sha256": "4543ad764073262b4237571bbaaf1587793d22b38e6046443894e48d965f7fb3"
+  },
+  {
+    "scene": "ImePinyin",
+    "size": 1,
+    "before_sha256": "62772d7b1effa3f541e02450234d8e3c9e89b46955b4078deff4074c77df603a",
+    "after_sha256": "0e6c5ba870a0031aa45f2005e899a7d9273bdd062d3c5d977c19bf0abd925c07"
+  },
+  {
+    "scene": "Ai",
+    "size": 1,
+    "before_sha256": "5094ceca65149be4a2665120becce589b910068d598a74e9da215f5a163514a4",
+    "after_sha256": "5094ceca65149be4a2665120becce589b910068d598a74e9da215f5a163514a4"
+  },
+  {
+    "scene": "Confirm",
+    "size": 1,
+    "before_sha256": "c11b9d157880440428e19af485561bb8a536978dc170f5e43b6e8df8cc614705",
+    "after_sha256": "c11b9d157880440428e19af485561bb8a536978dc170f5e43b6e8df8cc614705"
+  },
+  {
+    "scene": "PowerMenu",
+    "size": 1,
+    "before_sha256": "3abcff6f54c3eb8cdbf884bba20931839d4e8b054a10f83b1b72fd27bc20a5d8",
+    "after_sha256": "3abcff6f54c3eb8cdbf884bba20931839d4e8b054a10f83b1b72fd27bc20a5d8"
+  },
+  {
+    "scene": "SetAbout",
+    "size": 1,
+    "before_sha256": "852b7fc8ee58fbcb3f4c82392c8068739a12abfe2d4798260612e6c3d9738e67",
+    "after_sha256": "33a8cd0c15ab2715af590853a41cea312044b40a116781af041e3e1d1964071e"
+  },
+  {
+    "scene": "Sms",
+    "size": 1,
+    "before_sha256": "2f7c3ae62ca36a0db14c47e5955d650c9adcff297da213774c70feadbd19d382",
+    "after_sha256": "37c32e49b145e971275de0e590248a1008ab9bd549c79ef3ffbfd19951365768"
+  },
+  {
+    "scene": "SmsThread",
+    "size": 1,
+    "before_sha256": "f24065bac72ab565059431b444ad229cc3d9ff5ff58dd3a23613f897544c5d3d",
+    "after_sha256": "f130a123ab2c29b6042be9f4baf498303f07977422c82d46d8cb3bf1272b73a8"
+  },
+  {
+    "scene": "Phone",
+    "size": 1,
+    "before_sha256": "ab668e6064fae108b070b3b83fa5becac493794a416579c8f7efa774a379462f",
+    "after_sha256": "c30537a7306cb94fd2151aae1028d8f549fc93761444a7ec9161bf7a5ba966c3"
+  },
+  {
+    "scene": "PhoneRecents",
+    "size": 1,
+    "before_sha256": "8f8c578ad39468569b3207de68249d4617c12397ff219ed133b90498d57adfa5",
+    "after_sha256": "6ca2986f13acbc361dd32c02cb89a7b9c7dff80a5cf5dc4053409f0e9ac22a6b"
+  },
+  {
+    "scene": "PhoneCall",
+    "size": 1,
+    "before_sha256": "64f471de9afa44ed90cd809965ef25a597ae802a1960543f01f8a3252d94834a",
+    "after_sha256": "8c0c2b0d3eff34019a0d5352ab3736537ba849d0f2b05665d8d22de7b3032b9c"
+  },
+  {
+    "scene": "Contacts",
+    "size": 1,
+    "before_sha256": "068b15c1e78e4dec7fd1a60f25a0b4f674df229614b07d24a549d2b5e80d9547",
+    "after_sha256": "dbe4b56fed266450f9db1f8fe8aea4d561a3b04daa826f22a8a2be585b56d2d4"
+  },
+  {
+    "scene": "MemoEdit",
+    "size": 1,
+    "before_sha256": "527984688a9c4e12fae8fc7cc93712267ce44cdfb3841dffa6f9c02a3e17e8be",
+    "after_sha256": "eff40083b2c23f79fb4e83cf80678a47b1384a82810a54df7374f53d6bc65ca0"
+  },
+  {
+    "scene": "Clock",
+    "size": 1,
+    "before_sha256": "c4e31cca42a2dbe8a6288e49ada8f8add4173dce6b6c9d83bba5ea3eacbf3e35",
+    "after_sha256": "e754d3e9380da481b75068796c205fc3a8dc744985752f5bea85b72c34feded0"
+  },
+  {
+    "scene": "ClockTimer",
+    "size": 1,
+    "before_sha256": "dc4fda00301b2a49848d31acfe97e6941088e56f7e96e4720408e0ffb529bab8",
+    "after_sha256": "dc4fda00301b2a49848d31acfe97e6941088e56f7e96e4720408e0ffb529bab8"
+  },
+  {
+    "scene": "ClockStopwatch",
+    "size": 1,
+    "before_sha256": "4a40b5dd1c92f1ad59a942c52c355043c12e74d316cb3e89b2e7214fe1cd3e57",
+    "after_sha256": "4a40b5dd1c92f1ad59a942c52c355043c12e74d316cb3e89b2e7214fe1cd3e57"
+  },
+  {
+    "scene": "Calculator",
+    "size": 1,
+    "before_sha256": "5bbe56eb06c000e8d14b3cc21ee56ed670c584541a2dd9691cf8b012c73684a6",
+    "after_sha256": "5bbe56eb06c000e8d14b3cc21ee56ed670c584541a2dd9691cf8b012c73684a6"
+  },
+  {
+    "scene": "Calendar",
+    "size": 1,
+    "before_sha256": "07628f4fd6736e718f77886ba44b7ca28c1f58c341230d973cd2828dfc06da44",
+    "after_sha256": "d7c45c28e233d8a1c1dc36f247f59f7376c149c05b0ae0b9a22b6e7a85ec844f"
+  },
+  {
+    "scene": "Weather",
+    "size": 1,
+    "before_sha256": "6d66036f62d98be190d41adcc4432efe474dceebb12594f68ef19aff7aa67516",
+    "after_sha256": "6d66036f62d98be190d41adcc4432efe474dceebb12594f68ef19aff7aa67516"
+  },
+  {
+    "scene": "Gallery",
+    "size": 1,
+    "before_sha256": "3fef87d42e113799c70163eb9ebf18474717398a74cd3f024a6a65d401fab93a",
+    "after_sha256": "1ebc6b768f72626f125e047daf37139d884394890c325c7993dba0b7b98378cd"
+  },
+  {
+    "scene": "Camera",
+    "size": 1,
+    "before_sha256": "680a02a3c3351ff03590a7a07e9bd5870348023bd5694d6a71cf2c94befcd866",
+    "after_sha256": "680a02a3c3351ff03590a7a07e9bd5870348023bd5694d6a71cf2c94befcd866"
+  },
+  {
+    "scene": "Files",
+    "size": 1,
+    "before_sha256": "03aa0be7c7c870aeb26b4677b963ac87aed2bcd7644734cd12d2d1b6a230ba5d",
+    "after_sha256": "44170e1418d2123fce19f0e64698c55153cccfaa5c1b3b2c994123a0588599c5"
+  },
+  {
+    "scene": "Main",
+    "size": 3,
+    "before_sha256": "bfb26f2a6f37d3b8ec8f124b1cd5c29f37f2efb2c05ae11e5e5b368d389b7fc4",
+    "after_sha256": "4c80028f7e590dd9e58dbd90c0f096fb59469bfb93939bb2e74c4506160b0298"
+  },
+  {
+    "scene": "Today",
+    "size": 3,
+    "before_sha256": "48bf72aabacb2bf99cf56a8e7559774ae817c47d1fe8df480a7d1ca72993e370",
+    "after_sha256": "d25ecb271ca5d5531989ba62b87be5017103dd73affb709aec32ae76e39ce7ea"
+  },
+  {
+    "scene": "Apps",
+    "size": 3,
+    "before_sha256": "eb90565ad4c526e40b5a37cad58bc9a352c503c09ebdf13fe9b72cdfc381cf72",
+    "after_sha256": "39458c0f81995c6d98f214ad55a02585ee341f8d7ef3eb0fd469416fbff97535"
+  },
+  {
+    "scene": "Control",
+    "size": 3,
+    "before_sha256": "69890e34946507373ca9bd9f9ac5f6f9ec466b0869102d49e6a54042b0bfe69d",
+    "after_sha256": "69890e34946507373ca9bd9f9ac5f6f9ec466b0869102d49e6a54042b0bfe69d"
+  },
+  {
+    "scene": "Lock",
+    "size": 3,
+    "before_sha256": "1854043c293c8131b16f591b7c612f9ada6e0bca0078350ba38f155b9d313fcb",
+    "after_sha256": "1854043c293c8131b16f591b7c612f9ada6e0bca0078350ba38f155b9d313fcb"
+  },
+  {
+    "scene": "Settings",
+    "size": 3,
+    "before_sha256": "7bb5de13628e1797c8250589ebb7d9f935ad855d014d71ad1c911a9f5842aad8",
+    "after_sha256": "7bb5de13628e1797c8250589ebb7d9f935ad855d014d71ad1c911a9f5842aad8"
+  },
+  {
+    "scene": "SetDisplay",
+    "size": 3,
+    "before_sha256": "f6d1c2bb878d1812cd09c9f76810b506c616c3b8e82f506fdddd021acf2aef02",
+    "after_sha256": "2eb72421b5d15447d544fd9cd8cfb9ad90dfdaba8f4ba2b6d2e1ec6eb9c5c6ae"
+  },
+  {
+    "scene": "SetSound",
+    "size": 3,
+    "before_sha256": "3b71090814588b95637224c3d6b214c0786d9ad24849446bf595e069a00f690a",
+    "after_sha256": "3b71090814588b95637224c3d6b214c0786d9ad24849446bf595e069a00f690a"
+  },
+  {
+    "scene": "SetNetwork",
+    "size": 3,
+    "before_sha256": "e3f21275c10df669f298569e9f442ae2116bb2d61928803ad817928de4f72dac",
+    "after_sha256": "702ac5f4c22cd33c54d0c9fb09546067b373ff9ae1fc1a65b7cfb1a0cc682d35"
+  },
+  {
+    "scene": "ImePinyin",
+    "size": 3,
+    "before_sha256": "26023283e807b657d817270262345155d6b1127a24aa6f222f27c3fc5e6f33d5",
+    "after_sha256": "25b37bf9392cbe4a61095d7f357fe79b7502b34a8e89ce53acf64fa089cfd4b6"
+  },
+  {
+    "scene": "Ai",
+    "size": 3,
+    "before_sha256": "c9d2602fe569cc6942740fb372ade916120dc9e17bef26db9caeba0b757729dd",
+    "after_sha256": "c9d2602fe569cc6942740fb372ade916120dc9e17bef26db9caeba0b757729dd"
+  },
+  {
+    "scene": "Confirm",
+    "size": 3,
+    "before_sha256": "18330d78ad5bc503eb9dc4be0711bdca757a663be6a5896271a2003d30d09cab",
+    "after_sha256": "18330d78ad5bc503eb9dc4be0711bdca757a663be6a5896271a2003d30d09cab"
+  },
+  {
+    "scene": "PowerMenu",
+    "size": 3,
+    "before_sha256": "0d80de73e7e700ba1da8f07f203e849426394e2da201c5d5e1188449ef86e90d",
+    "after_sha256": "0d80de73e7e700ba1da8f07f203e849426394e2da201c5d5e1188449ef86e90d"
+  },
+  {
+    "scene": "SetAbout",
+    "size": 3,
+    "before_sha256": "06a6603bf7b39cf0df1cfc8126c235eb4d4bfe85d23302a0d89a839980490b53",
+    "after_sha256": "c133642a068c6a414bf119774f1fd870e74435dc6597cfbc6a6def38ed72a5d9"
+  },
+  {
+    "scene": "Sms",
+    "size": 3,
+    "before_sha256": "67c9f4793ff15669109990c5dfc710618cb84409a86539130ebd343cf4cf4550",
+    "after_sha256": "1e50c170f409cc50262161bfce594ff59a26ca9aea964a7b336dae82e0af2454"
+  },
+  {
+    "scene": "SmsThread",
+    "size": 3,
+    "before_sha256": "1606e03f45b62113f73e97945f16faaf401e54a5ca63ee6405a725300de64ba3",
+    "after_sha256": "4a4f979b6dcac80dea9ac8df2dc65399cb938d5fd56fac3f6f603c81af60579a"
+  },
+  {
+    "scene": "Phone",
+    "size": 3,
+    "before_sha256": "3daea35a6a0f93cd8d2fac091f84a3f854634c84369309236a034622c042bf29",
+    "after_sha256": "42a53ad41de202090a86430b62cbfaf2bcc505ef23035a4c51c60e71db5d6985"
+  },
+  {
+    "scene": "PhoneRecents",
+    "size": 3,
+    "before_sha256": "e4cc2ade9633036b9b28e32550d5377b38bb79465a000a94349632930ce0fb28",
+    "after_sha256": "798b5a7c0fdba95828ba60f75f8c0c4334a75d8c868a45f93fdd0cddc791e70a"
+  },
+  {
+    "scene": "PhoneCall",
+    "size": 3,
+    "before_sha256": "0bccea98e19c8756392d2b76e11d52e90168f1e7bd84e2a143bee36da2624316",
+    "after_sha256": "54bbf28753cd855c695010f6ced85024647f5ae31652441a66b6c4373f8e4705"
+  },
+  {
+    "scene": "Contacts",
+    "size": 3,
+    "before_sha256": "54f25025232a35014e3a9d85ae6ce332b67928b738a43f1edc740db076648288",
+    "after_sha256": "1ca9630cd65f1467ad568e5cd3923afd7a99de00072adf3ad9f1040414b9ab5e"
+  },
+  {
+    "scene": "MemoEdit",
+    "size": 3,
+    "before_sha256": "b7ca8e8fd94fd0f49b28dfdaea9d8bad79116f6ae2ee487d79c7a91cfccb06f2",
+    "after_sha256": "e4afd5504f9c72ec6ebdd127ed266836b6612122852d1c071c44ff7defb8cdf7"
+  },
+  {
+    "scene": "Clock",
+    "size": 3,
+    "before_sha256": "5b9a968cdf243669736b737d3a48ba5a1a26cb037a4e361594353385c0956c21",
+    "after_sha256": "65c10c001a950ac448f1b1ecd9c24ba703e101b78898199a4c45fa69dcff6437"
+  },
+  {
+    "scene": "ClockTimer",
+    "size": 3,
+    "before_sha256": "85ee0e77484b773972380a870a31184fdf6f37555f799e41d77aa2f04e843617",
+    "after_sha256": "85ee0e77484b773972380a870a31184fdf6f37555f799e41d77aa2f04e843617"
+  },
+  {
+    "scene": "ClockStopwatch",
+    "size": 3,
+    "before_sha256": "667d3f2dbf41e64619bee6d049e4163794cf89fe658e3b507cbace6e66deedb6",
+    "after_sha256": "667d3f2dbf41e64619bee6d049e4163794cf89fe658e3b507cbace6e66deedb6"
+  },
+  {
+    "scene": "Calculator",
+    "size": 3,
+    "before_sha256": "5eb075879a9f2fdc96a601107c976a8ff7d150c1dab28a046ab0b8e20409967f",
+    "after_sha256": "5eb075879a9f2fdc96a601107c976a8ff7d150c1dab28a046ab0b8e20409967f"
+  },
+  {
+    "scene": "Calendar",
+    "size": 3,
+    "before_sha256": "dbf2eea870a9b2aaa39e74becf6cabfe9b48402ce1d01b69591ef2aadf5a7e8c",
+    "after_sha256": "d58505a1ec250fd7d1a6ac3e6a8d33cb0e77ae40737980cd2a0dbcceab425d9b"
+  },
+  {
+    "scene": "Weather",
+    "size": 3,
+    "before_sha256": "b9caa9d14243b0199a3b0884b0433c5cfd4d86a567f79a6d01781c2030aaa2b5",
+    "after_sha256": "b9caa9d14243b0199a3b0884b0433c5cfd4d86a567f79a6d01781c2030aaa2b5"
+  },
+  {
+    "scene": "Gallery",
+    "size": 3,
+    "before_sha256": "fce4bbb8476cab5004839525c0213685b6871c387bce4ef420e71566ccbe3c24",
+    "after_sha256": "427213b3d5781b5f3513a869adde075af05e7fd0a52da4fe597832c6503b7c80"
+  },
+  {
+    "scene": "Camera",
+    "size": 3,
+    "before_sha256": "94fbb4f604e640ed0c459400b4c9d7b9b77d344b5d42961e8867fb324058055d",
+    "after_sha256": "94fbb4f604e640ed0c459400b4c9d7b9b77d344b5d42961e8867fb324058055d"
+  },
+  {
+    "scene": "Files",
+    "size": 3,
+    "before_sha256": "651eab363dabf4bb86d387b9dd5f1311254d4f0a6445ed2d9ab92cf68b9cf5ec",
+    "after_sha256": "651eab363dabf4bb86d387b9dd5f1311254d4f0a6445ed2d9ab92cf68b9cf5ec"
+  }
+]

@@ -1,6 +1,7 @@
 /* Shared geometry and components; no service state lives here. */
 /* ui-scale-runtime: dimension x,y,w,h,px,radius,diameter,icon_px,height Public component arguments; each caller is checked. */
 /* ui-scale-runtime: dimension offset_x,offset_y,ink_ui_line_height,text_px,moved,descent_at,value_width Theme scaling and font metrics, not independent pixel choices. */
+/* ui-scale-runtime: dimension minimum,left,right Segment widths reserve measured captions before distributing spare width. */
 /* ui-scale-runtime: font px Public font argument; ink_ui_font_px and line-height callers are checked. */
 /* ui-scale-runtime: icon icon_px Public circle argument; ink_ui_circle callers are checked. */
 /* ui-scale-runtime: radius radius Public box argument; ink_ui_box callers are checked. */
@@ -22,8 +23,11 @@ static const int FONT_LINE[] = {INK_LINE_STATUS, INK_LINE_NOTE, INK_LINE_LIST, I
 enum { GLYPH_SCALE_COST = 8 }; /* a scaled glyph, in plain glyphs: estimate until measured on the device */
 static const int TEXT_PERCENT[] = {90, 100, 110, 120}; /* the 字号 setting */
 typedef struct { ink_font_t *primary; int px, thicken; } font_face_t;
-static lv_font_t fitted[4][3][9] INK_PSRAM_BSS; /* text size, weight, token */
-static font_face_t faces[4][3][9] INK_PSRAM_BSS;
+enum { FONT_TOKENS = 9 };
+_Static_assert(sizeof FONT_PX / sizeof *FONT_PX <= FONT_TOKENS, "font tokens fit");
+_Static_assert(sizeof FONT_LINE / sizeof *FONT_LINE == sizeof FONT_PX / sizeof *FONT_PX, "font lines match");
+static lv_font_t fitted[4][3][FONT_TOKENS] INK_PSRAM_BSS; /* text size, weight, token */
+static font_face_t faces[4][3][FONT_TOKENS] INK_PSRAM_BSS;
 static ink_font_t *fallback;
 static lv_obj_t *captures[24];
 
@@ -120,8 +124,9 @@ int ink_ui_width(void) { return lv_display_get_horizontal_resolution(NULL); }
 int ink_ui_height(void) { return lv_display_get_vertical_resolution(NULL); }
 int ink_ui_px(int px) {
     int w = ink_ui_width(), h = ink_ui_height();
-    if (w * INK_CANVAS_H <= h * INK_CANVAS_W) return (px * w + INK_CANVAS_W / 2) / INK_CANVAS_W;
-    return (px * h + INK_CANVAS_H / 2) / INK_CANVAS_H;
+    int sign = px < 0 ? -1 : 1;
+    if (w * INK_CANVAS_H <= h * INK_CANVAS_W) return (px * w + sign * INK_CANVAS_W / 2) / INK_CANVAS_W;
+    return (px * h + sign * INK_CANVAS_H / 2) / INK_CANVAS_H;
 }
 static int offset_x(lv_obj_t *parent) {
     return lv_obj_get_width(parent) == ink_ui_width() ? (ink_ui_width() - ink_ui_px(INK_CANVAS_W)) / 2 : 0;
@@ -131,7 +136,8 @@ static int offset_y(lv_obj_t *parent) {
 }
 lv_color_t ink_ui_paper(void) { return lv_color_white(); }
 lv_color_t ink_ui_ink(void) { return lv_color_black(); }
-lv_color_t ink_ui_secondary(void) { return lv_color_hex(0x000000); } /* chosen on the real panel too: secondary text differs by size, not by gray */
+lv_color_t ink_ui_secondary(void) { return lv_color_hex(0x666666); }
+lv_color_t ink_ui_separator(void) { return lv_color_hex(0x888888); }
 
 ink_ui_surface_t ink_ui_surface_kind(const lv_obj_t *obj) {
     if (lv_obj_has_flag(obj, LV_OBJ_FLAG_USER_2)) return INK_SURFACE_STATIC;
@@ -142,15 +148,11 @@ void ink_ui_surface_style(lv_obj_t *obj, ink_ui_surface_t surface, bool border) 
     lv_obj_remove_flag(obj, LV_OBJ_FLAG_USER_2 | LV_OBJ_FLAG_USER_3);
     if (surface == INK_SURFACE_STATIC) lv_obj_add_flag(obj, LV_OBJ_FLAG_USER_2);
     if (surface == INK_SURFACE_BLACK) lv_obj_add_flag(obj, LV_OBJ_FLAG_USER_3);
-    lv_obj_t *parent = lv_obj_get_parent(obj);
-    bool frame = surface == INK_SURFACE_STATIC && (!parent || ink_ui_surface_kind(parent) != INK_SURFACE_STATIC);
     lv_obj_set_style_bg_color(obj, surface == INK_SURFACE_BLACK ? ink_ui_ink() : ink_ui_paper(), 0);
     lv_obj_set_style_text_color(obj, surface == INK_SURFACE_BLACK ? ink_ui_paper() : ink_ui_ink(), 0);
     lv_obj_set_style_border_color(obj, ink_ui_ink(), 0);
-    lv_obj_set_style_border_width(obj, border || frame ? ink_ui_px(INK_STROKE) : 0, 0);
+    lv_obj_set_style_border_width(obj, border ? ink_ui_px(INK_STROKE) : 0, 0);
     lv_obj_set_style_border_post(obj, surface == INK_SURFACE_STATIC, 0);
-    /* A new frame must not move the old contents or be covered by its rows. */
-    if (surface == INK_SURFACE_STATIC) lv_obj_set_style_pad_all(obj, frame && !border ? 0 - ink_ui_px(INK_STROKE) : 0, 0);
 }
 
 /* 字号 moves all text by one factor; a child reads one step above the middle (docs/product/legibility.md).
@@ -195,6 +197,8 @@ static ink_font_t *face_of(int px, ink_ui_weight_t weight) {
 }
 
 const lv_font_t *ink_ui_font_px(int px, ink_ui_weight_t weight) {
+    if (px == INK_FONT_LIST) px = INK_FONT_BODY;
+    if (px > INK_FONT_HEADING && weight == INK_WEIGHT_REGULAR) weight = INK_WEIGHT_MEDIUM;
     int level = text_level(), at = token_at(px);
     if ((unsigned)weight > INK_WEIGHT_BOLD) weight = INK_WEIGHT_REGULAR;
     lv_font_t *font = &fitted[level][weight][at];
@@ -268,19 +272,56 @@ static void bind(lv_obj_t *o, lv_event_cb_t cb, void *ctx) {
 }
 
 lv_obj_t *ink_ui_card(lv_obj_t *parent, int x, int y, int w, int h, ink_ui_surface_t surface) {
-    return ink_ui_box(parent, x, y, w, h, INK_RADIUS_CARD, surface, surface == INK_SURFACE_WHITE);
+    return ink_ui_box(parent, x, y, w, h, INK_RADIUS_CARD, surface, false);
 }
 
 lv_obj_t *ink_ui_pill(lv_obj_t *parent, const char *text, int x, int y, int w, int h, bool primary, lv_event_cb_t cb, void *ctx) {
     lv_obj_t *b = lv_button_create(parent);
-    box_style(b, x, y, w, h, -1, primary ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, !primary);
+    box_style(b, x, y, w < INK_CONTROL ? INK_CONTROL : w, h < INK_CONTROL ? INK_CONTROL : h, INK_RADIUS_KEY,
+              primary ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, !primary);
     bind(b, cb, ctx);
     lv_obj_set_style_pad_hor(b, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_t *l = ink_ui_line(b, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, 0, 0);
     lv_obj_set_width(l, LV_PCT(100));
+    if (h >= 2 * ink_ui_line_height(INK_FONT_LIST)) {
+        lv_label_set_long_mode(l, LV_LABEL_LONG_WRAP);
+        lv_obj_set_height(l, LV_SIZE_CONTENT);
+    }
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_center(l);
     return b;
+}
+
+lv_obj_t *ink_ui_text_button(lv_obj_t *parent, const char *text, int x, int y, int w, lv_event_cb_t cb, void *ctx) {
+    lv_obj_t *b = ink_ui_pill(parent, text, x, y, w, INK_CONTROL, false, cb, ctx);
+    lv_obj_set_style_border_width(b, 0, 0);
+    lv_obj_set_style_bg_opa(b, LV_OPA_TRANSP, 0);
+    return b;
+}
+
+lv_obj_t *ink_ui_switch_tile(lv_obj_t *parent, const char *icon, const char *title, const char *state,
+                            bool on, bool enabled, int x, int y, int w, lv_event_cb_t cb, void *ctx) {
+    lv_obj_t *b = ink_ui_box(parent, x, y, w, INK_CONTROL, INK_RADIUS_KEY,
+                              on ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, !on);
+    bind(b, cb, ctx);
+    lv_obj_set_state(b, LV_STATE_DISABLED, !enabled);
+    if (!enabled) lv_obj_set_style_text_color(b, ink_ui_secondary(), 0);
+    ink_ui_icon(b, icon, INK_ICON_SMALL, INK_ICON_LINE, INK_GAP_M, (INK_CONTROL - INK_ICON_SMALL) / 2, on);
+    int left = INK_GAP_M + INK_ICON_SMALL + INK_GAP_M;
+    ink_ui_line(b, title, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, left, 0, w - left - INK_GAP_M);
+    ink_ui_line(b, state, INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, ink_ui_line_height(INK_FONT_NOTE), w - left - INK_GAP_M);
+    return b;
+}
+
+lv_obj_t *ink_ui_empty(lv_obj_t *parent, const char *text, const char *action, lv_event_cb_t cb, void *ctx) {
+    int w = INK_CANVAS_W - 2 * INK_MARGIN, line = ink_ui_line_height(INK_FONT_NOTE);
+    int h = line + (action && cb ? INK_GAP + INK_CONTROL : 0);
+    lv_obj_t *box = ink_ui_box(parent, INK_MARGIN, (INK_CANVAS_H - h) / 2, w, h, 0, INK_SURFACE_WHITE, false);
+    lv_obj_t *l = ink_ui_line(box, text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, 0, w);
+    lv_obj_set_style_text_color(l, ink_ui_secondary(), 0);
+    lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
+    if (action && cb) ink_ui_text_button(box, action, 0, line + INK_GAP, w, cb, ctx);
+    return box;
 }
 
 void ink_ui_pill_text(lv_obj_t *pill, int px, ink_ui_weight_t weight) {
@@ -291,10 +332,14 @@ void ink_ui_pill_text(lv_obj_t *pill, int px, ink_ui_weight_t weight) {
 
 lv_obj_t *ink_ui_circle(lv_obj_t *parent, const char *icon, int x, int y, int diameter, int icon_px,
                         ink_ui_surface_t surface, lv_event_cb_t cb, void *ctx) {
-    lv_obj_t *b = ink_ui_box(parent, x, y, diameter, diameter, -1, surface, surface == INK_SURFACE_WHITE && cb);
+    int size = cb && diameter < INK_CONTROL ? INK_CONTROL : diameter;
+    lv_obj_t *b = ink_ui_box(parent, x, y, size, size, 0, INK_SURFACE_WHITE, false);
+    lv_obj_set_style_bg_opa(b, LV_OPA_TRANSP, 0);
+    if (size < INK_CONTROL) lv_obj_set_ext_click_area(b, ink_ui_px((INK_CONTROL - size + 1) / 2));
     bind(b, cb, ctx);
+    bool white = ink_ui_surface_kind(parent) == INK_SURFACE_BLACK;
     ink_ui_icon(b, icon, icon_px, surface == INK_SURFACE_BLACK ? INK_ICON_SOLID : INK_ICON_LINE,
-                (diameter - icon_px) / 2, (diameter - icon_px) / 2, surface == INK_SURFACE_BLACK);
+                (size - icon_px) / 2, (size - icon_px) / 2, white);
     return b;
 }
 
@@ -303,10 +348,12 @@ lv_obj_t *ink_ui_toggle(lv_obj_t *parent, const char *title, bool on, int x, int
     lv_obj_set_style_bg_opa(row, LV_OPA_TRANSP, 0);
     bind(row, cb, ctx);
     ink_ui_line(row, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2, w - INK_PRIMARY - INK_GAP);
-    lv_obj_t *track = ink_ui_box(row, w - INK_PRIMARY, (INK_CONTROL - INK_RADIUS_PANEL) / 2,
-                                 INK_PRIMARY, INK_RADIUS_PANEL, -1, on ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, true);
-    int knob = INK_RADIUS_PANEL - 2 * INK_GAP_XS;
-    ink_ui_box(track, on ? INK_PRIMARY - knob - INK_GAP_XS : INK_GAP_XS, INK_GAP_XS, knob, knob, -1,
+    lv_obj_t *track = ink_ui_box(row, w - INK_SWITCH_W, (INK_CONTROL - INK_SWITCH_H) / 2,
+                                 INK_SWITCH_W, INK_SWITCH_H, -1, on ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, true);
+    lv_obj_set_style_border_width(track, ink_ui_px(on ? INK_STROKE_FOCUS : INK_STROKE), 0);
+    int knob = on ? INK_SWITCH_ON : INK_SWITCH_OFF;
+    ink_ui_box(track, on ? INK_SWITCH_W - knob - INK_GAP_XS - INK_STROKE_FOCUS : INK_GAP_XS,
+               (INK_SWITCH_H - knob) / 2 - (on ? INK_STROKE_FOCUS : INK_STROKE), knob, knob, -1,
                on ? INK_SURFACE_WHITE : INK_SURFACE_BLACK, false);
     return row;
 }
@@ -314,28 +361,21 @@ lv_obj_t *ink_ui_toggle(lv_obj_t *parent, const char *title, bool on, int x, int
 lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, int y, int w, lv_event_cb_t cb, void *ctx) {
     if (value < 0) value = 0;
     if (value > 10) value = 10;
-    lv_obj_t *b = ink_ui_box(parent, x, y, w, INK_SLIDER, -1, INK_SURFACE_WHITE, true);
-    lv_obj_t *fill = ink_ui_box(b, 0, 0, w * value / 10, INK_SLIDER, 0, INK_SURFACE_BLACK, false);
-    (void)fill;
-    const char *icon = !strcmp(title, TR("亮度")) ? INK_UI_ICON(sun) : !strcmp(title, TR("音量")) ? INK_UI_ICON(volume) : !strcmp(title, TR("暖光")) ? INK_UI_ICON(warm) : NULL;
-    int title_x = INK_GAP_XL + (icon ? INK_ICON_MEDIUM + INK_GAP_M : 0);
-    if (icon) ink_ui_icon(b, icon, INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_XL, (INK_SLIDER - INK_ICON_MEDIUM) / 2, false);
-    int text_y = (INK_SLIDER - ink_ui_line_height(INK_FONT_LIST)) / 2;
-    ink_ui_line(b, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, title_x, text_y, w - 2 * INK_BLOCK_L);
-    lv_obj_t *clip = lv_obj_create(b);
-    lv_obj_remove_style_all(clip);
-    lv_obj_remove_flag(clip, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_add_flag(clip, LV_OBJ_FLAG_USER_1); /* cuts the white copy of the title where the bar ends, on purpose */
-    lv_obj_set_pos(clip, 0, 0);
-    lv_obj_set_size(clip, ink_ui_px(w * value / 10), ink_ui_px(INK_SLIDER));
-    if (icon) ink_ui_icon(clip, icon, INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_XL, (INK_SLIDER - INK_ICON_MEDIUM) / 2, true);
-    lv_obj_t *white = ink_ui_line(clip, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, title_x, text_y, w - 2 * INK_BLOCK_L);
-    lv_obj_set_style_text_color(white, ink_ui_paper(), 0);
+    lv_obj_t *b = ink_ui_box(parent, x, y, w, INK_SLIDER, 0, INK_SURFACE_WHITE, false);
+    int left = INK_CONTROL, span = w - 2 * left, cy = INK_SLIDER - INK_ICON_SMALL / 2 - INK_STROKE;
+    ink_ui_line(b, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, left, 0, span - INK_CONTROL);
     char s[8];
     snprintf(s, sizeof s, "%d", value);
-    lv_obj_t *v = ink_ui_line(b, s, INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - INK_BLOCK_L, text_y, INK_BLOCK);
+    lv_obj_t *v = ink_ui_line(b, s, INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - 2 * INK_CONTROL, 0, INK_CONTROL);
     lv_obj_set_style_text_align(v, LV_TEXT_ALIGN_RIGHT, 0);
-    lv_obj_set_style_text_color(v, value == 10 ? ink_ui_paper() : ink_ui_ink(), 0);
+    ink_ui_icon(b, "minus", INK_ICON_SMALL, INK_ICON_LINE, (INK_CONTROL - INK_ICON_SMALL) / 2,
+                cy - INK_ICON_SMALL / 2, false);
+    ink_ui_icon(b, "plus", INK_ICON_SMALL, INK_ICON_LINE, w - (INK_CONTROL + INK_ICON_SMALL) / 2,
+                cy - INK_ICON_SMALL / 2, false);
+    ink_ui_box(b, left, cy - INK_SLIDER_TRACK / 2, span, INK_SLIDER_TRACK, 0, INK_SURFACE_BLACK, false);
+    ink_ui_box(b, left, cy - INK_SLIDER_FILL / 2, span * value / 10, INK_SLIDER_FILL, 0, INK_SURFACE_BLACK, false);
+    ink_ui_box(b, left + span * value / 10 - INK_SLIDER_KNOB / 2, cy - INK_SLIDER_KNOB / 2,
+               INK_SLIDER_KNOB, INK_SLIDER_KNOB, -1, INK_SURFACE_WHITE, true);
     if (cb) lv_obj_add_event_cb(b, cb, LV_EVENT_RELEASED, ctx);
     lv_obj_add_flag(b, LV_OBJ_FLAG_CLICKABLE);
     ink_ui_capture_touch(b);
@@ -343,11 +383,20 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
 }
 
 lv_obj_t *ink_ui_segments(lv_obj_t *parent, const char *const *labels, int count, int selected, int x, int y, int w, lv_event_cb_t cb, void *ctx) {
-    lv_obj_t *row = ink_ui_box(parent, x, y, w, INK_SEGMENT, -1, INK_SURFACE_WHITE, true);
+    if (count < 1 || count > 4 || w < count * INK_CONTROL) return NULL;
+    lv_obj_t *row = ink_ui_box(parent, x, y, w, INK_SEGMENT, INK_RADIUS_KEY, INK_SURFACE_WHITE, true);
+    int need = 0, left = 0;
+    for (int i = 0; i < count; i++)
+        need += LV_MAX(INK_CONTROL, ink_ui_text_width(labels[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_XS);
     for (int i = 0; i < count; i++) {
-        lv_obj_t *b = ink_ui_pill(row, labels[i], INK_GAP_XS - INK_STROKE + i * (w - 2 * INK_GAP_XS) / count, INK_GAP_XS - INK_STROKE,
-                                  (w - 2 * INK_GAP_XS) / count, INK_SEGMENT - 2 * INK_GAP_XS, i == selected, cb, ctx);
-        if (i != selected) lv_obj_set_style_border_width(b, 0, 0);
+        int minimum = LV_MAX(INK_CONTROL, ink_ui_text_width(labels[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_XS);
+        int right = need <= w ? left + minimum + (i + 1) * (w - need) / count - i * (w - need) / count : (i + 1) * w / count;
+        lv_obj_t *b = ink_ui_pill(row, labels[i], left - INK_STROKE, 0 - INK_STROKE,
+                                  right - left, INK_SEGMENT, i == selected, cb, ctx);
+        lv_obj_set_style_border_width(b, 0, 0);
+        lv_obj_set_style_radius(b, 0, 0);
+        if (i != selected) lv_obj_set_style_bg_opa(b, LV_OPA_TRANSP, 0);
+        left = right;
     }
     return row;
 }
@@ -363,7 +412,8 @@ static int value_width(const char *title, const char *value, int room) {
 
 void ink_ui_group_divider(lv_obj_t *parent, int y, int w) {
     int left = INK_CIRCLE_SMALL + INK_GAP_XL;
-    ink_ui_box(parent, left, y, w - left, INK_STROKE, 0, INK_SURFACE_BLACK, false);
+    lv_obj_t *line = ink_ui_box(parent, left, y, w - left, INK_DIVIDER, 0, INK_SURFACE_WHITE, false);
+    lv_obj_set_style_bg_color(line, ink_ui_separator(), 0);
 }
 
 lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title, const char *value,
@@ -374,12 +424,15 @@ lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title,
     ink_ui_circle(r, icon, INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM,
                   INK_SURFACE_WHITE, NULL, NULL);
     if (y && ink_ui_surface_kind(parent) == INK_SURFACE_STATIC) ink_ui_group_divider(r, 0, w);
-    int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = w - left - INK_BLOCK - INK_GAP, value_w = value_width(title, value, room);
-    ink_ui_line(r, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, left, (h - ink_ui_line_height(INK_FONT_LIST)) / 2, room - value_w);
+    int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = w - left - INK_BLOCK - INK_GAP;
+    int value_w = two_lines && value && value[0] ? room : value_width(title, value, room);
+    int title_y = (h - ink_ui_line_height(INK_FONT_LIST) - (two_lines ? ink_ui_line_height(INK_FONT_NOTE) : 0)) / 2;
+    ink_ui_line(r, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, left, title_y, two_lines ? room : room - value_w);
     if (value_w) {
-        lv_obj_t *l = ink_ui_line(r, value, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w - INK_BLOCK - value_w, (h - ink_ui_line_height(INK_FONT_NOTE)) / 2, value_w);
-        lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_RIGHT, 0);
-        lv_obj_set_style_text_color(l, ink_ui_secondary(), 0);
+        int value_y = two_lines ? title_y + ink_ui_line_height(INK_FONT_LIST) : (h - ink_ui_line_height(INK_FONT_NOTE)) / 2;
+        lv_obj_t *l = ink_ui_line(r, value, INK_FONT_NOTE, INK_WEIGHT_REGULAR, two_lines ? left : w - INK_BLOCK - value_w, value_y, value_w);
+        lv_obj_set_style_text_align(l, two_lines ? LV_TEXT_ALIGN_LEFT : LV_TEXT_ALIGN_RIGHT, 0);
+        lv_obj_set_style_text_color(l, two_lines ? ink_ui_secondary() : ink_ui_ink(), 0);
     }
     if (cb) ink_ui_icon(r, "next", INK_ICON_SMALL, INK_ICON_LINE, w - INK_READING_MARGIN, (h - INK_ICON_SMALL) / 2, false);
     return r;
@@ -397,10 +450,18 @@ lv_obj_t *ink_ui_pagebar(lv_obj_t *parent, int page, int total, int y, lv_event_
     int w = 2 * INK_CONTROL + INK_CIRCLE_LARGE + 2 * INK_GAP;
     lv_obj_t *row = ink_ui_box(parent, (INK_CANVAS_W - w) / 2, y, w, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
     ink_ui_circle(row, "back", 0, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, page > 1 ? cb : NULL, (void *)(intptr_t)-1);
-    char s[24];
-    snprintf(s, sizeof s, "%d / %d", page, total);
-    lv_obj_t *l = ink_ui_line(row, s, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_CONTROL + INK_GAP, (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2, INK_CIRCLE_LARGE);
-    lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
+    char s[24] = "";
+    if (total > 5) snprintf(s, sizeof s, "%d/%d", page, total);
+    lv_obj_t *indicator = ink_ui_line(row, s, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_CONTROL + INK_GAP,
+                                       total > 5 ? (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2 : 0, INK_CIRCLE_LARGE);
+    lv_obj_set_style_text_align(indicator, LV_TEXT_ALIGN_CENTER, 0);
+    if (total <= 5) {
+        lv_obj_set_height(indicator, ink_ui_px(INK_CONTROL));
+        for (int i = 0; i < total; i++)
+            ink_ui_box(indicator, (INK_CIRCLE_LARGE - total * INK_GAP_L + INK_GAP_L - INK_PAGE_DOT) / 2 + i * INK_GAP_L,
+                       (INK_CONTROL - INK_PAGE_DOT) / 2, INK_PAGE_DOT, INK_PAGE_DOT, -1,
+                       i + 1 == page ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, i + 1 != page);
+    }
     ink_ui_circle(row, "next", w - INK_CONTROL, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, page < total ? cb : NULL, (void *)(intptr_t)1);
     return row;
 }

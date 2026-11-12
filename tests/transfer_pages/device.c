@@ -1,6 +1,7 @@
 /* Synthetic HTTP bytes and real transfer, USB, confirmation and file pages. */
 #include "../../system/ui/shell/transfer_pages.c"
 #include "../services_finish/product.h"
+#include "../pagebar.h"
 #include "ink/hal_transfer.h"
 #include "cJSON.h"
 #include <sys/stat.h>
@@ -167,12 +168,17 @@ static void eject_usb(void *arg) { (void)arg; sim_usb_eject(); }
 static double card_writes;
 static void sample_writes(void *arg) { (void)arg; sim_storage_report(); card_writes = sim_metric_value("sd.write_bytes"); }
 static bool busy_result(void) { return at("TransferUsbBusy") && strstr(g_snap, "有应用在用存储卡"); }
+static void inspect_file_pager(void) {
+    lv_obj_t *bar = ink_test_pagebar(lv_screen_active(), 1, 1);
+    touch_x = bar ? 0 : -1;
+    if (bar) lv_obj_get_coords(bar, &control_bounds);
+}
 static void run(void *arg) {
     (void)arg; vtk_host_call(options, NULL); delay_ms(4000); test_start_home();
     if (large_text) command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}");
     roots();
     CHECK(strstr(g_snap, "transfer.open") && strstr(g_snap, "transfer.usb"), "adult file home exposes both entries to AI");
-    wanted = "1 / 1"; on_ui(target); int pager_bottom = control_bounds.y2;
+    on_ui(inspect_file_pager); int pager_bottom = control_bounds.y2;
     CHECK(touch_x >= 0, "file home exposes its pagination");
     wanted = "从手机或电脑传入"; on_ui(target);
     CHECK(touch_x >= 0 && control_bounds.y1 > pager_bottom, "transfer entry clears the file pagination");

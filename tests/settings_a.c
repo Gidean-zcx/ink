@@ -66,13 +66,21 @@ static bool row_has_icon(lv_obj_t *slot) {
             for (uint32_t k = 0; k < lv_obj_get_child_count(bg); k++) {
                 lv_obj_t *part = lv_obj_get_child(bg, (int32_t)k);
                 if (lv_obj_get_y(part)) continue;
-                if (lv_obj_get_width(part) == lv_obj_get_width(bg)) joined = true;
-                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_ink()) &&
-                    lv_obj_get_height(part) == ink_ui_px(INK_STROKE)) divided = true;
+                CHECK(!lv_obj_get_style_border_width(part, 0) ||
+                    lv_obj_get_style_border_side(part, 0) != (LV_BORDER_SIDE_LEFT | LV_BORDER_SIDE_RIGHT), "settings groups have no orphan side frames");
+                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_separator()) &&
+                    lv_obj_get_height(part) == ink_ui_px(INK_DIVIDER)) divided = true;
             }
+            lv_obj_t *parent = lv_obj_get_parent(slot);
+            int previous_bottom = 0;
+            for (uint32_t k = 0; k < lv_obj_get_child_count(parent); k++) {
+                lv_obj_t *previous = lv_obj_get_child(parent, (int32_t)k);
+                if (!lv_obj_has_flag(previous, LV_OBJ_FLAG_HIDDEN) && lv_obj_get_y(previous) < lv_obj_get_y(slot))
+                    previous_bottom = LV_MAX(previous_bottom, lv_obj_get_y(previous) + lv_obj_get_height(previous));
+            }
+            joined = previous_bottom > 0 && previous_bottom == lv_obj_get_y(slot) && !lv_obj_get_y(bg);
             CHECK(joined == divided, "every joined settings row uses the shared divider, including later pages");
             if (joined) {
-                lv_obj_t *parent = lv_obj_get_parent(slot);
                 int bottom = 0;
                 for (uint32_t k = 0; k < lv_obj_get_child_count(parent); k++) {
                     lv_obj_t *previous = lv_obj_get_child(parent, (int32_t)k);
@@ -111,7 +119,7 @@ static void inspect_visible_page(void) {
                 if (ink_json_eq(j, ink_json_find(j, 0, "id"), GROUPED[k]))
                     CHECK(slot && row_has_icon(slot) && ink_ui_surface_kind(lv_obj_get_child(slot, 0)) == INK_SURFACE_STATIC &&
                         lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(slot, 0), 0), ink_ui_paper()) &&
-                        lv_obj_get_style_border_width(lv_obj_get_child(slot, 0), 0) == ink_ui_px(INK_STROKE),
+                        !lv_obj_get_style_border_width(lv_obj_get_child(slot, 0), 0),
                         "grouped row retains the design's icon and theme background: %s", GROUPED[k]);
         }
         if (!ink_json_eq(j, ink_json_find(j, 0, "role"), "setting")) {
@@ -153,9 +161,9 @@ static void inspect_layout(void) {
             for (uint32_t i = 0; i < lv_obj_get_child_count(slot); i++) {
                 lv_obj_t *o = lv_obj_get_child(slot, i);
                 if (lv_obj_get_width(o) == ink_ui_px(INK_CIRCLE_APP) && lv_obj_get_height(o) == ink_ui_px(INK_CIRCLE_APP) &&
-                    lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink())) logo = true;
+                    lv_obj_get_style_bg_opa(o, 0) == LV_OPA_TRANSP && lv_obj_get_child_count(o) == 1) logo = true;
             }
-            CHECK(logo, "about restores the centered black identity mark");
+            CHECK(logo, "about shows the centered identity icon without a circular fill");
         }
     } else if (!strcmp(ink_ui_page_name(), "SetPrivacy") && page_number == 1) {
         wanted = "你的东西放在哪"; find_label();

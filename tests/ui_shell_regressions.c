@@ -5,6 +5,7 @@
 #include "ink/sys/confirm.h"
 #include "ink/sys/interrupt.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/textfield.h"
 #include "ink/ui_shell.h"
 #define ink_main product_main
 #include "../system/boot/main.c"
@@ -50,13 +51,13 @@ static void check_segments(void) {
                                          INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL);
         lv_obj_update_layout(root);
         lv_area_t outer; lv_obj_get_coords(row, &outer);
-        int gap = ink_ui_px(INK_GAP_XS);
+        int gap = 0;
         for (int i = 0; i < count; i++) {
             lv_area_t inner; lv_obj_get_coords(lv_obj_get_child(row, i), &inner);
             CHECK(abs(inner.y1 - outer.y1 - gap) <= 1 && abs(outer.y2 - inner.y2 - gap) <= 1,
-                  "%d-way segment %d leaves the top and bottom outlines visible", count, i);
+                  "%d-way segment %d fills the full 108 px segment height", count, i);
             CHECK(inner.x1 >= outer.x1 + gap - 1 && inner.x2 <= outer.x2 - gap + 1,
-                  "%d-way segment %d stays within both rounded ends", count, i);
+                  "%d-way segment %d stays within the clipped rounded group", count, i);
         }
         lv_obj_delete(row);
     }
@@ -71,28 +72,38 @@ static void check_group_row(lv_obj_t *row, bool separated) {
     lv_area_t bounds; lv_obj_get_coords(row, &bounds);
     for (uint32_t i = 0; i < lv_obj_get_child_count(row); i++) {
         lv_obj_t *o = lv_obj_get_child(row, (int32_t)i);
-        if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER) continue;
         lv_area_t a; lv_obj_get_coords(o, &a);
-        if (lv_obj_get_style_radius(o, 0) == LV_RADIUS_CIRCLE) {
+        if (lv_obj_get_child_count(o) == 1 && lv_obj_check_type(lv_obj_get_child(o, 0), &lv_image_class)) {
             circles++;
             CHECK(lv_obj_get_width(o) == ink_ui_px(INK_CIRCLE_SMALL) &&
                   lv_obj_get_height(o) == ink_ui_px(INK_CIRCLE_SMALL) &&
                   a.x1 - bounds.x1 == ink_ui_px(INK_GAP) && abs(a.y1 + a.y2 - bounds.y1 - bounds.y2) <= 1,
-                  "shared list icon circle uses the scaled tokens and is centered in either row height");
+                  "shared list icon uses the scaled tokens and is centered in either row height");
             CHECK(!lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE) && count_icons(o) == 1,
-                  "shared list icon has a white circle, one icon and no button outline or hit target");
-            CHECK(lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper()), "decorative icon stays white");
-        } else if (lv_obj_get_height(o) <= ink_ui_px(INK_STROKE)) {
+                  "shared list icon has one icon and no button outline or hit target");
+            CHECK(lv_obj_get_style_bg_opa(o, 0) == LV_OPA_TRANSP && !lv_obj_get_style_radius(o, 0), "decorative icon has no circle fill");
+        } else if (lv_obj_get_height(o) <= ink_ui_px(INK_DIVIDER)) {
             dividers++;
-            CHECK(lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink()), "a group divider is black on white");
+            CHECK(lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_separator()), "a group divider is medium gray");
             CHECK(a.x1 - bounds.x1 == ink_ui_px(INK_CIRCLE_SMALL + INK_GAP_XL) &&
-                  a.y1 == bounds.y1 && a.x2 == bounds.x2 && lv_obj_get_height(o) == ink_ui_px(INK_STROKE),
+                  a.y1 == bounds.y1 && a.x2 == bounds.x2 && lv_obj_get_height(o) == ink_ui_px(INK_DIVIDER),
                   "shared group divider starts after the icon and uses the scaled stroke");
         }
     }
     CHECK(circles == 1 && dividers == (separated ? 1 : 0), "shared group has one icon circle and a divider only between rows");
 }
 static void check_theme(void) {
+    CHECK(ink_ui_font_px(INK_FONT_CLOCK, INK_WEIGHT_REGULAR) == ink_ui_font_px(INK_FONT_CLOCK, INK_WEIGHT_MEDIUM) &&
+          ink_ui_font_px(INK_FONT_NUMBER, INK_WEIGHT_REGULAR) == ink_ui_font_px(INK_FONT_NUMBER, INK_WEIGHT_MEDIUM),
+          "large digits use the existing 400-weight face rather than the 300-weight face");
+    CHECK(ink_ui_px(0) == 0 && ink_ui_px(0 - INK_STROKE) == 0 - ink_ui_px(INK_STROKE) &&
+          ink_ui_px(0 - INK_CONTROL) == 0 - ink_ui_px(INK_CONTROL), "negative layout coordinates round symmetrically");
+    CHECK(ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_MEDIUM) == ink_ui_font_px(INK_FONT_BODY, INK_WEIGHT_MEDIUM),
+          "the legacy reading option and the UI body resolve to the same 38 px face");
+    CHECK(INK_CONTROL == 108 && INK_PRIMARY == 108 && INK_FIELD_HEIGHT == 108 && INK_SEGMENT == 108 && INK_SLIDER == 108,
+          "all shared single-row controls use the requested 108 px token");
+    CHECK(INK_ROW_DOUBLE == 136 && INK_ROW_TRIPLE == 164 && INK_GROUP_TITLE == 64,
+          "multi-line rows and group headings keep the requested heights");
     int64_t original = ink_setting_get("display.font_size");
     for (int level = 1; level <= 3; level += 2) {
         ink_receipt_t rc; ink_setting_set("display.font_size", level, INK_SRC_TOUCH, &rc);
@@ -104,9 +115,14 @@ static void check_theme(void) {
             lv_obj_t *first = ink_ui_list_row(group, "wifi", "合成网络", "未连接", 0, 0, w, lines, NULL, NULL);
             lv_obj_t *second = ink_ui_list_row(group, "volume", "合成声音", "60%", 0, h, w, lines, theme_clicked, &clicks);
             lv_obj_update_layout(root);
+            lv_obj_t *row_title = find_label(first, "合成网络"), *row_value = find_label(first, "未连接");
+            lv_area_t title_rect, value_rect; lv_obj_get_coords(row_title, &title_rect); lv_obj_get_coords(row_value, &value_rect);
+            CHECK(!lines || title_rect.y2 < value_rect.y1, "two-line rows place the value below the title");
+            CHECK(lv_color_eq(lv_obj_get_style_text_color(row_value, 0), lines ? ink_ui_secondary() : ink_ui_ink()),
+                  "single-line row text stays black; only the second line uses gray");
             CHECK(ink_ui_surface_kind(group) == INK_SURFACE_STATIC &&
                   lv_color_eq(lv_obj_get_style_bg_color(group, 0), ink_ui_paper()) &&
-                  lv_obj_get_style_border_width(group, 0) == ink_ui_px(INK_STROKE), "static groups have a white fill and one black frame");
+                  !lv_obj_get_style_border_width(group, 0), "static groups have no outer frame");
             CHECK(!lv_obj_get_style_border_width(first, 0) && !lv_obj_get_style_border_width(second, 0), "nested rows do not repeat the group frame");
             check_group_row(first, false); check_group_row(second, true);
             CHECK(!lv_obj_has_flag(first, LV_OBJ_FLAG_CLICKABLE) && lv_obj_has_flag(second, LV_OBJ_FLAG_CLICKABLE),
@@ -116,11 +132,11 @@ static void check_theme(void) {
         }
         lv_obj_t *single = ink_ui_list_row(root, "book", "合成单行", "", INK_MARGIN, INK_CONTROL, w, false, NULL, NULL);
         lv_obj_update_layout(root); check_group_row(single, false);
-        CHECK(lv_obj_get_style_border_width(single, 0) == ink_ui_px(INK_STROKE), "a standalone static row keeps its frame");
+        CHECK(!lv_obj_get_style_border_width(single, 0), "a standalone list row has no frame");
         lv_obj_t *black = ink_ui_card(root, 0, 0, w, INK_CONTROL, INK_SURFACE_BLACK);
         CHECK(ink_ui_surface_kind(black) == INK_SURFACE_BLACK &&
               lv_color_eq(lv_obj_get_style_bg_color(black, 0), ink_ui_ink()) && !lv_obj_get_style_border_width(black, 0), "black surfaces retain their fill and border");
-        lv_obj_t *outlined = ink_ui_card(root, 0, 0, w, INK_CONTROL, INK_SURFACE_WHITE);
+        lv_obj_t *outlined = ink_ui_box(root, 0, 0, w, INK_CONTROL, INK_RADIUS_CARD, INK_SURFACE_WHITE, true);
         lv_obj_t *text = ink_ui_line(outlined, "合成短信", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP, w / 2);
         lv_area_t before, after; lv_obj_update_layout(root); lv_obj_get_coords(text, &before);
         ink_ui_surface_style(outlined, INK_SURFACE_STATIC, true);
@@ -133,13 +149,16 @@ static void check_theme(void) {
         CHECK(!lv_obj_get_style_border_width(decor, 0) && !lv_obj_has_flag(decor, LV_OBJ_FLAG_CLICKABLE),
               "a shared decorative circle has no button outline");
         lv_obj_t *button = ink_ui_circle(root, "back", 0, 0, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_WHITE, theme_clicked, &clicks);
-        CHECK(lv_obj_get_style_border_width(button, 0) == ink_ui_px(INK_STROKE) && lv_obj_has_flag(button, LV_OBJ_FLAG_CLICKABLE),
-              "a directly bound circle keeps its button outline");
+        CHECK(!lv_obj_get_style_border_width(button, 0) && lv_obj_has_flag(button, LV_OBJ_FLAG_CLICKABLE),
+              "a directly bound icon button has no circle outline");
         lv_obj_send_event(button, LV_EVENT_CLICKED, NULL);
         ink_shell_bind(decor, "shell.back", NULL);
-        CHECK(lv_obj_get_style_border_width(decor, 0) == ink_ui_px(INK_STROKE) &&
+        lv_area_t hit; lv_obj_update_layout(decor); lv_obj_get_click_area(decor, &hit);
+        CHECK(lv_area_get_width(&hit) >= ink_ui_px(INK_CONTROL) && lv_area_get_height(&hit) >= ink_ui_px(INK_CONTROL),
+              "an icon reserves the minimum target even when its capability is bound later");
+        CHECK(!lv_obj_get_style_border_width(decor, 0) &&
               lv_obj_has_flag(decor, LV_OBJ_FLAG_CLICKABLE) && !strcmp(ink_shell_bound_cap(decor), "shell.back"),
-              "a circle bound after construction also keeps its outline and capability");
+              "an icon bound after construction keeps its capability without a circle");
         const char *const labels[] = {"合成甲", "合成乙", "合成丙"};
         lv_obj_t *segments = ink_ui_segments(root, labels, 3, 0, 0, 0, w, NULL, NULL);
         for (int i = 0; i < 3; i++) {
@@ -150,6 +169,9 @@ static void check_theme(void) {
         for (int on = 0; on < 2; on++) {
             lv_obj_t *toggle = ink_ui_toggle(root, "合成开关", on, 0, 0, w, theme_clicked, &clicks);
             lv_obj_t *track = lv_obj_get_child(toggle, 1), *knob = lv_obj_get_child(track, 0);
+            lv_obj_update_layout(track);
+            CHECK(lv_obj_get_width(track) == ink_ui_px(96) && lv_obj_get_height(track) == ink_ui_px(56) &&
+                  lv_obj_get_width(knob) == ink_ui_px(on ? 40 : 24), "switch state has the requested track and distinct knob sizes");
             CHECK(lv_obj_get_style_bg_opa(toggle, 0) == LV_OPA_TRANSP &&
                   lv_obj_get_style_bg_opa(track, 0) == LV_OPA_COVER && lv_obj_get_style_bg_opa(knob, 0) == LV_OPA_COVER &&
                   lv_color_eq(lv_obj_get_style_bg_color(track, 0), on ? ink_ui_ink() : ink_ui_paper()) &&
@@ -158,6 +180,47 @@ static void check_theme(void) {
             lv_obj_send_event(toggle, LV_EVENT_CLICKED, NULL);
         }
         CHECK(clicks == 5, "shared row, circle and both toggle states preserve their callbacks and context");
+        lv_obj_t *primary = ink_ui_pill(root, "主要", 0, 0, 2 * INK_CONTROL, INK_PRIMARY, true, NULL, NULL);
+        lv_obj_t *secondary = ink_ui_pill(root, "次要", 0, 0, 2 * INK_CONTROL, INK_CONTROL, false, NULL, NULL);
+        lv_obj_t *plain = ink_ui_text_button(root, "文字", 0, 0, INK_CONTROL, NULL, NULL);
+        CHECK(lv_obj_get_style_radius(primary, 0) == ink_ui_px(16) &&
+              lv_color_eq(lv_obj_get_style_bg_color(primary, 0), ink_ui_ink()) &&
+              lv_color_eq(lv_obj_get_style_text_color(primary, 0), ink_ui_paper()), "primary button has black fill and white text");
+        CHECK(lv_obj_get_style_border_width(secondary, 0) == ink_ui_px(2) && !lv_obj_get_style_border_width(plain, 0) &&
+              lv_obj_get_style_bg_opa(plain, 0) == LV_OPA_TRANSP, "secondary and text buttons have distinct styles");
+        lv_obj_t *tile = ink_ui_switch_tile(root, "wifi", "网络", "已开启", true, true, 0, 0, w / 2 - INK_GAP_M / 2, NULL, NULL);
+        CHECK(lv_color_eq(lv_obj_get_style_bg_color(tile, 0), ink_ui_ink()) &&
+              lv_color_eq(lv_obj_get_style_text_color(tile, 0), ink_ui_paper()), "enabled switch tile uses black and white");
+        lv_obj_t *off = ink_ui_switch_tile(root, "wifi", "网络", "未开启", false, false, 0, 0, w / 2 - INK_GAP_M / 2, NULL, NULL);
+        CHECK(lv_obj_get_style_border_width(off, 0) == ink_ui_px(2) && lv_obj_has_state(off, LV_STATE_DISABLED) &&
+              lv_color_eq(lv_obj_get_style_text_color(off, 0), ink_ui_secondary()), "unavailable off tile retains its outline and gray text");
+        lv_obj_t *empty = ink_ui_empty(root, "没有内容", "添加", theme_clicked, &clicks);
+        CHECK(lv_obj_get_child_count(empty) == 2 && !lv_obj_get_style_border_width(empty, 0), "empty state has one line and at most one action");
+        lv_obj_t *dots = ink_ui_pagebar(root, 2, 5, 0, NULL);
+        CHECK(lv_obj_get_child_count(dots) == 3 && lv_obj_get_child_count(lv_obj_get_child(dots, 1)) == 5,
+              "short pagination has five dots and preserves the arrow child contract");
+        lv_obj_t *numbers = ink_ui_pagebar(root, 2, 7, 0, NULL);
+        CHECK(!strcmp(lv_label_get_text(lv_obj_get_child(numbers, 1)), "2/7"), "long pagination uses compact numbers");
+        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .initial = "合成的很长的搜索字串", .hint = "查找"};
+        lv_obj_t *field = ink_textfield_create(root, &cfg, NULL, NULL, false);
+        lv_obj_set_width(field, ink_ui_px(3 * INK_CONTROL));
+        lv_obj_update_layout(root);
+        lv_obj_t *title = lv_obj_get_child(field, 0), *area = lv_obj_get_child(field, 1), *clear = lv_obj_get_child(field, 3);
+        lv_area_t field_rect, input_rect, clear_rect, title_rect;
+        lv_obj_get_coords(field, &field_rect); lv_obj_get_coords(area, &input_rect);
+        lv_obj_get_coords(clear, &clear_rect); lv_obj_get_coords(title, &title_rect);
+        CHECK(lv_obj_is_visible(title) && title_rect.y2 < input_rect.y1, "input label stays above the shared field");
+        CHECK(input_rect.x2 <= field_rect.x2 && clear_rect.x2 <= input_rect.x2 &&
+              lv_area_get_width(&clear_rect) == ink_ui_px(108) && lv_area_get_height(&clear_rect) == ink_ui_px(108),
+              "a narrowed search field keeps its right border and full clear target inside");
+        CHECK(lv_obj_get_style_bg_opa(clear, 0) == LV_OPA_TRANSP,
+              "the clear button does not paint over the input's right border");
+        CHECK(lv_obj_get_style_radius(area, 0) == ink_ui_px(16) && lv_obj_get_style_border_width(area, 0) == ink_ui_px(2),
+              "search uses the same rectangular input style");
+        CHECK(lv_color_eq(lv_obj_get_style_text_color(area, LV_PART_TEXTAREA_PLACEHOLDER), ink_ui_ink()), "input placeholder text stays black");
+        lv_obj_add_state(area, LV_STATE_FOCUSED);
+        CHECK(lv_obj_get_style_border_width(area, 0) == ink_ui_px(3) && !lv_obj_get_style_outline_width(area, 0),
+              "focus thickens one border without adding an outer frame");
         lv_obj_delete(root);
     }
     ink_receipt_t rc; ink_setting_set("display.font_size", original, INK_SRC_TOUCH, &rc);
@@ -188,6 +251,23 @@ static void inspect(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *o = lv_obj_get_child(root, (int32_t)i);
         if (lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) continue;
+        if (lv_obj_get_child_count(o) == 3) {
+            lv_obj_t *indicator = lv_obj_get_child(o, 1);
+            unsigned dots = lv_obj_get_child_count(indicator);
+            if (lv_obj_check_type(indicator, &lv_label_class) && dots && dots <= 5 &&
+                lv_obj_get_width(lv_obj_get_child(indicator, 0)) == ink_ui_px(INK_PAGE_DOT)) {
+                pages = (int)dots; pager_fits = true;
+                lv_area_t bounds; lv_obj_get_coords(o, &bounds); pager_bottom = bounds.y2;
+                for (unsigned dot = 0; dot < dots; dot++) {
+                    lv_obj_t *mark = lv_obj_get_child(indicator, (int32_t)dot);
+                    lv_area_t a; lv_obj_get_coords(mark, &a);
+                    pager_fits = pager_fits && a.x1 >= bounds.x1 && a.x2 <= bounds.x2 && a.y1 >= bounds.y1 && a.y2 <= bounds.y2;
+                    if (lv_color_eq(lv_obj_get_style_bg_color(mark, 0), ink_ui_ink())) page = (int)dot + 1;
+                }
+                lv_area_t next; lv_obj_get_coords(lv_obj_get_child(o, 2), &next);
+                next_x = (next.x1 + next.x2) / 2; next_y = (next.y1 + next.y2) / 2;
+            }
+        }
         if (lv_obj_check_type(o, &lv_label_class)) {
             const char *s = lv_label_get_text(o);
             lv_obj_t *parent = lv_obj_get_parent(o);
@@ -329,7 +409,7 @@ static void slider_tests(void) {
         CHECK(BY_HAND(i < 2 ? "shell.display" : "shell.sound", NULL) && g_rc.status == INK_RC_DONE, "open real slider page"); quiet();
         wanted = titles[i]; on_ui(read_view);
         CHECK(have_slider, "find slider %s in the rendered tree", titles[i]);
-        CHECK(slider_icons >= 2, "%s includes its normal and reversed icon for either slider fill", titles[i]);
+        CHECK(slider_icons >= 2, "%s includes unframed minus and plus icons", titles[i]);
         for (int drag = 0; drag < 2; drag++) for (int value = 0; value <= 10; value++) {
             int span = slider.x2 - slider.x1, y = (slider.y1 + slider.y2) / 2;
             int x = slider.x1 + (span * value + 5) / 10;
@@ -385,7 +465,9 @@ static void context_tests(void) {
     CHECK(AI("settings.set", "{\"id\":\"power.lock_after_s\",\"value\":600}") && g_rc.status == INK_RC_DONE, "set the actual automatic lock time");
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "return to the settings overview"); quiet();
     wanted = "叫名字已关闭"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the wake setting");
+    CHECK(AI("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "read the next settings page at the larger row size"); quiet();
     wanted = "10 分钟"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the automatic lock time");
+    CHECK(AI("shell.page_prev", NULL) && g_rc.status == INK_RC_DONE, "return to the first settings page"); quiet();
     /* A UI-only connection-state fixture; no pairing or real radio is used. */
     ink_state_set_bool(ink_state_find("bt.connected"), true); quiet();
     wanted = "已连接"; on_ui(read_view); CHECK(label_x >= 0, "a connection-state event updates the visible Bluetooth status");
@@ -468,8 +550,9 @@ static void read_answer(void) {
 static void check_long_layout(void) {
     lv_obj_update_layout(answer_root);
     int height = ink_ui_height() - lv_obj_get_y(answer_root);
-    CHECK(height * 100 >= ink_ui_height() * 53 && height * 100 <= ink_ui_height() * 55,
-          "a long answer expands to about 54 percent of the screen");
+    int expected = 2 * INK_GAP_L + 2 * INK_CONTROL + 3 * INK_GAP_S +
+        5 * ink_ui_line_height(INK_FONT_BODY) + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M;
+    CHECK(height == ink_ui_px(expected), "a long answer uses the exact shared spacing and five body lines");
     CHECK(lv_obj_get_height(answer_label) >= ink_ui_px(5 * ink_ui_line_height(INK_FONT_BODY)), "the expanded answer has five body lines");
     lv_obj_t *source = find_label(answer_root, "出自这一页");
     lv_obj_t *next = bound(answer_root, "ai.panel.next");
@@ -630,7 +713,7 @@ static void snapshot_tests(void) {
     CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open the populated control center"); quiet(); on_ui(read_context);
     for (int i = 0; i < 3; i++) {
         wanted = titles[i]; on_ui(read_view);
-        CHECK((label_x >= 0) == (i > 0) && (strstr(context, titles[i]) != NULL) == (i > 0), "control notification %d agrees between screen and snapshot", i);
+        CHECK((label_x >= 0) == (i == 2) && (strstr(context, titles[i]) != NULL) == (i == 2), "control notification %d agrees between screen and snapshot", i);
     }
     char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)ids[2]);
     CHECK(AI("notify.read", args) && g_rc.status == INK_RC_DONE, "AI marks the displayed notification read"); quiet(); on_ui(read_context);

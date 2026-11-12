@@ -26,6 +26,15 @@ static void evidence(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_M
 static void bounds(lv_obj_t *o) {
     const char *cap = ink_shell_bound_cap(o);
     if (cap && !strncmp(cap, "music.", 6)) { lv_area_t a; lv_obj_get_coords(o, &a); CHECK(a.x1 >= 0 && a.y1 >= 0 && a.x2 < ink_ui_width() && a.y2 < ink_ui_height(), "music control fits %.40s", cap); }
+    if (cap && !strcmp(cap, "music.play") && lv_obj_get_child_count(o) > 1) {
+        lv_obj_t *parent = lv_obj_get_parent(o);
+        for (uint32_t i = 0; i < lv_obj_get_child_count(parent); i++) {
+            lv_obj_t *sibling = lv_obj_get_child(parent, (int32_t)i), *caption = lv_obj_get_child(sibling, 0);
+            if (!caption || !lv_obj_check_type(caption, &lv_label_class) || strcmp(lv_label_get_text(caption), "上级目录")) continue;
+            lv_area_t row, footer; lv_obj_get_coords(o, &row); lv_obj_get_coords(sibling, &footer);
+            CHECK(row.y2 < footer.y1, "music rows clear the directory and paging controls");
+        }
+    }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) bounds(lv_obj_get_child(o, (int)i));
 }
 static int x, y;

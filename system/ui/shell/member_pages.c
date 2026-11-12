@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension y Text positions are derived from the theme. */
 /* ui-scale-runtime: font font Centered labels use theme font tokens. */
 /* ui-scale-runtime: dimension x,y,w Buttons receive theme-derived positions and widths. */
+/* ui-scale-runtime: dimension key_h Digit rows share the remaining height after measured instructions and the cancel control. */
 #include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
@@ -163,7 +164,9 @@ static void draw(void) {
     else snprintf(message, sizeof message, "%s", P.status);
     P.message = ink_ui_label(P.card.panel, message, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     lv_obj_set_style_text_align(P.message, LV_TEXT_ALIGN_CENTER, 0);
-    int y0 = INK_CANVAS_H - INK_MARGIN - 4 * INK_DIGIT - 3 * INK_GAP;
+    int key_h = LV_MIN(INK_DIGIT, (INK_CANVAS_H - INK_MARGIN - y -
+        ink_ui_text_height(message, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) - INK_CONTROL - 2 * INK_GAP_XS - 3 * INK_GAP) / 4);
+    int y0 = INK_CANVAS_H - INK_MARGIN - 4 * key_h - 3 * INK_GAP;
     button(P.mode == UNLOCK ? TR("忘记密码") : TR("取消"), P.mode == UNLOCK ? "shell.pin_forgot" : "shell.pin_cancel",
         INK_MARGIN, y0 - INK_CONTROL - INK_GAP_XS, w, false);
     int x0 = (INK_CANVAS_W - 3 * INK_DIGIT - 2 * INK_GAP_XL) / 2;
@@ -172,7 +175,7 @@ static void draw(void) {
         char label[12]; snprintf(label, sizeof label, "%d", d);
         bool confirm = row == 3 && col == 2, disabled = P.busy || remaining();
         lv_obj_t *b = ink_ui_pill(P.card.panel, row == 3 && col != 1 ? (confirm ? TR("确定") : TR("删除")) : label,
-            x0 + col * (INK_DIGIT + INK_GAP_XL), y0 + row * (INK_DIGIT + INK_GAP), INK_DIGIT, INK_DIGIT, confirm,
+            x0 + col * (INK_DIGIT + INK_GAP_XL), y0 + row * (key_h + INK_GAP), INK_DIGIT, key_h, confirm,
             disabled ? NULL : confirm ? clicked : digit, confirm ? (void *)"shell.pin_submit" : (void *)(intptr_t)d);
         if (disabled) lv_obj_add_state(b, LV_STATE_DISABLED);
         if (confirm && !disabled) lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);

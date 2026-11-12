@@ -23,9 +23,9 @@ for phase in ("write", "verify", "stale", "delete"):
         print(f'{phase}: {metrics["metrics"]["test.pass"]} assertions')
         continue
     snapshots = [json.loads(line) for line in (output / phase / "snapshots.ndjson").read_text().splitlines()]
-    expected = {"empty": (1, 1, 0, 0, 0), "one": (1, 1, 1, 0, 1), "four": (1, 1, 4, 0, 4),
-                "multi": (1, 2, 5, 0, 4), "last": (2, 2, 5, 4, 1), "kid-empty": (1, 1, 0, 0, 0),
-                "owner-return": (1, 2, 5, 0, 4), "reboot": (1, 2, 5, 0, 4), "kid-reboot": (1, 1, 1, 0, 1)}
+    expected = {"empty": (1, 1, 0, 0, 0), "one": (1, 1, 1, 0, 1), "four": (1, 2, 4, 0, 3),
+                "multi": (1, 2, 5, 0, 3), "last": (2, 2, 5, 3, 2), "kid-empty": (1, 1, 0, 0, 0),
+                "owner-return": (1, 2, 5, 0, 3), "reboot": (1, 2, 5, 0, 3), "reboot-last": (2, 2, 5, 3, 2), "kid-reboot": (1, 1, 1, 0, 1)}
     for item in snapshots:
         snapshot = item["snapshot"]
         if item["case"] == "form":

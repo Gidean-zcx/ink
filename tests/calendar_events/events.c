@@ -84,7 +84,8 @@ static void ai_queries(void) {
 }
 static void month(void) {
     call_ok("calendar.open", NULL); call_ok("calendar.select", "{\"day\":11}");
-    expect("跨天日程"); expect("响铃对照"); expect("日程"); on_ui(check_markers); capture("month");
+    expect("跨天日程"); expect("日程"); absent("响铃对照"); on_ui(check_markers); capture("month");
+    call_ok("calendar.next", NULL); expect("响铃对照");
     call_ok("calendar.select", "{\"day\":12}"); expect("跨天日程"); absent("响铃对照"); capture("cross-day");
     call_ok("calendar.select", "{\"day\":13}"); expect("全天日程"); absent("跨天日程"); capture("all-day");
 }

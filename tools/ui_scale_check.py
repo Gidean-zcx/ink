@@ -20,11 +20,11 @@ CATEGORIES = {
     'font': {v for k, v in VALUES.items() if k.startswith('INK_FONT_')},
     'icon': {v for k, v in VALUES.items() if k.startswith('INK_ICON_')},
     'radius': {0, -1} | {v for k, v in VALUES.items() if k.startswith('INK_RADIUS_')},
-    'stroke': {0, VALUES['INK_STROKE']},
+    'stroke': {0, VALUES['INK_STROKE'], VALUES['INK_STROKE_FOCUS']},
     'dimension': SPEC | {-1},
 }
 STYLE_SIZE = r'(?:min_|max_)?(?:width|height)|pad_\w+|radius|border_width|outline_(?:width|pad)|text_(?:letter|line)_space|translate_[xy]'
-CALL = re.compile(r"\b(ink_dp|ink_ui_px|ink_ui_font_px|ink_ui_line_height|ink_ui_(?:box|label|line|icon|pill|circle|card|toggle|slider|segments|list_row|panel|pagebar|notice)|"
+CALL = re.compile(r"\b(ink_dp|ink_ui_px|ink_ui_font_px|ink_ui_line_height|ink_ui_(?:box|label|line|icon|pill|text_button|switch_tile|circle|card|toggle|slider|segments|list_row|panel|pagebar|notice)|"
                   r"lv_obj_(?:set_(?:pos|size|width|height|x|y|content_(?:width|height)|ext_click_area)|align(?:_to)?|set_style_(?:" + STYLE_SIZE + r"))|lv_style_set_(?:" + STYLE_SIZE + r"))\s*\(")
 EXCEPTION = re.compile(r"ui-scale-exception:\s*(\d+(?:\.\d+)?)\s+([^\n*]+)")
 DECL = re.compile(r'\b(?:(?:const|static|unsigned|signed)\s+)*(?:int|long|short|float|double|u?int\d+_t|lv_coord_t)\s+(?:const\s+)?([a-zA-Z_]\w*)\s*(?=[=;,)])')
@@ -62,6 +62,8 @@ def parameters(name, args):
         'ink_ui_line': {2: 'font', 4: 'dimension', 5: 'dimension', 6: 'dimension'},
         'ink_ui_icon': {2: 'icon', 4: 'dimension', 5: 'dimension'},
         'ink_ui_pill': dict.fromkeys(range(2, 6), 'dimension'),
+        'ink_ui_text_button': dict.fromkeys(range(2, 5), 'dimension'),
+        'ink_ui_switch_tile': dict.fromkeys(range(6, 9), 'dimension'),
         'ink_ui_circle': {2: 'dimension', 3: 'dimension', 4: 'dimension', 5: 'icon'},
         'ink_ui_card': dict.fromkeys(range(1, 5), 'dimension'),
         'ink_ui_toggle': dict.fromkeys(range(3, 6), 'dimension'),
@@ -283,6 +285,8 @@ def violations(source, category, symbols, allowed):
         if ast.unparse(n) in symbols and getattr(symbols[ast.unparse(n)], 'ui_contract', False): return []
         if isinstance(n, ast.Call):
             name = ast.unparse(n.func)
+            if category == 'dimension' and name in ('LV_MIN', 'LV_MAX') and len(n.args) == 2:
+                return leaves(n.args[0]) + leaves(n.args[1])
             if name in ('ink_ui_px', 'ink_dp') and len(n.args) == 1: return leaves(n.args[0])
             if category == 'dimension' and name in ('LV_PCT', 'lv_pct') and len(n.args) == 1: return []
             if category == 'dimension' and (name in symbols and getattr(symbols[name], 'ui_contract', False) or

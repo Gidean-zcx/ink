@@ -1,4 +1,5 @@
 /* ui-scale-runtime: dimension x,y,w,h Theme-derived page and row positions. */
+/* ui-scale-runtime: dimension heights[0],heights[1],at,left,button_h Measured complete text lines plus theme padding and control minimums. */
 #include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
@@ -66,7 +67,7 @@ static ink_ui_action_spec_t *action(const char *label, const char *cap, const ch
 }
 static void draw(void) {
     lv_obj_clean(F.screen);
-    int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_CONTROL + INK_GAP, h = 2 * INK_CONTROL;
+    int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_CONTROL + INK_GAP;
     const char *name = F.done ? DONE.name : RESET.name;
     F.model = (ink_ui_page_spec_t){name, F.done ? TR("已清空") : TR("清空这台设备"), {name, 0}, F.fields, F.done ? 2 : 5, F.actions, 0};
     F.fields[0] = (ink_ui_field_spec_t){"member", "text", TR("家人"), F.member, {NULL, 0}, false};
@@ -84,27 +85,43 @@ static void draw(void) {
     const char *titles[] = {TR("会清除（所有家人）"), F.media ? TR("备份保留，卡上另选") : TR("不会动")};
     const char *rows[] = {TR("家人、设置和 Wi-Fi"), TR("备忘、录音、照片（含卡上个人资料）"), TR("家庭服务器上的备份"), TR("存储卡的书和音频")};
     const char *icons[] = {"family", "memo", "cloud", "sd"};
-    for (int i = 0; i < 2; i++) {
-        ink_ui_label(F.screen, titles[i], INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, w); y += INK_LINE_LIST + INK_GAP;
-        lv_obj_t *card = ink_ui_card(F.screen, INK_MARGIN, y, w, h + INK_LINE_NOTE, INK_SURFACE_STATIC);
-        for (int k = 0; k < 2; k++) {
-            ink_ui_circle(card, icons[2 * i + k], INK_GAP, k * INK_CONTROL + INK_GAP_S, INK_CIRCLE_SMALL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
-            ink_ui_label(card, rows[2 * i + k], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_CIRCLE_SMALL + INK_GAP_XL, k * INK_CONTROL + INK_GAP_L, w - INK_CIRCLE_SMALL - INK_GAP_XL - (i && k ? INK_PRIMARY : INK_GAP));
+    enum { GROUPS = 2, GROUP_ROWS = 2 };
+    _Static_assert(sizeof titles / sizeof *titles <= GROUPS, "factory groups fit");
+    _Static_assert(sizeof rows / sizeof *rows <= GROUPS * GROUP_ROWS, "factory rows fit");
+    _Static_assert(sizeof icons / sizeof *icons <= GROUPS * GROUP_ROWS, "factory icons fit");
+    for (int i = 0; i < GROUPS; i++) {
+        ink_ui_label(F.screen, titles[i], INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, w);
+        y += ink_ui_text_height(titles[i], INK_FONT_LIST, INK_WEIGHT_BOLD, w) + INK_GAP_XS;
+        int heights[GROUP_ROWS], left = INK_CIRCLE_SMALL + INK_GAP_XL, at = 0;
+        const char *note = F.media ? TR("删除，找不回来") : TR("默认保留");
+        for (int k = 0; k < GROUP_ROWS; k++) {
+            int text_h = ink_ui_text_height(rows[2 * i + k], INK_FONT_NOTE, INK_WEIGHT_MEDIUM,
+                w - left - (i && k ? INK_PRIMARY + INK_GAP : INK_GAP));
+            if (i && k) text_h += INK_GAP_XS + ink_ui_text_height(note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w - left - INK_PRIMARY - INK_GAP);
+            heights[k] = LV_MAX(INK_CONTROL, text_h + 2 * INK_GAP_XS);
         }
-        ink_ui_group_divider(card, INK_CONTROL, w);
+        lv_obj_t *card = ink_ui_card(F.screen, INK_MARGIN, y, w, heights[0] + heights[1], INK_SURFACE_STATIC);
+        for (int k = 0; k < GROUP_ROWS; k++) {
+            ink_ui_circle(card, icons[2 * i + k], INK_GAP, at + (heights[k] - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+            ink_ui_label(card, rows[2 * i + k], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, left, at + INK_GAP_XS, w - left - (i && k ? INK_PRIMARY + INK_GAP : INK_GAP));
+            at += heights[k];
+        }
+        ink_ui_group_divider(card, heights[0], w);
         if (i) {
-            ink_ui_label(card, F.media ? TR("删除，找不回来") : TR("默认保留"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CIRCLE_SMALL + INK_GAP_XL, INK_CONTROL + INK_LINE_LIST + INK_GAP, w - INK_CIRCLE_SMALL - INK_GAP_XL - INK_PRIMARY);
-            ink_ui_toggle(card, "", F.media, w - INK_PRIMARY - INK_GAP, INK_CONTROL, INK_PRIMARY, click, action(TR("一起清空存储卡上的书和音频"), "factory.media", F.media ? "{\"clear_media\":false}" : "{\"clear_media\":true}"));
+            ink_ui_label(card, note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, heights[0] + 2 * INK_GAP_XS +
+                ink_ui_text_height(rows[3], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, w - left - INK_PRIMARY - INK_GAP), w - left - INK_PRIMARY - INK_GAP);
+            ink_ui_toggle(card, "", F.media, w - INK_PRIMARY - INK_GAP, heights[0], INK_PRIMARY, click, action(TR("一起清空存储卡上的书和音频"), "factory.media", F.media ? "{\"clear_media\":false}" : "{\"clear_media\":true}"));
         }
-        y += h + (i ? 0 : INK_LINE_NOTE) + INK_GAP_L;
+        y += heights[0] + heights[1] + INK_GAP_M;
     }
-    F.status = ink_ui_label(F.screen, F.backup, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_LINE_NOTE, w);
+    F.status = ink_ui_label(F.screen, F.backup, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     F.fields[1] = (ink_ui_field_spec_t){"cleared", "text", TR("会清除"), TR("所有家人的资料、设置和 Wi-Fi；含卡上个人资料及缓存"), {NULL, 0}, false};
     F.fields[2] = (ink_ui_field_spec_t){"kept", "text", TR("不会动"), F.media ? TR("家庭服务器上的备份；卡上其他共享文件") : TR("家庭服务器上的备份；卡上的书和音频及其他共享文件"), {NULL, 0}, false};
     F.fields[3] = (ink_ui_field_spec_t){"media", "toggle", TR("存储卡上的书和音频也一起清空"), F.media ? TR("开") : TR("关"), {NULL, 0}, false};
     F.fields[4] = (ink_ui_field_spec_t){"backup", "text", TR("这位家人的备份"), F.backup, {NULL, 0}, false};
-    F.backup_button = ink_ui_pill(F.screen, TR("先备份"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, (w - INK_GAP) / 2, INK_PRIMARY, false, click, action(TR("先备份"), "backup.now", NULL));
-    ink_ui_pill(F.screen, TR("验证并清空"), INK_MARGIN + (w + INK_GAP) / 2, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, (w - INK_GAP) / 2, INK_PRIMARY, true, click, action(TR("验证并清空"), "system.factory_reset", F.media ? "{\"clear_media\":true}" : "{\"clear_media\":false}"));
+    int button_h = LV_MAX(INK_CONTROL, ink_ui_text_height(TR("验证并清空"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, (w - INK_GAP) / 2 - 2 * INK_GAP_XS) + 2 * INK_GAP_XS);
+    F.backup_button = ink_ui_pill(F.screen, TR("先备份"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - button_h, (w - INK_GAP) / 2, button_h, false, click, action(TR("先备份"), "backup.now", NULL));
+    ink_ui_pill(F.screen, TR("验证并清空"), INK_MARGIN + (w + INK_GAP) / 2, INK_CANVAS_H - INK_MARGIN - button_h, (w - INK_GAP) / 2, button_h, true, click, action(TR("验证并清空"), "system.factory_reset", F.media ? "{\"clear_media\":true}" : "{\"clear_media\":false}"));
 }
 static void create(lv_obj_t *screen, void *arg) {
     F.screen = screen; F.done = arg != NULL; F.epoch = ink_member_epoch(); F.generation++; F.pending = false;

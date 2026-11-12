@@ -67,7 +67,8 @@ ink_ui_list_t *ink_ui_list_create(lv_obj_t *parent, const ink_ui_page_spec_t *pa
     l->columns = columns; l->cell_h = cell_h; l->bind = bind; l->ctx = ctx;
     l->fixed = page->action_count; memcpy(l->actions, page->actions, l->fixed * sizeof *l->actions);
     l->page.fields = l->fields; l->page.actions = l->actions;
-    l->empty = ink_ui_notice(parent, empty, INK_GAP_L);
+    l->empty = ink_ui_empty(parent, empty, NULL, NULL, NULL);
+    lv_obj_center(l->empty);
     lv_obj_add_event_cb(parent, deleted, LV_EVENT_DELETE, l);
     return l;
 }
@@ -87,7 +88,7 @@ void ink_ui_list_refresh(ink_ui_list_t *l, size_t total) {
         l->fields[i] = (ink_ui_field_spec_t){0}; l->actions[i + l->fixed] = (ink_ui_action_spec_t){0};
         l->bind(l->slots[i], offset + i, &l->fields[i], &l->actions[i + l->fixed], l->ctx);
         lv_obj_set_style_outline_width(l->slots[i], l->fields[i].object.id &&
-            !strcmp(l->fields[i].object.id, l->position->selected) ? INK_STROKE : 0, 0);
+            !strcmp(l->fields[i].object.id, l->position->selected) ? INK_STROKE_FOCUS : 0, 0);
     }
     l->page.field_count = l->visible; l->page.action_count = l->visible + l->fixed;
     l->actions[0].enabled = l->position->page > 0;
@@ -95,6 +96,7 @@ void ink_ui_list_refresh(ink_ui_list_t *l, size_t total) {
     if (total) lv_obj_add_flag(l->empty, LV_OBJ_FLAG_HIDDEN); else lv_obj_remove_flag(l->empty, LV_OBJ_FLAG_HIDDEN);
     if (l->bar) lv_obj_delete(l->bar);
     draw_bar(l, l->capacity, l->columns, l->cell_h);
+    if (!total) lv_obj_add_flag(l->bar, LV_OBJ_FLAG_HIDDEN);
     ink_ui_content_changed();
     ink_ui_hint_obj(l->parent, INK_REFRESH_UI);
 }

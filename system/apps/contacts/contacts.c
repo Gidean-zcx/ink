@@ -223,8 +223,11 @@ static void create(lv_obj_t *screen, void *arg) {
         P.search = ink_textfield_create(screen, &cfg, NULL, NULL, false);
         lv_obj_set_pos(P.search, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_width(P.search, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));
         ink_textfield_bind_short(P.search, &P.form, &P.specs[0], &P.actions[0]); lv_obj_add_event_cb(P.search, searched, LV_EVENT_VALUE_CHANGED, NULL);
-        lv_obj_t *body = ink_ui_box(screen, 0, y + INK_CONTROL + INK_GAP_XS, INK_CANVAS_W, CONTACT_ROWS * (INK_ROW_DOUBLE + INK_GAP_M) + INK_CONTROL + INK_GAP_L, 0, INK_SURFACE_WHITE, false);
-        build_rows(); P.list = ink_ui_list_create(body, &MODEL, &P.position, CONTACT_ROWS, 1, INK_ROW_DOUBLE, TR("没有匹配的联系人"), bind_item, NULL);
+        y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP_XS;
+        int room = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_GAP_L - y;
+        int capacity = (room - INK_CONTROL - INK_GAP) / (ink_ui_row_double() + INK_GAP_M);
+        lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, room, 0, INK_SURFACE_WHITE, false);
+        build_rows(); P.list = ink_ui_list_create(body, &MODEL, &P.position, capacity, 1, ink_ui_row_double(), TR("没有匹配的联系人"), bind_item, NULL);
         if (P.list) ink_ui_list_refresh(P.list, P.count);
         lv_obj_t *button = ink_ui_pill(screen, TR("添加联系人"), INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, NULL, NULL);
         ink_shell_bind(button, "contacts.edit", "{}");

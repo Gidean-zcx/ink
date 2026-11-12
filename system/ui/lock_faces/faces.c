@@ -144,7 +144,7 @@ void ink_lock_face_draw(lv_obj_t *parent, int style) {
     F.body = ink_ui_box(parent, 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
     lv_obj_set_style_bg_opa(F.body, LV_OPA_TRANSP, 0);
     ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t); F.day = t.year * 10000 + t.month * 100 + t.day;
-    int y = INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M;
+    int y = INK_STATUS_BAR + INK_GAP + (style == INK_LOCK_CALENDAR ? 0 : INK_CONTROL + INK_GAP_M);
     char time[24], date[96], name[64], text[128], ganzhi[24] = "";
     snprintf(name, sizeof name, "%s", TR("农历暂不可用"));
     ink_shell_time_strings(time, sizeof time, date, sizeof date);

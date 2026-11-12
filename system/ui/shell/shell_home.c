@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension y tile and notifications accept a theme-derived row position. */
 /* ui-scale-runtime: dimension ink_activity_card_draw,ink_activity_home_offset F6 returns theme-sized row heights and offsets. */
 /* ui-scale-runtime: dimension F.y,heading_h,notice_h,home_room,below_heading Page flow: theme sizes added up, plus text measured at the current size. */
+/* ui-scale-runtime: dimension first_h The lead card reserves two full title lines plus theme padding. */
 #include "shell_internal.h"
 
 static bool kid_app_visible(const char *id) {
@@ -167,8 +168,8 @@ static void draw_dots(void) {
     lv_obj_clean(N.dots);
     for (int i = 0; i < 3; i++)
         ink_ui_box(N.dots,
-                   INK_CANVAS_W / 2 - INK_RADIUS_PANEL + i * INK_RADIUS_PANEL - (i == N.home_page ? INK_GAP_M : 0),
-                   INK_GAP, i == N.home_page ? INK_ICON_MEDIUM : INK_GAP_M, INK_GAP_M, -1,
+                   INK_CANVAS_W / 2 + (i - 1) * INK_GAP_L - INK_PAGE_DOT / 2,
+                   (INK_GAP_XL - INK_PAGE_DOT) / 2, INK_PAGE_DOT, INK_PAGE_DOT, -1,
                    i == N.home_page ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, i != N.home_page);
     ink_ui_hint_obj(N.dots, INK_REFRESH_FAST);
 }
@@ -244,7 +245,7 @@ static int below_heading(void) {
     return INK_GAP_S + ink_ui_line_height(INK_FONT_HEADING) + INK_GAP_XS;
 }
 static int home_room(void) {
-    return INK_CANVAS_H - INK_STATUS_BAR - INK_DOCK - INK_MARGIN - ink_ui_line_height(INK_FONT_LIST);
+    return INK_CANVAS_H - INK_STATUS_BAR - INK_DOCK - INK_MARGIN - INK_GAP_XL;
 }
 
 typedef struct {
@@ -375,23 +376,26 @@ void draw_home_content(void) {
         lv_obj_set_style_text_align(today_date, LV_TEXT_ALIGN_RIGHT, 0);
         int notice = child() ? ink_ui_line_height(INK_FONT_NOTE) + INK_GAP : 0;
         int first = below_heading() + INK_GAP_XS, h = (home_room() - notice - first - 2 * INK_GAP) / 3;
-        lv_obj_t *c = ink_ui_card(N.content, INK_MARGIN, first, width(), h, INK_SURFACE_BLACK);
-        ink_ui_line(c, N.card_fields[0].label, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_L, width() - 2 * INK_MARGIN);
+        int first_h = LV_MAX(h, INK_GAP_M + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S +
+                            2 * ink_ui_line_height(INK_FONT_TITLE) + INK_GAP_XS);
+        h = (home_room() - notice - first - first_h - 2 * INK_GAP) / 2;
+        lv_obj_t *c = ink_ui_card(N.content, INK_MARGIN, first, width(), first_h, INK_SURFACE_BLACK);
+        ink_ui_line(c, N.card_fields[0].label, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_M, width() - 2 * INK_MARGIN);
         lv_obj_t *reading =
             ink_ui_label(c, N.card_fields[0].value, INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN,
-                         INK_GAP_L + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S, width() - 2 * INK_MARGIN);
+                         INK_GAP_M + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S, width() - 2 * INK_MARGIN);
         lv_label_set_long_mode(reading, LV_LABEL_LONG_DOT);
         lv_obj_set_height(reading, ink_ui_px(2 * ink_ui_line_height(INK_FONT_TITLE)));
         bind_card(c, 0);
         for (int i = 0; i < today_slots(); i++) {
             int w = (width() - INK_GAP) / 2;
-            int y = first + h + INK_GAP + (i / 2) * (h + INK_GAP);
+            int y = first + first_h + INK_GAP + (i / 2) * (h + INK_GAP);
             lv_obj_t *small = ink_ui_card(N.content, INK_MARGIN + (i % 2) * (w + INK_GAP), y, w, h, INK_SURFACE_WHITE);
-            ink_ui_icon(small, today_icon(i), INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_L, INK_GAP_L, false);
+            ink_ui_icon(small, today_icon(i), INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_L, INK_GAP_M, false);
             ink_ui_line(small, N.card_fields[i + 1].label, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_S,
-                        INK_GAP_L, w - 2 * INK_GAP_L - INK_ICON_MEDIUM - INK_GAP_S);
+                        INK_GAP_M, w - 2 * INK_GAP_L - INK_ICON_MEDIUM - INK_GAP_S);
             lv_obj_t *what = ink_ui_label(small, N.card_fields[i + 1].value, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_GAP_L,
-                                          INK_GAP_L + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M, w - 2 * INK_GAP_L);
+                                          INK_GAP_M + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S, w - 2 * INK_GAP_L);
             lv_label_set_long_mode(what, LV_LABEL_LONG_DOT);
             lv_obj_set_height(what, ink_ui_px(2 * ink_ui_line_height(INK_FONT_LIST)));
             if (child() && !strcmp(N.card_fields[i + 1].id, "time")) N.kid_time_label = what;
@@ -451,7 +455,7 @@ void ink_shell_home_create(lv_obj_t *screen) {
     ink_shell_statusbar(screen, N.home_page != 1);
     int h = home_room();
     N.content = ink_ui_box(screen, 0, INK_STATUS_BAR, INK_CANVAS_W, h, 0, INK_SURFACE_WHITE, false);
-    N.dots = ink_ui_box(screen, 0, INK_STATUS_BAR + h, INK_CANVAS_W, ink_ui_line_height(INK_FONT_LIST), 0,
+    N.dots = ink_ui_box(screen, 0, INK_STATUS_BAR + h, INK_CANVAS_W, INK_GAP_XL, 0,
                         INK_SURFACE_WHITE, false);
     ink_shell_dock(screen);
     draw_home_content();

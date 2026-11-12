@@ -220,12 +220,6 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     bool join_previous = r->icon && i % S.capacity && PAGES[S.page].rows[i - 1].icon && !r->section && !PAGES[S.page].rows[i - 1].note;
     if (r->icon) {
         lv_obj_set_style_border_post(bg, false, 0);
-        for (int end = 0; end < 2; end++) {
-            if (!(end ? join_next : join_previous)) continue;
-            lv_obj_t *half = ink_ui_box(bg, 0, end ? body / 2 : 0, w, end ? body - body / 2 : body / 2,
-                0, INK_SURFACE_WHITE, true);
-            lv_obj_set_style_border_side(half, LV_BORDER_SIDE_LEFT | LV_BORDER_SIDE_RIGHT, 0);
-        }
         if (join_previous)
             ink_ui_group_divider(bg, 0, w);
         ink_ui_circle(slot, r->icon, INK_GAP, head + (body - INK_CIRCLE_SMALL) / 2,

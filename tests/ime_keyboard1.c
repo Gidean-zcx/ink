@@ -98,7 +98,7 @@ static void functional(void) {
         CHECK(ink_text_english() && !ink_text_value()[0], "specialized input ignores language code: %d", cfg.type);
         if (cfg.type == INK_TEXT_PASSWORD) {
             lv_area_t compact, actual; ink_shell_keyboard_area(&compact); lv_obj_update_layout(K.root); lv_obj_get_coords(K.root, &actual);
-            int saved = ink_ui_px(ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP);
+            int saved = ink_ui_px(candidate_band_height());
             CHECK(compact.y1 - normal.y1 == saved && actual.y1 == compact.y1, "password keyboard removes the entire candidate band from its reported and actual height");
             CHECK(!lv_obj_is_visible(K.cands) && !lv_obj_is_visible(K.composing), "password hides candidates and composing");
             touch(KEY_SWITCH); ink_shell_keyboard_area(&actual);

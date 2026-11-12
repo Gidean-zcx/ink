@@ -9,6 +9,7 @@
 #include "../../system/boot/main.c"
 #undef ink_main
 #include "../integration/whole_product.h"
+#include "../pagebar.h"
 
 extern void test_confirm_request(const ink_json_t *j);
 static char scene[32], decision[24], status[24];
@@ -49,6 +50,14 @@ static void find(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) find(lv_obj_get_child(root, (int32_t)i));
 }
 static void locate(void) { px = py = -1; enabled = false; lv_obj_update_layout(lv_layer_sys()); find(lv_layer_sys()); }
+static int reading_page, reading_pages;
+static void locate_next(void) {
+    px = py = -1; enabled = false;
+    lv_obj_t *bar = ink_test_pagebar(lv_layer_sys(), reading_page, reading_pages);
+    if (!bar) return;
+    lv_obj_t *next = lv_obj_get_child(bar, 2); lv_area_t a; lv_obj_get_coords(next, &a);
+    px = (a.x1 + a.x2) / 2; py = (a.y1 + a.y2) / 2; enabled = true;
+}
 static void press(const char *label) {
     wanted = label;
     CHECK(WAIT_FOR(({ on_ui(locate); px >= 0 && enabled; }), 5000), "human control '%s' is available", label);
@@ -101,8 +110,10 @@ static void read_all(uint32_t token) {
         view(); const char *at = strstr(g_snap, "阅读="); int page = 0, pages = 0;
         CHECK(at && sscanf(at, "阅读=%d/%d", &page, &pages) == 2 && pages > 0, "snapshot reports mandatory reading");
         if (!pages || page == pages) return;
-        char label[40]; snprintf(label, sizeof label, "%d / %d", page, pages);
-        press(label);
+        reading_page = page; reading_pages = pages; on_ui(locate_next);
+        CHECK(enabled, "exact shared pager state %d/%d offers the next page", page, pages);
+        if (enabled) tap(px, py);
+        quiet();
     }
     CHECK(false, "all pages are reachable");
 }

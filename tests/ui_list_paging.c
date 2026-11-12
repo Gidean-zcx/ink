@@ -98,11 +98,22 @@ static bool has_label(lv_obj_t *o, const char *text) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) if (has_label(lv_obj_get_child(o, i), text)) return true;
     return false;
 }
+static bool single_page_indicator(void) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(body); i++) {
+        lv_obj_t *bar = lv_obj_get_child(body, (int32_t)i);
+        if (lv_obj_get_child_count(bar) != 3) continue;
+        lv_obj_t *indicator = lv_obj_get_child(bar, 1);
+        if (lv_obj_get_child_count(indicator) == 1 &&
+            lv_obj_get_width(lv_obj_get_child(indicator, 0)) == ink_ui_px(INK_PAGE_DOT) &&
+            lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(indicator, 0), 0), ink_ui_ink())) return true;
+    }
+    return false;
+}
 static unsigned item_count(void) {
     unsigned n = 0;
     for (uint32_t i = 0; i < lv_obj_get_child_count(body); i++) {
         lv_obj_t *o = lv_obj_get_child(body, i);
-        if (lv_obj_get_child_count(o) == 1 && lv_obj_check_type(lv_obj_get_child(o, 0), &lv_label_class)) n++;
+        if (lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE) && lv_obj_get_child_count(o) == 1 && lv_obj_check_type(lv_obj_get_child(o, 0), &lv_label_class)) n++;
     }
     return n;
 }
@@ -136,7 +147,7 @@ static void restored(void) {
     read_snapshot();
     CHECK(position.page == 1 && !strcmp(position.selected, expected) && !strcmp(opened, expected), "return restores the original page and stable selected file id");
     CHECK(strstr(snapshot, expected) && strstr(snapshot, file_label), "renaming the real file updates its label without changing its identity");
-    CHECK(lv_obj_get_style_outline_width(slots[1], 0) == INK_STROKE, "the restored selection is visible");
+    CHECK(lv_obj_get_style_outline_width(slots[1], 0) == INK_STROKE_FOCUS, "the restored selection is visible");
 }
 static void ai_open(void) {
     ink_receipt_t rc;
@@ -156,13 +167,14 @@ static void boundaries(void) {
     CHECK(!ink_ui_list_turn(list, -1), "the first page cannot underflow");
     for (int i = 0; i < 333; i++) CHECK(ink_ui_list_turn(list, 1), "turn to page %d", i + 2);
     read_snapshot();
-    CHECK(item_count() == 1 && has_label(body, "334 / 334") && strstr(snapshot, "\"offset\":999,\"visible\":1,\"truncated\":true"), "the last page contains just its last item");
+    CHECK(item_count() == 1 && has_label(body, "334/334") && strstr(snapshot, "\"offset\":999,\"visible\":1,\"truncated\":true"), "the last page contains just its last item");
     CHECK(!strstr(snapshot, "test.list_next") && !ink_ui_list_turn(list, 1), "last-page next is absent and cannot overflow");
     total = 0; ink_ui_list_refresh(list, total); read_snapshot();
-    CHECK(item_count() == 0 && position.page == 0 && has_label(body, "这里还没有内容") && has_label(body, "1 / 1"), "empty pages have no item objects and a visible empty state");
+    CHECK(item_count() == 0 && position.page == 0 && has_label(body, "这里还没有内容") &&
+        single_page_indicator() && lv_obj_has_flag(lv_obj_get_child(body, -1), LV_OBJ_FLAG_HIDDEN), "empty pages show the empty state and hide the pager");
     CHECK(strstr(snapshot, "\"fields\":[],\"actions\":[]") && strstr(snapshot, "\"total\":0,\"offset\":0,\"visible\":0,\"truncated\":false"), "empty snapshot has neither fabricated items nor page actions");
     total = 2; ink_ui_list_refresh(list, total); read_snapshot();
-    CHECK(item_count() == 2 && has_label(body, "1 / 1") && strstr(snapshot, "\"total\":2,\"offset\":0,\"visible\":2,\"truncated\":false") &&
+    CHECK(item_count() == 2 && single_page_indicator() && strstr(snapshot, "\"total\":2,\"offset\":0,\"visible\":2,\"truncated\":false") &&
           !strstr(snapshot, "test.list_prev") && !strstr(snapshot, "test.list_next"), "a single page shows both items and disables both endpoints");
     char small[32] = "filled";
     CHECK(ink_ui_list_snapshot(list, small, sizeof small) < 0 && !small[0], "small output is an explicit failure without partial JSON");
