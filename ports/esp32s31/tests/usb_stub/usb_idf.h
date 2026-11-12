@@ -27,6 +27,12 @@ int tinyusb_driver_install(const tinyusb_config_t *);
 int tinyusb_driver_uninstall(void);
 bool tud_task_event_ready(void);
 bool tud_disconnect(void);
+bool tud_connect(void);
+#define GPIO_NUM_36 36
+#define GPIO_MODE_OUTPUT 1
+int gpio_reset_pin(int);
+int gpio_set_direction(int, int);
+int gpio_set_level(int, int);
 void usbd_defer_func(void (*)(void *), void *, bool);
 TickType_t xTaskGetTickCount(void);
 void vTaskSuspend(void *);

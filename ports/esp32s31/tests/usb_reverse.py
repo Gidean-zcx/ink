@@ -17,11 +17,17 @@ source = (port / "hal_usb_s31.c").read_text()
 mutations = [
     ("local-write-barrier", '__atomic_store_n(&g_present, false, __ATOMIC_RELEASE);',
      '__atomic_store_n(&g_present, true, __ATOMIC_RELEASE);'),
-    ("poll-remount-barrier", 'return ink_usb_lent ? ESP_ERR_INVALID_STATE', 'return false ? ESP_ERR_INVALID_STATE'),
+    ("poll-remount-barrier", 'ink_usb_card ? ESP_ERR_INVALID_STATE', 'false ? ESP_ERR_INVALID_STATE'),
     ("eject", 'if (load_eject && !start)', 'if (false && load_eject && !start)'),
-    ("restore", 'if (r) return -1;\n    card_event(NULL, INK_SD_EVENT, 0, NULL);',
-     'if (r) return -1;'),
+    ("restore", 'if (ink_usb_card && ink_usb_reclaim()) DONE(-1);\n    osal_mutex_unlock(g_lock);\n    card_event(NULL, INK_SD_EVENT, 0, NULL);',
+     'if (ink_usb_card && ink_usb_reclaim()) DONE(-1);\n    osal_mutex_unlock(g_lock);'),
     ("drain", 'if (tud_task_event_ready())', 'if (false && tud_task_event_ready())'),
+    ("route-to-msc", 'epd_board_metalio_eink4_plus_ana_sw_set(false);',
+     'epd_board_metalio_eink4_plus_ana_sw_set(true);'),
+    ("route-to-usj", 'epd_board_metalio_eink4_plus_ana_sw_set(true);', ''),
+    ("disconnect-delay", 'vTaskDelay(pdMS_TO_TICKS(250));', ''),
+    ("route-settle", 'vTaskDelay(pdMS_TO_TICKS(100));\n    __atomic_store_n', '__atomic_store_n'),
+    ("switching-events", 'if (!__atomic_load_n(&ink_usb_up, __ATOMIC_ACQUIRE)) return;', ''),
 ]
 with tempfile.TemporaryDirectory(prefix="usb-reverse-", dir=build) as directory:
     work = Path(directory)

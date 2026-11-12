@@ -113,7 +113,19 @@ static void (*usb_event_cb)(tinyusb_event_t *, void *);
 static void (*deferred)(void *);
 static void *deferred_arg;
 static unsigned ticks;
-bool usb_serial_jtag_is_connected(void) { return computer; }
+static bool route_high = true;
+static unsigned disconnected_at, routed_at;
+bool usb_serial_jtag_is_connected(void) { return computer && route_high; }
+int gpio_reset_pin(int pin) { assert(pin == 36); return 0; }
+int gpio_set_direction(int pin, int mode) { assert(pin == 36 && mode == GPIO_MODE_OUTPUT); return 0; }
+int gpio_set_level(int pin, int high) {
+    assert(pin == 36);
+    if (!high) assert(usb_running && ticks - disconnected_at >= 250);
+    else assert(!usb_running && ticks - disconnected_at >= 250);
+    route_high = high;
+    routed_at = ticks;
+    return 0;
+}
 int sdmmc_host_init(void) { return 0; }
 int sdmmc_host_deinit(void) { return 0; }
 int sdmmc_host_init_slot(int slot, const sdmmc_slot_config_t *cfg) {
@@ -161,7 +173,14 @@ bool tud_task_event_ready(void) {
     completed_writes++;
     return true;
 }
-bool tud_disconnect(void) { assert(usb_running); return true; }
+bool tud_disconnect(void) {
+    assert(usb_running);
+    disconnected_at = ticks;
+    tinyusb_event_t event = {.id = TINYUSB_EVENT_DETACHED};
+    usb_event_cb(&event, NULL);
+    return true;
+}
+bool tud_connect(void) { assert(!route_high && ticks - routed_at >= 100); return true; }
 void usbd_defer_func(void (*fn)(void *), void *arg, bool isr) { assert(!isr); deferred = fn; deferred_arg = arg; }
 TickType_t xTaskGetTickCount(void) { return ticks; }
 void vTaskSuspend(void *task) { assert(!task && ink_usb_parked); }
@@ -217,7 +236,7 @@ int main(void) {
     assert(tud_msc_start_stop_cb(0, 0, false, true) && hal_usb_host_done());
     poll_card(); assert(stop_requested);
     deferred_writes = 2;
-    assert(!hal_usb_disk_stop() && completed_writes == 2 && hal_fs_card_present());
+    assert(!hal_usb_disk_stop() && completed_writes == 2 && hal_fs_card_present() && route_high);
     check_local_write();
     stop_requested = false;
     assert(!hal_usb_disk_start()); check_lent();
@@ -225,7 +244,7 @@ int main(void) {
     computer = false;
     tinyusb_event_t detached = {.id = TINYUSB_EVENT_DETACHED}; usb_event_cb(&detached, NULL);
     poll_card(); assert(stop_requested);
-    assert(!hal_usb_disk_stop() && hal_fs_card_present());
+    assert(!hal_usb_disk_stop() && hal_fs_card_present() && route_high);
     check_local_write();
     assert(!lfs_unmount(&g_lfs)); heap_caps_free(g_dma);
     snprintf(path, sizeof path, "%s/content/from-device.txt", g_root); assert(!remove(path));
