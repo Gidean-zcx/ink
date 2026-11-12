@@ -385,14 +385,19 @@ static void create(lv_obj_t *screen, void *arg) {
             const char *caps[] = {"call.mute", "phone.keypad", connected ? "call.route" : "shell.bluetooth", "call.record"};
             const char *args[] = {P.muted ? "{\"on\":false}" : "{\"on\":true}", "{}", headset ? "{\"headset\":false}" : "{\"headset\":true}", "{}"};
             for (int i = 0; i < 4; i++) {
-                int x = INK_MARGIN + i * 160;
-                ink_ui_circle(screen, icons[i], x, 653, 125, INK_ICON_LIST, (i == 0 && P.muted) || (i == 2 && headset) ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, control, (void *)(intptr_t)(i + 1));
-                lv_obj_t *text = ink_ui_line(screen, labels[i], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, x, 790, 125); lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_CENTER, 0);
-                lv_obj_add_flag(text, LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(text, control, LV_EVENT_CLICKED, (void *)(intptr_t)(i + 1));
+                int cell = (INK_CANVAS_W - 2 * INK_MARGIN - 3 * INK_GAP_M) / 4;
+                int x = INK_MARGIN + i * (cell + INK_GAP_M), h = INK_CONTROL + INK_GAP_XS + 2 * ink_ui_line_height(INK_FONT_NOTE);
+                lv_obj_t *tile = ink_ui_box(screen, x, INK_CANVAS_H / 2 + INK_GAP, cell, h, 0, INK_SURFACE_WHITE, false);
+                lv_obj_add_flag(tile, LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(tile, control, LV_EVENT_CLICKED, (void *)(intptr_t)(i + 1));
+                ink_ui_circle(tile, icons[i], (cell - INK_CONTROL) / 2, 0, INK_CONTROL, INK_ICON_LIST,
+                    (i == 0 && P.muted) || (i == 2 && headset) ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, NULL, NULL);
+                lv_obj_t *text = ink_ui_label(tile, labels[i], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, 0, INK_CONTROL + INK_GAP_XS, cell);
+                lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_CENTER, 0);
                 P.actions[i + 1] = (ink_ui_action_spec_t){.id = icons[i], .label = labels[i], .capability = caps[i], .args_json = args[i], .enabled = enabled};
             }
             P.model.action_count = 5;
-            lv_obj_t *route_label = ink_ui_notice(screen, P.route, 850); lv_obj_set_style_text_align(route_label, LV_TEXT_ALIGN_CENTER, 0);
+            lv_obj_t *route_label = ink_ui_notice(screen, P.route, INK_CANVAS_H / 2 + INK_GAP + INK_CONTROL +
+                2 * INK_GAP_XS + 2 * ink_ui_line_height(INK_FONT_NOTE)); lv_obj_set_style_text_align(route_label, LV_TEXT_ALIGN_CENTER, 0);
             P.fields[4] = (ink_ui_field_spec_t){.id = "recording", .role = "status", .label = TR("录音"), .value = TR("通话音频接线未核实，暂不能录音")};
         }
     } else if (recent) {
@@ -424,15 +429,17 @@ static void create(lv_obj_t *screen, void *arg) {
             if (a) { ink_args_init(a); ink_args_str(a, "collection", "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a); }
         }
         static const char *const keys[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"};
-        int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3, y = INK_CANVAS_H - INK_MARGIN - INK_DIGIT - 4 * (INK_DIGIT + INK_GAP_S);
+        int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
+        int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L + ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
+        int key_h = (INK_CANVAS_H - INK_MARGIN - INK_DIGIT - INK_GAP_M - y - 3 * INK_GAP_S) / 4;
         lv_obj_set_pos(P.notice, ink_ui_px(INK_MARGIN), ink_ui_px(INK_CANVAS_H - INK_MARGIN - INK_DIGIT + INK_GAP_S));
         lv_obj_set_width(P.notice, ink_ui_px((INK_CANVAS_W - INK_DIGIT) / 2 - INK_MARGIN - INK_GAP));
         for (int i = 0; i < 12; i++) {
-            lv_obj_t *b = ink_ui_pill(screen, keys[i], INK_MARGIN + (i % 3) * cell + (cell - INK_DIGIT) / 2, y + (i / 3) * (INK_DIGIT + INK_GAP_S), INK_DIGIT, INK_DIGIT, false, digit, (void *)keys[i]);
+            lv_obj_t *b = ink_ui_pill(screen, keys[i], INK_MARGIN + (i % 3) * cell + (cell - INK_DIGIT) / 2, y + (i / 3) * (key_h + INK_GAP_S), INK_DIGIT, key_h, false, digit, (void *)keys[i]);
             ink_ui_pill_text(b, INK_FONT_HEADING, INK_WEIGHT_MEDIUM);
         }
         ink_ui_circle(screen, "phone", (INK_CANVAS_W - INK_DIGIT) / 2, INK_CANVAS_H - INK_MARGIN - INK_DIGIT, INK_DIGIT, INK_ICON_APP, INK_SURFACE_BLACK, dial, NULL);
-        int remove_w = !strcmp(ink_lang_code(), "zh") ? INK_CONTROL : 2 * INK_CONTROL;
+        int remove_w = LV_MAX(INK_CONTROL, ink_ui_text_width(TR("删除"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE));
         ink_ui_pill(screen, TR("删除"), INK_CANVAS_W - INK_MARGIN - remove_w, INK_CANVAS_H - INK_MARGIN - INK_DIGIT + INK_GAP_L, remove_w, INK_CONTROL, false, digit, "delete");
     }
 }

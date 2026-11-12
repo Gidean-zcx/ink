@@ -155,20 +155,22 @@ static void create_detail(lv_obj_t *screen, void *arg) {
         action(i, labels[i], "clock.draft", args, true);
         button(screen, i, INK_MARGIN + i * (w + INK_GAP_M) / 4, y + INK_CONTROL, (w - 3 * INK_GAP_M) / 4, false);
     }
-    y += 2 * INK_CONTROL + INK_GAP;
+    y += 2 * INK_CONTROL + INK_GAP_XS;
     action(4, TR_NOOP("输入名称"), "clock.focus", NULL, true);
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = C.draft.title, .hint = TR("闹钟名称"), .max = sizeof C.draft.title - 1};
     C.name = ink_textfield_create(screen, &cfg, NULL, NULL, false);
     lv_obj_set_y(C.name, ink_ui_px(y));
     ink_textfield_style(C.name, INK_FIELD_SINGLE, TR("闹钟名称"));
     ink_textfield_bind_short(C.name, &EDIT, &C.fields[2], &C.actions[4]); lv_obj_add_event_cb(C.name, name_changed, LV_EVENT_VALUE_CHANGED, NULL);
-    y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
+    y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP_XS;
     const char *presets[] = {TR_NOOP("只响一次"), TR_NOOP("每天"), TR_NOOP("工作日")}; const int masks[] = {0, 127, 62};
+    int preset_h = LV_MAX(INK_CONTROL, 2 * ink_ui_line_height(INK_FONT_LIST) + 2 * INK_GAP_XS);
     for (int i = 0; i < 3; i++) {
         char args[48]; snprintf(args, sizeof args, "{\"weekdays\":%d}", masks[i]); action(5 + i, presets[i], "clock.draft", args, true);
-        button(screen, 5 + i, INK_MARGIN + i * (w + INK_GAP_M) / 3, y, (w - 2 * INK_GAP_M) / 3, C.draft.weekdays == masks[i]);
+        ink_ui_pill(screen, C.actions[5 + i].label, INK_MARGIN + i * (w + INK_GAP_M) / 3, y,
+            (w - 2 * INK_GAP_M) / 3, preset_h, C.draft.weekdays == masks[i], clicked, (void *)(uintptr_t)(5 + i));
     }
-    y += INK_CONTROL + INK_GAP;
+    y += preset_h + INK_GAP;
     for (int i = 0; i < 7; i++) {
         char args[48]; snprintf(args, sizeof args, "{\"weekdays\":%u}", C.draft.weekdays ^ (1u << i)); action(8 + i, DAYS[i], "clock.draft", args, true);
         button(screen, 8 + i, INK_MARGIN + (i % 4) * (w + INK_GAP_M) / 4, y + (i / 4) * (INK_CONTROL + INK_GAP_M), (w - 3 * INK_GAP_M) / 4, C.draft.weekdays & (1u << i));

@@ -1,6 +1,7 @@
 /* Reuse the existing synthetic shell fixtures; exercise real app capabilities. */
 #define INK_DESIGN_LANG
 #include "ui_shell_scenes.c"
+#include "pagebar.h"
 
 static int requested_size;
 static char *tree_json;
@@ -61,6 +62,49 @@ static void tree_node(lv_obj_t *obj, lv_area_t clip, unsigned depth) {
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) tree_node(lv_obj_get_child(obj, (int32_t)i), clip, depth + 1);
 }
+static void check_about_frames(lv_obj_t *obj) {
+    if (!lv_obj_is_visible(obj)) return;
+    CHECK(!lv_obj_get_style_border_width(obj, 0) ||
+        lv_obj_get_style_border_side(obj, 0) != (LV_BORDER_SIDE_LEFT | LV_BORDER_SIDE_RIGHT), "about has no orphan side frame");
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) check_about_frames(lv_obj_get_child(obj, (int32_t)i));
+}
+static lv_obj_t *field_named(const char *title) {
+    wanted = title; find_label();
+    CHECK(found_label, "field label is visible: %s", title);
+    return found_label ? lv_obj_get_parent(found_label) : NULL;
+}
+static void check_page_repairs(void) {
+    if (!strcmp(scene, "Sms") || !strcmp(scene, "SmsThread"))
+        CHECK(!ink_test_pagebar(lv_screen_active(), 1, 1), "empty SMS page has no pager");
+    if (!strcmp(scene, "SetAbout")) check_about_frames(lv_screen_active());
+    if (!strcmp(scene, "Main")) {
+        unsigned strips = 0;
+        for (uint32_t i = 0; i < lv_obj_get_child_count(lv_screen_active()); i++) {
+            lv_obj_t *o = lv_obj_get_child(lv_screen_active(), (int32_t)i);
+            if (lv_obj_get_height(o) != ink_ui_px(INK_GAP_XL) || lv_obj_get_child_count(o) != 3) continue;
+            strips++;
+            for (int dot = 0; dot < 3; dot++) {
+                lv_obj_t *d = lv_obj_get_child(o, dot);
+                CHECK(lv_obj_get_width(d) == ink_ui_px(INK_PAGE_DOT) && lv_obj_get_height(d) == ink_ui_px(INK_PAGE_DOT), "home indicators are equal dots");
+                if (dot) CHECK(lv_obj_get_x(d) - lv_obj_get_x(lv_obj_get_child(o, dot - 1)) == ink_ui_px(INK_GAP_L), "home dots remain separated");
+            }
+        }
+        CHECK(strips == 1, "one home indicator strip");
+    }
+    const char *title = !strcmp(scene, "Contacts") ? "搜索联系人" : !strcmp(scene, "SmsThread") ? "短信内容" : !strcmp(scene, "Phone") ? "号码" : NULL;
+    if (!title) return;
+    lv_obj_t *f = field_named(title); lv_area_t a, b;
+    if (!f) return;
+    lv_obj_get_coords(f, &a);
+    CHECK(a.y2 < ink_ui_height() - ink_ui_px(INK_MARGIN), "the complete field clears the footer");
+    if (!strcmp(scene, "Contacts")) {
+        wanted = "没有匹配的联系人"; find_label(); CHECK(found_label, "contact empty state is visible");
+        if (found_label) { lv_obj_get_coords(lv_obj_get_parent(lv_obj_get_parent(found_label)), &b); CHECK(a.y2 < b.y1, "contact list begins below the whole search field"); }
+    } else if (!strcmp(scene, "Phone")) {
+        wanted = "1"; find_label(); CHECK(found_label, "dial pad is visible");
+        if (found_label) { lv_obj_get_coords(lv_obj_get_parent(found_label), &b); CHECK(a.y2 < b.y1, "dial pad begins below the whole number field"); }
+    }
+}
 static void inspect_design(void) {
     tree_json = osal_malloc(65536, OSAL_MEM_EXTERNAL);
     CHECK(tree_json, "tree buffer is available");
@@ -76,6 +120,7 @@ static void inspect_design(void) {
     ink_jw_raw(&tree_writer, "]}");
     CHECK(!tree_writer.overflow, "complete control tree fits");
     assert_text_fits();
+    check_page_repairs();
     read_screen(); CHECK(g_snap[0], "page provides its actual AI snapshot");
 }
 static void save_tree(void *arg) {

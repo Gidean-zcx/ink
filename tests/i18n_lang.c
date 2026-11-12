@@ -135,11 +135,18 @@ static const char *const EN_ROWS[] = {"Settings", "Network & SIM", "Bluetooth", 
     "Lock Screen", "Storage & Backup", "About & Updates"};
 static void settings_home(const char *const rows[], const char *const absent[], const char *name) {
     CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open the settings home");
-    capture("Settings", name);
-    for (int i = 0; i < 9; i++) {
-        CHECK(shows(rows[i]), "%s shows %s", name, rows[i]);
-        CHECK(!shows(absent[i]), "%s no longer shows %s", name, absent[i]);
+    unsigned seen = 0;
+    for (int page = 1; page <= 2; page++) {
+        char frame[64]; snprintf(frame, sizeof frame, page == 1 ? "%s" : "%s-2", name);
+        capture("Settings", frame);
+        for (int i = 0; i < 9; i++) {
+            if (shows(rows[i])) seen |= 1u << i;
+            CHECK(!shows(absent[i]), "%s no longer shows %s", name, absent[i]);
+        }
+        if (page == 1) CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "visit settings second page");
     }
+    CHECK(seen == (1u << 9) - 1, "%s shows every setting across exactly two pages", name);
+    CHECK(BY_HAND("shell.page_prev", NULL) && ready("Settings"), "return to settings first page");
 }
 
 static const char *missing_key = "这句测试用的话没有译文";
@@ -237,7 +244,7 @@ static void first_run(void) {
           "English again before the restart");
     CHECK(WAIT_FOR(at("Settings") && strstr(g_snap, "语言=en"), 3000), "the settings home follows at once");
     on_ui(read_labels);
-    CHECK(shows("Settings") && shows("About & Updates"), "the open settings home is redrawn in English");
+    CHECK(shows("Settings") && shows("Voice & AI") && !shows("语音和 AI"), "the open settings first page is redrawn in English");
     finish();
 }
 

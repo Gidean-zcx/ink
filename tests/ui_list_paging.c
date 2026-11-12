@@ -170,7 +170,8 @@ static void boundaries(void) {
     CHECK(item_count() == 1 && has_label(body, "334/334") && strstr(snapshot, "\"offset\":999,\"visible\":1,\"truncated\":true"), "the last page contains just its last item");
     CHECK(!strstr(snapshot, "test.list_next") && !ink_ui_list_turn(list, 1), "last-page next is absent and cannot overflow");
     total = 0; ink_ui_list_refresh(list, total); read_snapshot();
-    CHECK(item_count() == 0 && position.page == 0 && has_label(body, "这里还没有内容") && single_page_indicator(), "empty pages have no item objects and a visible empty state");
+    CHECK(item_count() == 0 && position.page == 0 && has_label(body, "这里还没有内容") &&
+        single_page_indicator() && lv_obj_has_flag(lv_obj_get_child(body, -1), LV_OBJ_FLAG_HIDDEN), "empty pages show the empty state and hide the pager");
     CHECK(strstr(snapshot, "\"fields\":[],\"actions\":[]") && strstr(snapshot, "\"total\":0,\"offset\":0,\"visible\":0,\"truncated\":false"), "empty snapshot has neither fabricated items nor page actions");
     total = 2; ink_ui_list_refresh(list, total); read_snapshot();
     CHECK(item_count() == 2 && single_page_indicator() && strstr(snapshot, "\"total\":2,\"offset\":0,\"visible\":2,\"truncated\":false") &&

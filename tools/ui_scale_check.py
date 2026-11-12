@@ -285,6 +285,8 @@ def violations(source, category, symbols, allowed):
         if ast.unparse(n) in symbols and getattr(symbols[ast.unparse(n)], 'ui_contract', False): return []
         if isinstance(n, ast.Call):
             name = ast.unparse(n.func)
+            if category == 'dimension' and name in ('LV_MIN', 'LV_MAX') and len(n.args) == 2:
+                return leaves(n.args[0]) + leaves(n.args[1])
             if name in ('ink_ui_px', 'ink_dp') and len(n.args) == 1: return leaves(n.args[0])
             if category == 'dimension' and name in ('LV_PCT', 'lv_pct') and len(n.args) == 1: return []
             if category == 'dimension' and (name in symbols and getattr(symbols[name], 'ui_contract', False) or

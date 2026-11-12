@@ -1,5 +1,6 @@
 /* Decode on the media executor; keep only dithered pixels in PSRAM. */
 /* ui-scale-runtime: dimension x,y,w,h Theme-sized preview rows and widget controls. */
+/* ui-scale-runtime: dimension INK_LOCK_FACE_COUNT Number of face tiles in the two-column grid. */
 #include "ink/sys/i18n.h"
 #include <limits.h>
 #include <stdio.h>
@@ -22,22 +23,22 @@ static struct {
 } P INK_PSRAM_BSS;
 
 void ink_lock_face_settings(lv_obj_t *parent) {
-    int w = INK_CANVAS_W - 2 * INK_MARGIN, h = 2 * ink_ui_line_height(INK_FONT_STATUS) + 2 * INK_GAP_S;
-    if (h < INK_CONTROL) h = INK_CONTROL;
+    int w = INK_CANVAS_W - 2 * INK_MARGIN, cell = (w - INK_GAP_M) / 2;
+    int preview_h = 2 * ink_ui_line_height(INK_FONT_STATUS) + 2 * INK_STROKE;
+    int h = preview_h + ink_ui_line_height(INK_FONT_LIST) + 2 * INK_GAP_XS;
     static const char *const previews[] = {"", "08:30", "", "08\n30", "08:30\n-- --", "1 2 3\n4 5 6"};
     _Static_assert(sizeof previews / sizeof *previews == INK_LOCK_FACE_COUNT, "previews match");
     for (int i = 0; i < INK_LOCK_FACE_COUNT; i++) {
         const char *title = TR(ink_lock_face_choices[i]);
         bool selected = ink_setting_get("display.lock_style") == i;
-        lv_obj_t *p = ink_ui_box(parent, INK_MARGIN, i * h, w, h, 0, INK_SURFACE_WHITE, false);
-        lv_obj_t *preview = ink_ui_box(p, 0, INK_GAP_XS, INK_PRIMARY, h - 2 * INK_GAP_XS, INK_RADIUS_KEY, INK_SURFACE_STATIC, true);
+        lv_obj_t *p = ink_ui_box(parent, INK_MARGIN + i % 2 * (cell + INK_GAP_M), i / 2 * h, cell, h, 0, INK_SURFACE_WHITE, false);
+        lv_obj_t *preview = ink_ui_box(p, (cell - INK_PRIMARY) / 2, 0, INK_PRIMARY, preview_h, INK_RADIUS_KEY, INK_SURFACE_STATIC, true);
         lv_obj_t *label = ink_ui_label(preview, previews[i], INK_FONT_STATUS, INK_WEIGHT_REGULAR, 0, 0, INK_PRIMARY);
         lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0); lv_obj_center(label);
         if (i == 0 || i == 2) lv_obj_center(ink_ui_icon(preview, i == 0 ? "page" : "gallery", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false));
-        ink_ui_line(p, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_PRIMARY + INK_GAP,
-                    (h - ink_ui_line_height(INK_FONT_LIST)) / 2, w - INK_PRIMARY - INK_CONTROL - INK_GAP);
-        ink_ui_box(p, w - INK_ICON_SMALL, (h - INK_ICON_SMALL) / 2, INK_ICON_SMALL, INK_ICON_SMALL, -1, INK_SURFACE_WHITE, true);
-        if (selected) ink_ui_icon(p, "check", INK_ICON_SMALL, INK_ICON_LINE, w - INK_ICON_SMALL, (h - INK_ICON_SMALL) / 2, false);
+        lv_obj_t *caption = ink_ui_line(p, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, 0, preview_h + INK_GAP_XS, cell);
+        lv_obj_set_style_text_align(caption, LV_TEXT_ALIGN_CENTER, 0);
+        if (selected) ink_ui_icon(p, "check", INK_ICON_SMALL, INK_ICON_LINE, cell - INK_ICON_SMALL, 0, false);
         snprintf(P.args[i], sizeof P.args[i], "{\"id\":\"display.lock_style\",\"value\":%d}", i);
         P.fields[i] = (ink_ui_field_spec_t){.id = ink_lock_face_choices[i], .role = "option", .label = title, .value = selected ? TR("已选择") : ""};
         P.actions[i] = (ink_ui_action_spec_t){.id = ink_lock_face_choices[i], .label = title, .capability = "settings.set", .args_json = P.args[i], .enabled = true};
@@ -53,7 +54,7 @@ void ink_lock_face_settings(lv_obj_t *parent) {
         P.fields[k] = (ink_ui_field_spec_t){.id = ids[i], .role = "setting", .label = TR(titles[i]), .value = on ? TR("开") : TR("关")};
         P.actions[k] = (ink_ui_action_spec_t){.id = ids[i], .label = TR(titles[i]), .capability = "settings.set", .args_json = P.args[k], .enabled = true};
         ink_shell_bind(ink_ui_toggle(parent, TR(titles[i]), on, INK_MARGIN,
-            INK_LOCK_FACE_COUNT * h + (int)i * INK_CONTROL, w, NULL, NULL), "settings.set", P.args[k]);
+            ((INK_LOCK_FACE_COUNT + 1) / 2) * h + (int)i * INK_CONTROL, w, NULL, NULL), "settings.set", P.args[k]);
     }
     P.model = (ink_ui_page_spec_t){.id = "LockFaces", .title = TR("锁屏画面"), .object = {"display.lock_style", 0}, .fields = P.fields, .field_count = FACE_SETTINGS_MAX,
         .actions = P.actions, .action_count = FACE_SETTINGS_MAX};

@@ -184,8 +184,9 @@ static void run(void *arg) {
     call_ok("calendar.prev", NULL); expect("\"page\":1");
     press("calendar.open", 0); CHECK(!strcmp(ink_ui_page_name(), "Calendar"), "the real month button opens Calendar");
     expect("2026年11月4日"); expect("今晚读书"); absent("带作业本"); capture("Calendar");
-    press("calendar.select", 4); expect("2026年11月5日"); expect("起床"); expect("带作业本"); absent("今晚读书");
-    call_ok("calendar.next", NULL); expect("放学取快递");
+    press("calendar.select", 4); expect("2026年11月5日"); expect("起床"); absent("带作业本"); absent("今晚读书");
+    call_ok("calendar.next", NULL); expect("带作业本"); expect("\"page\":2");
+    call_ok("calendar.next", NULL); expect("放学取快递"); expect("\"page\":3");
     call_ok("calendar.select", "{\"day\":6}"); expect("家长会"); expect("\"page\":1");
     call_ok("calendar.select", "{\"day\":7}"); expect("\"total\":0"); visible("这一天没有提醒和闹钟");
     press("calendar.month_next", 0); expect("2026年12月1日");

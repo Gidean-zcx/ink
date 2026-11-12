@@ -4,6 +4,7 @@
 #include "../../system/boot/main.c"
 #undef ink_main
 #include "../integration/whole_product.h"
+#include "../pagebar.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/textinput.h"
 #include "ink/sys/notify.h"
@@ -73,9 +74,9 @@ static void contact_footer(void) {
     wanted = "添加联系人"; found = NULL; find_label(lv_screen_active()); CHECK(found, "contact add button is visible");
     if (!found) return;
     lv_area_t add, bar; lv_obj_update_layout(lv_screen_active()); lv_obj_get_coords(lv_obj_get_parent(found), &add);
-    wanted = "1 / 1"; found = NULL; find_label(lv_screen_active()); CHECK(found, "contact page bar is visible");
+    found = ink_test_pagebar(lv_screen_active(), 1, 1); CHECK(found, "contact page bar has one selected dot");
     if (!found) return;
-    lv_obj_get_coords(lv_obj_get_parent(found), &bar);
+    lv_obj_get_coords(found, &bar);
     CHECK(add.y1 > bar.y2 + ink_ui_px(INK_GAP), "page bar and add button keep separate full touch targets");
 }
 static void contacts(void) {

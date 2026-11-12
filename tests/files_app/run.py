@@ -103,27 +103,32 @@ for phase, scene in runs:
     if not passed:
         print(result.stderr[-2200:])
         break
+    long_paths = {}
     for line in (out / "snapshots.ndjson").read_text().splitlines() if (out / "snapshots.ndjson").exists() else []:
         snap = json.loads(line)
         seen.add(snap["scene"])
         assert snap["snapshot"], snap
-        if snap["scene"] in ("FileListLong", "FileMoveLong"):
+        if snap["scene"] in ("FileListLong", "FileMoveLong", "FileListLong-2", "FileMoveLong-2"):
             page = snap["snapshot"]
             fields = page["fields"]
-            assert len(fields) == 4 and len({f["id"] for f in fields}) == 4, fields
+            visible = 1 if snap["scene"].endswith("-2") else 3
+            assert len(fields) == visible and len({f["id"] for f in fields}) == visible, fields
             for field in fields:
                 assert field["label"].endswith("…") and "名称已截断" in field["value"], field
                 assert len(field["id"]) < 24 and field["object"]["id"] == field["id"], field
             paths = {json.loads(action["args_json"])["path"] for action in page["actions"] if action["capability"] == "files.browse"}
-            expected = {"/me/SYNTH_资料目录/SYNTH_" + "测" * 17 + str(i) for i in range(4)}
-            assert paths == expected, paths
+            assert len(paths) == visible, paths
+            long_paths.setdefault(snap["scene"].removesuffix("-2"), set()).update(paths)
+    for paths in long_paths.values():
+        expected = {"/me/SYNTH_资料目录/SYNTH_" + "测" * 17 + str(i) for i in range(4)}
+        assert paths == expected, paths
     if scene:
         target = build / "files-app-compare" / scene
         target.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(out / "snap-scene.png", target / "snap-scene.png")
         shutil.copyfile(out / "metrics.json", target / "metrics.json")
 if ok and not a.mutant:
-    assert seen == {"Files", "FileList", "FileActions", "FileMove", "FileActionsPreview", "FileListLong", "FileMoveLong"}, seen
+    assert seen == {"Files", "FileList", "FileActions", "FileMove", "FileActionsPreview", "FileListLong", "FileMoveLong", "FileListLong-2", "FileMoveLong-2"}, seen
 (work / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
 if ok and not os.environ.get("INK_KEEP_EVIDENCE"):
     shutil.rmtree(work)

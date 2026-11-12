@@ -392,7 +392,7 @@ static void create(lv_obj_t *screen, void *arg) {
         } else F.model.action_count = 3;
     }
     if (F.multi && strchr(F.result, '\n')) { F.busy = false; lv_obj_set_y(F.notice, ink_ui_px(INK_STATUS_BAR + 2 * INK_PRIMARY)); status(F.result); return; }
-    int rows = F.multi || ink_ui_row_double() > INK_ROW_DOUBLE ? 3 : 4;
+    int rows = F.mode == HOME || F.multi || ink_ui_row_double() > INK_ROW_DOUBLE ? 3 : 4;
     lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L + (F.mode == MOVE || F.multi ? ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L : 0), INK_CANVAS_W, rows * (ink_ui_row_double() + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
     F.list_body = body;
     ink_ui_page_spec_t list_model = F.model; if (F.mode == LIST) list_model.action_count = 2;

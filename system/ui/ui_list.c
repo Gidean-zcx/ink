@@ -96,6 +96,7 @@ void ink_ui_list_refresh(ink_ui_list_t *l, size_t total) {
     if (total) lv_obj_add_flag(l->empty, LV_OBJ_FLAG_HIDDEN); else lv_obj_remove_flag(l->empty, LV_OBJ_FLAG_HIDDEN);
     if (l->bar) lv_obj_delete(l->bar);
     draw_bar(l, l->capacity, l->columns, l->cell_h);
+    if (!total) lv_obj_add_flag(l->bar, LV_OBJ_FLAG_HIDDEN);
     ink_ui_content_changed();
     ink_ui_hint_obj(l->parent, INK_REFRESH_UI);
 }

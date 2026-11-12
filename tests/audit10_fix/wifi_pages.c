@@ -43,17 +43,20 @@ static void run(void *arg) {
     CHECK(AI("settings.set", "{\"id\":\"display.font_size\",\"value\":3}") && g_rc.status == INK_RC_DONE, "use largest font");
     CHECK(AI("shell.network", NULL) && g_rc.status == INK_RC_DONE, "open connected network settings");
     quiet(); on_ui(inspect);
-    CHECK(strstr(page, "第 1 页，共 2 页") && button && strstr(page, "wifi.forget(") && strstr(g_snap, "wifi.forget("),
-        "first page has both the forget button and its snapshot action");
-    CHECK(AI("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "turn to second page");
-    quiet(); on_ui(inspect);
-    CHECK(strstr(page, "第 2 页，共 2 页") && !button, "second page has no forget button");
-    CHECK(!strstr(page, "wifi.forget(") && !strstr(g_snap, "wifi.forget("), "second page omits the hidden forget action");
+    int current = 1, pages = 0, forget_page = 0, count = 0;
+    const char *at = strstr(page, "第 ");
+    CHECK(at && sscanf(at, "第 %d 页，共 %d 页", &current, &pages) == 2 && pages > 1 && pages <= 8, "network pages are bounded");
+    for (int i = 1; i <= pages; i++) {
+        CHECK(button == (strstr(page, "wifi.forget(") != NULL) && button == (strstr(g_snap, "wifi.forget(") != NULL),
+            "page %d snapshot exposes exactly its visible forget action", i);
+        if (button) { forget_page = i; count++; }
+        if (i < pages) { CHECK(AI("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "visit next page"); quiet(); on_ui(inspect); }
+    }
+    CHECK(count == 1, "exactly one page offers the current network's forget action");
     vtk_event_at(vtk_now() + SIM_MS(1), capture, "network-second");
-    CHECK(AI("shell.page_prev", NULL) && g_rc.status == INK_RC_DONE, "return to first page");
-    quiet(); on_ui(inspect);
-    CHECK(strstr(page, "第 1 页，共 2 页") && button && strstr(page, "wifi.forget(") && strstr(g_snap, "wifi.forget("),
-        "returning to first page restores the exact visible action");
+    for (int i = pages; i > forget_page; i--) { CHECK(AI("shell.page_prev", NULL) && g_rc.status == INK_RC_DONE, "return to forget page"); quiet(); }
+    on_ui(inspect);
+    CHECK(button && strstr(page, "wifi.forget(") && strstr(g_snap, "wifi.forget("), "return restores the exact visible action");
     if (button) tap(x, y);
     ink_confirm_view_t card = {0};
     CHECK(WAIT_FOR(ink_confirm_list(&card, 1) == 1, 5000) && !strcmp(card.cap, "wifi.forget") && card.src == INK_SRC_TOUCH,

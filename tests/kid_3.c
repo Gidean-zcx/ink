@@ -122,7 +122,12 @@ static void check_home(void) {
     wanted = "听"; find();
     CHECK(label, "the first child application row is visible");
     if (label) lv_obj_get_coords(label, &icon_label);
-    CHECK(time_area.y2 < icon_label.y1 - ink_ui_px(INK_CIRCLE_APP + INK_GAP_S), "KidHome allowance never overlaps the application icons");
+    if (label) {
+        lv_obj_t *icon = lv_obj_get_child(lv_obj_get_parent(label), lv_obj_get_index(label) - 1);
+        lv_area_t tile; lv_obj_get_coords(icon, &tile);
+        CHECK(ink_shell_bound_cap(icon) && !strcmp(ink_shell_bound_cap(icon), "shell.launch") && tile.y2 < icon_label.y1 &&
+            time_area.y2 + ink_ui_px(INK_GAP_S) < tile.y1, "KidHome allowance clears the actual application touch target");
+    }
     wanted = "设置"; find(); CHECK(!label, "KidHome has no adult settings tile");
 }
 static void check_activity(void) {

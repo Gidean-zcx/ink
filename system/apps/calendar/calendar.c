@@ -105,8 +105,9 @@ static void create(lv_obj_t *screen, void *arg) {
     memset(C.actions, 0, sizeof C.actions);
     if (C.calendar && ink_time_valid()) {
         int x = INK_CANVAS_W - INK_MARGIN - 2 * INK_CONTROL - INK_GAP_XS;
-        ink_shell_bind(ink_ui_circle(screen, "back", x, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_prev", "{}");
-        ink_shell_bind(ink_ui_circle(screen, "next", x + INK_CONTROL + INK_GAP_XS, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_next", "{}");
+        ink_shell_bind(ink_ui_circle(screen, "back", x, y, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_prev", "{}");
+        ink_shell_bind(ink_ui_circle(screen, "next", x + INK_CONTROL + INK_GAP_XS, y, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_next", "{}");
+        y += INK_CONTROL + INK_GAP_XS;
         ink_tm_t first = {.year = C.date.year, .month = C.date.month, .day = 1}; ink_time_to_local(ink_time_from_local(&first), &first);
         int days = month_days(C.date.year, C.date.month), rows = (first.wday + days + 6) / 7, cell = w / 7;
         static const char *const WEEK[] = {TR_NOOP("周日"), TR_NOOP("周一"), TR_NOOP("周二"), TR_NOOP("周三"), TR_NOOP("周四"), TR_NOOP("周五"), TR_NOOP("周六")};
@@ -114,10 +115,11 @@ static void create(lv_obj_t *screen, void *arg) {
             const char *day = TR(WEEK[i]) + (!strcmp(ink_lang_code(), "zh") ? strlen("周") : 0);
             ink_ui_line(screen, day, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + i * cell + INK_GAP_M, y, cell);
         }
-        y += INK_LINE_NOTE;
+        y += ink_ui_line_height(INK_FONT_NOTE);
+        int day_h = ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_NOTE);
         for (int d = 1; d <= days; d++) {
             int pos = first.wday + d - 1; bool selected = d == C.date.day;
-            lv_obj_t *box = ink_ui_box(screen, INK_MARGIN + pos % 7 * cell, y + pos / 7 * INK_CONTROL, cell, INK_CONTROL, INK_RADIUS_KEY, selected ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, false);
+            lv_obj_t *box = ink_ui_box(screen, INK_MARGIN + pos % 7 * cell, y + pos / 7 * day_h, cell, day_h, INK_RADIUS_KEY, selected ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, false);
             ink_tm_t date = {.year = C.date.year, .month = C.date.month, .day = d};
             int64_t from = ink_time_from_local(&date); date.day++;
             int64_t until = ink_time_from_local(&date); unsigned marks = 0; int cursor = 0; ink_alarm_t a;
@@ -129,18 +131,18 @@ static void create(lv_obj_t *screen, void *arg) {
             ink_shell_bind(box, "calendar.select", args);
             lv_obj_t *label = ink_ui_line(box, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, 0, cell);
             lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0); lv_obj_set_style_text_color(label, selected ? ink_ui_paper() : ink_ui_ink(), 0);
-            lunar_text(d, true, text, sizeof text); label = ink_ui_line(box, text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, INK_LINE_LIST, cell);
+            lunar_text(d, true, text, sizeof text); label = ink_ui_line(box, text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, ink_ui_line_height(INK_FONT_LIST), cell);
             lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0); lv_obj_set_style_text_color(label, selected ? ink_ui_paper() : ink_ui_ink(), 0);
             for (unsigned bit = 0; bit < 2; bit++) if (marks & (1u << bit)) {
-                lv_obj_t *mark = ink_ui_box(box, (cell - INK_GAP_L) / 2 + (int)bit * INK_GAP_M, INK_LINE_LIST - INK_GAP_S, INK_GAP_S, INK_GAP_S, -1,
+                lv_obj_t *mark = ink_ui_box(box, (cell - INK_GAP_L) / 2 + (int)bit * INK_GAP_M, ink_ui_line_height(INK_FONT_LIST) - INK_GAP_S, INK_GAP_S, INK_GAP_S, -1,
                     (bit == 0) != selected ? INK_SURFACE_WHITE : INK_SURFACE_BLACK, bit == 0);
                 lv_obj_set_style_border_color(mark, selected ? ink_ui_paper() : ink_ui_ink(), 0);
             }
         }
-        y += rows * INK_CONTROL; capacity = rows == 6 ? 1 : 2;
+        y += rows * day_h; capacity = 1;
         char lunar[32]; lunar_text(C.date.day, false, lunar, sizeof lunar);
         snprintf(C.date_text, sizeof C.date_text, TR("%d年%d月%d日 · %s"), C.date.year, C.date.month, C.date.day, lunar);
-        ink_ui_notice(screen, C.date_text, y); y += INK_LINE_NOTE + INK_GAP_S;
+        ink_ui_notice(screen, C.date_text, y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
         snprintf(C.select_args, sizeof C.select_args, "{\"day\":%d}", C.date.day);
         control(0, "month-prev", TR("上月"), "calendar.month_prev", "{}"); control(1, "month-next", TR("下月"), "calendar.month_next", "{}");
         control(2, "select", TR("选一天"), "calendar.select", C.select_args);
@@ -157,8 +159,7 @@ static void create(lv_obj_t *screen, void *arg) {
     control(3, "back", TR("返回"), "shell.back", "{}"); C.controls.action_count = 4;
     load_rows();
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = C.controls.title, .object = {"calendar", 1}, .actions = PAGING, .action_count = 2};
-    int cell_h = C.calendar ? INK_CONTROL : INK_ROW_DOUBLE;
-    lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, capacity * (cell_h + INK_GAP_M) + INK_GAP + INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+    lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
     C.list = ink_ui_list_create(body, &model, &C.position, (unsigned)capacity, 1, C.calendar ? INK_CONTROL : INK_ROW_DOUBLE, ink_time_valid() ? (C.calendar ? TR("这一天没有提醒和闹钟") : TR("还没有接下来的事")) : TR("请先设置时间"), bind_row, NULL);
     if (C.list) ink_ui_list_refresh(C.list, C.count);
 }

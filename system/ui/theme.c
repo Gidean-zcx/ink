@@ -1,6 +1,7 @@
 /* Shared geometry and components; no service state lives here. */
 /* ui-scale-runtime: dimension x,y,w,h,px,radius,diameter,icon_px,height Public component arguments; each caller is checked. */
 /* ui-scale-runtime: dimension offset_x,offset_y,ink_ui_line_height,text_px,moved,descent_at,value_width Theme scaling and font metrics, not independent pixel choices. */
+/* ui-scale-runtime: dimension minimum,left,right Segment widths reserve measured captions before distributing spare width. */
 /* ui-scale-runtime: font px Public font argument; ink_ui_font_px and line-height callers are checked. */
 /* ui-scale-runtime: icon icon_px Public circle argument; ink_ui_circle callers are checked. */
 /* ui-scale-runtime: radius radius Public box argument; ink_ui_box callers are checked. */
@@ -282,6 +283,10 @@ lv_obj_t *ink_ui_pill(lv_obj_t *parent, const char *text, int x, int y, int w, i
     lv_obj_set_style_pad_hor(b, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_t *l = ink_ui_line(b, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, 0, 0);
     lv_obj_set_width(l, LV_PCT(100));
+    if (h >= 2 * ink_ui_line_height(INK_FONT_LIST)) {
+        lv_label_set_long_mode(l, LV_LABEL_LONG_WRAP);
+        lv_obj_set_height(l, LV_SIZE_CONTENT);
+    }
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_center(l);
     return b;
@@ -380,13 +385,18 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
 lv_obj_t *ink_ui_segments(lv_obj_t *parent, const char *const *labels, int count, int selected, int x, int y, int w, lv_event_cb_t cb, void *ctx) {
     if (count < 1 || count > 4 || w < count * INK_CONTROL) return NULL;
     lv_obj_t *row = ink_ui_box(parent, x, y, w, INK_SEGMENT, INK_RADIUS_KEY, INK_SURFACE_WHITE, true);
+    int need = 0, left = 0;
+    for (int i = 0; i < count; i++)
+        need += LV_MAX(INK_CONTROL, ink_ui_text_width(labels[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_XS);
     for (int i = 0; i < count; i++) {
-        int left = i * w / count, right = (i + 1) * w / count;
+        int minimum = LV_MAX(INK_CONTROL, ink_ui_text_width(labels[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_XS);
+        int right = need <= w ? left + minimum + (i + 1) * (w - need) / count - i * (w - need) / count : (i + 1) * w / count;
         lv_obj_t *b = ink_ui_pill(row, labels[i], left - INK_STROKE, 0 - INK_STROKE,
                                   right - left, INK_SEGMENT, i == selected, cb, ctx);
         lv_obj_set_style_border_width(b, 0, 0);
         lv_obj_set_style_radius(b, 0, 0);
         if (i != selected) lv_obj_set_style_bg_opa(b, LV_OPA_TRANSP, 0);
+        left = right;
     }
     return row;
 }

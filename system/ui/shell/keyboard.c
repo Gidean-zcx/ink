@@ -1,5 +1,6 @@
 /* LVGL keyboard maps feed the existing text capabilities; the service owns all edits. */
 /* ui-scale-runtime: dimension area.y1,key_height,candidates_height,keyboard_height,keyboard_height_for,make_board,height Theme-derived keyboard geometry scales with the current text line. */
+/* ui-scale-runtime: dimension keyboard.y1 The keyboard safe area includes the wrapped edit toolbar. */
 #include <stdio.h>
 #include <string.h>
 
@@ -49,10 +50,16 @@ static int key_height(bool digits) {
     return ink_ui_line_height(INK_FONT_LIST) * (digits ? INK_KB_DIGIT : INK_KB_KEY) / INK_LINE_LIST;
 }
 static int candidates_height(void) { return ink_ui_line_height(INK_FONT_LIST) * INK_KB_CAND / INK_LINE_LIST; }
+static bool editing(void) {
+    size_t start, end; ink_text_selection(&start, &end);
+    return ink_text_type() != INK_TEXT_PASSWORD && (start != end || (!ink_text_composing()[0] &&
+        (ink_text_can_redo() || (K.root && K.edit && !lv_obj_has_flag(K.edit, LV_OBJ_FLAG_HIDDEN) && ink_text_can_undo()))));
+}
 static int keyboard_height_for(ink_text_type_t type) {
     bool number = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE;
     bool nine = type == INK_TEXT_PLAIN && !ink_text_english() && !K.symbols && ink_setting_get("text.nine_key");
     int top = type == INK_TEXT_PASSWORD ? 0 : ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP;
+    if (type != INK_TEXT_PASSWORD && editing()) top += 2 * INK_CONTROL + INK_GAP_XS - candidates_height();
     /* Nine-key pinyin is as tall as the full keyboard (phone keyboards keep one height when switching layouts):
      * three letter-height rows of digit keys and the function row. The number pad keeps its tall digits. */
     return top + (number ? 3 * key_height(true) + 2 * key_height(false) + 4 * INK_KB_GAP :
@@ -291,10 +298,10 @@ static void map_install(int kind) {
         K.map_size--; map_key(TR("删除"), KEY_BACKSPACE, INK_KB_FUNCTION); K.map[K.map_size++] = "\n";
     }
     if (kind != 3) {
-        map_key(K.symbols ? TR("字母") : !strcmp(ink_lang_code(), "zh") ? TR("符号") : "123", KEY_SWITCH, INK_KB_FUNCTION);
+        map_key(K.symbols ? TR("字母") : !strcmp(ink_lang_code(), "zh") ? TR("符号") : "123", KEY_SWITCH, INK_KB_FUNCTION + 1);
         if (K.plain) {
             map_key(K.english ? TR("英") : "中", INK_TEXT_KEY_LANGUAGE, INK_KB_UNIT);
-            map_key(ink_setting_get("text.nine_key") ? TR("全键") : TR("九键"), KEY_LAYOUT, INK_KB_FUNCTION);
+            map_key(ink_setting_get("text.nine_key") ? TR("全键") : TR("九键"), KEY_LAYOUT, INK_KB_FUNCTION + 1);
             if (kind != 4) map_key(ink_text_punctuation(',') ? ink_text_punctuation(',') : ",", ',', INK_KB_UNIT);
         }
         map_key(TR("空格"), ' ', K.plain ? INK_KB_SPACE + (kind == 4 ? INK_KB_HALF : 0) : INK_KB_SPACE + 2 * INK_KB_UNIT + INK_KB_FUNCTION);
@@ -360,6 +367,7 @@ static void build(int kind) {
     K.revision++;
     K.layout_revision++;
     if (K.root) { ink_ui_overlay_remove(&OVERLAY); lv_obj_delete(K.root); }
+    K.edit = NULL;
     K.root = lv_obj_create(lv_layer_sys());
     lv_obj_remove_style_all(K.root);
     lv_obj_remove_flag(K.root, LV_OBJ_FLAG_SCROLLABLE);
@@ -389,14 +397,17 @@ static void build(int kind) {
     lv_label_set_text(K.composing, "");
     if (K.password) lv_obj_add_flag(K.composing, LV_OBJ_FLAG_HIDDEN);
     K.edit = new_row();
+    lv_obj_set_flex_flow(K.edit, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_style_pad_row(K.edit, ink_ui_px(INK_GAP_XS), 0);
     static const char *const EDIT[] = {"◀", "▶", TR_NOOP("复制"), TR_NOOP("剪切"), TR_NOOP("粘贴"), TR_NOOP("撤销"), TR_NOOP("重做")};
     for (unsigned i = 0; i < sizeof EDIT / sizeof *EDIT; i++) {
-        lv_obj_t *b = ink_ui_pill(K.edit, TR(EDIT[i]), 0, 0, 0, candidates_height(), false, i < 5 ? edit_action : NULL, (void *)(intptr_t)i);
+        lv_obj_t *b = ink_ui_pill(K.edit, TR(EDIT[i]), 0, 0,
+            (INK_CANVAS_W - 2 * INK_GAP - 2 * INK_STROKE - 3 * INK_GAP_XS) / 4, INK_CONTROL,
+            false, i < 5 ? edit_action : NULL, (void *)(intptr_t)i);
         lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
         if (i >= 5) ink_shell_bind(b, i == 5 ? "text.undo" : "text.redo", NULL);
         ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
         lv_obj_set_style_min_width(b, ink_ui_px(ink_ui_text_width(i < 2 ? EDIT[i] : TR(EDIT[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)), 0);
-        lv_obj_set_flex_grow(b, i < 2 ? 0 : 1);
     }
     lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
     K.cands = new_row();
@@ -596,10 +607,7 @@ static void sync(void) { /* UI task */
     else lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     if (K.shown != n) { K.revision++; ink_ui_content_changed(); }
     K.shown = n;
-    size_t start, end;
-    ink_text_selection(&start, &end);
-    bool editing = type != INK_TEXT_PASSWORD && (start != end || (!ink_text_composing()[0] &&
-        (ink_text_can_redo() || (!lv_obj_has_flag(K.edit, LV_OBJ_FLAG_HIDDEN) && ink_text_can_undo()))));
+    bool show_edit = editing();
     lv_obj_t *undo = lv_obj_get_child(K.edit, 5), *redo = lv_obj_get_child(K.edit, 6);
     if (ink_text_can_undo()) lv_obj_remove_state(undo, LV_STATE_DISABLED);
     else lv_obj_add_state(undo, LV_STATE_DISABLED);
@@ -607,12 +615,15 @@ static void sync(void) { /* UI task */
     else lv_obj_add_state(redo, LV_STATE_DISABLED);
     lv_obj_set_style_text_decor(lv_obj_get_child(undo, 0), ink_text_can_undo() ? LV_TEXT_DECOR_NONE : LV_TEXT_DECOR_STRIKETHROUGH, 0);
     lv_obj_set_style_text_decor(lv_obj_get_child(redo, 0), ink_text_can_redo() ? LV_TEXT_DECOR_NONE : LV_TEXT_DECOR_STRIKETHROUGH, 0);
-    if (editing) { lv_obj_remove_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
+    if (show_edit) { lv_obj_remove_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
     else {
         lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
         if (password) lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
         else lv_obj_remove_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
     }
+    lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
+    lv_obj_set_height(K.root, ink_ui_height() - keyboard.y1);
+    lv_obj_set_height(K.keys, ink_ui_px(keyboard_height()));
     for (uint32_t i = 0; i < lv_obj_get_child_count(K.keys); i++) {
         lv_obj_t *row = lv_obj_get_child(K.keys, (int32_t)i);
         if (row == K.composing || row == K.cands || row == K.edit) continue;

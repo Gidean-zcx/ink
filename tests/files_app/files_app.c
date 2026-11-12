@@ -98,10 +98,12 @@ static void fixture(void) {
     kept = file_id("/me/SYNTH_FILES/SYNTH_A.txt"); removed = file_id("/me/SYNTH_FILES/SYNTH_C.txt"); picture_id = file_id("/me/SYNTH_FILES/SYNTH_B.png");
     CHECK(kept && removed && picture_id, "stable service identifiers");
 }
+static unsigned visible_rows = 4;
 static void first_page(void) {
     CHECK(F.count == expected_total && F.list && F.position.page == 0, "only %u direct children, not the nested file", expected_total);
-    char pages[32]; snprintf(pages, sizeof pages, "\"pages\":%u", (expected_total + 3) / 4);
-    CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, pages) && strstr(g_snap, "\"visible\":4"), "F4 pages only four visible rows");
+    char pages[32], visible[32]; snprintf(pages, sizeof pages, "\"pages\":%u", (expected_total + visible_rows - 1) / visible_rows);
+    snprintf(visible, sizeof visible, "\"visible\":%u", visible_rows);
+    CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, pages) && strstr(g_snap, visible), "F4 has the exact capacity for this text size");
     CHECK(strstr(g_snap, "files.select") && strstr(g_snap, "files.browse") && strstr(g_snap, "files.next"), "AI sees the same row and paging capabilities");
 }
 static lv_obj_t *ai_panel;
@@ -126,7 +128,7 @@ static void thumb_check(void) {
     CHECK(visible, "a picture row displays file.thumb pixels");
 }
 static unsigned picture_page;
-static void find_picture_page(void) { for (size_t i = 0; i < F.count; i++) if (F.items[i].id == picture_id) picture_page = (unsigned)i / 4; }
+static void find_picture_page(void) { for (size_t i = 0; i < F.count; i++) if (F.items[i].id == picture_id) picture_page = (unsigned)i / visible_rows; }
 static void check_list_thumb(void) {
     picture_page = 0; on_ui(find_picture_page);
     for (unsigned i = 0; i < picture_page; i++) { command("files.next", NULL); quiet(); }
@@ -184,9 +186,13 @@ static void long_rows(void) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     CHECK(j != NULL, "allocate action argument parser");
     if (!j) return;
-    for (size_t i = 0; i < F.count && i < 4; i++) {
+    size_t offset = F.position.page * 3, visible = F.count - offset;
+    if (visible > 3) visible = 3;
+    char count[32]; snprintf(count, sizeof count, "\"visible\":%zu", visible);
+    CHECK(strstr(g_snap, count), "large text shows the exact long-name page capacity");
+    for (size_t i = offset; i < offset + visible; i++) {
         char path[INK_FS_PATH_MAX];
-        CHECK(ink_json_parse(j, F.args[i], strlen(F.args[i])) == 0 &&
+        CHECK(ink_json_parse(j, F.args[i % 4], strlen(F.args[i % 4])) == 0 &&
               ink_json_str(j, ink_json_find(j, 0, "path"), path, sizeof path) > 0 && !strcmp(path, F.items[i].path),
               "shortened row retains its complete browse path");
     }
@@ -216,7 +222,10 @@ static void review_regressions(void) {
         CHECK(ink_fs_mkdir(path) == 0, "create legal synthetic long directory %d", i);
     }
     browse_path(parent, "FileMove"); on_ui(long_rows); snap("FileMoveLong");
+    command("files.next", NULL); quiet(); on_ui(long_rows); snap("FileMoveLong-2");
     roots(); browse_path(parent, "FileList"); on_ui(long_rows); snap("FileListLong");
+    command("files.next", NULL); quiet(); on_ui(long_rows); snap("FileListLong-2");
+    command("files.prev", NULL); quiet();
     on_ui(show_ai); quiet(); on_ui(long_rows); on_ui(close_ai);
     touch("SYNTH_测…"); wait_page("FileList");
     CHECK(!strncmp(F.path, parent, strlen(parent)) && strlen(F.path) > strlen(parent), "touch opens the full long directory path");
@@ -278,7 +287,7 @@ static void exercise(void) {
     CHECK(!strstr(g_snap, "file.delete") && !strstr(g_snap, "file.move") && !strstr(g_snap, "files.name"), "child sees no write actions for shared content");
     CHECK(ink_member_switch("owner") == 0, "return to the owner"); roots();
     expected_total = 8;
-    command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"); quiet(); browse(); on_ui(first_page); check_list_thumb();
+    command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"); visible_rows = 3; quiet(); browse(); on_ui(first_page); check_list_thumb();
 }
 /* Cold member opens overlap boot indexing. The root page must keep its queued tap valid. */
 static void memo_reply(void *ctx, const ink_receipt_t *rc) {

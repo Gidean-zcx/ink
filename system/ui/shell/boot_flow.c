@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension x,y,w,h Theme-derived shared layout coordinates. */
 /* ui-scale-runtime: font font Callers use the subtitle, heading and note theme sizes. */
 /* ui-scale-runtime: dimension B.wifi_page Page count times the theme-sized Wi-Fi row height. */
+/* ui-scale-runtime: dimension back_w Measured translated caption plus theme padding, at least one control. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -155,9 +156,10 @@ static void create(lv_obj_t *screen, void *arg) {
             (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H / 2 - INK_CIRCLE_LARGE - INK_GAP,
             INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
     if (B.page == WIFI || B.page == PASSWORD) {
-        button(TR("返回"), "shell.launch", "boot.back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, false);
+        int back_w = LV_MAX(INK_CONTROL, ink_ui_text_width(TR("返回"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE));
+        button(TR("返回"), "shell.launch", "boot.back", INK_MARGIN, INK_STATUS_BAR, back_w, false);
         ink_ui_line(screen, B.page == WIFI ? TR(TITLES[WIFI]) : B.picked[0] ? B.picked : TR("其他网络"), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD,
-            2 * INK_MARGIN + INK_CONTROL, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_MARGIN);
+            2 * INK_MARGIN + back_w, INK_STATUS_BAR + INK_GAP, w - back_w - INK_MARGIN);
     } else text(B.page == CLAIM && B.computer ? TR("用电脑加入家庭") : TR(TITLES[B.page]), B.page == FIRST ? INK_FONT_HEADING : INK_FONT_SUBTITLE,
         B.page == FIRST || B.page == CLAIM ? INK_PRIMARY : INK_CANVAS_H / 2);
     if (B.page == FIRST) {

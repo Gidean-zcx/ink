@@ -431,7 +431,8 @@ static void create(lv_obj_t *screen, void *arg) {
         M.opened_crc = mode == FAIL ? 0xffffffffu : ink_crc32(0, ink_textfield_text(M.field), strlen(ink_textfield_text(M.field)));
         M.note.draft = ink_text_draft_id(); snprintf(M.note.page, sizeof M.note.page, "%s", ink_ui_page_name());
         M.delete_button = ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL); ink_shell_bind(M.delete_button, "memo.delete", M.target);
-        M.retry_button = ink_ui_pill(screen, TR("重试"), INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, INK_CONTROL, false, retry, NULL);
+        int retry_w = LV_MAX(INK_CONTROL, ink_ui_text_width(TR("重试"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE));
+        M.retry_button = ink_ui_pill(screen, TR("重试"), INK_CANVAS_W - INK_MARGIN - retry_w, INK_STATUS_BAR, retry_w, INK_CONTROL, false, retry, NULL);
         lv_obj_add_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN);
         return;
     }

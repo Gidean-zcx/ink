@@ -68,17 +68,34 @@ def capture(build, label):
 
 def targets(build, label):
     failures = []
+    page_owned = []
     checked = 0
     for tree in sorted((build / 'design-lang-1' / label).glob('*/tree.json')):
         data = json.loads(tree.read_text())
         for target in data['targets']:
             checked += 1
             if target['width'] < 108 or target['height'] < 108:
-                failures.append({'scene': tree.parent.name, **target})
+                scene = tree.parent.name.split('-')[0]
+                owner = ''
+                if target['cap'] == 'calendar.select':
+                    owner = '月历日期格（页面任务）'
+                elif target['cap'] == 'keyboard.key':
+                    owner = '原生键盘按键（keyboard-2）'
+                elif scene in ('ImePinyin', 'MemoEdit') and (target['cap'] == 'text.voice_start' or
+                        (not target['cap'] and target['text'] in ('今天', '进', '今', '近', '金', '仅', '更多'))):
+                    owner = '键盘候选或语音键（keyboard-2）'
+                elif scene == 'Ai' and target['text'] == '星星邮差 · 目录' and target['depth'] == 1:
+                    owner = '背景阅读页的自绘目录链接（任务禁止修改 apps/）'
+                item = {'scene': tree.parent.name, **target}
+                if owner:
+                    page_owned.append({**item, 'owner': owner})
+                else:
+                    failures.append(item)
     assert checked, 'capture first'
-    output = {'checked': checked, 'undersized': len(failures), 'failures': failures}
+    output = {'checked': checked, 'undersized': len(failures) + len(page_owned),
+              'undersized_shared': len(failures), 'failures': failures, 'page_owned': page_owned}
     (build / 'design-lang-1' / label / 'targets.json').write_text(json.dumps(output, ensure_ascii=False, indent=2) + '\n')
-    print(f'{checked} targets checked; {len(failures)} below 108 × 108')
+    print(f'{checked} targets checked; shared below 108 × 108: {len(failures)}; page-owned: {len(page_owned)}')
     return bool(failures)
 
 

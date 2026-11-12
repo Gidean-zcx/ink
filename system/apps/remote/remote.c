@@ -725,8 +725,9 @@ static void page_show(remote_page_t page) {
     RS.field = NULL;
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP;
-    RS.chrome = ink_ui_box(lv_obj_get_parent(RS.img), 0, page == REMOTE ? INK_CANVAS_H - INK_PRIMARY - INK_GAP : 0,
-        INK_CANVAS_W, page == REMOTE ? INK_PRIMARY + INK_GAP : INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
+    int chrome_h = 2 * INK_CONTROL + 2 * INK_GAP_S;
+    RS.chrome = ink_ui_box(lv_obj_get_parent(RS.img), 0, page == REMOTE ? INK_CANVAS_H - chrome_h : 0,
+        INK_CANVAS_W, page == REMOTE ? chrome_h : INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
     memset(RS.actions, 0, sizeof RS.actions);
     RS.fields[0] = (ink_ui_field_spec_t){.id="board", .role="text", .label=TR("页面"), .value=BOARDS[page]};
     RS.fields[1] = (ink_ui_field_spec_t){.id="status", .role="text", .label=TR("状态"), .value=page_message()};
@@ -740,8 +741,8 @@ static void page_show(remote_page_t page) {
         ink_shell_bind(ink_ui_circle(RS.chrome, "back", INK_MARGIN, INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "remote.prev", "{}");
         ink_shell_bind(ink_ui_circle(RS.chrome, "next", INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "remote.next", "{}");
         snprintf(RS.target, sizeof RS.target, TR("网址 · %s"), domain);
-        lv_obj_t *address = ink_ui_pill(RS.chrome, RS.target, INK_MARGIN + 2 * INK_CONTROL + INK_GAP_M, INK_GAP_S,
-            w - 2 * INK_CONTROL - INK_GAP_M, INK_CONTROL, false, NULL, NULL);
+        lv_obj_t *address = ink_ui_pill(RS.chrome, RS.target, INK_MARGIN, INK_CONTROL + INK_GAP_S,
+            w, INK_CONTROL, false, NULL, NULL);
         ink_ui_pill_text(address, INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
         ink_shell_bind(address, "remote.address", "{}");
     } else {

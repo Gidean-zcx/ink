@@ -18,7 +18,7 @@
 #include "ink/ui_shell.h"
 #include "../../services/audio/vendor/kiikoread/music_lyrics.h"
 void ink_music_tags(const char *, char *, char *, char *, size_t);
-enum { ROWS = 4, FIELDS = ROWS + 5 };
+enum { ROWS = 3, FIELDS = ROWS + 5 };
 typedef struct {
     char owner[INK_MEMBER_ID_MAX], dir[128], track[128], title[96], artist[96], album[96], lyric[192], time[48];
     char paths[ROWS][128], names[ROWS][96]; bool dirs[ROWS], favorite;
@@ -218,6 +218,7 @@ static void create(lv_obj_t *s, void *arg) {
         }
         char json[180], parent[128]; snprintf(parent, sizeof parent, "%s", V.dir); char *slash = strrchr(parent, '/'); if (slash && slash > parent + 3) *slash = 0;
         ink_jw_t jw; ink_jw_init(&jw, json, sizeof json); ink_jw_raw(&jw, "{\"path\":"); ink_jw_str(&jw, parent); ink_jw_raw(&jw, "}");
+        y = INK_CANVAS_H - INK_MARGIN - 2 * INK_CONTROL - INK_GAP;
         button(s, TR("上级目录"), "music.list", json, INK_MARGIN, y, w); y += INK_CONTROL + INK_GAP;
         snprintf(json, sizeof json, "{\"page\":%d}", V.page > 0 ? V.page - 1 : 0); button(s, TR("上一页"), "music.list", json, INK_MARGIN, y, w / 2 - INK_GAP_S);
         snprintf(json, sizeof json, "{\"page\":%d}", V.page + (V.more ? 1 : 0)); button(s, TR("下一页"), "music.list", json, INK_MARGIN + w / 2, y, w / 2);

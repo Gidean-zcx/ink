@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import shlex
 import shutil
@@ -9,6 +10,7 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
+STATUS_BAR = int(re.search(r'INK_STATUS_BAR\s*=\s*(\d+)', (ROOT / 'system/ui/ink/ui_theme.h').read_text())[1])
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)
 parser.add_argument("--negative-member", action="store_true")
@@ -54,13 +56,13 @@ for scene in (("Upcoming", "Calendar") if args.visual else ("",)):
     updates = [e for e in trace if e.get("name") in ("DU", "GC16", "GL16", "A2") and
                marks.get("calendar.minute.before", float("inf")) <= e.get("ts", -1) < marks.get("calendar.minute.after", 0)]
     partial = bool(updates) and all(e["name"] == "DU" and e["args"]["x"] == 0 and e["args"]["y"] == 0 and
-                                  e["args"]["w"] <= 62 and e["args"]["h"] <= 684 for e in updates)
+                                  e["args"]["w"] <= STATUS_BAR and e["args"]["h"] <= 684 for e in updates)
     print("Minute refresh stays in the status bar:", partial, flush=True)
     passed &= partial
     if scene == "Calendar":
         from PIL import Image, ImageChops
         with Image.open(out / "snap-MinuteBefore.png") as before, Image.open(out / "snap-MinuteAfter.png") as after:
-            unchanged = ImageChops.difference(before, after).crop((0, 62, before.width, before.height)).getbbox() is None
+            unchanged = ImageChops.difference(before, after).crop((0, STATUS_BAR, before.width, before.height)).getbbox() is None
         print("Rendered calendar below the status bar is unchanged:", unchanged, flush=True)
         passed &= unchanged
     if args.negative_member:

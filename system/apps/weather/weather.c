@@ -200,16 +200,17 @@ static void weather_create(lv_obj_t *screen, void *arg) {
         const char *empty = !W.id ? TR("还没有设天气城市") : W.offline ? TR("没联网，还没取到天气") : TR("正在取天气…");
         ink_ui_notice(screen, empty, y); field(n++, "empty", TR("天气"), empty);
     } else {
-        lv_obj_t *card = ink_ui_card(screen, INK_MARGIN, y, w, 2 * INK_GAP_L + INK_LINE_NUMBER + INK_LINE_LIST, INK_SURFACE_WHITE);
+        int pad = INK_GAP_XS, now_h = 2 * pad + INK_LINE_NUMBER + ink_ui_line_height(INK_FONT_LIST);
+        lv_obj_t *card = ink_ui_card(screen, INK_MARGIN, y, w, now_h, INK_SURFACE_WHITE);
         snprintf(W.texts[0], sizeof W.texts[0], "%d°", W.t);
-        ink_ui_line(card, W.texts[0], INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_GAP_L, INK_GAP_L, w / 2);
-        ink_ui_icon(card, W.now.i, INK_ICON_STATE, INK_ICON_LINE, w - INK_GAP_L - INK_ICON_STATE, INK_GAP_L, false);
+        ink_ui_line(card, W.texts[0], INK_FONT_NUMBER, INK_WEIGHT_REGULAR, pad, pad, w / 2);
+        ink_ui_icon(card, W.now.i, INK_ICON_STATE, INK_ICON_LINE, w - pad - INK_ICON_STATE, pad, false);
         snprintf(W.texts[1], sizeof W.texts[1], TR("%s · 最高 %d° 最低 %d°"), TR(W.now.w), W.now.hi, W.now.lo);
-        ink_ui_line(card, W.texts[1], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP_L, INK_GAP_L + INK_LINE_NUMBER, w - 2 * INK_GAP_L);
+        ink_ui_line(card, W.texts[1], INK_FONT_LIST, INK_WEIGHT_MEDIUM, pad, pad + INK_LINE_NUMBER, w - 2 * pad);
         field(n++, "now", TR("现在"), W.texts[0]); field(n++, "today", TR("今天"), W.texts[1]);
-        y += 2 * INK_GAP_L + INK_LINE_NUMBER + INK_LINE_LIST + INK_GAP;
-        int row_h = strcmp(ink_lang_code(), "zh") ? 2 * ink_ui_line_height(INK_FONT_LIST) : INK_CONTROL;
-        lv_obj_t *group = ink_ui_card(screen, INK_MARGIN, y, w, (W.ndays + 1) * row_h, INK_SURFACE_STATIC);
+        y += now_h + INK_GAP_M;
+        int cell = (w - INK_GAP_M) / 2, row_h = 2 * ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_NOTE);
+        lv_obj_t *group = ink_ui_card(screen, INK_MARGIN, y, w, ((W.ndays + 2) / 2) * row_h, INK_SURFACE_STATIC);
         static const char *const IDS[] = {"rain", "day1", "day2", "day3"};
         for (int i = 0; i <= W.ndays; i++) {
             const day_t *d = i ? &W.days[i - 1] : &W.now;
@@ -218,15 +219,14 @@ static void weather_create(lv_obj_t *screen, void *arg) {
             char *range = W.ranges[i]; /* the page's snapshot reads it later */
             snprintf(range, sizeof W.ranges[i], TR("不知道"));
             if (i) snprintf(range, sizeof W.ranges[i], "%d° / %d°", d->hi, d->lo); else if (d->p >= 0) snprintf(range, sizeof W.ranges[i], "%d%%", d->p);
-            lv_obj_t *row = ink_ui_list_row(group, i ? d->i : "rain", W.texts[2 + i], range, 0, i * row_h, w, false, NULL, NULL);
-            lv_obj_set_height(row, ink_ui_px(row_h));
-            if (i && strcmp(ink_lang_code(), "zh")) {
-                lv_obj_t *title = lv_obj_get_child(row, -2); lv_label_set_long_mode(title, LV_LABEL_LONG_MODE_WRAP);
-                lv_obj_set_height(title, LV_SIZE_CONTENT); lv_obj_set_y(title, 0);
-            }
+            int x = i % 2 * (cell + INK_GAP_M), top = i / 2 * row_h;
+            ink_ui_label(group, W.texts[2 + i], INK_FONT_LIST, INK_WEIGHT_REGULAR, x, top, cell);
+            ink_ui_line(group, range, INK_FONT_NOTE, INK_WEIGHT_REGULAR, x, top + 2 * ink_ui_line_height(INK_FONT_LIST), cell - INK_ICON_MEDIUM - INK_GAP_XS);
+            ink_ui_icon(group, i ? d->i : "rain", INK_ICON_MEDIUM, INK_ICON_LINE, x + cell - INK_ICON_MEDIUM,
+                top + 2 * ink_ui_line_height(INK_FONT_LIST), false);
             field(n++, IDS[i], W.texts[2 + i], i ? TR(d->w) : range);
         }
-        y += (W.ndays + 1) * row_h + INK_GAP_S;
+        y += ((W.ndays + 2) / 2) * row_h + INK_GAP_S;
         char updated[sizeof W.updated]; memcpy(updated, W.updated, sizeof updated);
         snprintf(W.texts[6], sizeof W.texts[6], W.offline ? TR("没联网，显示上次天气\n%s\n数据来自 Open-Meteo.com") : TR("%s\n数据来自 Open-Meteo.com"), updated); /* 2..5: the rows */
         ink_ui_notice(screen, W.texts[6], y); field(n++, "updated", TR("更新"), W.texts[6]);

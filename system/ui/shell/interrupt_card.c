@@ -97,7 +97,9 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     if (alarm) ink_shell_time_strings(C.clock, sizeof C.clock, C.date_text, sizeof C.date_text);
     shell_card_text(&C.card, alarm ? C.now.body : C.now.title, alarm ? C.clock : C.now.body);
     lv_obj_set_style_text_font(C.card.title, ink_ui_font_px(call ? INK_FONT_LIST : alarm ? INK_FONT_TITLE : INK_FONT_HEADING, INK_WEIGHT_BOLD), 0);
-    lv_obj_set_y(C.card.title, ink_ui_px(call ? INK_STATUS_BAR + INK_BLOCK : INK_STATUS_BAR + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN));
+    lv_obj_set_y(C.card.title, ink_ui_px(call ? INK_STATUS_BAR + INK_GAP_M +
+        ink_ui_text_height(TR("结束后回到刚才的页面"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W - 2 * INK_MARGIN) + INK_GAP :
+        INK_STATUS_BAR + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN));
     lv_obj_set_y(C.card.body, ink_ui_px(INK_STATUS_BAR + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN + ink_ui_line_height(INK_FONT_TITLE)));
     lv_obj_set_style_text_font(C.card.body, ink_ui_font_px(alarm ? INK_FONT_NUMBER : INK_FONT_BODY, INK_WEIGHT_REGULAR), 0);
     lv_obj_set_height(C.card.body, ink_ui_px(alarm ? ink_ui_line_height(INK_FONT_NUMBER) : 2 * INK_ROW_DOUBLE));

@@ -14,6 +14,8 @@ class ScaleCheck(unittest.TestCase):
 
     def test_illegal_sizes(self):
         for text in (
+            'lv_obj_set_width(o, LV_MAX(INK_CONTROL, 123));',
+            'lv_obj_set_width(o, LV_MIN(123, INK_CONTROL));',
             'lv_obj_set_width(o, 123);',
             'lv_obj_set_style_width(o, 123, 0);',
             'lv_style_set_pad_all(&style, 123);',
@@ -59,6 +61,8 @@ class ScaleCheck(unittest.TestCase):
 
     def test_legal_sizes_and_non_size_parameters(self):
         for text in (
+            'lv_obj_set_width(o, LV_MAX(INK_CONTROL, INK_PRIMARY + INK_GAP));',
+            'lv_obj_set_width(o, LV_MIN(INK_CANVAS_W, INK_CONTROL));',
             'lv_obj_set_width(o, 108);',
             'const int width=108; lv_obj_set_width(o, width);',
             'lv_obj_set_width(o, INK_CANVAS_W - 2 * INK_MARGIN);',
