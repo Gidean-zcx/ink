@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import asyncio
 from typing import Protocol
+from ink_hub.models import from_environment
 
 
 @dataclass(frozen=True)
@@ -23,10 +24,14 @@ class FakeModel:
         self.gate, self.fail = gate, fail
         self.calls = 0
         self.started = asyncio.Event()
+        # Preserve the gateway's existing default entry point and injectable fake.
+        self.provider = from_environment()
 
     async def answer(self, question, tools, lang="zh"):
         self.calls += 1
         self.started.set()
+        if self.provider is not None:
+            return await self.provider.answer(question, tools, lang)
         if self.gate:
             await self.gate.wait()
         if self.fail:

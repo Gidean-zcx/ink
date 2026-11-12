@@ -1,6 +1,6 @@
 # 家庭服务器：第 1 步
 
-这是本机的示例演示：设备网关、能力总线、合成身份和权限、假模型与语音、持久任务队列、安装骨架，以及默认关闭的模拟器桥。没有接入真实厂商、账号、配对、记忆、内容或真实音频，不能导入真实家庭资料。
+这是本机的示例演示：设备网关、能力总线、合成身份和权限、默认假模型与语音、持久任务队列、安装骨架，以及默认关闭的模拟器桥。可选择接入真实对话模型（见下文），账号、配对和音频仍是示例，不能导入真实家庭资料。
 
 ## 从零运行
 
@@ -14,7 +14,7 @@ hub/.venv/bin/python -m ink_hub doctor --data work/hub-data
 hub/.venv/bin/python -m ink_hub serve --data work/hub-data --dev-allow-proto1
 ```
 
-打开终端打印的本机 `/setup`，输入本次设置码。向导只保存示例进度；设置码成功使用后更换。CLI 等价命令：`hub/.venv/bin/python -m ink_hub setup --data work/hub-data --config example.yaml`，配置仅含 `step: 1` 和 `mode: example`。`status --data work/hub-data` 可读进度。凭据不进配置或日志，真实密钥以后仅从环境变量读；示例 `.env.example` 没有密钥。
+打开终端打印的本机 `/setup`，输入本次设置码。向导只保存示例进度；设置码成功使用后更换。CLI 等价命令：`hub/.venv/bin/python -m ink_hub setup --data work/hub-data --config example.yaml`，配置仅含 `step: 1` 和 `mode: example`。`status --data work/hub-data` 可读进度。凭据不进配置或日志，真实密钥仅从环境变量读；示例 `.env.example` 没有密钥。
 
 服务固定监听 `127.0.0.1:8443`。远程开发机通过 `ssh -L 8443:127.0.0.1:8443 user@example.com`，再访问本机地址。第 1 步不开放公网设置，不信任转发来的 HTTPS 头，不自动申请证书，也不把自签证书当成可信网页入口。开发握手默认拒绝，必须显式打开；它只映射到合成家庭的儿童身份，不能验证成人密码。
 
@@ -43,6 +43,38 @@ INK_HUB_CAPS=../build/test-out/hub/caps.json .venv/bin/python -m pytest -q
 ```
 
 所有流程只用假厂商、替身 Opus 包，不代表真实语音可用。模拟器桥只接受 `--hub-url ws://127.0.0.1:端口/v1/device`，强制 1× 实时；省略参数就用原来的确定性模拟中枢。模拟任务只排队；专用宿主网络线程经 `vtk_inject_external` 回到模拟世界，关闭或代次过期的回调丢弃。继续交互可使用原来的 `ink-sim` / `ink-sim-gui` 加同一个参数。
+
+## 怎么换成真模型
+
+默认仍为假模型。`INK_HUB_MODEL_PROVIDER` 可选 `fake`、`openai`、`anthropic`；选了真实接法但没有对应环境密钥时，自动用假模型。沿用上面的 `serve` 命令，不要设置旧的 `INK_HUB_MODEL`。本任务没有发送真实模型请求；启用真实服务可能产生费用，须先由用户选择厂商和模型。
+
+| 接法 | 必填环境变量 | 可选环境变量 |
+| --- | --- | --- |
+| OpenAI 兼容 Chat Completions（DeepSeek、方舟、通义、Kimi 等） | `INK_HUB_OPENAI_API_KEY`、`INK_HUB_OPENAI_MODEL` | `INK_HUB_OPENAI_BASE_URL`，默认 `https://api.openai.com/v1` |
+| Anthropic Messages | `INK_HUB_ANTHROPIC_API_KEY`、`INK_HUB_ANTHROPIC_MODEL` | `INK_HUB_ANTHROPIC_BASE_URL`，默认 `https://api.anthropic.com/v1` |
+
+Base URL 填厂商的 API 前缀，代码追加 `/chat/completions` 或 `/messages`。例如方舟的前缀可能含 `/api/v3`，按所选厂商文档填写。正式服务必须 HTTPS，仅本机假服务器允许 HTTP。密钥用终端静默读取或由进程环境注入，不写 YAML、命令参数或仓库文件。以 Bash 为例（先填好选定服务的地址与模型名）：
+
+```sh
+export INK_HUB_MODEL_PROVIDER=openai
+export INK_HUB_OPENAI_BASE_URL=https://example.com/v1
+export INK_HUB_OPENAI_MODEL=user-selected-model
+IFS= read -r -s -p '模型服务密钥：' INK_HUB_OPENAI_API_KEY
+export INK_HUB_OPENAI_API_KEY
+hub/.venv/bin/python -m ink_hub serve --data work/hub-data --dev-allow-proto1
+```
+
+`example.com` 是占位地址。Anthropic 按表换环境变量名和 provider。没有安装厂商 SDK，复用锁定的 aiohttp。请求使用 SSE，`RemoteModel.stream()` 逐段输出文字并在参数完整后返回一次工具调用；现有网关的 `answer()` 接口会先汇总流，再按原来的设备协议发送。工具沿用设备当前允许的能力名、校验和授权路径；现有网关只把名字交给模型，因此适配发送通用对象参数，完整参数 Schema 仍由网关验证。每轮最多一个工具，不新增自动代理循环或会话记忆。
+
+无需密钥、也不会访问外网的验证：
+
+```sh
+PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_models.py
+```
+
+它在随机本机端口启动两种假服务器，检查分段文字、分片工具参数、一次设备能力调用、缺密钥回退，以及 HTTP 错误和日志脱敏。真实厂商的兼容性和效果还需用户授权后的联调。接口依据：[OpenAI Chat Completions 流事件](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events)、[Anthropic streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)（查阅：2026-11-12）。
+
+设备连接边界仍见 [hub-link-1 报告](../docs/tasks/hub-link-1/REPORT.md)：当前 CLI 只监听本机、HTTP、开发协议 1；它不是已经支持局域网 WSS 和生产配对的中枢入口。
 
 ## 安装骨架
 

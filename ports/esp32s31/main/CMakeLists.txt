@@ -3,7 +3,8 @@ option(INK_AUTOTEST "Embed and run a device test script" OFF)
 set(INK_AUTOTEST_SCRIPT "" CACHE FILEPATH "Script embedded in a test image")
 idf_component_register(SRCS main.c ../osal_selftest.c ../s31_boot.c ../s31_panic.c ../s31_coproc.c ${root}/system/boot/main.c
     PRIV_INCLUDE_DIRS ..
-    REQUIRES ink_apps ink_system ink_drivers app_update esp_app_format esp_hal_lcd esp_hal_gpio esp_http_server)
+    REQUIRES ink_apps ink_system ink_drivers app_update esp_app_format esp_hal_lcd esp_hal_gpio esp_http_server
+        tcp_transport esp-tls mbedtls http_parser)
 target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=esp_panic_handler")
 # the interrupt entry's hardware-loop save, from IRAM (s31_coproc.c)
 target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=pxPortGetCoprocArea" "-Wl,-u,__wrap_pxPortGetCoprocArea") # -u: nothing else pulls s31_coproc.o from libmain
@@ -54,6 +55,13 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${reader_tables
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 endif()
 # The vendor file manager needs IDF's own components: not in the early expansion pass.
+if(NOT CMAKE_BUILD_EARLY_EXPANSION)
+# Keep the TLS transport in the platform target without changing its public HAL.
+idf_component_get_property(ink_ws_platform ink_platform COMPONENT_LIB)
+target_sources(${ink_ws_platform} PRIVATE ../hal_ws_s31.c)
+target_link_libraries(${ink_ws_platform} PRIVATE idf::tcp_transport idf::esp-tls idf::mbedtls idf::http_parser)
+endif()
+
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
 # Vendor file manager: protocol and workers are unchanged; storage is policy-backed.
 set(ap ${CMAKE_CURRENT_LIST_DIR}/../vendor/ap_transfer)
