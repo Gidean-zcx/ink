@@ -3,6 +3,7 @@
 #include "../music/formats.c"
 #undef main
 #include "speex/speex_resampler.h"
+#include "speex/ink_quality.h"
 static int prefix(const char *path, unsigned ms, const char *output) {
     ink_format_t *r; int err;
     assert(!ink_format_open_for("test", path, &r, &err));
@@ -14,7 +15,7 @@ static int prefix(const char *path, unsigned ms, const char *output) {
     assert(raw && mono && out);
     size_t n = ink_format_pcm(r, raw, count);
     for (size_t i = 0; i < n; i++) mono[i] = ch == 1 ? raw[i] : (int16_t)(((int)raw[2 * i] + raw[2 * i + 1]) / 2);
-    SpeexResamplerState *s = speex_resampler_init(1, rate, 16000, 4, &err);
+    SpeexResamplerState *s = speex_resampler_init(1, rate, 16000, INK_AUDIO_PCM_QUALITY, &err);
     spx_uint32_t in = (spx_uint32_t)n, len = HAL_OPUS_FRAME_SAMPLES + 1;
     assert(s && !speex_resampler_process_int(s, 0, mono, &in, out, &len) && in == n);
     FILE *f = fopen(output, "wb"); assert(f);
@@ -37,7 +38,7 @@ int main(int argc, char **argv) {
         int16_t *raw = osal_malloc(count * channels * 2, 0), *mono = osal_malloc(count * 2, 0);
         int16_t *out = osal_malloc((HAL_OPUS_FRAME_SAMPLES + 1) * 2, 0);
         size_t pre_filter = live;
-        SpeexResamplerState *s = speex_resampler_init(1, rate, 16000, 4, &err);
+        SpeexResamplerState *s = speex_resampler_init(1, rate, 16000, INK_AUDIO_PCM_QUALITY, &err);
         assert(s && raw && mono && out);
         size_t filter_bytes = live - pre_filter;
         clock_t decode = 0, resample = 0, worst = 0;

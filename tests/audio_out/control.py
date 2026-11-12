@@ -14,6 +14,7 @@ p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', required=True, type=Path)
 p.add_argument('--baseline', help='manual mode only; never required by ctest')
 p.add_argument('--opus-build', type=Path, help='manual baseline: real fixed-point codec from the S31 host build')
+p.add_argument('--playback-reverse', action='store_true', help='restore filtering in the output task using the checked-in patch')
 a = p.parse_args()
 build = a.build.resolve()
 db = json.loads((build / 'compile_commands.json').read_text())
@@ -26,14 +27,21 @@ with tempfile.TemporaryDirectory(prefix='audio-out-control-', dir=build) as tmp:
         source = ROOT / 'system/services/audio' / name
         if a.baseline:
             text = subprocess.check_output(['git', 'show', f'{a.baseline}:{source.relative_to(ROOT)}'], cwd=ROOT, text=True)
+        elif a.playback_reverse:
+            copy = folder / name
+            copy.write_text(source.read_text())
+            subprocess.run(['patch', '-s', '-R', str(copy)], input=(ROOT / 'tests/audio_out/producer.patch').read_text(), text=True, check=True)
+            text = copy.read_text()
         else:
             text = source.read_text()
-            old = 'int err = speex_resampler_process_int(AU.resampler, 0, f->data ? (const int16_t *)f->data + AU.source_off : NULL, &in, AU.pcm, &out);'
+            old = 'int err = speex_resampler_process_int(PC.resampler, 0, mono, &in, copy, &out);'
             assert old in text
-            text = text.replace(old, '''out = (spx_uint32_t)((uint64_t)in * HAL_AUDIO_RATE / f->rate);
-for (spx_uint32_t i = 0; i < out; i++) AU.pcm[i] = ((const int16_t *)f->data)[(uint64_t)i * f->rate / HAL_AUDIO_RATE];
+            text = text.replace(old, '''spx_uint32_t rate, target;
+speex_resampler_get_rate(PC.resampler, &rate, &target);
+out = (spx_uint32_t)((uint64_t)in * target / rate);
+for (spx_uint32_t i = 0; i < out; i++) copy[i] = mono ? mono[(uint64_t)i * rate / target] : 0;
 int err = 0;''', 1)
-            old = 'osal_cost_cycles((uint64_t)out * 3200 * (f->rate > 44100 ? f->rate : 44100) / 44100);'
+            old = 'osal_cost_cycles((uint64_t)out * 3200 * (2 * speex_resampler_get_input_latency(PC.resampler)) / 176);'
             assert old in text
             text = text.replace(old, 'osal_cost_cycles((uint64_t)out * 6);', 1)
         copy = folder / name
@@ -71,7 +79,7 @@ int err = 0;''', 1)
         cmd += ['-I' + str(opus / 'esp-opus/include')]
         subprocess.run(cmd, cwd=build, check=True)
         link += [str(real), str(opus / 'opus-build/libs31-opus.a'), '-lm']
-    binary = build / ('audio-out-baseline-real' if a.opus_build else 'audio-out-baseline' if a.baseline else 'audio-out-point-sampling')
+    binary = build / ('audio-out-baseline-real' if a.opus_build else 'audio-out-baseline' if a.baseline else 'audio-out-playback-filter' if a.playback_reverse else 'audio-out-point-sampling')
     link[link.index('-o') + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True)
     if a.baseline:
@@ -95,12 +103,20 @@ int err = 0;''', 1)
                 print(case, json.dumps(measurements[case]))
         (area / 'quality.json').write_text(json.dumps(measurements, indent=2) + '\n')
     else:
-        cmd = [sys.executable, '-B', str(ROOT / 'tests/audio_out/run.py'), '--build', str(build), '--binary', str(binary), '--case', 'tone10k']
+        cmd = [sys.executable, '-B', str(ROOT / 'tests/audio_out/run.py'), '--build', str(build), '--binary', str(binary), '--case', 'scenario' if a.playback_reverse else 'tone10k']
         result = subprocess.run(cmd, capture_output=True, text=True, env={**os.environ, 'INK_KEEP_EVIDENCE': '1'})
         print(result.stdout)
-        expected = 'attenuation_db'
-        assert result.returncode != 0 and expected in result.stderr, result.stdout + result.stderr[-12000:]
+        expected = 'no underruns:' if a.playback_reverse else 'attenuation_db'
+        if a.playback_reverse:
+            data = json.loads((build / 'audio-out-evidence' / binary.name / 'scenario/out/metrics.json').read_text())
+            assert result.returncode != 0 and data['metrics'].get('audio.speaker.underruns', 0) > 0
+            assert any(expected in warning for warning in data.get('warnings', [])), data.get('warnings')
+            print('reverse control:', data['metrics']['audio.speaker.underruns'], 'underruns,', data['metrics']['audio.speaker.underrun_ms'], 'ms')
+        else:
+            assert result.returncode != 0 and expected in result.stderr, result.stdout + result.stderr[-12000:]
         print('reverse control failed at the required assertion:', expected)
         if not os.environ.get('INK_KEEP_EVIDENCE'):
             shutil.rmtree(build / 'audio-out-evidence' / binary.name)
             binary.unlink()
+if not a.baseline and not a.playback_reverse:
+    subprocess.run([sys.executable, '-B', __file__, '--build', str(build), '--playback-reverse'], check=True)

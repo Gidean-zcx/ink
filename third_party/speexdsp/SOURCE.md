@@ -14,3 +14,5 @@
 | `LICENSE` | `COPYING` | `2654a4264b2bfe298dedc508748d140111840c315cc8eb646a3a68c13fa75b01` |
 
 本地适配：`os_support_custom.h` 将三种分配操作接到 OSAL 的 PSRAM；`include/speex/speexdsp_config_types.h` 是使用 stdint.h 的本地固定宽度类型头；CMake 固定浮点、标量实现，模拟器与 S31 同源。
+
+audio-out-2：新增本地 `include/speex/ink_quality.h`，由生产端和独立参考测试共享所选质量常量；上表原文保持不变。Q0～Q10 的合成音调和宿主耗时对比见 `tests/audio_out/quality.c`，S31 估算及取舍见 `docs/tasks/audio-out-2/REPORT.md`。
