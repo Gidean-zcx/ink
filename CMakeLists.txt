@@ -1050,7 +1050,8 @@ add_test(NAME hub-bridge-generations COMMAND sim-hub-bridge-state
 if(INK_HUB_PYTHON)
   add_test(NAME hub-contract COMMAND ${INK_HUB_PYTHON} ${CMAKE_SOURCE_DIR}/tests/hub/run_contract.py
     --caps ${CMAKE_BINARY_DIR}/test-out/hub/caps.json --samples ${CMAKE_BINARY_DIR}/test-out/hub/messages.jsonl)
-  set_tests_properties(hub-contract PROPERTIES FIXTURES_REQUIRED hub-caps FIXTURES_SETUP hub-messages SKIP_RETURN_CODE 77 TIMEOUT 120)
+  # The hub suite grew with hub-real-1 (about 70 s alone); 120 s timed out on a loaded machine.
+  set_tests_properties(hub-contract PROPERTIES FIXTURES_REQUIRED hub-caps FIXTURES_SETUP hub-messages SKIP_RETURN_CODE 77 TIMEOUT 300)
   add_test(NAME hub-json-crosscheck COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hub/check_samples.py
     $<TARGET_FILE:hub-json-check> ${CMAKE_BINARY_DIR}/test-out/hub/messages.jsonl)
   set_tests_properties(hub-json-crosscheck PROPERTIES FIXTURES_REQUIRED hub-messages SKIP_RETURN_CODE 77)
