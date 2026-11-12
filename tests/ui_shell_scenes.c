@@ -112,6 +112,10 @@ static void prepare(void) {
         CHECK(ink_alarm_add(&a) > 0, "schedule the next thing");
         ink_ui_home();
     } else if (!strcmp(scene, "Apps")) { ink_receipt_t rc; CHECK(ink_cap_invoke("shell.apps", NULL, INK_SRC_TOUCH, 0, &rc) == INK_RC_DONE, "全部应用 opens"); }
+    else if (!strcmp(scene, "AppsSearch")) { /* the matches, as KISS lists them, and the search of everything */
+        ink_args_t args; ink_args_init(&args); ink_args_str(&args, "query", "计算"); ink_receipt_t rc;
+        CHECK(ink_cap_invoke("shell.search", &args, INK_SRC_TOUCH, 0, &rc) == INK_RC_DONE, "the apps are searched");
+    }
     else if (!strcmp(scene, "Control")) ink_shell_control();
     else if (!strncmp(scene, "Components", 10)) ink_ui_push(&COMPONENTS, NULL);
     else if (!strcmp(scene, "Settings") || !strncmp(scene, "Set", 3) || !strcmp(scene, "Notifications")) ink_shell_open_page(scene);
@@ -213,7 +217,9 @@ static void assert_identity(void) {
     /* D-135: Today is the one page with its cards; Apps is the second page behind 全部应用. */
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today")) {
         top = "home"; home_board = kid ? "KidHome" : "Main"; expected_text = !strcmp(scene, "Today") ? "继续读：《星星邮差》" : home_board;
-    } else if (!strcmp(scene, "Apps")) { top = page = "Apps"; home_board = expected_text = kid ? "KidApps" : "Apps"; }
+    } else if (!strcmp(scene, "Apps") || !strcmp(scene, "AppsSearch")) {
+        top = page = "Apps"; home_board = kid ? "KidApps" : "Apps"; expected_text = !strcmp(scene, "Apps") ? home_board : "查找=计算";
+    }
     else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) { top = "LockPage"; expected_text = "设备已锁定"; }
     else if (!strcmp(scene, "Members") || !strcmp(scene, "MembersBack") || !strncmp(scene, "Pin", 3)) { top = "member_gate"; expected_text = !strncmp(scene, "Pin", 3) ? "密码内容不可见" : "请选择家人"; }
     else if (!strncmp(scene, "Ime", 3)) { top = "Keyboard"; page = "test.text"; expected_text = password ? "密码输入" : "键盘"; }
@@ -261,6 +267,9 @@ static void assert_identity(void) {
         CHECK(kid ? label_visible("爸爸妈妈可以看到你的记录") : label_visible("按住侧边 AI 键，直接说话"), "%s: the bottom line", scene);
     }
     if (!strcmp(scene, "Apps")) CHECK(snapshot_has("工具页=1/") && snapshot_has("阅读（reader）") && label_visible("读和听"), "Apps: its first page, in groups");
+    if (!strcmp(scene, "AppsSearch"))
+        CHECK(snapshot_has("工具页=1/1") && snapshot_has("计算器（calculator）") && !snapshot_has("阅读（reader）") && label_visible("搜索全部内容") &&
+              !label_visible("读和听"), "AppsSearch: only the matches, no groups, then the search of everything");
 }
 
 /* No text cut off by what holds it, and no two lines of text on top of each other. Whatever the
@@ -345,6 +354,9 @@ static void assert_operation(void) {
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today") || !strcmp(scene, "Apps")) {
         CHECK(press_label("阅读"), "touch the reading favourite or row"); quiet();
         CHECK(strcmp(ink_ui_page_name(), "home") && strcmp(ink_ui_page_name(), "Apps"), "the touch actually opens the reading application");
+    } else if (!strcmp(scene, "AppsSearch")) {
+        CHECK(press_label("计算器"), "touch the match"); quiet();
+        CHECK(!strcmp(ink_ui_page_name(), "Calculator"), "the match opens the calculator (%s)", ink_ui_page_name());
     } else if (!strcmp(scene, "Settings")) {
         CHECK(press_label("显示和亮度"), "touch the display settings row"); quiet();
         CHECK(!strcmp(ink_ui_page_name(), "SetDisplay"), "the row opens its promised page");

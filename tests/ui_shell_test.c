@@ -133,7 +133,7 @@ static void test_task(void *arg) {
     CHECK(!strcmp(ink_ui_page_name(), "Apps") && strstr(g_snap, "查找=阅读") && strstr(g_snap, "阅读（reader）") && !ink_text_focused(),
           "the real query lists the matching apps in place and closes its keyboard");
     on_ui(find_clock); CHECK(!clock_tile, "the nonmatching Clock tile is absent from the rendered tree");
-    CHECK(tap_label("在全部内容里找") && wanted_seen, "the search of everything follows the matches"); quiet();
+    CHECK(tap_label("搜索全部内容") && wanted_seen, "the search of everything follows the matches"); quiet();
     on_ui(read_screen); CHECK(!strcmp(ink_ui_page_name(), "Search") && strstr(g_snap, "阅读"), "it opens global Search with the same words");
     CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "global search returns to the original Apps page"); quiet();
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "clearing the same query restores Apps"); quiet();

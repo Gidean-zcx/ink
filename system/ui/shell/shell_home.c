@@ -412,12 +412,12 @@ static int apps_walk(bool draw, char *list, size_t cap) {
                 char args[192];
                 ink_jw_t w; ink_jw_init(&w, args, sizeof args);
                 ink_jw_raw(&w, "{\"query\":"); ink_jw_str(&w, N.search); ink_jw_raw(&w, "}");
-                lv_obj_t *r = ink_ui_list_row(apps_box, "search", TR("在全部内容里找"), N.search, INK_MARGIN,
+                lv_obj_t *r = ink_ui_list_row(apps_box, "search", TR("搜索全部内容"), N.search, INK_MARGIN,
                                               y + (count ? INK_GAP_M : INK_CONTROL), width(), false, NULL, NULL);
                 chevron(r, INK_CONTROL);
                 ink_shell_bind(r, "search.show", args);
             }
-            if (here && list && len < cap) len += (size_t)snprintf(list + len, cap - len, "%s（search.show）；", TR("在全部内容里找"));
+            if (here && list && len < cap) len += (size_t)snprintf(list + len, cap - len, "%s（search.show）；", TR("搜索全部内容"));
             break;
         }
         if (here && draw) {
