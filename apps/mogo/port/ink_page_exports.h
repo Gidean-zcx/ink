@@ -3,7 +3,7 @@ static int ink_mogo_shelf_count, ink_mogo_shelf_page;
 enum { INK_MOGO_SETTING_COUNT=8, INK_MOGO_SHELF_ROWS=4, INK_MOGO_TOOL_COUNT=6 };
 enum { INK_MOGO_TOOLS=10, INK_MOGO_MARKS, INK_MOGO_SETTINGS };
 static const char *const ink_mogo_setting_actions[]={"mogo.set_font_size","mogo.set_line_spacing","mogo.set_paragraph_spacing","mogo.set_margin","mogo.set_weight","mogo.set_indent","mogo.set_header","mogo.set_footer"};
-static const char *const ink_mogo_setting_names[] = {"字号","行距","段距","边距","字重","缩进","页眉","页脚"};
+static const char *const ink_mogo_setting_names[] = {TR_NOOP("字号"),TR_NOOP("行距"),TR_NOOP("段距"),TR_NOOP("边距"),TR_NOOP("字重"),TR_NOOP("缩进"),TR_NOOP("页眉"),TR_NOOP("页脚")};
 _Static_assert(sizeof ink_mogo_setting_actions/sizeof *ink_mogo_setting_actions == INK_MOGO_SETTING_COUNT,"setting actions");
 static int ink_mogo_setting_value(int index) {
     const ink_mogo_settings_t *p=&ink_mogo_settings;
@@ -122,22 +122,22 @@ void ink_mogo_page_draw(uint8_t *pixels) {
     }
     if (s_view==TOC) book_toc_render(pixels,s_reader_session.book.title,book_navigation_count(),current_toc_position(),(int)ink_mogo_context.leaf,s_message);
     else if (s_view==SHELF) {
-        ui_text_box(pixels,(EpdRect){36,80,612,90},42,"书架",EPD_DRAW_ALIGN_CENTER,false);
+        ui_text_box(pixels,(EpdRect){36,80,612,90},42,TR("书架"),EPD_DRAW_ALIGN_CENTER,false);
         for (int row=0;row<INK_MOGO_SHELF_ROWS && ink_mogo_shelf_page*4+row<ink_mogo_shelf_count;++row)
             ui_draw_button(pixels,(EpdRect){36,210+row*190,612,164},ink_mogo_shelf[ink_mogo_shelf_page*4+row].name,false);
-        ui_text_box(pixels,(EpdRect){36,1000,612,80},28,"‹ 上一页                     下一页 ›",EPD_DRAW_ALIGN_CENTER,false);
+        ui_text_box(pixels,(EpdRect){36,1000,612,80},28,TR("‹ 上一页                     下一页 ›"),EPD_DRAW_ALIGN_CENTER,false);
     } else if (s_reader_panel==INK_MOGO_MARKS) draw_reader_bookmarks(pixels);
     else if (s_reader_panel==INK_MOGO_SETTINGS) {
-        draw_sheet(pixels,180,"阅读设置");
-        ui_draw_button(pixels,(EpdRect){36,280,612,72},"返回正文",false);
+        draw_sheet(pixels,180,TR("阅读设置"));
+        ui_draw_button(pixels,(EpdRect){36,280,612,72},TR("返回正文"),false);
         for (int i=0;i<INK_MOGO_SETTING_COUNT;++i) {
-            char text[80]; snprintf(text,sizeof text,"-     %s  %d     +",ink_mogo_setting_names[i],ink_mogo_setting_value(i));
+            char text[80]; snprintf(text,sizeof text,"-     %s  %d     +",TR(ink_mogo_setting_names[i]),ink_mogo_setting_value(i));
             ui_draw_button(pixels,(EpdRect){36,380+i*94,612,82},text,false);
         }
     } else if (s_reader_panel==INK_MOGO_TOOLS) {
-        draw_sheet(pixels,640,"阅读工具");
-        const char *labels[]={"目录","加书签","书签列表","阅读设置","书架","返回正文"};
-        for (int i=0;i<INK_MOGO_TOOL_COUNT;++i) ui_draw_button(pixels,(EpdRect){36+(i%2)*318,750+(i/2)*136,294,112},labels[i],false);
+        draw_sheet(pixels,640,TR("阅读工具"));
+        const char *labels[]={TR_NOOP("目录"),TR_NOOP("加书签"),TR_NOOP("书签列表"),TR_NOOP("阅读设置"),TR_NOOP("书架"),TR_NOOP("返回正文")};
+        for (int i=0;i<INK_MOGO_TOOL_COUNT;++i) ui_draw_button(pixels,(EpdRect){36+(i%2)*318,750+(i/2)*136,294,112},TR(labels[i]),false);
     }
     ink_mogo_ui_coordinates(false);
 }
@@ -185,8 +185,8 @@ int ink_mogo_page_snapshot(char *out,size_t cap) {
     size_t n=s_text && end>=start?end-start:0;
     if (n>600) n=600;
     while (n && ((unsigned char)s_text[start+n]&0xc0)==0x80) --n;
-    const char *ink_mogo_panel_name=s_view==SHELF?"书架":s_view==TOC?"目录":s_reader_panel==INK_MOGO_MARKS?"书签列表":s_reader_panel==INK_MOGO_SETTINGS?"设置":s_reader_panel==INK_MOGO_TOOLS?"工具":"正文";
-    int len=snprintf(out,cap,"新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 章名=%s\n%.*s",
+    const char *ink_mogo_panel_name=s_view==SHELF?TR_NOOP("书架"):s_view==TOC?TR_NOOP("目录"):s_reader_panel==INK_MOGO_MARKS?TR_NOOP("书签列表"):s_reader_panel==INK_MOGO_SETTINGS?TR_NOOP("设置"):s_reader_panel==INK_MOGO_TOOLS?TR_NOOP("工具"):TR_NOOP("正文");
+    int len=snprintf(out,cap,TR_NOOP("新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 章名=%s\n%.*s"),
         s_reader_session.book.title,s_reader_session.position.chapter+1,s_reader_session.position.page+1,book_layout_page_count(),start,end,s_px,ink_mogo_panel_name,bookmark_count(),s_reader_session.book.chapter_title,(int)n,s_text?s_text+start:s_message);
     if (s_view==SHELF && len>=0 && (size_t)len<cap) for (int i=0;i<ink_mogo_shelf_count;++i) {
         int written=snprintf(out+len,cap-(size_t)len,"\n%d %s",i+1,ink_mogo_shelf[i].path);

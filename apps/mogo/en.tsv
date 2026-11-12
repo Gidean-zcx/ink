@@ -1,3 +1,13 @@
 新阅读	New reader
 新阅读 正在排版	New reader: laying out
 新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 字号=%d\n%.*s	New reader %s Chapter=%zu Page=%zu/%zu Position=%zu Size=%d\n%.*s
+字重	Weight
+缩进	Indent
+页眉	Header
+页脚	Footer
+返回正文	Back to book
+阅读工具	Reading tools
+书签列表	Bookmarks
+正文	Book
+‹ 上一页                     下一页 ›	‹ Previous                     Next ›
+新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 章名=%s\n%.*s	New reader %s Chapter=%zu Page=%zu/%zu Position=%zu End=%zu Size=%d Panel=%s Bookmarks=%zu Chapter title=%s\n%.*s
