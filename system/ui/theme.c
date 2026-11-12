@@ -197,6 +197,7 @@ static ink_font_t *face_of(int px, ink_ui_weight_t weight) {
 
 const lv_font_t *ink_ui_font_px(int px, ink_ui_weight_t weight) {
     if (px == INK_FONT_LIST) px = INK_FONT_BODY;
+    if (px > INK_FONT_HEADING && weight == INK_WEIGHT_REGULAR) weight = INK_WEIGHT_MEDIUM;
     int level = text_level(), at = token_at(px);
     if ((unsigned)weight > INK_WEIGHT_BOLD) weight = INK_WEIGHT_REGULAR;
     lv_font_t *font = &fitted[level][weight][at];
@@ -357,10 +358,10 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
     if (value > 10) value = 10;
     lv_obj_t *b = ink_ui_box(parent, x, y, w, INK_SLIDER, 0, INK_SURFACE_WHITE, false);
     int left = INK_CONTROL, span = w - 2 * left, cy = INK_SLIDER - INK_ICON_SMALL / 2 - INK_STROKE;
-    ink_ui_line(b, title, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, left, 0, span - INK_CONTROL);
+    ink_ui_line(b, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, left, 0, span - INK_CONTROL);
     char s[8];
     snprintf(s, sizeof s, "%d", value);
-    lv_obj_t *v = ink_ui_line(b, s, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, w - 2 * INK_CONTROL, 0, INK_CONTROL);
+    lv_obj_t *v = ink_ui_line(b, s, INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - 2 * INK_CONTROL, 0, INK_CONTROL);
     lv_obj_set_style_text_align(v, LV_TEXT_ALIGN_RIGHT, 0);
     ink_ui_icon(b, "minus", INK_ICON_SMALL, INK_ICON_LINE, (INK_CONTROL - INK_ICON_SMALL) / 2,
                 cy - INK_ICON_SMALL / 2, false);
@@ -413,12 +414,15 @@ lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title,
     ink_ui_circle(r, icon, INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM,
                   INK_SURFACE_WHITE, NULL, NULL);
     if (y && ink_ui_surface_kind(parent) == INK_SURFACE_STATIC) ink_ui_group_divider(r, 0, w);
-    int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = w - left - INK_BLOCK - INK_GAP, value_w = value_width(title, value, room);
-    ink_ui_line(r, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, left, (h - ink_ui_line_height(INK_FONT_LIST)) / 2, room - value_w);
+    int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = w - left - INK_BLOCK - INK_GAP;
+    int value_w = two_lines && value && value[0] ? room : value_width(title, value, room);
+    int title_y = (h - ink_ui_line_height(INK_FONT_LIST) - (two_lines ? ink_ui_line_height(INK_FONT_NOTE) : 0)) / 2;
+    ink_ui_line(r, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, left, title_y, two_lines ? room : room - value_w);
     if (value_w) {
-        lv_obj_t *l = ink_ui_line(r, value, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w - INK_BLOCK - value_w, (h - ink_ui_line_height(INK_FONT_NOTE)) / 2, value_w);
-        lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_RIGHT, 0);
-        lv_obj_set_style_text_color(l, ink_ui_secondary(), 0);
+        int value_y = two_lines ? title_y + ink_ui_line_height(INK_FONT_LIST) : (h - ink_ui_line_height(INK_FONT_NOTE)) / 2;
+        lv_obj_t *l = ink_ui_line(r, value, INK_FONT_NOTE, INK_WEIGHT_REGULAR, two_lines ? left : w - INK_BLOCK - value_w, value_y, value_w);
+        lv_obj_set_style_text_align(l, two_lines ? LV_TEXT_ALIGN_LEFT : LV_TEXT_ALIGN_RIGHT, 0);
+        lv_obj_set_style_text_color(l, two_lines ? ink_ui_secondary() : ink_ui_ink(), 0);
     }
     if (cb) ink_ui_icon(r, "next", INK_ICON_SMALL, INK_ICON_LINE, w - INK_READING_MARGIN, (h - INK_ICON_SMALL) / 2, false);
     return r;

@@ -3,7 +3,7 @@
     "scene": "Main",
     "size": 1,
     "before_sha256": "2e033a7b0fadeae08f3b3cca4c2da65571a3d155e8c9ddea7c33a6adcc3436c7",
-    "after_sha256": "fec318934927b840be402f5005d5539c0e806f12285bcfe10e186f4e76133840"
+    "after_sha256": "a571add02192eb08fe6d24e9ed9f3686c5f62bd3581c26bd77186855b9489ee8"
   },
   {
     "scene": "Today",
@@ -15,37 +15,37 @@
     "scene": "Apps",
     "size": 1,
     "before_sha256": "8facf40043f8a274eb017c2358c5c07da5edfb11e88517dfb2f96a6b2838752d",
-    "after_sha256": "43ccf44e58fc92ecbac4f9e519ccb31f8b3a6c5125fc94913955e3a287bcad9f"
+    "after_sha256": "2a6c4c407e651c130a092fa934cd7cece24b76a58389dcd09bf6649aaec198d8"
   },
   {
     "scene": "Control",
     "size": 1,
     "before_sha256": "0e7598edb09d529a646fa94273f7bc5e0fa083b9c70b6f6cd1a29514b1a24b50",
-    "after_sha256": "0d3026d19ab2cf9a8b9e0a125d0413c3fcb68a05f933781f493955b634023a42"
+    "after_sha256": "09482aa4a4180d090224ad39aef8e9a6ae59e1519681c3948e97fcfdc4a28e74"
   },
   {
     "scene": "Lock",
     "size": 1,
     "before_sha256": "6a65e130f50934e07c4c95aa8f9097bd463a1984c35b1130c6d2f8f9a688879b",
-    "after_sha256": "0757c846fddedaa59478599a6af7e33d1573d71acc38ac6207415b1424843b34"
+    "after_sha256": "d8573b4be43a95cc5000ca7957772e164528b63d72ab4471f1d8673bfb04c423"
   },
   {
     "scene": "Settings",
     "size": 1,
     "before_sha256": "72b51b35a9377a516f16445540777cb3ac157dbd6d0e3918c0c0355a029c7cf3",
-    "after_sha256": "355d671b63a37326c94954128a019c5b428ac72aacafa1d3a005f7a7a8f2a7a9"
+    "after_sha256": "2ac4adece0736078971db4a852b9934fbc0a1f849e8b6aca311ddd8811c73b9c"
   },
   {
     "scene": "SetDisplay",
     "size": 1,
     "before_sha256": "6f58d0ba1a6020285a54a99bef983e55ef14315e5d38bc72fd5f85cdc57a0915",
-    "after_sha256": "d955979b05d03577ffd8dbe2c8a84a7ac00aefc86eb84bb158dbb3dfe22d8918"
+    "after_sha256": "2611c9b89f0878f33f08057ca57ff8431f1b63ba88b403a7ef3d043c52066870"
   },
   {
     "scene": "SetSound",
     "size": 1,
     "before_sha256": "058b3bf8fe1fd489f8777fdedd6ebbeb27391c5b8288d9b208ed90134f31a344",
-    "after_sha256": "6d91b42c0da53ab090efcd5faaedf504150189948853a10bcc8349c02dbb8f4a"
+    "after_sha256": "38c3e75cf9b8cc2e149d237b9ccee89b18f7b5220b6fd39b86124444eaf1e56f"
   },
   {
     "scene": "SetNetwork",
@@ -69,7 +69,7 @@
     "scene": "Confirm",
     "size": 1,
     "before_sha256": "d4530e1d984f14c5a7780a0ade424a178d8630cbfedee12893b0181e0af6b1b4",
-    "after_sha256": "19ef44ecfead1781c56408572f2e8eeee59f368b3feb5beadbe5dc471e373b1b"
+    "after_sha256": "c11b9d157880440428e19af485561bb8a536978dc170f5e43b6e8df8cc614705"
   },
   {
     "scene": "PowerMenu",
@@ -93,7 +93,7 @@
     "scene": "SmsThread",
     "size": 1,
     "before_sha256": "88bdbe91b219fb7b79ce41ec49c4dda467d72f9816683d126c5664ca18c5e194",
-    "after_sha256": "67bfa00429e467ccc413c953f371465974bbc68dfb8851254ac29c7a3713488d"
+    "after_sha256": "f24065bac72ab565059431b444ad229cc3d9ff5ff58dd3a23613f897544c5d3d"
   },
   {
     "scene": "Phone",
@@ -117,7 +117,7 @@
     "scene": "Contacts",
     "size": 1,
     "before_sha256": "0072302ef9d1c42ceb0d081117a320969c89479cbd9f50ab06878a2696c1b48d",
-    "after_sha256": "2b284040ea96ebe5d92cf8b89bcde85fe8257bc571618bec5014392f69aa5863"
+    "after_sha256": "068b15c1e78e4dec7fd1a60f25a0b4f674df229614b07d24a549d2b5e80d9547"
   },
   {
     "scene": "MemoEdit",
@@ -135,19 +135,19 @@
     "scene": "ClockTimer",
     "size": 1,
     "before_sha256": "05872beb5afaa93d9c4f2d480c7ed08b50fdfd4d7a7ac26e2652eb2299b2514e",
-    "after_sha256": "b253fafdbd89c2df5391d8888653a81090b9870413c0ed0ad8e7ae6c2b3dc910"
+    "after_sha256": "dc4fda00301b2a49848d31acfe97e6941088e56f7e96e4720408e0ffb529bab8"
   },
   {
     "scene": "ClockStopwatch",
     "size": 1,
     "before_sha256": "7e2062e0dc10c0f3a1531bcafca5a0366986e7bef078383192eb515f14421085",
-    "after_sha256": "8ec7a7a2796800472fcb9ac6bee42a873ecf88d634dc755ae7ff0b60b97ba3df"
+    "after_sha256": "4a40b5dd1c92f1ad59a942c52c355043c12e74d316cb3e89b2e7214fe1cd3e57"
   },
   {
     "scene": "Calculator",
     "size": 1,
     "before_sha256": "5df47db437847a6df93a91fdadce0be5da188790cc58051ded99c1ea82cd4a86",
-    "after_sha256": "83561d3f6e3a9c9fa52b4f6ce652c3c1a73bb6616993fa19f351cf0ac78f3e9c"
+    "after_sha256": "5bbe56eb06c000e8d14b3cc21ee56ed670c584541a2dd9691cf8b012c73684a6"
   },
   {
     "scene": "Calendar",
@@ -183,7 +183,7 @@
     "scene": "Main",
     "size": 3,
     "before_sha256": "a72e3de3522bee80a544ad9058077ba1cc11052898d527876cbbf7b8a6fb7c6e",
-    "after_sha256": "45a4f940e2d354cf59828cae39ea5048bda49e7f986f706da6690233bfabcbf9"
+    "after_sha256": "bfb26f2a6f37d3b8ec8f124b1cd5c29f37f2efb2c05ae11e5e5b368d389b7fc4"
   },
   {
     "scene": "Today",
@@ -195,37 +195,37 @@
     "scene": "Apps",
     "size": 3,
     "before_sha256": "ecaf9c2ecc1ec74bd29963356fb9bc11f856c9d5353ee1f9c47c6528beda9715",
-    "after_sha256": "0b9beb6414e5a203ac1a921e8b8ca3b7e29293f5eb8d1acc5f0bfbc8b63d42bc"
+    "after_sha256": "eb90565ad4c526e40b5a37cad58bc9a352c503c09ebdf13fe9b72cdfc381cf72"
   },
   {
     "scene": "Control",
     "size": 3,
     "before_sha256": "d3ac9d993ac6f5a63ac4eb45c036d492acae03022c3b8404e7b97056c3cf22db",
-    "after_sha256": "aa20283e1526a067b81cf2aee94cf317f44f46a7a9be4b0c7f4d6050396c9fec"
+    "after_sha256": "69890e34946507373ca9bd9f9ac5f6f9ec466b0869102d49e6a54042b0bfe69d"
   },
   {
     "scene": "Lock",
     "size": 3,
     "before_sha256": "a7bb17d5765a84c83ec930750ef68a9d171bb5ff31585b5bd4def9b6eea58997",
-    "after_sha256": "22c89182aa4e93da5138ac37e20b3b8e2883f8408fda1a0d044c58a5b53c5681"
+    "after_sha256": "1854043c293c8131b16f591b7c612f9ada6e0bca0078350ba38f155b9d313fcb"
   },
   {
     "scene": "Settings",
     "size": 3,
     "before_sha256": "5498fd72b83cef1bc9dca6907dc2a2000435c900a6fc37bbfa5d78915255b7bd",
-    "after_sha256": "44af0db1cffad949fe2cbe39d400b66d94b86125980632f51209c29a58596d96"
+    "after_sha256": "7bb5de13628e1797c8250589ebb7d9f935ad855d014d71ad1c911a9f5842aad8"
   },
   {
     "scene": "SetDisplay",
     "size": 3,
     "before_sha256": "374f7b8f3bd8738a5291e388a4fae3d686db5f222851e49647bfe8ca64a73756",
-    "after_sha256": "80bd0cd9af7785e1688866042897ed87232aaa2035eb0a3d2eb33c0051138194"
+    "after_sha256": "f6d1c2bb878d1812cd09c9f76810b506c616c3b8e82f506fdddd021acf2aef02"
   },
   {
     "scene": "SetSound",
     "size": 3,
     "before_sha256": "1ec5ebaee27b309c1485b6717202d98b1cf4603ebdd2b78a4f388d3598b95af8",
-    "after_sha256": "062b7b0e41f87f2cd5d9a0985d185d52b89f2cb6b5dc41e9edee6c1e2fa8d7b8"
+    "after_sha256": "3b71090814588b95637224c3d6b214c0786d9ad24849446bf595e069a00f690a"
   },
   {
     "scene": "SetNetwork",
@@ -249,7 +249,7 @@
     "scene": "Confirm",
     "size": 3,
     "before_sha256": "3d5b2e0f63859de51e62c126f72e867eadec8c65bce6ea00ef81d66f032348e7",
-    "after_sha256": "e56e3c460fdd9a5e78d86ed3761a3aeaa468b9b459e5c41539ee35b116cc6bc1"
+    "after_sha256": "18330d78ad5bc503eb9dc4be0711bdca757a663be6a5896271a2003d30d09cab"
   },
   {
     "scene": "PowerMenu",
@@ -273,13 +273,13 @@
     "scene": "SmsThread",
     "size": 3,
     "before_sha256": "64f2361c6adf046613d1f61b17dfa9e67905ab251a48c096e42e9eb0a890363f",
-    "after_sha256": "40fef720cc6648c4e974545dc2645b8fe2ae1e14827383e3f65e0d69e0fb2917"
+    "after_sha256": "1606e03f45b62113f73e97945f16faaf401e54a5ca63ee6405a725300de64ba3"
   },
   {
     "scene": "Phone",
     "size": 3,
     "before_sha256": "57439189e33e46860987c1436fc7189ecdb71ff7550aa455f9e1ca4a92814b18",
-    "after_sha256": "469379b5f54dd21f0333423164179946b4b0ebccecf7d570ff831a5dab17fd93"
+    "after_sha256": "3daea35a6a0f93cd8d2fac091f84a3f854634c84369309236a034622c042bf29"
   },
   {
     "scene": "PhoneRecents",
@@ -297,7 +297,7 @@
     "scene": "Contacts",
     "size": 3,
     "before_sha256": "5cf3332c2f7bef5e61c6885fbdedbf1fb8990076745de7edd74a4dd3994d9458",
-    "after_sha256": "eea42cd7fc2745942930a6231a10ea17ce876e9ff23cc84710192a4ffec62b7a"
+    "after_sha256": "54f25025232a35014e3a9d85ae6ce332b67928b738a43f1edc740db076648288"
   },
   {
     "scene": "MemoEdit",
@@ -315,19 +315,19 @@
     "scene": "ClockTimer",
     "size": 3,
     "before_sha256": "69fe4bbd78a6b1590153a0405fc6089e54ce9ef1b1e968803b657f2638be7bdb",
-    "after_sha256": "1bc34b895f35e44eafaf95ee1a58462e487f290ce883c0cc7c26752125729422"
+    "after_sha256": "85ee0e77484b773972380a870a31184fdf6f37555f799e41d77aa2f04e843617"
   },
   {
     "scene": "ClockStopwatch",
     "size": 3,
     "before_sha256": "0c82785a3b036b3f0a40a8fd20bbca9be3edc2d93608c428b0d4cc6f20f19834",
-    "after_sha256": "ac508b2838094ca4420e5a90b9d4739fdf012167d5da006c591b11818a88fd88"
+    "after_sha256": "667d3f2dbf41e64619bee6d049e4163794cf89fe658e3b507cbace6e66deedb6"
   },
   {
     "scene": "Calculator",
     "size": 3,
     "before_sha256": "838e29130780e51c9bd1c5dd3100b38a5e46c33d1dbb74ba4172bf26ef654ee4",
-    "after_sha256": "f0c70f5ef9e787e82276602f42fe808137f4eca51594647d8ae3c55bea980984"
+    "after_sha256": "5eb075879a9f2fdc96a601107c976a8ff7d150c1dab28a046ab0b8e20409967f"
   },
   {
     "scene": "Calendar",

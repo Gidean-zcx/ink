@@ -444,7 +444,7 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     lv_obj_set_width(f->area, LV_PCT(100));
     lv_obj_set_style_text_font(f->area, font(), 0);
     lv_obj_set_style_text_color(f->area, ink_ui_ink(), 0);
-    lv_obj_set_style_text_color(f->area, ink_ui_secondary(), LV_PART_TEXTAREA_PLACEHOLDER);
+    lv_obj_set_style_text_color(f->area, ink_ui_ink(), LV_PART_TEXTAREA_PLACEHOLDER);
     lv_obj_set_style_bg_color(f->area, ink_ui_ink(), LV_PART_SELECTED);
     lv_obj_set_style_text_color(f->area, ink_ui_paper(), LV_PART_SELECTED);
     lv_obj_set_style_bg_color(f->area, ink_ui_paper(), 0);

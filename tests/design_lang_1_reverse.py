@@ -19,6 +19,14 @@ for line in (build / 'CMakeFiles/ink_system.dir/flags.make').read_text().splitli
         key, value = line.split(' = ', 1)
         flags[key] = shlex.split(value)
 mutations = [
+    ('digit-weight', 'theme.c',
+     '    if (px > INK_FONT_HEADING && weight == INK_WEIGHT_REGULAR) weight = INK_WEIGHT_MEDIUM;\n', ''),
+    ('double-row', 'theme.c',
+     'int value_y = two_lines ? title_y + ink_ui_line_height(INK_FONT_LIST) : (h - ink_ui_line_height(INK_FONT_NOTE)) / 2;',
+     'int value_y = (h - ink_ui_line_height(INK_FONT_NOTE)) / 2;'),
+    ('placeholder-ink', 'textfield.c',
+     'lv_obj_set_style_text_color(f->area, ink_ui_ink(), LV_PART_TEXTAREA_PLACEHOLDER);',
+     'lv_obj_set_style_text_color(f->area, ink_ui_secondary(), LV_PART_TEXTAREA_PLACEHOLDER);'),
     ('late-icon-target', 'theme.c',
      '    if (size < INK_CONTROL) lv_obj_set_ext_click_area(b, ink_ui_px((INK_CONTROL - size + 1) / 2));\n', ''),
     ('negative-rounding', 'theme.c',

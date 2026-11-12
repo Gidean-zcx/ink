@@ -93,6 +93,9 @@ static void check_group_row(lv_obj_t *row, bool separated) {
     CHECK(circles == 1 && dividers == (separated ? 1 : 0), "shared group has one icon circle and a divider only between rows");
 }
 static void check_theme(void) {
+    CHECK(ink_ui_font_px(INK_FONT_CLOCK, INK_WEIGHT_REGULAR) == ink_ui_font_px(INK_FONT_CLOCK, INK_WEIGHT_MEDIUM) &&
+          ink_ui_font_px(INK_FONT_NUMBER, INK_WEIGHT_REGULAR) == ink_ui_font_px(INK_FONT_NUMBER, INK_WEIGHT_MEDIUM),
+          "large digits use the existing 400-weight face rather than the 300-weight face");
     CHECK(ink_ui_px(0) == 0 && ink_ui_px(0 - INK_STROKE) == 0 - ink_ui_px(INK_STROKE) &&
           ink_ui_px(0 - INK_CONTROL) == 0 - ink_ui_px(INK_CONTROL), "negative layout coordinates round symmetrically");
     CHECK(ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_MEDIUM) == ink_ui_font_px(INK_FONT_BODY, INK_WEIGHT_MEDIUM),
@@ -112,6 +115,11 @@ static void check_theme(void) {
             lv_obj_t *first = ink_ui_list_row(group, "wifi", "合成网络", "未连接", 0, 0, w, lines, NULL, NULL);
             lv_obj_t *second = ink_ui_list_row(group, "volume", "合成声音", "60%", 0, h, w, lines, theme_clicked, &clicks);
             lv_obj_update_layout(root);
+            lv_obj_t *row_title = find_label(first, "合成网络"), *row_value = find_label(first, "未连接");
+            lv_area_t title_rect, value_rect; lv_obj_get_coords(row_title, &title_rect); lv_obj_get_coords(row_value, &value_rect);
+            CHECK(!lines || title_rect.y2 < value_rect.y1, "two-line rows place the value below the title");
+            CHECK(lv_color_eq(lv_obj_get_style_text_color(row_value, 0), lines ? ink_ui_secondary() : ink_ui_ink()),
+                  "single-line row text stays black; only the second line uses gray");
             CHECK(ink_ui_surface_kind(group) == INK_SURFACE_STATIC &&
                   lv_color_eq(lv_obj_get_style_bg_color(group, 0), ink_ui_paper()) &&
                   !lv_obj_get_style_border_width(group, 0), "static groups have no outer frame");
@@ -209,6 +217,7 @@ static void check_theme(void) {
               "the clear button does not paint over the input's right border");
         CHECK(lv_obj_get_style_radius(area, 0) == ink_ui_px(16) && lv_obj_get_style_border_width(area, 0) == ink_ui_px(2),
               "search uses the same rectangular input style");
+        CHECK(lv_color_eq(lv_obj_get_style_text_color(area, LV_PART_TEXTAREA_PLACEHOLDER), ink_ui_ink()), "input placeholder text stays black");
         lv_obj_add_state(area, LV_STATE_FOCUSED);
         CHECK(lv_obj_get_style_border_width(area, 0) == ink_ui_px(3) && !lv_obj_get_style_outline_width(area, 0),
               "focus thickens one border without adding an outer frame");

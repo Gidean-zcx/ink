@@ -50,18 +50,23 @@ ctest 退出 8。三个测试显示 Skipped：`hub-contract`、`hub-json-crossch
 
 三个阅读场景的原始失败分别为：连续翻页 17 < 36；快速翻页 17 < 60；空书场景缺少前后页动作及第二次稳定打开指标。未抬预算，也未对它们做全量基线归因，不能把所有失败统称为旧测试。
 
-## 最后两处共用修正后的界面复核
+## 共用修正后的界面复核
 
 【实测】修正负坐标舍入及稍后绑定图标的热区后，两种构建都重新编译，运行全部 `ui-*` 与 `settings-a`，均为 `95% tests passed, 6 tests failed out of 118`。普通 305.85 秒，ASan/UBSan 176.93 秒。失败为大字今日、孩子今日、默认/大字编辑栏、大字来电、出厂设置页面；没有修改这些页面来消除断言。
 
-最后小修后没有再次重跑其余全量项；上面的普通、下面的 ASan 全量数字属于这次修正之前。完整 60 场景、截图和控件树则已重新采集。
+随后补齐两行上下排、单行及占位文字黑色、滑杆保留列表字号、大数字使用已有 400 字重。最终普通和 ASan/UBSan 均重新构建成功，主题、滑杆、上下文、输入、字号、列表定向测试均为 `100% tests passed out of 10`，分别 9.49 秒、17.95 秒。日志为 `build/design-lang-1/validation/final-controls.log`、`final-asan-controls.log`。
+
+最后这些修正后没有再次重跑全部 423 项或全部 118 项；全量与 118 项数字属于各自当时的代码，不能视为最终代码全量通过。最终 60 场景、截图和控件树已重新采集；120% 今日 5 次、日历 60 次文字失败仍保留。
 
 ## 共用控件反向对照
 
-【实测】六种变体均执行到结束并明确失败；正常主题在两种显示档案通过。
+【实测】九种变体均执行到结束并明确失败；正常主题在两种显示档案通过。
 
 | 撤去的修正 | 退出码 | 失败断言数 |
 | --- | ---: | ---: |
+| digit-weight | 1 | 1 |
+| double-row | 1 | 2 |
+| placeholder-ink | 1 | 2 |
 | late-icon-target | 1 | 2 |
 | negative-rounding | 1 | 1 |
 | font-merge | 1 | 1 |
@@ -86,8 +91,10 @@ Total Test time (real) = 2249.69 sec
 
 ctest 退出 8，三个 hub 项 Skipped。30 个失败项等于普通全量的 32 项减去已修正的两个设置翻页用例。全量与最后 118 项界面复核的失败输出均未出现 AddressSanitizer、UndefinedBehaviorSanitizer 或 `runtime error:` 诊断；这不把失败的 ctest 写成全通过。
 
-原始记录在 `build/design-lang-1/validation/asan-ctest.log`，最后两轮界面复核在该目录的 `final-ui.log`、`final-asan-ui.log`。
+原始记录在 `build/design-lang-1/validation/asan-ctest.log`，118 项界面复核在该目录的 `final-ui.log`、`final-asan-ui.log`。最终 10 项定向检查也未出现 sanitizer 诊断。
 
 ## S31
 
-【实测】S31 宿主机独立配置并完整构建，ctest 退出 0：`100% tests passed out of 77`，128.86 秒。原始记录为 `build/design-lang-1/validation/s31-host-ctest.log`。固件编译进行中。
+【实测】S31 宿主机独立配置并完整构建，ctest 退出 0：`100% tests passed out of 77`，128.86 秒。原始记录为 `build/design-lang-1/validation/s31-host-ctest.log`。
+
+固件首轮 `bash ports/esp32s31/build.sh` 退出 0，完成链接、资源包、栈与尺寸检查。该轮有 6 条 SDK/组件私有 include 依赖的 CMake 警告、2 次应用分区剩余 5% 的尺寸警告，没有编译器 `warning:`。没有固件基线警告对照，不能宣称整个构建无新警告。最终两行排版与字重修正后的重编待核对。

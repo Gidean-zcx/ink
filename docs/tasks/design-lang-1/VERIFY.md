@@ -20,8 +20,10 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest -
 taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python
 taskpolicy -c utility cmake --build build-s31-host -j2
 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build-s31-host --output-on-failure -j2
-taskpolicy -c utility env INK_DEPS=$INK_DEPS INK_UPSTREAM=$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus ports/esp32s31/build.sh
+taskpolicy -c utility env INK_DEPS=$INK_DEPS INK_UPSTREAM=$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus bash ports/esp32s31/build.sh
 ```
+
+仓库中该脚本的文件模式是 100644，直接执行会在启动前退出 126；本次使用 `bash` 运行同一脚本，未改变文件模式。
 
 截图采集的先后顺序不可颠倒：本次 `before` 是在产品四文件仍为基线、基线构建完成时采集，之后才改产品并构建 `after`。不要在修改后代码上重跑 `--label before` 冒充基线。驱动拒绝覆盖已有证据目录；重新采集时应换一个构建目录。
 
@@ -53,6 +55,6 @@ taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1_
 
 截图取 `clean-scene.png`（无模拟残影），不画调试框、不裁掉页面。每个对比图都有完整左右画布；SHA-256 在 `screenshots.json`。模拟显示模型的 `snap-scene.png` 也保留在构建目录，可另行检查残影。
 
-反向对照临时编译撤去字体合并、自动分组去框、清除按钮透明底、输入焦点边框、负坐标舍入、图标热区的版本，运行同一组共用控件断言，要求明确失败且测试执行到结束。脚本不修改产品文件，不依赖 Git 历史，未注册进 ctest。
+反向对照临时编译撤去数字字重、两行上下排、黑色占位文字、字体合并、自动分组去框、清除按钮透明底、输入焦点边框、负坐标舍入、图标热区的版本，运行同一组共用控件断言，要求明确失败且测试执行到结束。脚本不修改产品文件，不依赖 Git 历史，未注册进 ctest。
 
 Linux 警告核对使用任务指定的 `ink-codex/tools/gcccheck.py`，读取 `build/compile_commands.json`，检查改过的可编译 C 文件；结果及跳过项在报告中单列。源码范围、链接、图片大小及隐私检查同样在报告中列出。
