@@ -3,7 +3,7 @@
 @6s cap app.open {"id":"memo"}
 +3s cap memo.edit {}
 +3s tap 22% 95%       # switch Chinese to English (中)
-+4s tap 59% 78.5%     # h (the first key within ~2 s of a language switch is lost: backlog)
++1s tap 59% 78.5%     # h
 +1s tap 26% 70%       # e
 +1s tap 87% 78.5%     # l
 +1s tap 87% 78.5%     # l

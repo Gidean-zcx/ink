@@ -42,7 +42,7 @@ static void at(unsigned seconds, int stage) {
 }
 static void driver(void *unused) {
     (void)unused; test_start_home();
-    if (!strcmp(scene, "memo")) { at(21, 1); at(27, 2); at(32, 3); } /* memo.script waits 4 s after the language switch */
+    if (!strcmp(scene, "memo")) { at(18, 1); at(24, 2); at(29, 3); } /* memo.script waits 1 s after the language switch */
     else if (!strcmp(scene, "reader")) { at(14, 1); at(55, 2); }
     else if (!strcmp(scene, "camera")) { at(10, 1); at(28, 2); }
     else at(10, 0);

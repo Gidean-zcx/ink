@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--build', type=Path, required=True)
 parser.add_argument('--reverse', action='store_true')
+parser.add_argument('--switch-reverse', action='store_true')
 args = parser.parse_args()
 build = args.build.resolve()
 
@@ -37,7 +38,7 @@ def exercise(binary, tag, expected=None, verify=False, state=None):
     if expected:
         ok = result.returncode != 0 and metrics.get('test.fail', 0) > 0 and any(expected in w for w in data.get('warnings', []))
     else:
-        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == (0 if verify else 20)
+        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == (0 if verify or os.environ.get("INK_IME_SWITCH_ONLY") else 20)
     summary = {'case': tag, 'exit': result.returncode, 'passes': metrics.get('test.pass', 0),
                'failures': metrics.get('test.fail', 0), 'frames': len(frames), 'expected_result': ok}
     summary['query_us'] = [list(map(float, line.split()[1:])) for line in result.stdout.splitlines() if line.startswith('NINE_BENCH ')]
@@ -49,6 +50,32 @@ def exercise(binary, tag, expected=None, verify=False, state=None):
         shutil.rmtree(out)
     return ok
 
+
+if args.switch_reverse:
+    # Manual baseline control: CI does not need repository history.
+    source = ROOT / 'tests/ime_keyboard1.c'
+    area = build / 'test-out/ime-switch-baseline'
+    area.mkdir(parents=True, exist_ok=True)
+    old = subprocess.run(['git', 'show', '6171c2bf8d59238c95f2d548663f8b2ab3c6f43a:system/ui/shell/keyboard.c'],
+                         cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    keyboard = area / 'keyboard.c'
+    keyboard.write_text(old)
+    replacement = area / 'ime_keyboard1.c'
+    replacement.write_text(source.read_text().replace('"../system/ui/shell/keyboard.c"', '"' + str(keyboard) + '"'))
+    entry = next(e for e in json.loads((build / 'compile_commands.json').read_text()) if Path(e['file']) == source)
+    command = shlex.split(entry['command'])
+    obj = area / 'ime_keyboard1.o'
+    command[command.index('-o') + 1] = str(obj)
+    command[command.index(str(source))] = str(replacement)
+    command += ['-I' + str(source.parent)]
+    subprocess.run(command, cwd=entry['directory'], check=True)
+    link = shlex.split((build / 'CMakeFiles/sim-ime-keyboard1.dir/link.txt').read_text())
+    binary = area / 'sim-ime-keyboard1'
+    link[link.index('-o') + 1] = str(binary)
+    link[link.index('CMakeFiles/sim-ime-keyboard1.dir/tests/ime_keyboard1.c.o')] = str(obj)
+    subprocess.run(link, cwd=build, check=True)
+    os.environ['INK_IME_SWITCH_ONLY'] = '1'
+    raise SystemExit(0 if exercise(binary, 'switch-baseline', expected='switch does not request a flashing keyboard rebuild') else 1)
 
 if not args.reverse:
     state = build / 'test-out/ime-keyboard1-state-current'

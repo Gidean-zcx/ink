@@ -675,8 +675,7 @@ foreach(case nat baud started silent dhcp throttle detect privacy)
   add_test(NAME unit-s31-cell-${case} COMMAND test-s31-cell ${case})
 endforeach()
 set_tests_properties(unit-s31-cell unit-s31-cell-nat unit-s31-cell-baud unit-s31-cell-started
-  unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120
-  RUN_SERIAL TRUE) # the vendor modem waits 100 ms for an ACK: under a loaded parallel run the fake peer misses it
+  unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120)
 add_test(NAME unit-s31-bt COMMAND test-s31-bt)
 set_tests_properties(unit-s31-bt PROPERTIES TIMEOUT 10)
 add_test(NAME unit-s31-bt-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/bt_negative.py ${CMAKE_BINARY_DIR})
@@ -1639,6 +1638,10 @@ target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py
   $<TARGET_FILE:sim-contacts> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/contacts)
 ink_sim_executable(sim-clock-alarm tests/clock_alarm.c)
+ink_sim_executable(sim-timer-seconds tests/timer_seconds.c)
+target_link_libraries(sim-timer-seconds PRIVATE ink_apps ink_system)
+add_test(NAME timer-seconds COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/timer_seconds.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(timer-seconds PROPERTIES TIMEOUT 180)
 ink_sim_executable(sim-clock-extras tests/clock_extras.c)
 target_link_libraries(sim-clock-extras PRIVATE ink_apps ink_system)
 add_test(NAME clock-extras COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/clock_extras.py --build ${CMAKE_BINARY_DIR})
@@ -1717,6 +1720,10 @@ set_tests_properties(mobile-network PROPERTIES TIMEOUT 600)
 target_sources(ink_system PRIVATE system/apps/memo/memo.c)
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-memo-save-busy tests/memo_save_busy.c)
+target_link_libraries(sim-memo-save-busy PRIVATE ink_apps ink_system)
+add_test(NAME memo-save-busy COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/memo_save_busy.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(memo-save-busy PROPERTIES TIMEOUT 120)
 add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/run.py --build ${CMAKE_BINARY_DIR})
 # Voice memos: recording, cancelling, the AI key, a call, the hub's words, members, a power cut (tests/memo_record).
 ink_sim_executable(sim-memo-record tests/memo_record/memo_record.c)
@@ -2012,7 +2019,7 @@ target_include_directories(sim-cell-status PRIVATE drivers/chips)
 target_link_libraries(sim-cell-status PRIVATE ink_apps ink_system)
 add_test(NAME cell-status COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/esp32s31/cell_status.py ${CMAKE_BINARY_DIR})
 add_test(NAME unit-s31-cell-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/cell_negative.py ${CMAKE_BINARY_DIR} --cc ${CMAKE_C_COMPILER})
-# Runs the same fake modem as unit-s31-cell: its 100 ms ACK is missed under a loaded parallel run (seen on CI macOS).
+# Retain the existing serialization of the recompilation-heavy negative controls.
 set_tests_properties(unit-s31-cell-negative PROPERTIES RUN_SERIAL TRUE)
 # Focused small-gaps scenarios use the real product and a synthetic peer.
 ink_sim_executable(sim-small-gaps-3 tests/small_gaps_3/main.c)
@@ -2031,7 +2038,7 @@ if(INK_SANITIZE)
 endif()
 add_test(NAME unit-s31-uhci-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/uhci_negative.py
   ${CMAKE_BINARY_DIR} --cc ${CMAKE_C_COMPILER} ${ink_uhci_test_args})
-set_tests_properties(unit-s31-uhci-negative PROPERTIES RUN_SERIAL TRUE) # same fake modem and 100 ms ACK as above
+set_tests_properties(unit-s31-uhci-negative PROPERTIES RUN_SERIAL TRUE)
 add_test(NAME unit-s31-camera COMMAND test-s31-camera)
 add_test(NAME unit-s31-camera-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/camera_negative.py ${CMAKE_BINARY_DIR})
 ink_sim_executable(sim-camera-absent tests/port_camera/absent.c)

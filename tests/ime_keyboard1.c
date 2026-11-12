@@ -137,6 +137,19 @@ static void functional(void) {
     lv_obj_delete(field);
 }
 
+static void language_over_ai_panel(void) {
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 32};
+    CHECK(ink_text_focus(&cfg, NULL, NULL) > 0, "focus above AI panel");
+    lv_obj_t *panel, *status, *question, *answer;
+    ink_shell_ai_open(&panel, &status, &question, &answer);
+    CHECK(lv_obj_get_index(K.root) < lv_obj_get_index(panel), "AI panel needs keyboard ordering");
+    bool english = ink_text_english();
+    touch(INK_TEXT_KEY_LANGUAGE);
+    expect_mode(!english);
+    ink_shell_ai_closed();
+    ink_text_blur(0);
+}
+
 static bool contains(const lv_area_t *outer, const lv_area_t *inner) {
     return inner->x1 >= outer->x1 && inner->y1 >= outer->y1 && inner->x2 <= outer->x2 && inner->y2 <= outer->y2;
 }
@@ -197,6 +210,66 @@ static void capture(const char *name) {
     captured = false; vtk_event_at(vtk_now() + SIM_US(1), frame, (void *)name);
     CHECK(WAIT_FOR(captured, 2000), "frame saved: %s", name);
     ink_probe_count("test.frames");
+}
+/* Exercise the pointer pipeline, including overlay changes during a language switch. */
+static void end_scene(void);
+static int pointer_code, pointer_x, pointer_y;
+static bool switch_nine, switch_english;
+static uint32_t root_events;
+static void switch_callbacks(void) { CHECK(lv_obj_get_event_count(K.root) == root_events, "mode switches keep root callback count stable"); }
+static void pointer_target(void) {
+    int i = key_index(pointer_code);
+    CHECK(i >= 0, "switch test key exists: %d", pointer_code);
+    if (i < 0) return;
+    lv_obj_t *board = K.footer && i >= 9 ? K.footer : K.board;
+    lv_obj_update_layout(K.root);
+    lv_area_t bounds; lv_obj_get_coords(board, &bounds);
+    lv_area_t a = ((lv_buttonmatrix_t *)board)->button_areas[K.footer && i >= 9 ? i - 9 : i];
+    pointer_x = bounds.x1 + (a.x1 + a.x2) / 2;
+    pointer_y = bounds.y1 + (a.y1 + a.y2) / 2;
+}
+static void pointer_key(int code) {
+    pointer_code = code; on_ui(pointer_target);
+    hw(HW_PRESS, pointer_x, pointer_y); delay_ms(80);
+    hw(HW_RELEASE, pointer_x, pointer_y);
+}
+static void switch_setup(void) {
+    ink_receipt_t rc;
+    ink_setting_set("text.nine_key", switch_nine, INK_SRC_TOUCH, &rc);
+    if (ink_text_english() != switch_english) ink_text_key(INK_TEXT_KEY_LANGUAGE);
+    root_events = lv_obj_get_event_count(K.root);
+}
+static void switch_once(void) { touch(INK_TEXT_KEY_LANGUAGE); }
+static void switch_keys(void) {
+    static const int offsets[] = {300, 1000, 2000};
+    for (int nine = 0; nine < 2; nine++) for (int english = 0; english < 2; english++) {
+        CHECK(BY_HAND("memo.edit", NULL) && WAIT_FOR(ink_text_focused(), 10000), "open real memo for switching");
+        switch_nine = nine; switch_english = english; on_ui(switch_setup);
+        CHECK(WAIT_FOR(settled() && !ink_storage_pending(), 15000), "switch setup settles");
+        uint32_t commits = ink_display_commits();
+        on_ui(switch_once);
+        CHECK(WAIT_FOR(settled(), 15000), "language refresh settles");
+        CHECK(ink_display_commits() - commits == 1, "language switch draws one frame: %u", (unsigned)(ink_display_commits() - commits));
+        on_ui(switch_setup);
+        CHECK(WAIT_FOR(settled(), 15000), "pointer switch setup settles");
+        double dropped = sim_metric_value("ui.touch_under_overlay_dropped");
+        double clean = sim_metric_value("display.dispatch.FLASH_UI") + sim_metric_value("display.dispatch.FLASH_UI+clean");
+        pointer_key(INK_TEXT_KEY_LANGUAGE);
+        uint64_t switched = osal_now_us();
+        for (int i = 0; i < 3; i++) {
+            uint64_t target = switched + (uint64_t)offsets[i] * 1000;
+            if (target > osal_now_us()) osal_task_delay_us(target - osal_now_us());
+            pointer_key(english && nine ? '2' : 'a');
+            const char *value = english ? ink_text_composing() : ink_text_value();
+            CHECK(WAIT_FOR(strlen(value) == (size_t)i + 1, 200), "switch %s %s at %d ms enters text: %.40s", nine ? "nine" : "full", english ? "en-zh" : "zh-en", offsets[i], value);
+        }
+        CHECK(sim_metric_value("ui.touch_under_overlay_dropped") == dropped, "switch keeps queued pointer input");
+        CHECK(sim_metric_value("display.dispatch.FLASH_UI") + sim_metric_value("display.dispatch.FLASH_UI+clean") == clean, "switch does not request a flashing keyboard rebuild");
+        CHECK(WAIT_FOR(settled(), 15000), "typing settles");
+        on_ui(switch_callbacks);
+        CHECK(BY_HAND("system.home", NULL) && WAIT_FOR(!ink_text_focused(), 10000), "leave switch memo");
+    }
+    ink_receipt_t rc; ink_setting_set("text.nine_key", false, INK_SRC_TOUCH, &rc);
 }
 static ink_text_cand_t nine_candidates[60];
 static char learned_word[40], unlearned_word[40];
@@ -307,8 +380,8 @@ static void wifi_layout(void) {
     CHECK(password_fields == 1 && ink_text_type() == INK_TEXT_PASSWORD, "real Wi-Fi page focuses exactly one password field");
     CHECK(!lv_obj_is_visible(K.cands) && !lv_obj_is_visible(K.composing), "real password page has no candidate or composing band");
 }
-static bool verify_layout;
-static void host_mode(void *arg) { (void)arg; verify_layout = getenv("INK_IME_LAYOUT_VERIFY") != NULL; }
+static bool verify_layout, switch_only;
+static void host_mode(void *arg) { (void)arg; verify_layout = getenv("INK_IME_LAYOUT_VERIFY") != NULL; switch_only = getenv("INK_IME_SWITCH_ONLY") != NULL; }
 static void remember_layout(void) {
     ink_receipt_t rc;
     CHECK(ink_setting_set("text.nine_key", 1, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "save owner layout for restart");
@@ -339,7 +412,10 @@ static void run(void *arg) {
         ink_probe_count("test.finished");
         return;
     }
+    if (switch_only) { switch_keys(); ink_probe_count("test.finished"); return; }
     on_ui(functional);
+    on_ui(language_over_ai_panel);
+    switch_keys();
     vtk_event_at(vtk_now() + SIM_US(1), wifi_environment, NULL);
     py_want_dict(NULL);
     CHECK(WAIT_FOR(py_dict_loaded(), 5000), "shipping IKD1 loads before nine-key acceptance");

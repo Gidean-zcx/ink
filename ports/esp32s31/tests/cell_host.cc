@@ -29,6 +29,22 @@ using Clock = std::chrono::steady_clock;
 static const auto epoch = Clock::now();
 static std::atomic<int64_t> offset{2000000};
 static constexpr unsigned scale = 1;
+static std::mutex clock_mu;
+static Clock::duration clock_skipped{};
+static Clock::time_point clock_paused_at;
+static unsigned clock_holds;
+static thread_local bool tx_worker, tx_frame, tx_clock_held;
+/* Host descheduling inside a TX transaction is not elapsed modem time. */
+static void tx_clock_pause(bool hold) {
+    std::lock_guard lock(clock_mu);
+    if (hold) {
+        if (clock_holds++ == 0) clock_paused_at = Clock::now();
+    } else if (--clock_holds == 0) clock_skipped += Clock::now() - clock_paused_at;
+}
+static void tx_clock_end() {
+    if (tx_clock_held) tx_clock_pause(false);
+    tx_clock_held = false; tx_frame = false;
+}
 static auto duration(TickType_t ticks) { return std::chrono::microseconds(uint64_t(ticks) * 1000 / scale); }
 struct ink_test_queue { std::mutex m; std::condition_variable cv; size_t size, cap; std::deque<std::vector<uint8_t>> data; };
 struct ink_test_event { std::mutex m; std::condition_variable cv; EventBits_t bits = 0; };
@@ -61,7 +77,11 @@ static void dispatch(esp_event_base_t base, int id, void *data) {
     for (auto h : copy) if (!strcmp(base,h.base) && (id == h.id || h.id == ESP_EVENT_ANY_ID)) h.fn(h.arg,base,id,data);
 }
 extern "C" int64_t esp_timer_get_time(void) {
-    return std::chrono::duration_cast<std::chrono::microseconds>(Clock::now()-epoch).count()*scale+offset;
+    if (tx_frame && !tx_clock_held) { tx_clock_pause(true); tx_clock_held = true; }
+    std::lock_guard lock(clock_mu);
+    auto now = Clock::now();
+    auto elapsed = now - epoch - clock_skipped - (clock_holds ? now - clock_paused_at : Clock::duration{});
+    return std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count()*scale+offset;
 }
 extern "C" uint64_t osal_now_us(void) { return (uint64_t)esp_timer_get_time(); }
 extern "C" void osal_task_delay_us(uint64_t us) { std::this_thread::sleep_for(std::chrono::microseconds(us/scale)); }
@@ -75,10 +95,20 @@ extern "C" BaseType_t xQueueSend(QueueHandle_t q, const void *p, TickType_t tick
     q->data.emplace_back((const uint8_t*)p,(const uint8_t*)p+q->size); q->cv.notify_all(); return pdTRUE;
 }
 extern "C" BaseType_t xQueueReceive(QueueHandle_t q, void *p, TickType_t ticks) {
+    if (tx_worker) tx_clock_end();
     std::unique_lock lock(q->m);
     if (ticks == portMAX_DELAY) q->cv.wait(lock,[&]{return !q->data.empty();});
-    else if (!q->cv.wait_for(lock,duration(ticks),[&]{return !q->data.empty();})) return pdFALSE;
-    memcpy(p,q->data.front().data(),q->size); q->data.pop_front(); q->cv.notify_all(); return pdTRUE;
+    else {
+        const int64_t deadline = esp_timer_get_time() + int64_t(ticks) * 1000;
+        while (q->data.empty()) {
+            int64_t left = deadline - esp_timer_get_time();
+            if (left <= 0) return pdFALSE;
+            q->cv.wait_for(lock, std::chrono::microseconds(left / scale));
+        }
+    }
+    memcpy(p,q->data.front().data(),q->size); q->data.pop_front(); q->cv.notify_all();
+    if (tx_worker) tx_frame = true;
+    return pdTRUE;
 }
 extern "C" BaseType_t xQueueSendFromISR(QueueHandle_t q, const void *p, BaseType_t *wake) { *wake=pdFALSE; return xQueueSend(q,p,0); }
 extern "C" EventGroupHandle_t xEventGroupCreate(void) { return new ink_test_event; }
@@ -107,7 +137,9 @@ extern "C" BaseType_t xTaskCreate(void (*fn)(void*), const char *name, unsigned 
     assert((!strcmp(name,"uart_eth_main") && stack==4096 && prio==10) ||
            (!strcmp(name,"uart_eth_tx") && stack==3072 && prio==9) || (!strcmp(name,"uart_eth_init") && stack==4096 && prio==4));
     counts[N_TASKS]++; *out=(void*)1;
-    std::lock_guard lock(threads_mu); threads.emplace_back([=]{fn(arg);}); return pdPASS;
+    std::lock_guard lock(threads_mu);
+    bool tx = !strcmp(name, "uart_eth_tx");
+    threads.emplace_back([=]{ tx_worker = tx; fn(arg); tx_clock_end(); }); return pdPASS;
 }
 extern "C" void vTaskDelete(TaskHandle_t task) { assert(!task); }
 extern "C" osal_queue_t *osal_queue_create(size_t size, size_t count) { auto *q=new osal_queue{xQueueCreate((unsigned)count,(unsigned)size)}; osal_queues.push_back(q); return q; }
@@ -303,6 +335,7 @@ extern "C" void ink_test_wait_log(const char *s) {
 }
 extern "C" void ink_test_finish(void) {
     std::lock_guard lock(threads_mu); for (auto &t:threads) t.join(); threads.clear();
+    assert(!clock_holds);
     for (auto *q:osal_queues) { vQueueDelete(q->queue); delete q; } osal_queues.clear();
 }
 
