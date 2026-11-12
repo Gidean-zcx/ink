@@ -1,20 +1,26 @@
-/* The vendor HTTP/WebSocket server owns sockets; the system owns policy. */
+/* The kiikoread HTTP server owns sockets; the system owns policy. */
 #include "ink/hal_transfer.h"
 #include "ink/hal_net.h"
 #include "esp_netif.h"
 #include "qrcodegen.h"
 #include <stdio.h>
 #include <string.h>
-extern int ink_ap_start(const hal_transfer_policy_t *, bool);
-extern void ink_ap_stop(void);
+extern int ink_pico_start(const hal_transfer_policy_t *);
+extern int ink_pico_radio_start(void);
+extern void ink_pico_radio_stop(void);
+extern void ink_pico_stop(void);
 extern void ink_transfer_wifi_init(void);
 static bool ink_hotspot;
 int hal_transfer_server_start(const hal_transfer_policy_t *policy, uint16_t *port) {
     hal_link_status_t link; hal_net_link_status(&link); ink_transfer_wifi_init();
     ink_hotspot = !link.up || link.type != HAL_LINK_WIFI;
-    int r = ink_ap_start(policy, !ink_hotspot); if (r == 1) *port = 80; return r;
+    if (ink_hotspot && ink_pico_radio_start()) { ink_pico_radio_stop(); return -1; }
+    int r = ink_pico_start(policy);
+    if (r == 1) *port = 80;
+    else if (ink_hotspot) ink_pico_radio_stop();
+    return r;
 }
-void hal_transfer_server_stop(void) { ink_ap_stop(); ink_hotspot = false; }
+void hal_transfer_server_stop(void) { ink_pico_stop(); if (ink_hotspot) ink_pico_radio_stop(); ink_hotspot = false; }
 bool hal_transfer_hotspot(void) { return ink_hotspot; }
 int hal_transfer_host(char *out, size_t cap) {
     esp_netif_ip_info_t ip;

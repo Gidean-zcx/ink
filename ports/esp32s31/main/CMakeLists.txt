@@ -65,29 +65,19 @@ target_link_libraries(${ink_ws_platform} PRIVATE idf::tcp_transport idf::esp-tls
 endif()
 
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
-# Vendor file manager: protocol and workers are unchanged; storage is policy-backed.
-set(ap ${CMAKE_CURRENT_LIST_DIR}/../vendor/ap_transfer)
+# Kiikoread HTTP handlers with the existing authorization and file policy.
+set(ap ${CMAKE_CURRENT_LIST_DIR}/../vendor/read_pico_transfer)
 set(cjson ${root}/third_party/cjson)
 idf_component_get_property(transfer_platform ink_platform COMPONENT_LIB)
-target_sources(${transfer_platform} PRIVATE ../hal_transfer_s31.c ${ap}/ap_transfer.cc ${ap}/ap_request_worker.cc
+target_sources(${transfer_platform} PRIVATE ../hal_transfer_s31.c ${ap}/read_pico_transfer.c ${ap}/ink_radio.cc
     ${ap}/qrcodegen.c ${cjson}/cJSON.c)
-target_include_directories(${transfer_platform} PRIVATE ${ap} ${cjson} ${root}/apps/reader/vendor/shim)
-target_link_libraries(${transfer_platform} PRIVATE idf::esp_http_server ink_miniz)
-idf_component_get_property(transfer_http esp_http_server COMPONENT_LIB)
-target_compile_definitions(${transfer_http} PUBLIC CONFIG_HTTPD_WS_SUPPORT=1 CONFIG_HTTPD_WS_PRE_HANDSHAKE_CB_SUPPORT=1)
-foreach(lang zh en)
-    set(page ${CMAKE_CURRENT_BINARY_DIR}/ap_fileman_${lang}.html.gz)
-    set(translation)
-    if(lang STREQUAL en)
-        set(translation ${ap}/fileman.en.json)
-    endif()
-    execute_process(COMMAND ${PYTHON} ${ap}/pack_ap_fileman.py ${ap}/fileman.html ${page} ${translation}
-        COMMAND_ERROR_IS_FATAL ANY)
-    target_add_binary_data(${COMPONENT_LIB} ${page} BINARY)
-endforeach()
-target_add_binary_data(${COMPONENT_LIB} ${ap}/cloudzao-logo.png BINARY)
-target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,-u,_binary_ap_fileman_zh_html_gz_start"
-    "-Wl,-u,_binary_ap_fileman_en_html_gz_start" "-Wl,-u,_binary_cloudzao_logo_png_start")
+target_include_directories(${transfer_platform} PRIVATE ${ap} ${cjson})
+set_source_files_properties(${ap}/read_pico_transfer.c PROPERTIES COMPILE_OPTIONS "-Wno-unused-function")
+target_link_libraries(${transfer_platform} PRIVATE idf::esp_http_server)
+set(page ${CMAKE_CURRENT_BINARY_DIR}/upload.html.gz)
+execute_process(COMMAND ${PYTHON} ${ap}/pack_upload.py ${ap}/upload.html ${page} COMMAND_ERROR_IS_FATAL ANY)
+target_add_binary_data(${COMPONENT_LIB} ${page} BINARY)
+target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,-u,_binary_upload_html_gz_start")
 endif()
 
 # The music parser line names an IDF target: not in the early expansion pass.
