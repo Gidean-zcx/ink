@@ -72,6 +72,7 @@
 - 内存检查：`INK_SANITIZE=ON` 同时启用 AddressSanitizer 与 UBSan；以 `UBSAN_OPTIONS=halt_on_error=1` 跑全部 81 个场景和外壳相关测试，共 112 项。原话 `99% tests passed, 1 tests failed out of 112`（193.65 秒），111 项通过，唯一失败是上述 `semantics-shell2-home` 的同一组断言；无 ASan/UBSan 错误。
 - S31 宿主机：独立配置、构建 `ports/esp32s31/tests`，原话 `100% tests passed out of 77`（120.68 秒）。
 - 最终普通构建补跑全部界面场景，原话 `100% tests passed out of 81`（25.99 秒）；再次比对 243 张截图，全部像素与基线一致。
+- 收尾：【实测】代码里程碑提交 `f4e83e44`。`git diff --stat <基线>..HEAD` 核对共 11 个范围内文件；`git diff --check` 退出 0。按总规则第 6 节的原隐私正则扫描暂存区及基线到 HEAD 的差异，均为 0 命中（grep 退出 1 表示无匹配）。未夹带构建产物、设计稿或共享文档改动；只作本地提交，未推送。
 
 ### 复现命令与本地证据
 
