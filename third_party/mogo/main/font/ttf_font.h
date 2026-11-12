@@ -8,6 +8,7 @@
  * at the current weight onto the framebuffer.
  */
 
+/* ink adaptation, 2026-11-12: declare member-session font shutdown. */
 #pragma once
 
 #include <stdbool.h>

@@ -14,6 +14,7 @@
  * User revision: titles reuse the active outlines/cache; coverage checks read the existing cmap without switching or loading another face.
  */
 
+/* ink adaptation, 2026-11-12: complete member-session font shutdown. */
 #include "../diagnostics/reader_memory.h"
 #include "ttf_font.h"
 #include "ttf_stroke_filter.h"

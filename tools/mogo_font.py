@@ -84,7 +84,7 @@ def convert(source, output, face=2):
                    "glyphs": len(result.getGlyphOrder()),
                    "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
                    "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
-                   "fonttools": __version__, "max_error_font_units": 1.0,
+                   "fonttools": __version__, "cu2qu_max_error_font_units": 1.0,
                    "missing": "未收录的字符由 Mogo 绘制 glyph 0（原字体的缺字方框）"}
     license_source = Path(__file__).parent / "appfw-spike/licenses/NotoSansCJK-OFL.txt"
     output.with_suffix(".OFL.txt").write_bytes(license_source.read_bytes())

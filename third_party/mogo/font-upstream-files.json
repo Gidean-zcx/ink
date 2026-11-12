@@ -1,15 +1,15 @@
 {
-  "commit": "864f2f9",
+  "commit": "864f2f9dc75980a67d2d6b67b17365020b7a50ce",
   "files": [
     {
       "path": "main/font/ttf_font.c",
       "sha256": "855e01b0be9b4425d813fa2ffad71a6f4936740ebf65c8fdbc62ff84de58d351",
-      "adapted_sha256": "c590cf07e1d2c82ddff0bde46d2938d7310f4a000ee45bb1cb09168762ea88fa"
+      "adapted_sha256": "e61813a56992b52d01892b0d08986dc17cb2498f133ec1c47640181d28f3e39f"
     },
     {
       "path": "main/font/ttf_font.h",
       "sha256": "10700ebf0c83b711ed9e91934a09b2ec06f74ac391a26338eff3d7ad93e3c650",
-      "adapted_sha256": "0aaeefdd31252badfebc75dc5204cd3207c877e9abac48f90fa9f93c95428325"
+      "adapted_sha256": "ca63b8248cd6a0440b3bed4361be39fd5da4786f24bf74c54d2deabf1529ac33"
     },
     {
       "path": "main/font/ttf_font_source.c",
