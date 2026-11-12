@@ -34,6 +34,8 @@ endif()
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
 include(${root}/apps/reader/reader_build.cmake)
 ink_reader_build(__idf_ink_apps __idf_ink_system __idf_ink_lvgl)
+include(${root}/system/graft/graft_build.cmake)
+ink_graft_build(__idf_ink_system)
 # Share the reader's pinned inflate implementation with uploads.
 set(miniz ${root}/third_party/reader_miniz/miniz.c)
 get_target_property(reader_sources ink_reader_vendor SOURCES)

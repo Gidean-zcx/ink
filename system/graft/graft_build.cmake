@@ -1,0 +1,5 @@
+function(ink_graft_build system_target)
+  get_filename_component(graft_root "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../.." ABSOLUTE)
+  target_sources(${system_target} PRIVATE ${graft_root}/system/graft/graft.c)
+  target_include_directories(${system_target} PUBLIC ${graft_root}/system/graft)
+endfunction()

@@ -630,6 +630,19 @@ endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
+add_subdirectory(third_party/mogo)
+include(system/graft/graft_build.cmake)
+ink_graft_build(ink_system)
+add_executable(sim-graft-carrier simulator/runtime/sim_main.c tests/graft_mogo/device.c)
+target_link_libraries(sim-graft-carrier PRIVATE ink_apps ink_system ink_port_sim)
+target_include_directories(sim-graft-carrier PRIVATE tests)
+target_compile_options(sim-graft-carrier PRIVATE ${INK_WARN})
+add_test(NAME graft-carrier COMMAND sim-graft-carrier
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --script ${CMAKE_SOURCE_DIR}/tests/graft_mogo/scenario.script
+  --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
+  --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+  --out ${CMAKE_BINARY_DIR}/test-out/graft-carrier --quiet --no-random-outages)
 add_executable(test-log tests/log/log.c ports/sim/hal/hal_log_sim.c)
 target_include_directories(test-log PRIVATE platform/include system/include simulator simulator/kernel/vtk simulator/memory simulator/runtime)
 target_compile_options(test-log PRIVATE ${INK_WARN} -UNDEBUG)
