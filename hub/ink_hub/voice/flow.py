@@ -124,19 +124,26 @@ async def run_turn(self, rid, method, params):
                 raise ProtocolError("页面快照无效")
             if any(not isinstance(n, str) or len(n.encode()) > 47 for n in snapshot.get("actions", [])):
                 raise ProtocolError("能力名无效")
-            available = await self.tools.current(snapshot.get("actions", []), guard=guard)
-            member = params.get("member", {})
-            if not isinstance(member, dict):
-                raise ProtocolError("家人信息无效")
-            child = self.hub.authority.role(scope) == "child" or member.get("role") == "child"
+            # The device's catalogue (hundreds of tools, many pages) is fetched while the user is still talking;
+            # waiting for it before recognition cost seconds on every first turn.
+            catalogue = asyncio.create_task(self.tools.current(snapshot.get("actions", []), guard=guard))
+            catalogue.add_done_callback(lambda task: task.cancelled() or task.exception())
+            try:
+                member = params.get("member", {})
+                if not isinstance(member, dict):
+                    raise ProtocolError("家人信息无效")
+                child = self.hub.authority.role(scope) == "child" or member.get("role") == "child"
+                if session:
+                    question, _ = await recognize(self, sid, session, rid)
+                    if not guard():
+                        return
+                else:
+                    question = params.get("question", "")
+                available = await catalogue
+            finally:
+                catalogue.cancel()
             if child:
                 available = {n: t for n, t in available.items() if t.get("effect") != "system" and t.get("confirm") != "parent"}
-            if session:
-                question, _ = await recognize(self, sid, session, rid)
-                if not guard():
-                    return
-            else:
-                question = params.get("question", "")
             if not isinstance(question, str):
                 raise ProtocolError("问题无效")
             lang = params.get("lang", "zh")
@@ -175,8 +182,8 @@ async def run_turn(self, rid, method, params):
                         self.hub.metrics.tool_calls += 1
                         logging.getLogger(__name__).info("设备操作回执：%s", "完成" if receipt["status"] == "done" else "未完成")
                         await emit(receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else ""))
-                        if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
-                            await self.tools.current([], guard=guard)
+                        # A new page needs no refetch here: the definitions are cached for the whole catalogue, and
+                        # the next turn fetches again only if its page names a tool the cache does not know.
             await emit(final=True)
             completed = True
     except asyncio.CancelledError:
