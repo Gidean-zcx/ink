@@ -76,11 +76,6 @@ static void look(void) { found = false; hit = NULL; search(lv_layer_sys()); }
 static bool visible(const char *text) { part = false; snprintf(wanted, sizeof wanted, "%s", text); on_ui(look); return found; }
 static bool drawn(const char *text) { part = true; snprintf(wanted, sizeof wanted, "%s", text); on_ui(look); part = false; return found; }
 static bool picture(const char *initial) { button = true; bool ok = visible(initial); button = false; return ok; }
-static void press(const char *text) {
-    CHECK(visible(text), "%s is on the screen", text);
-    if (found) tap((box.x1 + box.x2) / 2, (box.y1 + box.y2) / 2);
-    quiet();
-}
 static void press_picture(const char *initial) {
     CHECK(picture(initial), "the picture %s is on the screen", initial);
     if (found) tap((box.x1 + box.x2) / 2, (box.y1 + box.y2) / 2);
