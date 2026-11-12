@@ -77,11 +77,11 @@ static void composition(void) {
 }
 static void switch_to(const char *member) { CHECK(ink_member_switch(member) == 0, "switch synthetic member"); CHECK(WAIT_FOR(!ink_text_focused(), 3000), "handoff ends old session"); focus(); }
 static void member_learning(void) {
-    query("beijing", false);
-    if (verify) CHECK(count && !strcmp(choices[0].word, "背景"), "owner learning survives restart");
-    else { selected = find("背景"); CHECK(selected >= 0, "rare selection is available"); if (selected >= 0) on_ui(pick_ui); query("beijing", false); CHECK(count && !strcmp(choices[0].word, "背景"), "owner selected word becomes first"); }
-    switch_to("kid"); query("beijing", false); CHECK(count && !strcmp(choices[0].word, "北京"), "child cannot see owner's learned ranking");
-    switch_to("owner"); query("beijing", false); CHECK(count && !strcmp(choices[0].word, "背景"), "owner ranking returns");
+    query("jiyu", false);
+    if (verify) CHECK(count && !strcmp(choices[0].word, "觊觎"), "owner learning survives restart");
+    else { CHECK(count && strcmp(choices[0].word, "觊觎"), "rare word is not initially first"); selected = find("觊觎"); CHECK(selected >= 0, "rare selection is available"); if (selected >= 0) on_ui(pick_ui); query("jiyu", false); CHECK(count && !strcmp(choices[0].word, "觊觎"), "owner selected word becomes first"); }
+    switch_to("kid"); query("jiyu", false); CHECK(count && strcmp(choices[0].word, "觊觎"), "child cannot see owner's learned ranking");
+    switch_to("owner"); query("jiyu", false); CHECK(count && !strcmp(choices[0].word, "觊觎"), "owner ranking returns");
     on_ui(password_ui);
     CHECK(AI("text.state", NULL) && !strstr(g_result, "SYNTHETIC_SECRET"), "password is absent from AI state");
     CHECK(AI("keyboard.pick", "{\"index\":0}") && g_rc.status == INK_RC_REJECTED, "AI cannot pick for password");
