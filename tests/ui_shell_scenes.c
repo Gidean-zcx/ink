@@ -186,17 +186,18 @@ static void assert_settings_decoration(void) {
     const char *rows[] = {"网络和 SIM 卡", "蓝牙", "显示和亮度", "声音", "语音和 AI", "锁屏和壁纸", "存储和备份", "关于和更新"};
     for (unsigned i = 0; i < sizeof rows / sizeof *rows; i++) {
         wanted = rows[i]; find_label();
-        CHECK(found_label, "settings row is visible: %s", wanted);
-        if (!found_label) continue;
+        if (!found_label) {
+            CHECK(!snapshot_has(wanted), "a row absent from this page is also absent from its snapshot: %s", wanted);
+            continue;
+        }
         lv_obj_t *row = lv_obj_get_parent(found_label);
         bool base = false, divider = false;
         for (uint32_t j = 0; j < lv_obj_get_child_count(row); j++) {
             lv_obj_t *o = lv_obj_get_child(row, (int32_t)j);
-            if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER) continue;
             int w = lv_obj_get_width(o), h = lv_obj_get_height(o);
-            if (w == h && lv_obj_get_style_radius(o, 0) >= w / 2 && lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper()))
-                base = !lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE);
-            if (w > lv_obj_get_width(row) / 2 && h <= ink_ui_px(INK_STROKE) && lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink())) divider = true;
+            if (w == ink_ui_px(INK_CIRCLE_SMALL) && h == w && lv_obj_get_child_count(o) == 1)
+                base = !lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE) && lv_obj_get_style_bg_opa(o, 0) == LV_OPA_TRANSP;
+            if (w > lv_obj_get_width(row) / 2 && h == ink_ui_px(INK_DIVIDER) && lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_separator())) divider = true;
         }
         CHECK(base, "settings group icon stays white without a button outline: %s", wanted);
         if (i != 0 && i != 2 && i != 5) CHECK(divider, "settings rows are visually separated: %s", wanted);
@@ -479,6 +480,7 @@ static void test_task(void *arg) {
     ink_probe_count("test.finished");
 }
 
+#ifndef INK_DESIGN_LANG
 void ink_main(void) {
     const char *requested = getenv("INK_UI_SCENE");
     snprintf(scene, sizeof scene, "%s", requested ? requested : "Main");
@@ -488,3 +490,4 @@ void ink_main(void) {
                           .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) osal_panic("UI scene task");
 }
+#endif

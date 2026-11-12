@@ -305,7 +305,7 @@ static void menu_button(field_t *f, const char *label, lv_event_cb_t cb) {
 
 static void field_icons(field_t *f, int w, int y, int h) {
     lv_obj_set_pos(f->clear, w - ink_ui_px(INK_FIELD_CLEAR), y + (h - ink_ui_px(INK_FIELD_CLEAR)) / 2);
-    lv_obj_set_pos(f->icon, ink_ui_px(INK_GAP_L), y + (h - ink_ui_px(INK_FIELD_SEARCH_ICON)) / 2);
+    lv_obj_set_pos(f->icon, ink_ui_px(INK_FIELD_PAD), y + (h - ink_ui_px(INK_FIELD_SEARCH_ICON)) / 2);
 }
 
 static void field_event(lv_event_t *e) {
@@ -391,8 +391,8 @@ void ink_textfield_style(lv_obj_t *obj, ink_textfield_kind_t kind, const char *l
     lv_obj_set_height(f->area, ink_ui_px(height));
     lv_obj_set_style_pad_ver(f->area, ink_ui_px(f->kind == INK_FIELD_BODY ? INK_FIELD_PAD : (height - line) / 2 - INK_FIELD_STROKE), 0);
     lv_obj_set_style_pad_right(f->area, ink_ui_px(f->cfg.draft_page || f->kind == INK_FIELD_PASSWORD ? INK_FIELD_PAD : INK_FIELD_CLEAR + INK_FIELD_PAD), 0);
-    lv_obj_set_style_radius(f->area, f->kind == INK_FIELD_SEARCH ? LV_RADIUS_CIRCLE : ink_ui_px(INK_FIELD_RADIUS), 0);
-    lv_obj_set_style_pad_left(f->area, ink_ui_px(f->kind == INK_FIELD_SEARCH ? INK_GAP_L + INK_FIELD_SEARCH_ICON + INK_GAP_M : INK_FIELD_PAD), 0);
+    lv_obj_set_style_radius(f->area, ink_ui_px(INK_FIELD_RADIUS), 0);
+    lv_obj_set_style_pad_left(f->area, ink_ui_px(f->kind == INK_FIELD_SEARCH ? INK_FIELD_PAD + INK_FIELD_SEARCH_ICON + INK_GAP_M : INK_FIELD_PAD), 0);
     lv_obj_set_flag(f->icon, LV_OBJ_FLAG_HIDDEN, f->kind != INK_FIELD_SEARCH);
 }
 
@@ -449,12 +449,11 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     lv_obj_set_style_text_color(f->area, ink_ui_paper(), LV_PART_SELECTED);
     lv_obj_set_style_bg_color(f->area, ink_ui_paper(), 0);
     lv_obj_set_style_bg_opa(f->area, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_color(f->area, ink_ui_ink(), 0);
+    lv_obj_set_style_border_color(f->area, ink_ui_secondary(), 0);
     lv_obj_set_style_border_width(f->area, ink_ui_px(INK_FIELD_STROKE), 0);
     lv_obj_set_style_pad_right(f->area, ink_ui_px(INK_FIELD_CLEAR + INK_FIELD_PAD), 0);
-    lv_obj_set_style_outline_width(f->area, ink_ui_px(INK_FIELD_STROKE), LV_STATE_FOCUSED);
-    lv_obj_set_style_outline_pad(f->area, 0 - ink_ui_px(INK_FIELD_FOCUS_GAP), LV_STATE_FOCUSED);
-    lv_obj_set_style_outline_color(f->area, ink_ui_ink(), LV_STATE_FOCUSED);
+    lv_obj_set_style_border_width(f->area, ink_ui_px(INK_STROKE_FOCUS), LV_STATE_FOCUSED);
+    lv_obj_set_style_border_color(f->area, ink_ui_ink(), LV_STATE_FOCUSED);
     lv_obj_set_style_border_width(f->area, ink_ui_px(INK_FIELD_STROKE), LV_PART_CURSOR);
     lv_obj_set_style_border_color(f->area, ink_ui_ink(), LV_PART_CURSOR);
     lv_obj_set_style_border_side(f->area, LV_BORDER_SIDE_LEFT, LV_PART_CURSOR);
@@ -476,7 +475,6 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     lv_obj_add_event_cb(f->obj, field_event, LV_EVENT_ALL, f);
     lv_obj_set_user_data(f->obj, f);
     ink_textfield_style(f->obj, cfg->draft_page ? INK_FIELD_BODY : cfg->enter == INK_ENTER_SEARCH ? INK_FIELD_SEARCH : INK_FIELD_SINGLE, NULL);
-    if (!cfg->draft_page) lv_obj_add_flag(f->title, LV_OBJ_FLAG_HIDDEN);
     ink_ui_capture_touch(f->obj);
     show(f);
     if (start) focus(f);

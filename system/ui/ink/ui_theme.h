@@ -9,29 +9,32 @@
  * Only the keys are not: ten have to fit across the panel. */
 enum {
     INK_CANVAS_W = 684, INK_CANVAS_H = 1216, /* Panel geometry, not control sizes. */
-    INK_STATUS_BAR = 62,
-    INK_FONT_STATUS = 29, INK_FONT_NOTE = 31, INK_FONT_LIST = 36,
-    INK_FONT_BODY = 38, INK_FONT_SUBTITLE = 43, INK_FONT_TITLE = 53,
+    INK_STATUS_BAR = 108,
+    INK_FONT_STATUS = 31, INK_FONT_NOTE = 31, INK_FONT_LIST = 38,
+    INK_FONT_BODY = 38, INK_FONT_SUBTITLE = 38, INK_FONT_TITLE = 53,
     INK_FONT_HEADING = 72, INK_FONT_NUMBER = 106, INK_FONT_CLOCK = 211,
-    INK_LINE_STATUS = 38, INK_LINE_NOTE = 43, INK_LINE_LIST = 53,
-    INK_LINE_BODY = 62, INK_LINE_SUBTITLE = 58, INK_LINE_TITLE = 72,
+    INK_LINE_STATUS = 43, INK_LINE_NOTE = 43, INK_LINE_LIST = 62,
+    INK_LINE_BODY = 62, INK_LINE_SUBTITLE = 62, INK_LINE_TITLE = 72,
     INK_LINE_HEADING = 86, INK_LINE_NUMBER = 120, INK_LINE_CLOCK = 223,
     INK_ICON_SMALL = 34, INK_ICON_MEDIUM = 43, INK_ICON_LIST = 53,
     INK_ICON_APP = 77, INK_ICON_STATE = 106,
-    INK_CIRCLE_SMALL = 77, INK_CIRCLE = 101, INK_CIRCLE_APP = 134, INK_CIRCLE_LARGE = 192,
-    INK_CONTROL = 101, INK_PRIMARY = 125, INK_ROW_DOUBLE = 134,
-    INK_FIELD_HEIGHT = 101, INK_FIELD_LINES = 3,
-    INK_FIELD_PAD = 19, INK_FIELD_LABEL_GAP = 10, INK_FIELD_RADIUS = 29,
-    INK_FIELD_CLEAR = 106, INK_FIELD_ICON = 34, INK_FIELD_SEARCH_ICON = 53,
+    INK_CIRCLE_SMALL = 77, INK_CIRCLE = 108, INK_CIRCLE_APP = 134, INK_CIRCLE_LARGE = 192,
+    INK_CONTROL = 108, INK_PRIMARY = 108, INK_ROW_DOUBLE = 136, INK_ROW_TRIPLE = 164, INK_GROUP_TITLE = 64,
+    INK_FIELD_HEIGHT = 108, INK_FIELD_LINES = 3,
+    INK_FIELD_PAD = 24, INK_FIELD_LABEL_GAP = 8, INK_FIELD_RADIUS = 16,
+    INK_FIELD_CLEAR = 108, INK_FIELD_ICON = 34, INK_FIELD_SEARCH_ICON = 53,
     INK_FONT_FIELD = 38, INK_FONT_FIELD_LABEL = 31,
     INK_LINE_FIELD = 62, INK_LINE_FIELD_LABEL = 43,
-    INK_FIELD_STROKE = 3, INK_FIELD_FOCUS_GAP = 5,
-    INK_SEGMENT = 115, INK_SLIDER = 115, INK_DOCK = 149,
+    INK_FIELD_STROKE = 2, INK_FIELD_FOCUS_GAP = 0,
+    INK_SEGMENT = 108, INK_SLIDER = 108, INK_DOCK = 149,
     INK_KEY = 96, INK_DIGIT = 163, INK_MARGIN = 38, INK_READING_MARGIN = 58,
-    INK_GAP_XS = 5, INK_GAP_S = 10, INK_GAP_M = 14, INK_GAP = 19,
-    INK_GAP_L = 29, INK_GAP_XL = 38, INK_GAP_XXL = 58, INK_BLOCK = 77, INK_BLOCK_L = 115,
-    INK_RADIUS_KEY = 29, INK_RADIUS_CARD = 48, INK_RADIUS_PANEL = 67,
-    INK_STROKE = 3 /* 2.5 x 1.2 */
+    INK_GAP_XS = 8, INK_GAP_S = 8, INK_GAP_M = 16, INK_GAP = 24,
+    INK_GAP_L = 32, INK_GAP_XL = 48, INK_GAP_XXL = 64, INK_BLOCK = 64, INK_BLOCK_L = 108,
+    INK_RADIUS_KEY = 16, INK_RADIUS_CARD = 16, INK_RADIUS_PANEL = 32,
+    INK_STROKE = 2, INK_STROKE_FOCUS = 3, INK_DIVIDER = 2,
+    INK_SWITCH_W = 96, INK_SWITCH_H = 56, INK_SWITCH_ON = 40, INK_SWITCH_OFF = 24,
+    INK_SLIDER_TRACK = 2, INK_SLIDER_FILL = 8, INK_SLIDER_KNOB = 32,
+    INK_PAGE_DOT = 8
 };
 
 typedef enum { INK_WEIGHT_REGULAR, INK_WEIGHT_MEDIUM, INK_WEIGHT_BOLD } ink_ui_weight_t;
@@ -44,6 +47,7 @@ int ink_ui_height(void);
 lv_color_t ink_ui_paper(void);
 lv_color_t ink_ui_ink(void);
 lv_color_t ink_ui_secondary(void);
+lv_color_t ink_ui_separator(void);
 /* Surface kinds survive the static surface's white fill. USER_2/3 are reserved for them. */
 ink_ui_surface_t ink_ui_surface_kind(const lv_obj_t *obj);
 void ink_ui_surface_style(lv_obj_t *obj, ink_ui_surface_t surface, bool border);
@@ -64,6 +68,10 @@ lv_obj_t *ink_ui_label(lv_obj_t *parent, const char *text, int px, ink_ui_weight
 lv_obj_t *ink_ui_icon(lv_obj_t *parent, const char *name, int px, ink_ui_icon_look_t look, int x, int y, bool white);
 lv_obj_t *ink_ui_pill(lv_obj_t *parent, const char *text, int x, int y, int w, int h, bool primary,
                       lv_event_cb_t cb, void *ctx);
+lv_obj_t *ink_ui_text_button(lv_obj_t *parent, const char *text, int x, int y, int w, lv_event_cb_t cb, void *ctx);
+lv_obj_t *ink_ui_switch_tile(lv_obj_t *parent, const char *icon, const char *title, const char *state,
+                            bool on, bool enabled, int x, int y, int w, lv_event_cb_t cb, void *ctx);
+lv_obj_t *ink_ui_empty(lv_obj_t *parent, const char *text, const char *action, lv_event_cb_t cb, void *ctx);
 lv_obj_t *ink_ui_circle(lv_obj_t *parent, const char *icon, int x, int y, int diameter, int icon_px,
                         ink_ui_surface_t surface, lv_event_cb_t cb, void *ctx);
 lv_obj_t *ink_ui_card(lv_obj_t *parent, int x, int y, int w, int h, ink_ui_surface_t surface);

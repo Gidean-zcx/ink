@@ -67,8 +67,8 @@ static bool row_has_icon(lv_obj_t *slot) {
                 lv_obj_t *part = lv_obj_get_child(bg, (int32_t)k);
                 if (lv_obj_get_y(part)) continue;
                 if (lv_obj_get_width(part) == lv_obj_get_width(bg)) joined = true;
-                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_ink()) &&
-                    lv_obj_get_height(part) == ink_ui_px(INK_STROKE)) divided = true;
+                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_separator()) &&
+                    lv_obj_get_height(part) == ink_ui_px(INK_DIVIDER)) divided = true;
             }
             CHECK(joined == divided, "every joined settings row uses the shared divider, including later pages");
             if (joined) {
@@ -111,7 +111,7 @@ static void inspect_visible_page(void) {
                 if (ink_json_eq(j, ink_json_find(j, 0, "id"), GROUPED[k]))
                     CHECK(slot && row_has_icon(slot) && ink_ui_surface_kind(lv_obj_get_child(slot, 0)) == INK_SURFACE_STATIC &&
                         lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(slot, 0), 0), ink_ui_paper()) &&
-                        lv_obj_get_style_border_width(lv_obj_get_child(slot, 0), 0) == ink_ui_px(INK_STROKE),
+                        !lv_obj_get_style_border_width(lv_obj_get_child(slot, 0), 0),
                         "grouped row retains the design's icon and theme background: %s", GROUPED[k]);
         }
         if (!ink_json_eq(j, ink_json_find(j, 0, "role"), "setting")) {
@@ -153,9 +153,9 @@ static void inspect_layout(void) {
             for (uint32_t i = 0; i < lv_obj_get_child_count(slot); i++) {
                 lv_obj_t *o = lv_obj_get_child(slot, i);
                 if (lv_obj_get_width(o) == ink_ui_px(INK_CIRCLE_APP) && lv_obj_get_height(o) == ink_ui_px(INK_CIRCLE_APP) &&
-                    lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink())) logo = true;
+                    lv_obj_get_style_bg_opa(o, 0) == LV_OPA_TRANSP && lv_obj_get_child_count(o) == 1) logo = true;
             }
-            CHECK(logo, "about restores the centered black identity mark");
+            CHECK(logo, "about shows the centered identity icon without a circular fill");
         }
     } else if (!strcmp(ink_ui_page_name(), "SetPrivacy") && page_number == 1) {
         wanted = "你的东西放在哪"; find_label();

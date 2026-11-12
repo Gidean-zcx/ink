@@ -67,7 +67,8 @@ ink_ui_list_t *ink_ui_list_create(lv_obj_t *parent, const ink_ui_page_spec_t *pa
     l->columns = columns; l->cell_h = cell_h; l->bind = bind; l->ctx = ctx;
     l->fixed = page->action_count; memcpy(l->actions, page->actions, l->fixed * sizeof *l->actions);
     l->page.fields = l->fields; l->page.actions = l->actions;
-    l->empty = ink_ui_notice(parent, empty, INK_GAP_L);
+    l->empty = ink_ui_empty(parent, empty, NULL, NULL, NULL);
+    lv_obj_set_y(l->empty, (lv_obj_get_height(parent) - ink_ui_px(ink_ui_line_height(INK_FONT_NOTE))) / 2);
     lv_obj_add_event_cb(parent, deleted, LV_EVENT_DELETE, l);
     return l;
 }
@@ -87,7 +88,7 @@ void ink_ui_list_refresh(ink_ui_list_t *l, size_t total) {
         l->fields[i] = (ink_ui_field_spec_t){0}; l->actions[i + l->fixed] = (ink_ui_action_spec_t){0};
         l->bind(l->slots[i], offset + i, &l->fields[i], &l->actions[i + l->fixed], l->ctx);
         lv_obj_set_style_outline_width(l->slots[i], l->fields[i].object.id &&
-            !strcmp(l->fields[i].object.id, l->position->selected) ? INK_STROKE : 0, 0);
+            !strcmp(l->fields[i].object.id, l->position->selected) ? INK_STROKE_FOCUS : 0, 0);
     }
     l->page.field_count = l->visible; l->page.action_count = l->visible + l->fixed;
     l->actions[0].enabled = l->position->page > 0;
