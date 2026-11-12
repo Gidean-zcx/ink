@@ -66,13 +66,13 @@ def exercise(build, binary=None, reverse=False):
         cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,text=True,timeout=15 if reverse == 'status' else 360,env={**os.environ,'UBSAN_OPTIONS':'halt_on_error=1'})
     except subprocess.TimeoutExpired:
         log.close()
-        output = (area/'run.log').read_text()
+        output = (area/'run.log').read_text(errors='replace')
         assert reverse == 'status' and 'Mogo: closing' in output and 'Mogo: closed' not in output, output[-4000:]
         print('reverse: stale status-bar ownership stalls reader close, as required', flush=True)
         return
     log.close()
-    output = (area/'run.log').read_text()
-    data = json.loads((area/'out/metrics.json').read_text()) if (area/'out/metrics.json').exists() else {}
+    output = (area/'run.log').read_text(errors='replace')
+    data = json.loads((area/'out/metrics.json').read_text(errors='replace')) if (area/'out/metrics.json').exists() else {}
     counts = data.get('metrics',{})
     if reverse:
         assert result.returncode and counts.get('test.fail') and any('forward input reaches native page' in str(w) for w in data.get('warnings',[])), output[-4000:]

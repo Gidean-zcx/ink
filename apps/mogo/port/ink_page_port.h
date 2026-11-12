@@ -1,17 +1,17 @@
 #pragma once
-#include "runtime.h"
-#include "settings.h"
-#include "esp_heap_caps.h"
-#include "esp_log.h"
-#include "reader_open.h"
-#include "reader_chapter.h"
-#include "reader_turn.h"
-#include "book_layout.h"
-#include "book_source.h"
-#include "book_policy.h"
-#include "ttf_font.h"
-#include "book_file_path.h"
-#include "page.h"
+#include <runtime.h>
+#include <settings.h>
+#include <esp_heap_caps.h>
+#include <esp_log.h>
+#include <reader_open.h>
+#include <reader_chapter.h>
+#include <reader_turn.h>
+#include <book_layout.h>
+#include <book_source.h>
+#include <book_policy.h>
+#include <ttf_font.h>
+#include <book_file_path.h>
+#include <page.h>
 #define READER_WIDTH ink_mogo_page_width
 #define READER_HEIGHT ink_mogo_page_height
 #define READER_FULLSCREEN_PROGRESS_TOP (READER_HEIGHT - 12)

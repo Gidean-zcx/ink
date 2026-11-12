@@ -8,6 +8,9 @@
 static char view[1200], first[1200];
 static uint32_t raster;
 static bool captured;
+static volatile bool cleanup_done;
+static ink_exec_job_t cleanup_barrier;
+static void after_cleanup(void *arg) { (void)arg; cleanup_done = true; }
 static void locate(lv_obj_t *o) {
     if (lv_obj_check_type(o,&lv_image_class)) {
         const lv_image_dsc_t *d = lv_image_get_src(o);
@@ -54,7 +57,9 @@ static void run(void *arg) {
     CHECK(AI("mogo.open","{\"path\":\"/me/books/星星邮差.epub\"}") && g_rc.status==INK_RC_DONE,"open EPUB through native path");
     CHECK(page(1) && strstr(view,"邮筒"),"EPUB body is laid out: %.150s",view); frame("epub-page-1");
     sim_note("Mogo: GBK round trip and EPUB assertions completed");
-    on_ui(close_reader); sim_note("Mogo: UI close returned"); delay_ms(1000);
+    on_ui(close_reader); sim_note("Mogo: UI close returned");
+    ink_exec_post(INK_EXEC_BG,&cleanup_barrier,after_cleanup,NULL);
+    CHECK(WAIT_FOR(cleanup_done,15000),"native cleanup finishes on the serialized executor");
     sim_note("Mogo: test finished"); ink_probe_count("test.finished");
 }
 void ink_main(void) {

@@ -6,8 +6,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
+#include "ink/sys/i18n.h"
 #include "ink/sys/app.h"
-#include "graft.h"
+#include <graft.h>
 void *ink_mogo_malloc(size_t n);
 void *ink_mogo_calloc(size_t n, size_t s);
 FILE *ink_mogo_fopen(const char *path, const char *mode);

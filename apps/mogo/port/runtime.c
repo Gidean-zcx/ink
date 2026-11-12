@@ -1,8 +1,8 @@
 #define INK_MOGO_PORT_IMPL
-#include "runtime.h"
-#include "book_index_cache.h"
-#include "book_progress.h"
-#include "epdiy.h"
+#include <runtime.h>
+#include <book_index_cache.h>
+#include <book_progress.h>
+#include <epdiy.h>
 #include <stdarg.h>
 typedef struct { ink_fs_file_t *file; bool error; } ink_mogo_stream_t;
 static ink_member_identity_t ink_mogo_member;

@@ -19,7 +19,7 @@ int ink_mogo_page_snapshot(char *out, size_t cap) {
     size_t n = s_text && end >= start ? end-start : 0;
     if (n > 600) n = 600;
     while (n && ((unsigned char)s_text[start+n] & 0xc0) == 0x80) --n;
-    return snprintf(out,cap,"新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 字号=%d\n%.*s",
+    return snprintf(out,cap,TR_NOOP("新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 字号=%d\n%.*s"),
         s_reader_session.book.title,s_reader_session.position.chapter+1,s_reader_session.position.page+1,
         book_layout_page_count(),start,s_px,(int)n,s_text ? s_text+start : s_message);
 }

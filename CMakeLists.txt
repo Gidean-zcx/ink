@@ -356,6 +356,7 @@ add_test(NAME reader-epub-segments COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_
 add_test(NAME reader-epub-toc-save-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR} --unsaved-toc)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
 ink_reader_translations(INK_I18N_TABLES)
+include(apps/mogo/translations.cmake)
 set(INK_HAVE_FONTS OFF)
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
@@ -974,6 +975,7 @@ add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
   --out ${CMAKE_BINARY_DIR}/test-out/hub --end 3s --quiet --no-random-outages)
 set_tests_properties(hub-export-caps PROPERTIES FIXTURES_SETUP hub-caps)
 ink_sim_executable(sim-capability-inventory tests/capability_table/export.c)
+target_compile_definitions(sim-capability-inventory PRIVATE INK_MOGO_SIM=1)
 target_link_libraries(sim-capability-inventory PRIVATE ink_apps ink_system)
 if(INK_HAVE_FONTS)
   add_dependencies(sim-capability-inventory ink_fonts ink_test_content)

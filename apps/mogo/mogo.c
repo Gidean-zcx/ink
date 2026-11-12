@@ -1,13 +1,13 @@
-#include "page.h"
+#include <page.h>
+#include "ink/sys/i18n.h"
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
-#include "ink/sys/exec.h"
 #include "ink/sys/file_picker.h"
-#include "ink/ui_theme.h"
-#include "book_reader_input.h"
+#include <ink/ui_theme.h>
+#include <book_reader_input.h>
 #define INK_MOGO_PORT_IMPL
-#include "port/runtime.h"
+#include <port/runtime.h>
 
 static struct {
     ink_member_identity_t owner;
@@ -83,7 +83,7 @@ static void ink_mogo_closed(void *ctx) {
 }
 static int ink_mogo_snapshot(void *ctx, char *out, size_t cap) {
     (void)ctx;
-    return ink_mogo_snprintf(out,cap,"%s",M.busy ? "新阅读 正在排版" : M.description);
+    return ink_mogo_snprintf(out,cap,"%s",M.busy ? TR_NOOP("新阅读 正在排版") : M.description);
 }
 static bool ink_mogo_input(void *ctx, const ink_graft_input_t *e) {
     (void)ctx;
@@ -135,5 +135,5 @@ static const ink_cap_t INK_MOGO_CAPS[] = {
 };
 static const ink_activity_t INK_MOGO_ACTIVITY = {.name="MogoReader",.app="mogo",.create=ink_mogo_create,
     .destroy=ink_graft_detach,.on_key=ink_graft_key,.on_swipe=ink_graft_swipe,.settle=ink_graft_settle,.snapshot=ink_graft_snapshot};
-const ink_app_def_t ink_appdef_mogo = {.id="mogo",.title="新阅读",.entry=&INK_MOGO_ACTIVITY,.system_app=true,.child_ok=true};
+const ink_app_def_t ink_appdef_mogo = {.id="mogo",.title=TR_NOOP("新阅读"),.entry=&INK_MOGO_ACTIVITY,.system_app=true,.child_ok=true};
 int ink_mogo_init(void) { return ink_cap_register(INK_MOGO_CAPS,sizeof INK_MOGO_CAPS/sizeof *INK_MOGO_CAPS); }
