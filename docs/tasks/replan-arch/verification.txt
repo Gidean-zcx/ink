@@ -1,0 +1,18 @@
+C2/C3 verification: PASS (documents and compile evidence only)
+Baseline: d09b79195e2dc57908e33219216048e529e082c6
+Source hashes and cited line bounds: 62 PASS
+Fixed OSS heads and CrossPoint SDK pin: PASS; existing snapshots unchanged
+Active API counts: CrossPoint display 22; kiikoread callbacks 23 / graphics 14 / display 23
+Existing reader body capabilities: 14
+Probe evidence: source hashes PASS; compiler exits 1 / 0 / 1 / 0; 34 unresolved symbols
+Probe limitation: compile only, no service implementation, link, rendering or device run
+Local document links: 8 PASS
+Changed file scope: task directory only; product code 0 lines; existing tests unchanged
+Individual task files <= 5 MiB: PASS
+Privacy pattern scan, baseline..HEAD and task files: 0 matches
+git diff --check baseline: exit 0
+Resource arithmetic: PASS; 8% is the task assumption, not a measured image
+Main build / full ctest / ASan / UBSan / S31 / gcccheck.py: NOT RUN (research task exemption)
+Commands: taskpolicy -c utility python3 docs/tasks/replan-arch/probe/run.py
+Commands: taskpolicy -c utility python3 docs/tasks/replan-arch/verify_report.py
+Commands: git diff --check baseline; git diff --stat baseline..HEAD; privacy scan of git diff baseline..HEAD
