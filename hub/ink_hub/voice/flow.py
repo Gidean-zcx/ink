@@ -2,10 +2,13 @@ import asyncio
 import re
 import logging
 import secrets
+from contextlib import aclosing
+from aiohttp import ClientError
 
 from ink_hub.bus.policy import authorize
 from ink_hub.bus.schema import validate
 from ink_hub.gateway.wire import ANSWER_BYTES, ANSWER_CUT, ProtocolError, answer as clip, chunks, frame, response
+from .stream import heard_text, recognize, speak, split_speech
 
 
 # The model accepts at most 128 functions (DeepSeek). The device sends every capability usable right now
@@ -38,10 +41,6 @@ def rank_tools(available, snapshot):
     return {name: available[name] for name in kept}
 
 
-def sentences(text):
-    for match in re.finditer(r"[^。！？.!?；;\n]*[。！？.!?；;\n]|[^。！？.!?；;\n]+$", text):
-        yield from chunks(match.group())
-
 
 def validate_photos(attachments):
     if not isinstance(attachments, list) or len(attachments) > 1:
@@ -64,9 +63,10 @@ async def run_turn(self, rid, method, params):
     count, seq, sent, text, speech, cut = 0, 0, 0, "", "", False
     loop = asyncio.get_running_loop()
     target, turn_timeout = loop.time() - 0.24, None
+    first, question, completed = True, "", False
 
     async def emit(value="", final=False):
-        nonlocal count, seq, sent, text, speech, cut, target
+        nonlocal count, seq, sent, text, speech, cut, target, first
         if not cut:
             combined = text + value
             text = clip(combined)
@@ -75,32 +75,39 @@ async def run_turn(self, rid, method, params):
         addition = safe[sent:]
         for part in chunks(addition):
             await self.notify("ai.delta", {"id": rid, "text": part, "seq": seq}, guard)
+            if session:
+                session.times.setdefault("first_text", loop.time())
             seq += 1
         sent += len(addition)
         if not session:
             return
         speech += addition
-        ready = list(sentences(speech))
-        speech = ""
-        if ready and not final and not re.search(r"[。！？.!?；;\n]$", ready[-1]):
-            speech = ready.pop()
-        for sentence in ready:
-            audio = await self.hub.tts.synthesize(sentence)
-            for packet in audio:
-                target = max(target, loop.time() - 0.24)
-                delay = target - loop.time()
-                if delay > 0:
-                    future = loop.create_future()
-                    timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
-                    try:
-                        await future
-                    finally:
-                        timer.cancel()
-                await self.send(frame(2, sid, count, packet), guard=guard)
-                count += 1
-                if turn_timeout is not None and not turn_timeout.expired():
-                    turn_timeout.reschedule(min(total_deadline, loop.time() + 10))
-                target += 0.06
+        ready = list(split_speech(speech, first, final))
+        speech = speech[sum(map(len, ready)):]
+        for sentence in (part for value in ready for part in chunks(value)):
+            first = False
+            session.times.setdefault("first_sentence", loop.time())
+            marker = [sentence, count, None]
+            session.spoken.append(marker)
+            async with aclosing(speak(self.hub.tts, sentence)) as audio:
+                async for packet in audio:
+                    target = max(target, loop.time() - 0.24)
+                    delay = target - loop.time()
+                    if delay > 0:
+                        future = loop.create_future()
+                        timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
+                        try:
+                            await future
+                        finally:
+                            timer.cancel()
+                    await self.send(frame(2, sid, count, packet), guard=guard)
+                    count += 1
+                    session.sent_frames = count
+                    session.times.setdefault("first_audio", loop.time())
+                    if turn_timeout is not None and not turn_timeout.expired():
+                        turn_timeout.reschedule(min(total_deadline, loop.time() + 10))
+                    target += 0.06
+            marker[2] = count
 
     try:
         if not guard():
@@ -125,13 +132,9 @@ async def run_turn(self, rid, method, params):
             if child:
                 available = {n: t for n, t in available.items() if t.get("effect") != "system" and t.get("confirm") != "parent"}
             if session:
-                await session.ended.wait()
-                question = await self.hub.asr.transcribe(session.frames)
-                session.frames.clear()
+                question, _ = await recognize(self, sid, session, rid)
                 if not guard():
                     return
-                transcript = next(chunks(question), "")
-                await self.notify("ai.stt", {"id": rid, "text": transcript}, guard)
             else:
                 question = params.get("question", "")
             if not isinstance(question, str):
@@ -144,39 +147,51 @@ async def run_turn(self, rid, method, params):
                 available = rank_tools(available, snapshot)
             context = {"role": "child" if child else "adult", "name": member.get("name", "")}
             if question:
-                async for part in self.hub.model.stream(question, available, lang=lang, member=context):
-                    if not guard():
-                        return
-                    await emit(part.text)
-                    if not part.tool:
-                        continue
-                    descriptor = available.get(part.tool)
-                    if not descriptor or not isinstance(part.arguments, dict) or "_meta" in part.arguments:
-                        raise ProtocolError("工具参数无效")
-                    validate(part.arguments, descriptor.get("inputSchema", {"type": "object"}))
-                    meta = authorize(self.hub.authority, scope, epoch=epoch, connection=self.id,
-                                     action=part.tool, arguments=part.arguments, now=loop.time(),
-                                     effect=descriptor.get("effect", "read"))
-                    meta["request_id"] = secrets.token_hex(16)
-                    receipt = await self.request("tools/call", {"name": part.tool, "arguments": part.arguments,
-                                                               "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
-                    if not isinstance(receipt, dict) or "status" not in receipt:
-                        raise ProtocolError("设备回执无效")
-                    self.hub.metrics.tool_calls += 1
-                    logging.getLogger(__name__).info("设备操作回执：%s", "完成" if receipt["status"] == "done" else "未完成")
-                    await emit(receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else ""))
-                    if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
-                        await self.tools.current([], guard=guard)
+                prompt = question
+                if session and self.voice_history:
+                    previous, heard = self.voice_history
+                    prompt = f"上一轮用户：{previous}\n用户已听到的回答：{heard}\n本轮用户：{question}"
+                async with aclosing(self.hub.model.stream(prompt, available, lang=lang, member=context)) as model_stream:
+                    async for part in model_stream:
+                        if not guard():
+                            return
+                        if session and part.text:
+                            session.times.setdefault("model_first_text", loop.time())
+                        await emit(part.text)
+                        if not part.tool:
+                            continue
+                        descriptor = available.get(part.tool)
+                        if not descriptor or not isinstance(part.arguments, dict) or "_meta" in part.arguments:
+                            raise ProtocolError("工具参数无效")
+                        validate(part.arguments, descriptor.get("inputSchema", {"type": "object"}))
+                        meta = authorize(self.hub.authority, scope, epoch=epoch, connection=self.id,
+                                         action=part.tool, arguments=part.arguments, now=loop.time(),
+                                         effect=descriptor.get("effect", "read"))
+                        meta["request_id"] = secrets.token_hex(16)
+                        receipt = await self.request("tools/call", {"name": part.tool, "arguments": part.arguments,
+                                                                   "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
+                        if not isinstance(receipt, dict) or "status" not in receipt:
+                            raise ProtocolError("设备回执无效")
+                        self.hub.metrics.tool_calls += 1
+                        logging.getLogger(__name__).info("设备操作回执：%s", "完成" if receipt["status"] == "done" else "未完成")
+                        await emit(receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else ""))
+                        if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
+                            await self.tools.current([], guard=guard)
             await emit(final=True)
+            completed = True
     except asyncio.CancelledError:
         return
-    except (TimeoutError, ProtocolError, PermissionError, ConnectionError, RuntimeError):
+    except (TimeoutError, ProtocolError, PermissionError, ConnectionError, RuntimeError, ClientError, ExceptionGroup, ValueError):
         if guard():
             try:
                 await emit("这次没有完成，请重试。", final=True)
-            except (ConnectionError, RuntimeError, TimeoutError):
+            except (ConnectionError, RuntimeError, TimeoutError, ClientError, ExceptionGroup, ValueError):
                 pass
     finally:
+        if session:
+            logging.getLogger(__name__).info("语音阶段时间：%s", session.times)
+        if session and question and self.valid_output(scope, epoch):
+            self.voice_history = session.history = (question, text if completed else heard_text(session))
         if guard() and not asyncio.current_task().cancelling():
             try:
                 if session:
@@ -192,13 +207,13 @@ async def run_dictation(self, sid, session):
     if not guard():
         return
     try:
-        text = await self.hub.asr.transcribe(session.frames)
-        session.frames.clear()
+        text, segs = await recognize(self, sid, session)
         if not guard():
             return
-        parts = list(chunks(text, limit=480))
-        for seg, part in enumerate(parts):
-            await self.notify("rt.asr", {"sid": sid, "seg": seg, "final": True, "text": part}, guard)
-        await self.notify("rt.asr.done", {"sid": sid, "segs": len(parts), "ms": session.seq * 60}, guard)
+        await self.notify("rt.asr.done", {"sid": sid, "segs": segs, "ms": session.seq * 60}, guard)
     except (asyncio.CancelledError, ConnectionError):
         return
+    except (RuntimeError, TimeoutError, ClientError, ExceptionGroup, ValueError):
+        if guard():
+            await self.notify("rt.asr.error", {"sid": sid, "code": "vendor", "message": "语音识别没有完成，请重试。"}, guard)
+            await self.notify("rt.close", {"sid": sid}, guard)

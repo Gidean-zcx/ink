@@ -22,6 +22,7 @@ from ink_hub.ops.metrics import Metrics
 from ink_hub.speech.fake import FakeASR, FakeTTS
 import ink_hub.speech
 from ink_hub.voice.flow import run_turn, run_dictation, validate_photos
+from ink_hub.voice.stream import heard_text
 from .wire import (ProtocolError, chunks, dumps, encode, frame,
                    notification, page, parse_frame, response)
 from .tls import loopback, proto_allowed
@@ -37,6 +38,13 @@ class Session:
     seq: int = 0
     browser: object = None
     ended: asyncio.Event = field(default_factory=asyncio.Event)
+    ready: asyncio.Event = field(default_factory=asyncio.Event)
+    interim_ms: int = 800
+    times: dict = field(default_factory=dict)
+    spoken: list = field(default_factory=list)
+    sent_frames: int = 0
+    heard_frames: int | None = None
+    history: tuple | None = None
 
 
 class Connection:
@@ -54,6 +62,7 @@ class Connection:
         self.turns = {}
         self.calls = {}
         self.turn_sessions = {}
+        self.voice_history = None
         self.pending = {}
         self.rid = 1000
         self.queue = asyncio.PriorityQueue(maxsize=128)
@@ -182,6 +191,7 @@ class Connection:
         self.turns.clear()
         self.calls.clear()
         self.turn_sessions.clear()
+        self.voice_history = None
         self.sessions.clear()
         for task in tasks:
             task.cancel()
@@ -220,6 +230,8 @@ class Connection:
                         return
                     await handle_input(session.browser, payload)
                     return
+                if session.ended.is_set():
+                    return
                 if kind != 1 or seq != session.seq or session.size + len(payload) > 128 * 1024:
                     await self.end_session(sid)
                     await self.notify("rt.close", {"sid": sid})
@@ -227,6 +239,7 @@ class Connection:
                 session.seq = (seq + 1) & 65535
                 session.frames.append(payload)
                 session.size += len(payload)
+                session.ready.set()
                 return
             if not self.scope and len(raw.encode()) > 4096:
                 await self.ws.close(code=1009)
@@ -300,10 +313,22 @@ class Connection:
                     raise ProtocolError("密码不能语音输入", -32020)
                 if len(self.sessions) >= 4:
                     raise ProtocolError("会话已满", -32022)
-                self.sessions[sid] = Session(cap, self.epoch)
+                interim = pp.get("interim_ms", 800)
+                if type(interim) is not int or not 0 <= interim <= 10000:
+                    raise ProtocolError("中间结果间隔无效")
+                self.sessions[sid] = Session(cap, self.epoch, interim_ms=interim)
                 await self.send(response(rid, {"sid": sid}))
+                if cap == "asr.stream":
+                    task = asyncio.create_task(run_dictation(self, sid, self.sessions[sid]))
+                    self.turns[f"asr:{sid}"] = task
+                    self.turn_sessions[f"asr:{sid}"] = sid
+                    task.add_done_callback(lambda t, key=f"asr:{sid}": self.forget_turn(key))
             elif method == "rt.close":
-                await self.end_session(params.get("sid"))
+                session = self.sessions.get(params.get("sid"))
+                heard = params.get("heard_frames")
+                if session and type(heard) is int and heard >= 0:
+                    session.heard_frames = heard
+                await self.end_session(params.get("sid"), params.get("reason") in ("barge_in", "dismiss", "cancel"))
             elif method == "ai.replay":
                 raise ProtocolError("unavailable", -32021)
             elif method in ("ai.listen", "ai.ask"):
@@ -322,15 +347,16 @@ class Connection:
             elif method == "ai.listen.end":
                 session = self.sessions.get(params.get("stream"))
                 if session:
+                    session.times.setdefault("speech_end", asyncio.get_running_loop().time())
                     session.ended.set()
+                    session.ready.set()
             elif method == "rt.turn":
                 sid = params.get("sid")
                 session = self.sessions.get(sid)
                 if session and session.cap == "asr.stream" and params.get("op") == "end":
-                    task = asyncio.create_task(run_dictation(self, sid, session))
-                    self.turns[f"asr:{sid}"] = task
-                    self.turn_sessions[f"asr:{sid}"] = sid
-                    task.add_done_callback(lambda t, key=f"asr:{sid}": self.forget_turn(key))
+                    session.times.setdefault("speech_end", asyncio.get_running_loop().time())
+                    session.ended.set()
+                    session.ready.set()
             elif method == "ink/member":
                 if self.proto == 2:
                     if type(params.get("epoch")) is not int or params["epoch"] <= self.epoch:
@@ -418,7 +444,7 @@ class Connection:
             authority.add("home", member, role)
         return authority.issue("home", member), authed, epoch
 
-    async def end_session(self, sid):
+    async def end_session(self, sid, interrupted=False):
         session = self.sessions.pop(sid, None)
         if session:
             session.ended.set()
@@ -426,6 +452,9 @@ class Connection:
         for task in tasks:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
+        if (session and session.history is not None and self.voice_history is session.history
+                and (interrupted or session.heard_frames is not None)):
+            self.voice_history = (session.history[0], heard_text(session))
 
     def forget_turn(self, key):
         self.turns.pop(key, None)

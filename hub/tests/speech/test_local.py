@@ -46,8 +46,8 @@ async def test_voice_protocol(make_hub, speech_tools, caplog, capfd):
         for seq, (_, (kind, sid, number, ms, flags, packet)) in enumerate(audio):
             assert (kind, sid, number, ms, flags) == (2, 7, seq, seq * 60, 0)
             assert len(tools.opus.decode(decoder, packet)) == 1920
-    assert tools.events()[0]["samples"] == 25 * 960
-    assert tools.events()[1]["text"] == SPOKEN
+    assert [event["samples"] for event in tools.events() if event["kind"] == "whisper"] == [25 * 960]
+    assert next(event for event in tools.events() if event["kind"] == "say")["text"] == SPOKEN
     logs = caplog.text + "".join(capfd.readouterr())
     assert TRANSCRIPT not in logs and SPOKEN not in logs
 
@@ -61,7 +61,10 @@ async def test_dictation(make_hub, speech_tools):
     for seq, packet in enumerate(tools.frames):
         await device.ws.send_bytes(frame(1, 9, seq, packet))
     await device.send("rt.turn", {"sid": 9, "op": "end"}, rid=False)
-    text, done = await device.recv(), await device.recv()
+    text = await device.recv()
+    while text["method"] == "rt.asr" and not text["params"]["final"]:
+        text = await device.recv()
+    done = await device.recv()
     assert text["method"] == "rt.asr" and text["params"] == {"sid": 9, "seg": 0, "final": True, "text": TRANSCRIPT}
     assert done["method"] == "rt.asr.done" and done["params"] == {"sid": 9, "segs": 1, "ms": 1500}
     await device.send("rt.close", {"sid": 9}, rid=False)
@@ -89,7 +92,7 @@ async def test_failure_keeps_connection(make_hub, speech_tools, monkeypatch, cap
     tools = speech_tools
     monkeypatch.setenv("INK_TEST_" + provider.upper() + "_MODE", mode)
     monkeypatch.setattr(local, "PROCESS_TIMEOUT", 1)
-    if mode == "missing":
+    if mode == "missing" and provider == "say":
         (tools.bins / provider).unlink()
     _, client, url = await make_hub(asr=tools.asr, tts=tools.tts, model=FakeModel(text=SPOKEN))
     device = FakeDevice(client, url)
@@ -100,8 +103,9 @@ async def test_failure_keeps_connection(make_hub, speech_tools, monkeypatch, cap
                and m["params"]["text"] == "这次没有完成，请重试。" for m in device.messages)
     assert "result" in await device.call("caps/list")
     for event in tools.events():
-        with pytest.raises(ProcessLookupError):
-            os.kill(event["pid"], 0)
+        if event["kind"] == "say":
+            with pytest.raises(ProcessLookupError):
+                os.kill(event["pid"], 0)
     logs = caplog.text + "".join(capfd.readouterr())
     assert TRANSCRIPT not in logs and SPOKEN not in logs
 
@@ -128,23 +132,13 @@ async def test_say_padding_language_and_input(speech_tools, monkeypatch):
 
 async def test_cancellation_cleans_process(speech_tools, monkeypatch):
     tools = speech_tools
-    started = asyncio.Event()
-    original = asyncio.create_subprocess_exec
-
-    async def spawn(*args, **kwargs):
-        process = await original(*args, **kwargs)
-        started.process = process
-        started.set()
-        return process
-
-    monkeypatch.setattr(asyncio, "create_subprocess_exec", spawn)
     monkeypatch.setenv("INK_TEST_WHISPER_MODE", "timeout")
     task = asyncio.create_task(tools.asr.transcribe(tools.frames))
-    await asyncio.wait_for(started.wait(), 3)
+    await asyncio.wait_for(tools.started.wait(), 3)
     task.cancel()
     with pytest.raises(asyncio.CancelledError):
         await task
-    assert started.process.returncode is not None
+    await asyncio.wait_for(tools.cancelled.wait(), 1)
 
 
 def test_environment_defaults(monkeypatch):
@@ -165,8 +159,7 @@ def test_environment_real(speech_tools, monkeypatch):
 
 @pytest.mark.parametrize("variable,value,message", [
     ("INK_HUB_ASR", "unknown", "INK_HUB_ASR"), ("INK_HUB_TTS", "unknown", "INK_HUB_TTS"),
-    ("INK_HUB_WHISPER_CLI", "missing-synthetic-whisper", "INK_HUB_WHISPER_CLI"),
-    ("INK_HUB_WHISPER_MODEL", "missing-synthetic-model", "INK_HUB_WHISPER_MODEL"),
+    ("INK_HUB_WHISPER_URL", "missing-synthetic-whisper", "INK_HUB_WHISPER_URL"),
     ("INK_HUB_LIBOPUS", "missing-synthetic-library", "INK_HUB_LIBOPUS"), ("PATH", "", "say"),
 ])
 def test_environment_errors(speech_tools, monkeypatch, variable, value, message):
