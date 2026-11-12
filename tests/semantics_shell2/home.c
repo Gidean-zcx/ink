@@ -7,8 +7,9 @@
 #endif
 #define ink_ui_semantics_summary inspect_compact_model
 #define key shell2_source_key
+/* shell_home.c first: navigation.c has a file-scope CAPS that shell_home.c's local CAPS would shadow. */
+#include INK_TEST_SHELL_HOME_SOURCE
 #include INK_TEST_SHELL_SOURCE
-#include INK_TEST_SHELL_HOME_SOURCE /* the home page moved here in shell-split-1 */
 #undef key
 #undef ink_ui_semantics_summary
 
