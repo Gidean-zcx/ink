@@ -49,7 +49,15 @@ bool ink_mogo_settings_save(void) {
     return !err;
 }
 const char *app_settings_fonts_dir(void) { return "/me/fonts"; }
-const char *app_settings_font_path(void) { return "/me/fonts/InkSC.ttf"; }
+const char *app_settings_font_path(void) {
+    /* A member's own copy wins; otherwise the family's one copy (on the card: /content/fonts/InkSC.ttf). */
+    ink_fs_file_t *f = NULL;
+    if (!ink_graft_file_open(&ink_mogo_member, "/me/fonts/InkSC.ttf", INK_FS_READ, &f)) {
+        ink_fs_close(f);
+        return "/me/fonts/InkSC.ttf";
+    }
+    return "/family/fonts/InkSC.ttf";
+}
 FILE *ink_mogo_fopen(const char *path, const char *mode) {
     ink_fs_file_t *f = NULL;
     if (strcmp(mode, "rb") || ink_graft_file_open(&ink_mogo_member, path, INK_FS_READ, &f)) return NULL;

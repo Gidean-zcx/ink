@@ -148,7 +148,9 @@ int ink_graft_file_open(const ink_member_identity_t *owner, const char *path, in
     if (!out) return INK_FS_ERR_PATH;
     *out = NULL;
     if (!owner_current(owner)) return INK_FS_ERR_DENIED;
-    if (!path || strncmp(path, "/me/", 4)) return INK_FS_ERR_PATH;
+    /* The member's own space, plus reading the family's shared fonts (one copy on the card for everyone). */
+    bool shared_font = path && mode == INK_FS_READ && !strncmp(path, "/family/fonts/", 14);
+    if (!path || (strncmp(path, "/me/", 4) && !shared_font)) return INK_FS_ERR_PATH;
     return ink_fs_open_for(owner->member, path, mode, out);
 }
 

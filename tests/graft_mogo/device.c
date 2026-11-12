@@ -153,6 +153,8 @@ static void run(void *arg) {
     CHECK(!ink_graft_preferences_open(&owner,"other",&PREFS),"preference namespace belongs to app");
     ink_fs_file_t *file = NULL;
     CHECK(ink_graft_file_open(&owner,"/family/test",INK_FS_READ,&file) == INK_FS_ERR_PATH,"carrier restricts native paths to me");
+    CHECK(ink_graft_file_open(&owner,"/family/fonts/x.ttf",INK_FS_WRITE|INK_FS_CREATE,&file) == INK_FS_ERR_PATH,"shared fonts are read-only to native apps");
+    CHECK(ink_graft_file_open(&owner,"/family/fontsx/x.ttf",INK_FS_READ,&file) == INK_FS_ERR_PATH,"only the fonts folder itself is shared");
     CHECK(!ink_fs_mkdir("/me/graftprobe"),"prepare synthetic member folder");
     CHECK(!ink_graft_file_open(&owner,"/me/graftprobe/fake.txt",INK_FS_WRITE|INK_FS_CREATE,&file),"native member file opens");
     if (file) {

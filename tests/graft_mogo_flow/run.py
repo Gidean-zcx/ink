@@ -17,6 +17,9 @@ def member_content(build):
     owner=root/".m/owner"
     kid=root/".m/kid"
     shutil.copytree(owner,kid,dirs_exist_ok=True)
+    # The child has no font of its own: the reader falls back to the family's one copy (/family/fonts).
+    (root/"fonts").mkdir(exist_ok=True)
+    shutil.move(str(kid/"fonts/InkSC.ttf"),str(root/"fonts/InkSC.ttf"))
     return root
 
 def flow_provenance():
