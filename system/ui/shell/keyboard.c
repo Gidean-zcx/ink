@@ -57,7 +57,10 @@ ink_source_t ink_shell_keyboard_enter_source(void) { return enter_call ? enter_c
 static int key_height(bool digits) {
     return ink_ui_line_height(INK_FONT_LIST) * (digits ? INK_KB_DIGIT : INK_KBD_KEY_HEIGHT) / INK_LINE_LIST;
 }
-static int candidates_height(void) { return ink_ui_line_height(INK_FONT_LIST) * INK_KBD_TOUCH / INK_LINE_LIST; }
+static int candidates_height(void) {
+    int height = ink_ui_line_height(INK_FONT_LIST) * INK_KBD_TOUCH / INK_LINE_LIST;
+    return height < INK_KBD_TOUCH ? INK_KBD_TOUCH : height;
+}
 static int keyboard_height_for(ink_text_type_t type) {
     bool number = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE || (K.numeric && (type == INK_TEXT_PLAIN || type == INK_TEXT_URL));
     bool nine = type == INK_TEXT_PLAIN && !ink_text_english() && !K.symbols && ink_setting_get("text.nine_key");
@@ -310,7 +313,7 @@ static void map_install(int kind) {
         }
         if (kind == 3) {
             map_row(ink_text_type() == INK_TEXT_PHONE ? "+0\b" : ".0\b");
-            if (K.plain) {
+            if (K.plain || K.numeric) {
                 map_key("26", KEY_NUMBER, INK_KB_UNIT);
                 map_key(TR("符号"), KEY_SWITCH, INK_KB_UNIT);
                 K.map[K.map_size++] = "\n";
@@ -463,6 +466,8 @@ static void build(int kind) {
         K.cand_icon[i] = NULL;
         K.cand_label[i] = lv_label_create(K.cand_btn[i]);
         lv_obj_set_style_text_font(K.cand_label[i], font(), 0);
+        lv_obj_set_width(K.cand_label[i], LV_PCT(100));
+        lv_label_set_long_mode(K.cand_label[i], LV_LABEL_LONG_WRAP);
         lv_label_set_text(K.cand_label[i], "");
         lv_obj_center(K.cand_label[i]);
         lv_obj_add_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN);
@@ -717,7 +722,6 @@ static void sync(void) { /* UI task */
         lv_obj_remove_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
         lv_obj_remove_flag(K.previous, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(K.cand_space, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(K.more, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
         if (K.first) lv_obj_remove_state(K.previous, LV_STATE_DISABLED);
         else lv_obj_add_state(K.previous, LV_STATE_DISABLED);

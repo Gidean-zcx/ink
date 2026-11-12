@@ -8,6 +8,11 @@ static const char *const SYMBOLS[] = {
 };
 _Static_assert(sizeof SYMBOLS / sizeof *SYMBOLS == sizeof SYMBOL_NAMES / sizeof *SYMBOL_NAMES, "symbol tabs");
 static const char *const RECENT_SETTINGS[] = {"keyboard.recent0", "keyboard.recent1"};
+static int symbol_columns(void) {
+    int columns = (lv_obj_get_content_width(K.keys) + ink_ui_px(INK_KB_GAP)) / ink_ui_px(candidates_height() + INK_KB_GAP);
+    return columns > INK_KBD_COLUMNS ? INK_KBD_COLUMNS : columns;
+}
+static int symbol_page_size(void) { return 2 * symbol_columns(); }
 static const char *category_name(void) { return SYMBOL_NAMES[K.category]; }
 static bool symbol_at(int category, int index, char text[8]) {
     if (category < 0 || category >= (int)(sizeof SYMBOLS / sizeof *SYMBOLS) || index < 0) return false;
@@ -68,10 +73,11 @@ static void sync_picker(void) {
         int id = recent_id(i) - 1; char text[8];
         if (!K.password && id >= 0 && symbol_at(id / 256, id % 256, text)) symbol_button(K.recent, text, candidates_height());
     }
-    int width = (lv_obj_get_content_width(K.keys) - (INK_KBD_COLUMNS - 1) * ink_ui_px(INK_KB_GAP)) / INK_KBD_COLUMNS;
+    int columns = symbol_columns();
+    int width = (lv_obj_get_content_width(K.keys) - (columns - 1) * ink_ui_px(INK_KB_GAP)) / columns;
     char text[8];
-    for (int i = 0; i < INK_KBD_SYMBOLS; i++) {
-        if (!symbol_at(K.category, K.symbol_page * INK_KBD_SYMBOLS + i, text)) break;
+    for (int i = 0; i < symbol_page_size(); i++) {
+        if (!symbol_at(K.category, K.symbol_page * symbol_page_size() + i, text)) break;
         symbol_button(K.symbol_grid, text, width);
     }
     lv_obj_t *prev = picker_button(K.picker_nav, "◀", "keyboard.symbol_page", "{\"direction\":-1}", 0);
@@ -79,7 +85,7 @@ static void sync_picker(void) {
     picker_button(K.picker_nav, "26", "keyboard.panel", "{\"panel\":\"letters\"}", 0);
     picker_button(K.picker_nav, "123", "keyboard.panel", "{\"panel\":\"number\"}", 0);
     lv_obj_t *next = picker_button(K.picker_nav, "▶", "keyboard.symbol_page", "{\"direction\":1}", 0);
-    if (!symbol_at(K.category, (K.symbol_page + 1) * INK_KBD_SYMBOLS, text)) lv_obj_add_state(next, LV_STATE_DISABLED);
+    if (!symbol_at(K.category, (K.symbol_page + 1) * symbol_page_size(), text)) lv_obj_add_state(next, LV_STATE_DISABLED);
     for (uint32_t i = 0; i < lv_obj_get_child_count(K.picker_nav); i++) lv_obj_set_flex_grow(lv_obj_get_child(K.picker_nav, (int)i), 1);
     for (uint32_t i = 0; i < lv_obj_get_child_count(K.tabs); i++) {
         lv_obj_t *b = lv_obj_get_child(K.tabs, (int)i);
@@ -128,7 +134,7 @@ static void panel_action(ink_call_t *call) {
     } else {
         int64_t direction = 0; ink_args_get_int(&call->args, "direction", &direction);
         int page = K.symbol_page + (direction > 0 ? 1 : -1); char text[8];
-        if (page >= 0 && symbol_at(K.category, page * INK_KBD_SYMBOLS, text)) K.symbol_page = page;
+        if (page >= 0 && symbol_at(K.category, page * symbol_page_size(), text)) K.symbol_page = page;
     }
     K.layout_revision++; ink_ui_content_changed();
     if (K.picker) sync_picker();
@@ -172,8 +178,8 @@ static void picker_snapshot(char *out, size_t cap) {
     char text[8]; size_t used = 0; out[0] = 0;
     if (K.alternate[0]) { snprintf(out, cap, "%s", K.alternate); return; }
     if (!K.symbols) return;
-    for (int i = 0; i < INK_KBD_SYMBOLS && used + sizeof text < cap; i++) {
-        if (!symbol_at(K.category, K.symbol_page * INK_KBD_SYMBOLS + i, text)) break;
+    for (int i = 0; i < symbol_page_size() && used + sizeof text < cap; i++) {
+        if (!symbol_at(K.category, K.symbol_page * symbol_page_size() + i, text)) break;
         int n = snprintf(out + used, cap - used, "%s%s", used ? " " : "", text);
         if (n > 0) used += (size_t)n;
     }

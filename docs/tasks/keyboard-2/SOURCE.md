@@ -6,8 +6,8 @@
 | --- | --- | --- |
 | 中英文全键盘、语言与布局切换 | fcitx5-android `eb5b50216e70484a009933d9519db76005f1faf3`，`input/keyboard/TextKeyboard.kt:33–75`、`KeyboardWindow.kt:68–83` | 保留 LVGL 键表和文本服务；功能键用短标签 |
 | 数字键盘 | 同上 `NumberKeyboard.kt:24–55` | 三列数字、独立数字页；号码框自动进入 |
-| 候选分页网格 | 同上 `candidates/expanded/GridPagingCandidateViewAdapter.kt:18–48`、`PagingCandidateViewAdapter.kt` | 六格、前后翻页、选中收起；数量和顺序由文本服务决定 |
-| 符号分类、分页、返回 | 同上 `picker/PickerTabsUi.kt`、`PickerPaginationUi.kt:40–76` | 分类标签、显式分页和返回；不做滑动动画 |
+| 候选分页网格 | 同上 `candidates/expanded/GridPagingCandidateViewAdapter.kt:18–48`、`PagingCandidateViewAdapter.kt:18–46` | 六格、前后翻页、选中收起；数量和顺序由文本服务决定 |
+| 符号分类、分页、返回 | 同上 `picker/PickerTabsUi.kt:34–135`、`PickerPaginationUi.kt:40–76` | 分类标签、显式分页和返回；不做滑动动画 |
 | 字母长按符号 | 同上 `keyboard/TextKeyboard.kt:35–65`、`popup/PopupKeyboardUi.kt:35–93` | 同一字母备选符号、小区域弹出、明确取消 |
 | 分类内容、最近符号 | Trime `76a9e763b148d747f6245f61d65e02595082f080`，`app/src/main/assets/shared/trime.yaml:686–712,720–759,920–929` | 中文、数学、英文；最近最多八个，现有成员设置存储 |
 | 九键、局部更新、长按删除 | Mogo `864f2f9`，`main/ui/ui_keyboard.c:1–14` | 九键只中文，英文全键；内部编码不印在键帽或组合栏；删除使用 LVGL 原生重复及取消 |
