@@ -36,6 +36,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include "speex/speex_resampler.h"
 
 #include "ink/sys/i18n.h"
 #include "ink/hal_audio.h"
@@ -69,6 +70,7 @@
 typedef struct {
     uint8_t *data;
     uint16_t len;
+    uint32_t rate; /* nonzero: len mono PCM samples, otherwise len Opus bytes */
 } jb_frame_t;
 
 static struct {
@@ -104,6 +106,8 @@ static struct {
     int jb_head, jb_count, plc_run;
     hal_opus_dec_t *dec;
     int dec_stream; /* the stream the decoder state belongs to */
+    SpeexResamplerState *resampler; /* audio task only; all allocations in PSRAM */
+    int resample_stream;
     int16_t *pcm; /* staging: one decoded frame or a tone (PSRAM); service task only */
     int pcm_off, pcm_len;
     int staged_stream; /* stream the staged samples belong to (0 = a tone) */
@@ -385,6 +389,24 @@ static void free_jb(void) { /* under lock */
     }
 }
 
+static int stage_pcm(const jb_frame_t *f, int sid) {
+    if (AU.resampler && AU.resample_stream != sid) {
+        speex_resampler_destroy(AU.resampler);
+        AU.resampler = NULL;
+    }
+    if (!AU.resampler) {
+        int err;
+        AU.resampler = speex_resampler_init(1, f->rate, HAL_AUDIO_RATE, 4, &err);
+        AU.resample_stream = sid;
+    }
+    if (!AU.resampler || speex_resampler_set_rate(AU.resampler, f->rate, HAL_AUDIO_RATE)) return -1;
+    spx_uint32_t in = f->len, out = FRAME + 1;
+    int err = speex_resampler_process_int(AU.resampler, 0, (const int16_t *)f->data, &in, AU.pcm, &out);
+    /* Estimate: scalar Q4 FIR/interpolation and PSRAM, 1200 cycles/output at 44.1 kHz. */
+    osal_cost_cycles((uint64_t)out * 1200 * (f->rate > 44100 ? f->rate : 44100) / 44100);
+    return err || in != f->len ? -1 : (int)out;
+}
+
 /* Fill the staging buffer with the next decoded frame. Returns false if nothing to play yet. */
 static bool stage_next(void) {
     lock();
@@ -408,7 +430,7 @@ static bool stage_next(void) {
         AU.jb_count--;
         AU.plc_run = 0;
         AU.stream_played++;
-    } else if (AU.finishing || AU.plc_run >= PLC_MAX) {
+    } else if (AU.finishing || AU.plc_run >= PLC_MAX || AU.resample_stream == sid) {
         unlock();
         return false;
     } else {
@@ -416,6 +438,10 @@ static bool stage_next(void) {
         ink_probe_count("audio.play_concealed_frames"); /* the network did not deliver in time */
     }
     unlock();
+    int n;
+    if (f.rate) {
+        n = stage_pcm(&f, sid);
+    } else {
     if (AU.dec && AU.dec_stream != sid) { /* a new stream starts from a fresh decoder state */
         hal_opus_dec_free(AU.dec);
         AU.dec = NULL;
@@ -424,7 +450,8 @@ static bool stage_next(void) {
         AU.dec = hal_opus_dec_new();
         AU.dec_stream = sid;
     }
-    int n = AU.dec ? hal_opus_decode(AU.dec, have ? f.data : NULL, have ? f.len : 0, AU.pcm) : -1;
+    n = AU.dec ? hal_opus_decode(AU.dec, have ? f.data : NULL, have ? f.len : 0, AU.pcm) : -1;
+    }
     osal_free(f.data);
     if (n <= 0) return false;
     apply_volume(AU.pcm, n);
@@ -446,7 +473,7 @@ static bool stage_next(void) {
 /* Would the stream play now if the output were open? (stage_next's conditions, nothing consumed) */
 static bool stream_wants_output(void) {
     lock();
-    bool want = AU.stream && (AU.started ? AU.jb_count > 0 || (!AU.finishing && AU.plc_run < PLC_MAX)
+    bool want = AU.stream && (AU.started ? AU.jb_count > 0 || (!AU.finishing && AU.plc_run < PLC_MAX && AU.resample_stream != AU.stream)
                                          : AU.jb_count >= JB_PREBUFFER || (AU.finishing && AU.jb_count > 0));
     unlock();
     return want;
@@ -615,6 +642,10 @@ static void service_playback(void) {
     if (no_stream && AU.dec) { /* finished or aborted: give the decoder's memory back */
         hal_opus_dec_free(AU.dec);
         AU.dec = NULL;
+    }
+    if (no_stream && AU.resampler) {
+        speex_resampler_destroy(AU.resampler);
+        AU.resampler = NULL;
     }
 }
 
@@ -1179,6 +1210,24 @@ int ink_audio_stream_push(int id, const uint8_t *opus, size_t len) {
         return -1;
     }
     AU.jb[(AU.jb_head + AU.jb_count) % JB_MAX] = (jb_frame_t){.data = copy, .len = (uint16_t)len};
+    AU.jb_count++;
+    unlock();
+    osal_sem_give(AU.wake);
+    return 0;
+}
+
+int ink_audio_stream_push_pcm(int id, const int16_t *pcm, size_t frames, unsigned rate, unsigned channels) {
+    if (!pcm || !frames || rate < 8000 || rate > 96000 || (channels != 1 && channels != 2) || frames > rate * 60 / 1000) return -1;
+    int16_t *copy = osal_malloc(frames * sizeof *copy, OSAL_MEM_EXTERNAL);
+    if (!copy) return -1;
+    for (size_t i = 0; i < frames; i++) copy[i] = channels == 1 ? pcm[i] : (int16_t)(((int)pcm[2 * i] + pcm[2 * i + 1]) / 2);
+    lock();
+    if (AU.stream != id || AU.finishing || AU.jb_count >= JB_MAX || !playback_owner_matches(&g_stream_owner, AU.prio)) {
+        unlock();
+        osal_free(copy);
+        return -1;
+    }
+    AU.jb[(AU.jb_head + AU.jb_count) % JB_MAX] = (jb_frame_t){.data = (uint8_t *)copy, .len = (uint16_t)frames, .rate = rate};
     AU.jb_count++;
     unlock();
     osal_sem_give(AU.wake);

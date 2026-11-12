@@ -67,6 +67,9 @@ int ink_audio_capture_level(void);
 int ink_audio_stream_open(ink_audio_prio_t prio, uint64_t cause_us, const char *heard_probe);
 /** Queue one Opus frame (copied). */
 int ink_audio_stream_push(int id, const uint8_t *opus, size_t len);
+/** Copy up to 60 ms of interleaved s16 PCM (8..96 kHz, 1 or 2 channels).
+ * The audio task filters/resamples to 16 kHz mono; abort/replacement discards its history. */
+int ink_audio_stream_push_pcm(int id, const int16_t *pcm, size_t frames, unsigned rate, unsigned channels);
 /** No more frames: play out what is queued, then close. */
 void ink_audio_stream_finish(int id);
 void ink_audio_stream_abort(int id);

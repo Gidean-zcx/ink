@@ -34,7 +34,15 @@
 
 ## 新增的机制
 
-- 任务书要求的 PCM 入口与 SpeexDSP 重采样；具体实现与质量档位待核查后补充。
+- 【实现】任务书第 1～3 项要求的 PCM 入口及 SpeexDSP 重采样；复用原队列、原音频任务与原输出，没有新任务、配置、文件格式或能力。
+
+## 实现与来源核查（2026-11-12）
+
+- 【实现】`ink_audio_stream_push_pcm` 接收最多 60 ms 的 8～96 kHz、1/2 声道 s16 PCM，复制时混成单声道；音频任务以 SpeexDSP Q4 浮点标量实现重采样，再经过原音量、成员隔离与 I2S 输出。旧 Opus 的 open/push/finish/abort 入口未改。MP3、WAV、FLAC、Vorbis 不再创建 Opus 编码器；Ogg Opus 仍交原 reader。
+- 【实现】滤波器由音频任务独占；流编号变化时销毁重建，流消失时释放。切歌、暂停、定位和成员切换沿用原来的流终止规则。滤波器及 PCM 队列均在 PSRAM。
+- 【实现】SpeexDSP 发布版 1.2.1，提交与逐文件哈希见 [SOURCE.md](../../../third_party/speexdsp/SOURCE.md)；原文未改。Q4、浮点的音质、耗时与设备增量尚待实测。
+- 【实现】原厂 `874538e:main/boards/common/audio/bt_audio_codec.cc:66-98` 为 slave/stereo32；`:138-163` 把同一个样本复制到左右槽。`main/boards/metalio-e-ink4-plus/periph/metalio_audio.cc:94-110` 配置 RX 与模式 1，没有耳机左右独立发送的证据。因此按任务书第 5 项保留单声道，HAL 不扩展。
+- 【实现】MyPaperS31 `325b538:main/audio/audio_radio_s31.cpp:370-430` 是格式转换后输出；`docs/S31_RADIO_PLAYBACK.md:5-9` 要求生产任务高于 UI，`:71` 记录其另一套算法每块约 1.26 ms，不能当成本实现实测。当前媒体执行器优先级 4、UI 5、音频 7；DMA 4×240 帧、60 ms。先测欠载，未取得证据前不改优先级或 DMA。
 
 ## 要改的文档
 

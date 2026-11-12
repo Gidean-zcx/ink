@@ -1,4 +1,4 @@
-/* Decode on the existing media executor; the output queue accepts Opus only. */
+/* Decode on the existing media executor; PCM goes straight to the audio service. */
 #include <math.h>
 #include <strings.h>
 #include "ink/hal_codec.h"
@@ -31,11 +31,8 @@ struct ink_format {
     union { drmp3 mp3; drwav wav; drflac *flac; stb_vorbis *vorbis; } dec;
     unsigned rate, channels;
     uint64_t frames, at;
-    hal_opus_enc_t *encoder;
     int16_t *samples;
     void *scratch;
-    int16_t mono[HAL_OPUS_FRAME_SAMPLES];
-    uint8_t packet[HAL_OPUS_MAX_PACKET];
 };
 static void *alloc_cb(size_t n, void *ctx) { (void)ctx; return ink_music_malloc(n); }
 static void *realloc_cb(void *p, size_t n, void *ctx) { (void)ctx; return ink_music_realloc(p, n); }
@@ -55,7 +52,7 @@ void ink_format_close(ink_format_t *r) {
     if (r->kind == 3) drflac_close(r->dec.flac);
     if (r->kind == 4) stb_vorbis_close(r->dec.vorbis);
     if (r->file) ink_music_fclose(r->file);
-    hal_opus_enc_free(r->encoder); osal_free(r->samples); osal_free(r->scratch); osal_free(r);
+    osal_free(r->samples); osal_free(r->scratch); osal_free(r);
 }
 int ink_format_open_for(const char *member, const char *path, ink_format_t **out, int *fs_err) {
     *out = NULL; *fs_err = 0;
@@ -87,8 +84,7 @@ int ink_format_open_for(const char *member, const char *path, ink_format_t **out
     }
     if (!r->kind || r->channels > 2 || !r->channels || r->rate < 8000 || r->rate > 96000 || !r->frames) { ink_format_close(r); return OGG_ERR_FORMAT; }
     r->samples = osal_malloc((size_t)r->rate * 60 / 1000 * r->channels * sizeof(int16_t), OSAL_MEM_EXTERNAL);
-    r->encoder = hal_opus_enc_new(24000, 0);
-    if (!r->samples || !r->encoder) { ink_format_close(r); return OGG_ERR_MEMORY; }
+    if (!r->samples) { ink_format_close(r); return OGG_ERR_MEMORY; }
     *out = r; return OGG_OK;
 }
 unsigned ink_format_rate(const ink_format_t *r) { return r->rate; }
@@ -118,12 +114,5 @@ int ink_format_next_packet(ink_format_t *r, const uint8_t **data, size_t *len) {
     if (r->opus) return ogg_next_packet(r->opus, data, len);
     size_t frames = (size_t)r->rate * 60 / 1000, n = ink_format_pcm(r, r->samples, frames);
     if (!n) return 0;
-    memset(r->mono, 0, sizeof r->mono);
-    for (unsigned i = 0; i < HAL_OPUS_FRAME_SAMPLES; i++) {
-        size_t at = (size_t)i * frames / HAL_OPUS_FRAME_SAMPLES;
-        if (at < n) r->mono[i] = r->channels == 1 ? r->samples[at] : (int16_t)(((int)r->samples[2 * at] + r->samples[2 * at + 1]) / 2);
-    }
-    int size = hal_opus_encode(r->encoder, r->mono, r->packet, sizeof r->packet);
-    if (size <= 0) return -1;
-    *data = r->packet; *len = (size_t)size; return 1;
+    *data = (const uint8_t *)r->samples; *len = n * r->channels * sizeof(int16_t); return 1;
 }
