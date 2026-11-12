@@ -1,0 +1,137 @@
+{
+  "checked_on": "2026-11-12",
+  "registry": {
+    "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all",
+    "http": 200,
+    "code": 0,
+    "total": 53,
+    "body_sha256": "73fcb7968d9c98c85ad4868f02622ebc3fb67e961fd37eedc9582fa740933d27",
+    "scope": "named reader candidates; firmware binaries, owners and credentials not retained",
+    "selected": [
+      {
+        "name": "CrossLink Pixel 4.7",
+        "version": "v4.3.0T",
+        "updated": "2026-11-08T22:06:12+08:00",
+        "quote": "增加阅读主题功能",
+        "description_sha256": "969b6cd777241a68c4022f7342890959638b3d5266c36751be47bce6bbf261cf",
+        "version_notes_sha256": "4c9ec41089c1db74ce5634e8e19f939cca1273dd7cbbeeffb58d20d1244b2922",
+        "repository_urls": []
+      },
+      {
+        "name": "Mogo E4p",
+        "version": "v1.0.10",
+        "updated": "2026-11-11T07:56:17+08:00",
+        "quote": "基于kiikoread pico版开发",
+        "description_sha256": "4bfaaa75d7855a5629c60fd3f2d2098e20ddebe9a7670da3fdb7848e1b3dfca9",
+        "version_notes_sha256": "bedf3927a888a70d536272f334cd88a204e95c207a2f51a7556ab65024a436f0",
+        "repository_urls": []
+      },
+      {
+        "name": "Crosslink2 无名4.7",
+        "version": "4.2.9",
+        "updated": "2026-11-09T09:25:41+08:00",
+        "quote": "优化翻页速度",
+        "description_sha256": "02a5c4573c32de69aecc5bf0282b0831e21c208daac101c1b51bf3abbdbb9660",
+        "version_notes_sha256": "76176716881efada531659727617932eb75486d8c57cdf735d9a00c874927d03",
+        "repository_urls": [
+          "https://www.crosslink-reader.top"
+        ]
+      },
+      {
+        "name": "ThingOS",
+        "version": "v0.1.7",
+        "updated": "2026-11-11T12:31:44+08:00",
+        "quote": "自动同步到云端",
+        "description_sha256": "d52eb21b92e5000a11be1b1101614c3df0d63a3708e4703a2f96251f71309102",
+        "version_notes_sha256": "acfc03732bdbb13d66168c3e3b52b48f8be55d3282a1c5c6f6d3da8c61f2c736",
+        "repository_urls": []
+      },
+      {
+        "name": "PageRest",
+        "version": "v0.7.103",
+        "updated": "2026-11-04T22:01:42+08:00",
+        "quote": "支持按键自定义",
+        "description_sha256": "a607740a747aca12205c658bb27bd9db5ab914717f53e1b2e3836e6079b961ea",
+        "version_notes_sha256": "6deb2841dcf7e93e38f85d943a7c60bc4ba79c8238d3fd34965fae444e54a33c",
+        "repository_urls": []
+      },
+      {
+        "name": "听趣S1-E4P",
+        "version": "v0.1.1",
+        "updated": "2026-11-08T16:52:49+08:00",
+        "quote": "基于官方固件的开源固件",
+        "description_sha256": "4706ed6766af4f5f67f569165739a0cfb8111477c65a8c6edd1da983c8a960de",
+        "version_notes_sha256": "32a2ffe131b9d9c95544fc09e4f0a990e63b18f425ccba137af2822e33669b83",
+        "repository_urls": [
+          "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1"
+        ]
+      }
+    ]
+  },
+  "requests": [
+    {
+      "url": "https://mogo.mantake.shop",
+      "result": "HTTP 403"
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr",
+      "result": "HTTP 403"
+    },
+    {
+      "url": "https://www.crosslink-reader.top",
+      "result": "DNS failure"
+    },
+    {
+      "url": "https://pico.gofree.kdns.fr",
+      "result": "DNS failure"
+    },
+    {
+      "url": "https://github.com/fengcheng01/read_pico_firmware",
+      "result": "raw main README 404; anonymous git ref unavailable"
+    },
+    {
+      "url": "https://github.com/allocated/crosspoint_chinesetype",
+      "result": "anonymous git ref unavailable; no login attempted"
+    },
+    {
+      "url": "https://api.github.com/repos/wegooo-cell/read-pico-reader/git/trees/0ae3ef80a3f391bb892248f324cf0835318ddbba?recursive=1",
+      "result": "HTTP 403 rate limit"
+    },
+    {
+      "url": "https://canary-dot.mindreset.tech/docs/read_0/start/pagerest",
+      "result": "HTTP 200 using read-only HTTP; vendor documentation only"
+    },
+    {
+      "url": "https://canary-dot.mindreset.tech/docs/read_0/start/thingsos",
+      "result": "HTTP 200 using read-only HTTP; refers to Pico, not Plus"
+    },
+    {
+      "url": "https://thingsos.scholarcn.com/THIRD_PARTY_NOTICES.txt",
+      "result": "HTTP 200; BSP and components named, no app sources fetched"
+    },
+    {
+      "url": "https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft",
+      "result": "unavailable to read-only web tool; choices not synchronized; task forbids editing decision records"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MindReset/dot_web_docs/main/en-US/read_0/start/pagerest.mdx",
+      "http": 200,
+      "sha256": "8fa60d11a978e80aa1f280857671b43c435a653831f7e59fd15ede8ab97e69bd"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MindReset/dot_web_docs/main/en-US/read_0/start/thingsos.mdx",
+      "http": 200,
+      "sha256": "2f568c1eacb6d0b048a86455b7399f1c7df7a3133cea8b0943e7b325e626b501"
+    },
+    {
+      "url": "https://thingsos.scholarcn.com/THIRD_PARTY_NOTICES.txt",
+      "http": 200,
+      "sha256": "22d23fffa3db263173930e055f83e7d02e6b629ab575765275c5cef3d4127825"
+    },
+    {
+      "url": "https://thingsos.scholarcn.com/release.json",
+      "http": 200,
+      "sha256": "a338764e3e24eb1740fd9f9578f6686f383ce71921e862286b170ac2a8378525"
+    }
+  ]
+}
