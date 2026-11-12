@@ -131,7 +131,7 @@ void ink_mogo_page_draw(uint8_t *pixels) {
         draw_sheet(pixels,180,"阅读设置");
         ui_draw_button(pixels,(EpdRect){36,280,612,72},"返回正文",false);
         for (int i=0;i<INK_MOGO_SETTING_COUNT;++i) {
-            char text[80]; snprintf(text,sizeof text,"−     %s  %d     +",ink_mogo_setting_names[i],ink_mogo_setting_value(i));
+            char text[80]; snprintf(text,sizeof text,"-     %s  %d     +",ink_mogo_setting_names[i],ink_mogo_setting_value(i));
             ui_draw_button(pixels,(EpdRect){36,380+i*94,612,82},text,false);
         }
     } else if (s_reader_panel==INK_MOGO_TOOLS) {
