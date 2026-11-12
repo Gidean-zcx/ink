@@ -7,7 +7,7 @@
 | 编号 | 实际命令或操作 | 结果原话／退出状态 | 解释 |
 | --- | --- | --- | --- |
 | C1 | `git status --short`、`git rev-parse HEAD` | 开工无差异；基线 `d09b79195e2dc57908e33219216048e529e082c6` | 已在独立任务分支 |
-| C2 | `git -C "$INK_DEPS/../ink-hw/upstream/oss/<候选>" rev-parse HEAD`，逐文件 `rg -n`、读取源码、SHA-256 | [50 个固定文件](source-evidence.json) | 源码证据，不是运行结果 |
+| C2 | `git -C "$INK_DEPS/../ink-hw/upstream/oss/<候选>" rev-parse HEAD`，逐文件 `rg -n`、读取源码、SHA-256 | [55 个固定文件、56 处证据](source-evidence.json) | 源码证据，不是运行结果 |
 | C3 | `PICO_SIM_FIRMWARE="$PWD/work/replan-reader/kiikoread-xiugai" taskpolicy -c utility python3 work/replan-reader/kiikoread-xiugai/tools/simulator/build.py` | **退出 0，但 `Compiled 48 failed 6`** | 没有生成 `pico-engine`；不能写构建成功 |
 | C4 | `taskpolicy -c utility python3 work/replan-reader/kiikoread-xiugai/tools/simulator/web/build.py` | 未执行编译；`emcc` 不存在 | 所需 Emscripten 6.0.13 不在环境中；网页构建也复用同一不匹配的源码清单 |
 | C5 | `PLATFORMIO_CORE_DIR="$PWD/work/replan-reader/pio-core" PATH="$PWD/work/replan-reader/host-bin:$PATH" taskpolicy -c utility work/replan-reader/host-env/bin/pio run -d work/replan-reader/crossmux -e simulator_readpico -j2` | 最终退出 1；`[FAILED] Took 201.35 seconds` | `lib/Epub/Epub/css/CssParser.cpp:244:23: error: 'from_chars' is unavailable: introduced in macOS 26.0` |
