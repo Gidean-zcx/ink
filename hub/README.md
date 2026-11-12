@@ -14,7 +14,7 @@ hub/.venv/bin/python -m ink_hub doctor --data work/hub-data
 hub/.venv/bin/python -m ink_hub serve --data work/hub-data --dev-allow-proto1
 ```
 
-打开终端打印的本机 `/setup`，输入本次设置码。向导只保存示例进度；设置码成功使用后更换。CLI 等价命令：`hub/.venv/bin/python -m ink_hub setup --data work/hub-data --config example.yaml`，配置仅含 `step: 1` 和 `mode: example`。`status --data work/hub-data` 可读进度。凭据不进配置或日志，真实密钥以后仅从环境变量读；示例 `.env.example` 没有密钥。
+打开终端打印的本机 `/setup`，输入本次设置码。向导只保存示例进度；设置码成功使用后更换。CLI 等价命令：`hub/.venv/bin/python -m ink_hub setup --data work/hub-data --config example.yaml`，配置仅含 `step: 1` 和 `mode: example`。`status --data work/hub-data` 可读进度。凭据不进配置或日志，真实密钥仅从环境变量读；示例 `.env.example` 没有密钥。
 
 服务固定监听 `127.0.0.1:8443`。远程开发机通过 `ssh -L 8443:127.0.0.1:8443 user@example.com`，再访问本机地址。第 1 步不开放公网设置，不信任转发来的 HTTPS 头，不自动申请证书，也不把自签证书当成可信网页入口。开发握手默认拒绝，必须显式打开；它只映射到合成家庭的儿童身份，不能验证成人密码。
 
@@ -72,7 +72,7 @@ hub/.venv/bin/python -m ink_hub serve --data work/hub-data --dev-allow-proto1
 PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_models.py
 ```
 
-它在随机本机端口启动两种假服务器，检查分段文字、分片工具参数、一次设备能力调用、缺密钥回退，以及 HTTP 错误和日志脱敏。真实厂商的兼容性和效果还需用户授权后的联调。接口依据：[OpenAI function calling](https://developers.openai.com/api/docs/guides/function-calling)、[Anthropic streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)（查阅：2026-11-12）。
+它在随机本机端口启动两种假服务器，检查分段文字、分片工具参数、一次设备能力调用、缺密钥回退，以及 HTTP 错误和日志脱敏。真实厂商的兼容性和效果还需用户授权后的联调。接口依据：[OpenAI Chat Completions 流事件](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events)、[Anthropic streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)（查阅：2026-11-12）。
 
 设备连接边界仍见 [hub-link-1 报告](../docs/tasks/hub-link-1/REPORT.md)：当前 CLI 只监听本机、HTTP、开发协议 1；它不是已经支持局域网 WSS 和生产配对的中枢入口。
 

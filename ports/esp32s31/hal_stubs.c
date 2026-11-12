@@ -69,13 +69,7 @@ void hal_display_set_temperature(int celsius) {  }
 /* TODO: ESP-IDF S31 JPEG decoder. */
 int hal_jpeg_decode_gray(const uint8_t *src, size_t n, uint8_t *dst, int w, int h) { return -1; }
 
-/* Wi-Fi/link/SNTP: hal_wifi_s31.c; TODO: TLS/WebSocket. */
-hal_ws_t *hal_ws_open_pinned(const char *url, const uint8_t *sha256, hal_ws_cb cb, void *ctx) { return NULL; }
-hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) { return NULL; }
-bool hal_ws_peer_key(hal_ws_t *ws, uint8_t out[32]) { return false; }
-int hal_ws_send(hal_ws_t *ws, bool binary, const void *data, size_t len, int64_t timeout_us) { return -1; }
-int hal_ws_flush(hal_ws_t *ws, int64_t timeout_us) { return -1; }
-void hal_ws_free(hal_ws_t *ws) {  }
+/* Wi-Fi/link/SNTP: hal_wifi_s31.c; TLS/WebSocket: hal_ws_s31.c. */
 
 /* TODO: ESP-IDF OTA/partition APIs + verified signature backend. */
 int hal_ota_begin(size_t size) { return -1; }

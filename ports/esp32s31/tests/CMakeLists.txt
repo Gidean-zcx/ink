@@ -60,6 +60,11 @@ set_tests_properties(unit-s31-cell unit-s31-cell-nat unit-s31-cell-baud unit-s31
     unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120
   RUN_SERIAL TRUE) # the vendor modem waits 100 ms for an ACK: under a loaded parallel run the fake peer misses it
 add_test(NAME unit-s31-wifi COMMAND test-s31-wifi)
+add_executable(test-s31-ws ws.c ${port}/hal_ws_s31.c ${root}/system/util/sha256.c)
+target_include_directories(test-s31-ws PRIVATE ws_stub ${root}/system/include)
+target_link_libraries(test-s31-ws PRIVATE Threads::Threads)
+add_test(NAME unit-s31-ws COMMAND test-s31-ws)
+set_tests_properties(unit-s31-ws PROPERTIES TIMEOUT 15)
 add_executable(test-s31-log ${root}/tests/log/s31.c ${port}/hal_log_s31.c)
 target_include_directories(test-s31-log PRIVATE ${root}/tests/log/s31_stub)
 target_compile_definitions(test-s31-log PRIVATE INK_BUILD_COMMIT="fixture")
@@ -78,6 +83,7 @@ add_executable(test-s31-display-power display_power.c ${root}/drivers/chips/tca9
 target_include_directories(test-s31-display-power PRIVATE display_stub)
 add_test(NAME unit-s31-display-power COMMAND test-s31-display-power)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_test(NAME unit-s31-ws-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/ws_reverse.py ${CMAKE_BINARY_DIR})
 enable_language(ASM)
 execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/asset_fixture.py ${CMAKE_BINARY_DIR}
   COMMAND_ERROR_IS_FATAL ANY)
