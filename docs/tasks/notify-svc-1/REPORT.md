@@ -17,19 +17,19 @@
 
 【实现】原文已入库，已接入跨午夜时段、成员偏好、例外、忙时、多动作和回复转发。正在运行服务验收。收藏枚举保留为 3，当前按不放行处理，等待 contacts-3 提供收藏接口。
 
-【实测，阶段结果】新用例 main 阶段 130 条断言、重启阶段 21 条断言都通过；重启阶段主任务栈估算超限 192 字节，已将首次偏好读取移到现有后台执行器，待复测。前两轮发现的外层超时和后台嵌套栈已集中修在动作转发点，未放宽预算。
+【实测，阶段结果】seed 10、main 136、restart 22 条断言全部通过。普通通知、升级恢复、AI 回合结束与新增通知四项定向回归全部通过；ASan/UBSan 9 项全部通过。普通来电即时放行，条件来电仍后台过滤；勿扰状态不变时不再发变化事件；启动时迁移回执放 PSRAM，勿扰查询不复制回复文本，未放宽栈预算。
 
 ## 和设计不一致的
 
-待核查。
+【实现】Pebble 的 UI、手机传输、cron 和偏好文件未链接；跨午夜三个完整函数直接编译，其余用现有成员存储、时间和能力总线适配。手动关闭只关闭手动来源，不临时覆盖仍有效的时段（任务要求任一来源生效）。日历忙时已通过现有提醒 API 接入，时间服务改动 0 行。
 
 ## 改过的已有测试
 
-暂无。
+仅在 `tests/integration/ai_surface.c` 的 FOR_AI 表末尾追加 5 个新能力；未改任何已有断言、期望、预算或超时。新增服务验收脚本与用例。
 
 ## 要用户定的
 
-暂无。
+收藏接口由 contacts-3 后续接；可信 asked 上下文需要能力层提供受信转发入口，当前保守保留确认。没有停工等待。
 
 ## 顺手发现
 
@@ -41,7 +41,7 @@
 
 ## 要改的文档
 
-通知页和控制中心接入清单见下文；共享能力目录按任务书的明确例外重新生成。
+`docs/system/system-services-design.md` §1.3 需要列入 `notify.act / notify.reply / notify.dnd_get / notify.dnd_set / notify.replies_set`。此文件不在任务允许修改的范围；现有 `services-mid-capability-doc` 因此失败，未跳过或改断言。通知页和控制中心接入清单见下文；共享能力目录按任务书明确允许的例外重新生成。
 
 ## 接口清单（notify-ui-1 / control-1）
 
@@ -57,3 +57,9 @@
 ## 架构审视
 
 【实现】通知服务只持有通知箱和自己的成员偏好，联系人通过公开匹配函数查询，时间通过现有 API 读取，外部动作通过能力总线转发。按钮与 AI 共用同一组能力；新能力已追加到 AI 覆盖表。服务不操作 LVGL，不新增常驻任务或线程。
+
+## 反向对照（手动运行，不依赖 CI 历史）
+
+【实测】临时将 `vendor/pebble/schedule.inc` 的 `if (from < to)` 改为 `if (from != to)`，使跨午夜错误地走普通区间；重编 `sim-notify-model`，以 `INK_NOTIFY_MODEL_PHASE=cross` 运行。退出 1，8 条断言失败，日志明确含 `23:30 matches the overnight period` 和 `06:59 matches the previous day's overnight period`。
+
+【实测】临时撤回 `changed()` 的无变化事件筛选，重编 `sim-configured`，运行 `scenario-ai_turn_end-metalio-plus`。ctest 退出 8，`hub.idle_disconnects: metric not recorded`。两份源码均逐字节恢复；跨午夜提取文件 SHA-256 再次核对一致。修复后的同一场景此前已通过，恢复后还会随最后一轮验证复测。

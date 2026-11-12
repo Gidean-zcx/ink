@@ -592,7 +592,7 @@ static void number_args(char *out, size_t cap, const char *key, const char *numb
 static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the modem's task; the answer's on exec.bg */
     (void)ctx;
     if (!strcmp(id, "call.incoming")) {
-        ink_interrupt_t it = {.kind = INK_INT_CALL, .ringing = false, .nactions = 2};
+        ink_interrupt_t it = {.kind = INK_INT_CALL, .ringing = notify_allowed(NULL), .nactions = 2};
         snprintf(it.title, sizeof it.title, TR("来电"));
         ink_args_get_str(p, "from", it.body, sizeof it.body);
         action(&it.actions[0], TR("接听"), "call.answer", NULL);
@@ -749,8 +749,11 @@ int ink_notify_init(void) {
     open_inbox();
     int64_t legacy = ink_setting_get("notify.dnd");
     NOTIFY_SETTINGS[0].per_member = true;
-    ink_receipt_t migrated;
-    if (legacy) ink_setting_set("notify.dnd", legacy, INK_SRC_SYSTEM, &migrated);
+    if (legacy) {
+        ink_receipt_t *migrated = osal_malloc(sizeof *migrated, OSAL_MEM_EXTERNAL);
+        if (!migrated) return -1;
+        ink_setting_set("notify.dnd", legacy, INK_SRC_SYSTEM, migrated); osal_free(migrated);
+    }
     if (notify_model_init() != 0) return -1;
     if (ink_state_watch("member.current", on_member, NULL, INK_EXEC_BG) != 0) return -1;
     if (ink_cap_subscribe("call.", on_call, NULL, INK_EXEC_DIRECT) || ink_cap_subscribe("alarm.fired", on_alarm, NULL, INK_EXEC_DIRECT) ||

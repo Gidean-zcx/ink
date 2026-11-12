@@ -9,6 +9,8 @@
 #include <stdlib.h>
 
 static char phase[16];
+static volatile int dnd_events;
+static void dnd_changed(void *ctx, const char *id, const ink_args_t *args) { (void)ctx; (void)id; (void)args; dnd_events++; }
 static ink_notify_view_t notice;
 static const ink_db_def_t LEGACY = {.name = "notify.inbox", .title = "通知", .scope = INK_DB_MEMBER, .schema = 1, .json = true, .ai_read = true};
 static const char CONTACT[] = "00000000991", STRANGER[] = "00000000992";
@@ -93,6 +95,9 @@ static void schedules(void) {
     model_set("{\"calendar\":false}"); clock_at(11, 23, 30);
     ink_notify_t high = {.title = "SYNTH_HIGH", .prio = INK_NOTIFY_HIGH}; double alerts = sim_metric_value("notify.alerted");
     CHECK(ink_notify_post(&high, NULL) == 0 && sim_metric_value("notify.alerted") == alerts, "scheduled DND suppresses high-priority notification sound");
+    clock_at(12, 12, 0); state(false, "off", 0, 0); CHECK(AI("notify.dnd_get", NULL), "drain clock events"); int before = dnd_events;
+    clock_at(12, 12, 1); CHECK(AI("notify.dnd_get", NULL), "drain unchanged minute");
+    CHECK(dnd_events == before, "an unchanged minute emits no DND event and cannot keep the hub awake");
 }
 static void members(bool restart) {
     clock_at(11, 23, 30); state(true, "schedule", 7, 0);
@@ -144,10 +149,14 @@ static void run(void *arg) {
     (void)arg; vtk_host_call(get_phase, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member opens"); test_start_home();
     CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "boot display settles");
+    CHECK(ink_cap_subscribe("notify.dnd_changed", dnd_changed, NULL, INK_EXEC_DIRECT) == 0, "observe DND changes");
     if (!strcmp(phase, "cross")) {
+        ink_notify_dnd_t d;
         setting("time.auto", 0); setting("notify.dnd", 0); model_set("{\"slot\":0,\"days\":62,\"start\":1320,\"end\":420}");
         clock_at(11, 23, 30); state(true, "schedule", 7, 0);
+        ink_notify_dnd_state(&d); CHECK(d.active, "23:30 matches the overnight period");
         clock_at(12, 6, 59); state(true, "schedule", 7, 0);
+        ink_notify_dnd_state(&d); CHECK(d.active, "06:59 matches the previous day's overnight period");
     } else if (!strcmp(phase, "seed")) seed();
     else if (!strcmp(phase, "restart")) { setting("time.auto", 0); members(true); CHECK(find_notice("SYNTH_THREE") && notice.nactions == 3, "schema-2 actions persist after reboot"); }
     else { schedules(); members(false); replies(); }

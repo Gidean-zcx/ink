@@ -63,18 +63,19 @@ static void write_prefs(ink_jw_t *w, const prefs_t *p) {
 void ink_notify_dnd_state(ink_notify_dnd_t *out) {
     *out = (ink_notify_dnd_t){.slot = -1, .reason = "off"};
     if (ink_setting_get("notify.dnd")) { out->active = true; out->reason = "manual"; return; }
-    ink_svc_lock(); prefs_t p = P; ink_svc_unlock();
+    DoNotDisturbScheduleSlot slots[SLOTS]; char member[16]; int calendar;
+    ink_svc_lock(); memcpy(slots, P.slots, sizeof slots); calendar = P.calendar; snprintf(member, sizeof member, "%s", P.member); ink_svc_unlock();
     int64_t now = ink_time_now_s();
-    if (!now || strcmp(p.member, ink_member_current()->id)) return;
+    if (!now || strcmp(member, ink_member_current()->id)) return;
     ink_tm_t tm; ink_time_to_local(now, &tm); struct pbl_tm local = {tm.hour, tm.min, tm.wday};
-    for (int i = 0; i < SLOTS; i++) if (prv_is_in_slot_period(&p.slots[i], &local)) {
-        ink_tm_t end = tm; const DoNotDisturbSchedule *s = &p.slots[i].schedule;
+    for (int i = 0; i < SLOTS; i++) if (prv_is_in_slot_period(&slots[i], &local)) {
+        ink_tm_t end = tm; const DoNotDisturbSchedule *s = &slots[i].schedule;
         if (prv_minutes(tm.hour, tm.min) >= prv_minutes(s->to_hour, s->to_minute)) end.day++;
         end.hour = s->to_hour; end.min = s->to_minute; end.sec = 0;
         int64_t until = ink_time_from_local(&end);
         if (until > out->until_s) { out->active = true; out->reason = "schedule"; out->slot = i; out->until_s = until; }
     }
-    if (p.calendar) {
+    if (calendar) {
         int cursor = 0; ink_alarm_t a;
         while (ink_alarm_next(&cursor, INK_REMINDER, &a) == 1) {
             int64_t start = ink_alarm_occurrence(&a, now);
@@ -88,6 +89,9 @@ static void changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h;
     if (id && !strcmp(id, "member.current")) load_prefs();
     ink_notify_dnd_t d; ink_notify_dnd_state(&d);
+    int64_t active = -1, until = -1; char reason[INK_STATE_STR] = "";
+    if (id && strcmp(id, "member.current") && ink_state_get_int(h_active, &active) && ink_state_get_int(h_until, &until) &&
+        ink_state_get_str(h_reason, reason, sizeof reason) >= 0 && active == d.active && until == d.until_s && !strcmp(reason, d.reason)) return;
     ink_state_set_int(h_until, d.until_s); ink_state_set_str(h_reason, d.reason); ink_state_set_bool(h_active, d.active);
     ink_cap_emit("notify.dnd_changed", NULL);
 }

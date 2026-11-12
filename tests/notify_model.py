@@ -30,7 +30,7 @@ for phase in ('seed', 'main', 'restart'):
     counts = data.get('metrics', {})
     print(f'{phase}: exit={result.returncode}, pass={counts.get("test.pass", 0)}, '
           f'fail={counts.get("test.fail", 0)}, finished={counts.get("test.finished", 0)}', flush=True)
-    delays = data.get('histograms', {}).get('test.notify_ring_delay_ms')
+    delays = counts.get('notify.ring_delay_ms')
     if delays:
         print('ring delay:', delays, flush=True)
     if result.returncode or counts.get('test.fail', 0) or counts.get('test.finished') != 1 or data.get('warnings'):

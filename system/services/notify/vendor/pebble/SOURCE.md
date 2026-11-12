@@ -19,3 +19,8 @@
 - 五条默认回复依照 `timeline_actions.c:794–827` 翻译，菜单与手机传输不编译，动作交给 ink 能力。
 - `notify.prefs` 记录 1 保留渠道开关，记录 2 存勿扰和回复；复用 JSON 记录，不另建通知库、线程、队列或定时器。
 - 定时复用 `time.minute` 和 `time.changed`，提醒变更看 `alarm.revision`；忙时复用 `ink_alarm_next` 和 `ink_alarm_occurrence`。
+
+## 行为对照（未复制代码）
+
+- [AOSP/LineageOS](https://github.com/LineageOS/android_frameworks_base/tree/22de88b7b8eb979c816669c7963dee66ae4953cd)：`ZenModeFiltering.java:185–267,394–462` 分开判断闹钟、来电、重复来电；`core/res/res/values/config.xml` 中 `config_zen_repeat_callers_threshold` 为 15 分钟。`ZenPolicy.java:258–278` 为来电对象分类。实现按任务要求调用现有联系人 API，不搬 Java 或通知数据库。
+- [MuditaOS](https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/phone-modes/DoNotDisturbWindow.cpp#L43)：收藏来电例外作为行为参考；本任务仅保留收藏枚举，等待联系人模块提供接口。
