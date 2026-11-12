@@ -1,10 +1,28 @@
 set(root ${CMAKE_CURRENT_LIST_DIR}/../../..)
+# Pinned MSC components used by IDF's example; generated sources stay in the build.
+idf_build_get_property(usb_build BUILD_DIR)
+set(usb ${usb_build}/usb)
+foreach(component esp_tinyusb tinyusb)
+    if(component STREQUAL esp_tinyusb)
+        set(object 2251cb74-99cd-4a04-8068-8afd9edb263d)
+        set(sha 9a173414f7a032bb2bae004531232fca2a977886609df85eabe14f3ab10ef081)
+    else()
+        set(object 42f8fcb4-2c0f-4c6a-9e65-c3ed2e805f8f)
+        set(sha e081d4176fd38bebfcf841d487b97476deebe73912936653e7fcc941af46f2cf)
+    endif()
+    if(NOT EXISTS ${usb}/${component}/CMakeLists.txt)
+        file(DOWNLOAD "https://components.espressif.com/api/downloads/?object_id=${object}&object_type=component"
+            ${usb}/${component}.zip EXPECTED_HASH SHA256=${sha} TLS_VERIFY ON TIMEOUT 90)
+        file(ARCHIVE_EXTRACT INPUT ${usb}/${component}.zip DESTINATION ${usb})
+    endif()
+endforeach()
 option(INK_AUTOTEST "Embed and run a device test script" OFF)
 set(INK_AUTOTEST_SCRIPT "" CACHE FILEPATH "Script embedded in a test image")
 idf_component_register(SRCS main.c ../osal_selftest.c ../s31_boot.c ../s31_panic.c ../s31_coproc.c ${root}/system/boot/main.c
+    KCONFIG ${usb}/esp_tinyusb/Kconfig
     PRIV_INCLUDE_DIRS ..
     REQUIRES ink_apps ink_system ink_drivers app_update esp_app_format esp_hal_lcd esp_hal_gpio esp_http_server
-        tcp_transport esp-tls mbedtls http_parser)
+        tcp_transport esp-tls mbedtls http_parser esp_driver_usb_serial_jtag esp_hal_usb wear_levelling)
 target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=esp_panic_handler")
 # the interrupt entry's hardware-loop save, from IRAM (s31_coproc.c)
 target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=pxPortGetCoprocArea" "-Wl,-u,__wrap_pxPortGetCoprocArea") # -u: nothing else pulls s31_coproc.o from libmain
@@ -55,6 +73,34 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${reader_tables
     --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
     --sources ${root}/system/apps/memory/memory.c ${root}/system/apps/snake/snake.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
+endif()
+
+if(NOT CMAKE_BUILD_EARLY_EXPANSION)
+idf_component_get_property(usb_platform ink_platform COMPONENT_LIB)
+get_target_property(usb_sources ${usb_platform} SOURCES)
+list(FILTER usb_sources EXCLUDE REGEX "/hal_storage_s31\\.c$")
+set_property(TARGET ${usb_platform} PROPERTY SOURCES ${usb_sources})
+target_sources(${usb_platform} PRIVATE ../hal_usb_s31.c)
+foreach(symbol hal_usb_host_connected hal_usb_host_done hal_usb_set_callback hal_usb_disk_start hal_usb_disk_stop)
+    set_property(SOURCE ../hal_stubs.c TARGET_DIRECTORY ${usb_platform} APPEND PROPERTY COMPILE_DEFINITIONS ${symbol}=ink_stub_${symbol})
+endforeach()
+set(usb_vendor_sources)
+foreach(source descriptors_control tinyusb usb_descriptors tinyusb_task tinyusb_vbus_monitor tinyusb_msc storage_sdmmc storage_spiflash)
+    list(APPEND usb_vendor_sources ${usb}/esp_tinyusb/${source}.c)
+endforeach()
+foreach(source tusb common/tusb_fifo device/usbd device/usbd_control class/msc/msc_device
+        portable/synopsys/dwc2/dcd_dwc2 portable/synopsys/dwc2/dwc2_common)
+    list(APPEND usb_vendor_sources ${usb}/tinyusb/src/${source}.c)
+endforeach()
+add_library(ink_usb_vendor STATIC ${usb_vendor_sources})
+target_include_directories(ink_usb_vendor PUBLIC ${usb}/esp_tinyusb/include ${usb}/tinyusb/src
+    PRIVATE ${usb}/esp_tinyusb/include_private)
+target_compile_definitions(ink_usb_vendor PUBLIC CFG_TUSB_MCU=OPT_MCU_ESP32S31)
+set_source_files_properties(${usb}/esp_tinyusb/tinyusb_msc.c PROPERTIES
+    COMPILE_DEFINITIONS tud_msc_start_stop_cb=ink_vendor_msc_start_stop_cb)
+target_link_libraries(ink_usb_vendor PUBLIC idf::fatfs idf::esp_hw_support idf::esp_driver_gpio
+    idf::esp_hal_usb idf::esp_driver_usb_serial_jtag idf::wear_levelling)
+target_link_libraries(${usb_platform} PRIVATE ink_usb_vendor)
 endif()
 # The vendor file manager needs IDF's own components: not in the early expansion pass.
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
