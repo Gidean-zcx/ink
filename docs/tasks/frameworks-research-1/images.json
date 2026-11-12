@@ -1,0 +1,58 @@
+[
+  {
+    "file": "fcitx-pinyin.jpg",
+    "url": "https://github.com/fcitx5-android/fcitx5-android/assets/13914967/bd429247-62d9-4c78-bab8-70ef3ce47588",
+    "original_sha256": "fb356d1746299ba7a10c179008cbe45da764067d84d57da57009f3a0300a891c",
+    "sha256": "1ed00aa4c16fa50ab953c352cfb79e93e05c0360d8b4cd264d97a27b36511c73",
+    "bytes": 88732
+  },
+  {
+    "file": "fcitx-symbols.jpg",
+    "url": "https://user-images.githubusercontent.com/13914967/202181861-dd253439-1d5e-4f5f-9535-934f28796a6b.png",
+    "original_sha256": "0ccf65b20e61fda355101bcaaa2cf5c6b1f52cce97d25b69811eefb7e48623eb",
+    "sha256": "563e16c308de130090d8be02eb3f5442ccaa8b3f99c990ad7922b89a7f1f971e",
+    "bytes": 50935
+  },
+  {
+    "file": "mudita-overview.jpg",
+    "url": "https://raw.githubusercontent.com/mudita/MuditaOS/2cd0e4721405c0bf263f311f27d38aadae6ac89f/doc/Images/readme_header.jpg",
+    "original_sha256": "1c44349e0ae7a758cff4978e532d79b17066f2f8240c7daf24d0663f1734976d",
+    "sha256": "4b91806ad1bcdf19699bccbfb34a5e83b40cecf4934b9a4ad72df6796bdaa340",
+    "bytes": 111219
+  },
+  {
+    "file": "infinitime-notifications.jpg",
+    "url": "https://raw.githubusercontent.com/InfiniTimeOrg/InfiniTime/9ad16304f5fd526b781a760cf1313813d232645e/doc/gettingStarted/ui/notifications.jpg",
+    "original_sha256": "89e0acdef26b73e26756992afe13df35d5071e2239beda61850a86d00e71d7d0",
+    "sha256": "6d44702271101515d84002815322fb3d30c455146c831e8332003de3ade39a7d",
+    "bytes": 141368
+  },
+  {
+    "file": "infinitime-quicksettings.jpg",
+    "url": "https://raw.githubusercontent.com/InfiniTimeOrg/InfiniTime/9ad16304f5fd526b781a760cf1313813d232645e/doc/gettingStarted/ui/quicksettings.jpg",
+    "original_sha256": "5e33ecb2068a7ce4a63e369634932de214be7ce574c7569e80f957c23a330770",
+    "sha256": "a2feac5a68a3f7ff4757127a1811bcb44613bb1bf15a65c4dd11c80cf1c028de",
+    "bytes": 138484
+  },
+  {
+    "file": "infinitime-settings.jpg",
+    "url": "https://raw.githubusercontent.com/InfiniTimeOrg/InfiniTime/9ad16304f5fd526b781a760cf1313813d232645e/doc/gettingStarted/ui/settings.jpg",
+    "original_sha256": "6fa5bf998d424ed65f4365c13ead28d64c8c934e22954027266d7ea14c7fc31c",
+    "sha256": "887d9d6a697f89e2a8ae13f6c6f13154e3b28daccc1dd044cdc48b66dfd3788f",
+    "bytes": 143545
+  },
+  {
+    "file": "brookesia-statusbar-v042.jpg",
+    "url": "https://raw.githubusercontent.com/espressif/esp-brookesia/2c0c83fad95b81c81ee560ba8af684ff32a402f4/docs/_static/readme/status_bar_demo.png",
+    "original_sha256": "178768aa99ff48c0c908620f5def806712bb0414471918bcdffc1d668adea9e3",
+    "sha256": "ea73c9ee0b39d6c2e6ad61f9482404d0f7b3c15240614105ffa7a620e4dbcf78",
+    "bytes": 7297
+  },
+  {
+    "file": "brookesia-recents-v042.jpg",
+    "url": "https://raw.githubusercontent.com/espressif/esp-brookesia/2c0c83fad95b81c81ee560ba8af684ff32a402f4/docs/_static/readme/recents_screen_demo.png",
+    "original_sha256": "98ea0b11862dbfec6e11ce5825eb12ec33faa52b1371cece0a70b53e2adef1c4",
+    "sha256": "85e4710bbf342b914df93dcaf2bf120c974ee5d55cf676d7da34c23145b19948",
+    "bytes": 31348
+  }
+]
