@@ -8,4 +8,5 @@
 #define INK_KBD_COLUMNS 5
 #define INK_KBD_SYMBOLS 10
 #define INK_KBD_RECENT 8
+#define INK_KBD_IDLE_MS 400
 #endif

@@ -28,7 +28,7 @@ static struct {
     lv_obj_t *root, *keys, *board, *footer, *cands, *composing, *edit, *fold;
     lv_obj_t *cand_btn[INK_TEXT_PAGE], *cand_label[INK_TEXT_PAGE], *more, *mic;
     lv_obj_t *cand_icon[INK_TEXT_PAGE];
-    lv_obj_t *previous, *cand_space, *picker, *tabs, *recent, *symbol_grid, *picker_nav, *popup;
+    lv_obj_t *previous, *cand_space, *picker, *tabs, *recent, *symbol_grid, *picker_nav, *popup, *more_icon;
     lv_obj_t *icons[3];
     lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
@@ -37,10 +37,12 @@ static struct {
     bool numeric, suppress_release;
     int category, symbol_page;
     char alternate[8];
+    lv_timer_t *cleanup;
+    unsigned candidate_changes;
     const char *map[KEYBOARD_MAP_MAX];
     lv_buttonmatrix_ctrl_t control[KEYBOARD_BUTTON_MAX];
     char codes[KEYBOARD_BUTTON_MAX], legends[KEYBOARD_BUTTON_MAX][24];
-    int buttons, map_size;
+    int buttons, map_size, footer_offset;
     uint32_t version, generation, revision, edit_revision, layout_revision, pressed_layout, voice_revision, pressed_voice;
     int built_for; /* 1 letters, 2 symbols, 3 digits */
 } K INK_PSRAM_BSS;
@@ -55,21 +57,16 @@ static const ink_call_t *enter_call;
 ink_source_t ink_shell_keyboard_enter_source(void) { return enter_call ? enter_call->src : INK_SRC_AI; }
 
 static int key_height(bool digits) {
-    return ink_ui_line_height(INK_FONT_LIST) * (digits ? INK_KB_DIGIT : INK_KBD_KEY_HEIGHT) / INK_LINE_LIST;
+    (void)digits;
+    return ink_ui_line_height(INK_FONT_LIST) * INK_KBD_KEY_HEIGHT / INK_LINE_LIST;
 }
 static int candidates_height(void) {
     int height = ink_ui_line_height(INK_FONT_LIST) * INK_KBD_TOUCH / INK_LINE_LIST;
     return height < INK_KBD_TOUCH ? INK_KBD_TOUCH : height;
 }
 static int keyboard_height_for(ink_text_type_t type) {
-    bool number = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE || (K.numeric && (type == INK_TEXT_PLAIN || type == INK_TEXT_URL));
-    bool nine = type == INK_TEXT_PLAIN && !ink_text_english() && !K.symbols && ink_setting_get("text.nine_key");
     int top = type == INK_TEXT_PASSWORD ? 0 : ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP;
-    /* Nine-key pinyin is as tall as the full keyboard (phone keyboards keep one height when switching layouts):
-     * three letter-height rows of digit keys and the function row. The number pad keeps its tall digits. */
-    return top + (number ? 3 * key_height(true) + 2 * key_height(false) + 4 * INK_KB_GAP :
-                  nine ? 3 * key_height(false) + key_height(false) + 3 * INK_KB_GAP :
-                  4 * key_height(false) + 3 * INK_KB_GAP);
+    return top + 4 * key_height(false) + 3 * INK_KB_GAP;
 }
 static int keyboard_height(void) { return keyboard_height_for(ink_text_type()); }
 static int candidate_width(const char *word, bool ai) {
@@ -182,7 +179,7 @@ static void show_alternates(lv_event_t *e);
 static void on_key(lv_event_t *e) {
     if (K.suppress_release) { K.suppress_release = false; return; }
     uint32_t id = lv_keyboard_get_selected_button(lv_event_get_target_obj(e));
-    if (lv_event_get_target_obj(e) == K.footer) id += 9;
+    if (lv_event_get_target_obj(e) == K.footer) id += (uint32_t)K.footer_offset;
     if (id >= (uint32_t)K.buttons || !K.codes[id]) return;
     char args[40]; snprintf(args, sizeof args, "{\"code\":%d}", (int)K.codes[id]);
     bool invalidation = lv_display_is_invalidation_enabled(NULL);
@@ -303,22 +300,30 @@ static void map_install(int kind) {
     K.buttons = K.map_size = 0;
     _Static_assert(10 + 11 + 9 + 7 <= KEYBOARD_BUTTON_MAX, "largest keyboard map");
     _Static_assert(KEYBOARD_BUTTON_MAX + 5 <= KEYBOARD_MAP_MAX, "map separators and terminator");
-    if (kind == 3 || kind == 4) {
+    if (kind == 3) {
+        static const char *const digits[] = {"123", "456", "789"};
+        static const char operators[] = "+-*";
+        _Static_assert(sizeof digits / sizeof *digits == sizeof operators - 1, "number rows");
+        for (int row = 0; row < 3; row++) {
+            char label[2] = {operators[row], 0};
+            map_key(label, operators[row], INK_KB_FUNCTION);
+            for (const char *digit = digits[row]; *digit; digit++) {
+                char text[2] = {*digit, 0}; map_key(text, *digit, INK_KB_UNIT);
+            }
+            map_key(row == 0 ? "/" : row == 1 ? TR("空格") : TR("删除"), row == 0 ? '/' : row == 1 ? ' ' : KEY_BACKSPACE, INK_KB_FUNCTION);
+            K.map[K.map_size++] = "\n";
+        }
+        map_key(K.numeric ? "26" : "+", K.numeric ? KEY_NUMBER : '+', INK_KB_FUNCTION);
+        map_key(",", ',', INK_KB_UNIT); map_key(TR("符号"), KEY_SWITCH, INK_KB_FUNCTION);
+        map_key("0", '0', INK_KB_UNIT); map_key("=", '=', INK_KB_UNIT); map_key(".", '.', INK_KB_UNIT);
+        map_key(enter_label(), KEY_ENTER, INK_KB_FUNCTION);
+    } else if (kind == 4) {
         static const char *const nine[] = {"，", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ"};
         _Static_assert(sizeof nine / sizeof *nine <= KEYBOARD_BUTTON_MAX, "nine-key map");
         for (int i = 0; i < 9; i++) {
             char text[2] = {(char)('1' + i), 0};
             map_key(kind == 4 ? nine[i] : text, kind == 4 && !i ? ',' : text[0], INK_KB_UNIT);
             if (i % 3 == 2) K.map[K.map_size++] = "\n";
-        }
-        if (kind == 3) {
-            map_row(ink_text_type() == INK_TEXT_PHONE ? "+0\b" : ".0\b");
-            if (K.plain || K.numeric) {
-                map_key("26", KEY_NUMBER, INK_KB_UNIT);
-                map_key(TR("符号"), KEY_SWITCH, INK_KB_UNIT);
-                K.map[K.map_size++] = "\n";
-            } else map_row(ink_text_type() == INK_TEXT_PHONE ? "*#" : "- ");
-            K.map_size--; map_key(enter_label(), KEY_ENTER, INK_KB_UNIT);
         }
     } else {
         map_row("qwertyuiop");
@@ -342,8 +347,9 @@ static void map_install(int kind) {
     }
     K.map[K.map_size] = "";
     if (kind == 3 || kind == 4) {
-        K.map[11] = "";
-        lv_keyboard_set_map(K.footer, LV_KEYBOARD_MODE_USER_2, K.map + 12, K.control + 9);
+        K.footer_offset = kind == 3 ? 15 : 9;
+        K.map[K.footer_offset + 2] = "";
+        lv_keyboard_set_map(K.footer, LV_KEYBOARD_MODE_USER_2, K.map + K.footer_offset + 3, K.control + K.footer_offset);
         lv_keyboard_set_mode(K.footer, LV_KEYBOARD_MODE_USER_2);
     }
     lv_keyboard_set_map(K.board, LV_KEYBOARD_MODE_USER_1, K.map, K.control);
@@ -355,7 +361,7 @@ static void draw_key_icon(lv_event_t *e) {
     lv_draw_task_t *task = lv_event_get_draw_task(e);
     lv_draw_label_dsc_t *label = lv_draw_task_get_label_dsc(task);
     if (!label || label->base.id1 >= (uint32_t)K.buttons) return;
-    unsigned index = label->base.id1 + (lv_event_get_target_obj(e) == K.footer ? 9 : 0);
+    unsigned index = label->base.id1 + (lv_event_get_target_obj(e) == K.footer ? (unsigned)K.footer_offset : 0);
     char code = K.codes[index];
     bool enter_icon = code == KEY_ENTER && ink_ui_text_width(enter_label(), INK_FONT_LIST, INK_WEIGHT_REGULAR) > INK_KB_FUNCTION_WIDTH;
     if (!enter_icon && code != KEY_BACKSPACE && (code != KEY_SHIFT || K.symbols)) return;
@@ -409,9 +415,19 @@ static lv_obj_t *make_board(int height) {
 
 #include "keyboard_picker.h"
 
+static void settle_candidates(lv_timer_t *timer) {
+    lv_timer_pause(timer);
+    if (K.root && K.candidate_changes >= 3 && !K.expanded && !K.symbols && ink_text_voice_state() == INK_VOICE_IDLE) {
+        K.candidate_changes = 0;
+        ink_ui_hint_obj(K.cands, INK_REFRESH_TEXT);
+        lv_obj_invalidate(K.cands);
+    }
+}
 static void build(int kind) {
     K.revision++;
     K.layout_revision++;
+    if (!K.cleanup) K.cleanup = lv_timer_create(settle_candidates, INK_KBD_IDLE_MS, NULL);
+    lv_timer_pause(K.cleanup); K.candidate_changes = 0;
     bool replacing = K.root != NULL;
     if (replacing) lv_obj_clean(K.root);
     else K.root = lv_obj_create(lv_layer_sys());
@@ -487,7 +503,10 @@ static void build(int kind) {
     lv_obj_t *ml = lv_label_create(K.more);
     lv_obj_set_style_text_font(ml, ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
     lv_label_set_text(ml, "▾");
+    lv_obj_set_style_text_opa(ml, LV_OPA_TRANSP, 0);
     lv_obj_center(ml);
+    K.more_icon = ink_ui_icon(K.more, "next", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false);
+    lv_obj_center(K.more_icon);
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     K.fold = ink_ui_pill(K.cands, TR("键盘"), 0, 0, INK_PRIMARY, candidates_height(), false, on_fold, NULL);
     lv_obj_set_style_radius(K.fold, 0, 0);
@@ -519,7 +538,7 @@ static void build(int kind) {
     lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     K.board = make_board(kind == 3 ? 3 * key_height(true) + 2 * INK_KB_GAP : kind == 4 ? 3 * key_height(false) + 2 * INK_KB_GAP :
                          4 * key_height(false) + 3 * INK_KB_GAP);
-    K.footer = kind == 3 || kind == 4 ? make_board((kind == 3 ? 2 : 1) * key_height(false) + (kind == 3 ? INK_KB_GAP : 0)) : NULL;
+    K.footer = kind == 3 || kind == 4 ? make_board(key_height(false)) : NULL;
     static const char *const enter_icons[] = {"check", "send", "search", "next"};
     for (int i = 0; i < 3; i++) {
         K.icons[i] = ink_ui_icon(K.board, i == 2 ? enter_icons[ink_text_enter_kind()] : i ? "del" : "shift", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false);
@@ -602,17 +621,19 @@ static void sync(void) { /* UI task */
             K.numeric = K.suppress_release = false;
             K.popup = NULL;
             K.expanded = false;
+            lv_timer_pause(K.cleanup); K.candidate_changes = 0;
         }
         return;
     }
     ink_text_type_t type = ink_text_type();
     bool secret = type == INK_TEXT_PASSWORD || ink_text_ai_hidden(), present = ink_text_value()[0] != 0;
-    if (!secret && K.edit_revision != ink_text_edit_revision()) {
+    bool edited = !secret && K.edit_revision != ink_text_edit_revision();
+    if (edited) {
         K.edit_revision = ink_text_edit_revision(); K.revision++; ink_ui_content_changed();
     }
     if (secret && present != K.secret_present) K.revision++;
     K.secret_present = present;
-    if (type != INK_TEXT_PLAIN && type != INK_TEXT_URL) K.numeric = false;
+    if (type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE) K.numeric = false;
     int kind = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE || K.numeric ? 3 : K.symbols ? 2 :
                type == INK_TEXT_PLAIN && !ink_text_english() && ink_setting_get("text.nine_key") ? 4 : type == INK_TEXT_PASSWORD ? 5 : 1;
     bool plain = type == INK_TEXT_PLAIN, english = ink_text_english();
@@ -643,8 +664,10 @@ static void sync(void) { /* UI task */
         K.first = 0;
         n = ink_text_candidates(0, c, INK_TEXT_PAGE + 1);
     }
+    bool updated = K.shown != n;
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         if (i < n) {
+            if (strcmp(lv_label_get_text(K.cand_label[i]), c[i].word)) updated = true;
             lv_label_set_text(K.cand_label[i], c[i].word);
             if (c[i].ai && !K.cand_icon[i]) {
                 K.cand_icon[i] = ink_ui_icon(K.cand_btn[i], "ai", INK_ICON_LIST, INK_ICON_SOLID, 0, 0, i == 0);
@@ -735,8 +758,13 @@ static void sync(void) { /* UI task */
         lv_obj_remove_flag(K.more, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
     }
     lv_label_set_text(lv_obj_get_child(K.more, 0), K.expanded ? "▶" : "▾");
+    lv_image_set_rotation(K.more_icon, K.expanded ? 0 : 900);
     ink_ui_hint_obj(K.cands, INK_REFRESH_FAST);
     ink_ui_hint_obj(K.composing, INK_REFRESH_FAST);
+    if (updated && n > 0 && !K.expanded && !rebuild) {
+        K.candidate_changes++;
+        lv_timer_reset(K.cleanup); lv_timer_resume(K.cleanup);
+    }
 }
 
 int ink_shell_keyboard_init(void) {

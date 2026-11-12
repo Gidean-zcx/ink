@@ -12,7 +12,7 @@ static int symbol_columns(void) {
     int columns = (lv_obj_get_content_width(K.keys) + ink_ui_px(INK_KB_GAP)) / ink_ui_px(candidates_height() + INK_KB_GAP);
     return columns > INK_KBD_COLUMNS ? INK_KBD_COLUMNS : columns;
 }
-static int symbol_page_size(void) { return 2 * symbol_columns(); }
+static int symbol_page_size(void) { return (K.password ? 1 : 2) * symbol_columns(); }
 static const char *category_name(void) { return SYMBOL_NAMES[K.category]; }
 static bool symbol_at(int category, int index, char text[8]) {
     if (category < 0 || category >= (int)(sizeof SYMBOLS / sizeof *SYMBOLS) || index < 0) return false;
@@ -104,13 +104,14 @@ static void build_picker(void) {
         lv_obj_set_flex_grow(b, 1);
     }
     K.recent = picker_row(K.picker);
+    if (K.password) lv_obj_add_flag(K.recent, LV_OBJ_FLAG_HIDDEN);
     lv_obj_set_height(K.recent, ink_ui_px(candidates_height()));
     lv_obj_add_flag(K.recent, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_scroll_dir(K.recent, LV_DIR_HOR);
     K.symbol_grid = picker_row(K.picker);
     lv_obj_set_flex_flow(K.symbol_grid, LV_FLEX_FLOW_ROW_WRAP);
     lv_obj_set_style_pad_row(K.symbol_grid, ink_ui_px(INK_KB_GAP), 0);
-    lv_obj_set_height(K.symbol_grid, ink_ui_px(2 * candidates_height() + INK_KB_GAP));
+    lv_obj_set_height(K.symbol_grid, ink_ui_px((K.password ? 1 : 2) * candidates_height() + (K.password ? 0 : INK_KB_GAP)));
     K.picker_nav = picker_row(K.picker);
     lv_obj_update_layout(K.root); sync_picker();
     lv_obj_add_flag(K.picker, LV_OBJ_FLAG_HIDDEN);

@@ -2,6 +2,7 @@
 #ifndef INK_TEST_KEYBOARD_MATRIX_H
 #define INK_TEST_KEYBOARD_MATRIX_H
 #include "ink/sys/cap.h"
+#include "ink/sys/textinput.h"
 #include "src/widgets/buttonmatrix/lv_buttonmatrix_private.h"
 static lv_obj_t *ink_test_matrix(lv_obj_t *root) {
     if (lv_obj_check_type(root, &lv_keyboard_class)) return root;
@@ -27,6 +28,15 @@ static bool ink_test_matrix_key(lv_obj_t *root, const char *text, lv_area_t *are
     if (board && !strcmp(text, "字母")) {
         if (ink_test_keyboard_label(root, "26", area)) return true;
         text = "26";
+    }
+    if (root == lv_layer_sys() && board && lv_obj_is_visible(board) && text[0] && !text[1] &&
+        !strcmp(lv_keyboard_get_button_text(board, 0), "+") && !strcmp(lv_keyboard_get_button_text(board, 1), "1") &&
+        (ink_text_type() == INK_TEXT_URL || ink_text_type() == INK_TEXT_PLAIN) &&
+        strchr("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~", text[0])) {
+        ink_receipt_t rc;
+        if (ink_cap_invoke_json("keyboard.panel", "{\"panel\":\"symbols\"}", INK_SRC_TOUCH, 0, &rc) != INK_RC_DONE) return false;
+        lv_obj_update_layout(root);
+        return ink_test_matrix_key(root, text, area);
     }
     lv_area_t navigation;
     if (board && !lv_obj_is_visible(board) && text[0] && !text[1] &&

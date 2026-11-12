@@ -70,8 +70,8 @@ static void touch(int code) {
     int i = key_index(code);
     CHECK(i >= 0 && lv_obj_is_visible(K.board), "visible keyboard control: %d", code);
     if (i < 0) return;
-    lv_obj_t *board = K.footer && i >= 9 ? K.footer : K.board;
-    lv_buttonmatrix_set_selected_button(board, (uint32_t)(K.footer && i >= 9 ? i - 9 : i));
+    lv_obj_t *board = K.footer && i >= K.footer_offset ? K.footer : K.board;
+    lv_buttonmatrix_set_selected_button(board, (uint32_t)(K.footer && i >= K.footer_offset ? i - K.footer_offset : i));
     lv_obj_send_event(board, LV_EVENT_PRESSED, NULL);
     lv_obj_send_event(board, LV_EVENT_VALUE_CHANGED, NULL);
 }
@@ -206,10 +206,10 @@ static void inspect(void) {
     lv_area_t bounds; lv_obj_get_coords(K.board, &bounds);
     int row_y = -1, min_width = 0, max_width = 0, letter_width = 0;
     for (int i = 0; i < K.buttons; i++) {
-        if (K.footer && i == 9) {
+        if (K.footer && i == K.footer_offset) {
             matrix = (lv_buttonmatrix_t *)K.footer; lv_obj_get_coords(K.footer, &bounds);
         }
-        lv_area_t a = matrix->button_areas[K.footer && i >= 9 ? i - 9 : i];
+        lv_area_t a = matrix->button_areas[K.footer && i >= K.footer_offset ? i - K.footer_offset : i];
         int width = lv_area_get_width(&a);
         if (K.codes[i] >= 'a' && K.codes[i] <= 'z') {
             if (!letter_width) letter_width = width;
@@ -231,7 +231,7 @@ static void inspect(void) {
             text.x = text.y = ink_ui_px(INK_ICON_MEDIUM * key_height(false) / INK_KB_KEY);
         CHECK(text.x <= width && text.y <= lv_area_get_height(&a), "label fits native key: %s / %.23s", picture, K.legends[i]);
     }
-    /* The number pad keeps tall digits; nine-key pinyin is as tall as the full keyboard (letter-height rows). */
+    /* Every layout keeps the same key height and four rows. */
     CHECK(lv_obj_get_height(K.board) == ink_ui_px((K.footer ? 3 : 4) * key_height(K.built_for == 3) + (K.footer ? 2 : 3) * INK_KB_GAP), "height comes from keyboard tokens and font scale");
     CHECK(lv_obj_get_width(K.mic) == ink_ui_px(INK_KB_FUNCTION_WIDTH) && lv_obj_get_height(K.mic) == ink_ui_px(key_height(false)), "voice uses function-key dimensions");
 
@@ -260,10 +260,10 @@ static void pointer_target(void) {
     int i = key_index(pointer_code);
     CHECK(i >= 0, "switch test key exists: %d", pointer_code);
     if (i < 0) return;
-    lv_obj_t *board = K.footer && i >= 9 ? K.footer : K.board;
+    lv_obj_t *board = K.footer && i >= K.footer_offset ? K.footer : K.board;
     lv_obj_update_layout(K.root);
     lv_area_t bounds; lv_obj_get_coords(board, &bounds);
-    lv_area_t a = ((lv_buttonmatrix_t *)board)->button_areas[K.footer && i >= 9 ? i - 9 : i];
+    lv_area_t a = ((lv_buttonmatrix_t *)board)->button_areas[K.footer && i >= K.footer_offset ? i - K.footer_offset : i];
     pointer_x = bounds.x1 + (a.x1 + a.x2) / 2;
     pointer_y = bounds.y1 + (a.y1 + a.y2) / 2;
 }
