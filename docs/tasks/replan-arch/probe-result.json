@@ -1,0 +1,78 @@
+{
+  "source_revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+  "sources": {
+    "main/ui/ui_nav.c": {
+      "sha256": "cd21e1bd733f014d5a9a1229286135839a2fd86dea9524694356604c9b0d1e56",
+      "lines": 258
+    },
+    "main/ui/ui_nav.h": {
+      "sha256": "044abd8555dafc3fa317cff054bfc62b7ca9f5af6a463989769d1db8bb0175fc",
+      "lines": 35
+    },
+    "main/ui/ui_nav_layout.h": {
+      "sha256": "90b08510b15d8faadefa58b3ffcdcb77ce47077a01510baae2efe1d69c722f59",
+      "lines": 15
+    }
+  },
+  "compiler": "Apple clang version 17.0.0 (clang-1700.6.3.2)",
+  "compat_header_lines": 55,
+  "undefined_symbols": [
+    "__snprintf_chk",
+    "__stack_chk_fail",
+    "__stack_chk_guard",
+    "app_at",
+    "app_settings_ble_turner",
+    "app_settings_main_refresh_mode",
+    "app_settings_status_signature",
+    "app_settings_system_font_path",
+    "bzero",
+    "epd_fill_rect",
+    "gmtime_r",
+    "memset",
+    "pmu_battery_charging",
+    "pmu_battery_percent",
+    "read_pico_pmu_get",
+    "read_pico_transfer_get_status",
+    "strcmp",
+    "strlen",
+    "time",
+    "ttf_font_path",
+    "ui_click_feedback_register",
+    "ui_draw_icon",
+    "ui_draw_round_rect",
+    "ui_fill_rect_fast",
+    "ui_fill_round_rect",
+    "ui_font_has_text",
+    "ui_font_text_width_px",
+    "ui_hairline",
+    "ui_status_mark_visible",
+    "ui_status_visible",
+    "ui_text",
+    "ui_text_fixed_context_width_px",
+    "ui_text_fixed_vc",
+    "ui_text_fixed_width_px"
+  ],
+  "runs": [
+    {
+      "command": "taskpolicy -c utility cc -std=c11 -Wall -Wextra -Werror -DKIIKO_BOARD_METALIO47=1 -I$INK_DEPS/../ink-hw/upstream/oss/kiikoread/main/app -fsyntax-only $INK_DEPS/../ink-hw/upstream/oss/kiikoread/main/ui/ui_nav.c",
+      "exit": 1,
+      "output": "In file included from $INK_DEPS/../ink-hw/upstream/oss/kiikoread/main/ui/ui_nav.c:14:\nIn file included from $INK_DEPS/../ink-hw/upstream/oss/kiikoread/main/ui/ui_nav.h:10:\n$INK_DEPS/../ink-hw/upstream/oss/kiikoread/main/app/app.h:25:10: fatal error: 'cst836u.h' file not found\n   25 | #include \"cst836u.h\"\n      |          ^~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "command": "taskpolicy -c utility cc -std=c11 -Wall -Wextra -Werror -DKIIKO_BOARD_METALIO47=1 -Iinclude -Isrc -c src/ui_nav.c -o ui_nav.o",
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "command": "taskpolicy -c utility cc -std=c11 -Wall -Wextra -Werror -DKIIKO_BOARD_METALIO47=1 -DINK_ARCH_OMIT_NETWORK=1 -Iinclude -Isrc -fsyntax-only src/ui_nav.c",
+      "exit": 1,
+      "output": "src/ui_nav.c:199:5: error: call to undeclared function 'read_pico_transfer_get_status'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]\n  199 |     read_pico_transfer_get_status(&network);\n      |     ^\n1 error generated.\n"
+    },
+    {
+      "command": "taskpolicy -c utility nm -u ui_nav.o",
+      "exit": 0,
+      "output": "___snprintf_chk\n___stack_chk_fail\n___stack_chk_guard\n_app_at\n_app_settings_ble_turner\n_app_settings_main_refresh_mode\n_app_settings_status_signature\n_app_settings_system_font_path\n_bzero\n_epd_fill_rect\n_gmtime_r\n_memset\n_pmu_battery_charging\n_pmu_battery_percent\n_read_pico_pmu_get\n_read_pico_transfer_get_status\n_strcmp\n_strlen\n_time\n_ttf_font_path\n_ui_click_feedback_register\n_ui_draw_icon\n_ui_draw_round_rect\n_ui_fill_rect_fast\n_ui_fill_round_rect\n_ui_font_has_text\n_ui_font_text_width_px\n_ui_hairline\n_ui_status_mark_visible\n_ui_status_visible\n_ui_text\n_ui_text_fixed_context_width_px\n_ui_text_fixed_vc\n_ui_text_fixed_width_px\n"
+    }
+  ],
+  "boundary": "Compile-only: no link, graphics, service implementation, product build or device execution."
+}
