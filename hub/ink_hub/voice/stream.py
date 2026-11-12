@@ -50,9 +50,9 @@ async def recognize(connection, sid, session, rid=None):
 
     if not hasattr(asr, "stream"):
         await session.ended.wait()
-        text = await asr.transcribe(session.frames)
+        value = await asr.transcribe(session.frames)
         session.frames.clear()
-        results = [(text, True)]
+        results = [(value, True)]
         async def legacy():
             for result in results:
                 yield result

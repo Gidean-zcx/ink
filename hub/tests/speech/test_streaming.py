@@ -191,3 +191,74 @@ async def test_interim_interval_allows_next_update_and_final_bypasses_it(monkeyp
     assert await stream.recognize(connection, 9, session) == ("丁", 1)
     assert [value["text"] for value in sent] == ["甲", "丙", "丁"]
     assert sent[-1]["final"]
+
+
+async def test_legacy_transcript_is_not_duplicated(make_hub):
+    _, client, url = await make_hub()
+    device = FakeDevice(client, url)
+    await device.connect()
+    await device.voice()
+    assert [m["params"]["text"] for m in device.messages if isinstance(m, dict) and m.get("method") == "ai.stt"] == ["翻到下一页"]
+
+
+async def test_late_uplink_after_vad_does_not_abort_answer(make_hub, vendors, opus):
+    release = asyncio.Event()
+    model = FakeModel(gate=release)
+    asr, tts = vendors.providers("doubao", opus)
+    hub, client, url = await make_hub(asr=asr, tts=tts, model=model)
+    device = FakeDevice(client, url)
+    await device.connect()
+    packets = encode(opus, 6, quiet=18)
+    rid = await start_voice(device, packets, end=False)
+    await asyncio.wait_for(model.started.wait(), 2)
+    connection = hub.connections["example-device"]
+    assert connection.sessions[7].ended.is_set()
+    for seq, packet in enumerate(encode(opus, 3), len(packets)):
+        await device.ws.send_bytes(frame(1, 7, seq, packet))
+    await device.call("caps/list")
+    assert 7 in connection.sessions and not connection.turns[rid].done()
+    release.set()
+    assert (await device.until(rid))["result"]["done"]
+
+
+async def test_streaming_tts_failure_returns_clean_receipt(make_hub):
+    from aiohttp import ClientConnectionError
+    tasks = []
+    async def fail():
+        raise ClientConnectionError("synthetic vendor failure")
+    class TTS:
+        async def stream(self, text):
+            tasks.append(asyncio.current_task())
+            yield await fail()
+    _, client, url = await make_hub(tts=TTS())
+    device = FakeDevice(client, url)
+    await device.connect()
+    _, result = await device.voice()
+    assert result["result"]["done"]
+    await asyncio.wait_for(asyncio.gather(*tasks), 1)
+    assert all(task.exception() is None for task in tasks)
+    assert "result" in await device.call("caps/list")
+
+
+async def test_abort_closes_model_suspended_at_yield(make_hub, vendors, opus):
+    closed = asyncio.Event()
+    class Model:
+        def stream(self, *args, **kwargs):
+            async def source():
+                try:
+                    yield ModelResult(ANSWER)
+                finally:
+                    closed.set()
+            self.active = source()
+            return self.active
+    vendors.gate = asyncio.Event()
+    asr, tts = vendors.providers("doubao", opus)
+    _, client, url = await make_hub(asr=asr, tts=tts, model=Model())
+    device = FakeDevice(client, url)
+    await device.connect()
+    await start_voice(device, encode(opus, 5))
+    while not isinstance(await device.recv(), bytes):
+        pass
+    await device.send("rt.close", {"sid": 7}, rid=False)
+    await device.call("caps/list")
+    assert closed.is_set()

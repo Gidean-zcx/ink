@@ -228,11 +228,11 @@ class Connection:
                         return
                     await handle_input(session.browser, payload)
                     return
+                if session.ended.is_set():
+                    return
                 if kind != 1 or seq != session.seq or session.size + len(payload) > 128 * 1024:
                     await self.end_session(sid)
                     await self.notify("rt.close", {"sid": sid})
-                    return
-                if session.ended.is_set():
                     return
                 session.seq = (seq + 1) & 65535
                 session.frames.append(payload)

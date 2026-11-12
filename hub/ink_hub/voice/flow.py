@@ -122,31 +122,32 @@ async def run_turn(self, rid, method, params):
                 if session and self.voice_history:
                     previous, heard = self.voice_history
                     prompt = f"上一轮用户：{previous}\n用户已听到的回答：{heard}\n本轮用户：{question}"
-                async for part in self.hub.model.stream(prompt, available, lang=lang, member=context):
-                    if not guard():
-                        return
-                    if session and part.text:
-                        session.times.setdefault("model_first_text", loop.time())
-                    await emit(part.text)
-                    if not part.tool:
-                        continue
-                    descriptor = available.get(part.tool)
-                    if not descriptor or not isinstance(part.arguments, dict) or "_meta" in part.arguments:
-                        raise ProtocolError("工具参数无效")
-                    validate(part.arguments, descriptor.get("inputSchema", {"type": "object"}))
-                    meta = authorize(self.hub.authority, scope, epoch=epoch, connection=self.id,
-                                     action=part.tool, arguments=part.arguments, now=loop.time(),
-                                     effect=descriptor.get("effect", "read"))
-                    meta["request_id"] = secrets.token_hex(16)
-                    receipt = await self.request("tools/call", {"name": part.tool, "arguments": part.arguments,
-                                                               "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
-                    if not isinstance(receipt, dict) or "status" not in receipt:
-                        raise ProtocolError("设备回执无效")
-                    self.hub.metrics.tool_calls += 1
-                    logging.getLogger(__name__).info("设备操作回执：%s", "完成" if receipt["status"] == "done" else "未完成")
-                    await emit(receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else ""))
-                    if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
-                        await self.tools.current([], guard=guard)
+                async with aclosing(self.hub.model.stream(prompt, available, lang=lang, member=context)) as model_stream:
+                    async for part in model_stream:
+                        if not guard():
+                            return
+                        if session and part.text:
+                            session.times.setdefault("model_first_text", loop.time())
+                        await emit(part.text)
+                        if not part.tool:
+                            continue
+                        descriptor = available.get(part.tool)
+                        if not descriptor or not isinstance(part.arguments, dict) or "_meta" in part.arguments:
+                            raise ProtocolError("工具参数无效")
+                        validate(part.arguments, descriptor.get("inputSchema", {"type": "object"}))
+                        meta = authorize(self.hub.authority, scope, epoch=epoch, connection=self.id,
+                                         action=part.tool, arguments=part.arguments, now=loop.time(),
+                                         effect=descriptor.get("effect", "read"))
+                        meta["request_id"] = secrets.token_hex(16)
+                        receipt = await self.request("tools/call", {"name": part.tool, "arguments": part.arguments,
+                                                                   "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
+                        if not isinstance(receipt, dict) or "status" not in receipt:
+                            raise ProtocolError("设备回执无效")
+                        self.hub.metrics.tool_calls += 1
+                        logging.getLogger(__name__).info("设备操作回执：%s", "完成" if receipt["status"] == "done" else "未完成")
+                        await emit(receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else ""))
+                        if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
+                            await self.tools.current([], guard=guard)
             await emit(final=True)
             completed = True
     except asyncio.CancelledError:
@@ -155,7 +156,7 @@ async def run_turn(self, rid, method, params):
         if guard():
             try:
                 await emit("这次没有完成，请重试。", final=True)
-            except (ConnectionError, RuntimeError, TimeoutError):
+            except (ConnectionError, RuntimeError, TimeoutError, ClientError, ExceptionGroup, ValueError):
                 pass
     finally:
         if session:
