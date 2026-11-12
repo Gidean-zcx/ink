@@ -21,6 +21,13 @@ extern "C" {
 
 typedef enum { INK_NOTIFY_LOW = 0, INK_NOTIFY_NORMAL, INK_NOTIFY_HIGH } ink_notify_prio_t;
 
+#define INK_NOTIFY_ACTIONS_MAX 3
+typedef struct { char label[32], cap[40], args[96]; } ink_notify_action_t;
+typedef enum { INK_NOTIFY_CALL_NONE, INK_NOTIFY_CALL_ANY, INK_NOTIFY_CALL_CONTACTS, INK_NOTIFY_CALL_STARRED } ink_notify_callers_t;
+typedef struct { bool active; int slot; int64_t until_s; const char *reason; } ink_notify_dnd_t;
+/** Current member; reason: off/manual/schedule/calendar; until_s=0 for manual. */
+void ink_notify_dnd_state(ink_notify_dnd_t *out);
+
 typedef struct {
     const char *channel;     /* "message"; NULL = "system" */
     const char *title, *body;
@@ -32,6 +39,9 @@ typedef struct {
     const char *member;      /* whose inbox; NULL = the current member */
     uint8_t src;             /* ink_source_t: who posted it */
     uint32_t *written_ver;   /* current inbox only; version accepted by this post */
+    const ink_notify_action_t *actions;
+    uint8_t nactions;
+    const char *reply_cap, *reply_args; /* JSON template; reply adds the text field */
 } ink_notify_t;
 
 typedef struct {
@@ -40,6 +50,9 @@ typedef struct {
     uint8_t prio, src;
     bool read;
     char channel[16], title[48], body[160], group[24], tag[24], action[40], action_args[96];
+    ink_notify_action_t actions[INK_NOTIFY_ACTIONS_MAX];
+    uint8_t nactions;
+    char reply_cap[40], reply_args[96];
 } ink_notify_view_t;
 
 typedef struct {

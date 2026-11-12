@@ -37,7 +37,7 @@
 #define RECORD_CAP 1024
 #define INBOX_KEEP 200
 
-static const ink_db_def_t INBOX = {.name = "notify.inbox", .title = "通知", .scope = INK_DB_MEMBER, .schema = 1, .json = true, .ai_read = true,
+static const ink_db_def_t INBOX = {.name = "notify.inbox", .title = "通知", .scope = INK_DB_MEMBER, .schema = 2, .json = true, .ai_read = true,
                                    .max_records = INBOX_KEEP, .max_bytes = 64u * 1024u, .drop_oldest = true};
 static const ink_db_def_t PREFS = {.name = "notify.prefs", .title = "通知渠道开关", .scope = INK_DB_MEMBER, .schema = 1, .json = true, .ai_read = true};
 
@@ -56,9 +56,12 @@ static struct {
     int unread;
     int h_unread;
     ink_exec_job_t haptic_job;
+    ink_exec_job_t call_ring_job;
     /* the call on screen */
     bool call_answered;
     char call_from[24];
+    char call_member[INK_MEMBER_ID_MAX];
+    uint64_t call_raised_us;
     ink_interrupt_t alarm_it; /* the timer task's: its stack is small */
 } NS INK_PSRAM_BSS;
 
@@ -111,6 +114,7 @@ static void recount(void) {
 }
 
 static int encode(char *out, size_t cap, const ink_notify_t *n, const char *channel, int prio, bool read) {
+    if (n->nactions > INK_NOTIFY_ACTIONS_MAX || (n->nactions && !n->actions)) return -1;
     ink_jw_t w;
     ink_jw_init(&w, out, cap);
     ink_jw_raw(&w, read ? "{\"read\":true,\"prio\":" : "{\"read\":false,\"prio\":");
@@ -139,6 +143,7 @@ static int encode(char *out, size_t cap, const ink_notify_t *n, const char *chan
             ink_jw_raw(&w, n->action_args);
         }
     }
+    notify_actions_write(&w, n->actions, n->nactions, n->reply_cap, n->reply_args);
     ink_jw_raw(&w, "}");
     return w.overflow ? -1 : (int)w.len;
 }
@@ -228,7 +233,7 @@ static void post_away(void *arg) { /* exec.bg: another member's inbox, nobody is
         bool now_theirs = posted && ink_member_exists(a->member) &&
                           !strcmp(ink_member_current()->id, a->member);
         ink_svc_unlock();
-        if (now_theirs && a->prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) {
+        if (now_theirs && a->prio >= INK_NOTIFY_HIGH && notify_allowed(NULL)) {
             ink_probe_count("notify.alerted");
             ink_audio_tone(INK_TONE_DONE, 0, NULL);
             ink_exec_post(INK_EXEC_BG, &NS.haptic_job, haptic_job, NULL);
@@ -328,7 +333,7 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
     mine = ink_member_exists(who) &&
            !strcmp(who, NS.member) && !strcmp(who, ink_member_current()->id);
     ink_svc_unlock();
-    if (mine && prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) { /* no banner: e-ink would need a refresh for it to go away too */
+    if (mine && prio >= INK_NOTIFY_HIGH && notify_allowed(NULL)) { /* no banner: e-ink would need a refresh for it to go away too */
         ink_probe_count("notify.alerted");
         ink_audio_tone(INK_TONE_DONE, 0, NULL);
         ink_exec_post(INK_EXEC_BG, &NS.haptic_job, haptic_job, NULL);
@@ -440,6 +445,7 @@ int ink_notify_next(ink_db_cursor_t *c, ink_notify_view_t *out) {
             ink_json_str(j, ink_json_find(j, 0, "action"), out->action, sizeof out->action);
             int args = ink_json_find(j, 0, "args");
             if (args >= 0) snprintf(out->action_args, sizeof out->action_args, "%.*s", j->tok[args].end - j->tok[args].start, j->text + j->tok[args].start);
+            notify_actions_read(j, out);
         }
     }
     osal_free(j);
@@ -561,19 +567,44 @@ static void action(ink_int_action_t *a, const char *label, const char *cap, cons
     snprintf(a->args, sizeof a->args, "%s", args ? args : "");
 }
 
+void notify_call_ring(void *arg) { /* BG: the card is already visible. */
+    int h = (int)(intptr_t)arg;
+    ink_svc_lock();
+    char from[24], member[INK_MEMBER_ID_MAX];
+    snprintf(from, sizeof from, "%s", NS.call_from); snprintf(member, sizeof member, "%s", NS.call_member);
+    bool pending = !NS.call_answered;
+    uint64_t raised = NS.call_raised_us;
+    ink_svc_unlock();
+    if (!pending || notify_interrupt_find(INK_INT_CALL, 0) != h || strcmp(member, ink_member_current()->id)) return;
+    bool ring = notify_allowed(from);
+    ink_svc_lock(); pending = !NS.call_answered && !strcmp(member, ink_member_current()->id); ink_svc_unlock();
+    if (pending && notify_interrupt_find(INK_INT_CALL, 0) == h) {
+        ink_interrupt_update(h, NULL, NULL, 0, ring);
+        if (ring) ink_probe_value("notify.ring_delay_ms", (double)(osal_now_us() - raised) / 1000.0);
+    }
+}
+
+static void number_args(char *out, size_t cap, const char *key, const char *number) {
+    ink_jw_t w; ink_jw_init(&w, out, cap);
+    ink_jw_raw(&w, "{"); ink_jw_str(&w, key); ink_jw_raw(&w, ":"); ink_jw_str(&w, number); ink_jw_raw(&w, "}");
+}
+
 static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the modem's task; the answer's on exec.bg */
     (void)ctx;
     if (!strcmp(id, "call.incoming")) {
-        ink_interrupt_t it = {.kind = INK_INT_CALL, .ringing = !ink_setting_get("notify.dnd"), .nactions = 2};
+        ink_interrupt_t it = {.kind = INK_INT_CALL, .ringing = notify_allowed(NULL), .nactions = 2};
         snprintf(it.title, sizeof it.title, TR("来电"));
         ink_args_get_str(p, "from", it.body, sizeof it.body);
         action(&it.actions[0], TR("接听"), "call.answer", NULL);
         action(&it.actions[1], TR("挂断"), "call.hangup", NULL);
         ink_svc_lock();
         NS.call_answered = false;
+        NS.call_raised_us = osal_now_us();
+        snprintf(NS.call_member, sizeof NS.call_member, "%s", ink_member_current()->id);
         snprintf(NS.call_from, sizeof NS.call_from, "%.23s", it.body); /* a number: it fits */
         ink_svc_unlock();
-        ink_interrupt_raise(&it);
+        int h = ink_interrupt_raise(&it);
+        if (h > 0) ink_exec_post(INK_EXEC_BG, &NS.call_ring_job, notify_call_ring, (void *)(intptr_t)h);
     } else if (!strcmp(id, "call.answered")) {
         int h = notify_interrupt_find(INK_INT_CALL, 0);
         ink_int_action_t hang;
@@ -591,7 +622,12 @@ static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the mod
         ink_svc_unlock();
         if (h) ink_interrupt_end(h);
         if (h && missed) {
-            ink_notify_t n = {.channel = "call", .title = TR("未接来电"), .body = from, .group = "missed-calls", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+            ink_notify_action_t acts[] = {{.label = "回电", .cap = "call.dial"}, {.label = "发短信", .cap = "sms.compose"}};
+            _Static_assert(sizeof acts / sizeof *acts <= INK_NOTIFY_ACTIONS_MAX, "notification actions");
+            snprintf(acts[0].label, sizeof acts[0].label, "%s", TR("回电")); snprintf(acts[1].label, sizeof acts[1].label, "%s", TR("发短信"));
+            number_args(acts[0].args, sizeof acts[0].args, "number", from);
+            number_args(acts[1].args, sizeof acts[1].args, "number", from);
+            ink_notify_t n = {.channel = "call", .title = TR("未接来电"), .body = from, .group = "missed-calls", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM, .actions = acts, .nactions = sizeof acts / sizeof *acts};
             ink_notify_post(&n, NULL);
         }
     }
@@ -641,7 +677,13 @@ static void on_message(void *ctx, const char *id, const ink_args_t *p) { /* exec
     ink_args_get_str(p, "from", from, sizeof from);
     ink_args_get_str(p, "text", text, sizeof text);
     ink_args_get_str(p, "member", whose, sizeof whose);
-    ink_notify_t n = {.channel = "message", .title = from, .body = text, .group = from, .prio = -1, .member = whose[0] ? whose : NULL, .src = INK_SRC_SYSTEM};
+    ink_notify_action_t act = {.label = "打开会话", .cap = "sms.thread"};
+    snprintf(act.label, sizeof act.label, "%s", TR("打开会话"));
+    char reply[64];
+    number_args(act.args, sizeof act.args, "peer", from);
+    number_args(reply, sizeof reply, "to", from);
+    ink_notify_t n = {.channel = "message", .title = from, .body = text, .group = from, .prio = -1, .member = whose[0] ? whose : NULL, .src = INK_SRC_SYSTEM,
+                      .actions = &act, .nactions = 1, .reply_cap = "sms.send", .reply_args = reply};
     ink_notify_post(&n, NULL);
 }
 
@@ -695,16 +737,25 @@ static void on_usb(void *ctx, const char *id, const ink_args_t *p) { /* exec.bg 
 /* ------------------------------------------------------------ start */
 
 static const ink_state_def_t ST_UNREAD = {.id = "notify.unread", .type = INK_ST_INT, .title = "没看的通知数"};
-static const ink_setting_def_t NOTIFY_SETTINGS[] = {
-    {.id = "notify.dnd", .title = TR_NOOP("勿扰"), .type = INK_SET_BOOL, .def = 0, .child_may_change = true},
+static ink_setting_def_t NOTIFY_SETTINGS[] = {
+    {.id = "notify.dnd", .title = TR_NOOP("勿扰"), .type = INK_SET_BOOL, .def = 0, .child_may_change = true, .per_member = true},
 };
 
 int ink_notify_init(void) {
     if (!NS.nch)
         for (size_t i = 0; i < sizeof BUILTIN / sizeof BUILTIN[0]; i++) NS.ch[NS.nch++] = &BUILTIN[i];
     NS.h_unread = ink_state_define(&ST_UNREAD);
+    NOTIFY_SETTINGS[0].per_member = false; /* Read the legacy unscoped value once. */
     if (ink_settings_define(NOTIFY_SETTINGS, 1) != 0 || ink_db_register(&INBOX) != 0 || notify_interrupt_init() != 0 || notify_caps_init() != 0) return -1;
     open_inbox();
+    int64_t legacy = ink_setting_get("notify.dnd");
+    NOTIFY_SETTINGS[0].per_member = true;
+    if (legacy) {
+        ink_receipt_t *migrated = osal_malloc(sizeof *migrated, OSAL_MEM_EXTERNAL);
+        if (!migrated) return -1;
+        ink_setting_set("notify.dnd", legacy, INK_SRC_SYSTEM, migrated); osal_free(migrated);
+    }
+    if (notify_model_init() != 0) return -1;
     if (ink_state_watch("member.current", on_member, NULL, INK_EXEC_BG) != 0) return -1;
     if (ink_cap_subscribe("call.", on_call, NULL, INK_EXEC_DIRECT) || ink_cap_subscribe("alarm.fired", on_alarm, NULL, INK_EXEC_DIRECT) ||
         ink_cap_subscribe("alarm.ended", on_alarm, NULL, INK_EXEC_DIRECT) || ink_cap_subscribe("alarm.missed", on_missed, NULL, INK_EXEC_BG) ||
