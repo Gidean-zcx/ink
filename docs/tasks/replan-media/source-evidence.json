@@ -1,0 +1,1175 @@
+{
+  "retrieved_on": "2026-11-12",
+  "baseline": "d09b79195e2dc57908e33219216048e529e082c6",
+  "evidence_scope": "Only selected ranges inspected, not every downloaded line; computed hashes are not binary/source equivalence or execution evidence. No upstream program executed.",
+  "sources": [
+    {
+      "id": "S01",
+      "repo": "chopper1026/mogo-e4p",
+      "commit": "864f2f9dc75980a67d2d6b67b17365020b7a50ce",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "main/lock/lock_screen.c",
+          "lines": 163,
+          "bytes": 10375,
+          "sha256": "ccf799860de2cb9eb39ce31cc23b7073a1e0361372baf67ae87429c14bafb16a",
+          "git_blob_sha1_computed": "c67ed6e925b42d4cd15804a23bbff610eed1959d",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/lock/lock_screen.c"
+        },
+        {
+          "path": "main/lock/lock_clock.c",
+          "lines": 105,
+          "bytes": 4583,
+          "sha256": "e0d90f7b7e2408e83921a90116ec55c8a020c846dd1d81c7373d8798e72fe2ea",
+          "git_blob_sha1_computed": "89ba630b4bfeba142343f0f70e8944c13d7347c5",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/lock/lock_clock.c"
+        },
+        {
+          "path": "main/lock/lock_calendar.c",
+          "lines": 37,
+          "bytes": 1540,
+          "sha256": "447c711818c84360963e869521e813c9e4617c6b042138d8f7ea2e9a7e913f67",
+          "git_blob_sha1_computed": "acc77050cb4a0fe999842aaeb4b3efaa47d0789c",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/lock/lock_calendar.c"
+        },
+        {
+          "path": "main/time/calendar.c",
+          "lines": 83,
+          "bytes": 5451,
+          "sha256": "bcf7019ba50373627cf1f6b67b8e72c78fb85ece7fe2b3ab12fe737e1909841b",
+          "git_blob_sha1_computed": "79a211952f13f6c33c9910390b67a20a10621cb0",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/time/calendar.c"
+        },
+        {
+          "path": "main/book/book_ticket.c",
+          "lines": 322,
+          "bytes": 14987,
+          "sha256": "471eeaf0148aceb83c12d05da56283e66d8621693388f2cf38fbc3e30054cf27",
+          "git_blob_sha1_computed": "19d79c564ce722c4a19b52c731cd66a55b501036",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/book/book_ticket.c"
+        },
+        {
+          "path": "main/book/book_lock_bookmark.c",
+          "lines": 343,
+          "bytes": 17639,
+          "sha256": "a0b8e91680b25140f3dcf53f8847a120da09756118c9fc9c636f3c4deb8d51ac",
+          "git_blob_sha1_computed": "a8235066d5827f048c8e62383316fefcf3a43b60",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/book/book_lock_bookmark.c"
+        },
+        {
+          "path": "main/book/book_lock_collage.c",
+          "lines": 666,
+          "bytes": 35173,
+          "sha256": "7b3e3367e667ebacb4669b3664c98f2f3ef4e277df9907b48aaef8c8452f1be2",
+          "git_blob_sha1_computed": "e8f2e095e57d93b562bf22dcda0d1d2bc41bd02d",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/book/book_lock_collage.c"
+        },
+        {
+          "path": "main/book/book_excerpt.c",
+          "lines": 261,
+          "bytes": 12066,
+          "sha256": "ae0420947213cae6d1121a2e8279522f66bfe09ef4b6504de41ec370290a3ff8",
+          "git_blob_sha1_computed": "40c85b2de569e6f308fe8aa54346bf3120139287",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/book/book_excerpt.c"
+        },
+        {
+          "path": "main/apps/app_dashboard.c",
+          "lines": 742,
+          "bytes": 40272,
+          "sha256": "f20a6e5b69e2d365b7f114e73959f6cd18c55bc6a644000701458ef623b5a29b",
+          "git_blob_sha1_computed": "b49d41e9752ba860d281242d52bc6f0d72311564",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/apps/app_dashboard.c"
+        },
+        {
+          "path": "main/apps/app_components.c",
+          "lines": 293,
+          "bytes": 16213,
+          "sha256": "ce7bac48bded2d6e75ebaea00805cff0066a9ce0e5c8e5fb65a1302d8fbd4ddc",
+          "git_blob_sha1_computed": "b32f50f767eccab992262d3a5a83eefe17bf0170",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/apps/app_components.c"
+        },
+        {
+          "path": "tools/generate_calendar_data.cjs",
+          "lines": 73,
+          "bytes": 5836,
+          "sha256": "0e2720092040da6d512ba404e7564b56c89fefe117f223f808ff631da06a6c96",
+          "git_blob_sha1_computed": "449b3a4292ce76b1939b663baef3a3a4e39daa8e",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/tools/generate_calendar_data.cjs"
+        },
+        {
+          "path": "docs/development/guides/LOCK_CLOCK.md",
+          "lines": 41,
+          "bytes": 6595,
+          "sha256": "512becb41b63476e4e70b728fe9b71f530e6db5ef03c542e30313a0d2cedbcca",
+          "git_blob_sha1_computed": "fedc87a29f36e3f0ef6a30ce1224851df7b1c5d7",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/docs/development/guides/LOCK_CLOCK.md"
+        },
+        {
+          "path": "docs/development/guides/CALENDAR.md",
+          "lines": 38,
+          "bytes": 7710,
+          "sha256": "d22e7ec7858f328533a6f170aa210e01f69374bffba32b5e1845db6c00591d6b",
+          "git_blob_sha1_computed": "faa1a90408dad175edb0881c7d66a64e997f2588",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/docs/development/guides/CALENDAR.md"
+        },
+        {
+          "path": "docs/development/guides/MINI_LIBRARY.md",
+          "lines": 50,
+          "bytes": 8982,
+          "sha256": "e60599081f8186d908741f803942d1571592054714a0b61ba13dafd0d597861d",
+          "git_blob_sha1_computed": "00460ced704016f5027f855d39c2d44e99bd8b0f",
+          "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/docs/development/guides/MINI_LIBRARY.md"
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "method": "fixed existing clone, read only",
+      "files": [
+        {
+          "path": "src/activities/apps/standby/StandbyActivity.cpp",
+          "lines": 633,
+          "bytes": 21323,
+          "sha256": "6bc18056a7356715f26e18a4392ce92f029d70ff557fcb12bb8218a364423b3e",
+          "git_blob_sha1_computed": "4d7c2b0bd46d745b108e4935d915361727510186",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/StandbyActivity.cpp"
+        },
+        {
+          "path": "src/activities/apps/standby/SloppyClockFace.cpp",
+          "lines": 79,
+          "bytes": 2494,
+          "sha256": "06ce350b4ab3b662e5b0172dd45890ec5841bd54593b44075e62fc8acb766546",
+          "git_blob_sha1_computed": "a5c5e00cf43231b8bbed1f0f6bd7e00a793e7775",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/SloppyClockFace.cpp"
+        },
+        {
+          "path": "src/activities/apps/standby/ChineseAlmanac.cpp",
+          "lines": 691,
+          "bytes": 21049,
+          "sha256": "e2ebaee5562100c43d61d004a4e7baa235ee56f55817cee6bfda7702fa84e5ca",
+          "git_blob_sha1_computed": "dfb69f00fc7084291d48f28cbd2c3e61eecaed74",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/ChineseAlmanac.cpp"
+        },
+        {
+          "path": "src/activities/apps/standby/ChineseCalendarFace.cpp",
+          "lines": 409,
+          "bytes": 15930,
+          "sha256": "bf7564e19c7bebb6ae38a6b878a880e6b5f960cfb1f4e60bbbe15dee5d0dc32c",
+          "git_blob_sha1_computed": "0a7bb2efaf9babe5733b8958f92640e26381e65c",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/ChineseCalendarFace.cpp"
+        },
+        {
+          "path": "src/activities/apps/gomoku/GomokuBoard.cpp",
+          "lines": 160,
+          "bytes": 5170,
+          "sha256": "da7b21b5c79e002941bed33fa48aec8832702814af905f1f89f82e4f1b22aadf",
+          "git_blob_sha1_computed": "928c514697c88066959eb3922c3cf2b40b9b9c4e",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuBoard.cpp"
+        },
+        {
+          "path": "src/activities/apps/gomoku/GomokuAI.cpp",
+          "lines": 510,
+          "bytes": 18014,
+          "sha256": "0a1336e7a94978f64018216cfbadda4f20bae799333be91b532ccf9801867eef",
+          "git_blob_sha1_computed": "bd132fff28baf6c169e187ebed489773e6dee0da",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuAI.cpp"
+        },
+        {
+          "path": "src/activities/apps/gomoku/GomokuGameActivity.cpp",
+          "lines": 829,
+          "bytes": 31968,
+          "sha256": "e473a2c121bd1f625814ff968ff71317e71f8dddf2e365e58038de5bd86c1efa",
+          "git_blob_sha1_computed": "96ce260ffce14dfbcbad210b15ed6fa2b1689c14",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuGameActivity.cpp"
+        },
+        {
+          "path": "src/activities/apps/gomoku/GomokuStore.cpp",
+          "lines": 166,
+          "bytes": 6068,
+          "sha256": "467d6e182424a6c794d2eeefb255e662186317c9ba13fd7194ba848a37d7f91a",
+          "git_blob_sha1_computed": "f0bace9879553d0fd9dc7aa6ec2c30d74fab78d8",
+          "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuStore.cpp"
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "repo": "uxjulia/CrossInk",
+      "commit": "9914146eeae7b46b300f475a16c32426fc02ec1f",
+      "method": "fixed existing clone, read only",
+      "files": [
+        {
+          "path": "src/components/themes/dashboard/DashboardTheme.cpp",
+          "lines": 607,
+          "bytes": 28506,
+          "sha256": "9d1296382fb67d0542eac6bec35f88666d95cd6427e16b3dc03819e7c44d68f4",
+          "git_blob_sha1_computed": "7ce1e68afc42eebfa2952427553720758114d14b",
+          "url": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/src/components/themes/dashboard/DashboardTheme.cpp"
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "repo": "CloudZao/Metalio-E-INK4-Plus",
+      "commit": "874538eb54f7f7eb593cd40cd1ba6dc8497226e7",
+      "method": "git show from fixed object, HEAD not moved",
+      "files": [
+        {
+          "path": "main/display/screen/standby_screen/standby_screen.cc",
+          "lines": 375,
+          "bytes": 11664,
+          "sha256": "ea9173859580835e24b6bd3d4429e76514757c84d97e41392f1ebd4f5401114f",
+          "git_blob_sha1_computed": "d12d7e05fc4c47d1f069467ef7b4fd408117bb3a",
+          "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/standby_screen/standby_screen.cc"
+        },
+        {
+          "path": "main/display/screen/standby_screen/standby_classic.cc",
+          "lines": 315,
+          "bytes": 15242,
+          "sha256": "43318e10798b9a276369bd89ade8b321dbddee822cbb5073896435921f7145e3",
+          "git_blob_sha1_computed": "31a5f29872f6519a974ff054ef1337730e0f9b23",
+          "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/standby_screen/standby_classic.cc"
+        },
+        {
+          "path": "main/display/screen/standby_screen/standby_wallpaper.cc",
+          "lines": 201,
+          "bytes": 6994,
+          "sha256": "001f2de986f91eb066cf10785f71b1b56c177ab3cb2941922023b0e5899f4d0e",
+          "git_blob_sha1_computed": "0e6d7c20ba02b6f05ac942179766894e3223462d",
+          "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/standby_screen/standby_wallpaper.cc"
+        },
+        {
+          "path": "main/display/screen/home_screen/home_screen.cc",
+          "lines": 524,
+          "bytes": 19913,
+          "sha256": "823cbc6f44934b0dda30d4a9c290d62257fda5af142d00c11dd7940aaf3fc7b0",
+          "git_blob_sha1_computed": "edd33003d062e411d34fe129fc12e7edf3a289dd",
+          "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/home_screen/home_screen.cc"
+        },
+        {
+          "path": "main/display/screen/home_screen/home_apps_slash.cc",
+          "lines": 238,
+          "bytes": 8953,
+          "sha256": "9c355a1edf1b77195b99c1123ce4bff88cc564f138976ea361e30a6f2373cdc4",
+          "git_blob_sha1_computed": "88a95c985cb100e488a6d1bcbb754314f22c3e6d",
+          "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/home_screen/home_apps_slash.cc"
+        },
+        {
+          "path": "main/boards/common/power_policy/README.md",
+          "lines": 239,
+          "bytes": 30144,
+          "sha256": "411c80d15afaa4c4be3a6700a4d0c4dd7f5c7a61919ef3b36f8aefd1655e06df",
+          "git_blob_sha1_computed": "c4deb45d80eefc26997f7db185455139aa28ace5",
+          "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/boards/common/power_policy/README.md"
+        },
+        {
+          "path": "main/display/screen/bluetooth_screen/bluetooth_uart.cc",
+          "lines": 541,
+          "bytes": 18714,
+          "sha256": "8e1ad2629b3c37ba2dfe96a676f0cdc178cd23e6de3689c47e302027d3eebc04",
+          "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/bluetooth_screen/bluetooth_uart.cc"
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "repo": "wegooo-cell/Metalio-S31-kiikoread",
+      "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "method": "fixed existing clone, read only",
+      "files": [
+        {
+          "path": "main/lock_screen.c",
+          "lines": 224,
+          "bytes": 12665,
+          "sha256": "7c12a1f44613acc9e48f2acd322bed3b5b873b5b5f2eb3313a3eacf33bf4a67c",
+          "git_blob_sha1_computed": "c55ef43c710c1c557f5f4d1a3ed08befaa0a009c",
+          "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/lock_screen.c"
+        },
+        {
+          "path": "main/book/book_ticket.c",
+          "lines": 400,
+          "bytes": 18600,
+          "sha256": "4ac6406d6be07ccff88f2c037671806f04b90bc98d8ee10c3bdcc9ad8685ede6",
+          "git_blob_sha1_computed": "be24566423ab71e647f61475da9ed6ed31d0b2e2",
+          "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_ticket.c"
+        },
+        {
+          "path": "main/book/book_lock_collage.c",
+          "lines": 741,
+          "bytes": 38859,
+          "sha256": "16b92dc8ebf71819bfccd45dc259e45c69ccb3420276426a4c698ffae1c3f05a",
+          "git_blob_sha1_computed": "b513b5ff3957c574d3d2e23c4f0b72417b16cfa5",
+          "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_lock_collage.c"
+        },
+        {
+          "path": "main/book/book_lock_bookmark.c",
+          "lines": 433,
+          "bytes": 21808,
+          "sha256": "fba00b3b838711dd5ddc8de89af3e813eb9403e9883a3016502e059e187215b2",
+          "git_blob_sha1_computed": "10dd0d85528ad7ba9043a7acee998df6d8cc16a8",
+          "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_lock_bookmark.c"
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "repo": "oouu00/Metalio-S31-kiikoread-xiugai",
+      "commit": "746ce316faf61ce5228eceee618eacb50a02a395",
+      "method": "fixed existing clone, read only",
+      "files": [
+        {
+          "path": "main/music/music_player.c",
+          "lines": 1628,
+          "bytes": 75838,
+          "sha256": "a98e87294803647031c656d290e7a70241e9783e01c29c976ebcabf318d70e85",
+          "git_blob_sha1_computed": "c6957c9e4ef1cd8c32474a769d6ba92d1f203613",
+          "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/music/music_player.c"
+        },
+        {
+          "path": "main/music/music_tags.c",
+          "lines": 559,
+          "bytes": 22963,
+          "sha256": "70e39c3be789f88567e14dcc7721cee1aca201b2c48dbef034b3464837192f0f",
+          "git_blob_sha1_computed": "0cd9627cf4e90863d4487f9b56fc3640883126ff",
+          "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/music/music_tags.c"
+        },
+        {
+          "path": "main/music/music_lyrics.c",
+          "lines": 316,
+          "bytes": 11796,
+          "sha256": "6f4ea6a6c25a9fb3c1f568848ca1c18bdb83bf40aa352c61c403ca3e880dc26d",
+          "git_blob_sha1_computed": "1bcf5577a1208b821d023b287f277ac60a95ed69",
+          "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/music/music_lyrics.c"
+        },
+        {
+          "path": "main/apps/app_music.c",
+          "lines": 1049,
+          "bytes": 52370,
+          "sha256": "99d6d50b59250b00a12a84f032314a9160ea12ae7054782a1fa5f9d6c69f0889",
+          "git_blob_sha1_computed": "eef32af96fb4c93e4e05b53947f85813a223cb89",
+          "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/apps/app_music.c"
+        },
+        {
+          "path": "components/bt_host/src/bt_host.c",
+          "lines": 2636,
+          "bytes": 148718,
+          "sha256": "0a9b8069b3b340a59eafd41962134bb6edfde6ef9236312bf3a4121cb8aa8b32",
+          "git_blob_sha1_computed": "0ee30dbd3489a6e4a5622826f45ecbac70faf9de",
+          "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/components/bt_host/src/bt_host.c"
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "repo": "NinthCode/MoJi",
+      "commit": "af02c8a6b83c51f24355a23bab0d3b2ef394caea",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README.md",
+          "lines": 48,
+          "bytes": 2937,
+          "sha256": "8e7ddd837f257fe9c53e655924327ede2f4003e7ce01ca2f44b2c1bbd870e429",
+          "git_blob_sha1_computed": "0bb01a207506c595d862bb86bf67ede615f5ec16",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/README.md"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "lines": 32,
+          "bytes": 2391,
+          "sha256": "a2e0243d9c2fdbb1dbf0d9e492616401b3f88adfcd94970366b2d6252b71a37d",
+          "git_blob_sha1_computed": "d98253820617db7d1fc9615e2946a3a5c072621c",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/docs/ARCHITECTURE.md"
+        },
+        {
+          "path": "docs/APP_DEVELOPMENT.md",
+          "lines": 83,
+          "bytes": 6221,
+          "sha256": "b20d0962f8b40713f391106b8d8444095e4821001ff104a9bbbc2ad7a0a7f3b3",
+          "git_blob_sha1_computed": "503b7ff40b08517b9e9fbfca2417a2f49adf45cd",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/docs/APP_DEVELOPMENT.md"
+        },
+        {
+          "path": "src/market_client.cpp",
+          "lines": 224,
+          "bytes": 8172,
+          "sha256": "d6331009956f3626ecdf19c000a41549f2c370d4bbe7ba29a520cdca86479cce",
+          "git_blob_sha1_computed": "ab51bf488f9291516201d1f7dd7a9e1d25317c5d",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/src/market_client.cpp"
+        },
+        {
+          "path": "src/app_registry.cpp",
+          "lines": 764,
+          "bytes": 28528,
+          "sha256": "0c9cd56cb1b63278e6bc7273196befb022a0ccac71a098123a5d8f015f1d3483",
+          "git_blob_sha1_computed": "2c1018601e28181efb579e34daf950a501f74936",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/src/app_registry.cpp"
+        },
+        {
+          "path": "boards/metalio-eink4/main_menu.cpp",
+          "lines": 346,
+          "bytes": 14973,
+          "sha256": "f1bb0a920d8d14a1ba9b7c1a6e83ba78ee80df7b31acf69824d1e7a54e1e61a3",
+          "git_blob_sha1_computed": "a855eb8b4f8fdb87caa8ea8c170b6ba053770531",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/boards/metalio-eink4/main_menu.cpp"
+        },
+        {
+          "path": "src/main.cpp",
+          "lines": 839,
+          "bytes": 28712,
+          "sha256": "4ff7da9ee240d2ebbca7bd5f2ee15242c7de85d28f59d8666b4c81e1cd997969",
+          "git_blob_sha1_computed": "bfcd5ae3f257fecc24d8743d5459002d2bab8975",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/src/main.cpp"
+        },
+        {
+          "path": "docs/DEPENDENCIES.md",
+          "lines": 25,
+          "bytes": 1329,
+          "sha256": "f6e8175704928f38d3514815b3e6452dc56da64b88e7a29f612f1e271a2a6c1b",
+          "git_blob_sha1_computed": "582bbfbf637d22d99d3b3da74e42b4d68b3d62ee",
+          "url": "https://github.com/NinthCode/MoJi/blob/af02c8a6b83c51f24355a23bab0d3b2ef394caea/docs/DEPENDENCIES.md"
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "repo": "bmorcelli/Launcher",
+      "commit": "2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README.md",
+          "lines": 518,
+          "bytes": 37333,
+          "sha256": "9d6b7656117360537ab9068c24a1f6da9378d293e15a34465981e6696e4bccbe",
+          "git_blob_sha1_computed": "9ae57793f817b4d557a93baa43c0cad555935b88",
+          "url": "https://github.com/bmorcelli/Launcher/blob/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/README.md"
+        },
+        {
+          "path": "src/main.cpp",
+          "lines": 806,
+          "bytes": 27962,
+          "sha256": "74aca02323fdfc51080b8f6783be2c2158129cc6c44c7c416c41c90e2e880c41",
+          "git_blob_sha1_computed": "fae78e9cdf4e543b42e3fce6acec4bcbf220c36c",
+          "url": "https://github.com/bmorcelli/Launcher/blob/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/src/main.cpp"
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "repo": "Changkai9888/CloudZao-Projects",
+      "commit": "90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8",
+      "method": "source ZIP only; only UTF-8 text extracted; no relink archive or firmware downloaded",
+      "archives": [
+        {
+          "name": "firmware-pocket-1.0.7-s3.20-source.zip",
+          "url": "https://raw.githubusercontent.com/Changkai9888/CloudZao-Projects/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/firmware-pocket/firmware-pocket-1.0.7-s3.20-source.zip",
+          "bytes": 1566126,
+          "sha256": "6b58c74b2f9c3b390735a82aaeb158cefe9e056819dd9176e4b52bd1b9b0b7ea",
+          "member_count": 142,
+          "files": [
+            {
+              "path": "firmware-pocket-1.0.7-s3.20-source/main/pocket/pocket_runtime.cc",
+              "lines": 1366,
+              "bytes": 75071,
+              "sha256": "c0b826718a2eaf32788d9bcf51cd94ad92811082d49d35624337c5d2092f97f8"
+            },
+            {
+              "path": "firmware-pocket-1.0.7-s3.20-source/main/pocket/pocket_handoff.cc",
+              "lines": 308,
+              "bytes": 16560,
+              "sha256": "70d8ffaeeb4c5de7fdb6eeb5bc2d4c082cc5854c95175585f8bf285bfaeed16c"
+            },
+            {
+              "path": "firmware-pocket-1.0.7-s3.20-source/main/pocket/pocket_standard.cc",
+              "lines": 267,
+              "bytes": 11935,
+              "sha256": "093dfd3dccd8dcdbc06d7b74e2dd4b196edf7e8af03a2b28f1de593199d38e53"
+            },
+            {
+              "path": "firmware-pocket-1.0.7-s3.20-source/main/ui/pocket_screen.cc",
+              "lines": 1791,
+              "bytes": 88823,
+              "sha256": "31e24164b621952b425e91a03b819ae4b7397b20acd3d7b50fac6ca445c7fee1"
+            },
+            {
+              "path": "firmware-pocket-1.0.7-s3.20-source/LICENSE",
+              "lines": 24,
+              "bytes": 1225,
+              "sha256": "e686f6387335ea8c0d97d68a86ec202e7adddab04a123480ad6fa450401dc482"
+            }
+          ],
+          "binary_member_names": [
+            "firmware-pocket-1.0.7-s3.20-source/main/assets/pocket_deepsleep.bin",
+            "firmware-pocket-1.0.7-s3.20-source/main/assets/pocket_legal.bin",
+            "firmware-pocket-1.0.7-s3.20-source/main/assets/pocket_lockscreen.bin"
+          ]
+        },
+        {
+          "name": "firmware-pocket-plus-1.0.7-plus.16-source.zip",
+          "url": "https://raw.githubusercontent.com/Changkai9888/CloudZao-Projects/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip",
+          "bytes": 2018663,
+          "sha256": "a197b62e49a55e12d5ec1e225d77670a51fb317ab8f9df0e460459deadb23bba",
+          "member_count": 203,
+          "files": [
+            {
+              "path": "firmware-pocket-plus-1.0.7-plus.16/main/pocket/pocket_runtime.cc",
+              "lines": 1327,
+              "bytes": 73299,
+              "sha256": "38eb1eb2c81ad2a3a63b11a0c2e60c48c58f4a592627eebae914f3672a81cb21"
+            },
+            {
+              "path": "firmware-pocket-plus-1.0.7-plus.16/main/pocket/pocket_handoff.cc",
+              "lines": 241,
+              "bytes": 12800,
+              "sha256": "aa9b946e30b7c62b96f829309be345f12be4bedf35a900594c0a4a246aeb4987"
+            },
+            {
+              "path": "firmware-pocket-plus-1.0.7-plus.16/main/pocket/pocket_standard.cc",
+              "lines": 267,
+              "bytes": 11935,
+              "sha256": "093dfd3dccd8dcdbc06d7b74e2dd4b196edf7e8af03a2b28f1de593199d38e53"
+            },
+            {
+              "path": "firmware-pocket-plus-1.0.7-plus.16/main/ui/pocket_screen.cc",
+              "lines": 1772,
+              "bytes": 88502,
+              "sha256": "7dca09366cc7612abb77c45f413c676528f0cd1d021d2c60c29e9f7b062fb806"
+            },
+            {
+              "path": "firmware-pocket-plus-1.0.7-plus.16/LICENSE",
+              "lines": 24,
+              "bytes": 1225,
+              "sha256": "e686f6387335ea8c0d97d68a86ec202e7adddab04a123480ad6fa450401dc482"
+            },
+            {
+              "path": "firmware-pocket-plus-1.0.7-plus.16/README.md",
+              "lines": 59,
+              "bytes": 7631,
+              "sha256": "c933c0d3d031727fa4750328700e748ed402adfd06f9a74bab0ccedd0f3ac351"
+            },
+            {
+              "path": "firmware-pocket-plus-1.0.7-plus.16/partitions.csv",
+              "lines": 6,
+              "bytes": 205,
+              "sha256": "c8e03aff24c4a1d0cc55e5c73e73a41db7e26d4b982dfee8c40f0ffb39752a97"
+            }
+          ],
+          "binary_member_names": [
+            "firmware-pocket-plus-1.0.7-plus.16/main/assets/pocket_deepsleep.bin",
+            "firmware-pocket-plus-1.0.7-plus.16/main/assets/pocket_legal.bin",
+            "firmware-pocket-plus-1.0.7-plus.16/main/assets/pocket_lockscreen.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "repo": "AlayaElla/MetalioClaw4-AgentUI",
+      "commit": "172ec530ff65e11521585fe3b8611daa20a78aa4",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "external_apps/examples/radio/main/radio.cc",
+          "lines": 617,
+          "bytes": 27627,
+          "sha256": "751f725a488cf9dbf5b5969181f7380df0fefd7bab753d8505d665e10cc91819",
+          "git_blob_sha1_computed": "4208fd9d2e0884d2efdb9b715c9fab38d86f8ac5",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/external_apps/examples/radio/main/radio.cc"
+        },
+        {
+          "path": "external_apps/examples/radio/README.md",
+          "lines": 28,
+          "bytes": 975,
+          "sha256": "b35d91d38463df9230bb0f3b09509c3d9aaa0b345dd8badc5393cd405ad5a17c",
+          "git_blob_sha1_computed": "67044917266d8696b5969885eb422121e4af456f",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/external_apps/examples/radio/README.md"
+        },
+        {
+          "path": "external_apps/examples/voice_recorder/main/voice_recorder.cc",
+          "lines": 247,
+          "bytes": 12114,
+          "sha256": "1b3214871b42475db0008717d515938fec0035c9fd9dc96cf8e8d2c24bcdd610",
+          "git_blob_sha1_computed": "31e19ddf5d362db9829d13db58760be15f706d6e",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/external_apps/examples/voice_recorder/main/voice_recorder.cc"
+        },
+        {
+          "path": "external_apps/examples/voice_recorder/README.md",
+          "lines": 19,
+          "bytes": 1418,
+          "sha256": "d2ac26adf9b4ba5cb1eb7d2b23acb9c011dceeb23da3229c7c7543e3ce749eb2",
+          "git_blob_sha1_computed": "22a00ec206bc3b8a7d39bddaff8d6bbf135eca3a",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/external_apps/examples/voice_recorder/README.md"
+        },
+        {
+          "path": "external_apps/examples/pet_demo/main/pet_demo.cc",
+          "lines": 351,
+          "bytes": 14229,
+          "sha256": "d3c187f54adaf2bcb5e01fa5900626770cf13766d925e53f51b1f832f858867b",
+          "git_blob_sha1_computed": "24cc8c0cecdc5671a8c8d43caab54b0ed1f7b474",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/external_apps/examples/pet_demo/main/pet_demo.cc"
+        },
+        {
+          "path": "external_apps/sdk/metalio_app_api.h",
+          "lines": 757,
+          "bytes": 28958,
+          "sha256": "a0c1f6ea8877450d8af2123072117cd46c70947c96eafc14bc80826cebf7ec1a",
+          "git_blob_sha1_computed": "4c8c6a56030da6dc9fe25183eda6daf5cd2a09a5",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/external_apps/sdk/metalio_app_api.h"
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "repo": "espressif/esp-adf",
+      "commit": "74e6be93f007faa411dab985a2b7613725506790",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "examples/player/pipeline_http_mp3/main/play_http_mp3_example.c",
+          "lines": 174,
+          "bytes": 6767,
+          "sha256": "489bc1055fbdcbfe572ac9efd6c324417ea0b1b622297705f0012cb75dbf0e38",
+          "git_blob_sha1_computed": "e359fcf6e2263697d1a56e2abbb6b84357bbf105",
+          "url": "https://github.com/espressif/esp-adf/blob/74e6be93f007faa411dab985a2b7613725506790/examples/player/pipeline_http_mp3/main/play_http_mp3_example.c"
+        },
+        {
+          "path": "examples/player/pipeline_sdcard_mp3_control/main/play_sdcard_mp3_control_example.c",
+          "lines": 275,
+          "bytes": 12085,
+          "sha256": "db3ee48fa435037bc1103dcecc0dcc93c95e14a787e503e24b4da94598006a87",
+          "git_blob_sha1_computed": "43f4b2fbdc662469bbe2f05afb9c411d6dda3d54",
+          "url": "https://github.com/espressif/esp-adf/blob/74e6be93f007faa411dab985a2b7613725506790/examples/player/pipeline_sdcard_mp3_control/main/play_sdcard_mp3_control_example.c"
+        },
+        {
+          "path": "examples/display/music_player/main/lv_demo_music.c",
+          "lines": 252,
+          "bytes": 6205,
+          "sha256": "a9ae037aa7c20ee6662ff58a8e4fed0fe41f67ab1a39fc7dd608481f0bb2fa46",
+          "git_blob_sha1_computed": "0cbaaf4a1882bc349096bccf16e3b0d9e2e75d43",
+          "url": "https://github.com/espressif/esp-adf/blob/74e6be93f007faa411dab985a2b7613725506790/examples/display/music_player/main/lv_demo_music.c"
+        },
+        {
+          "path": "examples/display/music_player/README_CN.md",
+          "lines": 121,
+          "bytes": 5231,
+          "sha256": "eaea8ebb65530b57c388c0763ea08ef0463c89a772feae02d6fab143a9ac5396",
+          "git_blob_sha1_computed": "44c6d3bea2f65f6e125ea7148fdf4d74b42a8415",
+          "url": "https://github.com/espressif/esp-adf/blob/74e6be93f007faa411dab985a2b7613725506790/examples/display/music_player/README_CN.md"
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "repo": "espressif/esp-adf",
+      "commit": "12ea304254d8a1efb1d93afa78e82ab3887684c1",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README_CN.md",
+          "lines": 59,
+          "bytes": 2758,
+          "sha256": "92ffca04d5e48929ae529cfa7ccf038281a91648b809363e9074a87e3c559a97",
+          "git_blob_sha1_computed": "8cb9a26c87c4d99e1a892444e4937d302a1cc274",
+          "url": "https://github.com/espressif/esp-adf/blob/12ea304254d8a1efb1d93afa78e82ab3887684c1/README_CN.md"
+        },
+        {
+          "path": "components/esp_audio_player_service/README_CN.md",
+          "lines": 110,
+          "bytes": 6457,
+          "sha256": "ce34be2365089f5e9bc00e64b0b0af7ff54c5cc8f01b82783231f483d32ba3b8",
+          "git_blob_sha1_computed": "05cb092181b46934130c7e2e545f4ffa0e7ae214",
+          "url": "https://github.com/espressif/esp-adf/blob/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_audio_player_service/README_CN.md"
+        },
+        {
+          "path": "components/esp_player_service/include/esp_player_service_playback.h",
+          "lines": 618,
+          "bytes": 25035,
+          "sha256": "61071c9df003e62428ca358fbe8d12374809c272023393f7620d95fd64905ea0",
+          "git_blob_sha1_computed": "663321ce32978218c1719aa0476276280716f94a",
+          "url": "https://github.com/espressif/esp-adf/blob/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_player_service/include/esp_player_service_playback.h"
+        },
+        {
+          "path": "components/esp_player_service/src/core/esp_player_service_ctrl.c",
+          "lines": 413,
+          "bytes": 16393,
+          "sha256": "91f9b3d838e26e97480667d7dc432a4c99a739a4647aa6d73528dcafdfeca1f5",
+          "git_blob_sha1_computed": "e7b9c94c2986b7450e11a41acafb44c1d7f3488b",
+          "url": "https://github.com/espressif/esp-adf/blob/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_player_service/src/core/esp_player_service_ctrl.c"
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "repo": "espressif/esp-brookesia",
+      "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README_CN.md",
+          "lines": 187,
+          "bytes": 19478,
+          "sha256": "442d0fc221673f6bc74f91dc0f87e0bf24cf0319fb8b4c1ddbd2fe8ff9b4b178",
+          "git_blob_sha1_computed": "d2256eb7c62bc77300a0d61193417decdd5064b4",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/README_CN.md"
+        },
+        {
+          "path": "service/media/brookesia_service_audio/src/audio_decoder.cpp",
+          "lines": 987,
+          "bytes": 30845,
+          "sha256": "be4e9c8bf78b0710c380821a81aff889c7cee18ffe03ac29cd10e09a5aa41390",
+          "git_blob_sha1_computed": "0efb7956ee635cb2eef2cc259df91fccf0a9f98a",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/src/audio_decoder.cpp"
+        },
+        {
+          "path": "service/media/brookesia_service_audio/src/audio_playback_control.cpp",
+          "lines": 401,
+          "bytes": 13306,
+          "sha256": "e2c01b133f4e7990c9d465b6399bce2a8a301758c7661ffd43c884999b899d20",
+          "git_blob_sha1_computed": "c8456ca1df7ca5932a726d64ef28226b3ab0d3ae",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/src/audio_playback_control.cpp"
+        },
+        {
+          "path": "service/media/brookesia_service_audio/src/service_audio.cpp",
+          "lines": 27,
+          "bytes": 896,
+          "sha256": "66d5f48cc93131d7fced359b70ed3e0f20f3c5dcbdd892673ba31929ae8a42f8",
+          "git_blob_sha1_computed": "5b46e134b9feddd577b259e1280bc96c1428ae4a",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/src/service_audio.cpp"
+        },
+        {
+          "path": "service/media/brookesia_service_audio/README_CN.md",
+          "lines": 26,
+          "bytes": 1177,
+          "sha256": "739b182f93241777436f8e778c5704df6a011be7a160fced39d74486bcb0b154",
+          "git_blob_sha1_computed": "1b8eb178e0761592efeae26e6d39828f62275aab",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/README_CN.md"
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "repo": "schreibfaul1/ESP32-audioI2S",
+      "commit": "56f27918a8e6d10d56a19ddf0fdd307cdeee8cde",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README.md",
+          "lines": 88,
+          "bytes": 3903,
+          "sha256": "ce7a1edc7774fd76d4ed1485072368cc6bb60b46dc63bce504ca8cc2d93a6746",
+          "git_blob_sha1_computed": "4218624befc92a53ba5782965e1d50b4dea2efd4",
+          "url": "https://github.com/schreibfaul1/ESP32-audioI2S/blob/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/README.md"
+        },
+        {
+          "path": "src/Audio.cpp",
+          "lines": 7957,
+          "bytes": 420695,
+          "sha256": "47d8820aee8274e3a4e9133cdfd817f832e6daafd1ac2d4c2638d806898be34d",
+          "git_blob_sha1_computed": "4e0f2d4705c828e6a4dbf23dc33739ae7af70ec2",
+          "url": "https://github.com/schreibfaul1/ESP32-audioI2S/blob/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/src/Audio.cpp"
+        },
+        {
+          "path": "src/Audio.h",
+          "lines": 860,
+          "bytes": 46849,
+          "sha256": "0f08a7af5b22c2e1ad342ec58d99508d5dcd72eb392e531fc6f6d1fd3d651450",
+          "git_blob_sha1_computed": "2fa4887c3ee53b5dda61111cb7597aeb706a24df",
+          "url": "https://github.com/schreibfaul1/ESP32-audioI2S/blob/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/src/Audio.h"
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "repo": "FFmpeg/FFmpeg",
+      "commit": "02970f067cf06c5c23209d521575b1024898bb29",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "libavformat/mov.c",
+          "lines": 13343,
+          "bytes": 457212,
+          "sha256": "38e13dfaa98a04b5963674364ff8aad05a1df6e59960fb82606fb541cb0d226f",
+          "git_blob_sha1_computed": "0c2f592e7f3915cb83c601972983a00e3225ebfb",
+          "url": "https://github.com/FFmpeg/FFmpeg/blob/02970f067cf06c5c23209d521575b1024898bb29/libavformat/mov.c"
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "repo": "ducalex/retro-go",
+      "commit": "4ced120669750ca7228fd0414211430c1d923166",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README.md",
+          "lines": 196,
+          "bytes": 9854,
+          "sha256": "5fce4650d19467aaac7e230114092166179a953bb0ee7d0a9369041b45111127",
+          "git_blob_sha1_computed": "fa497b9a30cea8157145f0a0fd965936c392b212",
+          "url": "https://github.com/ducalex/retro-go/blob/4ced120669750ca7228fd0414211430c1d923166/README.md"
+        },
+        {
+          "path": "retro-core/components/gnuboy/gnuboy.c",
+          "lines": 912,
+          "bytes": 20044,
+          "sha256": "5d9a3f59ad7d7710d3271ad0ad3c548018d7e7584bb30f1af1c71a9c3e130c43",
+          "git_blob_sha1_computed": "5e9bc73aa7f98623c06d8595b3bfa1a5c663320e",
+          "url": "https://github.com/ducalex/retro-go/blob/4ced120669750ca7228fd0414211430c1d923166/retro-core/components/gnuboy/gnuboy.c"
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "repo": "deltabeard/Peanut-GB",
+      "commit": "d0bcca771c83a2638c93a9ae61f3d51f226dc905",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README.md",
+          "lines": 205,
+          "bytes": 8202,
+          "sha256": "f2ba4830e482d50dd1057a200390d12e3a58043b8cef08444a41b0b027872c7b",
+          "git_blob_sha1_computed": "e75be471160518b355deb2b8785b2a2abc725050",
+          "url": "https://github.com/deltabeard/Peanut-GB/blob/d0bcca771c83a2638c93a9ae61f3d51f226dc905/README.md"
+        },
+        {
+          "path": "peanut_gb.h",
+          "lines": 4045,
+          "bytes": 102999,
+          "sha256": "cf7777068492474d084f7dca0b00724d4dcdeab7f9a6c91a5d3a82e60d1cf728",
+          "git_blob_sha1_computed": "a4ab182391b68389bfa9f04d2e714baa37d8f960",
+          "url": "https://github.com/deltabeard/Peanut-GB/blob/d0bcca771c83a2638c93a9ae61f3d51f226dc905/peanut_gb.h"
+        }
+      ]
+    },
+    {
+      "id": "S18",
+      "repo": "tiberiusbrown/Ardens",
+      "commit": "e811cc6be72c8a802bd3265a84daf4165c177b93",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "README.md",
+          "lines": 328,
+          "bytes": 14376,
+          "sha256": "2fa4371c278aa51678a919ed92a3db69d4966aaa5ea278fcf9db94b60cdb5d62",
+          "git_blob_sha1_computed": "89ebad467dcd7053b4e35e28d763023fdb32499d",
+          "url": "https://github.com/tiberiusbrown/Ardens/blob/e811cc6be72c8a802bd3265a84daf4165c177b93/README.md"
+        },
+        {
+          "path": "src/absim.hpp",
+          "lines": 1701,
+          "bytes": 52312,
+          "sha256": "56784ba3a30bb5d3d936be02119137171688027b5484e702dfd0ff03354cdccf",
+          "git_blob_sha1_computed": "caeb22c8a73ce989d464bb8d0a30052cf4c99dcc",
+          "url": "https://github.com/tiberiusbrown/Ardens/blob/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim.hpp"
+        },
+        {
+          "path": "src/absim_arduboy.cpp",
+          "lines": 1723,
+          "bytes": 52217,
+          "sha256": "179cfe05df3e933516718ce7e2dc5888686ea687ebe9914219389e7e42edee1e",
+          "git_blob_sha1_computed": "b0957b31f2a5f28fc090bb8fa2aa32d062492cc2",
+          "url": "https://github.com/tiberiusbrown/Ardens/blob/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim_arduboy.cpp"
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "repo": "patorjk/JavaScript-Snake",
+      "commit": "3243086c0badb4b4c6bedfe6d95d5a52a7caaa88",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "src/js/snake.js",
+          "lines": 1606,
+          "bytes": 52983,
+          "sha256": "c666784da7011050f29df91519e68e81e2ef338fdd7eb5e8fa5f37525a280edd",
+          "git_blob_sha1_computed": "10d1123866965c8ea6a27e8b7a3e45d092649563",
+          "url": "https://github.com/patorjk/JavaScript-Snake/blob/3243086c0badb4b4c6bedfe6d95d5a52a7caaa88/src/js/snake.js"
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "repo": "taniarascia/memory",
+      "commit": "4c991ddb6b7db2f72945b09d9c8e82af6356482b",
+      "method": "fixed raw text",
+      "files": [
+        {
+          "path": "js/script.original.js",
+          "lines": 138,
+          "bytes": 2763,
+          "sha256": "88572d9d1736ebda498309ddd25553d17c899e1595dfed30003477b2c02d632f",
+          "git_blob_sha1_computed": "d70a8827ed5bef773869619feb1e3358a06efe45",
+          "url": "https://github.com/taniarascia/memory/blob/4c991ddb6b7db2f72945b09d9c8e82af6356482b/js/script.original.js"
+        }
+      ]
+    },
+    {
+      "id": "S21",
+      "repo": "DaisonChun/crosslink",
+      "commit": "107e172994ad2086c414e159795515175681be71",
+      "method": "fixed existing clone, read only; not proof of community Pixel/2 ancestry",
+      "files": [
+        {
+          "path": "src/activities/boot_sleep/SleepActivity.cpp",
+          "lines": 298,
+          "bytes": 10852,
+          "sha256": "8b7ca7f6ba3b45992e90dc217a42440ba3cea14416670ef855814bb62ecaf73c",
+          "git_blob_sha1_computed": "06efdef7acb32b27b1ead018fb3ac527935185c9",
+          "url": "https://github.com/DaisonChun/crosslink/blob/107e172994ad2086c414e159795515175681be71/src/activities/boot_sleep/SleepActivity.cpp"
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "repo": "6tail/lunar-javascript",
+      "commit": "5c92e62c904ba5cc0b62f032796aeef433702268",
+      "method": "fixed existing clone, read only; not claimed byte-identical to Mogo vendored version",
+      "files": [
+        {
+          "path": "lunar.js",
+          "lines": 8539,
+          "bytes": 436585,
+          "sha256": "84f0105dd1c0be1c39990a0f38084f857901b1368c787c70b5687c8afd02298a",
+          "git_blob_sha1_computed": "cf2e35db854e1766ea4d215f0fce552f1f3b13f8",
+          "url": "https://github.com/6tail/lunar-javascript/blob/5c92e62c904ba5cc0b62f032796aeef433702268/lunar.js"
+        }
+      ]
+    }
+  ],
+  "moji_launcher_lineage": {
+    "moji_commit": "af02c8a6b83c51f24355a23bab0d3b2ef394caea",
+    "launcher_commit": "2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba",
+    "identical_paths": [
+      ".clang-format",
+      ".gitattributes",
+      ".github/FUNDING.yml",
+      ".github/workflows/cache_maker.yml",
+      ".github/workflows/deploy.yml",
+      "LICENSE",
+      "Launcher.gif",
+      "Launcher_anim.webp",
+      "M5Launcher.png",
+      "New Launcher.jpg",
+      "boards/CYD-2432S028/CYD-2432S022C.ini",
+      "boards/CYD-2432S028/CYD-2432S024R.ini",
+      "boards/CYD-2432S028/CYD-2432S028.ini",
+      "boards/CYD-2432S028/CYD-2432S032C.ini",
+      "boards/CYD-2432S028/CYD-2432S032R.ini",
+      "boards/CYD-2432S028/CYD-2432W328C.ini",
+      "boards/CYD-2432S028/CYD-2432W328R.ini",
+      "boards/CYD-2432S028/CYD-3248S035C.ini",
+      "boards/CYD-2432S028/CYD-3248S035R.ini",
+      "boards/CYD-2432S028/CYD-3248W535C.ini",
+      "boards/CYD-2432S028/CYD-4827S043R.ini",
+      "boards/CYD-2432S028/CYD-8048S043C.ini",
+      "boards/CYD-2432S028/CYD-8048W550C.ini",
+      "boards/CYD-2432S028/ESP32-E32R40T.ini",
+      "boards/CYD-2432S028/custom_flags.md",
+      "boards/CYD-2432S028/custom_flags.py",
+      "boards/CYD-2432S028/interface.cpp",
+      "boards/CYD-2432S028/platformio.ini",
+      "boards/CYD-2432S028/source/source.md",
+      "boards/ES3C28P/connections.md",
+      "boards/ES3C28P/interface.cpp",
+      "boards/ES3C28P/platformio.ini",
+      "boards/ESP-General/interface.cpp",
+      "boards/ESP-General/platformio.ini",
+      "boards/NEW_BOARD_GUIDE.md",
+      "boards/NM-CYD-C5/interface.cpp",
+      "boards/NM-CYD-C5/platformio.ini",
+      "boards/README.md",
+      "boards/_New-Device-Model/connections.md",
+      "boards/_jsonfiles/esp32.h",
+      "boards/_jsonfiles/esp32.json",
+      "boards/_jsonfiles/esp32c3.h",
+      "boards/_jsonfiles/esp32c3.json",
+      "boards/_jsonfiles/esp32c5.h",
+      "boards/_jsonfiles/esp32c5.json",
+      "boards/_jsonfiles/esp32c6.h",
+      "boards/_jsonfiles/esp32c6.json",
+      "boards/_jsonfiles/esp32p4.h",
+      "boards/_jsonfiles/esp32p4.json",
+      "boards/_jsonfiles/esp32p4_es.json",
+      "boards/_jsonfiles/esp32s2.h",
+      "boards/_jsonfiles/esp32s2.json",
+      "boards/_jsonfiles/esp32s3.h",
+      "boards/_jsonfiles/esp32s3.json",
+      "boards/_jsonfiles/pins_arduino.h",
+      "boards/_jsonfiles/variant.cpp",
+      "boards/elecrow-esp32p4-7in/interface.cpp",
+      "boards/elecrow-esp32p4-7in/platformio.ini",
+      "boards/elecrow-esp32s3-5in/interface.cpp",
+      "boards/elecrow-esp32s3-5in/platformio.ini",
+      "boards/elecrow/interface.cpp",
+      "boards/elecrow/platformio.ini",
+      "boards/lilygo-t-deck-pro/platformio.ini",
+      "boards/lilygo-t-deck/platformio.ini",
+      "boards/lilygo-t-display-c5/connections.md",
+      "boards/lilygo-t-display-c5/platformio.ini",
+      "boards/lilygo-t-display-p4/platformio.ini",
+      "boards/lilygo-t-display-s3-amoled-plus/platformio.ini",
+      "boards/lilygo-t-display-s3-amoled/interface.cpp",
+      "boards/lilygo-t-display-s3-amoled/platformio.ini",
+      "boards/lilygo-t-display-s3-pro/platformio.ini",
+      "boards/lilygo-t-display-s3-touch/interface.cpp",
+      "boards/lilygo-t-display-s3-touch/platformio.ini",
+      "boards/lilygo-t-embed-cc1101/interface.cpp",
+      "boards/lilygo-t-embed-cc1101/platformio.ini",
+      "boards/lilygo-t-hmi/connections.md",
+      "boards/lilygo-t-hmi/interface.cpp",
+      "boards/lilygo-t-hmi/platformio.ini",
+      "boards/lilygo-t-lora-pager/platformio.ini",
+      "boards/lilygo-t-watch-s3/platformio.ini",
+      "boards/lilygo-t-watch-ultra/platformio.ini",
+      "boards/lilygo-t5-epaper-s3-pro/platformio.ini",
+      "boards/m5stack-cardputer/CardputerADV.md",
+      "boards/m5stack-core2/platformio.ini",
+      "boards/m5stack-cores3/platformio.ini",
+      "boards/m5stack-cplus2/interface.cpp",
+      "boards/m5stack-dinmeter/interface.cpp",
+      "boards/m5stack-dinmeter/platformio.ini",
+      "boards/m5stack-paper-mono/interface.cpp.bkp",
+      "boards/m5stack-paper-mono/platformio.ini.bkp",
+      "boards/m5stack-tab5/platformio.ini",
+      "boards/marauder-mini/interface.cpp",
+      "boards/marauder-mini/platformio.ini",
+      "boards/marauder-v4og/interface.cpp",
+      "boards/marauder-v4og/platformio.ini",
+      "boards/marauder-v8/platformio.ini",
+      "boards/pancake/platformio.ini",
+      "boards/phantom/interface.cpp",
+      "boards/phantom/platformio.ini",
+      "boards/reaper/interface.cpp",
+      "boards/reaper/platformio.ini",
+      "boards/seeedstudio-reterminal-d1001/connections.md",
+      "boards/seeedstudio-reterminal-d1001/gsl3670_fw_data.h",
+      "boards/seeedstudio-reterminal-d1001/gsl3670_touch.cpp",
+      "boards/seeedstudio-reterminal-d1001/gsl3670_touch.h",
+      "boards/seeedstudio-reterminal-d1001/gsl_point_id.cpp",
+      "boards/seeedstudio-reterminal-d1001/gsl_point_id.h",
+      "boards/seeedstudio-reterminal-d1001/interface.cpp",
+      "boards/seeedstudio-reterminal-d1001/platformio.ini",
+      "boards/seeedstudio-reterminal-e1001/connections.md",
+      "boards/seeedstudio-reterminal-e1001/interface.cpp",
+      "boards/seeedstudio-reterminal-e1001/platformio.ini",
+      "boards/seeedstudio-reterminal-sticky/platformio.ini",
+      "boards/seeedstudio-sensecap/connections.md",
+      "boards/seeedstudio-sensecap/interface.cpp",
+      "boards/seeedstudio-sensecap/platformio.ini",
+      "boards/seeedstudio-sensecap/sensecap_display_bus.h",
+      "boards/smoochiee-board/platformio.ini",
+      "boards/waveshare-esp32-s3-lcd-147/interface.cpp",
+      "boards/waveshare-esp32-s3-lcd-147/platformio.ini",
+      "boards/xteink-x3-x4/platformio.ini",
+      "boards/xteink-x4pro/interface.cpp",
+      "boards/xteink-x4pro/platformio.ini",
+      "boards/xueersi-xiaomiao/interface.cpp",
+      "boards/xueersi-xiaomiao/platformio.ini",
+      "include/interface.h",
+      "lib/AXP192/AXP192.cpp",
+      "lib/AXP192/AXP192.h",
+      "lib/CYD-touch/CYD28_TouchscreenC.cpp",
+      "lib/CYD-touch/CYD28_TouchscreenC.h",
+      "lib/CYD-touch/CYD28_TouchscreenR.cpp",
+      "lib/CYD-touch/CYD28_TouchscreenR.h",
+      "lib/Keyboard/Keyboard.cpp",
+      "lib/Keyboard/Keyboard.h",
+      "lib/Keyboard/Keyboard_def.h",
+      "lib/README",
+      "lib/bq27220/bq27220.cpp",
+      "lib/bq27220/bq27220.h",
+      "lib/xteink_panel/xteink_panel_probe.cpp",
+      "lib/xteink_panel/xteink_panel_probe.h",
+      "native/platformio.ini",
+      "native/sources/Arduino.h",
+      "native/sources/FFat.h",
+      "native/sources/FS.h",
+      "native/sources/LittleFS.h",
+      "native/sources/Print.h",
+      "native/sources/SD.h",
+      "native/sources/SPI.h",
+      "native/sources/SPIFFS.h",
+      "native/sources/Stream.h",
+      "native/sources/WString.h",
+      "native/sources/driver/gpio.h",
+      "native/sources/esp_app_format.h",
+      "native/sources/esp_image_format.h",
+      "native/sources/esp_log.h",
+      "native/sources/esp_mac.h",
+      "native/sources/esp_ota_ops.h",
+      "native/sources/esp_partition.h",
+      "native/sources/esp_random.h",
+      "native/sources/esp_timer.h",
+      "native/sources/esp_wifi_types.h",
+      "native/sources/freertos/FreeRTOS.h",
+      "native/sources/freertos/task.h",
+      "native/sources/nvs.h",
+      "native/sources/nvs_flash.h",
+      "native/sources/pins_arduino.h",
+      "native/src/main.cpp",
+      "src/backup_manager.cpp",
+      "src/backup_manager.h",
+      "src/ble_bonds.h",
+      "src/cardkb2.cpp",
+      "src/cardkb2.h",
+      "src/hal/device.h",
+      "src/hal/inputs/encoder.cpp",
+      "src/hal/inputs/encoder.h",
+      "src/hal/inputs/keyboard.cpp",
+      "src/hal/inputs/keyboard.h",
+      "src/hal/inputs/touch.h",
+      "src/hal/power/gauge.cpp",
+      "src/hal/power/gauge.h",
+      "src/idf/idf_http_client.h",
+      "src/idf/idf_update.cpp",
+      "src/idf/idf_update.h",
+      "src/idf/idf_web_server.cpp",
+      "src/idf/idf_web_server.h",
+      "src/idf/idf_wifi.cpp",
+      "src/idf/idf_wifi.h",
+      "src/idf/idf_wifi_at.cpp",
+      "src/idf/idf_wifi_at.h",
+      "src/idf/launcher_platform.cpp",
+      "src/idf/launcher_platform.h",
+      "src/littlefs_patch.cpp",
+      "src/littlefs_patch.h",
+      "src/massStorage.h",
+      "src/partitioner.h",
+      "src/powerSave.cpp",
+      "src/powerSave.h",
+      "src/ram_profile.cpp",
+      "src/ram_profile.h",
+      "src/serial_console.h",
+      "src/settings.h",
+      "src/utils.h",
+      "src/webInterface.h",
+      "src/wifi_crypto.cpp",
+      "src/wifi_crypto.h",
+      "support_files/clang_format.py",
+      "support_files/custom_16Mb.csv",
+      "support_files/custom_16Mb_p4.csv",
+      "support_files/custom_4Mb.csv",
+      "support_files/custom_4Mb_noOta.csv",
+      "support_files/custom_4Mbcore.csv",
+      "support_files/custom_8Mb.csv",
+      "support_files/custom_8Mb2.csv",
+      "support_files/custom_headless.csv",
+      "support_files/enable_lto.py",
+      "support_files/patch_hosted_sdio_freq.py",
+      "support_files/upload_patch.py",
+      "webUi/backend/nvs_mock.json",
+      "webUi/backend/package.json",
+      "webUi/backend/partitions_mock.json"
+    ]
+  },
+  "vendor_head_before": "690a023c66862af103a3187464373ee7c5efcd14",
+  "vendor_head_after": "690a023c66862af103a3187464373ee7c5efcd14",
+  "local_files_verified_against_git_objects": 27
+}
