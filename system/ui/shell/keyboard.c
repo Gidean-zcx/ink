@@ -359,8 +359,9 @@ static lv_obj_t *make_board(int height) {
 static void build(int kind) {
     K.revision++;
     K.layout_revision++;
-    if (K.root) { ink_ui_overlay_remove(&OVERLAY); lv_obj_delete(K.root); }
-    K.root = lv_obj_create(lv_layer_sys());
+    bool replacing = K.root != NULL;
+    if (replacing) lv_obj_clean(K.root);
+    else K.root = lv_obj_create(lv_layer_sys());
     lv_obj_remove_style_all(K.root);
     lv_obj_remove_flag(K.root, LV_OBJ_FLAG_SCROLLABLE);
     lv_area_t area;
@@ -496,7 +497,7 @@ static void build(int kind) {
     lv_obj_add_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
     ink_ui_capture_touch(K.root);
     ink_ui_overlay_add(&OVERLAY, K.root);
-    ink_ui_hint_obj(K.root, INK_REFRESH_FLASH_UI);
+    ink_ui_hint_obj(K.root, replacing ? INK_REFRESH_FAST : INK_REFRESH_FLASH_UI);
 }
 
 /* The voice panel over the keys, or the keys back: only the fixed area changes while it lasts. */
@@ -549,7 +550,8 @@ static void sync(void) { /* UI task */
                type == INK_TEXT_PLAIN && !ink_text_english() && ink_setting_get("text.nine_key") ? 4 : type == INK_TEXT_PASSWORD ? 5 : 1;
     bool plain = type == INK_TEXT_PLAIN, english = ink_text_english();
     bool password = type == INK_TEXT_PASSWORD;
-    bool rebuild = !K.root || K.built_for != kind || K.plain != plain || K.english != english || K.password != password;
+    bool language_changed = K.english != english;
+    bool rebuild = !K.root || K.built_for != kind || K.plain != plain || K.password != password;
     K.plain = plain; K.english = english; K.password = password;
     if (password) K.expanded = false;
     if (rebuild) build(kind);
@@ -559,7 +561,11 @@ static void sync(void) { /* UI task */
     lv_obj_t *panel = ink_shell_ai_panel_root();
     if (panel && lv_obj_get_parent(panel) == lv_obj_get_parent(K.root) && lv_obj_get_index(K.root) < lv_obj_get_index(panel))
         lv_obj_move_to_index(K.root, lv_obj_get_index(panel));
-    else if (K.drawn_shift != K.shift) map_install(kind);
+    else if (K.drawn_shift != K.shift || language_changed) {
+        K.layout_revision++;
+        map_install(kind);
+        ink_ui_hint_obj(K.keys, INK_REFRESH_FAST);
+    }
     ink_voice_state_t vs = ink_text_voice_state();
     sync_voice(vs);
     if (vs != INK_VOICE_IDLE) return;
