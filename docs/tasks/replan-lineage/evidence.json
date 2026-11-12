@@ -1,0 +1,4192 @@
+{
+  "retrieved_on": "2026-11-12",
+  "baseline": "d09b79195e2dc57908e33219216048e529e082c6",
+  "scope": "Public text and metadata research only; no firmware binaries or device operations",
+  "source_files": [
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/README.md",
+      "bytes": 13361,
+      "lines": 155,
+      "sha256": "cfacb82e4f6d5628d021dc3e61beb2d9909d6444dc5fd8af8f9289f41ace865c",
+      "git_blob_sha1": "8c69ef27a9ca1740c43dcf72a1b3a38c98d0e4fe",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "lib/WeReadWebApi/src/WeReadClient.cpp",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadClient.cpp",
+      "bytes": 174870,
+      "lines": 4373,
+      "sha256": "00cc97dd650ff3da74ec380f2f2d635ba1cca745dce92484b28ee482e6fa47bf",
+      "git_blob_sha1": "c24fd8a08b5ac1b56532690de431209708f142a2",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "lib/WeReadWebApi/src/WeReadProtocol.cpp",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/WeReadWebApi/src/WeReadProtocol.cpp",
+      "bytes": 37837,
+      "lines": 1065,
+      "sha256": "aeb2651dc9ba9e1911c233e8efab7f926966b2062b46a2839a1bccebf96598ec",
+      "git_blob_sha1": "dbef41279b10c0feecfed10a6268d8c6d4e5283a",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "src/activities/apps/gomoku/GomokuAI.cpp",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuAI.cpp",
+      "bytes": 18014,
+      "lines": 510,
+      "sha256": "0a1336e7a94978f64018216cfbadda4f20bae799333be91b532ccf9801867eef",
+      "git_blob_sha1": "bd132fff28baf6c169e187ebed489773e6dee0da",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "src/activities/apps/gomoku/GomokuBoard.cpp",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuBoard.cpp",
+      "bytes": 5170,
+      "lines": 160,
+      "sha256": "da7b21b5c79e002941bed33fa48aec8832702814af905f1f89f82e4f1b22aadf",
+      "git_blob_sha1": "928c514697c88066959eb3922c3cf2b40b9b9c4e",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "src/activities/apps/weread/README.md",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/weread/README.md",
+      "bytes": 16183,
+      "lines": 118,
+      "sha256": "9f15e45e11419eecc7bf0164d1e7bbd70a4f2b8ca304a0c7cf5584dd2f680343",
+      "git_blob_sha1": "23acc20f4e5c85d964648c7c673856e2a90b21be",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "src/activities/browser/OpdsBookBrowserActivity.cpp",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/browser/OpdsBookBrowserActivity.cpp",
+      "bytes": 48700,
+      "lines": 1178,
+      "sha256": "0e89d62f9b09d1c386a2713c99fcc3d0118453d3815230d4acb3db713f645f83",
+      "git_blob_sha1": "8b3dfed3e978e94150f6fcebeee2c82dbaa44858",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "src/network/OpdsHttpTransport.cpp",
+      "raw_url": "https://raw.githubusercontent.com/0x1abin/crossmux/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/network/OpdsHttpTransport.cpp",
+      "bytes": 1790,
+      "lines": 45,
+      "sha256": "3e4cd72062260eda8f64b62d852e860cf4a156473f482baa505e2c59c1796825",
+      "git_blob_sha1": "46439951dd22c8b00f58387410c4e509aa69868e",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "446599/Metalio-WhiteAI",
+      "commit": "153d0967e97e1cf308403252cfc2839d6d65fb08",
+      "path": "README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/446599/Metalio-WhiteAI/153d0967e97e1cf308403252cfc2839d6d65fb08/README_zh.md",
+      "bytes": 14695,
+      "lines": 336,
+      "sha256": "f6093146b25c0054042a7c45b26b66bd0c422318b968dda0b9953280633c11ee",
+      "git_blob_sha1": "0d690edae90546d812cdf0b08c54e6c37ce73725",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "446599/Metalio-WhiteAI",
+      "commit": "153d0967e97e1cf308403252cfc2839d6d65fb08",
+      "path": "docs/AI_SYSTEM_MCP.md",
+      "raw_url": "https://raw.githubusercontent.com/446599/Metalio-WhiteAI/153d0967e97e1cf308403252cfc2839d6d65fb08/docs/AI_SYSTEM_MCP.md",
+      "bytes": 6094,
+      "lines": 72,
+      "sha256": "f83c2957019ac48b24e76dfe70737064c41624c98b7faaa08802289f71e3869c",
+      "git_blob_sha1": "9a485f705a81549ef760e639fab943976812a64c",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "446599/Metalio-WhiteAI",
+      "commit": "153d0967e97e1cf308403252cfc2839d6d65fb08",
+      "path": "main/application.cc",
+      "raw_url": "https://raw.githubusercontent.com/446599/Metalio-WhiteAI/153d0967e97e1cf308403252cfc2839d6d65fb08/main/application.cc",
+      "bytes": 6666,
+      "lines": 199,
+      "sha256": "289b907a53b646279dc92e4cdbbd1be0a42604153118297df83cbbf772c8388f",
+      "git_blob_sha1": "b51fabcef0acbd3ed6ea777b9094b08adb58f4fb",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "78/xiaozhi-esp32",
+      "commit": "026e9b6e55e871089670c3909f85805b2a4b41f7",
+      "path": "README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/78/xiaozhi-esp32/026e9b6e55e871089670c3909f85805b2a4b41f7/README_zh.md",
+      "bytes": 10362,
+      "lines": 170,
+      "sha256": "311d97752fb9c9a2e7642958756e0326bcd5adff5bcff8fdff2d13b131ba9d0b",
+      "git_blob_sha1": "cff0d4fac7900f81deebe3c54e29365d6362fafa",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "78/xiaozhi-esp32",
+      "commit": "026e9b6e55e871089670c3909f85805b2a4b41f7",
+      "path": "main/application.cc",
+      "raw_url": "https://raw.githubusercontent.com/78/xiaozhi-esp32/026e9b6e55e871089670c3909f85805b2a4b41f7/main/application.cc",
+      "bytes": 56749,
+      "lines": 1475,
+      "sha256": "1bc555041c5c98f621ea437743d53e4c96fa752fb65b3ca0a939998de5cb9752",
+      "git_blob_sha1": "159f663be92bde99b7dcef2636c5bc674ee6e9b0",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "78/xiaozhi-esp32",
+      "commit": "026e9b6e55e871089670c3909f85805b2a4b41f7",
+      "path": "main/mcp_server.cc",
+      "raw_url": "https://raw.githubusercontent.com/78/xiaozhi-esp32/026e9b6e55e871089670c3909f85805b2a4b41f7/main/mcp_server.cc",
+      "bytes": 27322,
+      "lines": 651,
+      "sha256": "23cb45b743a82e281732b153ea66c3e567043186c89fb333bda922f6e1b5360a",
+      "git_blob_sha1": "0ab57838b75a0e742c220df7699e670571008cd2",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "BaconSoong/crosslink",
+      "commit": "b3794560efbfba663be1c1dc27791f6b55fdcddb",
+      "path": "platformio.ini",
+      "raw_url": "https://raw.githubusercontent.com/BaconSoong/crosslink/b3794560efbfba663be1c1dc27791f6b55fdcddb/platformio.ini",
+      "bytes": 2870,
+      "lines": 99,
+      "sha256": "6f32a32f492f10456b6d1b27e061530e3138100301a86cc895e093ccfae9a387",
+      "git_blob_sha1": "75ee95672d5e0440c5f50e91b15f634b0b1034ff",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "Changkai9888/CloudZao-Projects",
+      "commit": "90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/Changkai9888/CloudZao-Projects/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/README.md",
+      "bytes": 3879,
+      "lines": 54,
+      "sha256": "99621f6a2757e78c6e7600f1edde09ee7e051a94f287f6ccc6cabcaf9a410656",
+      "git_blob_sha1": "dca33fdb61ed0b108003d3ba8edfd3707b257cb4",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "Changkai9888/CloudZao-Projects",
+      "commit": "90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8",
+      "path": "protocols/固件口袋接入规范与开发指南.md",
+      "raw_url": "https://raw.githubusercontent.com/Changkai9888/CloudZao-Projects/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/protocols/%E5%9B%BA%E4%BB%B6%E5%8F%A3%E8%A2%8B%E6%8E%A5%E5%85%A5%E8%A7%84%E8%8C%83%E4%B8%8E%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97.md",
+      "bytes": 45499,
+      "lines": 644,
+      "sha256": "c016a290fdd6b2a81f4fa128add00d41d61cab3e9a8aa08ac1720fcfcf6a4c0d",
+      "git_blob_sha1": "9fb506d0934aa1f286f7bcccd81b0aa9955e24e5",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "DaisonChun/crosslink",
+      "commit": "107e172994ad2086c414e159795515175681be71",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/DaisonChun/crosslink/107e172994ad2086c414e159795515175681be71/README.md",
+      "bytes": 1565,
+      "lines": 21,
+      "sha256": "38b26682acb72644d6b8f485e9a4376a1a5b27cc7aec763905377c9b77f92fdc",
+      "git_blob_sha1": "51bc18aff9e57ccd0a70c6acb8993cb0a66bc017",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "DaisonChun/crosslink",
+      "commit": "107e172994ad2086c414e159795515175681be71",
+      "path": "SCOPE.md",
+      "raw_url": "https://raw.githubusercontent.com/DaisonChun/crosslink/107e172994ad2086c414e159795515175681be71/SCOPE.md",
+      "bytes": 3838,
+      "lines": 62,
+      "sha256": "01684e1512cb48c950d81ad1a255ca2b6d2e13500aa8cc3a7c471091f364ec42",
+      "git_blob_sha1": "f115e0b4e98aa8255d2d00dd44d25abc533c4151",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "DaisonChun/crosslink",
+      "commit": "107e172994ad2086c414e159795515175681be71",
+      "path": "platformio.ini",
+      "raw_url": "https://raw.githubusercontent.com/DaisonChun/crosslink/107e172994ad2086c414e159795515175681be71/platformio.ini",
+      "bytes": 2870,
+      "lines": 99,
+      "sha256": "6f32a32f492f10456b6d1b27e061530e3138100301a86cc895e093ccfae9a387",
+      "git_blob_sha1": "75ee95672d5e0440c5f50e91b15f634b0b1034ff",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "DaveGamble/cJSON",
+      "commit": "c859b25da02955fef659d658b8f324b5cde87be3",
+      "path": "cJSON.c",
+      "raw_url": "https://raw.githubusercontent.com/DaveGamble/cJSON/c859b25da02955fef659d658b8f324b5cde87be3/cJSON.c",
+      "bytes": 80399,
+      "lines": 3191,
+      "sha256": "298581a04a36c0165da4b0aade235c23088cb2faa58651d720ea2f3706ed0b0d",
+      "git_blob_sha1": "6e4fb0dd369cd905923da515be87ab06db6c1ee0",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "Free-Ink/freeink-sdk",
+      "commit": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+      "path": "libs/network/Opds/src/Opds2Parser.cpp",
+      "raw_url": "https://raw.githubusercontent.com/Free-Ink/freeink-sdk/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/network/Opds/src/Opds2Parser.cpp",
+      "bytes": 23191,
+      "lines": 602,
+      "sha256": "24d19e5d519931b10071798bd7aba25039ced762b3e2e3cdeeb94e49a4f44da3",
+      "git_blob_sha1": "1457239ce62b6d0037f6d72054ee241529d9815c",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "Free-Ink/freeink-sdk",
+      "commit": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+      "path": "libs/network/Opds/src/OpdsClient.cpp",
+      "raw_url": "https://raw.githubusercontent.com/Free-Ink/freeink-sdk/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/network/Opds/src/OpdsClient.cpp",
+      "bytes": 11969,
+      "lines": 278,
+      "sha256": "2540108f3704dbf39cc5188b208c36cd4e11f4bebc0bf8364ab44f969a11fc18",
+      "git_blob_sha1": "cdff709ac38154412f3275c8755175b7246b4dfe",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "Free-Ink/freeink-sdk",
+      "commit": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+      "path": "libs/network/Opds/src/OpdsParser.cpp",
+      "raw_url": "https://raw.githubusercontent.com/Free-Ink/freeink-sdk/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/network/Opds/src/OpdsParser.cpp",
+      "bytes": 17587,
+      "lines": 437,
+      "sha256": "7cb38789a7e51b2bfeb48790396c41fa6e721e882f3c1265becb6c6d979b903d",
+      "git_blob_sha1": "83a3aadb8a6d1c56b142a83a3ee966b19fe71313",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "Irak4t0n/HowBoyAdvance",
+      "commit": "d2ed7442e7fbca96146ce043ae127835fa7e4ce8",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/Irak4t0n/HowBoyAdvance/d2ed7442e7fbca96146ce043ae127835fa7e4ce8/README.md",
+      "bytes": 3228,
+      "lines": 103,
+      "sha256": "15f922dde503fd6126a661888a33ff000dce230aecdfe3ca1907168b45ddfba0",
+      "git_blob_sha1": "c36441ac648454ded40c2021ddd60b9e967bec38",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "Irak4t0n/HowBoyAdvance",
+      "commit": "d2ed7442e7fbca96146ce043ae127835fa7e4ce8",
+      "path": "components/gpsp/gpsp_esp.c",
+      "raw_url": "https://raw.githubusercontent.com/Irak4t0n/HowBoyAdvance/d2ed7442e7fbca96146ce043ae127835fa7e4ce8/components/gpsp/gpsp_esp.c",
+      "bytes": 7622,
+      "lines": 255,
+      "sha256": "3ed2b6e05ff3dea560f4d5be9043217943b0bb484f93ed2b65e1786e6c3b0bed",
+      "git_blob_sha1": "26daf1160f1eecaadf79e55ecaab6d84a1d98bac",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "Irak4t0n/HowBoyAdvance",
+      "commit": "d2ed7442e7fbca96146ce043ae127835fa7e4ce8",
+      "path": "components/gpsp/riscv/riscv_emit.h",
+      "raw_url": "https://raw.githubusercontent.com/Irak4t0n/HowBoyAdvance/d2ed7442e7fbca96146ce043ae127835fa7e4ce8/components/gpsp/riscv/riscv_emit.h",
+      "bytes": 116801,
+      "lines": 2207,
+      "sha256": "7a2a1131a990590a664956ebee6598fec38e2dcb83799a32b4741d36f4c84b0f",
+      "git_blob_sha1": "e3bc8339236a7439519ee07e23643bba846853ce",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "MindReset/read_pico_firmware",
+      "commit": "6a247cc94420b85c650b32a6b2c063a360070eee",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/MindReset/read_pico_firmware/6a247cc94420b85c650b32a6b2c063a360070eee/README.md",
+      "bytes": 14466,
+      "lines": 177,
+      "sha256": "20027b738eb4f56dc12eb528bd0e73d2a29c347dae37ece49ae530bce7c1d666",
+      "git_blob_sha1": "a3626fcfc31df40888bd76dc5a69f658d9195ed2",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "MindReset/read_pico_firmware",
+      "commit": "6a247cc94420b85c650b32a6b2c063a360070eee",
+      "path": "components/read_pico_transfer/read_pico_transfer.c",
+      "raw_url": "https://raw.githubusercontent.com/MindReset/read_pico_firmware/6a247cc94420b85c650b32a6b2c063a360070eee/components/read_pico_transfer/read_pico_transfer.c",
+      "bytes": 51762,
+      "lines": 1024,
+      "sha256": "f18231ccbe0f1408cd4657fe2101c8cddab812f8fbd11b6e0abbe8247a05049c",
+      "git_blob_sha1": "3b76b5550200499717313aca605a139353044878",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "MindReset/read_pico_firmware",
+      "commit": "6a247cc94420b85c650b32a6b2c063a360070eee",
+      "path": "main/book/book_source.c",
+      "raw_url": "https://raw.githubusercontent.com/MindReset/read_pico_firmware/6a247cc94420b85c650b32a6b2c063a360070eee/main/book/book_source.c",
+      "bytes": 3179,
+      "lines": 66,
+      "sha256": "f7d395758a54f4d2e1b3a71260945c4f60520dd140bd314011d358a7a65b214b",
+      "git_blob_sha1": "987db516a8064763440191cada40e8983e7ddf31",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "adam-ikari/crosslink",
+      "commit": "2d4dc951549b621631385c27cc3a768104ad2692",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/adam-ikari/crosslink/2d4dc951549b621631385c27cc3a768104ad2692/README.md",
+      "bytes": 1565,
+      "lines": 21,
+      "sha256": "38b26682acb72644d6b8f485e9a4376a1a5b27cc7aec763905377c9b77f92fdc",
+      "git_blob_sha1": "51bc18aff9e57ccd0a70c6acb8993cb0a66bc017",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "adam-ikari/crosslink",
+      "commit": "2d4dc951549b621631385c27cc3a768104ad2692",
+      "path": "platformio.ini",
+      "raw_url": "https://raw.githubusercontent.com/adam-ikari/crosslink/2d4dc951549b621631385c27cc3a768104ad2692/platformio.ini",
+      "bytes": 2870,
+      "lines": 99,
+      "sha256": "6f32a32f492f10456b6d1b27e061530e3138100301a86cc895e093ccfae9a387",
+      "git_blob_sha1": "75ee95672d5e0440c5f50e91b15f634b0b1034ff",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "andjiang0083/retro-go-claw4",
+      "commit": "f775a34d56f7346057c1193d106f041c7d9b17e8",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/README.md",
+      "bytes": 21756,
+      "lines": 351,
+      "sha256": "f03b1b9cf326ea6e96319fbe48fe5c8c60852f691c38b6ff9c84c91e5211185f",
+      "git_blob_sha1": "3b6ae207323cae9997a7add83fd96981f77f62a9",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-claw4",
+      "commit": "f775a34d56f7346057c1193d106f041c7d9b17e8",
+      "path": "retro-go-p4/components/retro-go/targets/claw4/config.h",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/retro-go-p4/components/retro-go/targets/claw4/config.h",
+      "bytes": 31594,
+      "lines": 427,
+      "sha256": "ad03d6c71155146e829c92926a3b06e13dfba371cd3f82c76c52daf970e811d2",
+      "git_blob_sha1": "7ce06700ba240aefdc22eb9e991e63c90278943b",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-claw4",
+      "commit": "f775a34d56f7346057c1193d106f041c7d9b17e8",
+      "path": "retro-go-p4/components/retro-go/targets/claw4/touch_layout.h",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/retro-go-p4/components/retro-go/targets/claw4/touch_layout.h",
+      "bytes": 9130,
+      "lines": 132,
+      "sha256": "95e4d03132aa43a8cd0af578bfc5880f94bf9c626ebf2baefa501d1686b07eab",
+      "git_blob_sha1": "f7ba05c3c4a47a928b49d675e4f2ba76777871fb",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-claw4",
+      "commit": "f775a34d56f7346057c1193d106f041c7d9b17e8",
+      "path": "retro-go-p4/gbsp/main/main.c",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/retro-go-p4/gbsp/main/main.c",
+      "bytes": 28472,
+      "lines": 650,
+      "sha256": "d3691acdbfba482445307c9fbac457092f1b9d4add6186ade7a6e06da81dc917",
+      "git_blob_sha1": "787c67856047556f3ca479cacb7e1dd35ab0cb92",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-tab5",
+      "commit": "4e8f0f2f4e75b2102016c433b34ee1f23e17e471",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/README.md",
+      "bytes": 19684,
+      "lines": 328,
+      "sha256": "2b2e1ae6ae47ce4ac01008d21e27570a2574d92728ae251e889e467753c0531d",
+      "git_blob_sha1": "8015d8866d5ddfd8e4a3103153d8a076ac3e8111",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-tab5",
+      "commit": "4e8f0f2f4e75b2102016c433b34ee1f23e17e471",
+      "path": "README_CN.md",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/README_CN.md",
+      "bytes": 18945,
+      "lines": 312,
+      "sha256": "c47f3457bac93b19d942bbecb671fd3099f72c3fa2a862d3e8bea02c1f8199ea",
+      "git_blob_sha1": "c9eb36cfc082ea370be6f4f54543126331050daa",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-tab5",
+      "commit": "4e8f0f2f4e75b2102016c433b34ee1f23e17e471",
+      "path": "retro-go-p4/gbsp/components/gbsp-libretro/README.md",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/retro-go-p4/gbsp/components/gbsp-libretro/README.md",
+      "bytes": 2068,
+      "lines": 49,
+      "sha256": "1482caaf79458b5da1505490564efcaabf9c345ca5200702ae8219bef3ac88db",
+      "git_blob_sha1": "f6ca4a8df4c767a2d71e1adb30183811434bcd3a",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-tab5",
+      "commit": "4e8f0f2f4e75b2102016c433b34ee1f23e17e471",
+      "path": "retro-go-p4/gbsp/main/main.c",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/retro-go-p4/gbsp/main/main.c",
+      "bytes": 28472,
+      "lines": 650,
+      "sha256": "d3691acdbfba482445307c9fbac457092f1b9d4add6186ade7a6e06da81dc917",
+      "git_blob_sha1": "787c67856047556f3ca479cacb7e1dd35ab0cb92",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "andjiang0083/retro-go-tab5",
+      "commit": "4e8f0f2f4e75b2102016c433b34ee1f23e17e471",
+      "path": "retro-go-p4/retro-core/components/gnuboy/gnuboy.c",
+      "raw_url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/retro-go-p4/retro-core/components/gnuboy/gnuboy.c",
+      "bytes": 20044,
+      "lines": 912,
+      "sha256": "5d9a3f59ad7d7710d3271ad0ad3c548018d7e7584bb30f1af1c71a9c3e130c43",
+      "git_blob_sha1": "5e9bc73aa7f98623c06d8595b3bfa1a5c663320e",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "bmorcelli/Launcher",
+      "commit": "2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/bmorcelli/Launcher/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/README.md",
+      "bytes": 37333,
+      "lines": 518,
+      "sha256": "9d6b7656117360537ab9068c24a1f6da9378d293e15a34465981e6696e4bccbe",
+      "git_blob_sha1": "9ae57793f817b4d557a93baa43c0cad555935b88",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "bmorcelli/Launcher",
+      "commit": "2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba",
+      "path": "src/install_shared.cpp",
+      "raw_url": "https://raw.githubusercontent.com/bmorcelli/Launcher/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/src/install_shared.cpp",
+      "bytes": 2095,
+      "lines": 49,
+      "sha256": "64d21f980ddd195bf7298ed27e22ada52027b8b57d34d3b85ddfe46a3d3cc2fd",
+      "git_blob_sha1": "f58dc2dbb2816659f2469f324fef73f1998ff0a4",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "bmorcelli/Launcher",
+      "commit": "2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba",
+      "path": "src/sd_functions.cpp",
+      "raw_url": "https://raw.githubusercontent.com/bmorcelli/Launcher/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/src/sd_functions.cpp",
+      "bytes": 38599,
+      "lines": 998,
+      "sha256": "4b1ed7c8969bc254832d24f9fbecf564ce1808aeb5fdca9d713c6a06b89df1e1",
+      "git_blob_sha1": "4fdefeb7c51682d346adc107a6519838838a42b2",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "LICENSE",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/LICENSE",
+      "bytes": 1202,
+      "lines": 24,
+      "sha256": "cf9594792105c61f556be3bb25804faec883faf6024504b8d4e095a916e47e5c",
+      "git_blob_sha1": "d1d11e142b079b7ed1c200a27dc73e5c780c69b8",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/README.md",
+      "bytes": 17759,
+      "lines": 242,
+      "sha256": "ef65675a53060669fe5bde9ce5ef39d31e53d8b881ad85c7566f7b155a0d7f90",
+      "git_blob_sha1": "b9103684a1b6f6042ff35ef1f2e7f2e42648d036",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "README.zh-CN.md",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/README.zh-CN.md",
+      "bytes": 11239,
+      "lines": 153,
+      "sha256": "070b4d2a2595c09873fd60e5ac6ec0ee9b60df591c5782c676eaa1c28a52dd34",
+      "git_blob_sha1": "c1aaf0c300394661bf7d5a9cd652ac7561090561",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "lib/WeReadWebApi/src/WeReadClient.cpp",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/lib/WeReadWebApi/src/WeReadClient.cpp",
+      "bytes": 169454,
+      "lines": 4248,
+      "sha256": "1249e27b22045693c570e065544effa2476876e540daf977881ea884f057a64b",
+      "git_blob_sha1": "71793ce0516353e42898a28e47a2ef587fe79b58",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "lib/WeReadWebApi/src/WeReadProtocol.cpp",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/lib/WeReadWebApi/src/WeReadProtocol.cpp",
+      "bytes": 37837,
+      "lines": 1065,
+      "sha256": "aeb2651dc9ba9e1911c233e8efab7f926966b2062b46a2839a1bccebf96598ec",
+      "git_blob_sha1": "dbef41279b10c0feecfed10a6268d8c6d4e5283a",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "platformio.ini",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/platformio.ini",
+      "bytes": 42967,
+      "lines": 1140,
+      "sha256": "34edadfd0b7971d6ece332c085922678d787badd550d49ae6c7390d027fcbf3f",
+      "git_blob_sha1": "b5def17e14eb56a5018b6f3334bd2ce163430119",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "src/activities/apps/standby/CalendarClockFace.cpp",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/src/activities/apps/standby/CalendarClockFace.cpp",
+      "bytes": 8372,
+      "lines": 195,
+      "sha256": "ad9955643ecda6ae164187dd7d3a07d2521b16047db31e14b037ff3d62226b39",
+      "git_blob_sha1": "d9fd0bb821214fc6307e9ead0fb981886c82cdf7",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "src/activities/apps/weread/README.md",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/src/activities/apps/weread/README.md",
+      "bytes": 14982,
+      "lines": 112,
+      "sha256": "969db93f11b4105a7e8fa10e3d2adf849bb9b8fdbd7e250fe1a7013af7fc4641",
+      "git_blob_sha1": "8d03cddc5885476a847de867963f5eefcaa714e3",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "path": "src/activities/home/HomeActivity.cpp",
+      "raw_url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/src/activities/home/HomeActivity.cpp",
+      "bytes": 33551,
+      "lines": 839,
+      "sha256": "a42dc71c8a1dcf6a0830aa1fcf79c7c4d275558f8fad4da5f79aee70f3326ebb",
+      "git_blob_sha1": "0dd4abbffa121c4162ea4a75356a6f2198516b6b",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "crosspoint-reader/crosspoint-reader",
+      "commit": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/crosspoint-reader/crosspoint-reader/0333cbbe4649f80afafe83061bf1afe9fd372fcf/README.md",
+      "bytes": 13452,
+      "lines": 300,
+      "sha256": "4407f20bd179e34487b0f42c8416f014b268d15f1fac73bda974680542abf671",
+      "git_blob_sha1": "5479b689b38bcb9c7e34d6a384ac75402c1e4318",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "crosspoint-reader/crosspoint-reader",
+      "commit": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "docs/sd-plugins.md",
+      "raw_url": "https://raw.githubusercontent.com/crosspoint-reader/crosspoint-reader/0333cbbe4649f80afafe83061bf1afe9fd372fcf/docs/sd-plugins.md",
+      "bytes": 42124,
+      "lines": 628,
+      "sha256": "961fc7a272b28a5331c0cab848bbe57e3f610378bd6eed82dafcca85a8d9d62f",
+      "git_blob_sha1": "d298e402d118a196172880b1391856e72cd9a5a9",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "crosspoint-reader/crosspoint-reader",
+      "commit": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp",
+      "raw_url": "https://raw.githubusercontent.com/crosspoint-reader/crosspoint-reader/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp",
+      "bytes": 141191,
+      "lines": 3284,
+      "sha256": "0e5b6fd233efbe295019605e33f050583c432591e7f13a2ff161718855098599",
+      "git_blob_sha1": "7a94cdd8a4793037b89963ab05c5e25615072a85",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "crosspoint-reader/crosspoint-reader",
+      "commit": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/activities/reader/EpubReaderActivity.cpp",
+      "raw_url": "https://raw.githubusercontent.com/crosspoint-reader/crosspoint-reader/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/reader/EpubReaderActivity.cpp",
+      "bytes": 143586,
+      "lines": 3500,
+      "sha256": "2ac8eb8cc362137cf32c006dd5f1abf55cd0a8f8cc0aef2a85bb3c0b63a66d67",
+      "git_blob_sha1": "51c508eee3bc5714e5e1c5f4c43c8089658cae38",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "lib/EpdFontLoader/EpdFontLoader.cpp",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/lib/EpdFontLoader/EpdFontLoader.cpp",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/9a0651ab835dee8aa2368632805fa4f55988fe89",
+      "bytes": 3058,
+      "lines": 92,
+      "sha256": "8d53c213851d3324ae49f2781bd0e78375f731eeaea1840e97b51988eca62e35",
+      "git_blob_sha1": "9a0651ab835dee8aa2368632805fa4f55988fe89",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "platformio.ini",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/platformio.ini",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/66c03e2f49ea2e8dce9b2bcb2f2cdf43100236c3",
+      "bytes": 6233,
+      "lines": 199,
+      "sha256": "a767662fce89cf9878902ca7f7eb81d232a81ced00952e0a941f84d6eaa50ad8",
+      "git_blob_sha1": "66c03e2f49ea2e8dce9b2bcb2f2cdf43100236c3",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "src/activities/browser/DataCapsuleBrowserActivity.cpp",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/src/activities/browser/DataCapsuleBrowserActivity.cpp",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/85bb3f305559ab119d0a40282922ebee2f6a0784",
+      "bytes": 42948,
+      "lines": 1120,
+      "sha256": "e1578433a4fb9dc6591dae32bdcf96ea17f00b3a966e9ee2730c707a32a52b8d",
+      "git_blob_sha1": "85bb3f305559ab119d0a40282922ebee2f6a0784",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "src/activities/browser/JianGuoBrowserActivity.cpp",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/src/activities/browser/JianGuoBrowserActivity.cpp",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/81a4465921e04e681fd6b5f1eacea00acd003b6d",
+      "bytes": 44478,
+      "lines": 1199,
+      "sha256": "542678ac6af6fcada79e2f70cefb6b76407b234a47c9e48ae42895147db9a6a2",
+      "git_blob_sha1": "81a4465921e04e681fd6b5f1eacea00acd003b6d",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "src/activities/reader/EpubReaderActivity.cpp",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/src/activities/reader/EpubReaderActivity.cpp",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/64b8bb1bb822f838b9220ca408dd598f9d85f3d1",
+      "bytes": 99937,
+      "lines": 2368,
+      "sha256": "c85ac2fb808b9861cc81edb18ee8c6fe32f962bb61907954f143ea5d99a99636",
+      "git_blob_sha1": "64b8bb1bb822f838b9220ca408dd598f9d85f3d1",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "src/activities/reader/JianGuoSyncActivity.cpp",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/src/activities/reader/JianGuoSyncActivity.cpp",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/b34f0262a3c2c7bb95498004cf563708e2d3c69c",
+      "bytes": 33889,
+      "lines": 910,
+      "sha256": "0ece78c3fbd8fcfa034afb42af4530b47e0a8818ccb2b44949ee6d2867951d74",
+      "git_blob_sha1": "b34f0262a3c2c7bb95498004cf563708e2d3c69c",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "src/components/themes/fengyan/FengyanTheme.cpp",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/src/components/themes/fengyan/FengyanTheme.cpp",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/e5e9fa71c90930c31e40f7fff92c87972fe53c41",
+      "bytes": 46010,
+      "lines": 928,
+      "sha256": "9de9f112f19362b40f26a474e797e098d57e12c2a1808fbe40c1ead29adbc79c",
+      "git_blob_sha1": "e5e9fa71c90930c31e40f7fff92c87972fe53c41",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "daixinchun/xteink",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "path": "src/managers/FontManager.cpp",
+      "raw_url": "https://gitee.com/daixinchun/xteink/raw/5a93c1bc4589cde5b4f6df22b2edc618703b74de/src/managers/FontManager.cpp",
+      "blob_api_url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/88a33bc02e598ef2fabdf44c994177390766eb9c",
+      "bytes": 19560,
+      "lines": 560,
+      "sha256": "a4c86a01c537b81b1730b6dc81294f07dd8d26c0bdd62fe7a49fa78443051724",
+      "git_blob_sha1": "88a33bc02e598ef2fabdf44c994177390766eb9c",
+      "encoding": "base64 Git blob API",
+      "blob_matched_metadata": true,
+      "evidence_method": "anonymous fixed Git blob API; decoded text matched pinned tree"
+    },
+    {
+      "repo": "deltabeard/Peanut-GB",
+      "commit": "d0bcca771c83a2638c93a9ae61f3d51f226dc905",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/deltabeard/Peanut-GB/d0bcca771c83a2638c93a9ae61f3d51f226dc905/README.md",
+      "bytes": 8202,
+      "lines": 205,
+      "sha256": "f2ba4830e482d50dd1057a200390d12e3a58043b8cef08444a41b0b027872c7b",
+      "git_blob_sha1": "e75be471160518b355deb2b8785b2a2abc725050",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "deltabeard/Peanut-GB",
+      "commit": "d0bcca771c83a2638c93a9ae61f3d51f226dc905",
+      "path": "peanut_gb.h",
+      "raw_url": "https://raw.githubusercontent.com/deltabeard/Peanut-GB/d0bcca771c83a2638c93a9ae61f3d51f226dc905/peanut_gb.h",
+      "bytes": 102999,
+      "lines": 4045,
+      "sha256": "cf7777068492474d084f7dca0b00724d4dcdeab7f9a6c91a5d3a82e60d1cf728",
+      "git_blob_sha1": "a4ab182391b68389bfa9f04d2e714baa37d8f960",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-adf",
+      "commit": "12ea304254d8a1efb1d93afa78e82ab3887684c1",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/README.md",
+      "bytes": 3171,
+      "lines": 59,
+      "sha256": "aa58ef5ebe42e5209dc479e8b4d1228ea2098eb1912da0ced7bb9f7986cb8ebf",
+      "git_blob_sha1": "360ff8d31e44ad4b5e6f1e5b13d3860465060019",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-adf",
+      "commit": "12ea304254d8a1efb1d93afa78e82ab3887684c1",
+      "path": "components/esp_audio_capture_service/examples/audio_capture/main/simple_record.c",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_audio_capture_service/examples/audio_capture/main/simple_record.c",
+      "bytes": 12280,
+      "lines": 343,
+      "sha256": "a87f3019e0cc8d4d127906b04130255dff2b64d6f1e3f4827bc12f81863ee5c6",
+      "git_blob_sha1": "5844749b8453ee93acee5e181bdad483f910c3ee",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-adf",
+      "commit": "12ea304254d8a1efb1d93afa78e82ab3887684c1",
+      "path": "components/esp_audio_capture_service/src/esp_audio_capture_service.c",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_audio_capture_service/src/esp_audio_capture_service.c",
+      "bytes": 10482,
+      "lines": 339,
+      "sha256": "13cde9df3f73b3a0f8cc8933a5399f2046505de58b7a0a34a1870f6e3e3dfdb6",
+      "git_blob_sha1": "a22f4d951f91284470f17d153f423539a2ecf23e",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-adf",
+      "commit": "12ea304254d8a1efb1d93afa78e82ab3887684c1",
+      "path": "components/esp_audio_player_service/src/esp_audio_player_service.c",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_audio_player_service/src/esp_audio_player_service.c",
+      "bytes": 6987,
+      "lines": 204,
+      "sha256": "9b876a532ad0e81ce321be32e466d7237fa05bcd530141a971b0692933b5ff36",
+      "git_blob_sha1": "54ba9e8e4980502394c49388383607628f78c627",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-brookesia",
+      "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/README.md",
+      "bytes": 20624,
+      "lines": 187,
+      "sha256": "2ecf6dc0be3ef73308805fce89f38e0d22bac94d53b121020c0f44efd3147a41",
+      "git_blob_sha1": "d4d016228888b14cbe7a109ed99b98f434da7a50",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-brookesia",
+      "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+      "path": "examples/service/audio/main/main.cpp",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/examples/service/audio/main/main.cpp",
+      "bytes": 26073,
+      "lines": 581,
+      "sha256": "3573effd6262dcf8f88887b21cde6783efe3a65eeb9dfc2789a0822a20cac6a7",
+      "git_blob_sha1": "e33fa221a5c9010b0056dda14fd737bf6df9f5cf",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-brookesia",
+      "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+      "path": "service/media/brookesia_service_audio/src/audio_encoder.cpp",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/src/audio_encoder.cpp",
+      "bytes": 13525,
+      "lines": 484,
+      "sha256": "010f15b3f381a19118ffe9b18f97aeea928a3d98edbf740633ecdc9fe083ee2d",
+      "git_blob_sha1": "b8a199bfb697a55b0b74bc22d31a1a264a41ae24",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "espressif/esp-brookesia",
+      "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+      "path": "service/media/brookesia_service_audio/src/audio_playback_control.cpp",
+      "raw_url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/src/audio_playback_control.cpp",
+      "bytes": 13306,
+      "lines": 401,
+      "sha256": "e2c01b133f4e7990c9d465b6399bce2a8a301758c7661ffd43c884999b899d20",
+      "git_blob_sha1": "c8456ca1df7ca5932a726d64ef28226b3ab0d3ae",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "finlater/weread.koplugin",
+      "commit": "2795349f9992c2c723817330cf4ef2a9f0716f8b",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/README.md",
+      "bytes": 14325,
+      "lines": 220,
+      "sha256": "5dd22536fff919ff995acf29183ef1cede0ffef07879b8aea3b2171c771f9192",
+      "git_blob_sha1": "c5a083b5b679f41b5771875de10d850811f7e4ef",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "finlater/weread.koplugin",
+      "commit": "2795349f9992c2c723817330cf4ef2a9f0716f8b",
+      "path": "weread/lib/downloader.lua",
+      "raw_url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/downloader.lua",
+      "bytes": 53766,
+      "lines": 1352,
+      "sha256": "c9f6f9b23664005617ae6eeaa907d65fd733bd4d7938aa8f2d9c0de82ca1d1bb",
+      "git_blob_sha1": "d381020761f44db501a61d06777ce05f0ff88751",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "finlater/weread.koplugin",
+      "commit": "2795349f9992c2c723817330cf4ef2a9f0716f8b",
+      "path": "weread/lib/progress_sync.lua",
+      "raw_url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/progress_sync.lua",
+      "bytes": 27876,
+      "lines": 812,
+      "sha256": "a67246025e599614f3845b1d37391a1e49d00c8b56347f3dfcc9b1dbfea6c175",
+      "git_blob_sha1": "56cf3b9ceca42f3dcf3ecd971e3d9c8c0dcfc49b",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "finlater/weread.koplugin",
+      "commit": "2795349f9992c2c723817330cf4ef2a9f0716f8b",
+      "path": "weread/lib/protocol.lua",
+      "raw_url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/protocol.lua",
+      "bytes": 8310,
+      "lines": 289,
+      "sha256": "cb98b9fd6c7fe7cf7dadfdc62e8d368c1373943b2eafef6d7a7cf132869db171",
+      "git_blob_sha1": "ee92c26ece3ab9cc9b5cba1ba6b3f87ffeaa65f2",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "finlater/weread.koplugin",
+      "commit": "2795349f9992c2c723817330cf4ef2a9f0716f8b",
+      "path": "weread/lib/qr_login.lua",
+      "raw_url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/qr_login.lua",
+      "bytes": 19999,
+      "lines": 567,
+      "sha256": "83620528f6127c4a2136b61ff9148e88e5aa97d03badabad9d8f4b66a2b6ec6e",
+      "git_blob_sha1": "a25e1d959a4aec8364df2f87ec7f60f93c1f49a2",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "flowflic/ThingsOS",
+      "commit": "ed344c5745e07a1dced8d4e0041218b2ce9dcd02",
+      "path": "LICENSE",
+      "raw_url": "https://raw.githubusercontent.com/flowflic/ThingsOS/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/LICENSE",
+      "bytes": 11358,
+      "lines": 202,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "git_blob_sha1": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "flowflic/ThingsOS",
+      "commit": "ed344c5745e07a1dced8d4e0041218b2ce9dcd02",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/flowflic/ThingsOS/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/README.md",
+      "bytes": 7336,
+      "lines": 134,
+      "sha256": "76fb7dc05ea6032a0c267e6d1fa569f25c2f1b40d229a4baf4d259e03d14e835",
+      "git_blob_sha1": "d77d4a1c2d73f5795998e5cd4a9a16240fd02133",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "freetype/freetype",
+      "commit": "0a0221a1347e2f1e07c395263540026e9a0aa7c7",
+      "path": "src/base/ftobjs.c",
+      "raw_url": "https://raw.githubusercontent.com/freetype/freetype/0a0221a1347e2f1e07c395263540026e9a0aa7c7/src/base/ftobjs.c",
+      "bytes": 161665,
+      "lines": 5900,
+      "sha256": "e5558a906bfef754843740c55a1110759f23c737303d092ba6fefdce2ba4bb9f",
+      "git_blob_sha1": "f9f64c40fec3118263cf409af8efc3c407c90863",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "hathach/tinyusb",
+      "commit": "dae3f9a366bfcddbf9dcf1b48d7500286a849539",
+      "path": "src/class/msc/msc_device.c",
+      "raw_url": "https://raw.githubusercontent.com/hathach/tinyusb/dae3f9a366bfcddbf9dcf1b48d7500286a849539/src/class/msc/msc_device.c",
+      "bytes": 35025,
+      "lines": 969,
+      "sha256": "9bba988f5c1e83db1d565e55e934a8e9dd7f5e5085820b6c555ffa1484473ac5",
+      "git_blob_sha1": "39dc3a0744242a9a8cdd6e4ec1103b4ff423ec47",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "icannotttt/crosspoint-chinesetype",
+      "commit": "c8e4100ed7fe59c4586cd1752f8c39544e493b81",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/README.md",
+      "bytes": 10008,
+      "lines": 246,
+      "sha256": "595e5a862b05c5aaad7564d8993c88628f8b190e23aa3ae61dda1bb37e5d5252",
+      "git_blob_sha1": "22525b50f01ae6698821d8fa8e01a7af44099693",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "icannotttt/crosspoint-chinesetype",
+      "commit": "c8e4100ed7fe59c4586cd1752f8c39544e493b81",
+      "path": "lib/EpdFont/CustomEpdFont.cpp",
+      "raw_url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/lib/EpdFont/CustomEpdFont.cpp",
+      "bytes": 11159,
+      "lines": 350,
+      "sha256": "e45af565a9c0933e67d9aab134a1bafc35126187500a7b0628c7c2d6608d7de3",
+      "git_blob_sha1": "9e3aa1334922d58d5b832143128612c801af3e73",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "icannotttt/crosspoint-chinesetype",
+      "commit": "c8e4100ed7fe59c4586cd1752f8c39544e493b81",
+      "path": "lib/Epub/Epub.cpp",
+      "raw_url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/lib/Epub/Epub.cpp",
+      "bytes": 26075,
+      "lines": 741,
+      "sha256": "0b4c1abba55d39d6ae59f2a0811c1b472c70ee79da9db459f81934a9049db40e",
+      "git_blob_sha1": "08083416505eebfd6fba58d11a6e2e43686bb9fc",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "icannotttt/crosspoint-chinesetype",
+      "commit": "c8e4100ed7fe59c4586cd1752f8c39544e493b81",
+      "path": "src/activities/reader/EpubReaderActivity.cpp",
+      "raw_url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/src/activities/reader/EpubReaderActivity.cpp",
+      "bytes": 52888,
+      "lines": 1291,
+      "sha256": "013e2a55d8a3f7335ecb05c5839eac37a1495e4dba863e58cf79ffa7e9d2bc9e",
+      "git_blob_sha1": "5da25f20f6a60d512dc6e5a950bd008d67f6dbf3",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "icannotttt/crosspoint-chinesetype",
+      "commit": "c8e4100ed7fe59c4586cd1752f8c39544e493b81",
+      "path": "src/managers/FontManager.cpp",
+      "raw_url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/src/managers/FontManager.cpp",
+      "bytes": 9556,
+      "lines": 302,
+      "sha256": "73f707571115491e8b640df70d1e340283455dd6c1cef15f9c7bd9a595547422",
+      "git_blob_sha1": "7af734ffb03d4f2828b15a57b3eac1fc118f54cb",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "lvgl/lvgl",
+      "commit": "c033a98afddd65aaafeebea625382a94020fe4a7",
+      "path": "src/libs/qrcode/lv_qrcode.c",
+      "raw_url": "https://raw.githubusercontent.com/lvgl/lvgl/c033a98afddd65aaafeebea625382a94020fe4a7/src/libs/qrcode/lv_qrcode.c",
+      "bytes": 7150,
+      "lines": 242,
+      "sha256": "7af62b33607c3f5365ed945ca8624c2af62c3276dcf7209adc21874180beb754",
+      "git_blob_sha1": "8b948f3aeeedb5c5bd8076c03847adb5cc0202fa",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "lvgl/lvgl",
+      "commit": "c033a98afddd65aaafeebea625382a94020fe4a7",
+      "path": "src/widgets/calendar/lv_calendar.c",
+      "raw_url": "https://raw.githubusercontent.com/lvgl/lvgl/c033a98afddd65aaafeebea625382a94020fe4a7/src/widgets/calendar/lv_calendar.c",
+      "bytes": 16029,
+      "lines": 503,
+      "sha256": "02c161525f36bd055d69c5700a84fe134050ea764738053293e7c0056fe7d6a7",
+      "git_blob_sha1": "bcdd23e22875ae48e126a18e82d2fc602e2fa7f9",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "lvgl/lvgl",
+      "commit": "c033a98afddd65aaafeebea625382a94020fe4a7",
+      "path": "src/widgets/textarea/lv_textarea.c",
+      "raw_url": "https://raw.githubusercontent.com/lvgl/lvgl/c033a98afddd65aaafeebea625382a94020fe4a7/src/widgets/textarea/lv_textarea.c",
+      "bytes": 46361,
+      "lines": 1506,
+      "sha256": "58243f530fe587a74f7a8851f5b353ef326b25f2559aea0753d8ae28ad45288e",
+      "git_blob_sha1": "511b113179fb90060d3737ebf77dc9096d34ae11",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "madler/zlib",
+      "commit": "51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf",
+      "path": "inflate.c",
+      "raw_url": "https://raw.githubusercontent.com/madler/zlib/51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf/inflate.c",
+      "bytes": 55519,
+      "lines": 1526,
+      "sha256": "34c998ce0037c0537c04b03b276f680b945f9b2c9d1e01b287605bd6879f7fd2",
+      "git_blob_sha1": "94ecff015a9be7d28d19ba7b2547e2563a1680c5",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "mozillazg/python-pinyin",
+      "commit": "df101577145af2eb1abe5656e592e34e3bb56d23",
+      "path": "pypinyin/converter.py",
+      "raw_url": "https://raw.githubusercontent.com/mozillazg/python-pinyin/df101577145af2eb1abe5656e592e34e3bb56d23/pypinyin/converter.py",
+      "bytes": 15228,
+      "lines": 390,
+      "sha256": "1bbd6c9b63d033a1c05f929b94ac7002a0e4c6d226e48bdbe074250fa4a15e44",
+      "git_blob_sha1": "8c8bc524aaa8241966fa1acefa25ded13860bb8d",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "nasonliu/papers3-weread",
+      "commit": "599ad6b2cc857c33c59a2ebedf9945e703c36c95",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/README.md",
+      "bytes": 11499,
+      "lines": 185,
+      "sha256": "7dda6c781ba9617b0e4560efee59f628c0d63a7e5b0103809eeaec95fda73157",
+      "git_blob_sha1": "f2ae26e8cc77f208e23dea43efcb2dd213ce2722",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "nasonliu/papers3-weread",
+      "commit": "599ad6b2cc857c33c59a2ebedf9945e703c36c95",
+      "path": "src/weread_api.cpp",
+      "raw_url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/src/weread_api.cpp",
+      "bytes": 62422,
+      "lines": 1350,
+      "sha256": "5533d0b086d42ecdebe8e6f409427bc0e1243ba79b0e40ad62b738fe90f19b20",
+      "git_blob_sha1": "725e35d9cf6bd686ca49a49b6b1d95d324dca7f3",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "nasonliu/papers3-weread",
+      "commit": "599ad6b2cc857c33c59a2ebedf9945e703c36c95",
+      "path": "src/weread_client.cpp",
+      "raw_url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/src/weread_client.cpp",
+      "bytes": 24150,
+      "lines": 554,
+      "sha256": "d1002d7437209ef00ffc90049956dc447d4a51c1348cdc3d54de9ccbec61243f",
+      "git_blob_sha1": "01eeb0741e6a7ef079cf4329099163710d788702",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "nasonliu/papers3-weread",
+      "commit": "599ad6b2cc857c33c59a2ebedf9945e703c36c95",
+      "path": "src/weread_login.cpp",
+      "raw_url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/src/weread_login.cpp",
+      "bytes": 5569,
+      "lines": 127,
+      "sha256": "024435a6ffb0765c4b1cc3b37e81aae7d00cc9a84e857e01ac8321d6032014af",
+      "git_blob_sha1": "a35cfe34ba32baeaf0d3412f4047224c5e3e466e",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "nothings/stb",
+      "commit": "4e9b368bfc071e97206ea5c6adba68dd0cbf8897",
+      "path": "stb_image.h",
+      "raw_url": "https://raw.githubusercontent.com/nothings/stb/4e9b368bfc071e97206ea5c6adba68dd0cbf8897/stb_image.h",
+      "bytes": 283010,
+      "lines": 7988,
+      "sha256": "594c2fe35d49488b4382dbfaec8f98366defca819d916ac95becf3e75f4200b3",
+      "git_blob_sha1": "9eedabedc45b3e6fd88fae6f14a160b4d53272ec",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "schreibfaul1/ESP32-audioI2S",
+      "commit": "56f27918a8e6d10d56a19ddf0fdd307cdeee8cde",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/schreibfaul1/ESP32-audioI2S/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/README.md",
+      "bytes": 3903,
+      "lines": 88,
+      "sha256": "ce7a1edc7774fd76d4ed1485072368cc6bb60b46dc63bce504ca8cc2d93a6746",
+      "git_blob_sha1": "4218624befc92a53ba5782965e1d50b4dea2efd4",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "schreibfaul1/ESP32-audioI2S",
+      "commit": "56f27918a8e6d10d56a19ddf0fdd307cdeee8cde",
+      "path": "src/Audio.cpp",
+      "raw_url": "https://raw.githubusercontent.com/schreibfaul1/ESP32-audioI2S/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/src/Audio.cpp",
+      "bytes": 420695,
+      "lines": 7957,
+      "sha256": "47d8820aee8274e3a4e9133cdfd817f832e6daafd1ac2d4c2638d806898be34d",
+      "git_blob_sha1": "4e0f2d4705c828e6a4dbf23dc33739ae7af70ec2",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "schreibfaul1/ESP32-audioI2S",
+      "commit": "56f27918a8e6d10d56a19ddf0fdd307cdeee8cde",
+      "path": "src/Audio.h",
+      "raw_url": "https://raw.githubusercontent.com/schreibfaul1/ESP32-audioI2S/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/src/Audio.h",
+      "bytes": 46849,
+      "lines": 860,
+      "sha256": "0f08a7af5b22c2e1ad342ec58d99508d5dcd72eb392e531fc6f6d1fd3d651450",
+      "git_blob_sha1": "2fa4887c3ee53b5dda61111cb7597aeb706a24df",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "tiberiusbrown/Ardens",
+      "commit": "e811cc6be72c8a802bd3265a84daf4165c177b93",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/README.md",
+      "bytes": 14376,
+      "lines": 328,
+      "sha256": "2fa4371c278aa51678a919ed92a3db69d4966aaa5ea278fcf9db94b60cdb5d62",
+      "git_blob_sha1": "89ebad467dcd7053b4e35e28d763023fdb32499d",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "tiberiusbrown/Ardens",
+      "commit": "e811cc6be72c8a802bd3265a84daf4165c177b93",
+      "path": "src/absim.hpp",
+      "raw_url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim.hpp",
+      "bytes": 52312,
+      "lines": 1701,
+      "sha256": "56784ba3a30bb5d3d936be02119137171688027b5484e702dfd0ff03354cdccf",
+      "git_blob_sha1": "caeb22c8a73ce989d464bb8d0a30052cf4c99dcc",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "tiberiusbrown/Ardens",
+      "commit": "e811cc6be72c8a802bd3265a84daf4165c177b93",
+      "path": "src/absim_execute.cpp",
+      "raw_url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim_execute.cpp",
+      "bytes": 41241,
+      "lines": 1437,
+      "sha256": "c636933986f55091d5097b0acb7705f55f118e994f47aa4b74f77724f40e5ace",
+      "git_blob_sha1": "58af5f6f466f315f17e7fada47c344d4efbf0066",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "tiberiusbrown/Ardens",
+      "commit": "e811cc6be72c8a802bd3265a84daf4165c177b93",
+      "path": "src/absim_load_file.cpp",
+      "raw_url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim_load_file.cpp",
+      "bytes": 43726,
+      "lines": 1447,
+      "sha256": "681b2667d9377df104ec6d54209933514ca2e2c08177252dde415e07306ab731",
+      "git_blob_sha1": "c979008f46be571902d4e249a3686ee74d42db94",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": true
+    },
+    {
+      "repo": "wegooo-cell/Metalio-S31-kiikoread",
+      "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/wegooo-cell/Metalio-S31-kiikoread/83942eb45d13064a47aca7ff04c2faf8fd51f98a/README.md",
+      "bytes": 6208,
+      "lines": 53,
+      "sha256": "6d53fedaf469486c39d8ea22e831d1dfab57bbf5667f45abf9de96dc37d2528e",
+      "git_blob_sha1": "5c29958e5d005086be49ccdbd45b5be0375526f6",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "wegooo-cell/Metalio-S31-kiikoread",
+      "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/book/book_layout.c",
+      "raw_url": "https://raw.githubusercontent.com/wegooo-cell/Metalio-S31-kiikoread/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_layout.c",
+      "bytes": 63221,
+      "lines": 1256,
+      "sha256": "7982b34cc5df2e293ae4e30369b2524e407ec398c97448b055656a520ac83d6a",
+      "git_blob_sha1": "3e9aa2605d0c9be8ed2dc01ca8d5e97dfacb8187",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "wegooo-cell/Metalio-S31-kiikoread",
+      "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/book/book_source.c",
+      "raw_url": "https://raw.githubusercontent.com/wegooo-cell/Metalio-S31-kiikoread/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_source.c",
+      "bytes": 7737,
+      "lines": 173,
+      "sha256": "795c5e997e6b352dd5617751c413d93712d9b26f8de41ab6fb9289f1268a56b4",
+      "git_blob_sha1": "849da2e0cebbf4a8f0214b22834830f53b22edb7",
+      "evidence_method": "read-only fixed local Git blob",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "wegooo-cell/read-pico-reader",
+      "commit": "ea371a7d5998880265aea09f9d44b26b619a8289",
+      "path": "README.md",
+      "raw_url": "https://raw.githubusercontent.com/wegooo-cell/read-pico-reader/ea371a7d5998880265aea09f9d44b26b619a8289/README.md",
+      "bytes": 29661,
+      "lines": 160,
+      "sha256": "82374640fc9bce110304a265c5f460f1487d623b654149e08561ec06839cbeb9",
+      "git_blob_sha1": "3488e4c336a7f6fa393a86952d47e1972f8191af",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "wegooo-cell/read-pico-reader",
+      "commit": "ea371a7d5998880265aea09f9d44b26b619a8289",
+      "path": "main/book/book_layout.c",
+      "raw_url": "https://raw.githubusercontent.com/wegooo-cell/read-pico-reader/ea371a7d5998880265aea09f9d44b26b619a8289/main/book/book_layout.c",
+      "bytes": 76931,
+      "lines": 1536,
+      "sha256": "6dba37bbbf0f58b894f420ce9608425f7224284ccb2271621d044ae3ed2683f5",
+      "git_blob_sha1": "a7156c480f5dfd65d7a6e35ba831c4dc815bc5cc",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    },
+    {
+      "repo": "wegooo-cell/read-pico-reader",
+      "commit": "ea371a7d5998880265aea09f9d44b26b619a8289",
+      "path": "main/book/book_source.c",
+      "raw_url": "https://raw.githubusercontent.com/wegooo-cell/read-pico-reader/ea371a7d5998880265aea09f9d44b26b619a8289/main/book/book_source.c",
+      "bytes": 10560,
+      "lines": 222,
+      "sha256": "d8a22683c8b4ebe067be00a5c68df1705cbab93249f239e76269145ec185286c",
+      "git_blob_sha1": "4befa7b6cedd36551a0f317c9206f54d3c9c1835",
+      "evidence_method": "anonymous fixed raw GET",
+      "blob_matched_metadata": null
+    }
+  ],
+  "source_groups": [
+    {
+      "id": "S01",
+      "title": "CrossPoint",
+      "repo": "crosspoint-reader/crosspoint-reader",
+      "commit": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 19
+        },
+        {
+          "path": "lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp",
+          "line": 111
+        },
+        {
+          "path": "src/activities/reader/EpubReaderActivity.cpp",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "CrossMux：微读、五子棋、OPDS 的应用端",
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 5
+        },
+        {
+          "path": "src/activities/apps/weread/README.md",
+          "line": 17
+        },
+        {
+          "path": "src/activities/apps/weread/README.md",
+          "line": 109
+        },
+        {
+          "path": "lib/WeReadWebApi/src/WeReadClient.cpp",
+          "line": 1
+        },
+        {
+          "path": "src/activities/apps/gomoku/GomokuAI.cpp",
+          "line": 499
+        },
+        {
+          "path": "src/activities/browser/OpdsBookBrowserActivity.cpp",
+          "line": 122
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "kiikoread Pico",
+      "repo": "wegooo-cell/read-pico-reader",
+      "commit": "ea371a7d5998880265aea09f9d44b26b619a8289",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 11
+        },
+        {
+          "path": "main/book/book_source.c",
+          "line": 61
+        },
+        {
+          "path": "main/book/book_source.c",
+          "line": 136
+        },
+        {
+          "path": "main/book/book_layout.c",
+          "line": 130
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "kiikoread S31",
+      "repo": "wegooo-cell/Metalio-S31-kiikoread",
+      "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 3
+        },
+        {
+          "path": "main/book/book_source.c",
+          "line": 25
+        },
+        {
+          "path": "main/book/book_source.c",
+          "line": 97
+        },
+        {
+          "path": "main/book/book_layout.c",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "CrossLink 公开旧分支",
+      "repo": "DaisonChun/crosslink",
+      "commit": "107e172994ad2086c414e159795515175681be71",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 16
+        },
+        {
+          "path": "README.md",
+          "line": 20
+        },
+        {
+          "path": "platformio.ini",
+          "line": 6
+        },
+        {
+          "path": "platformio.ini",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "ChineseType：CrossLink 指出的另一来源",
+      "repo": "icannotttt/crosspoint-chinesetype",
+      "commit": "c8e4100ed7fe59c4586cd1752f8c39544e493b81",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 10
+        },
+        {
+          "path": "README.md",
+          "line": 74
+        },
+        {
+          "path": "README.md",
+          "line": 78
+        },
+        {
+          "path": "lib/EpdFont/CustomEpdFont.cpp",
+          "line": 1
+        },
+        {
+          "path": "src/managers/FontManager.cpp",
+          "line": 1
+        },
+        {
+          "path": "src/activities/reader/EpubReaderActivity.cpp",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "RickyOS 旧版完整源码",
+      "repo": "chinoryunqin/RickyOS",
+      "commit": "ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 3
+        },
+        {
+          "path": "README.md",
+          "line": 7
+        },
+        {
+          "path": "platformio.ini",
+          "line": 1101
+        },
+        {
+          "path": "src/activities/home/HomeActivity.cpp",
+          "line": 687
+        },
+        {
+          "path": "src/activities/apps/standby/CalendarClockFace.cpp",
+          "line": 77
+        },
+        {
+          "path": "src/activities/apps/weread/README.md",
+          "line": 109
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "Metalio-WhiteAI",
+      "repo": "446599/Metalio-WhiteAI",
+      "commit": "153d0967e97e1cf308403252cfc2839d6d65fb08",
+      "files": [
+        {
+          "path": "README_zh.md",
+          "line": 3
+        },
+        {
+          "path": "README_zh.md",
+          "line": 6
+        },
+        {
+          "path": "docs/AI_SYSTEM_MCP.md",
+          "line": 1
+        },
+        {
+          "path": "main/application.cc",
+          "line": 148
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "retro-go-tab5：多核心游戏系统",
+      "repo": "andjiang0083/retro-go-tab5",
+      "commit": "4e8f0f2f4e75b2102016c433b34ee1f23e17e471",
+      "files": [
+        {
+          "path": "README_CN.md",
+          "line": 22
+        },
+        {
+          "path": "README_CN.md",
+          "line": 85
+        },
+        {
+          "path": "README_CN.md",
+          "line": 295
+        },
+        {
+          "path": "retro-go-p4/gbsp/main/main.c",
+          "line": 52
+        },
+        {
+          "path": "retro-go-p4/gbsp/main/main.c",
+          "line": 341
+        },
+        {
+          "path": "retro-go-p4/retro-core/components/gnuboy/gnuboy.c",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "retro-go-claw4：独立 Claw4 分叉",
+      "repo": "andjiang0083/retro-go-claw4",
+      "commit": "f775a34d56f7346057c1193d106f041c7d9b17e8",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 3
+        },
+        {
+          "path": "README.md",
+          "line": 32
+        },
+        {
+          "path": "retro-go-p4/components/retro-go/targets/claw4/config.h",
+          "line": 1
+        },
+        {
+          "path": "retro-go-p4/components/retro-go/targets/claw4/touch_layout.h",
+          "line": 1
+        },
+        {
+          "path": "retro-go-p4/gbsp/main/main.c",
+          "line": 341
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "title": "HowBoyAdvance：gpSP 的 RISC-V 实现链",
+      "repo": "Irak4t0n/HowBoyAdvance",
+      "commit": "d2ed7442e7fbca96146ce043ae127835fa7e4ce8",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 16
+        },
+        {
+          "path": "components/gpsp/gpsp_esp.c",
+          "line": 82
+        },
+        {
+          "path": "components/gpsp/riscv/riscv_emit.h",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "title": "Peanut-GB",
+      "repo": "deltabeard/Peanut-GB",
+      "commit": "d0bcca771c83a2638c93a9ae61f3d51f226dc905",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 9
+        },
+        {
+          "path": "README.md",
+          "line": 13
+        },
+        {
+          "path": "peanut_gb.h",
+          "line": 3532
+        },
+        {
+          "path": "peanut_gb.h",
+          "line": 3697
+        },
+        {
+          "path": "peanut_gb.h",
+          "line": 3826
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "title": "Ardens：真正加载 Arduboy 游戏的模拟器",
+      "repo": "tiberiusbrown/Ardens",
+      "commit": "e811cc6be72c8a802bd3265a84daf4165c177b93",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 13
+        },
+        {
+          "path": "README.md",
+          "line": 43
+        },
+        {
+          "path": "src/absim_load_file.cpp",
+          "line": 253
+        },
+        {
+          "path": "src/absim_load_file.cpp",
+          "line": 966
+        },
+        {
+          "path": "src/absim_execute.cpp",
+          "line": 1
+        },
+        {
+          "path": "src/absim.hpp",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "title": "weread.koplugin：完整流程与同步语义参考",
+      "repo": "finlater/weread.koplugin",
+      "commit": "2795349f9992c2c723817330cf4ef2a9f0716f8b",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 5
+        },
+        {
+          "path": "README.md",
+          "line": 23
+        },
+        {
+          "path": "weread/lib/qr_login.lua",
+          "line": 1
+        },
+        {
+          "path": "weread/lib/protocol.lua",
+          "line": 1
+        },
+        {
+          "path": "weread/lib/downloader.lua",
+          "line": 78
+        },
+        {
+          "path": "weread/lib/progress_sync.lua",
+          "line": 282
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "title": "papers3-weread：ESP32 上的微读实现",
+      "repo": "nasonliu/papers3-weread",
+      "commit": "599ad6b2cc857c33c59a2ebedf9945e703c36c95",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 3
+        },
+        {
+          "path": "README.md",
+          "line": 37
+        },
+        {
+          "path": "src/weread_login.cpp",
+          "line": 25
+        },
+        {
+          "path": "src/weread_api.cpp",
+          "line": 52
+        },
+        {
+          "path": "src/weread_api.cpp",
+          "line": 159
+        },
+        {
+          "path": "src/weread_api.cpp",
+          "line": 860
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "title": "FreeInk SDK 的 OPDS 客户端与解析器",
+      "repo": "Free-Ink/freeink-sdk",
+      "commit": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+      "files": [
+        {
+          "path": "libs/network/Opds/src/OpdsParser.cpp",
+          "line": 37
+        },
+        {
+          "path": "libs/network/Opds/src/Opds2Parser.cpp",
+          "line": 1
+        },
+        {
+          "path": "libs/network/Opds/src/OpdsClient.cpp",
+          "line": 65
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "title": "Launcher：Moji／lnkboot 的功能候选",
+      "repo": "bmorcelli/Launcher",
+      "commit": "2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 1
+        },
+        {
+          "path": "src/sd_functions.cpp",
+          "line": 640
+        },
+        {
+          "path": "src/sd_functions.cpp",
+          "line": 801
+        },
+        {
+          "path": "src/install_shared.cpp",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S18",
+      "title": "ESP-ADF：录音／播放服务候选",
+      "repo": "espressif/esp-adf",
+      "commit": "12ea304254d8a1efb1d93afa78e82ab3887684c1",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 13
+        },
+        {
+          "path": "components/esp_audio_capture_service/src/esp_audio_capture_service.c",
+          "line": 1
+        },
+        {
+          "path": "components/esp_audio_capture_service/examples/audio_capture/main/simple_record.c",
+          "line": 35
+        },
+        {
+          "path": "components/esp_audio_player_service/src/esp_audio_player_service.c",
+          "line": 161
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "title": "ESP-Brookesia：系统界面与音频服务候选",
+      "repo": "espressif/esp-brookesia",
+      "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 11
+        },
+        {
+          "path": "README.md",
+          "line": 47
+        },
+        {
+          "path": "service/media/brookesia_service_audio/src/audio_encoder.cpp",
+          "line": 12
+        },
+        {
+          "path": "service/media/brookesia_service_audio/src/audio_playback_control.cpp",
+          "line": 68
+        },
+        {
+          "path": "examples/service/audio/main/main.cpp",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "title": "LVGL 的编辑、日历、二维码控件",
+      "repo": "lvgl/lvgl",
+      "commit": "c033a98afddd65aaafeebea625382a94020fe4a7",
+      "files": [
+        {
+          "path": "src/widgets/textarea/lv_textarea.c",
+          "line": 185
+        },
+        {
+          "path": "src/widgets/textarea/lv_textarea.c",
+          "line": 269
+        },
+        {
+          "path": "src/widgets/calendar/lv_calendar.c",
+          "line": 1
+        },
+        {
+          "path": "src/libs/qrcode/lv_qrcode.c",
+          "line": 93
+        }
+      ]
+    },
+    {
+      "id": "S21",
+      "title": "MindReset Read Pico：可读基础来源",
+      "repo": "MindReset/read_pico_firmware",
+      "commit": "6a247cc94420b85c650b32a6b2c063a360070eee",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 21
+        },
+        {
+          "path": "README.md",
+          "line": 143
+        },
+        {
+          "path": "main/book/book_source.c",
+          "line": 1
+        },
+        {
+          "path": "components/read_pico_transfer/read_pico_transfer.c",
+          "line": 601
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "title": "开哥项目集：规范和源码包入口",
+      "repo": "Changkai9888/CloudZao-Projects",
+      "commit": "90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 19
+        },
+        {
+          "path": "README.md",
+          "line": 29
+        },
+        {
+          "path": "protocols/固件口袋接入规范与开发指南.md",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S23",
+      "title": "ESP32-audioI2S：常见音频容器的实现候选",
+      "repo": "schreibfaul1/ESP32-audioI2S",
+      "commit": "56f27918a8e6d10d56a19ddf0fdd307cdeee8cde",
+      "files": [
+        {
+          "path": "README.md",
+          "line": 3
+        },
+        {
+          "path": "src/Audio.cpp",
+          "line": 750
+        },
+        {
+          "path": "src/Audio.cpp",
+          "line": 2193
+        },
+        {
+          "path": "src/Audio.cpp",
+          "line": 5892
+        },
+        {
+          "path": "src/Audio.h",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S24",
+      "title": "xiaozhi-esp32",
+      "repo": "78/xiaozhi-esp32",
+      "commit": "026e9b6e55e871089670c3909f85805b2a4b41f7",
+      "files": [
+        {
+          "path": "README_zh.md",
+          "line": 1
+        },
+        {
+          "path": "main/application.cc",
+          "line": 1
+        },
+        {
+          "path": "main/mcp_server.cc",
+          "line": 28
+        },
+        {
+          "path": "main/mcp_server.cc",
+          "line": 459
+        }
+      ]
+    },
+    {
+      "id": "S25",
+      "title": "ThingsOS声明的基础组件",
+      "components": [
+        {
+          "repo": "freetype/freetype",
+          "commit": "0a0221a1347e2f1e07c395263540026e9a0aa7c7",
+          "path": "src/base/ftobjs.c",
+          "line": 907
+        },
+        {
+          "repo": "madler/zlib",
+          "commit": "51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf",
+          "path": "inflate.c",
+          "line": 590
+        },
+        {
+          "repo": "DaveGamble/cJSON",
+          "commit": "c859b25da02955fef659d658b8f324b5cde87be3",
+          "path": "cJSON.c",
+          "line": 1142
+        },
+        {
+          "repo": "hathach/tinyusb",
+          "commit": "dae3f9a366bfcddbf9dcf1b48d7500286a849539",
+          "path": "src/class/msc/msc_device.c",
+          "line": 472
+        },
+        {
+          "repo": "mozillazg/python-pinyin",
+          "commit": "df101577145af2eb1abe5656e592e34e3bb56d23",
+          "path": "pypinyin/converter.py",
+          "line": 34
+        },
+        {
+          "repo": "nothings/stb",
+          "commit": "4e9b368bfc071e97206ea5c6adba68dd0cbf8897",
+          "path": "stb_image.h",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "S26",
+      "title": "CrossLink Gitee源码仓",
+      "repo": "daixinchun/xteink",
+      "provider": "gitee",
+      "commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+      "files": [
+        {
+          "path": "platformio.ini",
+          "line": 4
+        },
+        {
+          "path": "src/activities/browser/DataCapsuleBrowserActivity.cpp",
+          "line": 720
+        },
+        {
+          "path": "src/activities/browser/JianGuoBrowserActivity.cpp",
+          "line": 52
+        },
+        {
+          "path": "src/activities/reader/JianGuoSyncActivity.cpp",
+          "line": 385
+        },
+        {
+          "path": "src/components/themes/fengyan/FengyanTheme.cpp",
+          "line": 389
+        },
+        {
+          "path": "src/managers/FontManager.cpp",
+          "line": 39
+        },
+        {
+          "path": "lib/EpdFontLoader/EpdFontLoader.cpp",
+          "line": 15
+        },
+        {
+          "path": "src/activities/reader/EpubReaderActivity.cpp",
+          "line": 1
+        }
+      ]
+    }
+  ],
+  "firmware_groups": [
+    {
+      "id": "T01",
+      "firmware": "CrossLink Pixel",
+      "registry_ids": [
+        "F02",
+        "F10"
+      ],
+      "own_source_finding": "当前 Pixel 对应版本未找到，但家族源码已取到：S26 有风眼主题、阅读器、云盘客户端；S05另有GitHub旧树。[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)称“像素风格主题固件”",
+      "lineage_and_confidence": "家族来源**高**：发布仓明确指向S26，S05团队列出风眼；当前4.3.0T版本对应**不确定**。S26可读主题／云盘，不据此认领当前联网元数据补全与Plus移植"
+    },
+    {
+      "id": "T02",
+      "firmware": "Crosslink2",
+      "registry_ids": [
+        "F08",
+        "F09"
+      ],
+      "own_source_finding": "**找到家族实际源码** S26；[Gitee发布仓README](https://gitee.com/api/v5/repos/daixinchun/crosslink/git/blobs/51556ad86b5b0e7249b74f9755a1b74cf21dd906)原文指向 `daixinchun/xteink`。已读坚果云、数据胶囊和同步代码；当前Metalio两版本未对应",
+      "lineage_and_confidence": "来源仓身份**高**；当前4.2.9／1.2.10对应**不确定**。S26构建版本20260424、目标X3/X4 C3；S05及5个GitHub fork也未给出当前Metalio版本证据。不能继续称这些云盘功能只有闭源说明"
+    },
+    {
+      "id": "T03",
+      "firmware": "Crossslink_2.0",
+      "registry_ids": [
+        "F05"
+      ],
+      "own_source_finding": "未找到周默转发适配的补丁；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)原文点名“Whimco开发”。家族旧源码见 S05/S26",
+      "lineage_and_confidence": "**中偏低**：转述支持属于CrossLink系，公开源码能用于比较；仍不能证明周默的S3适配改动已公开"
+    },
+    {
+      "id": "T04",
+      "firmware": "Mogo",
+      "registry_ids": [
+        "F04"
+      ],
+      "own_source_finding": "官网可读，未找到 Mogo 自身仓库或源码附件；[官网](https://mogo.mantake.shop)页脚原文：“Mogo 固件基于 kiikoread 开发”并链接 Pico 仓库",
+      "lineage_and_confidence": "**中**：作者明确指向 S03，S03 README 又承认源于 S21；可取实际书籍／章节／排版实现。Mogo 的新书架、手帐和锁屏增量仍未知；不能说等同 S04"
+    },
+    {
+      "id": "T05",
+      "firmware": "PageRest",
+      "registry_ids": [
+        "F18"
+      ],
+      "own_source_finding": "[官网](https://pagerest.gofree.kdns.fr)有“第三方组件许可与声明”，实际只覆盖 React、网页烧录等网站依赖；[设备厂商文档](https://dot.mindreset.tech/docs/read_0/start/pagerest)留下 `fengcheng01/read_pico_firmware`，本次 404，Git 退出128。换作者显示名地址也不可读",
+      "lineage_and_confidence": "**不确定**：同名仓库与 Pico 官方基础代码是线索，未证实来自 kiikoread；S03/S04/S21 只是功能替代来源。网站还明说“Metalio 版本仍需真机测试”，不能由版本号认定 Plus 已成熟"
+    },
+    {
+      "id": "T06",
+      "firmware": "ThingOS",
+      "registry_ids": [
+        "F11"
+      ],
+      "own_source_finding": "找到同名作者 [flowflic/ThingsOS](https://github.com/flowflic/ThingsOS)，当前及三次历史只有说明、许可和图片，无应用源码。README 原文为“独立阅读系统”；[组件声明](https://thingsos.scholarcn.com/THIRD_PARTY_NOTICES.txt)公开 FreeType、zlib、stb_image、cJSON、TinyUSB、拼音词典和 Pico BSP 来源（具体上游文件见 [S25](SOURCES.md#s25)）",
+      "lineage_and_confidence": "**中**：作者与品牌对应，但仓库说明主指 Pico，未对上 F11 Plus 版本。基础组件来源有作者声明；微读具体来源**不确定**，不能硬归到 CrossMux。功能替代用 S02/S14/S15，不把这些候选写成血缘"
+    },
+    {
+      "id": "T07",
+      "firmware": "ModernClassicOS",
+      "registry_ids": [
+        "F30"
+      ],
+      "own_source_finding": "GitHub/Gitee 名称、作者、主页及跨站检索未找到代码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)突出“复古转盘操作”",
+      "lineage_and_confidence": "**低／不确定**：没有声称基于 Rockbox、ESP-ADF 或某 iPod 项目。可比较 S23 音频格式与定位、S18/S19 服务；转盘 UI、M4B 章节／索引和该固件自身续播逻辑仍未取得"
+    },
+    {
+      "id": "T08",
+      "firmware": "lnkboot",
+      "registry_ids": [
+        "F12"
+      ],
+      "own_source_finding": "未找到代码；同时检索 `lnkboot` 与易混淆的 `Inkboot`。作者 `wenbos058` 同名 GitHub/Gitee 查询404，不能由此断定作者没有别的账号；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)只称“多固件切换启动器”",
+      "lineage_and_confidence": "**低／不确定**：S17 Launcher、S22 口袋是同类代码／材料候选；没有出处支持它与 Moji、M5Launcher 同源"
+    },
+    {
+      "id": "T09",
+      "firmware": "布丁",
+      "registry_ids": [
+        "F22"
+      ],
+      "own_source_finding": "`paouke` 同名 GitHub/Gitee 公开仓库列表均为空；未取得源码链接。[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)自称“轻量系统”，且明确短信发送仍在诊断",
+      "lineage_and_confidence": "**低／不确定**：S23 本地／网络音频、S18 录音、S19 系统界面是可用零件候选，不能猜它基于 Brookesia。完整后台播放、电话与阅读协同未取得实现"
+    },
+    {
+      "id": "T10",
+      "firmware": "墨集 Moji",
+      "registry_ids": [
+        "F15"
+      ],
+      "own_source_finding": "自身代码未找到；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)明确“Fork 自 Launcher项目”，但无作者、地址或提交",
+      "lineage_and_confidence": "“有 Launcher 上游”的自述**中**；“就是 bmorcelli/Launcher”**低**。S17 有成熟的固件安装／目录代码，可列候选，不能把通用名字当成已追到唯一来源"
+    },
+    {
+      "id": "T11",
+      "firmware": "Eink4Boy",
+      "registry_ids": [
+        "F24"
+      ],
+      "own_source_finding": "自身代码未找到；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)明确“不支持 GBC 专用游戏”",
+      "lineage_and_confidence": "**低**：与 S12 Peanut-GB 的 DMG 限制相容，但不能排除 S09 的 gnuboy 被裁剪等实现。先按兼容、存档、声音、输入体验比较两者，不因 Peanut 小而默认它最佳"
+    },
+    {
+      "id": "T12",
+      "firmware": "ardmos",
+      "registry_ids": [
+        "F37"
+      ],
+      "own_source_finding": "自身代码未找到；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)明确是“Arduboy 游戏模拟器”，有独立版和 Moji 版",
+      "lineage_and_confidence": "**低／不确定**：S13 Ardens 有实际 AVR、声音、HEX/FX 装载源码，可作为替代；没证据说它是 ardmos 的核心。不能用“重新编译 Arduboy 游戏源码的库”替代任意游戏模拟功能"
+    },
+    {
+      "id": "T13",
+      "firmware": "开哥录音机",
+      "registry_ids": [
+        "F35"
+      ],
+      "own_source_finding": "项目集、规范、作者相关链接及源码检索均未找到该应用实现；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)称“支持锁屏录音”",
+      "lineage_and_confidence": "**低／不确定**：口袋兼容自述不是代码继承关系。S18 录音帧服务可复用，S23 可比较回放；两者都不自动补上锁屏和后台录音的产品流程"
+    },
+    {
+      "id": "T14",
+      "firmware": "开哥浏览器",
+      "registry_ids": [
+        "F38",
+        "F41"
+      ],
+      "own_source_finding": "未取得应用源码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)只有“网上冲浪”等短说明，没有 HTML／JS 兼容范围",
+      "lineage_and_confidence": "**不确定**：不能猜是 Chromium、LVGL 或某代理浏览器；未识别可信的浏览器引擎来源。本次只保留设计参照，S20 不是浏览器"
+    },
+    {
+      "id": "T15",
+      "firmware": "开哥天气",
+      "registry_ids": [
+        "F34",
+        "F42"
+      ],
+      "own_source_finding": "未取得代码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)称“根据 IP 查询天气”",
+      "lineage_and_confidence": "**不确定**：不知道调用哪个服务／SDK；不能因 Mogo 用和风就认定它相同。S22 只提供接入规范，不能算天气客户端实现"
+    },
+    {
+      "id": "T16",
+      "firmware": "开哥五子棋",
+      "registry_ids": [
+        "F29",
+        "F43"
+      ],
+      "own_source_finding": "未取得代码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)称“人机和双人对战”",
+      "lineage_and_confidence": "**低**：S02 的 GomokuBoard／GomokuAI／GameActivity 有实际规则和搜索，是功能替代候选；没有复用关系证据，不能将相同棋盘 UI 当作复制证明"
+    },
+    {
+      "id": "T17",
+      "firmware": "开哥贪吃蛇",
+      "registry_ids": [
+        "F36"
+      ],
+      "own_source_finding": "项目集树与中英文／跨站检索未取得该应用源码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)原文“小游戏”",
+      "lineage_and_confidence": "**不确定**：未识别专用核心，不指定某个随手找到的 Snake 教程为上游；保留设计参照，不宣称已有与其体验相当的代码"
+    },
+    {
+      "id": "T18",
+      "firmware": "开哥记事本",
+      "registry_ids": [
+        "F32",
+        "F49"
+      ],
+      "own_source_finding": "未取得代码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)明确“txt记事本”",
+      "lineage_and_confidence": "**低**：S20 的 textarea 可承担编辑输入，S08 有带实现的笔记系统参照；保存、中文输入和文件管理不是文本控件自带。没有证据认定其用了这些来源"
+    },
+    {
+      "id": "T19",
+      "firmware": "开哥点读机",
+      "registry_ids": [
+        "F45"
+      ],
+      "own_source_finding": "未取得代码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)标为“开发示范”",
+      "lineage_and_confidence": "**不确定**：没给 OCR、点字坐标或内容包机制；不能把“点读”推成某个 OCR/TTS 库。仅保留设计参照"
+    },
+    {
+      "id": "T20",
+      "firmware": "开哥亮证",
+      "registry_ids": [
+        "F40"
+      ],
+      "own_source_finding": "[项目集](https://github.com/Changkai9888/CloudZao-Projects/tree/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/%E4%BA%AE%E8%AF%81)有 public-compliance.zip；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)明确公开“驱动源码、重新链接材料”",
+      "lineage_and_confidence": "驱动材料入口**高**；完整亮证应用是否包含其中**不确定**，本次没有下载整包。S20 有二维码显示实现，但不包含凭证核销业务。不能从 LGPL 驱动交付反推整个应用开源"
+    },
+    {
+      "id": "T21",
+      "firmware": "开哥黑猩猩测试",
+      "registry_ids": [
+        "F27"
+      ],
+      "own_source_finding": "未取得代码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)自身注明介绍为“艺术化处理”",
+      "lineage_and_confidence": "**不确定**：数字记忆玩法不识别具体引擎／来源；不认定来自 Human Benchmark，不将小游戏说明当成学习效果证据"
+    },
+    {
+      "id": "T22",
+      "firmware": "开哥森林里的朋友",
+      "registry_ids": [
+        "F28",
+        "F51"
+      ],
+      "own_source_finding": "未取得代码或关卡资源源码；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)分类“知识通关，兴趣冒险，电子宠物”",
+      "lineage_and_confidence": "**不确定**：没有证据对应某个宠物引擎或课程。口袋只是兼容运行入口，不能用其它 pet demo 当成这款应用的完整开源替代"
+    },
+    {
+      "id": "T23",
+      "firmware": "BoBoOS",
+      "registry_ids": [
+        "F23",
+        "F25"
+      ],
+      "own_source_finding": "官网及[开发文档](https://bobo.sh.creativone.cn/developer/docs)可读，未找到固件仓库／SDK 下载。原文给出 `/.crosspoint/plugins/<应用 ID>/`、`manifest.json`、`device.json`、`plugin.js`，另有 `app.json`、MCP 和 ELF 包",
+      "lineage_and_confidence": "**中（协议线索）**：与 S01 的 `docs/sd-plugins.md:9–29` 精确对应，不只是外观相似；具体是 CrossPoint、CrossMux 还是再衍生仍**不确定**。其新增原生应用／商店／AI 后端代码未取得，不能以协议同源替代源码同源"
+    },
+    {
+      "id": "T24",
+      "firmware": "RickyOS",
+      "registry_ids": [
+        "F06"
+      ],
+      "own_source_finding": "**找到旧版源码** S07；官网明确区分 1.1.x 开源与 1.2 起不公开。公开树与 Release 仍在1.1线，不能冒充 F06 的 v1.2.14",
+      "lineage_and_confidence": "**高**：README:4 明确基于 S02；旧版主页、阅读库、待机源码可读。当前狗狗伴读、竖排等是否都在旧版有实现需逐功能核对，不能把官网1.2图片套给1.1"
+    },
+    {
+      "id": "T25",
+      "firmware": "小智畅享版",
+      "registry_ids": [
+        "F31"
+      ],
+      "own_source_finding": "未取得这个改版的代码或可确认作者账号；不反查已脱敏数字昵称。[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)自称“小智固件”，主打日历／壁纸／U盘",
+      "lineage_and_confidence": "小智家族线索**中偏低**；直接基底是 S24 `xiaozhi-esp32` 还是 Metalio 改版**不确定**。S24 有对话／工具实现，S20 有日历控件；均不能证明它的壁纸与 USB 增量已公开"
+    },
+    {
+      "id": "T26",
+      "firmware": "微信读书适配版",
+      "registry_ids": [
+        "F19"
+      ],
+      "own_source_finding": "自身移植代码未找到；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)明确“移植自 CrossMux（原作者 0x1abin）”，另称以官方固件为底",
+      "lineage_and_confidence": "**中**：上游与功能路径明确，S02/S16 能定位微读与 OPDS，S14/S15 可再向上追；尚未核对作者的适配提交和对应固件"
+    },
+    {
+      "id": "T27",
+      "firmware": "Metalio-WhiteAI",
+      "registry_ids": [
+        "F20"
+      ],
+      "own_source_finding": "**已有公开实现** S08，前次报告已经找到；不应继续归成无源码，也不计为本次新增。README 原文：“不编译也不链接 LVGL”",
+      "lineage_and_confidence": "**高（代码可得）**；当前源码与列表旧 v2.0.51 仍未对应。可以比较 AI 状态、笔记和录音的代码，不能拿它支持“所有固件都来自 LVGL”的猜测"
+    },
+    {
+      "id": "T28",
+      "firmware": "CrossMux 倾斜版",
+      "registry_ids": [
+        "F14"
+      ],
+      "own_source_finding": "未找到 Eric 的增强补丁／fork；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)明确承认 CrossPoint 阅读体验与 CrossMux 名称",
+      "lineage_and_confidence": "**中**：CrossMux→CrossPoint 的上游链为高置信，Eric 的倾斜检测／去抖／方向映射未知。S02 可复用阅读器，不宣称包含这份增强"
+    },
+    {
+      "id": "T29",
+      "firmware": "CrossPoint 非官方 Plus",
+      "registry_ids": [
+        "F39"
+      ],
+      "own_source_finding": "自用移植改动未找到；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)作者自称“纯crosspoint”，还说明无支持、网页刷写未测",
+      "lineage_and_confidence": "**中**：S01 上游可读；Plus 移植本身和稳定性**不确定**。不要把上游支持 S3 Metalio E-Ink4 当成这份 S31 端口已公开或成熟"
+    },
+    {
+      "id": "T30",
+      "firmware": "Claw4 GBA版",
+      "registry_ids": [
+        "F26"
+      ],
+      "own_source_finding": "署名 zuochen.luo 的自身修改未找到；[注册说明](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all)只称“优化后的GBA 模拟器”。另找到 S10 的独立开源 Claw4 版本",
+      "lineage_and_confidence": "F26→S10 血缘**低／未证实**；S10 自身是 Claw4 适配的证据**高**，可直接纳入体验候选。S09/S11 提供 gpSP 和 JIT 实现链；P4 的彩屏性能不外推 Plus"
+    },
+    {
+      "id": "T31",
+      "firmware": "retro-go-gba",
+      "registry_ids": [
+        "F33"
+      ],
+      "own_source_finding": "**已有源码链接** S09，前次报告已有；当前完整核到 GBA／gnuboy 代码与上游说明，不能继续按闭源排除",
+      "lineage_and_confidence": "**高（发布者直接链接）**：S09 README:295–298 指向 retro-go／gpSP／HowBoyAdvance。另有 S10 Claw4 分叉；仍无二进制一致性测试。此前“GPL全部排除”的筛选不适用于本任务"
+    }
+  ],
+  "registry": {
+    "public_total_observed": 53,
+    "target_record_count": 39,
+    "records": [
+      {
+        "id": "F02",
+        "name": "CrossLink Pixel 4.7",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "风眼",
+        "observed_version": "v4.3.0T",
+        "original_short_excerpt": "像素风格主题固件",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F04",
+        "name": "Mogo E4p",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "常暗",
+        "observed_version": "v1.0.10",
+        "original_short_excerpt": "基于kiikoread pico版开发",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F05",
+        "name": "Crossslink_2.0（Metalio E-Ink4）",
+        "board": "Metalio E-Ink4",
+        "author": "周默の周末",
+        "observed_version": "10.10 修复BUG最新版",
+        "original_short_excerpt": "Whimco开发",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F06",
+        "name": "RickyOS",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "Ricky AI Studio",
+        "observed_version": "v1.2.14",
+        "original_short_excerpt": null,
+        "original_excerpt_field": null,
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F08",
+        "name": "Crosslink2 无名4.7",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "whimco",
+        "observed_version": "4.2.9",
+        "original_short_excerpt": "经典主题固件",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F09",
+        "name": "Crosslink2 无名3.97寸",
+        "board": "Metalio E-Ink4",
+        "author": "whimco",
+        "observed_version": "v1.2.10",
+        "original_short_excerpt": "经典主题固件",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F10",
+        "name": "CrossLink Pixel",
+        "board": "Metalio E-Ink4",
+        "author": "风眼",
+        "observed_version": "v4.3.0T",
+        "original_short_excerpt": "像素风格主题固件",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F11",
+        "name": "ThingOS",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "flowflic",
+        "observed_version": "v0.1.7",
+        "original_short_excerpt": "微信读书和阅读进度",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F12",
+        "name": "lnkboot",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "wenbos058",
+        "observed_version": "v1.0.6",
+        "original_short_excerpt": "多固件切换启动器",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F14",
+        "name": "CrossMux_Metalio E-ink4 (倾斜翻页增强版）",
+        "board": "Metalio E-Ink4",
+        "author": "Eric",
+        "observed_version": "v1.6.5",
+        "original_short_excerpt": "CrossPoint 阅读体验",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F15",
+        "name": "墨集",
+        "board": "Metalio E-Ink4",
+        "author": "paouke",
+        "observed_version": "v0.1.3",
+        "original_short_excerpt": "本项目Fork 自 Launcher项目",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F18",
+        "name": "PageRest",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "风城",
+        "observed_version": "v0.7.103",
+        "original_short_excerpt": "阅读、书架与每日手帐",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F19",
+        "name": "Metalio E-Ink4微信读书适配自用",
+        "board": "Metalio E-Ink4",
+        "author": "卡卡罗特",
+        "observed_version": "v0.1.1",
+        "original_short_excerpt": "移植自 CrossMux（原作者 0x1abin）",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F20",
+        "name": "Metalio-WhiteAI",
+        "board": "Metalio E-Ink4",
+        "author": "Michael",
+        "observed_version": "v2.0.51",
+        "original_short_excerpt": "WhiteAI",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F22",
+        "name": "布丁",
+        "board": "Metalio E-Ink4",
+        "author": "paouke",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "轻量系统",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F23",
+        "name": "boboos-前往官网 https://bobo.sh.creativone.cn",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "树莓和派",
+        "observed_version": "v0.2.3.1",
+        "original_short_excerpt": null,
+        "original_excerpt_field": null,
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F24",
+        "name": "Eink4Boy",
+        "board": "Metalio E-Ink4",
+        "author": "paouke",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "不支持 GBC 专用游戏",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F25",
+        "name": "BoBoOS--AIOS 用AI重塑你的生活 建议前往官网https://bobo.sh.creativone.cn完成刷写",
+        "board": "Metalio E-Ink4",
+        "author": "树莓和派",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": null,
+        "original_excerpt_field": null,
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F26",
+        "name": "Metalio_Claw4_2.0.51_gba_full",
+        "board": "Metalio Claw4",
+        "author": "zuochen.luo",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "优化后的GBA 模拟器",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F27",
+        "name": "黑猩猩测试——黑猩猩发起对人类的智力挑战",
+        "board": "Metalio E-Ink4",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "艺术化处理",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F28",
+        "name": "森林里的朋友——简单的认识",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "知识通关，兴趣冒险，电子宠物",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F29",
+        "name": "五子棋",
+        "board": "Metalio E-Ink4",
+        "author": "开哥",
+        "observed_version": "v0.0.2",
+        "original_short_excerpt": "人机和双人对战",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F30",
+        "name": "ModernClassicOS",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "wenbos058",
+        "observed_version": "v0.1.1",
+        "original_short_excerpt": "复古转盘操作",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F31",
+        "name": "小智畅享版",
+        "board": "Metalio E-Ink4",
+        "author": "数字昵称（已隐去）",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "小智固件",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F32",
+        "name": "记事本",
+        "board": "Metalio E-Ink4",
+        "author": "开哥",
+        "observed_version": "v0.1.1",
+        "original_short_excerpt": "txt记事本",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F33",
+        "name": "retro-go-gba",
+        "board": "Metalio Claw4",
+        "author": "黄埔大道西",
+        "observed_version": "0.4.13",
+        "original_short_excerpt": "带虚拟按键",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F34",
+        "name": "天气查询",
+        "board": "Metalio E-Ink4",
+        "author": "开哥",
+        "observed_version": "v0.1.1",
+        "original_short_excerpt": "根据 IP 查询天气",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F35",
+        "name": "录音机",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "支持锁屏录音",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F36",
+        "name": "贪吃蛇",
+        "board": "Metalio E-Ink4",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "小游戏",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F37",
+        "name": "ardmos",
+        "board": "Metalio E-Ink4",
+        "author": "paouke",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "Arduboy 游戏模拟器",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F38",
+        "name": "浏览器",
+        "board": "Metalio E-Ink4",
+        "author": "开哥",
+        "observed_version": "v0.1.1",
+        "original_short_excerpt": "网上冲浪",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F39",
+        "name": "Crosspoint (自用非官方）",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "郁闷",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "纯crosspoint",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F40",
+        "name": "亮证",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "驱动源码",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F41",
+        "name": "浏览器",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "网上冲浪",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F42",
+        "name": "天气查询",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "根据 IP 查询天气",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F43",
+        "name": "五子棋",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "人机和双人对战",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F45",
+        "name": "点读机",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "开发示范",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F49",
+        "name": "记事本",
+        "board": "Metalio E-Ink4 Plus",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "txt记事本",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      },
+      {
+        "id": "F51",
+        "name": "森林里的朋友——简单的认识",
+        "board": "Metalio E-Ink4",
+        "author": "开哥",
+        "observed_version": "v0.1.0",
+        "original_short_excerpt": "知识通关，兴趣冒险，电子宠物",
+        "original_excerpt_field": "description",
+        "primary_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all"
+      }
+    ]
+  },
+  "web_search_queries": [
+    "Crosslink reader Gitee whimco CrossLink Pixel 风眼 开源",
+    "\"Mogo\" \"kiikoread\" github",
+    "\"PageRest\" github 风城",
+    "\"ThingOS\" \"github\" 墨水屏",
+    "\"ModernClassicOS\" \"wenbos058\"",
+    "\"lnkboot\" github",
+    "\"paouke\" \"Launcher\" github",
+    "\"开哥\" \"固件口袋\" 源码",
+    "\"RickyOS\" github source",
+    "\"PageRest\" \"开源\"",
+    "\"Mogo\" \"mantake\" 固件 开源",
+    "\"BoBoOS\" \"开源\"",
+    "\"Eink4Boy\" github",
+    "\"ardmos\" github",
+    "\"ModernClassicOS\" 固件",
+    "\"布丁\" \"paouke\" 源码",
+    "\"CrossLink\" site:gitee.com/daixinchun",
+    "\"ThingOS\" \"flowflic\" source code",
+    "\"ModernClassicOS\" site:github.com",
+    "\"Launcher\" \"Metalio\" github",
+    "\"Mogo\" \"固件\" site:bilibili.com",
+    "\"PageRest\" site:xiaohongshu.com",
+    "\"ModernClassicOS\" site:xiaohongshu.com",
+    "\"Moji\" \"Launcher\" \"E-INK4\"",
+    "\"CrossLink Pixel\" site:xiaohongshu.com github",
+    "\"Crosslink\" \"whimco\" gitee source",
+    "\"Eink4Boy\" \"Peanut\"",
+    "\"ardmos\" \"Arduboy\" \"github\"",
+    "\"Metalio\" \"Launcher\" \"Moji\" source",
+    "\"ModernClassicOS\" \"wenbos\" 源码",
+    "\"PageRest\" \"kiikoread\"",
+    "\"ThingOS\" \"开源\" 墨水屏",
+    "\"Eink4Boy\" OR \"ModernClassicOS\" OR \"lnkboot\" site:gitee.com",
+    "\"BoBoOS\" OR \"PageRest\" OR \"Mogo E4p\" site:gitee.com",
+    "\"Metalio\" \"Launcher\" github 源码",
+    "\"paouke\" source code firmware",
+    "\"Inkboot\" \"ESP32\" source",
+    "\"墨集\" \"Launcher\" 源码",
+    "\"ModernClassicOS\" music firmware source",
+    "\"E-INK4\" \"Launcher\" -site:relatedrepos.com",
+    "\"BoBoOS\" \"源码\" 墨水屏",
+    "\"Eink4Boy\" \"源码\"",
+    "\"ardmos\" \"开源\" 墨水屏",
+    "\"小智畅享版\" 开源",
+    "\"CrossLink\" source code site:zhihu.com",
+    "\"墨水屏\" \"固件\" \"开源\" site:coolapk.com",
+    "\"E-INK4\" \"固件\" site:tieba.baidu.com",
+    "\"Metalio\" \"固件\" site:v2ex.com",
+    "ESP32 Arduboy emulator source code github",
+    "ESP32 e ink Launcher firmware bmorcelli source",
+    "Peanut-GB gnuboy Gameboy emulator github",
+    "ESP-Brookesia audio player recorder source github",
+    "Ardens Arduboy emulator github hex bin AVR",
+    "\"ESP32\" \"Arduboy\" \"emulator\" github -site:reddit.com",
+    "\"Peanut-GB\" github deltabeard",
+    "\"ModernClassicOS\" OR \"lnkboot\" OR \"Eink4Boy\" site:gitlab.com",
+    "\"固件口袋\" \"录音机\" 源码 site:github.com",
+    "\"开哥\" \"记事本\" \"浏览器\" \"天气\" 固件 开源",
+    "\"点读机\" \"森林里的朋友\" \"亮证\" 固件",
+    "\"Metalio\" \"GBA\" \"zuochen\"",
+    "\"CrossMux\" \"倾斜\" \"Eric\" 开源",
+    "\"Crosspoint\" \"郁闷\" Plus 源码",
+    "\"Metalio_Claw4_2.0.51_gba_full\" source",
+    "\"微信读书适配自用\" \"源码\"",
+    "\"CrossLink Pixel\" \"源码\" site:xiaohongshu.com",
+    "\"Mogo E4p\" \"开源\" site:zhihu.com",
+    "\"开哥\" \"固件\" site:bilibili.com",
+    "\"布丁\" \"E-INK4\" site:coolapk.com",
+    "\"CrossLink\" \"firmware\" \"source\" site:gitlab.com",
+    "\"PageRest\" source firmware 风城",
+    "\"lnkboot\" \"固件\" \"源码\"",
+    "\"BoBoOS\" \"github\" \"creativone\"",
+    "\"andjiang0083\" \"Claw4\"",
+    "\"allocated/crosspoint_chinesetype\"",
+    "\"HowBoyAdvance\" github source",
+    "\"ModernClassicOS\" \"ESP-ADF\"",
+    "\"开哥\" \"五子棋\" \"贪吃蛇\" \"源码\"",
+    "\"黑猩猩测试\" \"固件\" \"开源\"",
+    "\"记事本\" \"亮证\" \"Changkai9888\"",
+    "\"ModernClassicOS\" OR \"lnkboot\" OR \"Eink4Boy\" OR \"ardmos\" site:v2ex.com",
+    "\"read_pico_firmware\" \"fork\"",
+    "\"PageRest\" \"fengcheng01\" source",
+    "\"ThingOS\" \"flowflic\" \"based\" firmware",
+    "\"Moji\" \"paouke\" \"Launcher\""
+  ],
+  "requests": [
+    {
+      "url": "https://api.github.com/users/wenbos058/repos?per_page=100",
+      "http": 404,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://api.github.com/users/paouke/repos?per_page=100",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://api.github.com/repos/Changkai9888/CloudZao-Projects/git/trees/HEAD?recursive=1",
+      "http": 200,
+      "bytes": 20102,
+      "sha256": "26231813db9aee62bf25c53840e9f5b5e9a6a324b1a1378641532963fcc6e082"
+    },
+    {
+      "url": "https://api.github.com/repos/DaisonChun/crosslink/git/trees/HEAD?recursive=1",
+      "http": 200,
+      "bytes": 134576,
+      "sha256": "21e84ff85aebcded564a2b01578b070657893beadd5e1ab12e1f30ed976b9f17"
+    },
+    {
+      "url": "https://api.github.com/users/flowflic/repos?per_page=100",
+      "http": 200,
+      "bytes": 410525,
+      "sha256": "7d5cf8760191dca9cb47df4a691cc78f096ca79c6358b6d3629cb8ec49664c7f"
+    },
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all",
+      "http": 200,
+      "bytes": 195941,
+      "sha256": "73fcb7968d9c98c85ad4868f02622ebc3fb67e961fd37eedc9582fa740933d27"
+    },
+    {
+      "url": "https://rickyaistudio.com/licenses.html",
+      "http": 200,
+      "bytes": 3605,
+      "sha256": "e18c9d93752f693c2cb58937a605861ebf297bd72e80c9cd999240d53b018aaf"
+    },
+    {
+      "url": "https://api.github.com/repos/flowflic/ThingsOS/git/trees/HEAD?recursive=1",
+      "http": 200,
+      "bytes": 2694,
+      "sha256": "15c80d298f9820594ada66531de2e54c26439ba5f5671bb12917c89422c7ba83"
+    },
+    {
+      "url": "https://gitee.com/daixinchun/xteink-x3",
+      "http": 404,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://mogo.mantake.shop",
+      "http": 200,
+      "bytes": 1737,
+      "sha256": "200617223d4e03af0fb392aadd03d47710b34440ef080e164d61e7613dfcf9b9"
+    },
+    {
+      "url": "https://api.github.com/repos/chinoryunqin/RickyOS/git/trees/HEAD?recursive=1",
+      "http": 200,
+      "bytes": 503557,
+      "sha256": "543a527858b351d99da35cd41987d90857aeb761cec1325cfdff3b7e999c041a"
+    },
+    {
+      "url": "https://www.crosslink-reader.top",
+      "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr",
+      "http": 200,
+      "bytes": 1035,
+      "sha256": "7c052644c7c1edf0beb16122054e364d86bdec4a276d53be2b132196c8ac9c83"
+    },
+    {
+      "url": "https://bobo.sh.creativone.cn",
+      "http": 200,
+      "bytes": 26224,
+      "sha256": "fb47fb01984fc958051a77685b2e43e810b8d01db3a50926d10aabce140747c6"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/flowflic/ThingsOS/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/README.md",
+      "http": 200,
+      "bytes": 7336,
+      "sha256": "76fb7dc05ea6032a0c267e6d1fa569f25c2f1b40d229a4baf4d259e03d14e835"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/flowflic/ThingsOS/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/LICENSE",
+      "http": 200,
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/README.md",
+      "http": 200,
+      "bytes": 17759,
+      "sha256": "ef65675a53060669fe5bde9ce5ef39d31e53d8b881ad85c7566f7b155a0d7f90"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/README.zh-CN.md",
+      "http": 200,
+      "bytes": 11239,
+      "sha256": "070b4d2a2595c09873fd60e5ac6ec0ee9b60df591c5782c676eaa1c28a52dd34"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/LICENSE",
+      "http": 200,
+      "bytes": 1202,
+      "sha256": "cf9594792105c61f556be3bb25804faec883faf6024504b8d4e095a916e47e5c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/platformio.ini",
+      "http": 200,
+      "bytes": 42967,
+      "sha256": "34edadfd0b7971d6ece332c085922678d787badd550d49ae6c7390d027fcbf3f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/lib/WeReadWebApi/src/WeReadProtocol.cpp",
+      "http": 200,
+      "bytes": 37837,
+      "sha256": "aeb2651dc9ba9e1911c233e8efab7f926966b2062b46a2839a1bccebf96598ec"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/src/activities/apps/weread/README.md",
+      "http": 200,
+      "bytes": 14982,
+      "sha256": "969db93f11b4105a7e8fa10e3d2adf849bb9b8fdbd7e250fe1a7013af7fc4641"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DaisonChun/crosslink/107e172994ad2086c414e159795515175681be71/README.md",
+      "http": 200,
+      "bytes": 1565,
+      "sha256": "38b26682acb72644d6b8f485e9a4376a1a5b27cc7aec763905377c9b77f92fdc"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DaisonChun/crosslink/107e172994ad2086c414e159795515175681be71/platformio.ini",
+      "http": 200,
+      "bytes": 2870,
+      "sha256": "6f32a32f492f10456b6d1b27e061530e3138100301a86cc895e093ccfae9a387"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DaisonChun/crosslink/107e172994ad2086c414e159795515175681be71/SCOPE.md",
+      "http": 200,
+      "bytes": 3838,
+      "sha256": "01684e1512cb48c950d81ad1a255ca2b6d2e13500aa8cc3a7c471091f364ec42"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Changkai9888/CloudZao-Projects/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/README.md",
+      "http": 200,
+      "bytes": 3879,
+      "sha256": "99621f6a2757e78c6e7600f1edde09ee7e051a94f287f6ccc6cabcaf9a410656"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Changkai9888/CloudZao-Projects/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/protocols/%E5%9B%BA%E4%BB%B6%E5%8F%A3%E8%A2%8B%E6%8E%A5%E5%85%A5%E8%A7%84%E8%8C%83%E4%B8%8E%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97.md",
+      "http": 200,
+      "bytes": 45499,
+      "sha256": "c016a290fdd6b2a81f4fa128add00d41d61cab3e9a8aa08ac1720fcfcf6a4c0d"
+    },
+    {
+      "url": "https://mogo.mantake.shop/docs/",
+      "http": 200,
+      "bytes": 22940,
+      "sha256": "1f7ede4e703bf60febfeb9290a287ee3f7bb87f0fa88091c299f157e261969d5"
+    },
+    {
+      "url": "https://mogo.mantake.shop/assets/index-CZ3RRlK6.js",
+      "http": 200,
+      "bytes": 68415,
+      "sha256": "b424266840663dc670ed8140dfb6a99aa9cf9765e86248c4ce4d1e8bbffbddb7"
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr/assets/index-BAmR7mhW.js",
+      "http": 200,
+      "bytes": 629709,
+      "sha256": "b63cab78ce03c5a2d1903f9065050d3cdf95a59598d4e68ac6854ffa23b91f1e"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink",
+      "http": 200,
+      "bytes": 6405,
+      "sha256": "6438d8dc73c75fd0ed349e9ab6633289301d87ffb78105b516a9dcd548baa5e2"
+    },
+    {
+      "url": "https://api.github.com/repos/DaisonChun/crosslink/forks?per_page=100",
+      "http": 200,
+      "bytes": 25917,
+      "sha256": "ab14fa86e1e81457a7836ab63aaf942897b519d38ae562da5fae76289f10f6d8"
+    },
+    {
+      "url": "https://api.github.com/repos/chinoryunqin/RickyOS/releases?per_page=20",
+      "http": 200,
+      "bytes": 79165,
+      "sha256": "f27e1fa83fb7a03ebc5a2102f3e7bcf25c5b96bd3eebae44943d862e1c919860"
+    },
+    {
+      "url": "https://gitee.com/daixinchun/xteink-x3/releases",
+      "http": 200,
+      "bytes": 47056,
+      "sha256": "cfac9b012c8001f60691afa9a3e74647ff3066c54700f7c88b3b80a2f8cb79ab"
+    },
+    {
+      "url": "https://api.github.com/repos/andjiang0083/retro-go-tab5/git/trees/HEAD?recursive=1",
+      "http": 200,
+      "bytes": 407660,
+      "sha256": "01e0d1bca149b129c86d693286fd744c7a547ec75d26fb38412f87b3d720ad3e"
+    },
+    {
+      "url": "https://api.github.com/repos/446599/Metalio-WhiteAI/git/trees/HEAD?recursive=1",
+      "http": 200,
+      "bytes": 145014,
+      "sha256": "c2b5ffa9ff371c0e9e517092e913ed7d41baa865e5d1d1358c149e72c9aa8bad"
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr/THIRD_PARTY_LICENSES.txt",
+      "http": 200,
+      "bytes": 22372,
+      "sha256": "97702ca46dd635d60dcb8ffb614fde363307b560a31c88308cd5f4ce75ecbff1"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/git/trees/master?recursive=1",
+      "http": 200,
+      "bytes": 787,
+      "sha256": "698ef61e950497b46d6eccfe81dfb37692723ddedbad57fbf098406190dd5c12"
+    },
+    {
+      "url": "https://thingsos.scholarcn.com/THIRD_PARTY_NOTICES.txt",
+      "http": 200,
+      "bytes": 100561,
+      "sha256": "22d23fffa3db263173930e055f83e7d02e6b629ab575765275c5cef3d4127825"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/forks?per_page=100",
+      "http": 500,
+      "error": "HTTP Error 500: Internal Server Error"
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=Eink4Boy+OR+ardmos+OR+ModernClassicOS+OR+lnkboot",
+      "http": 200,
+      "bytes": 31769,
+      "sha256": "0c9c5a345655085de1c09227be036b4b3cb58376d28495767194c6c003699b6f"
+    },
+    {
+      "url": "https://gitlab.com/api/v4/projects?search=Metalio&simple=true&per_page=100",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://gitee.com/api/v5/users/wenbos058/repos?per_page=100",
+      "http": 404,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://gitee.com/api/v5/users/paouke/repos?per_page=100",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://api.github.com/repos/espressif/esp-brookesia/git/trees/HEAD?recursive=1",
+      "http": 403,
+      "error": "HTTP Error 403: rate limit exceeded"
+    },
+    {
+      "url": "https://api.github.com/repos/espressif/esp-adf/git/trees/HEAD?recursive=1",
+      "http": 403,
+      "error": "HTTP Error 403: rate limit exceeded"
+    },
+    {
+      "url": "https://api.github.com/repos/deltabeard/Peanut-GB/git/trees/HEAD?recursive=1",
+      "http": 200,
+      "bytes": 16289,
+      "sha256": "74211de1381595e6f1a5dbc3123a74d26259121a8de0fbf73fbaa92068413671"
+    },
+    {
+      "url": "https://api.github.com/repos/78/xiaozhi-esp32/git/trees/HEAD?recursive=1",
+      "http": 403,
+      "error": "HTTP Error 403: rate limit exceeded"
+    },
+    {
+      "url": "https://api.github.com/repos/bmorcelli/Launcher/git/trees/HEAD?recursive=1",
+      "http": 403,
+      "error": "HTTP Error 403: rate limit exceeded"
+    },
+    {
+      "url": "https://api.github.com/repos/tiberiusbrown/Ardens/git/trees/HEAD?recursive=1",
+      "http": 403,
+      "error": "HTTP Error 403: rate limit exceeded"
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=Mogo+kiikoread&per_page=20",
+      "http": 200,
+      "bytes": 55,
+      "sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f"
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=BoBoOS+in:name&per_page=20",
+      "http": 200,
+      "bytes": 25923,
+      "sha256": "25d34c7a98da2dfe1a2db5a0f85bb4b7fcfc81c3818294ae593eee9c3b05097e"
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=PageRest+in:name&per_page=20",
+      "http": 200,
+      "bytes": 108354,
+      "sha256": "863c2dfd77734a19e74c7f609ad50919c35c2cafd3db715ae259bed27041ffaa"
+    },
+    {
+      "url": "https://gitee.com/api/v5/search/repositories?q=Eink4Boy&per_page=20",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://gitee.com/api/v5/search/repositories?q=ModernClassicOS&per_page=20",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://gitee.com/api/v5/search/repositories?q=BoBoOS&per_page=20",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://gitlab.com/api/v4/projects?search=PageRest&simple=true&per_page=100",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://gitlab.com/api/v4/projects?search=CrossLink&simple=true&per_page=100",
+      "http": 500,
+      "error": "HTTP Error 500: Internal Server Error"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/deltabeard/Peanut-GB/d0bcca771c83a2638c93a9ae61f3d51f226dc905/README.md",
+      "http": 200,
+      "bytes": 8202,
+      "sha256": "f2ba4830e482d50dd1057a200390d12e3a58043b8cef08444a41b0b027872c7b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/README.md",
+      "http": 200,
+      "bytes": 19684,
+      "sha256": "2b2e1ae6ae47ce4ac01008d21e27570a2574d92728ae251e889e467753c0531d"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/deltabeard/Peanut-GB/d0bcca771c83a2638c93a9ae61f3d51f226dc905/peanut_gb.h",
+      "http": 200,
+      "bytes": 102999,
+      "sha256": "cf7777068492474d084f7dca0b00724d4dcdeab7f9a6c91a5d3a82e60d1cf728"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/README_CN.md",
+      "http": 200,
+      "bytes": 18945,
+      "sha256": "c47f3457bac93b19d942bbecb671fd3099f72c3fa2a862d3e8bea02c1f8199ea"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/retro-go-p4/gbsp/components/gbsp-libretro/README.md",
+      "http": 200,
+      "bytes": 2068,
+      "sha256": "1482caaf79458b5da1505490564efcaabf9c345ca5200702ae8219bef3ac88db"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/retro-go-p4/gbsp/main/main.c",
+      "http": 200,
+      "bytes": 28472,
+      "sha256": "d3691acdbfba482445307c9fbac457092f1b9d4add6186ade7a6e06da81dc917"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-tab5/4e8f0f2f4e75b2102016c433b34ee1f23e17e471/retro-go-p4/retro-core/components/gnuboy/gnuboy.c",
+      "http": 200,
+      "bytes": 20044,
+      "sha256": "5d9a3f59ad7d7710d3271ad0ad3c548018d7e7584bb30f1af1c71a9c3e130c43"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/446599/Metalio-WhiteAI/153d0967e97e1cf308403252cfc2839d6d65fb08/docs/AI_SYSTEM_MCP.md",
+      "http": 200,
+      "bytes": 6094,
+      "sha256": "f83c2957019ac48b24e76dfe70737064c41624c98b7faaa08802289f71e3869c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/446599/Metalio-WhiteAI/153d0967e97e1cf308403252cfc2839d6d65fb08/README_zh.md",
+      "http": 200,
+      "bytes": 14695,
+      "sha256": "f6093146b25c0054042a7c45b26b66bd0c422318b968dda0b9953280633c11ee"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/446599/Metalio-WhiteAI/153d0967e97e1cf308403252cfc2839d6d65fb08/main/application.cc",
+      "http": 200,
+      "bytes": 6666,
+      "sha256": "289b907a53b646279dc92e4cdbbd1be0a42604153118297df83cbbf772c8388f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bmorcelli/Launcher/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/README.md",
+      "http": 200,
+      "bytes": 37333,
+      "sha256": "9d6b7656117360537ab9068c24a1f6da9378d293e15a34465981e6696e4bccbe"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bmorcelli/Launcher/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/src/sd_functions.cpp",
+      "http": 200,
+      "bytes": 38599,
+      "sha256": "4b1ed7c8969bc254832d24f9fbecf564ce1808aeb5fdca9d713c6a06b89df1e1"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bmorcelli/Launcher/2f43aa7bd3ef03e770c0a97135cbcfcc79c15aba/src/install_shared.cpp",
+      "http": 200,
+      "bytes": 2095,
+      "sha256": "64d21f980ddd195bf7298ed27e22ada52027b8b57d34d3b85ddfe46a3d3cc2fd"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/README.md",
+      "http": 200,
+      "bytes": 3171,
+      "sha256": "aa58ef5ebe42e5209dc479e8b4d1228ea2098eb1912da0ced7bb9f7986cb8ebf"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_audio_capture_service/src/esp_audio_capture_service.c",
+      "http": 200,
+      "bytes": 10482,
+      "sha256": "13cde9df3f73b3a0f8cc8933a5399f2046505de58b7a0a34a1870f6e3e3dfdb6"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_audio_player_service/src/esp_audio_player_service.c",
+      "http": 200,
+      "bytes": 6987,
+      "sha256": "9b876a532ad0e81ce321be32e466d7237fa05bcd530141a971b0692933b5ff36"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-adf/12ea304254d8a1efb1d93afa78e82ab3887684c1/components/esp_audio_capture_service/examples/audio_capture/main/simple_record.c",
+      "http": 200,
+      "bytes": 12280,
+      "sha256": "a87f3019e0cc8d4d127906b04130255dff2b64d6f1e3f4827bc12f81863ee5c6"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/README.md",
+      "http": 200,
+      "bytes": 20624,
+      "sha256": "2ecf6dc0be3ef73308805fce89f38e0d22bac94d53b121020c0f44efd3147a41"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/src/audio_playback_control.cpp",
+      "http": 200,
+      "bytes": 13306,
+      "sha256": "e2c01b133f4e7990c9d465b6399bce2a8a301758c7661ffd43c884999b899d20"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/service/media/brookesia_service_audio/src/audio_encoder.cpp",
+      "http": 200,
+      "bytes": 13525,
+      "sha256": "010f15b3f381a19118ffe9b18f97aeea928a3d98edbf740633ecdc9fe083ee2d"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espressif/esp-brookesia/65d66c810ad706c9e2f82fe9177b11816acee546/examples/service/audio/main/main.cpp",
+      "http": 200,
+      "bytes": 26073,
+      "sha256": "3573effd6262dcf8f88887b21cde6783efe3a65eeb9dfc2789a0822a20cac6a7"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/78/xiaozhi-esp32/026e9b6e55e871089670c3909f85805b2a4b41f7/README_zh.md",
+      "http": 200,
+      "bytes": 10362,
+      "sha256": "311d97752fb9c9a2e7642958756e0326bcd5adff5bcff8fdff2d13b131ba9d0b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/README.md",
+      "http": 200,
+      "bytes": 14376,
+      "sha256": "2fa4371c278aa51678a919ed92a3db69d4966aaa5ea278fcf9db94b60cdb5d62"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/78/xiaozhi-esp32/026e9b6e55e871089670c3909f85805b2a4b41f7/main/mcp_server.cc",
+      "http": 200,
+      "bytes": 27322,
+      "sha256": "23cb45b743a82e281732b153ea66c3e567043186c89fb333bda922f6e1b5360a"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/78/xiaozhi-esp32/026e9b6e55e871089670c3909f85805b2a4b41f7/main/application.cc",
+      "http": 200,
+      "bytes": 56749,
+      "sha256": "1bc555041c5c98f621ea437743d53e4c96fa752fb65b3ca0a939998de5cb9752"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim_execute.cpp",
+      "http": 200,
+      "bytes": 41241,
+      "sha256": "c636933986f55091d5097b0acb7705f55f118e994f47aa4b74f77724f40e5ace"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim_load_file.cpp",
+      "http": 200,
+      "bytes": 43726,
+      "sha256": "681b2667d9377df104ec6d54209933514ca2e2c08177252dde415e07306ab731"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tiberiusbrown/Ardens/e811cc6be72c8a802bd3265a84daf4165c177b93/src/absim.hpp",
+      "http": 200,
+      "bytes": 52312,
+      "sha256": "56784ba3a30bb5d3d936be02119137171688027b5484e702dfd0ff03354cdccf"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/README.md",
+      "http": 200,
+      "bytes": 14325,
+      "sha256": "5dd22536fff919ff995acf29183ef1cede0ffef07879b8aea3b2171c771f9192"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/qr_login.lua",
+      "http": 200,
+      "bytes": 19999,
+      "sha256": "83620528f6127c4a2136b61ff9148e88e5aa97d03badabad9d8f4b66a2b6ec6e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/protocol.lua",
+      "http": 200,
+      "bytes": 8310,
+      "sha256": "cb98b9fd6c7fe7cf7dadfdc62e8d368c1373943b2eafef6d7a7cf132869db171"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/progress_sync.lua",
+      "http": 200,
+      "bytes": 27876,
+      "sha256": "a67246025e599614f3845b1d37391a1e49d00c8b56347f3dfcc9b1dbfea6c175"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/README.md",
+      "http": 200,
+      "bytes": 11499,
+      "sha256": "7dda6c781ba9617b0e4560efee59f628c0d63a7e5b0103809eeaec95fda73157"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/finlater/weread.koplugin/2795349f9992c2c723817330cf4ef2a9f0716f8b/weread/lib/downloader.lua",
+      "http": 200,
+      "bytes": 53766,
+      "sha256": "c9f6f9b23664005617ae6eeaa907d65fd733bd4d7938aa8f2d9c0de82ca1d1bb"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/src/weread_api.cpp",
+      "http": 200,
+      "bytes": 62422,
+      "sha256": "5533d0b086d42ecdebe8e6f409427bc0e1243ba79b0e40ad62b738fe90f19b20"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/src/weread_client.cpp",
+      "http": 200,
+      "bytes": 24150,
+      "sha256": "d1002d7437209ef00ffc90049956dc447d4a51c1348cdc3d54de9ccbec61243f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nasonliu/papers3-weread/599ad6b2cc857c33c59a2ebedf9945e703c36c95/src/weread_login.cpp",
+      "http": 200,
+      "bytes": 5569,
+      "sha256": "024435a6ffb0765c4b1cc3b37e81aae7d00cc9a84e857e01ac8321d6032014af"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/src/activities/home/HomeActivity.cpp",
+      "http": 200,
+      "bytes": 33551,
+      "sha256": "a42dc71c8a1dcf6a0830aa1fcf79c7c4d275558f8fad4da5f79aee70f3326ebb"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/src/activities/apps/standby/CalendarClockFace.cpp",
+      "http": 200,
+      "bytes": 8372,
+      "sha256": "ad9955643ecda6ae164187dd7d3a07d2521b16047db31e14b037ff3d62226b39"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chinoryunqin/RickyOS/ecfc977e6dd2fa93ef3a1f237ea0c0e48ad292ae/lib/WeReadWebApi/src/WeReadClient.cpp",
+      "http": 200,
+      "bytes": 169454,
+      "sha256": "1249e27b22045693c570e065544effa2476876e540daf977881ea884f057a64b"
+    },
+    {
+      "url": "https://bobo.sh.creativone.cn/developer/docs",
+      "http": 200,
+      "bytes": 72491,
+      "sha256": "a6e7e8bbdcac53e460d0e987bf106cd8d827f90734dd6ca9f36538f321cc02d9"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/allocated/crosspoint_chinesetype",
+      "http": 200,
+      "bytes": 6677,
+      "sha256": "41ae20c24c4c1241605b22b709d9a6869beb09bc3224febfcdeb1e97d9c19ab1"
+    },
+    {
+      "url": "https://dot.mindreset.tech/docs/read_0/start/thingsos",
+      "http": 200,
+      "bytes": 411935,
+      "sha256": "d82f2df9abba5f533b683a0deaeda2aaffba66878cbe6c8d4807ac0c1496eb6a"
+    },
+    {
+      "url": "https://dot.mindreset.tech/docs/read_0/start/pagerest",
+      "http": 200,
+      "bytes": 421860,
+      "sha256": "a6a5388724dd832e817b41618c25cf14226fbbd846e6c370b1e30ecefb0bc363"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/commits/master",
+      "http": 200,
+      "bytes": 4695,
+      "sha256": "32276d9f8b0babcd8b54b6c8b53b4356e02b7262f7d106e574a2d744829eb644"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/README.md",
+      "http": 200,
+      "bytes": 21756,
+      "sha256": "f03b1b9cf326ea6e96319fbe48fe5c8c60852f691c38b6ff9c84c91e5211185f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Irak4t0n/HowBoyAdvance/d2ed7442e7fbca96146ce043ae127835fa7e4ce8/README.md",
+      "http": 200,
+      "bytes": 3228,
+      "sha256": "15f922dde503fd6126a661888a33ff000dce230aecdfe3ca1907168b45ddfba0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/retro-go-p4/gbsp/main/main.c",
+      "http": 200,
+      "bytes": 28472,
+      "sha256": "d3691acdbfba482445307c9fbac457092f1b9d4add6186ade7a6e06da81dc917"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Irak4t0n/HowBoyAdvance/d2ed7442e7fbca96146ce043ae127835fa7e4ce8/components/gpsp/gpsp_esp.c",
+      "http": 200,
+      "bytes": 7622,
+      "sha256": "3ed2b6e05ff3dea560f4d5be9043217943b0bb484f93ed2b65e1786e6c3b0bed"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/README.md",
+      "http": 200,
+      "bytes": 10008,
+      "sha256": "595e5a862b05c5aaad7564d8993c88628f8b190e23aa3ae61dda1bb37e5d5252"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Irak4t0n/HowBoyAdvance/d2ed7442e7fbca96146ce043ae127835fa7e4ce8/components/gpsp/riscv/riscv_emit.h",
+      "http": 200,
+      "bytes": 116801,
+      "sha256": "7a2a1131a990590a664956ebee6598fec38e2dcb83799a32b4741d36f4c84b0f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/lib/Epub/Epub.cpp",
+      "http": 200,
+      "bytes": 26075,
+      "sha256": "0b4c1abba55d39d6ae59f2a0811c1b472c70ee79da9db459f81934a9049db40e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/src/activities/reader/EpubReaderActivity.cpp",
+      "http": 200,
+      "bytes": 52888,
+      "sha256": "013e2a55d8a3f7335ecb05c5839eac37a1495e4dba863e58cf79ffa7e9d2bc9e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Free-Ink/freeink-sdk/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/network/Opds/src/OpdsParser.cpp",
+      "http": 200,
+      "bytes": 17587,
+      "sha256": "7cb38789a7e51b2bfeb48790396c41fa6e721e882f3c1265becb6c6d979b903d"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Free-Ink/freeink-sdk/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/network/Opds/src/Opds2Parser.cpp",
+      "http": 200,
+      "bytes": 23191,
+      "sha256": "24d19e5d519931b10071798bd7aba25039ced762b3e2e3cdeeb94e49a4f44da3"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Free-Ink/freeink-sdk/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/network/Opds/src/OpdsClient.cpp",
+      "http": 200,
+      "bytes": 11969,
+      "sha256": "2540108f3704dbf39cc5188b208c36cd4e11f4bebc0bf8364ab44f969a11fc18"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/wegooo-cell/read-pico-reader/ea371a7d5998880265aea09f9d44b26b619a8289/README.md",
+      "http": 200,
+      "bytes": 29661,
+      "sha256": "82374640fc9bce110304a265c5f460f1487d623b654149e08561ec06839cbeb9"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/wegooo-cell/read-pico-reader/ea371a7d5998880265aea09f9d44b26b619a8289/main/book/book_source.c",
+      "http": 200,
+      "bytes": 10560,
+      "sha256": "d8a22683c8b4ebe067be00a5c68df1705cbab93249f239e76269145ec185286c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/wegooo-cell/read-pico-reader/ea371a7d5998880265aea09f9d44b26b619a8289/main/book/book_layout.c",
+      "http": 200,
+      "bytes": 76931,
+      "sha256": "6dba37bbbf0f58b894f420ce9608425f7224284ccb2271621d044ae3ed2683f5"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/adam-ikari/crosslink/2d4dc951549b621631385c27cc3a768104ad2692/README.md",
+      "http": 200,
+      "bytes": 1565,
+      "sha256": "38b26682acb72644d6b8f485e9a4376a1a5b27cc7aec763905377c9b77f92fdc"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/adam-ikari/crosslink/2d4dc951549b621631385c27cc3a768104ad2692/platformio.ini",
+      "http": 200,
+      "bytes": 2870,
+      "sha256": "6f32a32f492f10456b6d1b27e061530e3138100301a86cc895e093ccfae9a387"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/BaconSoong/crosslink/b3794560efbfba663be1c1dc27791f6b55fdcddb/platformio.ini",
+      "http": 200,
+      "bytes": 2870,
+      "sha256": "6f32a32f492f10456b6d1b27e061530e3138100301a86cc895e093ccfae9a387"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lvgl/lvgl/c033a98afddd65aaafeebea625382a94020fe4a7/src/widgets/textarea/lv_textarea.c",
+      "http": 200,
+      "bytes": 46361,
+      "sha256": "58243f530fe587a74f7a8851f5b353ef326b25f2559aea0753d8ae28ad45288e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lvgl/lvgl/c033a98afddd65aaafeebea625382a94020fe4a7/src/libs/qrcode/lv_qrcode.c",
+      "http": 200,
+      "bytes": 7150,
+      "sha256": "7af62b33607c3f5365ed945ca8624c2af62c3276dcf7209adc21874180beb754"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lvgl/lvgl/c033a98afddd65aaafeebea625382a94020fe4a7/src/widgets/calendar/lv_calendar.c",
+      "http": 200,
+      "bytes": 16029,
+      "sha256": "02c161525f36bd055d69c5700a84fe134050ea764738053293e7c0056fe7d6a7"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MindReset/read_pico_firmware/6a247cc94420b85c650b32a6b2c063a360070eee/main/book/book_source.c",
+      "http": 200,
+      "bytes": 3179,
+      "sha256": "f7d395758a54f4d2e1b3a71260945c4f60520dd140bd314011d358a7a65b214b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MindReset/read_pico_firmware/6a247cc94420b85c650b32a6b2c063a360070eee/README.md",
+      "http": 200,
+      "bytes": 14466,
+      "sha256": "20027b738eb4f56dc12eb528bd0e73d2a29c347dae37ece49ae530bce7c1d666"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MindReset/read_pico_firmware/6a247cc94420b85c650b32a6b2c063a360070eee/components/read_pico_transfer/read_pico_transfer.c",
+      "http": 200,
+      "bytes": 51762,
+      "sha256": "f18231ccbe0f1408cd4657fe2101c8cddab812f8fbd11b6e0abbe8247a05049c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/crosspoint-reader/crosspoint-reader/0333cbbe4649f80afafe83061bf1afe9fd372fcf/docs/sd-plugins.md",
+      "http": 200,
+      "bytes": 42124,
+      "sha256": "961fc7a272b28a5331c0cab848bbe57e3f610378bd6eed82dafcca85a8d9d62f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/schreibfaul1/ESP32-audioI2S/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/README.md",
+      "http": 200,
+      "bytes": 3903,
+      "sha256": "ce7a1edc7774fd76d4ed1485072368cc6bb60b46dc63bce504ca8cc2d93a6746"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/schreibfaul1/ESP32-audioI2S/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/src/Audio.h",
+      "http": 200,
+      "bytes": 46849,
+      "sha256": "0f08a7af5b22c2e1ad342ec58d99508d5dcd72eb392e531fc6f6d1fd3d651450"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/schreibfaul1/ESP32-audioI2S/56f27918a8e6d10d56a19ddf0fdd307cdeee8cde/src/Audio.cpp",
+      "http": 200,
+      "bytes": 420695,
+      "sha256": "47d8820aee8274e3a4e9133cdfd817f832e6daafd1ac2d4c2638d806898be34d"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/retro-go-p4/components/retro-go/targets/claw4/touch_layout.h",
+      "http": 200,
+      "bytes": 9130,
+      "sha256": "95e4d03132aa43a8cd0af578bfc5880f94bf9c626ebf2baefa501d1686b07eab"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/andjiang0083/retro-go-claw4/f775a34d56f7346057c1193d106f041c7d9b17e8/retro-go-p4/components/retro-go/targets/claw4/config.h",
+      "http": 200,
+      "bytes": 31594,
+      "sha256": "ad03d6c71155146e829c92926a3b06e13dfba371cd3f82c76c52daf970e811d2"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/git/trees/eaeecd22761dd2d2884cbdb02acd066d4bd71bc4?recursive=1",
+      "http": 200,
+      "bytes": 855,
+      "sha256": "6fe4501cd63eee91d70e047af84a30fd5acd8cf6dbd9eb59e329a566bc0b3f26"
+    },
+    {
+      "url": "https://gitee.com/daixinchun/crosslink/raw/eaeecd22761dd2d2884cbdb02acd066d4bd71bc4/README.en.md",
+      "http": 200,
+      "bytes": 953,
+      "sha256": "9d380b6e23c0b2446edb161a4873827791bbdeb126f68a9b19ebb2b66c58782f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/lib/EpdFont/CustomEpdFont.cpp",
+      "http": 200,
+      "bytes": 11159,
+      "sha256": "e45af565a9c0933e67d9aab134a1bafc35126187500a7b0628c7c2d6608d7de3"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/icannotttt/crosspoint-chinesetype/c8e4100ed7fe59c4586cd1752f8c39544e493b81/src/managers/FontManager.cpp",
+      "http": 200,
+      "bytes": 9556,
+      "sha256": "73f707571115491e8b640df70d1e340283455dd6c1cef15f9c7bd9a595547422"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/madler/zlib/51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf/inflate.c",
+      "http": 200,
+      "bytes": 55519,
+      "sha256": "34c998ce0037c0537c04b03b276f680b945f9b2c9d1e01b287605bd6879f7fd2"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DaveGamble/cJSON/c859b25da02955fef659d658b8f324b5cde87be3/cJSON.c",
+      "http": 200,
+      "bytes": 80399,
+      "sha256": "298581a04a36c0165da4b0aade235c23088cb2faa58651d720ea2f3706ed0b0d"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/freetype/freetype/0a0221a1347e2f1e07c395263540026e9a0aa7c7/src/base/ftobjs.c",
+      "http": 200,
+      "bytes": 161665,
+      "sha256": "e5558a906bfef754843740c55a1110759f23c737303d092ba6fefdce2ba4bb9f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hathach/tinyusb/dae3f9a366bfcddbf9dcf1b48d7500286a849539/src/class/msc/msc_device.c",
+      "http": 200,
+      "bytes": 35025,
+      "sha256": "9bba988f5c1e83db1d565e55e934a8e9dd7f5e5085820b6c555ffa1484473ac5"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/mozillazg/python-pinyin/df101577145af2eb1abe5656e592e34e3bb56d23/pypinyin/converter.py",
+      "http": 200,
+      "bytes": 15228,
+      "sha256": "1bbd6c9b63d033a1c05f929b94ac7002a0e4c6d226e48bdbe074250fa4a15e44"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nothings/stb/4e9b368bfc071e97206ea5c6adba68dd0cbf8897/stb_image.h",
+      "http": 200,
+      "bytes": 283010,
+      "sha256": "594c2fe35d49488b4382dbfaec8f98366defca819d916ac95becf3e75f4200b3"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink",
+      "http": 200,
+      "bytes": 6346,
+      "sha256": "3a53a3b8d85994b106664b4f7d2a67a051bde5c6fad97df71479b82136ec8d80"
+    },
+    {
+      "url": "https://gitee.com/daixinchun/xteink",
+      "http": 404,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/trees/master?recursive=1",
+      "http": 200,
+      "bytes": 132278,
+      "sha256": "bb17604df3dd91335f0be7351c3dd9187d4c4b1ee6dbf743bb98e2cf844f8b82"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/contents/README.md?ref=master",
+      "http": 200,
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/contents/platformio.ini?ref=master",
+      "http": 200,
+      "bytes": 8870,
+      "sha256": "fb7a03be5c061f7795f04a41c30d79bcc02ac9672eeff68b6f997b9666e36ebd"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/commits/master",
+      "http": 200,
+      "bytes": 211968,
+      "sha256": "895a153433122fe3cd10be233b769922721a5ae751f2089ccb74c8b82c9fa4ff"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/trees/5a93c1bc4589cde5b4f6df22b2edc618703b74de?recursive=1",
+      "http": 200,
+      "bytes": 132346,
+      "sha256": "52d541c5f369dbd792848b947e64039fd9ac57c88d349a41f05433f6fd9c7799"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/66c03e2f49ea2e8dce9b2bcb2f2cdf43100236c3",
+      "http": 200,
+      "decoded_text_bytes": 6233,
+      "decoded_text_sha256": "a767662fce89cf9878902ca7f7eb81d232a81ced00952e0a941f84d6eaa50ad8"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/85bb3f305559ab119d0a40282922ebee2f6a0784",
+      "http": 200,
+      "decoded_text_bytes": 42948,
+      "decoded_text_sha256": "e1578433a4fb9dc6591dae32bdcf96ea17f00b3a966e9ee2730c707a32a52b8d"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/81a4465921e04e681fd6b5f1eacea00acd003b6d",
+      "http": 200,
+      "decoded_text_bytes": 44478,
+      "decoded_text_sha256": "542678ac6af6fcada79e2f70cefb6b76407b234a47c9e48ae42895147db9a6a2"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/b34f0262a3c2c7bb95498004cf563708e2d3c69c",
+      "http": 200,
+      "decoded_text_bytes": 33889,
+      "decoded_text_sha256": "0ece78c3fbd8fcfa034afb42af4530b47e0a8818ccb2b44949ee6d2867951d74"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/e5e9fa71c90930c31e40f7fff92c87972fe53c41",
+      "http": 200,
+      "decoded_text_bytes": 46010,
+      "decoded_text_sha256": "9de9f112f19362b40f26a474e797e098d57e12c2a1808fbe40c1ead29adbc79c"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/88a33bc02e598ef2fabdf44c994177390766eb9c",
+      "http": 200,
+      "decoded_text_bytes": 19560,
+      "decoded_text_sha256": "a4c86a01c537b81b1730b6dc81294f07dd8d26c0bdd62fe7a49fa78443051724"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/9a0651ab835dee8aa2368632805fa4f55988fe89",
+      "http": 200,
+      "decoded_text_bytes": 3058,
+      "decoded_text_sha256": "8d53c213851d3324ae49f2781bd0e78375f731eeaea1840e97b51988eca62e35"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/64b8bb1bb822f838b9220ca408dd598f9d85f3d1",
+      "http": 200,
+      "decoded_text_bytes": 99937,
+      "decoded_text_sha256": "c85ac2fb808b9861cc81edb18ee8c6fe32f962bb61907954f143ea5d99a99636"
+    },
+    {
+      "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/git/blobs/51556ad86b5b0e7249b74f9755a1b74cf21dd906",
+      "http": 200,
+      "path": "README.md",
+      "git_blob_sha1": "51556ad86b5b0e7249b74f9755a1b74cf21dd906",
+      "bytes": 91,
+      "sha256": "58c985391037d9ce68d11a48bfc620b50e2f7c03ef46674b793f03d2e37e82a7"
+    }
+  ],
+  "fork_refs": [
+    {
+      "repo": "DerrickFC/read_pico_firmware",
+      "exit": 128,
+      "refs": [],
+      "error": "fatal: could not read Username for 'https://github.com': terminal prompts disabled\n"
+    },
+    {
+      "repo": "BaconSoong/crosslink",
+      "exit": 0,
+      "refs": [
+        "107e172994ad2086c414e159795515175681be71\tHEAD",
+        "b3794560efbfba663be1c1dc27791f6b55fdcddb\trefs/heads/bug/x3-bq27220-battery",
+        "107e172994ad2086c414e159795515175681be71\trefs/heads/master"
+      ],
+      "error": ""
+    },
+    {
+      "repo": "leosongyyy/crosslink",
+      "exit": 0,
+      "refs": [
+        "107e172994ad2086c414e159795515175681be71\tHEAD",
+        "107e172994ad2086c414e159795515175681be71\trefs/heads/master"
+      ],
+      "error": ""
+    },
+    {
+      "repo": "adam-ikari/crosslink",
+      "exit": 0,
+      "refs": [
+        "2d4dc951549b621631385c27cc3a768104ad2692\tHEAD",
+        "2d4dc951549b621631385c27cc3a768104ad2692\trefs/heads/master"
+      ],
+      "error": ""
+    },
+    {
+      "repo": "reira-lai/crosslink",
+      "exit": 0,
+      "refs": [
+        "107e172994ad2086c414e159795515175681be71\tHEAD",
+        "107e172994ad2086c414e159795515175681be71\trefs/heads/master"
+      ],
+      "error": ""
+    },
+    {
+      "repo": "ck00031/crosslink",
+      "exit": 0,
+      "refs": [
+        "107e172994ad2086c414e159795515175681be71\tHEAD",
+        "107e172994ad2086c414e159795515175681be71\trefs/heads/master"
+      ],
+      "error": ""
+    }
+  ],
+  "thingsos_public_history": {
+    "repo": "flowflic/ThingsOS",
+    "exit": 0,
+    "head": "ed344c5745e07a1dced8d4e0041218b2ce9dcd02",
+    "history": [
+      "ed344c5745e07a1dced8d4e0041218b2ce9dcd02",
+      "",
+      "LICENSE",
+      "README.md",
+      "docs/images/library.webp",
+      "docs/images/lock-book-cover.webp",
+      "docs/images/reading-menu.webp",
+      "docs/images/reading.webp",
+      "docs/images/statistics.webp",
+      "docs/images/weread-offline.webp",
+      "docs/images/weread-shelf.webp",
+      "434e97e39bf9247f13ca9cb3a1189d2207213702",
+      "",
+      "README.md",
+      "bc0c983a29ff820591d0b1ac5b436d23211f3c8f",
+      "",
+      "README.md"
+    ],
+    "refs": [
+      "ed344c5745e07a1dced8d4e0041218b2ce9dcd02 refs/heads/main",
+      "ed344c5745e07a1dced8d4e0041218b2ce9dcd02 refs/remotes/origin/HEAD",
+      "ed344c5745e07a1dced8d4e0041218b2ce9dcd02 refs/remotes/origin/main"
+    ]
+  },
+  "gitee_crosslink_pinned_tree": {
+    "sha": "eaeecd22761dd2d2884cbdb02acd066d4bd71bc4",
+    "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/git/trees/eaeecd22761dd2d2884cbdb02acd066d4bd71bc4",
+    "tree": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5760e74768289167f4f1da4201295acd62999075",
+        "size": 1081,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/git/blobs/5760e74768289167f4f1da4201295acd62999075"
+      },
+      {
+        "path": "README.en.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "58d4110760f24a5fea9e9a12cd09d6c68c8f52bb",
+        "size": 953,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/git/blobs/58d4110760f24a5fea9e9a12cd09d6c68c8f52bb"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "51556ad86b5b0e7249b74f9755a1b74cf21dd906",
+        "size": 91,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/crosslink/git/blobs/51556ad86b5b0e7249b74f9755a1b74cf21dd906"
+      }
+    ],
+    "truncated": false
+  },
+  "source_archive_range_probe": {
+    "repo": "Changkai9888/CloudZao-Projects",
+    "path": "firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip",
+    "http": 501,
+    "result": "Unsupported client range; did not read or save archive body"
+  },
+  "validation": {
+    "source_text_files": 112,
+    "source_groups": 26,
+    "source_file_line_anchors": 124,
+    "text_blobs_matched_to_git_metadata": 76,
+    "firmware_groups": 31,
+    "unique_original_registry_records": 39,
+    "source_text_size_max": 420695,
+    "git_clone_pack_verification": [
+      {
+        "clone": "Ardens",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 69
+        }
+      },
+      {
+        "clone": "HowBoyAdvance",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 65
+        }
+      },
+      {
+        "clone": "Launcher",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 90
+        }
+      },
+      {
+        "clone": "PageRest-name-match",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 6
+        }
+      },
+      {
+        "clone": "ThingsOS-history",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 3,
+          "tree": 5
+        }
+      },
+      {
+        "clone": "crosspoint-chinesetype",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 84
+        }
+      },
+      {
+        "clone": "esp-adf",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 491
+        }
+      },
+      {
+        "clone": "esp-brookesia",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 891
+        }
+      },
+      {
+        "clone": "mindreset-pico",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 76
+        }
+      },
+      {
+        "clone": "papers3-weread",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 9
+        }
+      },
+      {
+        "clone": "retro-go-claw4",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 232
+        }
+      },
+      {
+        "clone": "weread.koplugin",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 21
+        }
+      },
+      {
+        "clone": "xiaozhi-esp32",
+        "verify_pack_exits": [
+          0
+        ],
+        "objects_by_type": {
+          "commit": 1,
+          "tree": 280
+        }
+      }
+    ],
+    "docs_links_and_privacy": {
+      "document_links": {
+        "markdown_local_links_checked": 18,
+        "fixed_source_links_checked": 124,
+        "target_group_count": 31,
+        "unique_registry_records": 39,
+        "source_groups": 26,
+        "bad": [],
+        "exit_code": 0
+      },
+      "privacy": {
+        "baseline_diff_matches": 0,
+        "grep_exit_code": 1,
+        "supplemental_secret_pattern_matches": 0,
+        "checked_commit": "35144918",
+        "note": "No source response bodies, signed redirect queries or absolute host paths committed"
+      }
+    },
+    "product_code_lines_changed": 0,
+    "main_build": "not run: task exemption",
+    "full_tests": "not run: task exemption",
+    "memory_checks": "not run: task exemption",
+    "s31_build": "not run: documentation only",
+    "gcccheck": "not run: no C/C++ changes",
+    "github_raw_recheck": {
+      "passed": 104,
+      "total": 104,
+      "exit_code": 0,
+      "output": "fixed source text hashes matched: 104 / 104"
+    },
+    "gitee_blob_recheck": {
+      "passed": 8,
+      "total": 8,
+      "exit_code": 0,
+      "output": "fixed Gitee source blobs matched: 8 / 8"
+    },
+    "decoded_source_text_size_max": 420695,
+    "all_source_text_rechecks": {
+      "passed": 112,
+      "total": 112,
+      "github_raw": 104,
+      "gitee_git_blob": 8,
+      "exit_code": 0
+    },
+    "blob_objects_downloaded_by_new_clones": 0,
+    "changed_files": [
+      "docs/tasks/replan-lineage/REPORT.md",
+      "docs/tasks/replan-lineage/SEARCH.md",
+      "docs/tasks/replan-lineage/SOURCES.md",
+      "docs/tasks/replan-lineage/evidence.json"
+    ],
+    "scope_exit_code": 0,
+    "diff_check_exit_code": 0,
+    "working_tree_clean_before_closeout": true
+  },
+  "gitee_crosslink_source_tree": {
+    "sha": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+    "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/trees/5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+    "truncated": false,
+    "entry_count": 540,
+    "checked_text_entries": [
+      {
+        "path": "lib/EpdFontLoader/EpdFontLoader.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9a0651ab835dee8aa2368632805fa4f55988fe89",
+        "size": 3058,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/9a0651ab835dee8aa2368632805fa4f55988fe89"
+      },
+      {
+        "path": "platformio.ini",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "66c03e2f49ea2e8dce9b2bcb2f2cdf43100236c3",
+        "size": 6233,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/66c03e2f49ea2e8dce9b2bcb2f2cdf43100236c3"
+      },
+      {
+        "path": "src/activities/browser/DataCapsuleBrowserActivity.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "85bb3f305559ab119d0a40282922ebee2f6a0784",
+        "size": 42948,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/85bb3f305559ab119d0a40282922ebee2f6a0784"
+      },
+      {
+        "path": "src/activities/browser/JianGuoBrowserActivity.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "81a4465921e04e681fd6b5f1eacea00acd003b6d",
+        "size": 44478,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/81a4465921e04e681fd6b5f1eacea00acd003b6d"
+      },
+      {
+        "path": "src/activities/reader/EpubReaderActivity.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "64b8bb1bb822f838b9220ca408dd598f9d85f3d1",
+        "size": 99937,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/64b8bb1bb822f838b9220ca408dd598f9d85f3d1"
+      },
+      {
+        "path": "src/activities/reader/JianGuoSyncActivity.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b34f0262a3c2c7bb95498004cf563708e2d3c69c",
+        "size": 33889,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/b34f0262a3c2c7bb95498004cf563708e2d3c69c"
+      },
+      {
+        "path": "src/components/themes/fengyan/FengyanTheme.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e5e9fa71c90930c31e40f7fff92c87972fe53c41",
+        "size": 46010,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/e5e9fa71c90930c31e40f7fff92c87972fe53c41"
+      },
+      {
+        "path": "src/managers/FontManager.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "88a33bc02e598ef2fabdf44c994177390766eb9c",
+        "size": 19560,
+        "url": "https://gitee.com/api/v5/repos/daixinchun/xteink/git/blobs/88a33bc02e598ef2fabdf44c994177390766eb9c"
+      }
+    ]
+  },
+  "gitee_crosslink_source_note": {
+    "release_readme_original": "本代码库只有发行版，源代码在 https://gitee.com/daixinchun/xteink",
+    "release_readme_blob": "51556ad86b5b0e7249b74f9755a1b74cf21dd906",
+    "source_repo": "daixinchun/xteink",
+    "source_commit": "5a93c1bc4589cde5b4f6df22b2edc618703b74de",
+    "web_http": 404,
+    "api_http": 200,
+    "tree_truncated": false,
+    "build_version": "20260424",
+    "targets": "X3/X4 ESP32-C3; not a current Metalio/Pixel release correspondence"
+  }
+}
