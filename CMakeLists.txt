@@ -637,6 +637,9 @@ add_executable(sim-graft-carrier simulator/runtime/sim_main.c tests/graft_mogo/d
 target_link_libraries(sim-graft-carrier PRIVATE ink_apps ink_system ink_port_sim)
 target_include_directories(sim-graft-carrier PRIVATE tests)
 target_compile_options(sim-graft-carrier PRIVATE ${INK_WARN})
+add_library(test-graft-cxx-abi OBJECT tests/graft_mogo/abi.cc)
+target_link_libraries(test-graft-cxx-abi PRIVATE ink_system)
+target_compile_options(test-graft-cxx-abi PRIVATE ${INK_WARN})
 add_test(NAME graft-carrier COMMAND sim-graft-carrier
   --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
   --script ${CMAKE_SOURCE_DIR}/tests/graft_mogo/scenario.script

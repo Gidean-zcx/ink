@@ -8,6 +8,10 @@
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum { INK_GRAFT_PAGE, INK_GRAFT_WHOLE, INK_GRAFT_PART } ink_graft_refresh_t;
 typedef enum { INK_GRAFT_TAP, INK_GRAFT_HOLD, INK_GRAFT_KEY, INK_GRAFT_SWIPE, INK_GRAFT_SHAKE } ink_graft_input_kind_t;
 typedef struct {
@@ -56,5 +60,9 @@ bool ink_graft_current(void);
 int ink_graft_file_open(const ink_member_identity_t *owner, const char *path, int mode, ink_fs_file_t **out);
 /* BG only: open the client's member-scoped preference collection; binary records may hold native NVS values. */
 ink_db_t *ink_graft_preferences_open(const ink_member_identity_t *owner, const char *app, const ink_db_def_t *def);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

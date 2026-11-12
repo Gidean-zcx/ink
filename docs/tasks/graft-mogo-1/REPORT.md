@@ -9,7 +9,7 @@
 | 1 阅读链、编码、EPUB、截图 | 未通过完整验收 | 【实测】Mogo 模块及 UTF-16 测试通过；未接原应用页面，无阅读截图 | `ctest --test-dir build -R '^mogo-' --output-on-failure -j2` |
 | 2 浮层恢复、成员隔离 | 仅承载层通过；原应用未验收 | 【实测】合成客户端覆盖浮层恢复、旧成员文件/偏好拒绝、儿童空集合；不是 Mogo 阅读会话 | `ctest --test-dir build -R '^graft-carrier$' --output-on-failure -j2` |
 | 3 能力与按钮等价 | 仅承载层通过；原应用未验收 | 【实测】合成按键和 AI 调同一测试能力；未登记 Mogo 用户动作 | 同上 |
-| 4 全量、内存检查、S31、资源 | 尚未完整验收 | 【实测】普通全量 434 项零失败、3 项跳过；收尾专项 13/13；GCC 检查零 finding，ZIP 因工具链缺 zlib 头跳过；ASan/S31 待补 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2` |
+| 4 全量、内存检查、S31、资源 | 尚未完整验收 | 【实测】普通全量 434 项、ASan/UBSan 全量 436 项均零失败，各 3 项跳过；普通/ASan 收尾专项各 13/13；S31 宿主 75/75；固件编译待补，阅读资源未测 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2`；同命令换 `build-asan`、`build-s31-host` |
 
 ## 没做到的
 
@@ -30,13 +30,17 @@
 
 ## 要用户定的
 
-字体接线仍需完成：优先评估复用系统字形服务是否保持 Mogo 的度量和绘制，或准备保留全部所需字形、可流式读取的 TrueType 轮廓字体放存储卡。两条都未验证，未替用户选定、降质量或改分区。
+无须用户重新决定产品范围。保守方案是字体放存储卡，不改分区、不削减字形或质量；现有 Noto TTC 文件本身需 18.58 MiB，兼容读取方式及实际运行占用尚未完成验证。不能把本轮未完成的接线转成取消需求或要求用户重新授权。
 
 ## 顺手发现
 
-工作区干净，当前提交与指定基线一致；远端指向本机依赖检出，不推送。
+开工时工作区干净、HEAD 与指定基线一致；远端指向本机依赖检出，未推送。
 
 普通全量原话：`100% tests passed out of 434`，耗时 `806.12 sec`；`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 是 Skipped，不能算实测通过。全量之后新增了设置绘制和来源检查，并补测承载层关闭中切成员；最终注册 436 项，收尾专项 13/13。
+
+内存检查：`build-asan` 使用 `INK_SANITIZE=ON`（AddressSanitizer + UBSan），主工程全量原话 `100% tests passed out of 436`，耗时 `1480.70 sec`，同样 3 个 Hub 测试跳过。C ABI 补齐后，普通和 ASan 的 13 项专项又各跑一遍，均通过；C++ 调用合同编译通过，撤掉 C 链接声明的反向编译按预期失败。单独 S31 宿主工程为普通构建，`100% tests passed out of 75`，耗时 `107.66 sec`。
+
+来源：109 个原文文件已逐个对到上游固定提交的 Git 对象。复核命令：`taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/graft_mogo/verify_import.py --upstream $INK_DEPS/../ink-hw/upstream/oss/mogo-e4p`。C ABI 反向命令：`taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/graft_mogo/reverse_abi.py build`。
 
 `gcccheck: 10 compiled, 0 with findings`；其中 `zip_reader.c` 因交叉工具链缺少主机 zlib 头被跳过，实际不能算 10 个文件全部通过 Linux 编译。未运行 Linux CI。
 
@@ -48,7 +52,7 @@
 - UTF-16 解码：任务书第 2 项明确要求；沿用 Mogo 读取/索引机制，原生索引缓存版本升为 3。
 - 新增测试客户端与宿主测试目标：仅测试，不是产品阅读功能。
 
-产品改动按含注释/空行的保守口径计约 294 行：嫁接目录 230（上限 600），Mogo 原文新增 32、删除 28（共 60，上限 1500），两处产品构建接线共 4 行；原样副本、测试和文档另计。超过 100 行的原因是任务明确要求画面、输入、生命周期及成员文件/偏好边界。已检查复用远程页的做法，其状态属于远程会话，不能直接作为其它应用的公开接口；本次承载层继续使用其 L8 图像合成方式。
+产品改动按含注释/空行的保守口径计约 302 行：嫁接目录 238（上限 600），Mogo 原文新增 32、删除 28（共 60，上限 1500），两处产品构建接线共 4 行；原样副本、测试和文档另计。超过 100 行的原因是任务明确要求画面、输入、生命周期及成员文件/偏好边界。已检查复用远程页的做法，其状态属于远程会话，不能直接作为其它应用的公开接口；本次承载层继续使用其 L8 图像合成方式。
 
 ## 要改的文档
 
