@@ -9,7 +9,7 @@
 static portMUX_TYPE s_lock = portMUX_INITIALIZER_UNLOCKED;
 static read_pico_transfer_status_t s_status;
 static read_pico_transfer_cfg_t s_cfg;
-static char s_root[160] = "/sdcard/books";
+static char s_root[160] = "/sdcard/收件箱"; /* the reader lists the inbox */
 static char *s_buffer;
 static bool s_stopping, s_upload_active;
 static httpd_handle_t s_http;

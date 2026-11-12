@@ -113,7 +113,13 @@ static int64_t native_file(hal_transfer_io_t *io) {
     if ((cleanup || live()) && valid) {
         ink_fs_stat_t st;
         switch (io->op) {
-        case HAL_TRANSFER_OPEN: r = fs_open_for(&T.actor, path, io->value ? INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL : INK_FS_READ, (ink_fs_file_t **)&io->handle); break;
+        case HAL_TRANSFER_OPEN:
+            r = fs_open_for(&T.actor, path, io->value ? INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL : INK_FS_READ, (ink_fs_file_t **)&io->handle);
+            /* The web server receives one file at a time, so a part file already there was left by a power cut. */
+            if (r == INK_FS_ERR_EXISTS && io->value && strlen(path) > 5 && !strcmp(path + strlen(path) - 5, ".part") &&
+                !fs_remove_for(&T.actor, path, 0))
+                r = fs_open_for(&T.actor, path, INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL, (ink_fs_file_t **)&io->handle);
+            break;
         case HAL_TRANSFER_READ: r = ink_fs_read(io->handle, io->data, io->len); break;
         case HAL_TRANSFER_WRITE:
             r = ink_fs_write(io->handle, io->data, io->len);

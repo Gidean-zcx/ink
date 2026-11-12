@@ -10,14 +10,14 @@
 | `LICENSE-CloudZao` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` |
 | `include/read_pico_transfer.h` | `c87c197c0d0c988888e591ad42ef13299eb9ac09ed2e4207484e0b8df14ecffc` | `c87c197c0d0c988888e591ad42ef13299eb9ac09ed2e4207484e0b8df14ecffc` |
 | `include/read_pico_transfer_network.h` | `9dfe436d1e63251119faea643d8c77cb5729839ace0aff9fe133a417621ad7bc` | `9dfe436d1e63251119faea643d8c77cb5729839ace0aff9fe133a417621ad7bc` |
-| `ink_adapter.h` | 项目胶水 | `193f81e41dc8bb27e877e8ed4c443806cccb1ff2b2bef95910b5eb3f67fdb098` |
+| `ink_adapter.h` | 项目胶水 | `f823f126fb73fb91d1fecce7e94cf826ff51bbe62b9477e049101e19e062b409` |
 | `ink_radio.cc` | 项目胶水 | `eb31f7b3b3dc75152787e8bf2393fb97ae2a2281c6ee1d7417b25220049aba81` |
-| `ink_server.h` | 项目胶水 | `363a4e5863083409cae35c72056a112bae22cdad5352d9f3b1cb017264c636f0` |
-| `ink_server_impl.h` | 项目胶水 | `b0714c72d5a9bfdcf46b3a6e175b7502badba5dfdc950cbb396a0ad41aced3b0` |
+| `ink_server.h` | 项目胶水 | `17d92eab2adf162ffb995e3a96ff7d061d190b5aa3d4fd1cee4b03fbaaf9541a` |
+| `ink_server_impl.h` | 项目胶水 | `8768c699b5fc33616cab266ebb6158401305801579124074f50c01eaf9bb46ad` |
 | `pack_upload.py` | 项目胶水 | `7f16b33b2bc0dff12aa69953d99fd388c0726b03f619c87f858661e40b386b69` |
 | `qrcodegen.c` | `014eb10d99212b15455df5657a63f84b488766958376eb5de1f2d5efc9efcbf9` | `014eb10d99212b15455df5657a63f84b488766958376eb5de1f2d5efc9efcbf9` |
 | `qrcodegen.h` | `0c0dff3efeff6b30d4bc447b9503634a48884b01a8f535cf4f0b92693872a4e6` | `0c0dff3efeff6b30d4bc447b9503634a48884b01a8f535cf4f0b92693872a4e6` |
-| `read_pico_transfer.c` | `c84ae9d28f067276ebde21aeee0d9dc2642330dbfec4ecc643a8eff9ce064027` | `be4b4ccd1b567b0d7516bae5722a7e21e7842be84bfea910940140ec94e81629` |
+| `read_pico_transfer.c` | `c84ae9d28f067276ebde21aeee0d9dc2642330dbfec4ecc643a8eff9ce064027` | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
 | `transfer_credentials_store.h` | `7909a5c82255458b8562cb4b1f89947bc8cb275f7f2daedf218f102e8934f73a` | `7909a5c82255458b8562cb4b1f89947bc8cb275f7f2daedf218f102e8934f73a` |
 | `transfer_http_time.c` | `076c34cc34f497c02d46246dfb75171a3e67cefca3beb0d70b15769f94dc8a14` | `076c34cc34f497c02d46246dfb75171a3e67cefca3beb0d70b15769f94dc8a14` |
 | `transfer_http_time.h` | `926b31faa6b5cbebfb866fe1d87981ab6ad6ef7294aa66796ab619d22302b037` | `926b31faa6b5cbebfb866fe1d87981ab6ad6ef7294aa66796ab619d22302b037` |
@@ -48,34 +48,34 @@
 
 | 文件 | 原文行 | 入库行 |
 | --- | --- | --- |
-| `read_pico_transfer.c` | 19–19 | 19–19 |
-| `read_pico_transfer.c` | 21–21 | 21–21 |
-| `read_pico_transfer.c` | 33–32 | 33–33 |
-| `read_pico_transfer.c` | 311–322 | 312–312 |
-| `read_pico_transfer.c` | 355–355 | 345–345 |
-| `read_pico_transfer.c` | 505–505 | 495–495 |
-| `read_pico_transfer.c` | 507–509 | 497–497 |
-| `read_pico_transfer.c` | 1276–1275 | 1264–1264 |
-| `read_pico_transfer.c` | 1280–1279 | 1269–1269 |
-| `read_pico_transfer.c` | 1440–1441 | 1430–1430 |
-| `read_pico_transfer.c` | 1750–1750 | 1739–1740 |
-| `read_pico_transfer.c` | 2552–2551 | 2542–2543 |
-| `read_pico_transfer.c` | 3154–3153 | 3146–3146 |
-| `read_pico_transfer.c` | 3176–3175 | 3169–3169 |
-| `read_pico_transfer.c` | 3180–3179 | 3174–3174 |
-| `read_pico_transfer.c` | 3181–3180 | 3176–3176 |
-| `read_pico_transfer.c` | 3202–3201 | 3198–3198 |
-| `read_pico_transfer.c` | 3213–3212 | 3210–3210 |
-| `read_pico_transfer.c` | 3280–3279 | 3278–3278 |
-| `read_pico_transfer.c` | 3281–3282 | 3280–3280 |
-| `read_pico_transfer.c` | 3412–3411 | 3410–3410 |
-| `read_pico_transfer.c` | 3419–3418 | 3418–3418 |
-| `read_pico_transfer.c` | 3432–3431 | 3432–3432 |
-| `read_pico_transfer.c` | 3535–3534 | 3536–3536 |
-| `read_pico_transfer.c` | 3581–3581 | 3583–3584 |
-| `read_pico_transfer.c` | 3991–3990 | 3994–3994 |
-| `read_pico_transfer.c` | 4197–4196 | 4201–4201 |
-| `read_pico_transfer.c` | 4225–4224 | 4230–4231 |
+| `read_pico_transfer.c` | 19–19 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 21–21 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 33–32 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 311–322 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 355–355 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 505–505 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 507–509 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 1276–1275 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 1280–1279 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 1440–1441 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 1750–1750 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 2552–2551 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3154–3153 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3176–3175 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3180–3179 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3181–3180 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3202–3201 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3213–3212 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3280–3279 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3281–3282 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3412–3411 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3419–3418 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3432–3431 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3535–3534 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3581–3581 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 3991–3990 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 4197–4196 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
+| `read_pico_transfer.c` | 4225–4224 | `c83989bc3ee844380a13511a17aac1db2eb3041468cef533cf6b85e7d5803e28` |
 | `upload.html` | 11–11 | 11–11 |
 | `upload.html` | 44–46 | 44–46 |
 | `upload.html` | 49–48 | 49–49 |
@@ -92,3 +92,18 @@
 | `upload.html` | 192–192 | 197–197 |
 | `upload.html` | 195–195 | 200–200 |
 | `upload.html` | 254–253 | 259–259 |
+
+## 主会话复核后的修改（2026-11-12 晚）
+
+复核发现的问题和改法（只改这几处，原文其余不动）：
+
+- `read_pico_transfer.c`：音乐、图片、字体上传目录改成家人空间里已有的位置——音乐 `/sdcard/音乐`（音乐应用读 `/me/音乐`），图片 `/sdcard/照片`，字体放 `/sdcard/收件箱`（两套实现里各一处，共 6 行）。
+- `read_pico_transfer.c`：`receive_file` 打不开临时文件、以及几处“查同名文件”的 `stat` 失败时，名字不合法（`EINVAL`，文件服务每段名字须小于 64 字节）返回 400，不再一律报 507“存储空间不足”。
+- `read_pico_transfer.c`：下载中途读失败（到期、换家人）时不发结束块、返回失败，浏览器不会存下截断却显示成功的文件。
+- `ink_server.h`、`ink_server_impl.h`：书的根目录从 `/sdcard/books` 改为 `/sdcard/收件箱`（文件应用里显示“传进来的”），旧阅读和基线一样能看到传进来的书；新阅读接入时再把收件箱列进书架。
+- `ink_server_impl.h`：浏览器带着上次会话的 cookie 打开首页时仍给输码页，并清掉旧 cookie（原来直接回 403，只能清 cookie）；被拒的请求带 `Connection: close` 并返回失败，不读未授权的请求体。
+- `ink_server_impl.h`：停止前先 `shutdown` 所有客户端连接，再 `httpd_stop`，慢速或中断的客户端不再把停止拖到接收超时之后；HTTP 任务栈 10 KiB 改回旧实现的 16 KiB（深层文件夹复制会超过 10 KiB）。
+- `ink_adapter.h`：文件服务的“路径不合法”映射成 `EINVAL`；只有上传路由里从 `.part` 改名才记一次“收到”，浏览器生成的 `*.toc.json` 和网页里的复制不计入。
+- `system/services/file/transfer.c`：网页服务一次只收一个文件，所以独占创建 `.part` 时遇到已存在的同名 `.part`，就是断电留下的，删掉重建。
+
+未改：`/info` 到期后网页只看到连接失败、看不到“授权已失效”的提示（网页原文的行为，影响小，留待后续）。

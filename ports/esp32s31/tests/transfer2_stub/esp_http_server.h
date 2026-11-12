@@ -17,6 +17,7 @@ typedef struct { int stack_size, max_uri_handlers, max_open_sockets, recv_wait_t
 #define HTTPD_DEFAULT_CONFIG() (httpd_config_t){0}
 int httpd_start(httpd_handle_t *, const httpd_config_t *);
 int httpd_stop(httpd_handle_t);
+int httpd_get_client_list(httpd_handle_t, size_t *, int *);
 int httpd_register_uri_handler(httpd_handle_t, const httpd_uri_t *);
 int httpd_resp_set_status(httpd_req_t *, const char *);
 int httpd_resp_set_type(httpd_req_t *, const char *);

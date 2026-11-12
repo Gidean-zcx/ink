@@ -11,10 +11,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/socket.h>
 static const hal_transfer_policy_t *ink_policy;
+static bool ink_receiving; /* an upload route is running: its final rename is a received file */
 static int64_t ink_io(hal_transfer_io_t *io) {
     int64_t r = ink_policy->file(io);
-    errno = r >= 0 ? 0 : r == -3 ? ENOENT : r == -4 ? EEXIST : r == -7 ? ENOSPC : r == -2 ? EACCES : EIO;
+    errno = r >= 0 ? 0 : r == -3 ? ENOENT : r == -4 ? EEXIST : r == -7 ? ENOSPC : r == -2 ? EACCES : r == -1 ? EINVAL : EIO;
     return r;
 }
 static const char *ink_path(const char *p) {
@@ -51,7 +53,10 @@ static int ink_mutate(const char *p, const char *to, int op) {
     hal_transfer_io_t io = {.op = op, .path = ink_path(p), .to = to ? ink_path(to) : NULL};
     if (ink_io(&io)) return -1;
     size_t n = strlen(p);
-    if (to && n > 5 && !strcmp(p + n - 5, ".part")) {
+    const char *leaf = to ? strrchr(to, '/') : NULL;
+    size_t m = leaf ? strlen(leaf) : 0; /* the browser's contents file beside a book is not a received file */
+    if (ink_receiving && to && n > 5 && !strcmp(p + n - 5, ".part") && leaf && leaf[1] != '.' &&
+        !(m > 9 && !strcmp(leaf + m - 9, ".toc.json"))) {
         io.op = HAL_TRANSFER_RECEIVED; io.path = ink_path(to); io.to = NULL; ink_io(&io);
     }
     return 0;

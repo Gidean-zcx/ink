@@ -192,17 +192,17 @@ static int resolve_mutation_path(const char *root, const char *name,
         if (!pass) {
             struct stat st;
             if (!stat(path, &st)) return 400;
-            if (errno != ENOENT) return 507;
+            if (errno != ENOENT) return errno == EINVAL ? 400 : 507;
         }
     }
     struct stat st;
     if (!stat(path, &st)) return 400;
-    if (errno != ENOENT) return 507;
+    if (errno != ENOENT) return errno == EINVAL ? 400 : 507;
     if (strlen(name) + strlen(".rename-backup") <= 255) {
         char backup[480];
         if (snprintf(backup, sizeof(backup), "%s.rename-backup", path) >= (int)sizeof(backup)) return 400;
         if (!stat(backup, &st)) return 400;
-        if (errno != ENOENT) return 507;
+        if (errno != ENOENT) return errno == EINVAL ? 400 : 507;
     }
     return 0;
 }
@@ -323,7 +323,7 @@ enum { TRANSFER_COMMITTED_BACKUP_RETAINED = 299 };
 static int receive_file(const char *path, const char *part, size_t total, char *buf,
                         size_t cap, receive_cb_t recv, void *ctx, progress_cb_t progress) {
     FILE *f = fopen(part, "wb");
-    if (!f) return 507;
+    if (!f) return errno == EINVAL ? 400 : 507;
 #if KIIKO_BOARD_METALIO47
     // 在已有接收缓冲中合并小包，按整块写卡；不再分配第二份 stdio 缓冲。
     // Coalesce small packets in the owned receive buffer; no duplicate stdio allocation.
@@ -1763,15 +1763,15 @@ static esp_err_t media_upload_handler(httpd_req_t *req, const char *root, unsign
 }
 
 static esp_err_t image_upload_handler(httpd_req_t *req) {
-    return media_upload_handler(req, "/sdcard/pictures", 1, IMAGE_UPLOAD_LIMIT);
+    return media_upload_handler(req, "/sdcard/照片", 1, IMAGE_UPLOAD_LIMIT);
 }
 
 static esp_err_t font_upload_handler(httpd_req_t *req) {
-    return media_upload_handler(req, "/sdcard/fonts", 2, FONT_UPLOAD_LIMIT);
+    return media_upload_handler(req, "/sdcard/收件箱", 2, FONT_UPLOAD_LIMIT);
 }
 
 static esp_err_t music_upload_handler(httpd_req_t *req) {
-    return media_upload_handler(req, "/sdcard/music", 3, MUSIC_UPLOAD_LIMIT);
+    return media_upload_handler(req, "/sdcard/音乐", 3, MUSIC_UPLOAD_LIMIT);
 }
 
 static esp_err_t file_upload_handler(httpd_req_t *req) {
@@ -3607,15 +3607,15 @@ static esp_err_t media_upload_handler(httpd_req_t *req, const char *root, unsign
 }
 
 static esp_err_t image_upload_handler(httpd_req_t *req) {
-    return media_upload_handler(req, "/sdcard/pictures", 1, IMAGE_UPLOAD_LIMIT);
+    return media_upload_handler(req, "/sdcard/照片", 1, IMAGE_UPLOAD_LIMIT);
 }
 
 static esp_err_t font_upload_handler(httpd_req_t *req) {
-    return media_upload_handler(req, "/sdcard/fonts", 2, FONT_UPLOAD_LIMIT);
+    return media_upload_handler(req, "/sdcard/收件箱", 2, FONT_UPLOAD_LIMIT);
 }
 
 static esp_err_t music_upload_handler(httpd_req_t *req) {
-    return media_upload_handler(req, "/sdcard/music", 3, MUSIC_UPLOAD_LIMIT);
+    return media_upload_handler(req, "/sdcard/音乐", 3, MUSIC_UPLOAD_LIMIT);
 }
 
 /* 本分支的 /file 路由引用下载处理函数，补前向声明，避免未声明先使用。 */
@@ -4223,6 +4223,7 @@ static esp_err_t file_download_handler(httpd_req_t *req) {
     while ((n = fread(buf, 1, sizeof(buf), f)) > 0) {
         if ((send_err = httpd_resp_send_chunk(req, buf, n)) != ESP_OK) break;
     }
+    if (send_err == ESP_OK && ferror(f)) send_err = ESP_FAIL;
     fclose(f);
     return send_err == ESP_OK ? httpd_resp_send_chunk(req, NULL, 0) : send_err;
 }

@@ -27,13 +27,16 @@ static esp_err_t ink_dispatch(httpd_req_t *req) {
     bool root = req->method == HTTP_GET && !strcmp(req->uri, "/");
     httpd_resp_set_hdr(req, "Cache-Control", "no-store");
     if (!ink_policy->authorize(code, token, issued)) {
-        if (root && !*code && !*token) {
+        if (root && !*code) {
+            if (*token) httpd_resp_set_hdr(req, "Set-Cookie", "ink_transfer=; Max-Age=0; HttpOnly; SameSite=Strict; Path=/");
             httpd_resp_set_type(req, "text/html; charset=utf-8");
             return httpd_resp_sendstr(req, ink_login);
         }
         httpd_resp_set_status(req, "403 Forbidden");
         httpd_resp_set_type(req, "application/json; charset=utf-8");
-        return httpd_resp_sendstr(req, "{\"error\":\"授权码不正确或已失效，请在设备重新开启\"}");
+        httpd_resp_set_hdr(req, "Connection", "close");
+        httpd_resp_sendstr(req, "{\"error\":\"授权码不正确或已失效，请在设备重新开启\"}");
+        return ESP_FAIL; /* never read an unauthorized body */
     }
     if (*issued) {
         static char header[96];
@@ -43,21 +46,30 @@ static esp_err_t ink_dispatch(httpd_req_t *req) {
     memcpy(ink_token, token, sizeof token);
     if (root && *code) return httpd_resp_sendstr(req, "ok");
     const httpd_uri_t *route = req->user_ctx;
-    return route->handler(req);
+    ink_receiving = req->method == HTTP_PUT;
+    esp_err_t result = route->handler(req);
+    ink_receiving = false;
+    return result;
 }
 void ink_pico_stop(void) {
     portENTER_CRITICAL(&s_lock); s_stopping = true; portEXIT_CRITICAL(&s_lock);
-    if (s_http) { httpd_stop(s_http); s_http = NULL; }
+    if (s_http) {
+        /* A client stalled mid-request would hold httpd_stop for the receive timeout (or forever, sending slowly). */
+        int fds[4]; size_t n = sizeof fds / sizeof *fds;
+        if (httpd_get_client_list(s_http, &n, fds) == ESP_OK)
+            for (size_t k = 0; k < n; k++) shutdown(fds[k], SHUT_RDWR);
+        httpd_stop(s_http); s_http = NULL;
+    }
     free(s_buffer); s_buffer = NULL; ink_token[0] = 0;
 }
 int ink_pico_start(const hal_transfer_policy_t *policy) {
     ink_policy = policy; s_stopping = s_upload_active = false; ink_token[0] = 0;
     memset(&s_status, 0, sizeof s_status); memset(&s_cfg, 0, sizeof s_cfg);
-    strcpy(s_root, "/sdcard/books"); s_cfg.free_bytes_cb = ink_free_bytes;
+    strcpy(s_root, "/sdcard/收件箱"); s_cfg.free_bytes_cb = ink_free_bytes;
     s_buffer = heap_caps_malloc(16384, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
     if (!s_buffer) return -1;
     httpd_config_t http = HTTPD_DEFAULT_CONFIG();
-    http.stack_size = 10240; http.max_uri_handlers = 16; http.max_open_sockets = 3;
+    http.stack_size = 16384; http.max_uri_handlers = 16; http.max_open_sockets = 3;
     http.recv_wait_timeout = 15; http.send_wait_timeout = 15;
     http.task_caps = MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT; http.lru_purge_enable = true;
     if (httpd_start(&s_http, &http) != ESP_OK) { ink_pico_stop(); return -1; }

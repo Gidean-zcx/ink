@@ -37,7 +37,8 @@ static bool full;
 static int path_check(const file_context_t *a, const char *p) {
     assert(!strcmp(a->member, "owner"));
     snprintf(last_path, sizeof last_path, "%.127s", p);
-    return !strncmp(p, "/me", 3) && !strstr(p, "..") && !strstr(p, "/.") && !strstr(p, "invalid:") ? 0 : INK_FS_ERR_PATH;
+    const char *leaf = strrchr(p, '/');
+    return !strncmp(p, "/me", 3) && !strstr(p, "..") && !strstr(p, "/.") && !strstr(p, "invalid:") && leaf && strlen(leaf + 1) < 64 ? 0 : INK_FS_ERR_PATH;
 }
 static struct node *find(const char *p) {
     for (unsigned i = 0; i < TEST_NODES; i++) if (!strcmp(nodes[i].path, p)) return &nodes[i];
@@ -114,6 +115,7 @@ int ink_fs_sync(ink_fs_file_t *f) { (void)f; return 0; }
 int ink_fs_close(ink_fs_file_t *f) { free(f); return 0; }
 int64_t ink_fs_tell(ink_fs_file_t *f) { return f->at; }
 int test_exists(const char *p) { return find(p) != NULL; }
+void test_make(const char *p) { make(p, false); }
 int test_bytes(const char *p, const void *data, size_t len) { struct node *n = find(p); return n && n->size == len && (!len || !memcmp(n->bytes, data, len)); }
 void test_clear_files(void) {
     for (unsigned i = 0; i < TEST_NODES; i++) { free(nodes[i].bytes); memset(&nodes[i], 0, sizeof nodes[i]); }
