@@ -1,4 +1,3 @@
-"""ASR/TTS provider interfaces. No real audio is processed in step 1."""
 """Explicit speech selection; missing settings preserve the gateway's fakes."""
 import os
 

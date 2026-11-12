@@ -76,6 +76,51 @@ PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/
 
 设备连接边界仍见 [hub-link-1 报告](../docs/tasks/hub-link-1/REPORT.md)：当前 CLI 只监听本机、HTTP、开发协议 1；它不是已经支持局域网 WSS 和生产配对的中枢入口。
 
+## 怎么开真的语音
+
+识别用本机 whisper.cpp 的 `whisper-cli`，朗读用 macOS 自带 `say`；音频统一为真 Opus、16 kHz 单声道、60 ms（960 个采样）。不新增 Python 依赖。先在仓库根目录编设备同源的定点 libopus（只读已有压缩包，校验 SHA-256，不联网）：
+
+```sh
+taskpolicy -c utility sh hub/tools/build_opus.sh
+```
+
+先设置 `INK_DEPS` 指向已有构建依赖目录。输出为 `work/hub-opus/libopus.dylib`（Mac）或 `libopus.so`（Linux）；Linux 无 `taskpolicy`，直接 `sh hub/tools/build_opus.sh`。脚本最多两个编译进程，源包的 BSD-3-Clause 许可证保留在输出目录的 `esp-opus/COPYING` 中。没有压缩包就明确失败，不自动下载。
+
+Whisper 程序和模型须另行取得用户同意后准备；[本次报告](../docs/tasks/hub-real-1/REPORT.md)列出版本、模型大小、哈希和编译命令。本任务没有下载模型，也没有编译或运行真实 Whisper。
+
+```sh
+export INK_HUB_ASR=whisper
+export INK_HUB_TTS=say
+export INK_HUB_LIBOPUS="$PWD/work/hub-opus/libopus.dylib"
+export INK_HUB_WHISPER_CLI="$PWD/work/whisper.cpp/build/bin/whisper-cli"
+export INK_HUB_WHISPER_MODEL="$PWD/work/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin"
+export INK_HUB_SAY_VOICE=Tingting
+say -v '?'
+```
+
+`say -v '?'` 的 `zh_CN` 行是普通话声音；默认 `Tingting`。`SayTTS.synthesize(text, lang="en")` 用 `Samantha` 英文声音。当前网关还不传 `lang`，由 `hub-pair-1` 或主会话接上；接口默认中文。Linux 可以用真识别、假朗读（`INK_HUB_TTS=fake`），原生 `say` 只能在 Mac 运行。
+
+`speech.from_environment()` 返回 `(asr, tts)`；`INK_HUB_ASR` 只接受 `fake`/`whisper`，`INK_HUB_TTS` 只接受 `fake`/`say`，假实现返回 `None` 以沿用 `Hub` 的默认值。都不设仍用假语音；显式选真实实现而缺程序、模型或共享库会抛中文启动错误，不回退成假的。
+
+**此分支尚未把环境选择接到 CLI**，需 `hub-pair-1` 或主会话调用选择器并注入 `Hub`。已有程序可以这样接（保持原有监听和配对设置）：
+
+```python
+from ink_hub.speech import from_environment
+asr, tts = from_environment()
+hub = Hub(directory, asr=asr, tts=tts)
+```
+
+识别先拦截不足 0.3 秒或 RMS 低于 100（约 -50 dBFS）的 PCM，再写入 700 权限的临时目录；Whisper 使用 `-l zh` 和简体普通话提示词。阈值是暂定经验值，需按设备麦克风实测调校。朗读文字只经标准输入交给 `say`，不出现在命令行参数；音频和识别结果用完删除，子进程输出不进日志。两种程序均有 20 秒超时，取消时终止并回收子进程。
+
+无需模型、无需外网的语音测试（缺 libopus 时可从 `INK_DEPS` 中的同一压缩包编译）：
+
+```sh
+INK_HUB_CAPS="$INK_DEPS/build/test-out/hub/caps.json" PYTHONPATH=hub \
+  taskpolicy -c utility "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/speech
+```
+
+假 Whisper 检查 WAV 的实际格式与时长，假 `say` 输出正弦波 WAV，设备问答和听写仍经过真实编解码。Mac 上还会运行原生 `say` 往返测试；Linux 明确跳过这项。需要保留解码 WAV 时加测试变量 `INK_HUB_SAY_EVIDENCE=docs/tasks/hub-real-1/say-roundtrip.wav`。语音专项不证明设备音频输出或真实识别质量。
+
 ## 安装骨架
 
 ```sh
