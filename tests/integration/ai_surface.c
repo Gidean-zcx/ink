@@ -141,6 +141,8 @@ static const struct {
     {"file.usage", NULL}, {"file.cleanup_preview", NULL}, {"file.cache_clear", "revision"}, {"file.cleanup", "revision"},
     {"transfer.open", NULL}, {"transfer.usb", NULL},
     {"shell.runtime_records", NULL},
+    {"notify.act", "id,index"}, {"notify.reply", "id"}, {"notify.dnd_get", NULL},
+    {"notify.dnd_set", ""}, {"notify.replies_set", "index,text"},
     {NULL, NULL},
 };
 
