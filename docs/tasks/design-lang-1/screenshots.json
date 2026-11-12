@@ -333,7 +333,7 @@
     "scene": "Calendar",
     "size": 3,
     "before_sha256": "dbf2eea870a9b2aaa39e74becf6cabfe9b48402ce1d01b69591ef2aadf5a7e8c",
-    "after_sha256": "48841fc8e4fc7f78983230e21b5e18d59bb11cc3424cda7a3af709cfc5f3f64c"
+    "after_sha256": "d58505a1ec250fd7d1a6ac3e6a8d33cb0e77ae40737980cd2a0dbcceab425d9b"
   },
   {
     "scene": "Weather",

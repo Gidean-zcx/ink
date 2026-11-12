@@ -6,14 +6,14 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 普通全量及指定 ASan | 首轮全量 10 项失败；新增回归已修并定向通过，原两项按三次上限保留；最终全量和 ASan 待跑 | `build/design-lang-2/ctest-full.log`、`full-regressions.log`、`contacts-final-3.log` | 见下方命令 |
+| 1 普通全量及指定 ASan | 分页前最终全量仅余 2 项旧断言失败；最终代码全量待重跑。ASan 指定 137 项仅 i18n-lang 失败，另加月历 3 项全过 | `build/design-lang-2/ctest-full.log`、`full-regressions.log`、`contacts-final-3.log` | 见下方命令 |
 | 2 S31 宿主机及固件 | 待执行 | — | — |
-| 3 共用控件 108×108 | 【实测】共用部分 0 个不足；211 个页面自绘小目标单列 | `build/design-lang-1/after/targets.json` | `tests/design_lang_1.py --build build --check-targets` |
-| 4 30 页截图及失败逐项说明 | 【实测】最终代码 60 个场景的文字及页面修复检查为 0，72 张图已覆盖；逐项说明如下 | [对比图](../design-lang-1/SCREENSHOTS.md)、`capture-final-code.log` | 见下方截图命令 |
+| 3 共用控件 108×108 | 【实测】共用部分 0 个不足；209 个页面自绘小目标单列 | `build/design-lang-1/after/targets.json` | `tests/design_lang_1.py --build build --check-targets` |
+| 4 30 页截图及失败逐项说明 | 【实测】最终代码 60 个场景的文字及页面修复检查为 0，72 张图已覆盖；逐项说明如下 | [对比图](../design-lang-1/SCREENSHOTS.md)、`capture-final-grid.log` | 见下方截图命令 |
 
 ## 没做到的
 
-- `i18n-lang` 第三轮仍失败：重启阶段还按旧首页同时核对八个设置项，第二页的锁屏、存储、关于触发三次断言。切换阶段已经通过。本任务按总规则第 7 节“三次还不过就停”保留失败，不继续修改这个测试。
+- `i18n-lang` 第三轮仍失败：重启阶段还按旧首页同时核对九个设置项，第二页的锁屏、存储、关于触发三次断言。切换阶段已经通过。本任务按总规则第 7 节“三次还不过就停”保留失败，不继续修改这个测试。
 - `files-app` 第三轮仍失败：新增第二页的 `FileMoveLong-2`、`FileListLong-2` 截图名未被原有快照名称检查识别，各一次；写入和重启验证已过。达到同一三次上限，保留失败。
 - 本机 Linux CI 未运行；实机触摸、灰阶和固件运行未验证。
 
@@ -33,7 +33,7 @@
 | `files_ops` | 行框 2 → 0；保留勾选标记、无额外 outline、无划线与选中数量断言，符合新语言去外框。 |
 | `factory_pages` | 圆底图标 → 透明图标；黑分隔线 → 中灰 2。仍要求恰好四个图标、两个分隔线、一个真实开关。 |
 | `files_app` | 大字仍四行 → 三行；缩略图按三行定位；长目录由四项同页改为两页 3+1，仍检查四个完整路径的并集。后者还有上述快照名失败，未声称通过。 |
-| `i18n_lang` | 八个设置项同屏 → 精确两页的完整并集；第一页返回后检查当前语言。重启阶段遗漏的旧假设保留为失败。 |
+| `i18n_lang` | 九个设置项同屏 → 精确两页的完整并集；第一页返回后检查当前语言。重启阶段遗漏的旧假设保留为失败。 |
 | `audit10-b10-02` | 固定两页且忘掉网络必须在第一页 → 遍历真实页数，逐页要求可见按钮与两个 AI 快照的动作完全一致，且只有一页有此动作；最后真实点按验证本人确认。 |
 | `calendar` | 日程首屏两条 → 一条、三条分三页全部读取；六行月份改从可见“下一页”翻到 31 日，新增默认、孩子和最大字号各页完整文字/触控检查、页边界及 AI 选日自动定位检查；分钟刷新上限和像素裁剪边界 62 → 主题实际状态栏 108，实测 DU 为 108×684，未允许刷新进入正文。 |
 | `kid_3` | 固定减去 134 的大图标高度 → 读取紧凑图标的实际点按矩形，要求与时间说明留有主题间距；没有放宽实际相交检查。 |
@@ -54,7 +54,7 @@
 
 ## 顺手发现
 
-- `apps/` 中背景阅读页的目录文字链接是页面自绘，100%/120% 热区高 43/52，任务明确禁止修改该目录；与键盘、月历小格一起单列，不算共用控件通过项。
+- 209 个不足 108 的页面自绘目标：134 个原生键盘键、15 个候选/语音键、58 个月历日期格、2 个阅读目录链接。`apps/` 中背景阅读页的目录文字链接是页面自绘，100%/120% 热区高 43/52，任务明确禁止修改该目录；与键盘、月历小格一起单列，不算共用控件通过项。
 - 键盘只改底行权重、两行编辑栏与统一的顶部保留区；普通输入不因显示编辑栏而改变安全边界，没有重写键盘。合并以 `keyboard-2` 为准。`transfer_pages.c` 未改，只更新其测试的页码识别。
 
 ## 新增的机制
@@ -120,7 +120,17 @@ taskpolicy -c utility cmake --build build -j2
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
 
-ASan 同样配置换 `build-asan`，只加 `-DINK_SANITIZE=ON`。其余命令及最终原话待补。
+ASan 同样配置换 `build-asan`，只加 `-DINK_SANITIZE=ON`。最终代码构建退出 0；指定组原话为 `99% tests passed, 1 tests failed out of 137`，121.14 秒，退出 8；唯一失败是上述 `i18n-lang` 重启旧断言。另加月历、日程和时区 3 项：`100% tests passed out of 3`，11.86 秒。两份运行日志未见 AddressSanitizer / UBSan 诊断。
+
+```sh
+taskpolicy -c utility cmake --build build-asan -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build-asan --output-on-failure -j2 -R '^(ui-|i18n-|scenario-reader_)'
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build-asan --output-on-failure -j2 -R '^(calendar|calendar-events|time-settings)$'
+```
+
+日志：`build/design-lang-2/build-asan.log`、`ctest-asan.log`、`ctest-asan-calendar.log`。
 
 ```sh
 INK_DEPS="$INK_DEPS" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" \
@@ -131,13 +141,13 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/design_lang_
 
 【实测】七项反向对照均执行到 `test.finished=1` 后退出 1：今日 5 次、关于 6 次、联系人 1 次、短信 2 次、拨号 1 次、月历 60 次、空页页码 1 次。只将对应基线页面对象链接到最终探针，没有回写产品源码。结果在 `build/design-lang-2/reverse/results.json`。其余失败的修前复现在 `baseline-failures.log`。
 
-【实测】`gcccheck.py` 检查主工程编译数据库中的 40 个改动 C 文件：`gcccheck: 40 compiled, 0 with findings`，退出 0；工厂页增加命名数组上限后另查一次为 `1 compiled, 0 with findings`。截图探针不在数据库中，明确跳过，由截图脚本按真实编译参数编译成功；此结果不等于 Linux CI 已执行。
+【实测】`gcccheck.py` 检查主工程编译数据库中的 40 个改动 C 文件：`gcccheck: 40 compiled, 0 with findings`，退出 0，最终月历与测试改动后复查仍为同一结果（`gcccheck-acceptance-final.log`）。截图探针不在数据库中，明确跳过，由截图脚本按真实编译参数编译成功；此结果不等于 Linux CI 已执行。
 
 ## 规模及架构核对
 
 产品代码 22 个文件，新增 263 行、删除 132 行，合计 395 行，小于 900。为什么不能更小：输入框总高、今日卡片容量、月历两行、英文按钮、键盘固定安全区是不同的真实布局根因；只恢复旧高度会违反 108 或大字合同。已经在共用按钮、分段、列表空页和键盘高度入口集中处理，没有新增服务或通用框架。
 
-【实现】服务、成员隔离、密码输入与确认策略没有新增路径；按钮和 AI 保持既有原子能力、列表快照及分页动作。没有更改 `apps/`、`third_party/mogo/`、声音/通知服务、S31 U 盘或已有调研和审计资料。
+【实现】服务、成员隔离、密码输入与确认策略没有新增路径；按钮和 AI 使用同一能力总线、列表快照及分页动作；月格分页的两个新能力和当前页状态也进入快照。没有更改 `apps/`、`third_party/mogo/`、声音/通知服务、S31 U 盘或已有调研和审计资料。
 
 ## 过程记录
 
