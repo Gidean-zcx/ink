@@ -113,15 +113,15 @@ static void (*usb_event_cb)(tinyusb_event_t *, void *);
 static void (*deferred)(void *);
 static void *deferred_arg;
 static unsigned ticks;
-static bool route_high = true;
-static unsigned disconnected_at, routed_at;
+static bool route_high;
+static unsigned disconnected_at, routed_at, connections;
 bool usb_serial_jtag_is_connected(void) { return computer && route_high; }
 int gpio_reset_pin(int pin) { assert(pin == 36); return 0; }
 int gpio_set_direction(int pin, int mode) { assert(pin == 36 && mode == GPIO_MODE_OUTPUT); return 0; }
 int gpio_set_level(int pin, int high) {
     assert(pin == 36);
     if (!high) assert(usb_running && ticks - disconnected_at >= 250);
-    else assert(!usb_running && ticks - disconnected_at >= 250);
+    else if (connections) assert(!usb_running && ticks - disconnected_at >= 250);
     route_high = high;
     routed_at = ticks;
     return 0;
@@ -180,7 +180,7 @@ bool tud_disconnect(void) {
     usb_event_cb(&event, NULL);
     return true;
 }
-bool tud_connect(void) { assert(!route_high && ticks - routed_at >= 100); return true; }
+bool tud_connect(void) { assert(!route_high && ticks - routed_at >= 100); connections++; return true; }
 void usbd_defer_func(void (*fn)(void *), void *arg, bool isr) { assert(!isr); deferred = fn; deferred_arg = arg; }
 TickType_t xTaskGetTickCount(void) { return ticks; }
 void vTaskSuspend(void *task) { assert(!task && ink_usb_parked); }
@@ -215,6 +215,7 @@ int main(void) {
     ink_s31_storage_init();
     hal_fs_set_card_callback(notify, &card);
     hal_usb_set_callback(usb_notify, &card);
+    assert(route_high);
     assert(hal_usb_disk_start() == -1);
     inserted = true; poll_card();
     assert(hal_fs_card_present() && callbacks == 1);

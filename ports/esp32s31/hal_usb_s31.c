@@ -76,6 +76,7 @@ bool hal_usb_host_done(void) {
 }
 void hal_usb_set_callback(void (*cb)(void *), void *ctx) {
     LOCK();
+    if (!ink_usb_card) epd_board_metalio_eink4_plus_ana_sw_set(true);
     ink_usb_callback = cb;
     ink_usb_context = ctx;
     osal_mutex_unlock(g_lock);

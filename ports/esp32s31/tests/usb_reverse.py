@@ -24,10 +24,11 @@ mutations = [
     ("drain", 'if (tud_task_event_ready())', 'if (false && tud_task_event_ready())'),
     ("route-to-msc", 'epd_board_metalio_eink4_plus_ana_sw_set(false);',
      'epd_board_metalio_eink4_plus_ana_sw_set(true);'),
-    ("route-to-usj", 'epd_board_metalio_eink4_plus_ana_sw_set(true);', ''),
+    ("route-to-usj", '        epd_board_metalio_eink4_plus_ana_sw_set(true);', ''),
     ("disconnect-delay", 'vTaskDelay(pdMS_TO_TICKS(250));', ''),
     ("route-settle", 'vTaskDelay(pdMS_TO_TICKS(100));\n    __atomic_store_n', '__atomic_store_n'),
     ("switching-events", 'if (!__atomic_load_n(&ink_usb_up, __ATOMIC_ACQUIRE)) return;', ''),
+    ("boot-route", 'if (!ink_usb_card) epd_board_metalio_eink4_plus_ana_sw_set(true);', ''),
 ]
 with tempfile.TemporaryDirectory(prefix="usb-reverse-", dir=build) as directory:
     work = Path(directory)
