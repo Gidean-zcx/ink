@@ -141,6 +141,8 @@ static const struct {
     {"transfer.open", NULL}, {"transfer.usb", NULL},
     {"shell.runtime_records", NULL},
     {NULL, NULL},
+    {"keyboard.page", "direction"}, {"keyboard.panel", "panel"}, {"keyboard.category", "category"},
+    {"keyboard.symbol_page", "direction"}, {"keyboard.symbol", "text"}, {"keyboard.alternates", "code"},
 };
 
 /* What it cannot, and why. */

@@ -452,7 +452,7 @@ add_custom_target(ink_ui_resource_check ALL
   COMMENT "Check required design icon geometry")
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
-set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard.c
+set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard_picker.h ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/status_bar.c ${CMAKE_SOURCE_DIR}/system/ui/shell/shell_home.c ${CMAKE_SOURCE_DIR}/system/ui/shell/control_center.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_body.c ${CMAKE_SOURCE_DIR}/system/ui/shell/today_edit.c
   ${CMAKE_SOURCE_DIR}/system/apps/memory/memory.c ${CMAKE_SOURCE_DIR}/system/apps/snake/snake.c
@@ -820,6 +820,8 @@ ink_sim_executable(sim-ime-keyboard1 tests/ime_keyboard1.c)
 target_link_libraries(sim-ime-keyboard1 PRIVATE ink_apps ink_system)
 add_test(NAME ime-keyboard1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ime_keyboard1.py
   --build ${CMAKE_BINARY_DIR})
+add_test(NAME keyboard-pages COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ime_keyboard1.py --build ${CMAKE_BINARY_DIR} --pages)
+set_tests_properties(keyboard-pages PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 set_tests_properties(ime-keyboard1 PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 foreach(scene keyboard ai member kid battery home)
   add_test(NAME semantics-shell2-${scene} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/semantics_shell2/run.py

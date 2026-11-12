@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 513 项：可调用能力 472、事件 41；设置 43 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 519 项：可调用能力 478、事件 41；设置 45 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -214,10 +214,16 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `interrupt.list` | 现在有什么在打断（来电、闹钟、低电量），各有什么按钮 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s35](#s35) | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
 | `job.cancel` | 停下一件后台在做的事 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s37](#s37) | [system/services/res/task.c](../../system/services/res/task.c) |
 | `job.list` | 后台在做什么、做到哪了、做完的结果 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s37](#s37) | [system/services/res/task.c](../../system/services/res/task.c) |
+| `keyboard.alternates` | 展开字母备选符号，code 为 ASCII，0 收起 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.candidates` | 展开下一页候选，或 fold 收回键盘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.category` | 符号分类：0 中文、1 数学、2 英文 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.edit` | 编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.key` | 按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.page` | 候选翻页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.panel` | 切换键盘面板 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.pick` | 选输入法候选（从 0 开始） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.symbol` | 选符号或长按备选 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.symbol_page` | 符号翻页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `kid.app_set` | 设置孩子能用的应用 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人；儿童须白名单 | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
 | `kid.period_set` | 设置孩子的禁用时段 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人；儿童须白名单 | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
 | `kid.policy_get` | 查看孩子的应用名单和禁用时段 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
@@ -702,7 +708,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s21 — `system/policy/settings`
 
-设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`backup.auto`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_background`、`display.lock_reading`、`display.lock_style`、`display.lock_todo`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`net.roaming`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`reader.font_size`、`reader.footer_mask`、`reader.line_spacing`、`reader.margins`、`reader.paragraph_spacing`、`system.language`、`text.assist`、`text.nine_key`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`、`wifi.enabled`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`backup.auto`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_background`、`display.lock_reading`、`display.lock_style`、`display.lock_todo`、`display.wallpaper_file`、`display.warmth`、`keyboard.recent0`、`keyboard.recent1`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`net.roaming`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`reader.font_size`、`reader.footer_mask`、`reader.line_spacing`、`reader.margins`、`reader.paragraph_spacing`、`system.language`、`text.assist`、`text.nine_key`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`、`wifi.enabled`。
 
 状态：—。
 
@@ -712,7 +718,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s22 — `system/policy/system_actions`
 
-设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`backup.auto`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_background`、`display.lock_reading`、`display.lock_style`、`display.lock_todo`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`net.roaming`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`reader.font_size`、`reader.footer_mask`、`reader.line_spacing`、`reader.margins`、`reader.paragraph_spacing`、`system.language`、`text.assist`、`text.nine_key`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`、`wifi.enabled`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`backup.auto`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_background`、`display.lock_reading`、`display.lock_style`、`display.lock_todo`、`display.wallpaper_file`、`display.warmth`、`keyboard.recent0`、`keyboard.recent1`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`net.roaming`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`reader.font_size`、`reader.footer_mask`、`reader.line_spacing`、`reader.margins`、`reader.paragraph_spacing`、`system.language`、`text.assist`、`text.nine_key`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`、`wifi.enabled`。
 
 状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.config_readonly`、`cell.registered`、`cell.roaming`、`cell.signal`、`cell.sim`、`cell.sim_missing`、`confirm.pending`、`file.index_state`、`hub.online`、`interrupt.active`、`job.revision`、`job.running`、`media.state`、`member.authed`、`member.current`、`member.time_up`、`net.mobile_rev`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.lifted`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
@@ -1032,7 +1038,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s54 — `system/ui/shell/keyboard`
 
-设置：`text.nine_key`。
+设置：`keyboard.recent0`、`keyboard.recent1`、`text.nine_key`。
 
 状态：—。
 
@@ -1193,6 +1199,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `display.lock_todo` | 锁屏显示待办 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.wallpaper_file` | 壁纸图片编号 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.warmth` | 暖光（越大越暖） | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
+| `keyboard.recent0` | 最近符号一 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.recent1` | 最近符号二 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `member.idle_return_s` | 大人锁屏多久后要重新输密码（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/policy/members.c](../../system/policy/members.c) |
 | `net.airplane` | 飞行模式 | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `net.set_airplane`，不能用 `system.undo` 撤销） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `net.prefer` | 上网方式 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |

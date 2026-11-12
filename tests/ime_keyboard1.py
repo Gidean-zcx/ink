@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--build', type=Path, required=True)
 parser.add_argument('--reverse', action='store_true')
+parser.add_argument('--pages', action='store_true')
 parser.add_argument('--switch-reverse', action='store_true')
 args = parser.parse_args()
 build = args.build.resolve()
@@ -29,7 +30,7 @@ def exercise(binary, tag, expected=None, verify=False, state=None):
                '--content', str(build / 'test-content'), '--flash-image', str(state / 'user.img'),
                '--sd-dir', str(state / 'sd'), '--out', str(out), '--quiet', '--no-random-outages']
     result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=150,
-                            env={**os.environ, **({'INK_IME_LAYOUT_VERIFY': '1'} if verify else {})})
+                            env={**os.environ, **({'INK_IME_LAYOUT_VERIFY': '1'} if verify else {}), **({'INK_KEYBOARD_PAGES': '1'} if args.pages else {})})
     out.mkdir(parents=True, exist_ok=True)
     (out / 'test.log').write_text(result.stdout + result.stderr)
     data = json.loads((out / 'metrics.json').read_text()) if (out / 'metrics.json').exists() else {}
@@ -38,7 +39,7 @@ def exercise(binary, tag, expected=None, verify=False, state=None):
     if expected:
         ok = result.returncode != 0 and metrics.get('test.fail', 0) > 0 and any(expected in w for w in data.get('warnings', []))
     else:
-        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == (0 if verify or os.environ.get("INK_IME_SWITCH_ONLY") else 20)
+        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == (0 if verify or os.environ.get("INK_IME_SWITCH_ONLY") else 28 if args.pages else 22)
     summary = {'case': tag, 'exit': result.returncode, 'passes': metrics.get('test.pass', 0),
                'failures': metrics.get('test.fail', 0), 'frames': len(frames), 'expected_result': ok}
     summary['query_us'] = [list(map(float, line.split()[1:])) for line in result.stdout.splitlines() if line.startswith('NINE_BENCH ')]
@@ -76,6 +77,9 @@ if args.switch_reverse:
     subprocess.run(link, cwd=build, check=True)
     os.environ['INK_IME_SWITCH_ONLY'] = '1'
     raise SystemExit(0 if exercise(binary, 'switch-baseline', expected='switch does not request a flashing keyboard rebuild') else 1)
+
+if args.pages:
+    raise SystemExit(0 if exercise(build / 'sim-ime-keyboard1', 'pages') else 1)
 
 if not args.reverse:
     state = build / 'test-out/ime-keyboard1-state-current'

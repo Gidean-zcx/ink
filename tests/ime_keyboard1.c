@@ -1,6 +1,25 @@
 /* Real input service, keyboard controls, capabilities and rendered frames. */
 #include <stdlib.h>
 #include <time.h>
+#include "ink/hal_display.h"
+#include "ink/rotation.h"
+static bool keyboard_tracking;
+static hal_rect_t keyboard_rows;
+static unsigned keyboard_updates, keyboard_outside, keyboard_full;
+static uint32_t keyboard_update(const hal_rect_t *r, const uint8_t *px, int stride, hal_waveform_t wf,
+                                uint32_t flags, hal_display_done_fn done, void *ctx) {
+    if (keyboard_tracking) {
+        keyboard_updates++;
+        if (r->x < keyboard_rows.x + keyboard_rows.w && r->x + r->w > keyboard_rows.x &&
+            r->y < keyboard_rows.y + keyboard_rows.h && r->y + r->h > keyboard_rows.y) keyboard_outside++;
+        hal_panel_info_t info; hal_display_get_info(&info);
+        if (r->w * r->h == info.width * info.height) keyboard_full++;
+    }
+    return hal_display_update(r, px, stride, wf, flags, done, ctx);
+}
+#define hal_display_update keyboard_update
+#include "../system/services/display/display_service.c"
+#undef hal_display_update
 #include "ink/sys/textfield.h"
 #include "ink/sys/storage.h"
 #include "src/widgets/buttonmatrix/lv_buttonmatrix_private.h"
@@ -24,10 +43,30 @@ static int key_index(int code) {
 }
 static lv_obj_t *button(lv_obj_t *root, int code) { (void)root; return key_index(code) < 0 ? NULL : K.board; }
 static bool labeled(int code, const char *text) {
+    if (K.symbols && code >= 32) {
+        char symbol[8];
+        int category = K.english ? 2 : 0;
+        for (int i = 0; symbol_at(category, i, symbol); i++) if (!strcmp(symbol, text)) return true;
+        return false;
+    }
     int i = key_index(code);
     return i >= 0 && !strcmp(K.legends[i], text);
 }
 static void touch(int code) {
+    if (K.symbols) {
+        char args[64]; ink_receipt_t rc;
+        if (code == KEY_SWITCH) {
+            ink_cap_invoke_json("keyboard.panel", "{\"panel\":\"letters\"}", INK_SRC_TOUCH, 0, &rc);
+            return;
+        }
+        if (code >= 32) {
+            char symbol[2] = {(char)code, 0};
+            const char *punctuation = ink_text_punctuation((char)code);
+            snprintf(args, sizeof args, "{\"text\":\"%s\"}", punctuation ? punctuation : symbol);
+            ink_cap_invoke_json("keyboard.symbol", args, INK_SRC_TOUCH, 0, &rc);
+            return;
+        }
+    }
     int i = key_index(code);
     CHECK(i >= 0 && lv_obj_is_visible(K.board), "visible keyboard control: %d", code);
     if (i < 0) return;
@@ -144,6 +183,21 @@ static void inspect(void) {
     CHECK(ink_ui_context_snapshot(snapshot, sizeof snapshot, NULL) > 0, "capture real semantic snapshot");
     lv_obj_update_layout(K.root);
     lv_area_t root; lv_obj_get_coords(K.root, &root);
+    if (K.expanded) {
+        for (int i = 0; i < INK_TEXT_PAGE; i++) if (lv_obj_is_visible(K.cand_btn[i])) {
+            lv_area_t a; lv_obj_get_coords(K.cand_btn[i], &a);
+            CHECK(contains(&root, &a) && lv_area_get_width(&a) >= 108 && lv_area_get_height(&a) >= 108, "expanded candidate fits page and touch minimum");
+        }
+        return;
+    }
+    if (K.built_for == 2) {
+        CHECK(lv_obj_is_visible(K.picker), "symbol picker is visible");
+        for (uint32_t i = 0; i < lv_obj_get_child_count(K.symbol_grid); i++) {
+            lv_area_t a; lv_obj_get_coords(lv_obj_get_child(K.symbol_grid, (int)i), &a);
+            CHECK(contains(&root, &a) && lv_area_get_width(&a) >= 108 && lv_area_get_height(&a) >= 108, "symbol key fits native page and touch minimum");
+        }
+        return;
+    }
     CHECK(lv_obj_check_type(K.board, &lv_keyboard_class), "keys use lv_keyboard");
     CHECK(lv_keyboard_get_textarea(K.board) == NULL, "no textarea input path");
     for (uint32_t i = 0; i < lv_obj_get_event_count(K.board); i++)
@@ -363,8 +417,8 @@ static void wifi_layout(void) {
     CHECK(password_fields == 1 && ink_text_type() == INK_TEXT_PASSWORD, "real Wi-Fi page focuses exactly one password field");
     CHECK(!lv_obj_is_visible(K.cands) && !lv_obj_is_visible(K.composing), "real password page has no candidate or composing band");
 }
-static bool verify_layout, switch_only;
-static void host_mode(void *arg) { (void)arg; verify_layout = getenv("INK_IME_LAYOUT_VERIFY") != NULL; switch_only = getenv("INK_IME_SWITCH_ONLY") != NULL; }
+static bool verify_layout, switch_only, pages_mode;
+static void host_mode(void *arg) { (void)arg; verify_layout = getenv("INK_IME_LAYOUT_VERIFY") != NULL; switch_only = getenv("INK_IME_SWITCH_ONLY") != NULL; pages_mode = getenv("INK_KEYBOARD_PAGES") != NULL; }
 static void remember_layout(void) {
     ink_receipt_t rc;
     CHECK(ink_setting_set("text.nine_key", 1, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "save owner layout for restart");
@@ -381,11 +435,17 @@ static void screenshot_scene(void) {
     if (screenshot_kind == 2) ai_key(KEY_SWITCH);
     if (screenshot_kind == 0) chinese_scene();
     if (screenshot_kind == 4) for (const char *p = "94664"; *p; p++) ink_text_key(*p);
+    if (screenshot_kind == 6) {
+        for (const char *p = "nihao"; *p; p++) ink_text_key(*p);
+        ink_receipt_t receipt; ink_cap_invoke_json("keyboard.candidates", "{}", INK_SRC_TOUCH, 0, &receipt);
+    }
 }
+#include "ime_keyboard1.pages.h"
 static void run(void *arg) {
     (void)arg;
     CHECK(WAIT_FOR(ink_member_space_open() && settled(), 15000), "boot settles");
     test_start_home(); ink_power_hold(INK_NEED_AWAKE);
+    if (pages_mode) { keyboard_pages(); ink_probe_count("test.finished"); return; }
     if (verify_layout) {
         CHECK(ink_text_nine(), "owner layout survives simulator restart");
         CHECK(ink_member_switch("kid") == 0 && WAIT_FOR(!ink_text_focused(), 5000), "verify child after restart");
@@ -418,8 +478,8 @@ static void run(void *arg) {
     CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":0}") && g_rc.status == INK_RC_DONE, "use Chinese for acceptance screenshots");
     for (int large = 0; large < 2; large++) {
         CHECK(BY_HAND("settings.set", large ? "{\"id\":\"display.font_size\",\"value\":3}" : "{\"id\":\"display.font_size\",\"value\":1}") && g_rc.status == INK_RC_DONE, "set screenshot font size");
-        for (int kind = 0; kind < 6; kind++) {
-            static const char *names[] = {"Pinyin", "English", "Symbols", "Number", "Nine", "Password"};
+        for (int kind = 0; kind < 7; kind++) {
+            static const char *names[] = {"Pinyin", "English", "Symbols", "Number", "Nine", "Password", "Expanded"};
             CHECK(BY_HAND("memo.edit", NULL) && WAIT_FOR(ink_text_focused(), 10000), "open screenshot host");
             screenshot_kind = kind; on_ui(screenshot_scene);
             char name[64]; snprintf(name, sizeof name, "%s-%s", names[kind], large ? "large" : "normal");
