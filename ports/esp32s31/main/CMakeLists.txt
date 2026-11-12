@@ -1,5 +1,6 @@
 set(root ${CMAKE_CURRENT_LIST_DIR}/../../..)
 # Pinned MSC components used by IDF's example; generated sources stay in the build.
+if(COMMAND idf_build_get_property)
 idf_build_get_property(usb_build BUILD_DIR)
 set(usb ${usb_build}/usb)
 foreach(component esp_tinyusb tinyusb)
@@ -16,6 +17,7 @@ foreach(component esp_tinyusb tinyusb)
         file(ARCHIVE_EXTRACT INPUT ${usb}/${component}.zip DESTINATION ${usb})
     endif()
 endforeach()
+endif()
 option(INK_AUTOTEST "Embed and run a device test script" OFF)
 set(INK_AUTOTEST_SCRIPT "" CACHE FILEPATH "Script embedded in a test image")
 idf_component_register(SRCS main.c ../osal_selftest.c ../s31_boot.c ../s31_panic.c ../s31_coproc.c ${root}/system/boot/main.c
