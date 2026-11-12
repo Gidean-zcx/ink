@@ -1,18 +1,18 @@
 # audio-out-2 执行报告
 
-基线：`a39e9693bb4dea2edd0b5549486d583122dc0a13`。状态：核心实现及定向回归完成，全量与 S31 验证待补。未连接设备，未推送。
+基线：`a39e9693bb4dea2edd0b5549486d583122dc0a13`。状态：核心实现、定向和普通全量回归完成，ASan 与 S31 验证待补。未连接设备，未推送。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 通过 | 【实测】四场景均 0 次/0 ms 欠载；1 kHz SNR 91.96 dB、10 kHz 衰减 88.49 dB。原基线 44 次/660 ms；保留 540 ms 预缓冲再把滤波移回输出任务，仍 43 次/645 ms，欠载断言失败 | C1、C2 |
-| 2 | 通过 | 【实测】[改前频谱](before-spectrum.png)、[改后频谱](after-spectrum.png)，分别 71507 / 25094 B；[改前 WAV](before-music.wav)、[改后 WAV](after-music.wav)，均为同一原创双音样例的实际 speaker.wav | C2、C3 |
-| 3 | 待验证 | 普通全量、内存检查、S31 宿主测试与固件构建 | 待补 |
+| 2 | 通过 | 【实测】[改前频谱](before-spectrum.png)、[改后频谱](after-spectrum.png)，分别 71757 / 25697 B；[改前 WAV](before-music.wav)、[改后 WAV](after-music.wav)，均为同一原创双音样例的实际 speaker.wav | C2、C3 |
+| 3 | 部分通过，继续验证 | 【实测】普通全量 436 项执行通过、3 项按原条件跳过；ASan、S31 宿主和固件待补 | C4 |
 
 ## 没做到的
 
-- 尚未完成验证；宿主模拟与计算量估算不能冒充 S31 实机结果。
+- ASan 与 S31 编译验证仍在进行。未做真机试听、烧录或串口操作；宿主模拟与计算量估算不能冒充 S31 实机结果。未运行 Linux 全套测试，GCC 检查待补。
 
 ## 和设计不一致的
 
@@ -31,18 +31,19 @@
 ## 顺手发现
 
 - Q8：1 kHz 与合成音乐各 1 次/255 ms 欠载；Q7：完整流程 2 次/285 ms 欠载。因此未采用。
-- 全量首轮发现新互斥锁启动时分配导致 ui-scene-ImeVoice 的内部内存余量为 32672 B，低于原有 32768 B 门槛；中止并改为首次 PCM 时分配。定向复跑余量 32776 B、无警告；Opus 的 finish/abort 不取得 PCM 锁。全量重跑待补。
+- 全量首轮发现新互斥锁启动时分配导致 ui-scene-ImeVoice 的内部内存余量为 32672 B，低于原有 32768 B 门槛；中止并改为首次 PCM 时分配。定向复跑余量 32776 B、无警告；Opus 的 finish/abort 不取得 PCM 锁。最终普通全量原话：`100% tests passed out of 439`，814.95 s；hub-contract、hub-json-crosscheck、hub-simulator-e2e 按原条件跳过。
 
 ## 新增的机制
 
 - 任务书第 1 项要求的生产侧滤波：在现有媒体执行器调用 PCM 入口时计算；生产端独占 FIR，首次 PCM 时分配一把互斥锁，串行化推送、排尾和销毁；输出任务和 Opus 流不取得这把锁。
 - 任务书第 1 项要求的缓冲：复用 PSRAM 播放队列，媒体上限 34×60 ms，PCM 启播阈值 9×60 ms。无新增任务、线程、队列、状态机、持久格式或用户配置。
+- 任务书第 2 项要求的固定 Q4 编译常量，由生产端与独立参考测试共用，无运行时档位配置。
 
 ## 资源与档位
 
 【实现】媒体执行器仍为优先级 4，声音任务仍为 7，DMA 仍为 4×240 帧。滤波、混为单声道、FIR 排尾全部在调用 PCM 入口的生产端；AU.lock 只管入队和状态，滤波时不持有它。处理后的 PSRAM 队列由原媒体循环限制在约 2.04 秒，启动至少准备 540 ms；短文件沿用 EOF 直接排完的规矩。
 
-【实现】44.1 kHz 输入时，队列分配上界约 35×1920=67200 B（含一块在途输出），加单声道暂存 5292 B、FIR 请求 4328 B，共 76820 B；沿用原队列元数据与 staging，不另分配整块第二队列。所有这些大缓冲和 FIR 均显式请求 PSRAM。与原始采样队列相比减少约 119 KB，未把它当作实机测量。唯一运行时内部增量是一把首次 PCM 才创建的 FreeRTOS 互斥锁，尺寸待 S31 编译核对；DMA 新增为 0。
+【实现】44.1 kHz 输入时，队列分配上界约 35×1920=67200 B（含一块在途输出），加单声道暂存 5292 B、FIR 请求 4328 B，共 76820 B；沿用原队列元数据与 staging，不另分配整块第二队列。所有这些大缓冲和 FIR 均显式请求 PSRAM。第一轮原速率队列上界为 185220 B，单比较队列减少 118020 B，未把它当作实机测量。唯一运行时内部增量是一把首次 PCM 才创建的 FreeRTOS 互斥锁，尺寸待 S31 编译核对；DMA 新增为 0。
 
 【实测】按 Q10→Q0 逐档运行同源 FIR，44.1 kHz 双声道同相信号混为单声道后降到 16 kHz。宿主耗时不含初始化和调度，是加载状态下的一次 CPU 计时；完整数字见 [qualities.json](qualities.json)，频响见 [档位图](quality-sweep.png)。
 
@@ -61,6 +62,8 @@
 | Q0 | 24 | 0.63 | 52.03 | 22 | 同上 |
 
 【估算】沿用第一轮 320 MHz、Q4 3200 cycles/输出采样的保守模型，按实际 tap 比例计算；没有调低成本让测试通过。Q9/Q10 的数仅为单精度成本下界，实际软件双精度更慢。Q4 每 60 ms 音频约 9.6 ms CPU；宿主 WAV/FLAC/MP3/Vorbis 解码分别为 0.055/0.288/0.784/0.677 ms/音频秒，若按宿主的 20～50 倍估计，总计约 161～199 ms/音频秒，留出调度余量。Q4 是保守选择，不声称已证明它是所有工况下可用的最高档。
+
+**为什么不能更小**：【实现】相对基线产品代码新增 79 行、删除 67 行，按增删相加为 **146 行**，低于 300 行。主要是搬出旧的输入分段与输出侧 FIR、增加生产侧入队/排尾/互斥生命周期；未增加第二任务或第二队列。看过的更小方案：滤波继续放在原输出任务（第一轮已经实测失败）；直接在 AU.lock 内滤波虽能少一把锁，但会阻塞输出取数，违背这次任务的目的，因此未采用。
 
 ## 来源与架构审视
 
@@ -86,4 +89,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/audio_out/measure.py --build build --binary build/audio-out-baseline
 # C3：work/measure-env 内固定 numpy 2.0.2、matplotlib 3.9.4，仅用于手动报告
 MPLCONFIGDIR=work/mpl-cache taskpolicy -c utility work/measure-env/bin/python -B tests/audio_out/plots.py --build build --out docs/tasks/audio-out-2 --font "$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" --before audio-out-baseline --before-title '改前：输出任务内 SpeexDSP Q4，含欠载'
+# C4：最终普通全量，退出 0
+taskpolicy -c utility cmake --build build -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
