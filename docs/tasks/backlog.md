@@ -282,7 +282,8 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 - 第 1 天（11-12）派出：`fixes-1112`（ime-switch-key、timer-seconds、memo-save-busy、cell-double-1，进今晚试用版 20）、`graft-mogo-1`（嫁接接口 + 新阅读第一版，先模拟器）、`hub-link-1`（S31 加密 WebSocket、配网热点缺口、中枢接 OpenAI 兼容和 Anthropic 两种真模型接法）、`fw-size-2`（压缩嵌入资源包）、`frameworks-research-1`（输入法、通知栏和控制中心、设置的最成熟来源；另有一个代理并行查同一题）。
 - 上午暂停的 `txt-gbk`、`music-pcm`、`almanac-1` 不再单做：GBK 随 Mogo 阅读，音质随新音乐（kiikoread 改版 + MyPaperS31 声音输出），老黄历随 Mogo 锁屏和日历数据。
 - 之后的顺序（按反馈调）：新阅读书架和统计、传书、设备上的 AI（11-14）；锁屏样式、U 盘、输入法（11-15）；通知栏和控制中心、设置、音乐、电话短信联系人、时钟、日历、天气、相册相机、备忘文件、微信读书。
-- 等用户的：中枢接哪家模型（花钱）；每天装机的时间（默认晚上插 USB）；微信读书到时扫码登录。
+- 中枢模型用户选了 DeepSeek（D-130）。`hub-link-1` 合入时补：有 `DEEPSEEK_API_KEY` 就默认用 DeepSeek（`deepseek-chat`），中枢启动时读 `ink-hw/private/hub.env`；语音识别先接本机 Whisper。
+- 等用户的：每天装机的时间（默认晚上插 USB）；微信读书到时扫码登录。
 
 ## 暂停，先重新规划（2026-11-12 中午）（已由上面的 v3 取代：不再原样托管 Mogo、不跟上游）
 
