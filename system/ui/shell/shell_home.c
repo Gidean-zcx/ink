@@ -464,7 +464,7 @@ static void apps_create(lv_obj_t *screen, void *arg) {
     lv_obj_t *search = ink_textfield_create(head, &cfg, search_entered, (void *)(uintptr_t)N.epoch, false);
     lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), 0); /* in the canvas, wherever the panel puts it */
     ink_textfield_style(search, INK_FIELD_SEARCH, TR("搜索"));
-    y += ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP_M;
+    y += ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP_XS; /* the group name below has its own room */
     apps_h = INK_CANVAS_H - y;
     apps_box = ink_ui_box(screen, 0, y, INK_CANVAS_W, apps_h, 0, INK_SURFACE_WHITE, false);
     draw_apps();

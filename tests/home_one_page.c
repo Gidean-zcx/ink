@@ -85,7 +85,8 @@ static void run(void *arg) {
     CHECK(AI("data.get", "{\"collection\":\"home.today\",\"id\":1}") && strstr(g_result, "camera"), "the six are kept for this member: %.120s", g_result);
     /* Another member keeps the defaults. */
     CHECK(ink_member_switch("kid") == 0, "the child takes the device"); quiet(); go_home();
-    CHECK(strstr(view, "页面=KidHome") && strstr(view, "常用=电话（phone）；短信（message）；阅读（reader）；"), "the child has their own six: %.200s", field(view, "常用="));
+    CHECK(strstr(view, "页面=KidHome") && strstr(view, "常用=电话（phone）；短信（message）；阅读（reader）；") &&
+          strstr(view, "相机（camera）；时钟（clock）；"), "the child has their own six, in the default order: %.200s", field(view, "常用="));
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
