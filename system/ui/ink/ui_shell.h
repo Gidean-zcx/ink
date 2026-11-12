@@ -39,7 +39,6 @@ void ink_shell_control(void);
 bool ink_shell_close(void);
 lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time);
 void ink_shell_time_strings(char *clock, size_t clock_cap, char *date, size_t date_cap);
-lv_obj_t *ink_shell_dock(lv_obj_t *parent);
 void ink_shell_topbar(lv_obj_t *parent, const char *title);
 void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json);
 /** A call or message refused because airplane mode is on: the panel with "关闭飞行模式". True if it was that. */

@@ -762,7 +762,7 @@ set_tests_properties(ui-borders PROPERTIES TIMEOUT 180)
 set(INK_SHELL_SCENES Main Today Apps Lock LockPage Control Notifications Members MembersBack Pin PinWrong
   ImePinyin ImeCandidates ImeEdit ImePassword ImeVoice Confirm ConfirmDelete ConfirmSecret AiListen AiThink Ai
   Settings SetDisplay SetSound SetNetwork SetVoice SetAbout SetPrivacy ImeSymbols
-  PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
+  PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsPanel)
 foreach(scene ${INK_SHELL_SCENES})
   if(scene STREQUAL "PowerOff")
     set(budget ui_off_scene)

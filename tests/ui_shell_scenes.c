@@ -81,7 +81,6 @@ static void component_scene(lv_obj_t *screen, void *arg) {
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, "公共组件");
-    if (!strcmp(scene, "ComponentsDock")) { ink_shell_dock(screen); return; }
     if (!strcmp(scene, "ComponentsPanel")) {
         lv_obj_t *panel = ink_ui_panel(screen, 3 * INK_PRIMARY + 2 * INK_MARGIN, true);
         ink_ui_label(panel, "底部面板", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_MARGIN, w);
@@ -107,8 +106,12 @@ static const ink_activity_t COMPONENTS = {.name = "Components", .create = compon
 static void prepare(void) {
     ink_time_set(1793803620, false); /* A fixed synthetic clock, not the host clock. */
     set_level("display.light", 40); set_level("display.warmth", 30); set_level("audio.volume", 60);
-    if (!strcmp(scene, "Today")) ink_shell_home_swipe(INK_SWIPE_RIGHT);
-    else if (!strcmp(scene, "Apps")) ink_shell_home_swipe(INK_SWIPE_LEFT);
+    if (!strcmp(scene, "Today")) { /* the one page with today's cards: the book opened before, and the next thing */
+        ink_alarm_t a = {.kind = INK_ALARM, .at_utc = ink_time_now_s() + 3600, .hour = 15, .min = 0, .src = INK_SRC_TOUCH};
+        snprintf(a.title, sizeof a.title, "接孩子");
+        CHECK(ink_alarm_add(&a) > 0, "schedule the next thing");
+        ink_ui_home();
+    } else if (!strcmp(scene, "Apps")) { ink_receipt_t rc; CHECK(ink_cap_invoke("shell.apps", NULL, INK_SRC_TOUCH, 0, &rc) == INK_RC_DONE, "全部应用 opens"); }
     else if (!strcmp(scene, "Control")) ink_shell_control();
     else if (!strncmp(scene, "Components", 10)) ink_ui_push(&COMPONENTS, NULL);
     else if (!strcmp(scene, "Settings") || !strncmp(scene, "Set", 3) || !strcmp(scene, "Notifications")) ink_shell_open_page(scene);
@@ -206,12 +209,11 @@ static void assert_settings_decoration(void) {
 static void assert_identity(void) {
     const char *top = scene, *page = "home", *expected_text = scene;
     const char *home_board = scene;
-    if (ink_member_current()->role == INK_ROLE_CHILD) {
-        if (!strcmp(scene, "Main")) home_board = expected_text = "KidHome";
-        else if (!strcmp(scene, "Today")) home_board = "KidToday";
-        else if (!strcmp(scene, "Apps")) home_board = expected_text = "KidApps";
-    }
-    if (!strcmp(scene, "Main") || !strcmp(scene, "Today") || !strcmp(scene, "Apps")) top = "home";
+    bool kid = ink_member_current()->role == INK_ROLE_CHILD;
+    /* D-135: Today is the one page with its cards; Apps is the second page behind 全部应用. */
+    if (!strcmp(scene, "Main") || !strcmp(scene, "Today")) {
+        top = "home"; home_board = kid ? "KidHome" : "Main"; expected_text = !strcmp(scene, "Today") ? "继续读《星星邮差》" : home_board;
+    } else if (!strcmp(scene, "Apps")) { top = page = "Apps"; home_board = expected_text = kid ? "KidApps" : "Apps"; }
     else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) { top = "LockPage"; expected_text = "设备已锁定"; }
     else if (!strcmp(scene, "Members") || !strcmp(scene, "MembersBack") || !strncmp(scene, "Pin", 3)) { top = "member_gate"; expected_text = !strncmp(scene, "Pin", 3) ? "密码内容不可见" : "请选择家人"; }
     else if (!strncmp(scene, "Ime", 3)) { top = "Keyboard"; page = "test.text"; expected_text = password ? "密码输入" : "键盘"; }
@@ -223,11 +225,10 @@ static void assert_identity(void) {
     else if (!strncmp(scene, "Components", 10)) { top = "Components"; page = "Components"; expected_text = "测试输入页"; }
     else if (!strcmp(scene, "Settings") || !strncmp(scene, "Set", 3) || !strcmp(scene, "Notifications")) page = scene;
     if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff")) page = "book";
-    if (!strcmp(scene, "Today")) expected_text = "\"title\":\"今日\"";
     if (!strcmp(scene, "Control") && ink_member_current()->role == INK_ROLE_CHILD) top = "KidControl";
     CHECK(!strcmp(ink_ui_top_name(), top), "%s requires overlay/page %s, got %s", scene, top, ink_ui_top_name());
     CHECK(!strcmp(ink_ui_page_name(), page), "%s requires activity %s, got %s", scene, page, ink_ui_page_name());
-    if (!strcmp(top, "home")) CHECK(!strcmp(ink_shell_board(), home_board), "%s is the selected home screen", home_board);
+    if (!strcmp(top, "home") || !strcmp(top, "Apps")) CHECK(!strcmp(ink_shell_board(), home_board), "%s is the selected home screen", home_board);
     CHECK(snapshot_has(expected_text), "%s snapshot must contain %s", scene, expected_text);
     if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage"))
         CHECK(ink_setting_get("display.lock_style") == !strcmp(scene, "Lock") && ink_power_state() == INK_PWR_LOCKED, "the requested lock variant is actually locked");
@@ -244,22 +245,22 @@ static void assert_identity(void) {
     if (!strcmp(scene, "Settings")) assert_settings_decoration();
     if (!strcmp(scene, "Components")) CHECK(label_visible("开关") && label_visible("自动"), "component controls exist");
     if (!strcmp(scene, "ComponentsPanel")) CHECK(label_visible("底部面板"), "the panel component exists");
-    if (!strcmp(scene, "ComponentsDock")) CHECK(lv_obj_get_child_count(lv_screen_active()) > 1 && !label_visible("开关") && !label_visible("底部面板"), "Dock fixture has its own variant");
     if (!strcmp(scene, "Control") || !strcmp(scene, "SetDisplay")) CHECK(snapshot_has("亮度=40"), "current brightness, not just a registered setting");
     if (!strcmp(scene, "SetDisplay")) {
         char size[32]; snprintf(size, sizeof size, "字号=%lld", (long long)ink_setting_get("display.font_size"));
         CHECK(snapshot_has(size) && snapshot_has("自动锁屏秒=600"), "display settings have their current values");
     }
     if (!strcmp(scene, "SetNetwork")) CHECK(snapshot_has("网络组=1") && snapshot_has("SIM="), "network selection context is present");
-    if (!strcmp(scene, "Today")) CHECK(
-        snapshot_has("\"id\":\"reader\",\"role\":\"card\",\"label\":\"继续读\",\"value\":\"还没有开始读书\"") &&
-        snapshot_has("\"id\":\"listen\",\"role\":\"card\",\"label\":\"继续听\",\"value\":\"还没有在听的内容\"") &&
-        snapshot_has("\"id\":\"news\",\"role\":\"card\",\"label\":\"今日报纸\",\"value\":\"今天的还没到\"") &&
-        snapshot_has("\"id\":\"word\",\"role\":\"card\",\"label\":\"单词\",\"value\":\"还没有记下的词\"") &&
-        (ink_member_current()->role == INK_ROLE_CHILD
-            ? snapshot_has("\"id\":\"time\",\"role\":\"text\",\"label\":\"今天\",\"value\":\"今天不限时\"")
-            : snapshot_has("\"id\":\"upcoming\",\"role\":\"card\",\"label\":\"接下来\",\"value\":\"还没有接下来的事\"")) &&
-        snapshot_has("\"actions\":[]"), "all five Today cards have structured semantic context and no fabricated empty-state action");
+    if (!strcmp(scene, "Main") || !strcmp(scene, "Today")) { /* the cards drawn, the favourites, no empty placeholder */
+        CHECK(!strcmp(scene, "Main") ? snapshot_has("卡片=没有") && !label_visible("继续读") && !label_visible("接下来")
+                                     : snapshot_has("卡片=继续读《星星邮差》：第 1 页 · 0%；接下来：接孩子 15:00") &&
+                                       label_visible("第 1 页 · 0%") && label_visible("接下来"),
+              "%s: cards with content are drawn and named, cards without are not", scene);
+        CHECK(snapshot_has("常用=电话（phone）；短信（message）；阅读（reader）") && label_visible("全部应用") && !snapshot_has("home.next"),
+              "%s: the favourites and 全部应用, nothing to turn", scene);
+        CHECK(kid ? label_visible("爸爸妈妈可以看到你的记录") : label_visible("按住侧边 AI 键，直接说话"), "%s: the bottom line", scene);
+    }
+    if (!strcmp(scene, "Apps")) CHECK(snapshot_has("工具页=1/") && snapshot_has("阅读（reader）") && label_visible("读和听"), "Apps: its first page, in groups");
 }
 
 /* No text cut off by what holds it, and no two lines of text on top of each other. Whatever the
@@ -342,8 +343,8 @@ static void assert_operation(void) {
         return;
     }
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today") || !strcmp(scene, "Apps")) {
-        tap(460, 1120); quiet();
-        CHECK(strcmp(ink_ui_page_name(), "home"), "the Dock touch actually opens the reading application");
+        CHECK(press_label("阅读"), "touch the reading favourite or row"); quiet();
+        CHECK(strcmp(ink_ui_page_name(), "home") && strcmp(ink_ui_page_name(), "Apps"), "the touch actually opens the reading application");
     } else if (!strcmp(scene, "Settings")) {
         CHECK(press_label("显示和亮度"), "touch the display settings row"); quiet();
         CHECK(!strcmp(ink_ui_page_name(), "SetDisplay"), "the row opens its promised page");
@@ -415,7 +416,7 @@ static void test_task(void *arg) {
         quiet();
         CHECK(ink_member_current()->role != INK_ROLE_CHILD || ink_ui_line_height(INK_FONT_BODY) == (INK_LINE_BODY * 110 + 50) / 100, "a child reads one step up");
     }
-    if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff")) {
+    if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff") || !strcmp(scene, "Today")) {
         CHECK(BY_HAND("reader.open_book", "{\"title\":\"星星邮差\"}") && g_rc.status == INK_RC_DONE, "open the real reading surface below the shell");
     }
     if (!strcmp(scene, "Notifications")) { /* with nothing to read the page shows only its empty state */

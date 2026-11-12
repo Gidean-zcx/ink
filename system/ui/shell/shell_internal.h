@@ -90,8 +90,6 @@ static inline void state_text(const char *id, char *buf, size_t cap) {
 /* Signal bars from the modem's reading in dBm (0: none). */
 static inline int cell_bars(int64_t dbm) { return dbm == 0 ? 0 : dbm >= -75 ? 4 : dbm >= -85 ? 3 : dbm >= -95 ? 2 : 1; }
 
-extern const char *const CARD_APPS[];
-extern const char *const APP_ICONS[];
 extern const ink_setting_def_t SETTINGS[2];
 
 void known_load(void *ctx, const char *id, const ink_args_t *args);
@@ -112,8 +110,14 @@ int today_slots(void);
 bool today_match(const ink_json_t *j, int slot);
 const char *today_icon(int slot);
 void today_model(void);
-void kid_today_model(void);
 bool icon_close(void);
 void icon_event(lv_event_t *e);
 void icon_bind(lv_obj_t *obj, const char *id);
 int today_init(void);
+/* The one-page home (D-135): favourites, labels and the minute's date line. */
+int home_init(void);
+int home_apps(const char *ids[6]);
+bool home_usable(const char *id);
+const char *home_icon(const char *id);
+const char *home_label(const char *id);
+void home_refresh(void);
