@@ -3,6 +3,7 @@ add_library(ink_mogo_native STATIC
   ${mogo_page_root}/apps/ink_book_page.c
   ${mogo_page_root}/book/reader_open.c ${mogo_page_root}/book/reader_chapter.c
   ${mogo_page_root}/book/reader_turn.c ${mogo_page_root}/book/reader_session.c
+  ${mogo_page_root}/book/book_progress.c
   ${mogo_page_root}/book/book_source.c ${mogo_page_root}/book/book_txt.c ${mogo_page_root}/book/gbk.c
   ${mogo_page_root}/book/book_epub.c ${mogo_page_root}/book/zip_reader.c ${mogo_page_root}/book/html_text.c
   ${mogo_page_root}/book/book_layout.c ${mogo_page_root}/image/book_image_header.c
@@ -14,7 +15,7 @@ target_include_directories(ink_mogo_native BEFORE PRIVATE ${CMAKE_CURRENT_LIST_D
 target_link_libraries(ink_mogo_native PRIVATE ink_system ink_reader_vendor)
 target_compile_options(ink_mogo_native PRIVATE -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable
   -include ${CMAKE_CURRENT_LIST_DIR}/port/runtime.h)
-target_sources(ink_apps PRIVATE ${CMAKE_CURRENT_LIST_DIR}/mogo.c ${CMAKE_CURRENT_LIST_DIR}/port/runtime.c)
+target_sources(ink_apps PRIVATE ${CMAKE_CURRENT_LIST_DIR}/mogo.c ${CMAKE_CURRENT_LIST_DIR}/port/runtime.c ${CMAKE_CURRENT_LIST_DIR}/port/preferences.c)
 target_include_directories(ink_apps PRIVATE ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/port ${mogo_page_root}/book)
 target_link_libraries(ink_apps PRIVATE ink_mogo_native)
 target_compile_definitions(ink_boot PRIVATE INK_MOGO_SIM=1)

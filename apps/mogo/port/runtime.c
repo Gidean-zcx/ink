@@ -19,6 +19,7 @@ void *ink_mogo_calloc(size_t n, size_t s) {
 }
 size_t ink_mogo_free(void) { size_t p; ink_app_mem_free(NULL, NULL, &p); return p; }
 void ink_mogo_owner(const ink_member_identity_t *o) { ink_mogo_member = *o; }
+const ink_member_identity_t *ink_mogo_current_owner(void) { return &ink_mogo_member; }
 void ink_mogo_dimensions(int w, int h, int px) { ink_mogo_w = w; ink_mogo_h = h; ink_mogo_px = px; }
 int app_settings_book_px(void) { return ink_mogo_px; }
 const char *app_settings_fonts_dir(void) { return "/me/fonts"; }
@@ -87,4 +88,3 @@ bool book_index_cache_prepare(const char *p, const char *tag, uint32_t v, char *
 FILE *book_index_cache_open_read(const char *p, const book_index_cache_header_t *h) { (void)p; (void)h; return NULL; }
 FILE *book_index_cache_open_write(const char *p, const book_index_cache_header_t *h, char *t, size_t n) { (void)p; (void)h; (void)t; (void)n; return NULL; }
 bool book_index_cache_finish_write(FILE *f, const char *t, const char *p, bool ok) { (void)f; (void)t; (void)p; (void)ok; return false; }
-bool book_progress_load(const char *p, uint32_t s, book_progress_t *v) { (void)p; (void)s; (void)v; return false; }

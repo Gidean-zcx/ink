@@ -27,6 +27,7 @@ ssize_t ink_mogo_read(int fd, void *p, size_t n);
 off_t ink_mogo_lseek(int fd, off_t off, int whence);
 int ink_mogo_snprintf(char *out, size_t cap, const char *fmt, ...);
 void ink_mogo_owner(const ink_member_identity_t *owner);
+const ink_member_identity_t *ink_mogo_current_owner(void);
 void ink_mogo_dimensions(int w, int h, int px);
 #ifndef INK_MOGO_PORT_IMPL
 #define malloc ink_mogo_malloc

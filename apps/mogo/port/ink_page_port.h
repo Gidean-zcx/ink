@@ -62,7 +62,13 @@ static reader_dims_ctx_t s_reader_dims_ctx;
 static ink_mogo_selection_t s_dictionary_selection;
 static app_ctx_t ink_mogo_context;
 static void free_book(void) { reader_session_close(&s_reader_session); s_text = NULL; }
-static void save_progress(void) { }
+static void save_progress(void) {
+    if (!s_text || !book_layout_page_count()) return;
+    book_progress_t p = {.file_size=s_reader_session.book.file_size,
+        .chapter=(uint16_t)s_reader_session.position.chapter,
+        .byte_off=(uint32_t)book_layout_page_start_offset(s_reader_session.position.page),.px=(uint8_t)s_px};
+    s_save_failed = book_progress_save(s_reader_session.book.path,&p) != ESP_OK;
+}
 static void copy_text(char *out, size_t cap, const char *s) {
     size_t n = strlen(s);
     if (n >= cap) { n = cap - 1; while (n && ((unsigned char)s[n] & 0xc0) == 0x80) --n; }

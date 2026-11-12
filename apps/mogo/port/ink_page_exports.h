@@ -10,6 +10,7 @@ bool ink_mogo_page_open(const char *path, const ink_member_identity_t *owner, in
 void ink_mogo_page_turn(int direction) { ink_mogo_context.now_ms = ink_now_us() / 1000; (void)turn_page(&ink_mogo_context,direction); }
 void ink_mogo_page_draw(uint8_t *pixels) { if (s_text) draw_reader(pixels,s_reader_session.position.page); }
 void ink_mogo_page_close(void) {
+    save_progress();
     free_book(); ink_mogo_font_shutdown(); memset(&s_reader_session,0,sizeof s_reader_session);
     s_reader_panel = READER_PANEL_NONE; s_reader_slider = -1;
 }
