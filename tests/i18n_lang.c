@@ -257,8 +257,16 @@ static void after_restart(void) {
     CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":0}") && g_rc.status == INK_RC_DONE && language("zh"),
           "switch back to Chinese by hand");
     CHECK(WAIT_FOR(at("Settings") && strstr(g_snap, "语言=zh"), 3000), "the settings home follows at once");
-    on_ui(read_labels);
-    for (int i = 0; i < 9; i++) CHECK(shows(ZH_ROWS[i]), "Chinese again: %s", ZH_ROWS[i]);
+    unsigned seen = 0; /* the settings home has two pages since the new design language */
+    for (int page = 1; page <= 2; page++) {
+        on_ui(read_labels);
+        for (int i = 0; i < 9; i++) {
+            if (shows(ZH_ROWS[i])) seen |= 1u << i;
+            CHECK(!shows(EN_ROWS[i]), "no English left after switching back: %s", EN_ROWS[i]);
+        }
+        if (page == 1) CHECK(BY_HAND("shell.page_next", NULL) && ready("Settings"), "visit settings second page");
+    }
+    for (int i = 0; i < 9; i++) CHECK(seen & (1u << i), "Chinese again: %s", ZH_ROWS[i]);
     finish();
 }
 
