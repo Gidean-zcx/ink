@@ -1,0 +1,1532 @@
+{
+  "retrieved_on": "2026-11-12",
+  "baseline": "d09b79195e2dc57908e33219216048e529e082c6",
+  "evidence_kind": "source inspection, no app execution",
+  "sources": [
+    {
+      "id": "F01",
+      "repository": "FossifyOrg/Phone",
+      "commit": "25804aa81061868c0f5d5b4ad4eefc544507380c",
+      "language_framework": "Kotlin / Android Views、Telecom",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/phone/activities/DialpadActivity.kt",
+          "start": 295,
+          "end": 399,
+          "line_count": 482,
+          "sha256": "2836a97a7b9a583dc1e10da89fc60f333d087ed936c070ffa90dccc70fd09adc",
+          "purpose": "号码/姓名匹配、SIM选择与快捷拨号",
+          "url": "https://github.com/FossifyOrg/Phone/blob/25804aa81061868c0f5d5b4ad4eefc544507380c/app/src/main/kotlin/org/fossify/phone/activities/DialpadActivity.kt#L295-L399"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/phone/activities/CallActivity.kt",
+          "start": 469,
+          "end": 520,
+          "line_count": 910,
+          "sha256": "55a9556841762a3f74a9a845e52085b93470d8865c5a3b11adc13a624cda1ca0",
+          "purpose": "音频路由显示",
+          "url": "https://github.com/FossifyOrg/Phone/blob/25804aa81061868c0f5d5b4ad4eefc544507380c/app/src/main/kotlin/org/fossify/phone/activities/CallActivity.kt#L469-L520"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/phone/activities/CallActivity.kt",
+          "start": 653,
+          "end": 738,
+          "line_count": 910,
+          "sha256": "55a9556841762a3f74a9a845e52085b93470d8865c5a3b11adc13a624cda1ca0",
+          "purpose": "通话状态与联系人显示",
+          "url": "https://github.com/FossifyOrg/Phone/blob/25804aa81061868c0f5d5b4ad4eefc544507380c/app/src/main/kotlin/org/fossify/phone/activities/CallActivity.kt#L653-L738"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "repository": "FossifyOrg/Messages",
+      "commit": "d9510f44b03c82869856d89a0fcd30b880df9688",
+      "language_framework": "Kotlin / Android Views、系统短信接口",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt",
+          "start": 343,
+          "end": 369,
+          "line_count": 2210,
+          "sha256": "bc982ebd2be17e12f0f425a7261d050e811318366617aeef816d0978f4ad7499",
+          "purpose": "草稿保存",
+          "url": "https://github.com/FossifyOrg/Messages/blob/d9510f44b03c82869856d89a0fcd30b880df9688/app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt#L343-L369"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt",
+          "start": 685,
+          "end": 705,
+          "line_count": 2210,
+          "sha256": "bc982ebd2be17e12f0f425a7261d050e811318366617aeef816d0978f4ad7499",
+          "purpose": "失败消息重新编辑/发送对象",
+          "url": "https://github.com/FossifyOrg/Messages/blob/d9510f44b03c82869856d89a0fcd30b880df9688/app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt#L685-L705"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt",
+          "start": 888,
+          "end": 924,
+          "line_count": 2210,
+          "sha256": "bc982ebd2be17e12f0f425a7261d050e811318366617aeef816d0978f4ad7499",
+          "purpose": "长度/分段提示",
+          "url": "https://github.com/FossifyOrg/Messages/blob/d9510f44b03c82869856d89a0fcd30b880df9688/app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt#L888-L924"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt",
+          "start": 1585,
+          "end": 1690,
+          "line_count": 2210,
+          "sha256": "bc982ebd2be17e12f0f425a7261d050e811318366617aeef816d0978f4ad7499",
+          "purpose": "普通和定时发送路径",
+          "url": "https://github.com/FossifyOrg/Messages/blob/d9510f44b03c82869856d89a0fcd30b880df9688/app/src/main/kotlin/org/fossify/messages/activities/ThreadActivity.kt#L1585-L1690"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "repository": "FossifyOrg/Contacts",
+      "commit": "5664636dbc78dd0c0b86ccc25b554943b24feb96",
+      "language_framework": "Kotlin / Android Views、Contacts Provider",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/contacts/activities/ViewContactActivity.kt",
+          "start": 198,
+          "end": 249,
+          "line_count": 864,
+          "sha256": "2a01482c20ba244fe5bfa48f67ccecdcefe14d428a38c1d78ccdfc47aa9b3905",
+          "purpose": "详情电话/短信/邮件动作",
+          "url": "https://github.com/FossifyOrg/Contacts/blob/5664636dbc78dd0c0b86ccc25b554943b24feb96/app/src/main/kotlin/org/fossify/contacts/activities/ViewContactActivity.kt#L198-L249"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/contacts/activities/ViewContactActivity.kt",
+          "start": 301,
+          "end": 371,
+          "line_count": 864,
+          "sha256": "2a01482c20ba244fe5bfa48f67ccecdcefe14d428a38c1d78ccdfc47aa9b3905",
+          "purpose": "收藏和多号码",
+          "url": "https://github.com/FossifyOrg/Contacts/blob/5664636dbc78dd0c0b86ccc25b554943b24feb96/app/src/main/kotlin/org/fossify/contacts/activities/ViewContactActivity.kt#L301-L371"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/contacts/helpers/VcfImporter.kt",
+          "start": 38,
+          "end": 105,
+          "line_count": 414,
+          "sha256": "b478e450410bc9b26b96ff914b087993e464447eee0e6fc0ba76f234ec24c5e5",
+          "purpose": "vCard导入处理",
+          "url": "https://github.com/FossifyOrg/Contacts/blob/5664636dbc78dd0c0b86ccc25b554943b24feb96/app/src/main/kotlin/org/fossify/contacts/helpers/VcfImporter.kt#L38-L105"
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "repository": "FossifyOrg/Clock",
+      "commit": "0511f508368ada82cdb587b0bf8df9d56cf9e6ad",
+      "language_framework": "Kotlin / Android Views、系统闹钟服务",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/clock/dialogs/EditAlarmDialog.kt",
+          "start": 110,
+          "end": 156,
+          "line_count": 269,
+          "sha256": "882471e225a38dad13735409d990fe8ffd9900fd72c68f29805594d86d263a80",
+          "purpose": "星期重复选择",
+          "url": "https://github.com/FossifyOrg/Clock/blob/0511f508368ada82cdb587b0bf8df9d56cf9e6ad/app/src/main/kotlin/org/fossify/clock/dialogs/EditAlarmDialog.kt#L110-L156"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/clock/dialogs/EditTimerDialog.kt",
+          "start": 19,
+          "end": 29,
+          "line_count": 111,
+          "sha256": "aadaf3bee2e10a22253e7eb7b2e383438b76ef543f0624ac45fd311c91d42aed",
+          "purpose": "秒数展示与编辑入口",
+          "url": "https://github.com/FossifyOrg/Clock/blob/0511f508368ada82cdb587b0bf8df9d56cf9e6ad/app/src/main/kotlin/org/fossify/clock/dialogs/EditTimerDialog.kt#L19-L29"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/clock/dialogs/EditTimerDialog.kt",
+          "start": 97,
+          "end": 102,
+          "line_count": 111,
+          "sha256": "aadaf3bee2e10a22253e7eb7b2e383438b76ef543f0624ac45fd311c91d42aed",
+          "purpose": "时长编辑回传秒数",
+          "url": "https://github.com/FossifyOrg/Clock/blob/0511f508368ada82cdb587b0bf8df9d56cf9e6ad/app/src/main/kotlin/org/fossify/clock/dialogs/EditTimerDialog.kt#L97-L102"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/clock/fragments/StopwatchFragment.kt",
+          "start": 247,
+          "end": 285,
+          "line_count": 291,
+          "sha256": "ca805b6fb065ea37bd6de7dfbb4cfff17e8c0cb4ace95da2e0cddb2572011c65",
+          "purpose": "计次列表及时间更新",
+          "url": "https://github.com/FossifyOrg/Clock/blob/0511f508368ada82cdb587b0bf8df9d56cf9e6ad/app/src/main/kotlin/org/fossify/clock/fragments/StopwatchFragment.kt#L247-L285"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/clock/dialogs/AddTimeZonesDialog.kt",
+          "start": 11,
+          "end": 31,
+          "line_count": 31,
+          "sha256": "6b3e2e117a8283228f4eb236cd497bb704437a582506e1f6ac358ecccc4d0cd3",
+          "purpose": "世界时钟多时区选择",
+          "url": "https://github.com/FossifyOrg/Clock/blob/0511f508368ada82cdb587b0bf8df9d56cf9e6ad/app/src/main/kotlin/org/fossify/clock/dialogs/AddTimeZonesDialog.kt#L11-L31"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "repository": "FossifyOrg/Calculator",
+      "commit": "bd2bf37edaff3e0c12538c3499760c90620c4dc2",
+      "language_framework": "Kotlin / Android Views、EvalEx、BigDecimal",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/math/helpers/CalculatorImpl.kt",
+          "start": 228,
+          "end": 310,
+          "line_count": 490,
+          "sha256": "d4f60ba6193172097e8b6e3123f84cffae3f93df734beececb9105a738b92986",
+          "purpose": "根号/表达式求值和历史写入",
+          "url": "https://github.com/FossifyOrg/Calculator/blob/bd2bf37edaff3e0c12538c3499760c90620c4dc2/app/src/main/kotlin/org/fossify/math/helpers/CalculatorImpl.kt#L228-L310"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/math/helpers/CalculatorImpl.kt",
+          "start": 176,
+          "end": 195,
+          "line_count": 490,
+          "sha256": "d4f60ba6193172097e8b6e3123f84cffae3f93df734beececb9105a738b92986",
+          "purpose": "百分比单独语义",
+          "url": "https://github.com/FossifyOrg/Calculator/blob/bd2bf37edaff3e0c12538c3499760c90620c4dc2/app/src/main/kotlin/org/fossify/math/helpers/CalculatorImpl.kt#L176-L195"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/math/activities/MainActivity.kt",
+          "start": 190,
+          "end": 200,
+          "line_count": 295,
+          "sha256": "0e090f0bf85bbd0bab636799158c80ac446c90d9e1978de0fb9f20c07fb44455",
+          "purpose": "历史入口",
+          "url": "https://github.com/FossifyOrg/Calculator/blob/bd2bf37edaff3e0c12538c3499760c90620c4dc2/app/src/main/kotlin/org/fossify/math/activities/MainActivity.kt#L190-L200"
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "repository": "FossifyOrg/Calendar",
+      "commit": "a437b8f2a354e0487043fd6b98734f9cfeb93933",
+      "language_framework": "Kotlin / Android Views、日历Provider",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/calendar/activities/EventActivity.kt",
+          "start": 846,
+          "end": 915,
+          "line_count": 2430,
+          "sha256": "883a1b80edec8fc973c34701adfb533416ef1bc7e94e7bd1e7ddb5d9a6e3418c",
+          "purpose": "多次提醒和重复编辑",
+          "url": "https://github.com/FossifyOrg/Calendar/blob/a437b8f2a354e0487043fd6b98734f9cfeb93933/app/src/main/kotlin/org/fossify/calendar/activities/EventActivity.kt#L846-L915"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/calendar/helpers/IcsImporter.kt",
+          "start": 143,
+          "end": 190,
+          "line_count": 602,
+          "sha256": "4da21e2c11b2634b7364854233f4ab7d98c8046e5c1b59249671d2fe38a7653f",
+          "purpose": "ICS属性和RRULE解析",
+          "url": "https://github.com/FossifyOrg/Calendar/blob/a437b8f2a354e0487043fd6b98734f9cfeb93933/app/src/main/kotlin/org/fossify/calendar/helpers/IcsImporter.kt#L143-L190"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/calendar/helpers/IcsImporter.kt",
+          "start": 250,
+          "end": 276,
+          "line_count": 602,
+          "sha256": "4da21e2c11b2634b7364854233f4ab7d98c8046e5c1b59249671d2fe38a7653f",
+          "purpose": "重复例外日期",
+          "url": "https://github.com/FossifyOrg/Calendar/blob/a437b8f2a354e0487043fd6b98734f9cfeb93933/app/src/main/kotlin/org/fossify/calendar/helpers/IcsImporter.kt#L250-L276"
+        }
+      ]
+    },
+    {
+      "id": "F07",
+      "repository": "FossifyOrg/Gallery",
+      "commit": "2688360242468f1d591eddf23740c879616bb828",
+      "language_framework": "Kotlin / Android Views、子采样图片和手势控件",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/gallery/fragments/PhotoFragment.kt",
+          "start": 223,
+          "end": 238,
+          "line_count": 1006,
+          "sha256": "cd388af975bfae9fa9e1c4e9d67f32d75199b71c0c034e1791727d0fa455a546",
+          "purpose": "EXIF方向处理",
+          "url": "https://github.com/FossifyOrg/Gallery/blob/2688360242468f1d591eddf23740c879616bb828/app/src/main/kotlin/org/fossify/gallery/fragments/PhotoFragment.kt#L223-L238"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/gallery/fragments/PhotoFragment.kt",
+          "start": 599,
+          "end": 635,
+          "line_count": 1006,
+          "sha256": "cd388af975bfae9fa9e1c4e9d67f32d75199b71c0c034e1791727d0fa455a546",
+          "purpose": "图片缩放手势与外层滑动分工",
+          "url": "https://github.com/FossifyOrg/Gallery/blob/2688360242468f1d591eddf23740c879616bb828/app/src/main/kotlin/org/fossify/gallery/fragments/PhotoFragment.kt#L599-L635"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/gallery/activities/MediaActivity.kt",
+          "start": 1078,
+          "end": 1142,
+          "line_count": 1142,
+          "sha256": "9c78f029e0ef060ee4321cefc593a668d8dcfde1068f4b04499fa51d2536c54f",
+          "purpose": "逐项删除与回收站处理",
+          "url": "https://github.com/FossifyOrg/Gallery/blob/2688360242468f1d591eddf23740c879616bb828/app/src/main/kotlin/org/fossify/gallery/activities/MediaActivity.kt#L1078-L1142"
+        }
+      ]
+    },
+    {
+      "id": "F08",
+      "repository": "FossifyOrg/Notes",
+      "commit": "f7efe788832e9f5eee0fb67417e92f4dfef0257c",
+      "language_framework": "Kotlin / Android Views、文本/清单编辑器",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/notes/fragments/TextFragment.kt",
+          "start": 94,
+          "end": 118,
+          "line_count": 371,
+          "sha256": "07a7ac14f224187ea1a4a0b8657596b08b5a46583b84b37027f12d577055af90",
+          "purpose": "离开页面自动保存",
+          "url": "https://github.com/FossifyOrg/Notes/blob/f7efe788832e9f5eee0fb67417e92f4dfef0257c/app/src/main/kotlin/org/fossify/notes/fragments/TextFragment.kt#L94-L118"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/notes/fragments/TextFragment.kt",
+          "start": 245,
+          "end": 293,
+          "line_count": 371,
+          "sha256": "07a7ac14f224187ea1a4a0b8657596b08b5a46583b84b37027f12d577055af90",
+          "purpose": "保存实现",
+          "url": "https://github.com/FossifyOrg/Notes/blob/f7efe788832e9f5eee0fb67417e92f4dfef0257c/app/src/main/kotlin/org/fossify/notes/fragments/TextFragment.kt#L245-L293"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/notes/activities/MainActivity.kt",
+          "start": 252,
+          "end": 315,
+          "line_count": 1602,
+          "sha256": "f41f4d81963ece3ae19c073f6846b1b270f8de1b23fa95fd55aa4eaedb33e25c",
+          "purpose": "文本/清单上下文动作",
+          "url": "https://github.com/FossifyOrg/Notes/blob/f7efe788832e9f5eee0fb67417e92f4dfef0257c/app/src/main/kotlin/org/fossify/notes/activities/MainActivity.kt#L252-L315"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/notes/activities/MainActivity.kt",
+          "start": 596,
+          "end": 675,
+          "line_count": 1602,
+          "sha256": "f41f4d81963ece3ae19c073f6846b1b270f8de1b23fa95fd55aa4eaedb33e25c",
+          "purpose": "搜索与上/下个命中",
+          "url": "https://github.com/FossifyOrg/Notes/blob/f7efe788832e9f5eee0fb67417e92f4dfef0257c/app/src/main/kotlin/org/fossify/notes/activities/MainActivity.kt#L596-L675"
+        }
+      ]
+    },
+    {
+      "id": "F09",
+      "repository": "FossifyOrg/File-Manager",
+      "commit": "1e43648eadfdbae862f1fd2f57ac68b3b7b35357",
+      "language_framework": "Kotlin / Android Views、文件与SAF接口",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/filemanager/activities/MainActivity.kt",
+          "start": 191,
+          "end": 247,
+          "line_count": 755,
+          "sha256": "25754fe8bb96cb654aa380786f7f854b17e98bc96653f4c82c491eaf20202bc0",
+          "purpose": "搜索和排序入口",
+          "url": "https://github.com/FossifyOrg/File-Manager/blob/1e43648eadfdbae862f1fd2f57ac68b3b7b35357/app/src/main/kotlin/org/fossify/filemanager/activities/MainActivity.kt#L191-L247"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/filemanager/fragments/ItemsFragment.kt",
+          "start": 305,
+          "end": 399,
+          "line_count": 551,
+          "sha256": "d2162ba4b309de525fa78db4e11e65f4f9b7656619ed0ed4caeb39fac0b76eb8",
+          "purpose": "目录内递归搜索与结果排序",
+          "url": "https://github.com/FossifyOrg/File-Manager/blob/1e43648eadfdbae862f1fd2f57ac68b3b7b35357/app/src/main/kotlin/org/fossify/filemanager/fragments/ItemsFragment.kt#L305-L399"
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "repository": "FossifyOrg/Launcher",
+      "commit": "622d894113553ffdfc6befdb055087551ed8939b",
+      "language_framework": "Kotlin / Android、自绘桌面网格",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/home/views/HomeScreenGrid.kt",
+          "start": 100,
+          "end": 148,
+          "line_count": 2473,
+          "sha256": "7e1c4172c468cb34e68fc6b1881e6e3513b15d1004818e9f846dd9a2fc88bf13",
+          "purpose": "拖动/文件夹状态",
+          "url": "https://github.com/FossifyOrg/Launcher/blob/622d894113553ffdfc6befdb055087551ed8939b/app/src/main/kotlin/org/fossify/home/views/HomeScreenGrid.kt#L100-L148"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/home/activities/MainActivity.kt",
+          "start": 137,
+          "end": 190,
+          "line_count": 1372,
+          "sha256": "e5eb8257d8b639737c23889454d97a2756031c51221f7c87f265103bd44d81c5",
+          "purpose": "桌面、应用和小部件区域",
+          "url": "https://github.com/FossifyOrg/Launcher/blob/622d894113553ffdfc6befdb055087551ed8939b/app/src/main/kotlin/org/fossify/home/activities/MainActivity.kt#L137-L190"
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "repository": "FossifyOrg/Camera",
+      "commit": "a57a2ffbbac1dd42231e3f030f738929ad139c6e",
+      "language_framework": "Kotlin / Android CameraX、Views",
+      "files": [
+        {
+          "path": "app/src/main/kotlin/org/fossify/camera/activities/MainActivity.kt",
+          "start": 569,
+          "end": 595,
+          "line_count": 1032,
+          "sha256": "08f72586411e6ebc765dd40cba650d14065fa26d0c51afa160c625c97feaeeeb",
+          "purpose": "最近照片预览更新与交叉渐变",
+          "url": "https://github.com/FossifyOrg/Camera/blob/a57a2ffbbac1dd42231e3f030f738929ad139c6e/app/src/main/kotlin/org/fossify/camera/activities/MainActivity.kt#L569-L595"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/camera/activities/MainActivity.kt",
+          "start": 160,
+          "end": 190,
+          "line_count": 1032,
+          "sha256": "08f72586411e6ebc765dd40cba650d14065fa26d0c51afa160c625c97feaeeeb",
+          "purpose": "照片/录像模式",
+          "url": "https://github.com/FossifyOrg/Camera/blob/a57a2ffbbac1dd42231e3f030f738929ad139c6e/app/src/main/kotlin/org/fossify/camera/activities/MainActivity.kt#L160-L190"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/camera/activities/MainActivity.kt",
+          "start": 990,
+          "end": 1032,
+          "line_count": 1032,
+          "sha256": "08f72586411e6ebc765dd40cba650d14065fa26d0c51afa160c625c97feaeeeb",
+          "purpose": "定时拍照过程",
+          "url": "https://github.com/FossifyOrg/Camera/blob/a57a2ffbbac1dd42231e3f030f738929ad139c6e/app/src/main/kotlin/org/fossify/camera/activities/MainActivity.kt#L990-L1032"
+        },
+        {
+          "path": "app/src/main/kotlin/org/fossify/camera/implementations/CameraXPreview.kt",
+          "start": 225,
+          "end": 270,
+          "line_count": 751,
+          "sha256": "18e3df89f44fce5335a94d2cfc4782cb8400f6cef1388155ad774cb669f5f7c7",
+          "purpose": "预览/拍照绑定生命周期",
+          "url": "https://github.com/FossifyOrg/Camera/blob/a57a2ffbbac1dd42231e3f030f738929ad139c6e/app/src/main/kotlin/org/fossify/camera/implementations/CameraXPreview.kt#L225-L270"
+        }
+      ]
+    },
+    {
+      "id": "A01",
+      "repository": "LineageOS/android_packages_apps_Dialer",
+      "commit": "3b9a8e35d2bc2c804ee1c64f9b291630a00e333d",
+      "language_framework": "Java / AOSP Android Views、Telecom",
+      "files": [
+        {
+          "path": "java/com/android/dialer/smartdial/util/SmartDialNameMatcher.java",
+          "start": 117,
+          "end": 181,
+          "line_count": 434,
+          "sha256": "79ba8a3f8a28671d1b89bbb959519c3c2f1ea26f5a2305ffa1651716fdda8395",
+          "purpose": "号码匹配",
+          "url": "https://github.com/LineageOS/android_packages_apps_Dialer/blob/3b9a8e35d2bc2c804ee1c64f9b291630a00e333d/java/com/android/dialer/smartdial/util/SmartDialNameMatcher.java#L117-L181"
+        },
+        {
+          "path": "java/com/android/dialer/smartdial/util/SmartDialNameMatcher.java",
+          "start": 412,
+          "end": 434,
+          "line_count": 434,
+          "sha256": "79ba8a3f8a28671d1b89bbb959519c3c2f1ea26f5a2305ffa1651716fdda8395",
+          "purpose": "姓名T9匹配",
+          "url": "https://github.com/LineageOS/android_packages_apps_Dialer/blob/3b9a8e35d2bc2c804ee1c64f9b291630a00e333d/java/com/android/dialer/smartdial/util/SmartDialNameMatcher.java#L412-L434"
+        },
+        {
+          "path": "java/com/android/incallui/CallCardPresenter.java",
+          "start": 394,
+          "end": 446,
+          "line_count": 1024,
+          "sha256": "487cfbd8934a605efe269e371e4839b63a749119e06851dba210c1bf83408f86",
+          "purpose": "区分真实通话状态的展示",
+          "url": "https://github.com/LineageOS/android_packages_apps_Dialer/blob/3b9a8e35d2bc2c804ee1c64f9b291630a00e333d/java/com/android/incallui/CallCardPresenter.java#L394-L446"
+        }
+      ]
+    },
+    {
+      "id": "A02",
+      "repository": "LineageOS/android_packages_apps_Messaging",
+      "commit": "47eb88d3219eea82905f844baa9240925329ab6f",
+      "language_framework": "Java / AOSP Android Views、短信/MMS Provider",
+      "files": [
+        {
+          "path": "src/com/android/messaging/datamodel/data/MessageData.java",
+          "start": 120,
+          "end": 154,
+          "line_count": 911,
+          "sha256": "36ec372b28ba8faaa625f67b41e30f7c99df3d3151901a5000a6f82e5901c940",
+          "purpose": "草稿、发送、送达、失败等不同消息状态",
+          "url": "https://github.com/LineageOS/android_packages_apps_Messaging/blob/47eb88d3219eea82905f844baa9240925329ab6f/src/com/android/messaging/datamodel/data/MessageData.java#L120-L154"
+        },
+        {
+          "path": "src/com/android/messaging/ui/conversation/ComposeMessageView.java",
+          "start": 145,
+          "end": 228,
+          "line_count": 985,
+          "sha256": "9372a055a4291c0d44127cfd5aae08ca6140431254ac184332bea4f7d0dbbc98",
+          "purpose": "附件、SIM和编辑区域的界面结构",
+          "url": "https://github.com/LineageOS/android_packages_apps_Messaging/blob/47eb88d3219eea82905f844baa9240925329ab6f/src/com/android/messaging/ui/conversation/ComposeMessageView.java#L145-L228"
+        }
+      ]
+    },
+    {
+      "id": "A03",
+      "repository": "LineageOS/android_packages_apps_Contacts",
+      "commit": "c03937e4d35924455b6e27d34fd91b1426580f4b",
+      "language_framework": "Java / AOSP Android Views、Contacts Provider",
+      "files": [
+        {
+          "path": "src/com/android/contacts/quickcontact/QuickContactActivity.java",
+          "start": 1012,
+          "end": 1070,
+          "line_count": 2970,
+          "sha256": "132d87810b7d40c13195967a89bfb13667953784e3b9015d818d1850bef4f139",
+          "purpose": "独立联系人详情绑定",
+          "url": "https://github.com/LineageOS/android_packages_apps_Contacts/blob/c03937e4d35924455b6e27d34fd91b1426580f4b/src/com/android/contacts/quickcontact/QuickContactActivity.java#L1012-L1070"
+        },
+        {
+          "path": "src/com/android/contacts/quickcontact/QuickContactActivity.java",
+          "start": 1730,
+          "end": 1802,
+          "line_count": 2970,
+          "sha256": "132d87810b7d40c13195967a89bfb13667953784e3b9015d818d1850bef4f139",
+          "purpose": "短信与电话等关联动作",
+          "url": "https://github.com/LineageOS/android_packages_apps_Contacts/blob/c03937e4d35924455b6e27d34fd91b1426580f4b/src/com/android/contacts/quickcontact/QuickContactActivity.java#L1730-L1802"
+        }
+      ]
+    },
+    {
+      "id": "A04",
+      "repository": "LineageOS/android_packages_apps_Settings",
+      "commit": "f82184028165ea108335a9745428c26fea3cec47",
+      "language_framework": "Java / Android Preference、Dashboard",
+      "files": [
+        {
+          "path": "src/com/android/settings/dashboard/DashboardFragment.java",
+          "start": 95,
+          "end": 178,
+          "line_count": 727,
+          "sha256": "24073002ab3b560583b8710f10df21bc86707f5b27f1cb3f06c25d9160ec062c",
+          "purpose": "设置控制器与页面显示分离",
+          "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/dashboard/DashboardFragment.java#L95-L178"
+        },
+        {
+          "path": "src/com/android/settings/dashboard/DashboardFragment.java",
+          "start": 345,
+          "end": 410,
+          "line_count": 727,
+          "sha256": "24073002ab3b560583b8710f10df21bc86707f5b27f1cb3f06c25d9160ec062c",
+          "purpose": "设置项状态更新",
+          "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/dashboard/DashboardFragment.java#L345-L410"
+        },
+        {
+          "path": "src/com/android/settings/core/SubSettingLauncher.java",
+          "start": 55,
+          "end": 130,
+          "line_count": 262,
+          "sha256": "e7c0f50b8746d1f96ad7fb922ca18c43daafaed038c78138b52fb1ddeded47da",
+          "purpose": "子设置页及标题/参数导航",
+          "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/core/SubSettingLauncher.java#L55-L130"
+        }
+      ]
+    },
+    {
+      "id": "C01",
+      "repository": "Etar-Group/Etar-Calendar",
+      "commit": "82ff55ea1fc035177054ce4b4aa8e0dd91059ef1",
+      "language_framework": "Java / AOSP Calendar、Android Views",
+      "files": [
+        {
+          "path": "app/src/main/java/com/android/calendar/calendarcommon2/EventRecurrence.java",
+          "start": 31,
+          "end": 92,
+          "line_count": 908,
+          "sha256": "96e6a7b7d3067cafee89c1f47cd9f2cb44d393e2517878120a59a8c781f59d2d",
+          "purpose": "重复频率、次数、日期条件模型",
+          "url": "https://github.com/Etar-Group/Etar-Calendar/blob/82ff55ea1fc035177054ce4b4aa8e0dd91059ef1/app/src/main/java/com/android/calendar/calendarcommon2/EventRecurrence.java#L31-L92"
+        },
+        {
+          "path": "app/src/main/java/com/android/calendar/event/EditEventHelper.java",
+          "start": 307,
+          "end": 394,
+          "line_count": 1581,
+          "sha256": "b9d3e7ff5e18ef9066981475f83a39e7e303d72d8a35de723996847e43f23963",
+          "purpose": "编辑重复事件的作用范围",
+          "url": "https://github.com/Etar-Group/Etar-Calendar/blob/82ff55ea1fc035177054ce4b4aa8e0dd91059ef1/app/src/main/java/com/android/calendar/event/EditEventHelper.java#L307-L394"
+        },
+        {
+          "path": "README.md",
+          "start": 17,
+          "end": 70,
+          "line_count": 86,
+          "sha256": "2a72b67640487b82502dca6065be164c636991d55500fabcb76cbffccb36db20",
+          "purpose": "月/周/日/议程、搜索等上游说明；不当本次实测",
+          "url": "https://github.com/Etar-Group/Etar-Calendar/blob/82ff55ea1fc035177054ce4b4aa8e0dd91059ef1/README.md#L17-L70"
+        }
+      ]
+    },
+    {
+      "id": "W01",
+      "repository": "breezy-weather/breezy-weather",
+      "commit": "484cbc53bd48c6dd735edcac13ddfc9ebdeb0e4a",
+      "language_framework": "Kotlin / Android、Jetpack Compose、Material 3",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 80,
+          "end": 104,
+          "line_count": 209,
+          "sha256": "326efd362ba2a0ff28cf60412c282fbd8c318493404257b9b168419345932bd6",
+          "purpose": "逐小时/分钟、预警和天气指标清单；上游说明",
+          "url": "https://github.com/breezy-weather/breezy-weather/blob/484cbc53bd48c6dd735edcac13ddfc9ebdeb0e4a/README.md#L80-L104"
+        },
+        {
+          "path": "app/src/main/kotlin/org/breezyweather/domain/weather/model/Weather.kt",
+          "start": 34,
+          "end": 92,
+          "line_count": 160,
+          "sha256": "b7e30ad3bea70e8f4897d0981ba7c60cb5a3d087d21b6f06c4921dada74aba09",
+          "purpose": "空气质量/分钟降雨的结构化展示逻辑",
+          "url": "https://github.com/breezy-weather/breezy-weather/blob/484cbc53bd48c6dd735edcac13ddfc9ebdeb0e4a/app/src/main/kotlin/org/breezyweather/domain/weather/model/Weather.kt#L34-L92"
+        },
+        {
+          "path": "app/src/main/kotlin/org/breezyweather/domain/weather/model/Daily.kt",
+          "start": 30,
+          "end": 100,
+          "line_count": 136,
+          "sha256": "4b52b5bcfde96e1e4d6dc8f9809915bfd8388d0e058c7c17904ab460a85c819c",
+          "purpose": "逐日信息和白天/夜晚关系",
+          "url": "https://github.com/breezy-weather/breezy-weather/blob/484cbc53bd48c6dd735edcac13ddfc9ebdeb0e4a/app/src/main/kotlin/org/breezyweather/domain/weather/model/Daily.kt#L30-L100"
+        }
+      ]
+    },
+    {
+      "id": "G01",
+      "repository": "deckerst/aves",
+      "commit": "9d3f1ff19f680db043c9d80831c6f222e0f8220c",
+      "language_framework": "Dart / Flutter、Android媒体平台",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 36,
+          "end": 44,
+          "line_count": 169,
+          "sha256": "7719bff6ad304ef90c2772ae45172153e1e4798cef71327a049032c9e6e8bc6d",
+          "purpose": "格式、元数据和按相册/标签搜索；上游说明",
+          "url": "https://github.com/deckerst/aves/blob/9d3f1ff19f680db043c9d80831c6f222e0f8220c/README.md#L36-L44"
+        },
+        {
+          "path": "lib/widgets/collection/collection_page.dart",
+          "start": 35,
+          "end": 117,
+          "line_count": 220,
+          "sha256": "ffc47c73b839ad42c199b2c283fa1952921aa22b45d1d9025f999a01b9b2dac5",
+          "purpose": "筛选集合和浏览页面",
+          "url": "https://github.com/deckerst/aves/blob/9d3f1ff19f680db043c9d80831c6f222e0f8220c/lib/widgets/collection/collection_page.dart#L35-L117"
+        },
+        {
+          "path": "lib/widgets/viewer/entry_viewer_page.dart",
+          "start": 11,
+          "end": 58,
+          "line_count": 58,
+          "sha256": "845af356c86c52af31e1dd56a3c1ee176569b823f1385158370847830fb85abb",
+          "purpose": "集合内单图与控制器",
+          "url": "https://github.com/deckerst/aves/blob/9d3f1ff19f680db043c9d80831c6f222e0f8220c/lib/widgets/viewer/entry_viewer_page.dart#L11-L58"
+        },
+        {
+          "path": "lib/widgets/viewer/info/info_page.dart",
+          "start": 1,
+          "end": 115,
+          "line_count": 344,
+          "sha256": "431e6fee61a9cd187bff5123c5e4c642b1fc6bea15c20784839376d8954bcbf3",
+          "purpose": "图片元数据详情页面",
+          "url": "https://github.com/deckerst/aves/blob/9d3f1ff19f680db043c9d80831c6f222e0f8220c/lib/widgets/viewer/info/info_page.dart#L1-L115"
+        }
+      ]
+    },
+    {
+      "id": "N01",
+      "repository": "laurent22/joplin",
+      "commit": "0e1489ce885ddf570da0b389c1cc57b98bf41307",
+      "language_framework": "TypeScript / 共享笔记业务；桌面/手机客户端",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 7,
+          "end": 17,
+          "line_count": 166,
+          "sha256": "b9444e9a16aa4d8b87124a368605847ce9ad368e603e5f6116c34f3121a86f69",
+          "purpose": "笔记/待办/离线/交换/同步的上游说明",
+          "url": "https://github.com/laurent22/joplin/blob/0e1489ce885ddf570da0b389c1cc57b98bf41307/README.md#L7-L17"
+        },
+        {
+          "path": "packages/lib/models/Note.ts",
+          "start": 72,
+          "end": 140,
+          "line_count": 1481,
+          "sha256": "77ef3cce0fe533f2c835eaafb9be7aee1969a45f9aa8b3d7aaa43a1b1c54759a",
+          "purpose": "笔记与待办属性",
+          "url": "https://github.com/laurent22/joplin/blob/0e1489ce885ddf570da0b389c1cc57b98bf41307/packages/lib/models/Note.ts#L72-L140"
+        },
+        {
+          "path": "packages/lib/services/search/SearchEngine.ts",
+          "start": 631,
+          "end": 665,
+          "line_count": 1020,
+          "sha256": "d5c1456c353e9ad3bf68b95bedf26d73de2c76dceb8ed3b1c926f422b2129e9d",
+          "purpose": "全文搜索输入处理",
+          "url": "https://github.com/laurent22/joplin/blob/0e1489ce885ddf570da0b389c1cc57b98bf41307/packages/lib/services/search/SearchEngine.ts#L631-L665"
+        },
+        {
+          "path": "packages/lib/services/search/SearchEngine.ts",
+          "start": 740,
+          "end": 760,
+          "line_count": 1020,
+          "sha256": "d5c1456c353e9ad3bf68b95bedf26d73de2c76dceb8ed3b1c926f422b2129e9d",
+          "purpose": "非字母语言搜索方式选择",
+          "url": "https://github.com/laurent22/joplin/blob/0e1489ce885ddf570da0b389c1cc57b98bf41307/packages/lib/services/search/SearchEngine.ts#L740-L760"
+        }
+      ]
+    },
+    {
+      "id": "X02",
+      "repository": "TeamAmaze/AmazeFileManager",
+      "commit": "5f1aea6829978aff67f97bf6f00ddd9fa9e3723e",
+      "language_framework": "Java、Kotlin / Android Views、前台文件任务",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 22,
+          "end": 34,
+          "line_count": 103,
+          "sha256": "44caeccfcc71368893596a138a4f38558942e6d548124fdd1650e89f2a32d140",
+          "purpose": "文件操作、标签页、搜索、归档的上游说明",
+          "url": "https://github.com/TeamAmaze/AmazeFileManager/blob/5f1aea6829978aff67f97bf6f00ddd9fa9e3723e/README.md#L22-L34"
+        },
+        {
+          "path": "app/src/main/java/com/amaze/filemanager/asynchronous/services/CopyService.java",
+          "start": 238,
+          "end": 296,
+          "line_count": 552,
+          "sha256": "6d3e6fbb926b9c0cb852a5e52727ef7af7d44e47825474a9e87b8431bdbfe484",
+          "purpose": "复制/移动结果与失败集合",
+          "url": "https://github.com/TeamAmaze/AmazeFileManager/blob/5f1aea6829978aff67f97bf6f00ddd9fa9e3723e/app/src/main/java/com/amaze/filemanager/asynchronous/services/CopyService.java#L238-L296"
+        },
+        {
+          "path": "app/src/main/java/com/amaze/filemanager/filesystem/compressed/CompressedHelper.java",
+          "start": 90,
+          "end": 151,
+          "line_count": 304,
+          "sha256": "b7ab86048d890d757d3e87ecf86bf8942467e1a706899f9d73ac6c22a8c107f9",
+          "purpose": "归档类型到解压器的分派",
+          "url": "https://github.com/TeamAmaze/AmazeFileManager/blob/5f1aea6829978aff67f97bf6f00ddd9fa9e3723e/app/src/main/java/com/amaze/filemanager/filesystem/compressed/CompressedHelper.java#L90-L151"
+        }
+      ]
+    },
+    {
+      "id": "H01",
+      "repository": "Neamar/KISS",
+      "commit": "231eff343320c22355a22e74853658291a3e8995",
+      "language_framework": "Java / Android、自有搜索/Provider",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 3,
+          "end": 12,
+          "line_count": 30,
+          "sha256": "5cb4bb24a8e4372b1f7aa687e6d2a59889372ee68e3939294897dad4c8df2c05",
+          "purpose": "搜索应用/联系人/设置、常用结果前置；上游说明",
+          "url": "https://github.com/Neamar/KISS/blob/231eff343320c22355a22e74853658291a3e8995/README.md#L3-L12"
+        },
+        {
+          "path": "app/src/main/java/fr/neamar/kiss/DataHandler.java",
+          "start": 297,
+          "end": 321,
+          "line_count": 1011,
+          "sha256": "717a0dd55558fb75f1d833744761b8e94256d41c01414c1aa5487df0b8a829cf",
+          "purpose": "同查询分派给各数据Provider",
+          "url": "https://github.com/Neamar/KISS/blob/231eff343320c22355a22e74853658291a3e8995/app/src/main/java/fr/neamar/kiss/DataHandler.java#L297-L321"
+        },
+        {
+          "path": "app/src/main/java/fr/neamar/kiss/MainActivity.java",
+          "start": 197,
+          "end": 228,
+          "line_count": 1110,
+          "sha256": "311858c85006a354cc8e5e795c33c3371cce19d8762ea3de7664a896723e9551",
+          "purpose": "收藏/历史变化刷新",
+          "url": "https://github.com/Neamar/KISS/blob/231eff343320c22355a22e74853658291a3e8995/app/src/main/java/fr/neamar/kiss/MainActivity.java#L197-L228"
+        }
+      ]
+    },
+    {
+      "id": "E01",
+      "repository": "AlayaElla/MetalioClaw4-AgentUI",
+      "commit": "172ec530ff65e11521585fe3b8611daa20a78aa4",
+      "language_framework": "C++ / ESP-IDF、LVGL；P4触屏",
+      "files": [
+        {
+          "path": "main/display/agent_ui/apps/camera/camera_view.cc",
+          "start": 44,
+          "end": 89,
+          "line_count": 1631,
+          "sha256": "859fd456ff060dc5037e9ea1a44fda43977f21fd196b219ffed39a4100c063f4",
+          "purpose": "图库缩略图尺寸/容量和5种效果",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/main/display/agent_ui/apps/camera/camera_view.cc#L44-L89"
+        },
+        {
+          "path": "main/display/agent_ui/apps/camera/camera_gallery_repository.cc",
+          "start": 116,
+          "end": 177,
+          "line_count": 211,
+          "sha256": "0a8dcf664db73014902f12aa025630d1dc595e9c04c900ac006a3c5cd26bd29e",
+          "purpose": "图库枚举",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/main/display/agent_ui/apps/camera/camera_gallery_repository.cc#L116-L177"
+        },
+        {
+          "path": "main/display/agent_ui/apps/camera/camera_controller.cc",
+          "start": 112,
+          "end": 166,
+          "line_count": 341,
+          "sha256": "481c65e6030ab7e795cf6098be0cf5d3aea9fd061a2a9baa89fd0bf9264a0441",
+          "purpose": "取景与缩略图生命周期",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/main/display/agent_ui/apps/camera/camera_controller.cc#L112-L166"
+        },
+        {
+          "path": "main/display/agent_ui/apps/files/files_view.cc",
+          "start": 319,
+          "end": 396,
+          "line_count": 866,
+          "sha256": "c49b7ef30bc328c31e7d426b669ff046460bc5ce27caf2464aa578872e518d48",
+          "purpose": "可见文件列表行的构建",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/main/display/agent_ui/apps/files/files_view.cc#L319-L396"
+        },
+        {
+          "path": "main/display/agent_ui/apps/phone/phone_view.cc",
+          "start": 270,
+          "end": 303,
+          "line_count": 769,
+          "sha256": "a94cdfe2fab09a655a8004e7a459e470f51c39066bf8e29882bed9b898126f60",
+          "purpose": "AT命令受理不冒称接通",
+          "url": "https://github.com/AlayaElla/MetalioClaw4-AgentUI/blob/172ec530ff65e11521585fe3b8611daa20a78aa4/main/display/agent_ui/apps/phone/phone_view.cc#L270-L303"
+        }
+      ]
+    },
+    {
+      "id": "E02",
+      "repository": "dparnell/lilyphone1",
+      "commit": "de10fc3882292b9be1cfcd14632726590fdef262",
+      "language_framework": "C++ / Arduino、LVGL、GxEPD2；单色触屏/实体键盘",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 22,
+          "end": 45,
+          "line_count": 466,
+          "sha256": "88e05ad70bdb6b92b045d63bd6261d0e8caed503d3e557a2d1a5146808287aa4",
+          "purpose": "电话/联系人/消息及UCS2的上游说明",
+          "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/README.md#L22-L45"
+        },
+        {
+          "path": "src/apps/phone_store.cpp",
+          "start": 111,
+          "end": 138,
+          "line_count": 539,
+          "sha256": "026492851b85169a6b7c16fe251b06c55ac336cd090c715f93864847a0e8db0d",
+          "purpose": "号码匹配规则",
+          "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/apps/phone_store.cpp#L111-L138"
+        },
+        {
+          "path": "src/apps/phone_store.cpp",
+          "start": 190,
+          "end": 251,
+          "line_count": 539,
+          "sha256": "026492851b85169a6b7c16fe251b06c55ac336cd090c715f93864847a0e8db0d",
+          "purpose": "来电查名和联系人排序/添加",
+          "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/apps/phone_store.cpp#L190-L251"
+        },
+        {
+          "path": "src/ui/ui_phone1.cpp",
+          "start": 2807,
+          "end": 2851,
+          "line_count": 6811,
+          "sha256": "4515a8a8f64b8ed35dbacf6ddc6e278aa175ca3997e467b872ab01b6ed3240cb",
+          "purpose": "短信提交界面处理",
+          "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/ui/ui_phone1.cpp#L2807-L2851"
+        },
+        {
+          "path": "src/ui/ui_phone1.cpp",
+          "start": 3331,
+          "end": 3382,
+          "line_count": 6811,
+          "sha256": "4515a8a8f64b8ed35dbacf6ddc6e278aa175ca3997e467b872ab01b6ed3240cb",
+          "purpose": "通话号码与联系人显示",
+          "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/ui/ui_phone1.cpp#L3331-L3382"
+        },
+        {
+          "path": "src/ui/ui_phone1.cpp",
+          "start": 3880,
+          "end": 3930,
+          "line_count": 6811,
+          "sha256": "4515a8a8f64b8ed35dbacf6ddc6e278aa175ca3997e467b872ab01b6ed3240cb",
+          "purpose": "会话内消息删除和重绘",
+          "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/ui/ui_phone1.cpp#L3880-L3930"
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "repository": "paulwilke/Phone-OS",
+      "commit": "903a451c759ad1ac1004da1951051ee106d00130",
+      "language_framework": "C++ / ESP32 Arduino、独立黑白界面",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 1,
+          "end": 80,
+          "line_count": 99,
+          "sha256": "99e936b26dbea581e323077cb89cdadfc5feb89a8c4d999e162237a7bea2c18d",
+          "purpose": "T-Deck Pro MAX公开实现的功能/边界说明",
+          "url": "https://github.com/paulwilke/Phone-OS/blob/903a451c759ad1ac1004da1951051ee106d00130/README.md#L1-L80"
+        },
+        {
+          "path": "src/ui/screens/ComposeScreen.cpp",
+          "start": 1,
+          "end": 110,
+          "line_count": 243,
+          "sha256": "280e8bf5e073fe9b7ec3d2f5a169d7132a3cece2c1316a728000b1265291e2f3",
+          "purpose": "墨水屏短信编辑界面",
+          "url": "https://github.com/paulwilke/Phone-OS/blob/903a451c759ad1ac1004da1951051ee106d00130/src/ui/screens/ComposeScreen.cpp#L1-L110"
+        },
+        {
+          "path": "src/app/ContactBook.cpp",
+          "start": 1,
+          "end": 110,
+          "line_count": 150,
+          "sha256": "7ebb596fda8dc7d3184caaf755cc4f2c6545dfd34ecc0d04adfed289aa789faa",
+          "purpose": "联系人业务实现",
+          "url": "https://github.com/paulwilke/Phone-OS/blob/903a451c759ad1ac1004da1951051ee106d00130/src/app/ContactBook.cpp#L1-L110"
+        }
+      ]
+    },
+    {
+      "id": "M01",
+      "repository": "InfiniTimeOrg/InfiniTime",
+      "commit": "9ad16304f5fd526b781a760cf1313813d232645e",
+      "language_framework": "C++ / FreeRTOS、LVGL；PineTime",
+      "files": [
+        {
+          "path": "src/components/stopwatch/StopWatchController.cpp",
+          "start": 11,
+          "end": 59,
+          "line_count": 72,
+          "sha256": "a48c950a05e80733958a16fc94ce8ce890e41f237d4223c295688ef4c5960a1d",
+          "purpose": "暂停/计次/累计时间",
+          "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/components/stopwatch/StopWatchController.cpp#L11-L59"
+        },
+        {
+          "path": "src/displayapp/screens/Timer.cpp",
+          "start": 118,
+          "end": 155,
+          "line_count": 202,
+          "sha256": "7fd3fd9dc13f8002776b25d5619e085d3570b18ed1093172dba8f81cedf2820b",
+          "purpose": "剩余时间显示",
+          "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/displayapp/screens/Timer.cpp#L118-L155"
+        },
+        {
+          "path": "src/displayapp/screens/Timer.cpp",
+          "start": 183,
+          "end": 199,
+          "line_count": 202,
+          "sha256": "7fd3fd9dc13f8002776b25d5619e085d3570b18ed1093172dba8f81cedf2820b",
+          "purpose": "分和秒的输入",
+          "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/displayapp/screens/Timer.cpp#L183-L199"
+        },
+        {
+          "path": "src/components/alarm/AlarmController.cpp",
+          "start": 56,
+          "end": 90,
+          "line_count": 181,
+          "sha256": "ec78760e064f39e38260554294c35af5f971c0625c2427fca3eb699c814c27d8",
+          "purpose": "闹钟调度；未移用为本项目电源机制",
+          "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/components/alarm/AlarmController.cpp#L56-L90"
+        }
+      ]
+    },
+    {
+      "id": "M02",
+      "repository": "ZSWatch/ZSWatch",
+      "commit": "821c340366a0bc55b536f7feb5d45ca3836c44c3",
+      "language_framework": "C / Zephyr、LVGL、Zbus",
+      "files": [
+        {
+          "path": "app/src/applications/calculator/smf_calculator_thread.c",
+          "start": 107,
+          "end": 153,
+          "line_count": 727,
+          "sha256": "c1c5d56052b75a31baf674a9c930b37648ab1e2933bc020a787e692214f53eda",
+          "purpose": "四则/除零/结果格式化",
+          "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/applications/calculator/smf_calculator_thread.c#L107-L153"
+        },
+        {
+          "path": "app/src/applications/calculator/calculator_ui.c",
+          "start": 1,
+          "end": 118,
+          "line_count": 209,
+          "sha256": "545ff54578c6f93517a888169b8ecd512e58d1dfd0da5e308d9f10eaf5e37397",
+          "purpose": "数字和操作键UI",
+          "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/applications/calculator/calculator_ui.c#L1-L118"
+        },
+        {
+          "path": "app/src/applications/weather/weather_ui.c",
+          "start": 99,
+          "end": 148,
+          "line_count": 314,
+          "sha256": "b2ccd953e768deadb85245bfc3e53e127dc05692c585747479251b9cef57ada5",
+          "purpose": "当前天气与预报布局",
+          "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/applications/weather/weather_ui.c#L99-L148"
+        },
+        {
+          "path": "app/src/applications/weather/weather_ui.c",
+          "start": 211,
+          "end": 314,
+          "line_count": 314,
+          "sha256": "b2ccd953e768deadb85245bfc3e53e127dc05692c585747479251b9cef57ada5",
+          "purpose": "天气显示和加载状态",
+          "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/applications/weather/weather_ui.c#L211-L314"
+        },
+        {
+          "path": "app/src/applications/voice_memo/voice_memo_ui.c",
+          "start": 65,
+          "end": 136,
+          "line_count": 545,
+          "sha256": "1a1e25b0ef3269c7b3e24bcd5015545e749b73b62c560c50a884bc81a2575f40",
+          "purpose": "录音界面和闪动指示",
+          "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/applications/voice_memo/voice_memo_ui.c#L65-L136"
+        },
+        {
+          "path": "app/src/applications/voice_memo/voice_memo_app.c",
+          "start": 46,
+          "end": 102,
+          "line_count": 298,
+          "sha256": "495e032ff4610a10d2fcb1cfe358b127b4de315fe9027cb9a8ae6b7f6deb8b4d",
+          "purpose": "录音事件接入",
+          "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/applications/voice_memo/voice_memo_app.c#L46-L102"
+        }
+      ]
+    },
+    {
+      "id": "M03",
+      "repository": "espruino/BangleApps",
+      "commit": "9fe678997d86dfabb5aadc5fba272b7d5897a340",
+      "language_framework": "JavaScript / Espruino、Graphics/Layout、Storage",
+      "files": [
+        {
+          "path": "apps/weather/app.js",
+          "start": 101,
+          "end": 160,
+          "line_count": 184,
+          "sha256": "4429e004dd096352803698760ffeb292cddcb3d34e2933fe5e0e115f1ae09969",
+          "purpose": "体感/高低温/风和数据年龄、过期状态",
+          "url": "https://github.com/espruino/BangleApps/blob/9fe678997d86dfabb5aadc5fba272b7d5897a340/apps/weather/app.js#L101-L160"
+        },
+        {
+          "path": "apps/weather/lib.js",
+          "start": 1,
+          "end": 100,
+          "line_count": 640,
+          "sha256": "9a34e07c0b58ab130687c36c78ed253259f73516120a36e0a51d490a477390b3",
+          "purpose": "天气来源更新和过期数据处理",
+          "url": "https://github.com/espruino/BangleApps/blob/9fe678997d86dfabb5aadc5fba272b7d5897a340/apps/weather/lib.js#L1-L100"
+        },
+        {
+          "path": "apps/calendar/calendar.js",
+          "start": 1,
+          "end": 100,
+          "line_count": 368,
+          "sha256": "7eb7730a2d60337b4ffd37e45be8becaa0a43c968cfae05b81ff05fd13278340",
+          "purpose": "小屏静态月历",
+          "url": "https://github.com/espruino/BangleApps/blob/9fe678997d86dfabb5aadc5fba272b7d5897a340/apps/calendar/calendar.js#L1-L100"
+        },
+        {
+          "path": "apps/sched/lib.js",
+          "start": 1,
+          "end": 85,
+          "line_count": 249,
+          "sha256": "7b292b95d5c00738ca6333142d1cdf98d3e3cc2b584ac355f0071b03fea02374",
+          "purpose": "日期重复与计时调度",
+          "url": "https://github.com/espruino/BangleApps/blob/9fe678997d86dfabb5aadc5fba272b7d5897a340/apps/sched/lib.js#L1-L85"
+        },
+        {
+          "path": "apps/noteify/app.js",
+          "start": 1,
+          "end": 80,
+          "line_count": 299,
+          "sha256": "f0a403bcae6d1d4b9c019dc4ab335f9936c782115010a5e5f9e0cf7db2e9cb50",
+          "purpose": "笔记和提醒联动",
+          "url": "https://github.com/espruino/BangleApps/blob/9fe678997d86dfabb5aadc5fba272b7d5897a340/apps/noteify/app.js#L1-L80"
+        }
+      ]
+    },
+    {
+      "id": "M04",
+      "repository": "coredevices/PebbleOS",
+      "commit": "aa0c27e8330d010e9202f9a706a56002db5861ee",
+      "language_framework": "C / Pebble原生UI、系统服务",
+      "files": [
+        {
+          "path": "pebble/apps/system/settings/menu.c",
+          "start": 23,
+          "end": 51,
+          "line_count": 51,
+          "sha256": "1770708ad6d8f1850b873c351087106095d4a5414a40de2e5a2a319520cc51e7",
+          "purpose": "设置目录和当前值",
+          "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/settings/menu.c#L23-L51"
+        },
+        {
+          "path": "pebble/apps/system/settings/option_menu.c",
+          "start": 26,
+          "end": 80,
+          "line_count": 92,
+          "sha256": "6914cc956cf491f0b61279a3ae989cd83273bdad154678762e17fd2d5d66e125",
+          "purpose": "选项行绘制/点击",
+          "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/settings/option_menu.c#L26-L80"
+        },
+        {
+          "path": "pebble/apps/system/launcher/default/launcher.c",
+          "start": 1,
+          "end": 120,
+          "line_count": 203,
+          "sha256": "38e2d674cab6ce3761337aba0b95b51ee0d44d1dbba2d1a455b92dfbcac297b2",
+          "purpose": "应用列表/启动器接入",
+          "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/launcher/default/launcher.c#L1-L120"
+        },
+        {
+          "path": "pebble/apps/system/launcher/default/app_glance.c",
+          "start": 10,
+          "end": 58,
+          "line_count": 75,
+          "sha256": "2e7de2e2d0cfd4b1cd56d17bb5682aabf43abc1e68b033cc6b43ea602dc00f87",
+          "purpose": "应用简览的更新和展示",
+          "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/launcher/default/app_glance.c#L10-L58"
+        },
+        {
+          "path": "pebble/apps/system/alarms/alarms.c",
+          "start": 214,
+          "end": 267,
+          "line_count": 484,
+          "sha256": "96191dffb667dbef44cd9e8bf431140742896cf949b7653ffa02fffa81684c3a",
+          "purpose": "闹钟列表",
+          "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/alarms/alarms.c#L214-L267"
+        }
+      ]
+    },
+    {
+      "id": "M05",
+      "repository": "sqfmi/Watchy",
+      "commit": "d1d233c43b36cac23bccc6abeae998aa3e27724e",
+      "language_framework": "C++ / Arduino、GxEPD2、ESP32深睡唤醒",
+      "files": [
+        {
+          "path": "src/Watchy.cpp",
+          "start": 135,
+          "end": 181,
+          "line_count": 1154,
+          "sha256": "47117dd31ecf74fdd49ed13fe84987d79d1ed09cb6a3b7f840d220981ffa4d64",
+          "purpose": "实体按键菜单返回",
+          "url": "https://github.com/sqfmi/Watchy/blob/d1d233c43b36cac23bccc6abeae998aa3e27724e/src/Watchy.cpp#L135-L181"
+        },
+        {
+          "path": "src/Watchy.cpp",
+          "start": 289,
+          "end": 348,
+          "line_count": 1154,
+          "sha256": "47117dd31ecf74fdd49ed13fe84987d79d1ed09cb6a3b7f840d220981ffa4d64",
+          "purpose": "黑白菜单绘制",
+          "url": "https://github.com/sqfmi/Watchy/blob/d1d233c43b36cac23bccc6abeae998aa3e27724e/src/Watchy.cpp#L289-L348"
+        },
+        {
+          "path": "README.md",
+          "start": 1,
+          "end": 18,
+          "line_count": 18,
+          "sha256": "19c608641db35f3cf56b0b9fad0f0b447b2414dc9a904aa9572662cdd9d2b63e",
+          "purpose": "上游手表和支持范围",
+          "url": "https://github.com/sqfmi/Watchy/blob/d1d233c43b36cac23bccc6abeae998aa3e27724e/README.md#L1-L18"
+        }
+      ]
+    },
+    {
+      "id": "B01",
+      "repository": "espressif/esp-brookesia",
+      "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+      "language_framework": "C++ / ESP-IDF组件、JSON UI、System Core/Super",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 37,
+          "end": 49,
+          "line_count": 187,
+          "sha256": "2ecf6dc0be3ef73308805fce89f38e0d22bac94d53b121020c0f44efd3147a41",
+          "purpose": "v0.8与历史release分工及S31版本列",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/README.md#L37-L49"
+        },
+        {
+          "path": "app/brookesia_app_settings/src/settings_app.cpp",
+          "start": 69,
+          "end": 82,
+          "line_count": 1201,
+          "sha256": "e623351d2293ab02c98f6da294440b197233bd2910d7e85380fefe2e63029e97",
+          "purpose": "扫描结果UI的PSRAM开销提示",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_settings/src/settings_app.cpp#L69-L82"
+        },
+        {
+          "path": "app/brookesia_app_settings/src/service/wifi.ipp",
+          "start": 206,
+          "end": 262,
+          "line_count": 1332,
+          "sha256": "23eaf94ac055b819137bfec7ef043e73678560b5046469325f8375089bffc843",
+          "purpose": "Wi-Fi连接状态与可操作反馈",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_settings/src/service/wifi.ipp#L206-L262"
+        },
+        {
+          "path": "app/brookesia_app_settings/src/service/wifi.ipp",
+          "start": 432,
+          "end": 491,
+          "line_count": 1332,
+          "sha256": "23eaf94ac055b819137bfec7ef043e73678560b5046469325f8375089bffc843",
+          "purpose": "Wi-Fi扫描服务接入",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_settings/src/service/wifi.ipp#L432-L491"
+        },
+        {
+          "path": "app/brookesia_app_files/src/files_app.cpp",
+          "start": 25,
+          "end": 59,
+          "line_count": 490,
+          "sha256": "beb2fbbcd67934468fd3ab008289d500c010c015dab4a4c76cfcf7746af2818e",
+          "purpose": "文件动作范围",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_files/src/files_app.cpp#L25-L59"
+        },
+        {
+          "path": "system/brookesia_system_super/src/shell_app_launcher.cpp",
+          "start": 154,
+          "end": 218,
+          "line_count": 440,
+          "sha256": "88f57761cfa8e760aefa63b755357c5b73d46a79f04ae8219a049adac5f415ed",
+          "purpose": "按应用身份生成启动器",
+          "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/system/brookesia_system_super/src/shell_app_launcher.cpp#L154-L218"
+        }
+      ]
+    },
+    {
+      "id": "B02",
+      "repository": "espressif/esp-box",
+      "commit": "aae1b7a6d193d968cf53e42f291a60c4ca1c622c",
+      "language_framework": "C / ESP-IDF、LVGL示例",
+      "files": [
+        {
+          "path": "examples/chatgpt_demo/main/settings/settings.c",
+          "start": 1,
+          "end": 96,
+          "line_count": 96,
+          "sha256": "d8535de8d44ef1e4456f583d7f5cc390c09531f5c4218967f4f83bc837b68628",
+          "purpose": "示例设置存取；不是完整电话类应用",
+          "url": "https://github.com/espressif/esp-box/blob/aae1b7a6d193d968cf53e42f291a60c4ca1c622c/examples/chatgpt_demo/main/settings/settings.c#L1-L96"
+        }
+      ]
+    },
+    {
+      "id": "B03",
+      "repository": "espressif/esp-brookesia",
+      "commit": "2c0c83fad95b81c81ee560ba8af684ff32a402f4",
+      "language_framework": "C++ / LVGL；v0.4.2历史P4例程",
+      "files": [
+        {
+          "path": "examples/esp_idf/esp_brookesia_phone_p4_function_ev_board/main/main.cpp",
+          "start": 13,
+          "end": 16,
+          "line_count": 141,
+          "sha256": "3e990a5642129122368f0cc2156591811553c7d48fec526e01f3499ce72b4bd4",
+          "purpose": "内置应用示例名字",
+          "url": "https://github.com/espressif/esp-brookesia/blob/2c0c83fad95b81c81ee560ba8af684ff32a402f4/examples/esp_idf/esp_brookesia_phone_p4_function_ev_board/main/main.cpp#L13-L16"
+        },
+        {
+          "path": "examples/esp_idf/esp_brookesia_phone_p4_function_ev_board/main/main.cpp",
+          "start": 71,
+          "end": 80,
+          "line_count": 141,
+          "sha256": "3e990a5642129122368f0cc2156591811553c7d48fec526e01f3499ce72b4bd4",
+          "purpose": "安装的是simple/complex/SquareLine示例",
+          "url": "https://github.com/espressif/esp-brookesia/blob/2c0c83fad95b81c81ee560ba8af684ff32a402f4/examples/esp_idf/esp_brookesia_phone_p4_function_ev_board/main/main.cpp#L71-L80"
+        }
+      ]
+    },
+    {
+      "id": "B04",
+      "repository": "espressif/esp-iot-solution",
+      "commit": "6e3cef29422a10255fef8919f51aa52914d599e7",
+      "language_framework": "C / ESP-IDF、摄像头/LCD示例",
+      "files": [
+        {
+          "path": "examples/camera/video_lcd_display/README.md",
+          "start": 1,
+          "end": 65,
+          "line_count": 70,
+          "sha256": "e98e6b705b251722e0b7a06fa08497dd955c3826c94debd3e9adf7b5a422411e",
+          "purpose": "官方视频采集到LCD示例边界",
+          "url": "https://github.com/espressif/esp-iot-solution/blob/6e3cef29422a10255fef8919f51aa52914d599e7/examples/camera/video_lcd_display/README.md#L1-L65"
+        },
+        {
+          "path": "examples/camera/video_lcd_display/main/app_video.c",
+          "start": 1,
+          "end": 112,
+          "line_count": 422,
+          "sha256": "e418e5e33deb9846f1e693d09901c26a8cdfa838f1fc5833a73fef8c739f59e1",
+          "purpose": "缓冲/取帧到LCD的流程；不是完整相机产品",
+          "url": "https://github.com/espressif/esp-iot-solution/blob/6e3cef29422a10255fef8919f51aa52914d599e7/examples/camera/video_lcd_display/main/app_video.c#L1-L112"
+        }
+      ]
+    },
+    {
+      "id": "L01",
+      "repository": "lvgl/lvgl",
+      "commit": "53819fe4fd3f3a767420743cbfdb2816f3928931",
+      "language_framework": "C / LVGL widgets与demos",
+      "files": [
+        {
+          "path": "examples/widgets/calendar/lv_example_calendar_basic.c",
+          "start": 1,
+          "end": 34,
+          "line_count": 34,
+          "sha256": "3607665402c5a7732af2f9d829c1b7eea4f2bb92a529a86c6093caf07ace5c9f",
+          "purpose": "日历控件事件/标日；无日程业务",
+          "url": "https://github.com/lvgl/lvgl/blob/53819fe4fd3f3a767420743cbfdb2816f3928931/examples/widgets/calendar/lv_example_calendar_basic.c#L1-L34"
+        }
+      ]
+    },
+    {
+      "id": "X01",
+      "repository": "flipperdevices/flipperzero-firmware",
+      "commit": "3060cee9bac71d332dc7629191ae1aeb1edaac33",
+      "language_framework": "C / Furi GUI；128x64单色按键设备",
+      "files": [
+        {
+          "path": "applications/main/archive/views/archive_browser_view.c",
+          "start": 54,
+          "end": 112,
+          "line_count": 493,
+          "sha256": "63c675c59543776432ae7f99ae0bbc00b7b193fbdca6286818093e3b72dd607c",
+          "purpose": "文件类型/当前选择和上下文菜单",
+          "url": "https://github.com/flipperdevices/flipperzero-firmware/blob/3060cee9bac71d332dc7629191ae1aeb1edaac33/applications/main/archive/views/archive_browser_view.c#L54-L112"
+        },
+        {
+          "path": "applications/main/archive/helpers/archive_files.c",
+          "start": 80,
+          "end": 114,
+          "line_count": 114,
+          "sha256": "bbe7cff3af9357b233cf9f5c5789eb54fb7304191c0b752eae81146963e038c0",
+          "purpose": "删除、改名、收藏的一致处理",
+          "url": "https://github.com/flipperdevices/flipperzero-firmware/blob/3060cee9bac71d332dc7629191ae1aeb1edaac33/applications/main/archive/helpers/archive_files.c#L80-L114"
+        },
+        {
+          "path": "applications/main/archive/scenes/archive_scene_browser.c",
+          "start": 1,
+          "end": 120,
+          "line_count": 274,
+          "sha256": "f8716b1604cc4cbf8b7f63a0383248e323cca5e041299fcb6794dc22314671a7",
+          "purpose": "文件浏览和菜单事件",
+          "url": "https://github.com/flipperdevices/flipperzero-firmware/blob/3060cee9bac71d332dc7629191ae1aeb1edaac33/applications/main/archive/scenes/archive_scene_browser.c#L1-L120"
+        }
+      ]
+    },
+    {
+      "id": "R01",
+      "repository": "novnc/noVNC",
+      "commit": "e8b5024d4603587b29ffede4fbd28b1fa2939829",
+      "language_framework": "JavaScript / HTML5 Canvas、RFB、WebSocket",
+      "files": [
+        {
+          "path": "core/rfb.js",
+          "start": 360,
+          "end": 423,
+          "line_count": 3426,
+          "sha256": "c9a9376d910c24febff2ccb4e73f77919844b99842700157ecf834a4d7c1aae5",
+          "purpose": "视口与压缩质量设置",
+          "url": "https://github.com/novnc/noVNC/blob/e8b5024d4603587b29ffede4fbd28b1fa2939829/core/rfb.js#L360-L423"
+        },
+        {
+          "path": "core/rfb.js",
+          "start": 450,
+          "end": 545,
+          "line_count": 3426,
+          "sha256": "c9a9376d910c24febff2ccb4e73f77919844b99842700157ecf834a4d7c1aae5",
+          "purpose": "连接/断开与键盘事件接口",
+          "url": "https://github.com/novnc/noVNC/blob/e8b5024d4603587b29ffede4fbd28b1fa2939829/core/rfb.js#L450-L545"
+        },
+        {
+          "path": "README.md",
+          "start": 15,
+          "end": 85,
+          "line_count": 228,
+          "sha256": "70fb38dacd32911760059b744b44d1991a93b34e5923e61c2c47aa9b8c80ba9a",
+          "purpose": "完整客户端的上游能力说明",
+          "url": "https://github.com/novnc/noVNC/blob/e8b5024d4603587b29ffede4fbd28b1fa2939829/README.md#L15-L85"
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "repository": "apache/guacamole-client",
+      "commit": "a8daafeb38b60b0acb4059c5218e6d5bacfaeb8f",
+      "language_framework": "Java Web应用、JavaScript / Guacamole显示协议",
+      "files": [
+        {
+          "path": "guacamole-common-js/src/main/webapp/modules/Display.js",
+          "start": 624,
+          "end": 645,
+          "line_count": 2143,
+          "sha256": "a95cc03885a51db62d58b84e28c70324eee912709d41fbd24fe935fda7c0b60b",
+          "purpose": "绘制任务按帧提交/取消",
+          "url": "https://github.com/apache/guacamole-client/blob/a8daafeb38b60b0acb4059c5218e6d5bacfaeb8f/guacamole-common-js/src/main/webapp/modules/Display.js#L624-L645"
+        },
+        {
+          "path": "guacamole-common-js/src/main/webapp/modules/Keyboard.js",
+          "start": 25,
+          "end": 115,
+          "line_count": 1975,
+          "sha256": "3e5759e004a2c74a87cdf9f5507218d9a563c07d4e61b4b0bec17debe4615e29",
+          "purpose": "键盘输入事件",
+          "url": "https://github.com/apache/guacamole-client/blob/a8daafeb38b60b0acb4059c5218e6d5bacfaeb8f/guacamole-common-js/src/main/webapp/modules/Keyboard.js#L25-L115"
+        },
+        {
+          "path": "guacamole-common-js/src/main/webapp/modules/Client.js",
+          "start": 90,
+          "end": 178,
+          "line_count": 2100,
+          "sha256": "f703c0331f551e8431524d513f2d61b6d19c57fa732e7ab1f859912d4bb3050a",
+          "purpose": "客户端连接/状态接口",
+          "url": "https://github.com/apache/guacamole-client/blob/a8daafeb38b60b0acb4059c5218e6d5bacfaeb8f/guacamole-common-js/src/main/webapp/modules/Client.js#L90-L178"
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "repository": "ttalvitie/browservice",
+      "commit": "02601b047f7abdc90545c9dc669d0081d7968c34",
+      "language_framework": "C++ / CEF；图像返回给浏览器客户端",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 3,
+          "end": 15,
+          "line_count": 383,
+          "sha256": "78a784d97594e54a5bd196e1ba8f4dda3b7b3cdc5aea2c74f3c307497bd01be4",
+          "purpose": "2026-09-11停止维护；不下载旧二进制",
+          "url": "https://github.com/ttalvitie/browservice/blob/02601b047f7abdc90545c9dc669d0081d7968c34/README.md#L3-L15"
+        },
+        {
+          "path": "README.md",
+          "start": 65,
+          "end": 87,
+          "line_count": 383,
+          "sha256": "78a784d97594e54a5bd196e1ba8f4dda3b7b3cdc5aea2c74f3c307497bd01be4",
+          "purpose": "网页渲染、剪贴板、下载、字体和控制栏的说明",
+          "url": "https://github.com/ttalvitie/browservice/blob/02601b047f7abdc90545c9dc669d0081d7968c34/README.md#L65-L87"
+        },
+        {
+          "path": "src/control_bar.cpp",
+          "start": 685,
+          "end": 735,
+          "line_count": 1427,
+          "sha256": "7e97a538df6fce40d62c7bcb008ec1736615549c74c120055484605f8471bafc",
+          "purpose": "地址与历史导航控制栏的布局",
+          "url": "https://github.com/ttalvitie/browservice/blob/02601b047f7abdc90545c9dc669d0081d7968c34/src/control_bar.cpp#L685-L735"
+        },
+        {
+          "path": "src/browser_area.cpp",
+          "start": 1,
+          "end": 105,
+          "line_count": 465,
+          "sha256": "daf39536c5859fb7f669ef7accdcea220e33736f7057440e329ac3296155092a",
+          "purpose": "浏览器画面/事件区域",
+          "url": "https://github.com/ttalvitie/browservice/blob/02601b047f7abdc90545c9dc669d0081d7968c34/src/browser_area.cpp#L1-L105"
+        }
+      ]
+    },
+    {
+      "id": "K01",
+      "repository": "Changkai9888/CloudZao-Projects",
+      "commit": "90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8",
+      "language_framework": "C++字体组件、接入协议、源码交付包",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 7,
+          "end": 33,
+          "line_count": 54,
+          "sha256": "99621f6a2757e78c6e7600f1edde09ee7e051a94f287f6ccc6cabcaf9a410656",
+          "purpose": "区分口袋、具体应用实验和各类交付物",
+          "url": "https://github.com/Changkai9888/CloudZao-Projects/blob/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/README.md#L7-L33"
+        }
+      ]
+    },
+    {
+      "id": "R05",
+      "repository": "dosyago/BrowserBox",
+      "commit": "82cc396fffcd223cef603b5cf6c1c933dc42fd71",
+      "language_framework": "公开文档/交付入口；未确认当前实现源码",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 26,
+          "end": 33,
+          "line_count": 480,
+          "sha256": "3c27322b0940cf4e35a632a24b82128f62222657639e4ba7032c3e6da848edbe",
+          "purpose": "当前商业软件说明，不能代替实现源码",
+          "url": "https://github.com/dosyago/BrowserBox/blob/82cc396fffcd223cef603b5cf6c1c933dc42fd71/README.md#L26-L33"
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "repository": "m1k1o/neko",
+      "commit": "c7266f93c75be5c913914349093f8692624cfb74",
+      "language_framework": "Go、TypeScript / GStreamer、WebRTC；前端客户端",
+      "files": [
+        {
+          "path": "README.md",
+          "start": 1,
+          "end": 100,
+          "line_count": 173,
+          "sha256": "9aa54e2876775bb6d1e2475a761a5a0136fb8b05f1886f099564ae95d0f1c726",
+          "purpose": "完整远程浏览器/虚拟桌面项目说明",
+          "url": "https://github.com/m1k1o/neko/blob/c7266f93c75be5c913914349093f8692624cfb74/README.md#L1-L100"
+        },
+        {
+          "path": "client/core/src/client.ts",
+          "start": 1,
+          "end": 115,
+          "line_count": 580,
+          "sha256": "cdda3672075db271c1625c941f12b4726326a7e08a489cfc7e98c4b9b09a55b2",
+          "purpose": "远程连接和输入传输的客户端接口",
+          "url": "https://github.com/m1k1o/neko/blob/c7266f93c75be5c913914349093f8692624cfb74/client/core/src/client.ts#L1-L115"
+        },
+        {
+          "path": "client/core/README.md",
+          "start": 1,
+          "end": 100,
+          "line_count": 328,
+          "sha256": "7dc4d18d0e4e4e29b00e4a747acf76e4f8c801f5156f144d99108bc38fd370c5",
+          "purpose": "WebSocket/WebRTC与挂载控件说明",
+          "url": "https://github.com/m1k1o/neko/blob/c7266f93c75be5c913914349093f8692624cfb74/client/core/README.md#L1-L100"
+        }
+      ]
+    }
+  ]
+}

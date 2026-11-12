@@ -1,0 +1,208 @@
+{
+  "retrieved_on": "2026-11-12",
+  "url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all",
+  "http_status": 200,
+  "total": 52,
+  "scope": "Public catalog metadata only; no firmware URLs downloaded. Only the fields relevant to source tracing are retained.",
+  "items": [
+    {
+      "id": "d339eb28f76779495b909d1129ce994f",
+      "firmwareName": "固件口袋",
+      "hardwareModelName": "Metalio E-Ink4 Plus",
+      "authorName": "开哥",
+      "githubUrl": "https://github.com/Changkai9888/CloudZao-Projects/tree/main/firmware-pocket",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v1.0.8-plus.15",
+          "versionStatus": "latest",
+          "githubUrl": "https://github.com/Changkai9888/CloudZao-Projects/tree/main/firmware-pocket",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "固件需要适配才能被集成"
+    },
+    {
+      "id": "c08c65e5a4ec74f2025efb64c9a56594",
+      "firmwareName": "固件口袋",
+      "hardwareModelName": "Metalio E-Ink4",
+      "authorName": "开哥",
+      "githubUrl": "https://github.com/Changkai9888/CloudZao-Projects/tree/main/firmware-pocket",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "1.0.7-s3.20",
+          "versionStatus": "latest",
+          "githubUrl": "https://github.com/Changkai9888/CloudZao-Projects/tree/main/firmware-pocket",
+          "giteeUrl": ""
+        },
+        {
+          "version": "1.0.7",
+          "versionStatus": "test",
+          "githubUrl": "https://github.com/Changkai9888/CloudZao-Projects/tree/main/firmware-pocket",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "固件需要适配才能被集成"
+    },
+    {
+      "id": "f4576587b25c738295eb196468c20307",
+      "firmwareName": "布丁",
+      "hardwareModelName": "Metalio E-Ink4",
+      "authorName": "paouke",
+      "githubUrl": "",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "test",
+          "githubUrl": "",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "短信目前无法发送，诊断中"
+    },
+    {
+      "id": "70f1b605d2619ed18663264729e7d933",
+      "firmwareName": "记事本",
+      "hardwareModelName": "Metalio E-Ink4",
+      "authorName": "开哥",
+      "githubUrl": "",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "一个很简单的txt记事本"
+    },
+    {
+      "id": "80cb722919f9f1439f5f8d72703ed04e",
+      "firmwareName": "天气查询",
+      "hardwareModelName": "Metalio E-Ink4",
+      "authorName": "开哥",
+      "githubUrl": "",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "根据 IP 查询天气"
+    },
+    {
+      "id": "095cb50f66803ac98b4ba2b1f149067d",
+      "firmwareName": "浏览器",
+      "hardwareModelName": "Metalio E-Ink4",
+      "authorName": "开哥",
+      "githubUrl": "",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v0.1.1",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        },
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "网上冲浪，即可体验！"
+    },
+    {
+      "id": "8fa583addfc017c28cd3451dbe830227",
+      "firmwareName": "浏览器",
+      "hardwareModelName": "Metalio E-Ink4 Plus",
+      "authorName": "开哥",
+      "githubUrl": "",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "网上冲浪，即可体验！"
+    },
+    {
+      "id": "e806162c097a7cacfba6d1a15e4a1a27",
+      "firmwareName": "天气查询",
+      "hardwareModelName": "Metalio E-Ink4 Plus",
+      "authorName": "开哥",
+      "githubUrl": "",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "根据 IP 查询天气"
+    },
+    {
+      "id": "d3aa1246e9a9f567f8e34e4f854828a0",
+      "firmwareName": "记事本",
+      "hardwareModelName": "Metalio E-Ink4 Plus",
+      "authorName": "开哥",
+      "githubUrl": "",
+      "giteeUrl": "",
+      "versions": [
+        {
+          "version": "v0.1.0",
+          "versionStatus": "latest",
+          "githubUrl": "",
+          "giteeUrl": ""
+        }
+      ],
+      "description_excerpt": "一个很简单的txt记事本"
+    }
+  ],
+  "searches": [
+    {
+      "query": "\"布丁\" \"Metalio\"",
+      "relevant_public_source_result": "未找到可建立归属的结果，不代表全网无源码"
+    },
+    {
+      "query": "\"布丁\" \"paouke\"",
+      "relevant_public_source_result": "未找到可建立归属的结果，不代表全网无源码"
+    },
+    {
+      "query": "\"paouke\" 布丁 固件 源码",
+      "relevant_public_source_result": "未找到可建立归属的结果，不代表全网无源码"
+    },
+    {
+      "query": "\"开哥\" \"天气查询\" \"源码\"",
+      "relevant_public_source_result": "未找到可建立归属的结果，不代表全网无源码"
+    },
+    {
+      "query": "\"Metalio\" \"浏览器\" \"开哥\"",
+      "relevant_public_source_result": "未找到可建立归属的结果，不代表全网无源码"
+    }
+  ]
+}
