@@ -211,12 +211,17 @@ static void chevron(lv_obj_t *row, int h) {
     ink_ui_icon(row, "next", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_READING_MARGIN, (h - INK_ICON_SMALL) / 2, false);
 }
 /* What is drawn, as the AI reads it (UI task only). */
-static struct { char cards[384], apps[256]; int card[HOME_CARDS], count; bool book; } seen;
-static lv_obj_t *card_row(const char *icon, const char *title, const char *text, int y, bool tap) {
-    lv_obj_t *row = ink_ui_list_row(N.content, icon, title, text, INK_MARGIN, y, width(), true, NULL, NULL);
+static struct { char cards[384], apps[256], book[40]; int card[HOME_CARDS], count; } seen;
+/* A card: what it is on top, where you are under it; a 《title》 it starts with goes on top (继续读《书名》). */
+static lv_obj_t *card_row(const char *icon, const ink_card_t *c, int y, bool tap) {
+    const char *end = strstr(c->text, "》"), *rest = c->text;
+    if (!strncmp(c->text, "《", strlen("《")) && end) rest = end + strlen("》") + strspn(end + strlen("》"), " ");
+    char title[160];
+    snprintf(title, sizeof title, "%s%.*s", c->title, (int)(rest - c->text), c->text);
+    lv_obj_t *row = ink_ui_list_row(N.content, icon, title, rest, INK_MARGIN, y, width(), true, NULL, NULL);
     if (tap) chevron(row, ink_ui_row_double());
     size_t n = strlen(seen.cards);
-    snprintf(seen.cards + n, sizeof seen.cards - n, "%s%s%s%s", n ? "；" : "", title, text[0] ? "：" : "", text);
+    snprintf(seen.cards + n, sizeof seen.cards - n, "%s%s%s%s", n ? "；" : "", c->title, c->text[0] ? "：" : "", c->text);
     return row;
 }
 static int tile_h(void) {
@@ -256,24 +261,23 @@ void draw_home_content(void) {
     int room = grid - S(INK_GAP_M);
     if (call < 0 && y + h <= room && ink_activity_home_draw(N.content, y)) { y += h + S(INK_GAP_S); seen.count++; }
     ink_card_t book;
-    if (seen.count < HOME_CARDS && y + h <= room && bookmark(&book)) { /* 继续读《书名》, then where */
-        const char *end = strstr(book.text, "》"), *rest = book.text;
-        if (!strncmp(book.text, "《", strlen("《")) && end) rest = end + strlen("》") + strspn(end + strlen("》"), " ");
-        char title[160];
-        snprintf(title, sizeof title, "%s%.*s", book.title, (int)(rest - book.text), book.text);
-        ink_shell_bind(card_row("book", title, rest, y, true), "shell.resume", NULL);
-        y += h + S(INK_GAP_S); seen.book = true; seen.count++;
+    if (seen.count < HOME_CARDS && y + h <= room && bookmark(&book)) { /* the book being read, first */
+        ink_shell_bind(card_row("book", &book, y, true), "shell.resume", NULL);
+        snprintf(seen.book, sizeof seen.book, "%s", book.action[0] ? book.action : "shell.resume");
+        y += h + S(INK_GAP_S); seen.count++;
     }
     for (int i = 1; i < 5 && seen.count < HOME_CARDS && y + h <= room; i++) {
         if (!N.cards[i].id[0]) continue; /* nothing to show: no card at all */
-        lv_obj_t *row = card_row(today_icon(i - 1), N.cards[i].title, N.cards[i].text, y, N.card_actions[i].enabled);
+        lv_obj_t *row = card_row(today_icon(i - 1), &N.cards[i], y, N.card_actions[i].enabled);
         if (N.card_actions[i].enabled && ink_cap_available(N.card_actions[i].capability)) {
             lv_obj_add_flag(row, LV_OBJ_FLAG_CLICKABLE);
             lv_obj_add_event_cb(row, card_clicked, LV_EVENT_CLICKED, (void *)(intptr_t)i);
         }
         seen.card[seen.count++] = i; y += h + S(INK_GAP_S);
     }
-    if (!N.cards_ok && seen.count < HOME_CARDS && y + h <= room) card_row("warn", TR("卡片没能读取"), "", y, false);
+    ink_card_t failed = {0}; /* a failed read is said, not shown as nothing */
+    snprintf(failed.title, sizeof failed.title, "%s", TR("卡片没能读取"));
+    if (!N.cards_ok && seen.count < HOME_CARDS && y + h <= room) card_row("warn", &failed, y, false);
     const char *apps[HOME_APPS];
     for (int i = 0, n = home_apps(apps), shown = 0; i < n && shown < HOME_APPS; i++)
         if (home_usable(apps[i])) tile(apps[i], shown++, grid);
@@ -342,10 +346,11 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
         {.id = "activity", .role = "group", .label = "正在做的事", .value = activity}};
     static const char *const CAPS[] = {"shell.launch", "shell.resume", "shell.apps", "shell.search", "shell.icon_menu",
                                        "shell.favorite", "shell.today_edit", "shell.control", "shell.tasks"};
-    ink_ui_action_spec_t actions[sizeof CAPS / sizeof *CAPS + HOME_CARDS];
+    ink_ui_action_spec_t actions[sizeof CAPS / sizeof *CAPS + HOME_CARDS + 1];
     size_t n = 0;
     for (size_t i = 0; i < sizeof CAPS / sizeof *CAPS; i++)
-        actions[n++] = (ink_ui_action_spec_t){.id = CAPS[i], .label = CAPS[i], .capability = CAPS[i], .enabled = i != 1 || seen.book};
+        actions[n++] = (ink_ui_action_spec_t){.id = CAPS[i], .label = CAPS[i], .capability = CAPS[i], .enabled = i != 1 || seen.book[0]};
+    if (seen.book[0]) actions[n++] = (ink_ui_action_spec_t){.id = "book", .label = seen.book, .capability = seen.book, .enabled = true};
     for (int i = 0; i < seen.count; i++) if (seen.card[i]) actions[n++] = N.card_actions[seen.card[i]];
     ink_ui_page_spec_t page = {.id = "home", .title = ink_shell_board(), .object = {"home", ink_ui_generation()},
         .fields = fields, .field_count = sizeof fields / sizeof *fields, .actions = actions, .action_count = n};
@@ -404,11 +409,11 @@ static int apps_walk(bool draw, char *list, size_t cap) {
         if (more) { /* the search of everything: contacts, notes, files and settings too */
             if (here && draw) {
                 if (!count) ink_ui_notice(apps_box, TR("没有找到应用"), y);
-                char text[128], args[192];
-                snprintf(text, sizeof text, TR("在全部内容里找“%s”"), N.search);
+                char args[192];
                 ink_jw_t w; ink_jw_init(&w, args, sizeof args);
                 ink_jw_raw(&w, "{\"query\":"); ink_jw_str(&w, N.search); ink_jw_raw(&w, "}");
-                lv_obj_t *r = ink_ui_list_row(apps_box, "search", text, NULL, INK_MARGIN, y + (count ? INK_GAP_M : INK_CONTROL), width(), false, NULL, NULL);
+                lv_obj_t *r = ink_ui_list_row(apps_box, "search", TR("在全部内容里找"), N.search, INK_MARGIN,
+                                              y + (count ? INK_GAP_M : INK_CONTROL), width(), false, NULL, NULL);
                 chevron(r, INK_CONTROL);
                 ink_shell_bind(r, "search.show", args);
             }
@@ -455,8 +460,9 @@ static void apps_create(lv_obj_t *screen, void *arg) {
     ink_shell_topbar(screen, TR("全部应用"));
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS;
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 64, .hint = TR("应用的名字"), .initial = N.search};
-    lv_obj_t *search = ink_textfield_create(screen, &cfg, search_entered, (void *)(uintptr_t)N.epoch, false);
-    lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), ink_ui_px(y));
+    lv_obj_t *head = ink_ui_box(screen, 0, y, INK_CANVAS_W, ink_textfield_height(INK_FIELD_SEARCH), 0, INK_SURFACE_WHITE, false);
+    lv_obj_t *search = ink_textfield_create(head, &cfg, search_entered, (void *)(uintptr_t)N.epoch, false);
+    lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), 0); /* in the canvas, wherever the panel puts it */
     ink_textfield_style(search, INK_FIELD_SEARCH, TR("搜索"));
     y += ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP_M;
     apps_h = INK_CANVAS_H - y;
@@ -499,7 +505,7 @@ static int apps_snapshot(char *buf, size_t cap) {
         .fields = fields, .field_count = sizeof fields / sizeof *fields, .actions = actions, .action_count = sizeof actions / sizeof *actions};
     return ink_ui_semantics_summary(&page, buf, cap);
 }
-static const ink_activity_t APPS = {.name = "Apps", .create = apps_create, .destroy = apps_destroy, .on_key = apps_key,
+static const ink_activity_t APPS = {.name = "Apps", .app = "home", .create = apps_create, .destroy = apps_destroy, .on_key = apps_key,
                                     .on_swipe = apps_swipe, .snapshot = apps_snapshot};
 
 static void apps_call(ink_call_t *c) {
@@ -528,10 +534,10 @@ static void apps_call(ink_call_t *c) {
 }
 int home_init(void) {
     static const ink_cap_t caps[] = {
-        {.id = "shell.apps", .title = "打开全部应用", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call},
-        {.id = "shell.search", .title = "在全部应用里找应用", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call,
+        {.id = "shell.apps", .app = "home", .title = "打开全部应用", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call},
+        {.id = "shell.search", .app = "home", .title = "在全部应用里找应用", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call,
          .input = "{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"maxLength\":64}},\"required\":[\"query\"]}"},
-        {.id = "shell.apps_next", .title = "全部应用的下一页", .activity = "Apps", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call},
-        {.id = "shell.apps_prev", .title = "全部应用的上一页", .activity = "Apps", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call}};
+        {.id = "shell.apps_next", .app = "home", .title = "全部应用的下一页", .activity = "Apps", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call},
+        {.id = "shell.apps_prev", .app = "home", .title = "全部应用的上一页", .activity = "Apps", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = apps_call}};
     return ink_cap_register(caps, sizeof caps / sizeof *caps);
 }
