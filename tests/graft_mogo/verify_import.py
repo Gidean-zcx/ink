@@ -11,7 +11,8 @@ import tarfile
 root = Path(__file__).resolve().parents[2]
 vendor = root / "third_party/mogo"
 manifest = json.loads((vendor / "upstream-files.json").read_text())
-changed = {"main/book/book_source.c", "main/book/book_source_internal.h", "main/book/book_txt.c"}
+changed = {"main/book/book_source.c", "main/book/book_source_internal.h", "main/book/book_txt.c",
+           "tools/book_shelf_test_code.py"}
 seen = set()
 for entry in manifest["files"]:
     name = entry["path"]
@@ -32,7 +33,7 @@ for required in ("LICENSE", "licenses/Apache-2.0.txt", "licenses/kiikoread-Perso
 lines = sum(len(p.read_text().splitlines()) for p in (root / "system/graft").glob("*") if p.is_file())
 if lines > 600:
     raise SystemExit(f"graft interface exceeds 600 lines: {lines}")
-print(f"Mogo provenance: {len(seen)} pinned files, 3 documented adaptations; graft {lines}/600 lines")
+print(f"Mogo provenance: {len(seen)} pinned files, {len(changed)} documented adaptations; graft {lines}/600 lines")
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--upstream", type=Path, help="manual check against the pinned read-only upstream Git objects")

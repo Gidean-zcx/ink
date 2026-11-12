@@ -26,6 +26,7 @@
 | `main/book/book_source.c` | 移除 MOBI 分派及引用，只保留本任务的 TXT/EPUB 分支；未重写二者解析算法。 |
 | `main/book/book_source_internal.h` | 给原有 TXT 书源记录 UTF-16 大小端，位置仍为原书字节偏移。 |
 | `main/book/book_txt.c` | 增加 BOM 识别、UTF-16 码元解码与代理对；沿用原来的流式索引和章节加载。索引缓存版本从 2 升到 3，旧缓存可重建。 |
+| `tools/book_shelf_test_code.py` | 测试代码：拼目录链改用 `memmove`/`memcpy`，原来用同一个二维数组的上一行做 `snprintf` 参数，Linux 的 gcc 报截断和 `restrict` 重叠（`-Werror`），CI 失败。 |
 
 其余上游文件保持逐字节一致。新增 `CMakeLists.txt` 和本来源记录由 ink 项目编写；
 测试入口和反向对照在 `tests/graft_mogo/`，通用承载接口在 `system/graft/`。

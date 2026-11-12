@@ -117,7 +117,7 @@ static void test_shelf_services(void){
     char root[96],chain[4][BOOK_STORE_PATH_MAX],path[340];
     snprintf(root,sizeof(root),"/tmp/shelf-service-%d",(int)getpid());assert(mkdir(root,0700)==0);
     strcpy(chain[0],root);
-    for(int i=1;i<4;++i){snprintf(chain[i],sizeof(chain[i]),"%s/d",chain[i-1]);assert(mkdir(chain[i],0700)==0);}
+    for(int i=1;i<4;++i){size_t n=strlen(chain[i-1]);assert(n+3<=sizeof(chain[i]));memmove(chain[i],chain[i-1],n);memcpy(chain[i]+n,"/d",3);assert(mkdir(chain[i],0700)==0);}
     snprintf(path,sizeof(path),"%s/book.txt",chain[3]);test_file(path);
     strcpy(test_roots[0].path,root);app_ctx_t ctx={0};s_view=SHELF;
     // 导航中断必须交还各层目录与NVS，再使缓存失效，允许下次重扫。
