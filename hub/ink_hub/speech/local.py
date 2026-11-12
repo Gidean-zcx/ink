@@ -1,12 +1,16 @@
 """Local speech tools; audio and text exist only in private temporary files."""
 import asyncio
 import math
+import io
+
+from aiohttp import ClientError, ClientSession, ClientTimeout, FormData
 import os
 import shutil
 import struct
 import tempfile
 import wave
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from .opus import FRAME_BYTES, RATE, Opus
 
@@ -40,30 +44,50 @@ async def run_cli(args, text=None):
 
 
 class WhisperASR:
-    def __init__(self, cli=None, model=None, opus=None):
-        self.cli = executable(cli or os.environ.get("INK_HUB_WHISPER_CLI"), "INK_HUB_WHISPER_CLI")
-        self.model = Path(model or os.environ.get("INK_HUB_WHISPER_MODEL") or "")
-        if not self.model.is_file() or not os.access(self.model, os.R_OK):
-            raise RuntimeError("找不到识别模型，请检查 INK_HUB_WHISPER_MODEL（不会自动下载）")
+    """Resident whisper.cpp /inference; closing HTTP aborts native decoding."""
+    def __init__(self, url=None, opus=None):
+        self.url = url or os.environ.get("INK_HUB_WHISPER_URL", "http://127.0.0.1:8080/inference")
+        if urlsplit(self.url).scheme not in ("http", "https") or not urlsplit(self.url).hostname:
+            raise RuntimeError("常驻 Whisper 地址无效，请检查 INK_HUB_WHISPER_URL")
         self.opus = opus or Opus()
+
+    async def infer(self, pcm):
+        samples = struct.unpack(f"<{len(pcm) // 2}h", pcm)
+        if len(samples) < MIN_SAMPLES or math.sqrt(sum(s * s for s in samples) / len(samples)) < SILENCE_RMS:
+            return ""
+        data = io.BytesIO()
+        with wave.open(data, "wb") as audio:
+            audio.setparams((1, 2, RATE, 0, "NONE", "not compressed"))
+            audio.writeframes(pcm)
+        form = FormData()
+        form.add_field("file", data.getvalue(), filename="audio.wav", content_type="audio/wav")
+        for key, value in {"language": "zh", "prompt": "以下是简体中文的普通话。", "response_format": "json",
+                           "temperature": "0", "temperature_inc": "0"}.items():
+            form.add_field(key, value)
+        try:
+            async with ClientSession(timeout=ClientTimeout(total=PROCESS_TIMEOUT)) as client:
+                async with client.post(self.url, data=form) as reply:
+                    reply.raise_for_status()
+                    return (await reply.json())["text"].strip()
+        except (ClientError, TimeoutError, ValueError, KeyError):
+            raise RuntimeError("常驻 Whisper 服务不可用或已超时，请重试") from None
+
+    async def stream(self, audio):
+        pcm, last, text = bytearray(), 0, ""
+        async for part in audio:
+            pcm.extend(part)
+            if len(pcm) - last >= RATE * 2:
+                text = await self.infer(bytes(pcm))
+                last = len(pcm)
+                yield text, False
+        if len(pcm) != last:
+            text = await self.infer(bytes(pcm))
+        yield text, True
 
     async def transcribe(self, frames):
         with self.opus.decoder() as decoder:
             pcm = b"".join(self.opus.decode(decoder, packet) for packet in frames)
-        samples = struct.unpack(f"<{len(pcm) // 2}h", pcm)
-        if len(samples) < MIN_SAMPLES or math.sqrt(sum(s * s for s in samples) / len(samples)) < SILENCE_RMS:
-            return ""
-        try:
-            with tempfile.TemporaryDirectory(prefix="ink-hub-asr-") as directory:
-                wav, output = Path(directory) / "audio.wav", Path(directory) / "result"
-                with wave.open(str(wav), "wb") as audio:
-                    audio.setparams((1, 2, RATE, 0, "NONE", "not compressed"))
-                    audio.writeframes(pcm)
-                await run_cli([self.cli, "-m", str(self.model), "-f", str(wav), "-l", "zh",
-                               "--prompt", "以下是简体中文的普通话。", "-nt", "-np", "-otxt", "-of", str(output)])
-                return output.with_suffix(".txt").read_text(encoding="utf-8").strip()
-        except (OSError, UnicodeError, wave.Error):
-            raise RuntimeError("无法读取本机识别结果，请重试") from None
+        return await self.infer(pcm)
 
 
 class SayTTS:

@@ -77,6 +77,10 @@ def test_install_with_mocked_docker_and_existing_target(tmp_path):
     docker = bindir / "docker"
     docker.write_text("#!/bin/sh\nprintf '%s\\n' \"$*\" >> \"$INK_TEST_CALLS\"\n")
     docker.chmod(0o755)
+    # This installer test mocks the host; an unrelated live hub may own 8443.
+    python = bindir / "python3"
+    python.write_text('#!/bin/sh\ncase "$1" in */ink_hub/ops/preflight.py) exit 0;; *) exit 64;; esac\n')
+    python.chmod(0o755)
     log = tmp_path / "calls"
     env = {**os.environ, "PATH": str(bindir) + os.pathsep + os.environ["PATH"], "INK_TEST_CALLS": str(log)}
     target = tmp_path / "example-install"

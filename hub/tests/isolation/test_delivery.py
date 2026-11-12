@@ -262,6 +262,7 @@ async def test_close_releases_queued_and_inflight_senders(blocked_connection):
 async def test_queued_dictation_drops_revoked_output(blocked_connection):
     connection, sink = blocked_connection
     session = Session("asr.stream", connection.epoch, frames=[b"example"])
+    session.ended.set()
     connection.sessions[4] = session
     task = asyncio.create_task(run_dictation(connection, 4, session))
     try:
