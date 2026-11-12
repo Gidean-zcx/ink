@@ -724,7 +724,8 @@ int main(void) {
     scan_shelf(&ctx);assert(s_count==66);assert(unlink(nested_book)==0);assert(rmdir(nested)==0);scan_shelf(&ctx);
     char deep[14][340];snprintf(deep[0],sizeof(deep[0]),"%s",test_roots[0].path);
     for(int level=1;level<=13;level++){
-        snprintf(deep[level],sizeof(deep[level]),"%s/d%02d",deep[level-1],level);
+        char parent[sizeof(deep[0])];memcpy(parent,deep[level-1],sizeof(parent));
+        int written=snprintf(deep[level],sizeof(deep[level]),"%s/d%02d",parent,level);assert(written>0&&(size_t)written<sizeof(deep[level]));
         assert(mkdir(deep[level],0700)==0);
     }
     char deep_book[380],ignored_book[380];
@@ -750,7 +751,7 @@ int main(void) {
     test_progress[0].value=(book_progress_t){.file_size=1,.chapter=3,.byte_off=17,.px=48,.pct=42,.last_open_s=19};
     snprintf(test_progress[1].path,BOOK_STORE_PATH_MAX,"%s/missing.txt",outside_dir);
     strcpy(test_progress[2].path,changed);
-    snprintf(test_progress[3].path,BOOK_STORE_PATH_MAX,"%s/book005.txt",test_roots[0].path);
+    {int written=snprintf(test_progress[3].path,BOOK_STORE_PATH_MAX,"%s/book005.txt",test_roots[0].path);assert(written>0&&written<BOOK_STORE_PATH_MAX);}
     for(int i=1;i<4;i++)test_progress[i].value=(book_progress_t){.file_size=1,.px=48,.pct=7};
     book_progress_bump();
     favorite_key(outside,test_favorite_key);
@@ -923,7 +924,7 @@ int main(void) {
     assert(retry_count==2);calls=test_delete_calls;batch_apply(&ctx);
     assert(!s_delete_retries&&test_delete_calls==calls&&!selected_count());
     // 首页指定的书籍无需先扫描或绘制书架。/ Home's requested book opens before a shelf scan.
-    snprintf(s_requested_open,sizeof(s_requested_open),"%s/book010.txt",test_roots[0].path);
+    {int written=snprintf(s_requested_open,sizeof(s_requested_open),"%s/book010.txt",test_roots[0].path);assert(written>0&&(size_t)written<sizeof(s_requested_open));}
     s_requested_open_home=true;s_shelf_cache_valid=false;calls=test_open_calls;
     on_enter(&ctx);
     assert(test_open_calls==calls+1&&s_view==READING&&!s_scan_pending&&s_reader_return_home);

@@ -12,7 +12,7 @@ root = Path(__file__).resolve().parents[2]
 vendor = root / "third_party/mogo"
 manifest = json.loads((vendor / "upstream-files.json").read_text())
 changed = {"main/book/book_source.c", "main/book/book_source_internal.h", "main/book/book_txt.c",
-           "tools/book_shelf_test_code.py"}
+           "tools/book_shelf_test_code.py", "tools/book_ui_host_test.py"}
 seen = set()
 for entry in manifest["files"]:
     name = entry["path"]

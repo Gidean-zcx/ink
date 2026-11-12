@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Fonts for the CJK bitmap font generator, SDL2 for the desktop simulator
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fonts-noto-cjk python3-pil libsdl2-dev
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fonts-noto-cjk python3-pil python3-fonttools libsdl2-dev
       - name: Configure (warnings are errors)
         run: cmake -S . -B build -DINK_WERROR=ON
       - name: Build
@@ -50,8 +50,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Pillow for the font generator
-        run: python -m pip install pillow
+      - name: Pillow for the font generator, fontTools for the Mogo page's TrueType font
+        run: python -m pip install pillow fonttools==4.55.0
       - name: Noto Sans CJK (release Sans2.004, checked by hash)
         run: |
           mkdir -p fonts
@@ -77,7 +77,7 @@ jobs:
           uv lock --project hub --check
           uv sync --project hub --frozen
       - name: Simulator dependencies
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fonts-noto-cjk python3-pil libsdl2-dev
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fonts-noto-cjk python3-pil python3-fonttools libsdl2-dev
       - name: Configure and build
         run: |
           cmake -S . -B build -DINK_WERROR=ON -DPython3_EXECUTABLE=/usr/bin/python3 -DINK_HUB_PYTHON=$PWD/hub/.venv/bin/python
