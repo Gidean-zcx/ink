@@ -1,0 +1,260 @@
+{
+  "pack": {
+    "embedded_before": 1498390,
+    "embedded_after": 767212,
+    "bytes_saved": 731178,
+    "entries_identical": 716,
+    "compressed_entries": 716,
+    "first_pack_identical": true
+  },
+  "screens": {
+    "before": {
+      "Main": {
+        "pixels_sha256": "ec6bdb41634ea9fceadd91b311cd892d7617e407c540cf2a378eae64c6244461",
+        "psram_peak_bytes": 3304752,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 0
+      },
+      "Apps": {
+        "pixels_sha256": "6dc04fd1f975edb52487f393d35a4b1c87afc1eedafe4850d580d12f23f6cc59",
+        "psram_peak_bytes": 3304752,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 0
+      },
+      "Settings": {
+        "pixels_sha256": "ccad94e17d9ce7bd2c67e5d9ed09bbff463511d54c0658b0cdf75f5d8f03d69d",
+        "psram_peak_bytes": 3315320,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 0
+      },
+      "Control": {
+        "pixels_sha256": "f49f4b14171c490720d1e37adeb3dd2294a7c4eab1ba7761dd67aabdff3471ea",
+        "psram_peak_bytes": 3337760,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 0
+      },
+      "AiListen": {
+        "pixels_sha256": "7f08770ffaa954129cf8890afed85cae166c4dd56075807c2c5ca3bc227f3e5c",
+        "psram_peak_bytes": 4577448,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 0
+      },
+      "PowerMenu": {
+        "pixels_sha256": "ae8e3a09e633f4852255f664ef127bdeb77b6721803d8fba87634c201741f12d",
+        "psram_peak_bytes": 3335640,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 0
+      }
+    },
+    "after": {
+      "Main": {
+        "pixels_sha256": "ec6bdb41634ea9fceadd91b311cd892d7617e407c540cf2a378eae64c6244461",
+        "psram_peak_bytes": 3304688,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 10264,
+        "psram_peak_delta_bytes": -64
+      },
+      "Apps": {
+        "pixels_sha256": "6dc04fd1f975edb52487f393d35a4b1c87afc1eedafe4850d580d12f23f6cc59",
+        "psram_peak_bytes": 3304688,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 10264,
+        "psram_peak_delta_bytes": -64
+      },
+      "Settings": {
+        "pixels_sha256": "ccad94e17d9ce7bd2c67e5d9ed09bbff463511d54c0658b0cdf75f5d8f03d69d",
+        "psram_peak_bytes": 3315336,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 10264,
+        "psram_peak_delta_bytes": 16
+      },
+      "Control": {
+        "pixels_sha256": "f49f4b14171c490720d1e37adeb3dd2294a7c4eab1ba7761dd67aabdff3471ea",
+        "psram_peak_bytes": 3337872,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 10264,
+        "psram_peak_delta_bytes": 112
+      },
+      "AiListen": {
+        "pixels_sha256": "7f08770ffaa954129cf8890afed85cae166c4dd56075807c2c5ca3bc227f3e5c",
+        "psram_peak_bytes": 4577352,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 10264,
+        "psram_peak_delta_bytes": -96
+      },
+      "PowerMenu": {
+        "pixels_sha256": "ae8e3a09e633f4852255f664ef127bdeb77b6721803d8fba87634c201741f12d",
+        "psram_peak_bytes": 3335544,
+        "assets_live_bytes": 0,
+        "assets_peak_bytes": 10264,
+        "psram_peak_delta_bytes": -96
+      }
+    }
+  },
+  "latency": {
+    "mode": "measured",
+    "runs": 3,
+    "host_to_target": 40.0,
+    "pages": [
+      {
+        "page_metric": "perf.open_ai_ms",
+        "before_ms": {
+          "count": 3,
+          "p50": 942.115,
+          "p95": 942.602
+        },
+        "after_ms": {
+          "count": 3,
+          "p50": 941.87,
+          "p95": 942.827
+        },
+        "p50_delta_ms": -0.245,
+        "p95_delta_ms": 0.225
+      },
+      {
+        "page_metric": "perf.open_files_ms",
+        "before_ms": {
+          "count": 3,
+          "p50": 963.048,
+          "p95": 981.96
+        },
+        "after_ms": {
+          "count": 3,
+          "p50": 961.954,
+          "p95": 971.774
+        },
+        "p50_delta_ms": -1.094,
+        "p95_delta_ms": -10.186
+      },
+      {
+        "page_metric": "perf.open_gallery_ms",
+        "before_ms": {
+          "count": 3,
+          "p50": 819.226,
+          "p95": 821.773
+        },
+        "after_ms": {
+          "count": 3,
+          "p50": 818.505,
+          "p95": 818.813
+        },
+        "p50_delta_ms": -0.721,
+        "p95_delta_ms": -2.96
+      },
+      {
+        "page_metric": "perf.open_log_ms",
+        "before_ms": {
+          "count": 3,
+          "p50": 992.006,
+          "p95": 992.051
+        },
+        "after_ms": {
+          "count": 3,
+          "p50": 991.896,
+          "p95": 991.921
+        },
+        "p50_delta_ms": -0.11,
+        "p95_delta_ms": -0.13
+      },
+      {
+        "page_metric": "perf.open_settings_ms",
+        "before_ms": {
+          "count": 3,
+          "p50": 1071.949,
+          "p95": 1091.668
+        },
+        "after_ms": {
+          "count": 3,
+          "p50": 1082.619,
+          "p95": 1082.633
+        },
+        "p50_delta_ms": 10.67,
+        "p95_delta_ms": -9.035
+      },
+      {
+        "page_metric": "perf.open_sms_ms",
+        "before_ms": {
+          "count": 3,
+          "p50": 952.055,
+          "p95": 954.613
+        },
+        "after_ms": {
+          "count": 3,
+          "p50": 951.957,
+          "p95": 952.63
+        },
+        "p50_delta_ms": -0.098,
+        "p95_delta_ms": -1.983
+      }
+    ],
+    "before_warnings": 42,
+    "after_warnings": 42
+  },
+  "firmware": {
+    "before": {
+      "ink-s31.bin": {
+        "bytes": 4831328,
+        "sha256": "4a342453b606ffd913a5a35192e54db2732f677a669b9e0c903be17e3a14afa1"
+      },
+      "ink-fonts.bin": {
+        "bytes": 4718377,
+        "sha256": "1643e8980f6b73deaa63a758aed9ab2d125d0424e61dced1c3cb05c1bb58f3e4"
+      },
+      "ink-embedded.bin": {
+        "bytes": 1498390,
+        "sha256": "f616b6c1e4438f29bcb4000e6ff268ba55856f5d20db0bf33c9f694748b1d032"
+      }
+    },
+    "after": {
+      "ink-s31.bin": {
+        "bytes": 4100416,
+        "sha256": "630d50fb6130b377fa5b172aa515146d26b1f7fdf9302a475fa0857e5e68be46"
+      },
+      "ink-fonts.bin": {
+        "bytes": 4718377,
+        "sha256": "1643e8980f6b73deaa63a758aed9ab2d125d0424e61dced1c3cb05c1bb58f3e4"
+      },
+      "ink-embedded.bin": {
+        "bytes": 767212,
+        "sha256": "1b62e544948bbfbbaa10394d45df3afafff33a486f0cf745ee8ecaa338f2d82a"
+      }
+    },
+    "bytes_saved": 730912,
+    "free_application_bytes": 1142464
+  },
+  "validation": {
+    "normal_ctest": {
+      "passed": 424,
+      "seconds": 918.43,
+      "skipped": 0
+    },
+    "s31_host_ctest": {
+      "passed": 75,
+      "seconds": 95.71
+    },
+    "asan_ubsan_host_ctest": {
+      "passed": 15,
+      "seconds": 11.84
+    },
+    "asan_ubsan_s31_ctest": {
+      "passed": 2,
+      "seconds": 0.32
+    },
+    "gcccheck": {
+      "compiled": 5,
+      "findings": 0
+    },
+    "s31_warnings": {
+      "compiler_before": 0,
+      "compiler_after": 0,
+      "cmake_before": 6,
+      "cmake_after": 6,
+      "cmake_text_identical": true
+    },
+    "product_lines": {
+      "added": 108,
+      "deleted": 37,
+      "total_changed": 145
+    }
+  }
+}
