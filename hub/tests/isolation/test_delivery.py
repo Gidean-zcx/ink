@@ -188,6 +188,7 @@ async def test_queued_direct_result_rechecks_permission(blocked_connection):
 
 async def test_member_change_discards_queued_turn_command(blocked_connection):
     connection, sink = blocked_connection
+    connection.hub.model.text = ""  # Queue the tool itself, without a streamed preamble.
     connection.tools.definitions["development", "reader.next_page", 1] = {
         "name": "reader.next_page", "effect": "navigate", "inputSchema": {"type": "object"}}
     await connection.receive(json.dumps({"jsonrpc": "2.0", "id": 10, "method": "ai.ask",

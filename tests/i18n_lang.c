@@ -199,6 +199,8 @@ static void first_run(void) {
     CHECK(WAIT_FOR(sim_metric_value("ai.answers") > answers, 20000), "the hub answers");
     const char *asked = sim_hub_last_ask();
     CHECK(asked && strstr(asked, "\"lang\":\"en\""), "the AI request says the interface language (%.150s)", asked ? asked : "");
+    CHECK(asked && strstr(asked, "\"member\":{\"name\":") && strstr(asked, "\"role\":\"adult\""),
+          "the AI request carries the current member's name and role (%.150s)", asked ? asked : "");
     CHECK(WAIT_FOR(at("home") && strstr(g_snap, "This page is about Xiaoman"), 5000), "the answer comes in English (%.150s)", g_snap);
     capture("home", "AiAnswer-en");
     /* The panel reads the service's status by its Chinese key and translates it to show it. Given the shown English text

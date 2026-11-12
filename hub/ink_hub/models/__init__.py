@@ -3,6 +3,9 @@ import os
 
 
 def from_environment():
+    if "INK_HUB_MODEL_PROVIDER" not in os.environ and os.environ.get("DEEPSEEK_API_KEY"):
+        from .remote import RemoteModel
+        return RemoteModel("openai", "DEEPSEEK", deepseek=True)
     provider = os.environ.get("INK_HUB_MODEL_PROVIDER", "fake")
     if provider == "fake":
         return None

@@ -592,6 +592,12 @@ static int request(const char *method, bool voice) {
     ink_jw_raw(&w, gen);
     ink_jw_raw(&w, ",\"lang\":"); /* the answer comes in the interface's language */
     ink_jw_str(&w, ink_lang_code());
+    const ink_member_t *who = ink_member_current();
+    ink_jw_raw(&w, ",\"member\":{\"name\":");
+    ink_jw_str(&w, who ? who->name : "");
+    ink_jw_raw(&w, ",\"role\":");
+    ink_jw_str(&w, who && who->role == INK_ROLE_ADULT ? "adult" : "child");
+    ink_jw_raw(&w, "}");
     ink_jw_raw(&w, ",\"page\":{\"app\":");
     ink_jw_str(&w, app);
     ink_jw_raw(&w, ",\"text\":");
