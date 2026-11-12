@@ -35,6 +35,8 @@ static int px, py;
 static bool large, numeric_target;
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "clock frame settles"); }
+/* A turning minute redraws the status bar's time and the lock screen's clock (lock-1): count frames clear of it. */
+static void clear_of_minute(void) { while (osal_wall_us() / 1000000 % 60 >= 55) delay_ms(250); quiet(); }
 static void read_page(void) {
     sampled_at = osal_now_us();
     CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "clock snapshot exists");
@@ -102,13 +104,13 @@ static void timer_test(void) {
     CHECK(number("remaining_seconds") <= 87 && number("remaining_seconds") >= 86, "AI countdown agrees with seconds");
     capture(large ? "timer-running-120" : "timer-running-normal");
     ok("system.home", NULL); quiet();
-    uint32_t commits = ink_display_commits(); delay_ms(3100);
+    clear_of_minute(); uint32_t commits = ink_display_commits(); delay_ms(3100);
     CHECK(ink_display_commits() == commits, "countdown does not redraw off page");
     ok("app.open", "{\"id\":\"clock\"}"); ok("clock.timer", NULL); quiet();
     int64_t left = number("remaining_seconds");
     CHECK(left >= (int64_t)((low + 90000000 - sampled_at) / 1000000) && left <= (int64_t)((high + 90000000 - sampled_at + 999999) / 1000000), "return catches up countdown");
     key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "lock countdown"); quiet();
-    commits = ink_display_commits(); delay_ms(2100);
+    clear_of_minute(); commits = ink_display_commits(); delay_ms(2100);
     CHECK(ink_display_commits() == commits, "countdown does not redraw while locked");
     key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() != INK_PWR_LOCKED, 3000), "unlock countdown");
     CHECK(number("remaining_seconds") < left - 1, "unlock catches up countdown");
@@ -127,7 +129,7 @@ static void stopwatch_test(void) {
     current_digits("第 1 次"); unsigned h, m, s, tenth;
     CHECK(sscanf(field_text, "%u:%u:%u.%u", &h, &m, &s, &tenth) == 4 && h == 0 && m == 0 && s >= (unsigned)seconds && s <= (unsigned)seconds + 2, "lap includes seconds");
     capture(large ? "stopwatch-120" : "stopwatch-normal");
-    ok("shell.back", NULL); quiet(); uint32_t commits = ink_display_commits(); delay_ms(2100);
+    ok("shell.back", NULL); quiet(); clear_of_minute(); uint32_t commits = ink_display_commits(); delay_ms(2100);
     CHECK(ink_display_commits() == commits, "stopwatch does not redraw off page");
     ok("clock.stopwatch", NULL); CHECK(number("elapsed_seconds") >= 5, "stopwatch catches up on return");
     ok("clock.stopwatch_pause", NULL); quiet();

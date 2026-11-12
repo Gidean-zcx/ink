@@ -316,7 +316,7 @@ static void show(void) {
 }
 static void hide(void) {
     if (!g_mark) return;
-    ink_ui_hint_obj(g_mark, INK_REFRESH_TEXT);
+    ink_ui_hint_obj(g_mark, g_next ? INK_REFRESH_UI : INK_REFRESH_TEXT);
     ink_ui_cause(g_unlock_cause, "power.unlock_to_visible_ms");
     ink_ui_overlay_remove(&OVERLAY);
     ink_lock_face_clear();
@@ -343,6 +343,7 @@ static void enter(ink_call_t *c) { /* UI task */
 static void sync_mark(void *arg) {
     (void)arg;
     if (__atomic_load_n(&g_locked, __ATOMIC_ACQUIRE)) { show(); return; }
+    if (g_next) ink_ui_stage_next(); /* the whole page comes back: black and white first, then its grays, as a page turn */
     hide(); ink_lock_face_resume(); enter_pending();
 }
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) {
