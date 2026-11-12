@@ -24,3 +24,5 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 ```
 
 普通通过的测试清理临时证据；设置 `INK_KEEP_EVIDENCE=1` 保留在构建目录。测试不依赖目录排序，不读取宿主时间来安排模拟任务，不接触设备。
+
+`measure.py --build build` 用于在已知欠载后继续收集四个场景的证据，保留失败并返回非零，不代替 ctest。报告频谱使用最终失败状态的输出；不会绕过欠载或放宽音质门槛。

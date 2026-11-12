@@ -49,8 +49,12 @@ int main(int argc, char **argv) {
             if (!n) break;
             t = clock();
             for (size_t i = 0; i < n; i++) mono[i] = (int16_t)(((int)raw[2 * i] + raw[2 * i + 1]) / 2);
-            spx_uint32_t in = (spx_uint32_t)n, len = HAL_OPUS_FRAME_SAMPLES + 1;
-            assert(!speex_resampler_process_int(s, 0, mono, &in, out, &len) && in == n);
+            size_t offset = 0;
+            while (offset < n) {
+                spx_uint32_t in = (spx_uint32_t)(n - offset), len = HAL_OPUS_FRAME_SAMPLES / 4;
+                assert(!speex_resampler_process_int(s, 0, mono + offset, &in, out, &len) && (in || len));
+                offset += in;
+            }
             clock_t dt = clock() - t;
             resample += dt;
             if (dt > worst) worst = dt;

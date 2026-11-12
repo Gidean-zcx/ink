@@ -13,4 +13,4 @@
 | `include/speex/speexdsp_types.h` | `include/speex/speexdsp_types.h` | `4f97187c057fd8493c787f2526752859cf57007d50fef8d2e03c9b79b2fed490` |
 | `LICENSE` | `COPYING` | `2654a4264b2bfe298dedc508748d140111840c315cc8eb646a3a68c13fa75b01` |
 
-本地适配：`os_support_custom.h` 将三种分配操作接到 OSAL 的 PSRAM；`include/speex/speexdsp_config_types.h` 从上游 configure 类型模板生成固定宽度类型；CMake 固定浮点、标量实现，模拟器与 S31 同源。
+本地适配：`os_support_custom.h` 将三种分配操作接到 OSAL 的 PSRAM；`include/speex/speexdsp_config_types.h` 是使用 stdint.h 的本地固定宽度类型头；CMake 固定浮点、标量实现，模拟器与 S31 同源。
