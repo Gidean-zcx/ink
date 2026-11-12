@@ -8,8 +8,9 @@ if(NOT ink_upstream)
             https://github.com/CloudZao/Metalio-E-INK4-Plus.git "${ink_upstream}"
             TIMEOUT 90 RESULT_VARIABLE fetched OUTPUT_QUIET ERROR_QUIET)
     endif()
+    # This clone belongs to the build: a pin change must not be blocked by an older pin's patches.
     if(EXISTS "${ink_upstream}/.git")
-        execute_process(COMMAND git -C "${ink_upstream}" checkout --detach ${ink_upstream_commit}
+        execute_process(COMMAND git -C "${ink_upstream}" checkout --force --detach ${ink_upstream_commit}
             TIMEOUT 90 RESULT_VARIABLE fetched OUTPUT_QUIET ERROR_QUIET)
     endif()
 endif()
