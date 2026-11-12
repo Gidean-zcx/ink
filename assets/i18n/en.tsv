@@ -1808,18 +1808,3 @@ Wi-Fi 已关闭	Wi-Fi is off
 秒－	Sec -
 秒＋	Sec +
 谷歌拼音	Google Pinyin
-好的	OK
-不是	No
-给我回个电话	Call me
-我晚点给你回电话	I will call you later
-回电	Call back
-通知偏好	Notification preferences
-执行通知动作（序号从 1 开始）	Run notification action (index starts at 1)
-回复通知（快捷回复 index 1 至 5，或 text）	Reply to notification (quick reply index 1 to 5, or text)
-勿扰状态、时段、例外和快捷回复	Do Not Disturb status, schedules, exceptions and quick replies
-修改自己的勿扰时段和例外（时段同时给 slot、days、start、end，分钟从零起）	Change own Do Not Disturb schedules and exceptions (schedules require slot, days, start and end; minutes since midnight)
-修改自己的快捷回复	Edit own quick reply
-勿扰状态或偏好有变化	Do Not Disturb state or preferences changed
-正在勿扰	Do Not Disturb is active
-勿扰原因	Do Not Disturb reason
-勿扰结束时间	Do Not Disturb end time

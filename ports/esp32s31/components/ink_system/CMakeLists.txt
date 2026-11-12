@@ -1,6 +1,5 @@
 set(root ${CMAKE_CURRENT_LIST_DIR}/../../../..)
 file(GLOB_RECURSE sources ${root}/system/*.c)
-list(FILTER sources EXCLUDE REGEX "/services/notify/vendor/pebble/")
 set(quirc_sources ${root}/third_party/quirc/quirc.c ${root}/third_party/quirc/identify.c ${root}/third_party/quirc/decode.c ${root}/third_party/quirc/version_db.c)
 list(APPEND sources ${quirc_sources})
 list(REMOVE_ITEM sources ${root}/system/boot/main.c ${root}/system/ui/lv_mem_osal.c)

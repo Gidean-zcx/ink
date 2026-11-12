@@ -248,7 +248,6 @@ add_library(ink_system STATIC
   system/services/time/time_caps.c
   system/services/notify/notify_service.c
   system/services/notify/notify_caps.c
-  system/services/notify/notify_model.c
   system/services/notify/interrupt.c
   system/services/net/wifi.c
   system/ui/shell/pinpad.c
@@ -1752,11 +1751,6 @@ ink_sim_executable(sim-notify-manage tests/notify_manage.c)
 target_link_libraries(sim-notify-manage PRIVATE ink_apps ink_system)
 add_test(NAME notify-manage COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/notify_manage.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(notify-manage PROPERTIES TIMEOUT 400)
-
-ink_sim_executable(sim-notify-model tests/notify_model.c)
-target_link_libraries(sim-notify-model PRIVATE ink_apps ink_system)
-add_test(NAME notify-model COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/notify_model.py --build ${CMAKE_BINARY_DIR})
-set_tests_properties(notify-model PROPERTIES TIMEOUT 600)
 ink_sim_executable(sim-settings-small tests/settings_small.c)
 target_link_libraries(sim-settings-small PRIVATE ink_apps ink_system)
 add_test(NAME settings-small COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_small.py --build ${CMAKE_BINARY_DIR})

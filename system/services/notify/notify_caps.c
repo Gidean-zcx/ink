@@ -89,7 +89,6 @@ static void cap_list(ink_call_t *c) {
             ink_jw_raw(&w, ",\"action\":");
             ink_jw_str(&w, v->action);
         }
-        notify_actions_write(&w, v->actions, v->nactions, v->reply_cap, v->reply_args);
         ink_jw_raw(&w, "}");
         if (w.overflow) {
             w.overflow = false;
