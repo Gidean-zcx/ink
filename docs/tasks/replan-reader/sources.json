@@ -1,0 +1,75 @@
+{
+  "checked_on": "2026-11-12",
+  "repositories": [
+    {
+      "name": "crosspoint-reader",
+      "commit": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader.git"
+    },
+    {
+      "name": "CrossInk",
+      "commit": "9914146eeae7b46b300f475a16c32426fc02ec1f",
+      "url": "https://github.com/uxjulia/CrossInk.git"
+    },
+    {
+      "name": "crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "url": "https://github.com/0x1abin/crossmux.git"
+    },
+    {
+      "name": "crosslink",
+      "commit": "107e172994ad2086c414e159795515175681be71",
+      "url": "https://github.com/DaisonChun/crosslink.git"
+    },
+    {
+      "name": "kiikoread",
+      "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread"
+    },
+    {
+      "name": "kiikoread-xiugai",
+      "commit": "746ce316faf61ce5228eceee618eacb50a02a395",
+      "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai"
+    },
+    {
+      "name": "dpreader",
+      "commit": "84f81c39d92fec50301aacc9f811d238fdb8b26a",
+      "url": "https://github.com/dephia31/dpreader31.git",
+      "local_copy": "source-only snapshot; newly created clone Git cache and firmware files removed after deviation audit"
+    },
+    {
+      "name": "tingqu",
+      "commit": "89db82442e655340e6194db89d4d6c9e64031d93",
+      "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1.git",
+      "local_copy": "source-only snapshot; newly created clone Git cache and firmware files removed after deviation audit"
+    },
+    {
+      "name": "thingsos-public",
+      "commit": "ed344c5745e07a1dced8d4e0041218b2ce9dcd02",
+      "url": "https://github.com/flowflic/ThingsOS",
+      "boundary": "9 public files: README, LICENSE and 7 images; no application source"
+    }
+  ],
+  "factory": {
+    "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus",
+    "commit": "874538eb54f7f7eb593cd40cd1ba6dc8497226e7",
+    "version_boundary": "v2.0.77 export, not registry v2.0.78"
+  },
+  "build_dependencies": [
+    {
+      "name": "crossmux-freeink-sdk",
+      "commit": "d9a1304cd234b0536136302f629304b609f62b32",
+      "url": "https://github.com/0x1abin/freeink-sdk"
+    },
+    {
+      "name": "crossmux-simulator",
+      "commit": "e5e716a40379d925ef6a31f7aafccf0b2f8ebcdb",
+      "url": "https://github.com/0x1abin/crosspoint-simulator"
+    },
+    {
+      "name": "crossink-freeink-sdk",
+      "commit": "699370183fa3a0e33c9cb83a36f701bbb6022095",
+      "url": "https://github.com/Free-Ink/freeink-sdk"
+    }
+  ]
+}

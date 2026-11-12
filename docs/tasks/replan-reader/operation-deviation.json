@@ -1,0 +1,20 @@
+{
+  "finding": "Source-only task clones accidentally fetched tracked firmware files. No firmware was executed or committed. The task-local files and clone Git object stores were removed; source-only snapshots and hashes remain. Existing upstream checkouts and project history were not modified.",
+  "records": [
+    {
+      "repository": "dpreader",
+      "removed_firmware_files": 82,
+      "removed_firmware_bytes": 341756672,
+      "new_clone_git_cache_removed": true,
+      "source_files_retained": true
+    },
+    {
+      "repository": "tingqu",
+      "removed_firmware_files": 1,
+      "removed_firmware_bytes": 47176,
+      "new_clone_git_cache_removed": true,
+      "source_files_retained": true
+    }
+  ],
+  "failed_partial_clone_removed": true
+}

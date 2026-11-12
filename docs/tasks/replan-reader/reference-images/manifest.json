@@ -1,0 +1,58 @@
+[
+  {
+    "file": "reference-images/crossink-reading.jpg",
+    "source": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/docs/images/bitter-small-15-margin.jpg",
+    "sha256": "39ba20055d12135e50ffb6b43f6b89dc282d5e9dce539d6a68a2710a830b46d5",
+    "bytes": 108183,
+    "kind": "上游文档照片或历史网页截图，非本次运行",
+    "modified": false
+  },
+  {
+    "file": "reference-images/crossink-stats.jpg",
+    "source": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/docs/images/reading-stats.jpg",
+    "sha256": "43c22e1a415d5c9d6f33b6d5dcd63ed4a73ea2237a121d1082c9919a4213f0b0",
+    "bytes": 71692,
+    "kind": "上游文档照片或历史网页截图，非本次运行",
+    "modified": false
+  },
+  {
+    "file": "reference-images/crossink-transfer.png",
+    "source": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/docs/images/wifi/webserver_files.png",
+    "sha256": "e7444d6ef64243e8f093259796174a4f560be0bb08853b74d7b1da6b384fccff",
+    "bytes": 188075,
+    "kind": "上游文档照片或历史网页截图，非本次运行",
+    "modified": false
+  },
+  {
+    "file": "reference-images/thingsos-reading.webp",
+    "source": "https://github.com/flowflic/ThingsOS/blob/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/docs/images/reading.webp",
+    "sha256": "b19b4a8008e3312744312e5dd57dadda992609f88d533482daabc48e4f18135c",
+    "bytes": 53324,
+    "kind": "作者注明由固件渲染的示例数据预览，Pico，不是Plus也非本次运行",
+    "modified": false
+  },
+  {
+    "file": "reference-images/thingsos-library.webp",
+    "source": "https://github.com/flowflic/ThingsOS/blob/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/docs/images/library.webp",
+    "sha256": "e312e53cebe54fdb1adfd5ae820ec4f19dcb2f604a4c627989e2e3a0a88457ea",
+    "bytes": 19908,
+    "kind": "作者注明由固件渲染的示例数据预览，Pico，不是Plus也非本次运行",
+    "modified": false
+  },
+  {
+    "file": "reference-images/thingsos-settings.webp",
+    "source": "https://github.com/flowflic/ThingsOS/blob/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/docs/images/reading-menu.webp",
+    "sha256": "501882330eba3c170ca0cc13f029db85315ca18b9adf84a27295f19b93f973fb",
+    "bytes": 37484,
+    "kind": "作者注明由固件渲染的示例数据预览，Pico，不是Plus也非本次运行",
+    "modified": false
+  },
+  {
+    "file": "reference-images/thingsos-stats.webp",
+    "source": "https://github.com/flowflic/ThingsOS/blob/ed344c5745e07a1dced8d4e0041218b2ce9dcd02/docs/images/statistics.webp",
+    "sha256": "ba8fcf48250ab0be1e235014063b659dfe30a3cd4881c9317c07e07ec8242872",
+    "bytes": 21238,
+    "kind": "作者注明由固件渲染的示例数据预览，Pico，不是Plus也非本次运行",
+    "modified": false
+  }
+]

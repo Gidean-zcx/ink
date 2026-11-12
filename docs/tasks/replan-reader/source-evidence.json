@@ -1,0 +1,506 @@
+[
+  {
+    "id": "P1",
+    "repository": "crosspoint-reader",
+    "file": "lib/Epub/Epub/CjkBreaks.cpp",
+    "line": 9,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/Epub/Epub/CjkBreaks.cpp#L9",
+    "sha256": "96b4363025cfdcc61382af9025e88ad9b5850ae8a6f26cd974428e78aff63540",
+    "finding": "禁则边界；这不是标点半字宽挤压。"
+  },
+  {
+    "id": "P2",
+    "repository": "crosspoint-reader",
+    "file": "lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp",
+    "line": 979,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp#L979",
+    "sha256": "0e5b6fd233efbe295019605e33f050583c432591e7f13a2ff161718855098599",
+    "finding": "表格测宽与分列布局；不能外推为浏览器级 CSS。"
+  },
+  {
+    "id": "P3",
+    "repository": "crosspoint-reader",
+    "file": "lib/Epub/Epub/css/CssParser.cpp",
+    "line": 236,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/Epub/Epub/css/CssParser.cpp#L236",
+    "sha256": "52785187f0a13a331baf1434823e17d4e9082e9a25189516b81172db2c05e28e",
+    "finding": "CSS 数值解析使用浮点 from_chars；本机构建的系统版本边界。"
+  },
+  {
+    "id": "P4",
+    "repository": "crosspoint-reader",
+    "file": "lib/Txt/TxtToHtml.cpp",
+    "line": 59,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/Txt/TxtToHtml.cpp#L59",
+    "sha256": "abed5accdea48cf28fafcdc4fa9064bd470cd23bb666d5e335e4820cf7e227ef",
+    "finding": "TXT 按 UTF-8 输出，换行转 br；此路径没有中文编码转换或自动章目录。"
+  },
+  {
+    "id": "P5",
+    "repository": "crosspoint-reader",
+    "file": "src/activities/reader/KOReaderSyncActivity.cpp",
+    "line": 1,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/reader/KOReaderSyncActivity.cpp#L1",
+    "sha256": "e2a668da748ff66477bbf75daa3b0fdc9dcb07856700b8687a8ad5f707765698",
+    "finding": "KOReader 同步界面和流程。"
+  },
+  {
+    "id": "P6",
+    "repository": "crosspoint-reader",
+    "file": "src/ClippingStore.cpp",
+    "line": 1,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/ClippingStore.cpp#L1",
+    "sha256": "96635a2539680577cb49d1d172a0156e9701d862da0afbdc051ceb53262afc09",
+    "finding": "书摘持久化。"
+  },
+  {
+    "id": "P7",
+    "repository": "crosspoint-reader",
+    "file": "src/network/CrossPointWebServer.cpp",
+    "line": 326,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/network/CrossPointWebServer.cpp#L326",
+    "sha256": "c425354ead08afc7d02b82dd92f427ac1e73f7995730d0f80e70dbedeb34eecd",
+    "finding": "上传、新建文件夹、重命名、删除和设置 API。"
+  },
+  {
+    "id": "P8",
+    "repository": "crosspoint-reader",
+    "file": "src/network/html/FilesPage.html",
+    "line": 3335,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/network/html/FilesPage.html#L3335",
+    "sha256": "f0a63bbe47f6bdc137462523d90441439395915bc0bcf7ccb8b19a44facae1ae",
+    "finding": "WebSocket 上传与进度交互。"
+  },
+  {
+    "id": "P9",
+    "repository": "crosspoint-reader",
+    "file": "src/activities/library/LibraryListActivity.cpp",
+    "line": 1,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/library/LibraryListActivity.cpp#L1",
+    "sha256": "bcff961fc22e86d382089697afa9b0edfd03355cfe337b1585a061425024588d",
+    "finding": "按标题和作者的书库检索，与正文搜索分开。"
+  },
+  {
+    "id": "M1",
+    "repository": "crossmux",
+    "file": "lib/Epub/Epub/ParsedText.cpp",
+    "line": 1678,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/Epub/Epub/ParsedText.cpp#L1678",
+    "sha256": "91da857e50914277bf31171cc2dbe90c67e4b375f3c3f339fdd6f2a551c70d05",
+    "finding": "完整行两端对齐，末行自然宽度。"
+  },
+  {
+    "id": "M2",
+    "repository": "crossmux",
+    "file": "lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp",
+    "line": 979,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp#L979",
+    "sha256": "268dee444b6d34649ee4db519984737c86312abe7d4f0e78af70bccefdfab649",
+    "finding": "表格、插图、ruby 等 EPUB 布局路径。"
+  },
+  {
+    "id": "M3",
+    "repository": "crossmux",
+    "file": "src/activities/reader/EpubReaderActivity.cpp",
+    "line": 874,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/reader/EpubReaderActivity.cpp#L874",
+    "sha256": "90c6ab3308a671c3000232a90d5f231d9cb9074ff0177198c2e225ad3b5bb6c6",
+    "finding": "脚注导航及返回，不是只提取纯文本。"
+  },
+  {
+    "id": "M4",
+    "repository": "crossmux",
+    "file": "src/activities/apps/weread/README.md",
+    "line": 1,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/weread/README.md#L1",
+    "sha256": "9f15e45e11419eecc7bf0164d1e7bbd70a4f2b8ca304a0c7cf5584dd2f680343",
+    "finding": "微信扫码、书架和离线 EPUB；需要非官方服务协议。"
+  },
+  {
+    "id": "M5",
+    "repository": "crossmux",
+    "file": "src/util/ReadingStatsAnalytics.cpp",
+    "line": 48,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/util/ReadingStatsAnalytics.cpp#L48",
+    "sha256": "7205ecefd63f0784d8051715e78688429778b81be3a75b0677d6a6d6bf279cf2",
+    "finding": "每日、每书统计汇总。"
+  },
+  {
+    "id": "M6",
+    "repository": "crossmux",
+    "file": "src/network/WebDAVHandler.cpp",
+    "line": 118,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/network/WebDAVHandler.cpp#L118",
+    "sha256": "806cce77fb40ffd4075147d7c7c7ecc7f86aea4926567c09e9c5310b323dd5de",
+    "finding": "WebDAV 服务端实现；不等于坚果云客户端。"
+  },
+  {
+    "id": "M7",
+    "repository": "crossmux",
+    "file": "src/network/html/zh-CN/FilesPage.html",
+    "line": 1,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/network/html/zh-CN/FilesPage.html#L1",
+    "sha256": "ecfb5f5f8546316b430f72a62972e0ded54feded43b7f5d94f765927eeffca16",
+    "finding": "中文传书前端。"
+  },
+  {
+    "id": "M8",
+    "repository": "crossmux",
+    "file": "lib/KOReaderSync/ProgressMapper.h",
+    "line": 1,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/lib/KOReaderSync/ProgressMapper.h#L1",
+    "sha256": "92f61cf036f00bdfc0e5a7a3a5c23b42e88982befe24fee75475e02976b89776",
+    "finding": "KOReader 位置映射边界。"
+  },
+  {
+    "id": "M9",
+    "repository": "crossmux",
+    "file": "platformio.ini",
+    "line": 336,
+    "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/platformio.ini#L336",
+    "sha256": "bb35ddd1e492c984a4e94875842e3c2b3e24ea05ab3068748ef716ab7349e21a",
+    "finding": "原生模拟器及其固定依赖；Read Pico 不是 Plus 的板级验证。"
+  },
+  {
+    "id": "K1",
+    "repository": "kiikoread",
+    "file": "main/book/book_layout.c",
+    "line": 245,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_layout.c#L245",
+    "sha256": "7982b34cc5df2e293ae4e30369b2524e407ec398c97448b055656a520ac83d6a",
+    "finding": "中文避头尾、后续悬挂与横竖排。"
+  },
+  {
+    "id": "K2",
+    "repository": "kiikoread",
+    "file": "main/font/ttf_font.c",
+    "line": 3237,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/font/ttf_font.c#L3237",
+    "sha256": "21fcfd1969d9c68f1dcaff384a2432a4bcda39bb6edc044e4e8b878f6b982d78",
+    "finding": "整行字距伸缩与 TTF 栅格化；不是专门的标点配对挤压。"
+  },
+  {
+    "id": "K3",
+    "repository": "kiikoread",
+    "file": "main/book/html_text.c",
+    "line": 169,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/html_text.c#L169",
+    "sha256": "07cc7b0d18488ded72311046ca0f9d155d201d24cd207580f4afc7d3e2e8473e",
+    "finding": "有限 CSS 属性集；不能称完整 CSS，也未见网格表格布局。"
+  },
+  {
+    "id": "K4",
+    "repository": "kiikoread",
+    "file": "main/book/book_txt.c",
+    "line": 1,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_txt.c#L1",
+    "sha256": "c64a7d1126f5764e9b1035ec93aa8b985fa1dde8ec7af216abc616cf1a51ccb2",
+    "finding": "流式 TXT、编码探测与中文章节。"
+  },
+  {
+    "id": "K5",
+    "repository": "kiikoread",
+    "file": "main/apps/app_book.c",
+    "line": 1452,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/apps/app_book.c#L1452",
+    "sha256": "f12fe6b0e3b51dec2910a24e9d9cfba3c30eef842e43bfe240bce8b473eb7a2f",
+    "finding": "书名检索及书架操作；不是正文全文搜索。"
+  },
+  {
+    "id": "K6",
+    "repository": "kiikoread",
+    "file": "main/apps/app_book.c",
+    "line": 2970,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/apps/app_book.c#L2970",
+    "sha256": "f12fe6b0e3b51dec2910a24e9d9cfba3c30eef842e43bfe240bce8b473eb7a2f",
+    "finding": "本次阅读时长、翻页数和最近30天统计；不是测试用 app_reading。"
+  },
+  {
+    "id": "K7",
+    "repository": "kiikoread",
+    "file": "main/book/book_excerpt.c",
+    "line": 1,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_excerpt.c#L1",
+    "sha256": "b939b0447a3e5c6177a651abeb2e52242304e270bb73b5c90552af286ca7495a",
+    "finding": "从当前解析章节自动缓存短句；不是自由选区划线或笔记。"
+  },
+  {
+    "id": "K8",
+    "repository": "kiikoread",
+    "file": "components/read_pico_transfer/upload.html",
+    "line": 62,
+    "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/components/read_pico_transfer/upload.html#L62",
+    "sha256": "4efc7e40c5a3a427d4304903ecad99bb4232dc8dbef7a4c6eda52b3fa8f6189b",
+    "finding": "网页目录和重命名、复制、删除；基础版没有改版的前端 TXT 目录生成。"
+  },
+  {
+    "id": "X1",
+    "repository": "kiikoread-xiugai",
+    "file": "components/read_pico_transfer/upload.html",
+    "line": 98,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/components/read_pico_transfer/upload.html#L98",
+    "sha256": "fa3cc38ba8059dd894acfd05d6e806db4fae93da8fa460c7e68a5eeb65a623cd",
+    "finding": "浏览器内编码探测、TXT 章节规则及原文字节偏移。"
+  },
+  {
+    "id": "X2",
+    "repository": "kiikoread-xiugai",
+    "file": "main/book/book_txt.c",
+    "line": 727,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/book/book_txt.c#L727",
+    "sha256": "e85452743b1ea7779274d6d10b9f918b1e89eb1bae334f148028cec076c1badc",
+    "finding": "设备读取同名 toc.json；目录由手机/电脑浏览器生成。"
+  },
+  {
+    "id": "X3",
+    "repository": "kiikoread-xiugai",
+    "file": "components/read_pico_transfer/read_pico_transfer.c",
+    "line": 2200,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/components/read_pico_transfer/read_pico_transfer.c#L2200",
+    "sha256": "c84ae9d28f067276ebde21aeee0d9dc2642330dbfec4ecc643a8eff9ce064027",
+    "finding": "FTP 服务生命周期。"
+  },
+  {
+    "id": "X4",
+    "repository": "kiikoread-xiugai",
+    "file": "main/apps/app_transfer.c",
+    "line": 781,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/apps/app_transfer.c#L781",
+    "sha256": "6de999d26704cf5d532b290ce3ed2b2208960e7f28cddfd80d12e1fbdf00488c",
+    "finding": "FTP 只显示接收字节，不伪造未知总量。"
+  },
+  {
+    "id": "X5",
+    "repository": "kiikoread-xiugai",
+    "file": "main/book/html_text.c",
+    "line": 77,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/book/html_text.c#L77",
+    "sha256": "485b92c33de4db55cf6b55b71c5ebb352ff8e53eead3b33715636ec92e0a9ead",
+    "finding": "仅同章锚点脚注，不能外推跨文件脚注。"
+  },
+  {
+    "id": "X6",
+    "repository": "kiikoread-xiugai",
+    "file": "tools/simulator/README.md",
+    "line": 3,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/tools/simulator/README.md#L3",
+    "sha256": "b445e42a0c218a4445c17fe942e1f644fc4cdef6bb19ec80f3bd2378834bc092",
+    "finding": "模拟器声明 rc97、684×1216，Wi-Fi/USB/波形不模拟。"
+  },
+  {
+    "id": "X7",
+    "repository": "kiikoread-xiugai",
+    "file": "tools/simulator/build.py",
+    "line": 21,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/tools/simulator/build.py#L21",
+    "sha256": "f20585f4c6a4354f3de9eeb12d1b9b79281693803a45c334a532bae2253ce4d4",
+    "finding": "编译失败只汇总而不设置非零退出码。"
+  },
+  {
+    "id": "X8",
+    "repository": "kiikoread-xiugai",
+    "file": "tools/simulator/source-manifest.json",
+    "line": 1,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/tools/simulator/source-manifest.json#L1",
+    "sha256": "27e30c21fb886c43fd9ef9f7a7f871fe72285e190f6caf4801fc02680f94b0a0",
+    "finding": "要求对应 rc97 的发布提交。"
+  },
+  {
+    "id": "I1",
+    "repository": "CrossInk",
+    "file": "README.md",
+    "line": 27,
+    "url": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/README.md#L27",
+    "sha256": "463383e2802fb04e4bcdc4774dded6bfdfb76efa8e10382cf1c5f8c3e5241c91",
+    "finding": "字体、阅读统计、控件映射与近期九宫格等作者说明。"
+  },
+  {
+    "id": "I2",
+    "repository": "CrossInk",
+    "file": "lib/Epub/Epub/ParsedText.cpp",
+    "line": 75,
+    "url": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/lib/Epub/Epub/ParsedText.cpp#L75",
+    "sha256": "1992223bf55edf68f77cec140030cfab0397d86cba192792e2e3cd4b868c6df8",
+    "finding": "CJK 禁则和两端对齐实现；不是仅支持英文。"
+  },
+  {
+    "id": "I3",
+    "repository": "CrossInk",
+    "file": "src/activities/network/NearbyStatsSyncActivity.cpp",
+    "line": 1,
+    "url": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/src/activities/network/NearbyStatsSyncActivity.cpp#L1",
+    "sha256": "578f9f0cd6e518b16923fbd4fca1bcf31ab9206645a9ef1d618a8ba375820f08",
+    "finding": "CrossInk 设备间统计同步。"
+  },
+  {
+    "id": "I4",
+    "repository": "CrossInk",
+    "file": "lib/Epub/Epub/css/CssParser.cpp",
+    "line": 137,
+    "url": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/lib/Epub/Epub/css/CssParser.cpp#L137",
+    "sha256": "aa7bda0bfb8eeeff095d3f4b88ad5d1315e596605beb07b0dca57a5be6062e84",
+    "finding": "同一浮点 from_chars 最低系统版本问题。"
+  },
+  {
+    "id": "L1",
+    "repository": "crosslink",
+    "file": "README.md",
+    "line": 16,
+    "url": "https://github.com/DaisonChun/crosslink/blob/107e172994ad2086c414e159795515175681be71/README.md#L16",
+    "sha256": "38b26682acb72644d6b8f485e9a4376a1a5b27cc7aec763905377c9b77f92fdc",
+    "finding": "作者致谢 CrossPoint 与 allocated/crosspoint_chinesetype。"
+  },
+  {
+    "id": "L2",
+    "repository": "crosslink",
+    "file": "USER_GUIDE.md",
+    "line": 1,
+    "url": "https://github.com/DaisonChun/crosslink/blob/107e172994ad2086c414e159795515175681be71/USER_GUIDE.md#L1",
+    "sha256": "86d39432b757a86d0ae8ad7675e2938ad4a965a8593af7e556cc90a472415c71",
+    "finding": "指南是继承文档；不能用它证明当前 Pixel 功能。"
+  },
+  {
+    "id": "L3",
+    "repository": "crosslink",
+    "file": "lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp",
+    "line": 811,
+    "url": "https://github.com/DaisonChun/crosslink/blob/107e172994ad2086c414e159795515175681be71/lib/Epub/Epub/parsers/ChapterHtmlSlimParser.cpp#L811",
+    "sha256": "ee571532a015c8f0c5e3213545073e949eb42ad075d17aaf951d33e8b0bcbde2",
+    "finding": "已有按字符断行代码；指南称不支持 CJK 与代码能力有时差。"
+  },
+  {
+    "id": "D1",
+    "repository": "dpreader",
+    "file": "firmware/shared/main/book/book_sync_position.c",
+    "line": 63,
+    "url": "https://github.com/dephia31/dpreader31/blob/84f81c39d92fec50301aacc9f811d238fdb8b26a/firmware/shared/main/book/book_sync_position.c#L63",
+    "sha256": "b69961d46defaffaa57de4f7c3913892d665101236eafb62760e8f13896d6177",
+    "finding": "精确 XPointer 与近似进度明确分开。"
+  },
+  {
+    "id": "D2",
+    "repository": "dpreader",
+    "file": "firmware/shared/main/book/opds_client.c",
+    "line": 1,
+    "url": "https://github.com/dephia31/dpreader31/blob/84f81c39d92fec50301aacc9f811d238fdb8b26a/firmware/shared/main/book/opds_client.c#L1",
+    "sha256": "bac9f4d9074d8a1ba4b2825300ff33b227a4cf275e19187e8c8b8111b3fb2096",
+    "finding": "设备端 OPDS 客户端。"
+  },
+  {
+    "id": "D3",
+    "repository": "dpreader",
+    "file": "tools/book_sync_position_host_test.py",
+    "line": 13,
+    "url": "https://github.com/dephia31/dpreader31/blob/84f81c39d92fec50301aacc9f811d238fdb8b26a/tools/book_sync_position_host_test.py#L13",
+    "sha256": "d5f930b00b1c436d8bba3acd595d0dd37ddad7010b3fe3f20156d15d66da9420",
+    "finding": "现有位置映射测试带 UBSan；本次运行失败。"
+  },
+  {
+    "id": "D4",
+    "repository": "dpreader",
+    "file": "tools/txt_utf16_host_test.py",
+    "line": 1,
+    "url": "https://github.com/dephia31/dpreader31/blob/84f81c39d92fec50301aacc9f811d238fdb8b26a/tools/txt_utf16_host_test.py#L1",
+    "sha256": "94095b999bd91ab25baaf92041b705d8d93676d92f3941d5d3ccdc59fc075e5e",
+    "finding": "现有流式 TXT 编码测试；本次运行失败。"
+  },
+  {
+    "id": "D5",
+    "repository": "dpreader",
+    "file": "tools/render_screenshots.py",
+    "line": 90,
+    "url": "https://github.com/dephia31/dpreader31/blob/84f81c39d92fec50301aacc9f811d238fdb8b26a/tools/render_screenshots.py#L90",
+    "sha256": "a721b157e2699dee30de65e2320554a1a838fe4cdf66d162c2cbb93f9511b253",
+    "finding": "部分所谓截图由 Pillow 绘制，包含示例网络名，不能当真机或模拟器实测。"
+  },
+  {
+    "id": "T1",
+    "repository": "tingqu",
+    "file": "docs/community-release-v2.0.74.md",
+    "line": 13,
+    "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/docs/community-release-v2.0.74.md#L13",
+    "sha256": "039f9936a8ad943f66b6365055ec2ba66fc1a50a4129b8e619d73c03c5064464",
+    "finding": "在线阅读正文未打通，EPUB kosync 为百分比近似。"
+  },
+  {
+    "id": "T2",
+    "repository": "tingqu",
+    "file": "main/reader/kosync.cc",
+    "line": 334,
+    "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/main/reader/kosync.cc#L334",
+    "sha256": "27865bbe954cf22caa3441b97e020dbadf65524be95ff44aedea588fedad4849",
+    "finding": "实际发送百分比作为 progress，不是 EPUB XPointer。"
+  },
+  {
+    "id": "T3",
+    "repository": "tingqu",
+    "file": "main/weread/weread_service.cc",
+    "line": 1,
+    "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/main/weread/weread_service.cc#L1",
+    "sha256": "2165d264f98a31a79f769a877a71e3ed4814dae1cf544ca2b0bc007cb009bf38",
+    "finding": "公开的书架服务代码；听趣不是只有闭源说明。"
+  },
+  {
+    "id": "T4",
+    "repository": "tingqu",
+    "file": "main/weread/weread_online.cc",
+    "line": 1,
+    "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/main/weread/weread_online.cc#L1",
+    "sha256": "3b81a85776458e06f94604dd02bce8cf64f0711f00ab3065c56bcd540215000c",
+    "finding": "在线读取适配代码，存在代码不等于正文接口可用。"
+  },
+  {
+    "id": "P10",
+    "repository": "crosspoint-reader",
+    "file": "lib/EpdFont/TtfEpdFont.cpp",
+    "line": 46,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/EpdFont/TtfEpdFont.cpp#L46",
+    "sha256": "23bb709504b67c5b1582df1c6d656ec86bb7c3d8c464ba42d7dd5920da79af99",
+    "finding": "TTF 字体流式来源与字重/字形处理。"
+  },
+  {
+    "id": "I5",
+    "repository": "CrossInk",
+    "file": "src/activities/reader/BookStatsView.cpp",
+    "line": 1,
+    "url": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/src/activities/reader/BookStatsView.cpp#L1",
+    "sha256": "34e2b94abe472b9ae34962a248f71840e7b450a220f679bd4750f306dfccd3f0",
+    "finding": "本书与全局统计展示。"
+  },
+  {
+    "id": "X9",
+    "repository": "kiikoread-xiugai",
+    "file": "MODIFICATIONS.md",
+    "line": 7,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/MODIFICATIONS.md#L7",
+    "sha256": "0dd19a4a5a76742012eeb35cb55f0446c67c3243e1f2fd8a2b24c60f7a4b16c9",
+    "finding": "改版声明 rc107 基线；不是模拟器 manifest 的 rc97。"
+  },
+  {
+    "id": "F1",
+    "repository": "factory",
+    "file": "main/reader/epub_document.cc",
+    "line": 380,
+    "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/epub_document.cc#L380",
+    "sha256": "1acb5a463f002cead84b7921af5a63e9623e5136ebc3320c0bceae8240353ef9",
+    "finding": "原厂 EPUB 使用 HtmlBlockParser 输出阅读块。"
+  },
+  {
+    "id": "F2",
+    "repository": "factory",
+    "file": "main/display/screen/book_screen/settings/book_settings_sheet.cc",
+    "line": 1,
+    "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/book_screen/settings/book_settings_sheet.cc#L1",
+    "sha256": "e0b4bd404e4151240532a1c2236298b5f14607df332c91c0bf07e487c3087f95",
+    "finding": "阅读设置和书内字号、边距等控件。"
+  },
+  {
+    "id": "F3",
+    "repository": "factory",
+    "file": "main/display/screen/cloud_screen/ap/ap_transfer.cc",
+    "line": 1142,
+    "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/cloud_screen/ap/ap_transfer.cc#L1142",
+    "sha256": "3fc762af1bffda80aac67aeacf9bee6a028ca72444cabcb607c98fa31fd26585",
+    "finding": "原厂网页文件管理路由；不是没有目录管理功能。"
+  }
+]
