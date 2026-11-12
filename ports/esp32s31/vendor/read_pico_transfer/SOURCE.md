@@ -29,7 +29,7 @@
 | `transfer_s31_radio_profile.h` | `96a3895f12e4334b15d4a2dcab8d11490f6d195c6a906ea7f74a6dce7891b398` | `96a3895f12e4334b15d4a2dcab8d11490f6d195c6a906ea7f74a6dce7891b398` |
 | `transfer_signature.h` | `1bc92d9a4746076248e9fc6694b57353f1f7ed1ca54acbd2ccc57f754f6217cd` | `1bc92d9a4746076248e9fc6694b57353f1f7ed1ca54acbd2ccc57f754f6217cd` |
 | `transfer_stream_writer.h` | `8a1ade18758577ddc5bdca57ae1c434b86b8dee1b40a4f5b2ee4591a4933f6c2` | `8a1ade18758577ddc5bdca57ae1c434b86b8dee1b40a4f5b2ee4591a4933f6c2` |
-| `upload.html` | `fa3cc38ba8059dd894acfd05d6e806db4fae93da8fa460c7e68a5eeb65a623cd` | `c745cf5580318dc4c9ebf35862ba443f7d145b7645d4826ad87a7f214de8bfb2` |
+| `upload.html` | `fa3cc38ba8059dd894acfd05d6e806db4fae93da8fa460c7e68a5eeb65a623cd` | `33176163d909ec5a449ef63eddfbe016fcefdf5db40dafea71f95cc5812289bc` |
 
 ## 接线与改动理由
 
@@ -87,7 +87,8 @@
 | `upload.html` | 92–94 | 95–97 |
 | `upload.html` | 148–148 | 151–151 |
 | `upload.html` | 152–152 | 155–155 |
-| `upload.html` | 189–188 | 192–192 |
-| `upload.html` | 192–192 | 196–196 |
-| `upload.html` | 195–195 | 199–199 |
-| `upload.html` | 254–253 | 258–258 |
+| `upload.html` | 157–157 | 160–161 |
+| `upload.html` | 189–188 | 193–193 |
+| `upload.html` | 192–192 | 197–197 |
+| `upload.html` | 195–195 | 200–200 |
+| `upload.html` | 254–253 | 259–259 |

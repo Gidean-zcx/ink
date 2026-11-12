@@ -157,7 +157,8 @@ async function sendToc(file,result,prepared){
   const tocName=file.name.replace(/\.txt$/i,'.toc.json');
   const url='/file-upload?path='+encodeURIComponent('books/'+tocName);
   const blob=new Blob([JSON.stringify(toc)],{type:'application/json'});
-  await upload(blob,url,()=>{});
+  const response=await upload(blob,url,()=>{});
+  if(response.status!==200)throw Error(response.body.error||'上传目录失败');
   set('目录已生成：'+toc.entries.length+' 章 · 已保存 '+tocName);
  }catch(e){set('目录生成失败：'+(e&&e.message?e.message:e))}
 }

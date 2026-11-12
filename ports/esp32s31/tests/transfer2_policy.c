@@ -5,7 +5,7 @@ static uint64_t now;
 static uint32_t epoch=1;
 static bool plane;
 static unsigned admissions, removals;
-static char last_path[128], last_result[768];
+static char last_path[128], last_result[1152];
 struct osal_mutex { int unused; };
 static struct osal_mutex mutex;
 static int guards;

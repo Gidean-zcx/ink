@@ -25,6 +25,21 @@ static void fx_usb_busy(void) {
     if (P.timer) lv_timer_pause(P.timer);
     P.pending = false;
 }
+static void fx_rows(void) {
+    fx_result = "{\"active\":true,\"host\":\"example.com\",\"port\":8080,\"code\":\"000000\",\"files\":0,\"received\":0,\"result\":\"等待上传\"}";
+    fx_load();
+    lv_obj_t *retained = lv_obj_get_child(P.screen, 0);
+    lv_obj_add_flag(retained, LV_OBJ_FLAG_USER_4);
+    CHECK(!P.file_rows[0] && !P.file_rows[1], "no file list is drawn before receipt");
+    fx_result = "{\"active\":true,\"host\":\"example.com\",\"port\":8080,\"code\":\"000000\",\"files\":1,\"last_file\":\"第一本.txt\",\"received\":100,\"result\":\"文件已收到\"}";
+    fx_load();
+    CHECK(lv_obj_get_child(P.screen, 0) == retained && lv_obj_has_flag(retained, LV_OBJ_FLAG_USER_4) && P.file_rows[0], "first receipt retains the page and adds one row");
+    lv_obj_t *first = P.file_rows[0];
+    fx_result = "{\"active\":true,\"host\":\"example.com\",\"port\":8080,\"code\":\"000000\",\"files\":2,\"last_file\":\"第二本.txt\",\"received\":200,\"result\":\"文件已收到\"}";
+    fx_load();
+    CHECK(lv_obj_get_child(P.screen, 0) == retained && lv_obj_has_flag(retained, LV_OBJ_FLAG_USER_4) && P.file_rows[0] == first && P.file_rows[1], "second receipt preserves the first row and adds only the new row");
+    CHECK(strstr(P.file_text, "第一本.txt") && strstr(P.file_text, "第二本.txt"), "AI receives both committed filenames");
+}
 static void run(void *arg) {
     (void)arg; fx_start(); on_ui(fx_open); fx_capture("idle");
     fx_wanted = "关闭"; on_ui(fx_find); fx_close = fx_area;
@@ -41,6 +56,7 @@ static void run(void *arg) {
     on_ui(fx_usb_busy); fx_capture("usb-busy");
     CHECK(strstr(g_snap, "不能自动停下") && !strstr(g_snap, "停下，开始"), "UX11 USB busy does not promise to stop applications");
     fx_press("返回先停下"); CHECK(!strcmp(fx_called, "shell.back"), "UX11 busy exit returns without mounting USB");
+    on_ui(fx_open); on_ui(fx_rows); fx_capture("received-native");
     ink_probe_count("test.finished");
 }
 void ink_main(void) { product_main(); fx_task(run); }

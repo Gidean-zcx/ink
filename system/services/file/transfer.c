@@ -301,8 +301,8 @@ static void status(ink_call_t *c) {
     }
     ink_jw_raw(&list, "]");
     if (hal_transfer_host(host, sizeof host)) host[0] = 0;
-    snprintf(out, sizeof out, "{\"active\":%s,\"host\":\"%.63s\",\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\",\"received\":%lld,\"connection\":\"%s\",\"url\":\"http://%.63s:%u/\",\"files\":%u,\"last_file\":%s,\"received_files\":%s}",
-             T.active ? "true" : "false", host, T.port, c->src == INK_SRC_AI ? 0u : (unsigned)T.code,
+    snprintf(out, sizeof out, "{\"active\":%s,\"host\":\"%.63s\",\"port\":%u,\"code\":\"%06u\",\"directory\":\"%s\",\"result\":\"%s\",\"received\":%lld,\"connection\":\"%s\",\"url\":\"http://%.63s:%u/\",\"files\":%u,\"last_file\":%s,\"received_files\":%s}",
+             T.active ? "true" : "false", host, T.port, c->src == INK_SRC_AI ? 0u : (unsigned)T.code, T.native ? "/me" : INBOX,
              TR(T.result ? T.result : TR_NOOP("尚未开启")), (long long)received,
              hal_transfer_hotspot() ? "hotspot" : "wifi", host, T.port, T.epoch == ink_member_epoch() ? T.files : 0, escaped, files);
     unlock();

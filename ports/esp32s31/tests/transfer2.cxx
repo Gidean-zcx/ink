@@ -136,9 +136,9 @@ int main(int argc, char **argv) {
     for (const char *endpoint : {"/font-upload?name=synthetic.ttf", "/image-upload?name=synthetic.png", "/music-upload?name=synthetic.mp3"})
         assert(request(endpoint, cookie, HTTP_PUT, "SYNTHETIC").status == "200 OK");
     assert(test_exists("/me/fonts/synthetic.ttf") && test_exists("/me/pictures/synthetic.png") && test_exists("/me/music/synthetic.mp3"));
-    test_full(true); auto full = request("/upload?name=full.txt", cookie, HTTP_PUT, gbk); test_full(false);
+    admitted = test_admissions(); test_full(true); auto full = request("/upload?name=full.txt", cookie, HTTP_PUT, gbk); test_full(false);
     assert(full.status == "507 Insufficient Storage" && full.response.find("存储空间不足") != std::string::npos);
-    assert(!test_exists("/me/books/full.txt.part"));
+    assert(!test_exists("/me/books/full.txt.part") && test_admissions() == admitted);
     auto invalid = request("/upload?name=invalid%3A.txt", cookie, HTTP_PUT, gbk);
     assert(invalid.status == "400 Bad Request" && invalid.response.find("无效") != std::string::npos);
     auto interrupted = request("/upload?name=expired.txt", cookie, HTTP_PUT, gbk, "", SIZE_MAX, true);
