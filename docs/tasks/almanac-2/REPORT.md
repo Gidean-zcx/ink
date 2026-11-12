@@ -1,6 +1,6 @@
 # almanac-2 执行报告
 
-基线：`ed4645db28e1339bca7338ca69e42990cf5a6f30`。分支：`claude/codex-almanac-2`。状态：进行中。
+基线：`ed4645db28e1339bca7338ca69e42990cf5a6f30`。分支：`claude/codex-almanac-2`。状态：本地交付与核验完成，验收未全通过；未推送、未操作设备。
 
 ## 验收表
 
@@ -11,11 +11,11 @@
 | 3 cnlunar 对照 | 【实测】已列差异 | 50/50 天有差异，完整表见 [CNLUNAR-DIFF.md](CNLUNAR-DIFF.md) | `python -B tests/almanac/run.py --binary build/almanac-model --mode compare --cnlunar "$INK_DEPS/../ink-hw/upstream/oss/cnlunar" --out docs/tasks/almanac-2` |
 | 4 现有农历逐日对照 | 【实测】已列差异 | 36,495 天一致，30 天不一致，全部日期见 [LUNAR-DIFF.md](LUNAR-DIFF.md)；没有修改旧实现 | `python -B tests/almanac/run.py --binary build/almanac-model --mode oracle --out docs/tasks/almanac-2` |
 | 5 AI、孩子、范围与时区 | 【实测】通过 | 模拟器 216 项检查；AI 与 C 接口全部字段相同，孩子可调、不确认，跨时区切换当天，1999 年如实报不在范围 | `INK_KEEP_EVIDENCE=1 ctest --test-dir build -R almanac-capability --output-on-failure` |
-| 6 构建、全量、ASan、S31、资源 | 【实测】部分通过；预算与全量未通过，内存及 S31 宿主测试进行中 | 普通构建、S31 固件、GCC 和本任务 4 个测试通过；完整全量有 2 个失败，详见下文 | `taskpolicy -c utility ctest --test-dir build --output-on-failure -j2` |
+| 6 构建、全量、ASan、S31、资源 | 【实测】部分通过；预算与完整全量未通过 | 普通构建、S31 固件、GCC、本任务普通与 ASan 各 4 个测试、S31 宿主 78 项通过；整轮全量有 2 个失败（备份恢复随后隔离通过），详见下文 | `taskpolicy -c utility ctest --test-dir build --output-on-failure -j2` |
 
 ## 没做到的
 
-固件增量的 60 KB 上限未达到：实际新增 **181,984 B（177.72 KiB）**。按任务书“超了停下写清，不砍内容”停止修改实现；完整模型和数据保留在本分支，未擅自压缩、裁剪或放宽预算。仍完成任务书要求的剩余测试和报告。测试结果不等于这一条验收通过。
+固件增量的 60 KB 上限未达到：实际新增 **181,984 B（177.72 KiB）**。按任务书“超了停下写清，不砍内容”停止修改产品实现；完整模型和数据保留在本分支，未擅自压缩、裁剪或放宽预算。此后只完成约定核验、测试日志限长和报告。测试结果不等于这一条验收通过。
 
 没有实机测试，S31 上的真实查询耗时待主会话核对。
 
@@ -23,9 +23,13 @@
 
 完整全量的 `backup-restore-recovery` 在 240.26 秒被原有 240 秒上限终止；已完成的备份/恢复子场景没有失败断言，最后日志到 `collect-cut PASS`，留下的 `collect-resume` 指标为 `test.pass=276/test.fail=0/test.finished=1`。不能凭这些中间结果认定整个测试通过或断定根因，本次未改备份模块及超时上限。
 
+【实测】随后按同一 240 秒上限隔离复跑原测试，50.99 秒通过（退出 0）。未稳定复现超时，尚不能断定根因；这次隔离通过不替代上面失败的整轮全量结果。
+
 ## 和设计不一致的
 
 没有改规则或旧农历。系统时区代替上游固定北京时间，是本任务明确要求的差异，见 [SOURCE.md](../../../system/services/time/vendor/mogo-calendar/SOURCE.md)。预算超限见上，不改任务书迁就实现。
+
+现有服务设计 §1.3 缺少本任务新增的能力，暂未与实现同步；受本任务文件范围限制，只准备补丁，没有修改原设计或放宽检查。
 
 ## 改过的已有测试
 
@@ -33,7 +37,7 @@
 
 ## 要用户定的
 
-完整数据与 60 KB 增量预算不能同时达到。实际增量为 181,984 B；是否调整预算或另开数据压缩任务，由主会话决定。本次没有默认提高上限。
+本次按原文直接编译静态表，增量未达到 60 KB 预算。实际增量为 181,984 B；是否调整预算或另开数据压缩任务，由主会话决定。本次没有默认提高上限。
 
 `calendar-3` 是否替换旧农历：2097-08-07 至 2097-09-05 共 30 天不同，参见完整日期表；本次保留旧实现。
 
@@ -106,4 +110,14 @@ Flash 复核：使用 ESP-IDF 的 Python（含 pyelftools）运行 `python -B do
 - 【实测】普通 `INK_WERROR=ON` 全构建退出 0；全量原话为 `99% tests passed, 2 tests failed out of 443`，耗时 1822.90 秒，退出 8。失败：`backup-restore-recovery (Timeout)`、`services-mid-capability-doc (Failed)`。
 - 【实测】原有 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 跳过（未配置中枢 Python 依赖），`memo-save-busy` 原本禁用；本次没有改这些设置或跳过规则。
 - 【实测】最后一次新测试运行：`100% tests passed out of 4`，18.04 秒；覆盖固定 50 天、全量 36,525 天、宜忌反向对照和真实能力调用。没有 node 的单独核查显示 `almanac-oracle (Skipped)` 并输出缺少 node 的原因；固定夹具测试仍可独立运行。
-- ASan、S31 宿主机测试：进行中。
+- 【实测】`INK_SANITIZE=ON`（AddressSanitizer + UndefinedBehaviorSanitizer），保留 `INK_WERROR=ON` 和原字体/依赖参数，构建目标 `almanac-model sim-almanac`；`taskpolicy -c utility ctest --test-dir build-asan -R '^almanac-' --output-on-failure -j2` 输出 `100% tests passed out of 4`，9.67 秒，退出 0，没有 sanitizer 报错。四项与普通新测试相同，均未跳过。
+- 【实测】`taskpolicy -c utility ctest --test-dir build -R '^backup-restore-recovery$' --output-on-failure -j1`：`100% tests passed out of 1`，51.03 秒，退出 0；没有扩大 240 秒上限。
+- 【实测】S31 宿主机独立工程：`taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"`；`taskpolicy -c utility cmake --build build-s31-host -j2`；`taskpolicy -c utility ctest --test-dir build-s31-host --output-on-failure -j2`。输出 `100% tests passed out of 78`，69.54 秒，退出 0。
+
+## 最终检查
+
+【实测】按总规则对基线至 HEAD 的完整提交差异扫描本机绝对路径和完整 MAC：零命中（`grep` 退出 1，表示无匹配）；`git diff --check` 通过。检查了差异统计：仅任务指定的代码、构建登记、AI 表、译文、生成能力表和本任务目录；没有构建产物、设计稿、超过 5 MB 的新文件或其它任务文件。
+
+【实测】10 个原文文件与上游固定提交的 Git 对象逐字节一致，cnlunar 包与其指定提交一致；旧 `lunar.c` / `time_service.c` 未变；报告的本地链接有效，待同步设计补丁可正常 `git apply --check`。无产品功能在固件预算失败后继续扩展。
+
+本地提交按里程碑保留；完整运行日志和固件测量产物在忽略目录 `work/almanac-2/`，未推送远端。
