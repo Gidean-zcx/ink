@@ -1808,3 +1808,11 @@ Wi-Fi 已关闭	Wi-Fi is off
 秒－	Sec -
 秒＋	Sec +
 谷歌拼音	Google Pinyin
+连接方式	Connection
+最近收到的文件	Recently received files
+设备热点	Device hotspot
+插电脑当 U 盘	Connect as USB drive
+可以管理当前家人的文件。关掉这页就断开。	Manage this family member’s files. Closing this page disconnects.
+文件已保存，可在文件中打开。	Saved. You can open it in Files.
+已收到 %u 个，%lld 字节	Received %u files, %lld bytes
+管理当前家人的文件。\n关掉这页就断开。	Manage this family member’s files.\nClosing this page disconnects.

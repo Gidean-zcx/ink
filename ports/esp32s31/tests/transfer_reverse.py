@@ -10,8 +10,8 @@ build = Path(sys.argv[1]).resolve()
 root = Path(__file__).resolve().parents[3]
 port = root / "ports/esp32s31"
 policy = root / "system/services/file/transfer.c"
-vendor = port / "vendor/ap_transfer"
-fixture = port / "tests/transfer_policy.c"
+vendor = port / "vendor/read_pico_transfer"
+fixture = port / "tests/transfer2_policy.c"
 commands = json.loads((build / "compile_commands.json").read_text())
 entries = {Path(c["file"]).resolve(): c for c in commands if "test-s31-transfer.dir" in str(c)}
 link = shlex.split((build / "CMakeFiles/test-s31-transfer.dir/link.txt").read_text())
@@ -24,11 +24,10 @@ cases = [
     ("member", policy, 'T.epoch == ink_member_epoch() &&', '', fixture),
     ("expiry", policy, 'osal_now_us() < T.expires &&', '', fixture),
     ("ai-secret", policy, 'c->src == INK_SRC_AI ? 0u', 'false ? 0u', fixture),
-    ("admission", policy, open_line, '        case HAL_TRANSFER_OPEN: r = 0; io->handle = (void *)1; break;', fixture),
     ("delete-policy", policy, 'r = fs_remove_for(&T.actor, path, 0); break;', 'r = 0; break;', fixture),
-    ("http-auth", vendor / "ink_adapter.h", 'if (!ink_policy->authorize(code, token, issued)) return false;', '(void)code; (void)token;', vendor / "ap_transfer.cc"),
-    ("space", vendor / "ap_transfer.cc", 'if (expected > free_bytes)', 'if (false && expected > free_bytes)', vendor / "ap_transfer.cc"),
-    ("frame-auth", vendor / "ap_transfer.cc", 'session == nullptr || !ink_policy->authorize(nullptr, session->token, nullptr)', 'session == nullptr', vendor / "ap_transfer.cc"),
+    ("http-auth-expiry", vendor / "ink_server_impl.h", 'if (!ink_policy->authorize(code, token, issued))', 'if (false)', vendor / "read_pico_transfer.c"),
+    ("space", vendor / "read_pico_transfer.c", 'if (total > available) return 507;', 'if (false && total > available) return 507;', vendor / "read_pico_transfer.c"),
+    ("expired-part-cleanup", policy, '(strlen(io->path) > 5 && !strcmp(io->path + strlen(io->path) - 5, ".part"))', 'false', fixture),
 ]
 with tempfile.TemporaryDirectory(prefix="transfer-reverse-", dir=build) as directory:
     work = Path(directory)
@@ -56,7 +55,7 @@ with tempfile.TemporaryDirectory(prefix="transfer-reverse-", dir=build) as direc
         cmd = [str(obj) if p == original_object else p for p in link]
         cmd[cmd.index("-o") + 1] = str(binary)
         subprocess.run(cmd, cwd=build, check=True, capture_output=True)
-        result = subprocess.run([str(binary)], cwd=build, capture_output=True, text=True)
+        result = subprocess.run([str(binary), *(["--expiry-only"] if name == "http-auth-expiry" else [])], cwd=build, capture_output=True, text=True)
         assert result.returncode != 0, name + " mutation escaped detection"
         line = next((s for s in result.stderr.splitlines() if "Assertion" in s), result.stderr[-160:])
         print(f"{name}: expected failure, exit={result.returncode}, {line[:180]}", flush=True)

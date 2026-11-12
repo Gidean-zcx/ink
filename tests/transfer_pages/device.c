@@ -11,9 +11,9 @@ static const char *wanted, *stage;
 static int touch_x, touch_y;
 static lv_area_t control_bounds;
 static unsigned sequence;
-static bool acknowledged;
+static bool acknowledged, large_text;
 static void options(void *arg) {
-    (void)arg; const char *s = getenv("INK_TRANSFER_SCENE");
+    (void)arg; large_text = getenv("INK_TRANSFER_LARGE") != NULL; const char *s = getenv("INK_TRANSFER_SCENE");
     snprintf(selected_scene, sizeof selected_scene, "%s", s ? s : "Transfer");
 }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
@@ -89,7 +89,8 @@ static void capture(const char *name) {
     if (!ready(name)) return;
     snprintf(scene, sizeof scene, "%s", name); on_ui(inspect);
     char metric[80]; snprintf(metric, sizeof metric, "test.snapshot.%s", name); ink_probe_count(metric);
-    if (!strcmp(name, selected_scene)) { vtk_event_at(vtk_now() + SIM_MS(1), frame, NULL); delay_ms(10); }
+    bool received_frame = !strcmp(selected_scene, "TransferReceived") && !strcmp(name, "Transfer") && P.received > 0;
+    if ((!strcmp(name, selected_scene) && (!P.received || strcmp(name, "Transfer"))) || received_frame) { vtk_event_at(vtk_now() + SIM_MS(1), frame, NULL); delay_ms(10); }
 }
 static void wireless_contract(void) {
     CHECK(P.active && !strcmp(P.code, saved_code) && !strcmp(P.address, saved_address), "address and digits come from transfer.status");
@@ -167,7 +168,9 @@ static double card_writes;
 static void sample_writes(void *arg) { (void)arg; sim_storage_report(); card_writes = sim_metric_value("sd.write_bytes"); }
 static bool busy_result(void) { return at("TransferUsbBusy") && strstr(g_snap, "有应用在用存储卡"); }
 static void run(void *arg) {
-    (void)arg; vtk_host_call(options, NULL); delay_ms(4000); test_start_home(); roots();
+    (void)arg; vtk_host_call(options, NULL); delay_ms(4000); test_start_home();
+    if (large_text) command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}");
+    roots();
     CHECK(strstr(g_snap, "transfer.open") && strstr(g_snap, "transfer.usb"), "adult file home exposes both entries to AI");
     wanted = "1 / 1"; on_ui(target); int pager_bottom = control_bounds.y2;
     CHECK(touch_x >= 0, "file home exposes its pagination");
@@ -180,6 +183,7 @@ static void run(void *arg) {
     capture("TransferLive"); exchange("finish");
     CHECK(WAIT_FOR(stopped(), 5000), "completed upload consumes authorization");
     CHECK(WAIT_FOR(at("Transfer") && strstr(g_snap, "已收到 1 个，12288 字节"), 5000), "completion returns to Transfer with actual size and count");
+    capture("Transfer");
     press("关闭"); ready("Files"); command("files.browse", "{\"path\":\"/me\"}"); ready("FileList");
     CHECK(WAIT_FOR(at("FileList") && strstr(g_snap, "传进来的"), 10000), "file app labels the real inbox as 传进来的");
     press("传进来的"); ready("FileList");

@@ -1,0 +1,18 @@
+{
+  "per_file": {
+    "ports/esp32s31/hal_transfer_s31.c": 11,
+    "system/services/file/transfer.c": 31,
+    "system/ui/shell/transfer_pages.c": 81,
+    "ports/esp32s31/main/CMakeLists.txt": 10,
+    "read_pico_transfer.c": 33,
+    "upload.html": 23,
+    "ink_adapter.h": 99,
+    "ink_server.h": 23,
+    "ink_server_impl.h": 84,
+    "ink_radio.cc": 86,
+    "pack_upload.py": 5,
+    "assets/i18n/en.tsv": 8
+  },
+  "method": "新增/替换行含空行和注释；测试与文档不计；扣除上游整文件相同行及新增的原文 FillSsid 六行；其余无线接线文件整份计入。",
+  "product_lines": 494
+}

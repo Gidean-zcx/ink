@@ -179,12 +179,13 @@ add_test(NAME unit-s31-vendor-power-source COMMAND ${Python3_EXECUTABLE} ${CMAKE
 # Transfer contract: actual vendor routes and system policy, fake HTTPD/files.
 enable_language(CXX)
 set(CMAKE_CXX_STANDARD 17)
-set(ap ${port}/vendor/ap_transfer)
+set(ap ${port}/vendor/read_pico_transfer)
 set(cjson ${root}/third_party/cjson)
-add_executable(test-s31-transfer transfer.cxx transfer_policy.c ${ap}/ap_transfer.cc ${cjson}/cJSON.c
-    ${root}/system/util/ink_json.c ${ap}/zlib/adler32.c ${ap}/zlib/crc32.c ${ap}/zlib/inffast.c
-    ${ap}/zlib/inflate.c ${ap}/zlib/inftrees.c ${ap}/zlib/zutil.c)
-target_include_directories(test-s31-transfer PRIVATE transfer_stub ${ap} ${cjson} ${ap}/zlib ${root}/system/include ${root}/third_party/jsmn)
+add_executable(test-s31-transfer transfer2.cxx transfer2_policy.c ${ap}/read_pico_transfer.c ${cjson}/cJSON.c
+    ${root}/system/util/ink_json.c)
+target_include_directories(test-s31-transfer PRIVATE transfer2_stub ${ap} ${cjson} ${root}/system/include ${root}/third_party/jsmn)
+target_compile_definitions(test-s31-transfer PRIVATE ESP_PLATFORM=1 KIIKO_BOARD_METALIO47=0)
+set_source_files_properties(${ap}/read_pico_transfer.c PROPERTIES COMPILE_OPTIONS "-Wno-unused-function")
 target_link_libraries(test-s31-transfer PRIVATE m)
 add_test(NAME unit-s31-transfer COMMAND test-s31-transfer)
 add_test(NAME unit-s31-transfer-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/transfer_reverse.py ${CMAKE_BINARY_DIR})
@@ -202,3 +203,8 @@ target_include_directories(test-s31-google-ime PRIVATE ${root}/system/include)
 include(${root}/system/services/text/google_build.cmake)
 ink_google_pinyin(test-s31-google-ime)
 add_test(NAME s31-google-ime COMMAND test-s31-google-ime ${root}/assets/ime/dict_pinyin.dat)
+# Browser TXT extraction uses the imported page, without network or device access.
+find_program(INK_TRANSFER_NODE node)
+if(INK_TRANSFER_NODE)
+  add_test(NAME unit-s31-transfer-toc COMMAND ${INK_TRANSFER_NODE} ${root}/docs/tasks/transfer-2/check-transfer.cjs)
+endif()

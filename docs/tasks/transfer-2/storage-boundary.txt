@@ -1,0 +1,1 @@
+read_pico_transfer.c.obj: nm -u finds no direct libc storage, NVS, Wi-Fi initialization or clock-write symbols.

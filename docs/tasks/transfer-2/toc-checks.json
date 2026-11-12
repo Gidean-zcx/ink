@@ -1,0 +1,48 @@
+{
+  "source": "kiikoread-xiugai 746ce316, upload.html functions unchanged",
+  "networkCalls": 0,
+  "results": [
+    {
+      "name": "UTF8",
+      "detected": "utf-8",
+      "chapters": 8,
+      "byteOffsetsValid": true
+    },
+    {
+      "name": "UTF8-BOM",
+      "detected": "utf-8",
+      "chapters": 8,
+      "byteOffsetsValid": true
+    },
+    {
+      "name": "UTF16LE-BOM",
+      "detected": "utf-16le",
+      "chapters": 8,
+      "byteOffsetsValid": true
+    },
+    {
+      "name": "UTF16BE-BOM",
+      "detected": "utf-16be",
+      "chapters": 8,
+      "byteOffsetsValid": true
+    },
+    {
+      "name": "UTF16LE-no-BOM",
+      "detected": "utf-16le",
+      "chapters": 8,
+      "byteOffsetsValid": true
+    },
+    {
+      "name": "UTF16BE-no-BOM",
+      "detected": "utf-16be",
+      "chapters": 8,
+      "byteOffsetsValid": true
+    },
+    {
+      "name": "GBK",
+      "detected": "gbk",
+      "chapters": 8,
+      "byteOffsetsValid": true
+    }
+  ]
+}
