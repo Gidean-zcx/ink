@@ -1294,6 +1294,8 @@ if(INK_HAVE_FONTS)
   # The no-dictionary scenarios: the asset pack's word list is shadowed by an empty one (searched first), so only the
   # program's small table is left, as before the word list shipped in the pack.
   file(WRITE ${CMAKE_BINARY_DIR}/assets-noime/ime/base.ikd "")
+  execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/asset_pack.py
+    ${CMAKE_BINARY_DIR}/assets-noime --out ${CMAKE_BINARY_DIR}/assets-noime COMMAND_ERROR_IS_FATAL ANY)
   foreach(v main nocard baddict)
     set(text_assets --assets ${INK_ASSETS_DIR})
     if(NOT v STREQUAL main)

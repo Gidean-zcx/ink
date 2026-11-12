@@ -57,6 +57,7 @@ static const void *mapped(int i, size_t *size) {
     size_t n = AS[i].size;
     if (!AS[i].compressed) { if (size) *size = n; return p; }
     if (n < 4 || !word(p) || word(p) > 5 * 1024 * 1024) return NULL;
+    hal_asset_access(p, n);
     size_t want = word(p), in = n - 4, out = want;
     const char *prev = osal_mem_tag("assets");
     uint8_t *buf = osal_malloc(want, OSAL_MEM_EXTERNAL);
