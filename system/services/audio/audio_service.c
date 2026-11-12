@@ -36,6 +36,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include "speex/speex_resampler.h"
+#include "speex/ink_quality.h"
 
 #include "ink/sys/i18n.h"
 #include "ink/hal_audio.h"
@@ -59,6 +61,7 @@
 #define MAX_FOCUS 6
 #define JB_MAX 512                    /* jitter buffer: frames (30 s; hubs send TTS faster than real time) */
 #define JB_PREBUFFER 6                /* 360 ms: history writes change the shared simulation RNG; seed 29 exhausts 300 ms on LTE. */
+#define PCM_PREBUFFER 9               /* 540 ms of already filtered PCM, in the PSRAM queue. */
 #define PLC_MAX 3                     /* conceal at most this many missing frames in a row */
 #define BITRATE 24000
 #define WAIT_HOLD_US 300000 /* a stream waiting for data keeps the output open this long, then it closes */
@@ -69,6 +72,7 @@
 typedef struct {
     uint8_t *data;
     uint16_t len;
+    uint32_t rate; /* nonzero: len mono PCM samples, otherwise len Opus bytes */
 } jb_frame_t;
 
 static struct {
@@ -104,6 +108,7 @@ static struct {
     int jb_head, jb_count, plc_run;
     hal_opus_dec_t *dec;
     int dec_stream; /* the stream the decoder state belongs to */
+    int pcm_stream; /* PCM never uses Opus packet-loss concealment. */
     int16_t *pcm; /* staging: one decoded frame or a tone (PSRAM); service task only */
     int pcm_off, pcm_len;
     int staged_stream; /* stream the staged samples belong to (0 = a tone) */
@@ -145,6 +150,11 @@ static struct {
     bool boosting;
     hal_cpu_boost_t *boost;
 } AU;
+static struct {
+    osal_mutex_t *lock; /* producers only; the output task never takes it */
+    SpeexResamplerState *resampler;
+    int stream;
+} PC INK_PSRAM_BSS;
 static bool g_capture_revoked INK_PSRAM_BSS; /* under AU.lock; a handoff cannot be undone by switching back */
 static char g_capture_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
 static bool g_output_revoked INK_PSRAM_BSS;
@@ -392,7 +402,7 @@ static bool stage_next(void) {
         unlock();
         return false;
     }
-    if (!AU.started && AU.jb_count < JB_PREBUFFER && !AU.finishing) {
+    if (!AU.started && AU.jb_count < (AU.pcm_stream == AU.stream ? PCM_PREBUFFER : JB_PREBUFFER) && !AU.finishing) {
         unlock();
         return false;
     }
@@ -408,7 +418,7 @@ static bool stage_next(void) {
         AU.jb_count--;
         AU.plc_run = 0;
         AU.stream_played++;
-    } else if (AU.finishing || AU.plc_run >= PLC_MAX) {
+    } else if (AU.finishing || AU.plc_run >= PLC_MAX || AU.pcm_stream == sid) {
         unlock();
         return false;
     } else {
@@ -416,15 +426,21 @@ static bool stage_next(void) {
         ink_probe_count("audio.play_concealed_frames"); /* the network did not deliver in time */
     }
     unlock();
-    if (AU.dec && AU.dec_stream != sid) { /* a new stream starts from a fresh decoder state */
-        hal_opus_dec_free(AU.dec);
-        AU.dec = NULL;
+    int n;
+    if (f.rate) {
+        n = f.len;
+        memcpy(AU.pcm, f.data, (size_t)n * sizeof(int16_t));
+    } else {
+        if (AU.dec && AU.dec_stream != sid) { /* a new stream starts from a fresh decoder state */
+            hal_opus_dec_free(AU.dec);
+            AU.dec = NULL;
+        }
+        if (!AU.dec) {
+            AU.dec = hal_opus_dec_new();
+            AU.dec_stream = sid;
+        }
+        n = AU.dec ? hal_opus_decode(AU.dec, have ? f.data : NULL, have ? f.len : 0, AU.pcm) : -1;
     }
-    if (!AU.dec) {
-        AU.dec = hal_opus_dec_new();
-        AU.dec_stream = sid;
-    }
-    int n = AU.dec ? hal_opus_decode(AU.dec, have ? f.data : NULL, have ? f.len : 0, AU.pcm) : -1;
     osal_free(f.data);
     if (n <= 0) return false;
     apply_volume(AU.pcm, n);
@@ -446,8 +462,9 @@ static bool stage_next(void) {
 /* Would the stream play now if the output were open? (stage_next's conditions, nothing consumed) */
 static bool stream_wants_output(void) {
     lock();
-    bool want = AU.stream && (AU.started ? AU.jb_count > 0 || (!AU.finishing && AU.plc_run < PLC_MAX)
-                                         : AU.jb_count >= JB_PREBUFFER || (AU.finishing && AU.jb_count > 0));
+    bool pcm = AU.pcm_stream == AU.stream;
+    bool want = AU.stream && (AU.started ? AU.jb_count > 0 || (!AU.finishing && AU.plc_run < PLC_MAX && !pcm)
+                                         : AU.jb_count >= (pcm ? PCM_PREBUFFER : JB_PREBUFFER) || (AU.finishing && AU.jb_count > 0));
     unlock();
     return want;
 }
@@ -1185,7 +1202,75 @@ int ink_audio_stream_push(int id, const uint8_t *opus, size_t len) {
     return 0;
 }
 
+/* Producer lock held. Filtering never holds AU.lock or runs in the output task. */
+static int queue_pcm(int id, const int16_t *mono, size_t frames) {
+    int16_t *copy = osal_malloc(FRAME * sizeof *copy, OSAL_MEM_EXTERNAL);
+    if (!copy) return -1;
+    spx_uint32_t in = (spx_uint32_t)frames, out = FRAME;
+    int err = speex_resampler_process_int(PC.resampler, 0, mono, &in, copy, &out);
+    /* Same conservative scalar/PSRAM estimate as Q4, scaled by the actual FIR length. */
+    osal_cost_cycles((uint64_t)out * 3200 * (2 * speex_resampler_get_input_latency(PC.resampler)) / 176);
+    lock();
+    if (err || in != frames || AU.stream != id || AU.finishing || AU.jb_count >= JB_MAX || !playback_owner_matches(&g_stream_owner, AU.prio)) {
+        unlock();
+        osal_free(copy);
+        return -1;
+    }
+    AU.jb[(AU.jb_head + AU.jb_count) % JB_MAX] = (jb_frame_t){.data = (uint8_t *)copy, .len = (uint16_t)out, .rate = HAL_AUDIO_RATE};
+    AU.jb_count++;
+    AU.pcm_stream = id;
+    unlock();
+    osal_sem_give(AU.wake);
+    return 0;
+}
+
+static void pcm_close(void) { /* producer lock held */
+    if (PC.resampler) speex_resampler_destroy(PC.resampler);
+    PC.resampler = NULL;
+    PC.stream = 0;
+}
+
+int ink_audio_stream_push_pcm(int id, const int16_t *pcm, size_t frames, unsigned rate, unsigned channels) {
+    if (!pcm || !frames || rate < 8000 || rate > 96000 || (channels != 1 && channels != 2) || frames > rate * 60 / 1000) return -1;
+    lock();
+    if (!PC.lock) PC.lock = osal_mutex_create(); /* PCM only: leave the voice-only internal budget unchanged. */
+    osal_mutex_t *guard = PC.lock;
+    unlock();
+    if (!guard) return -1;
+    osal_mutex_lock(guard, OSAL_WAIT_FOREVER);
+    lock();
+    bool valid = AU.stream == id && !AU.finishing && AU.jb_count < JB_MAX && playback_owner_matches(&g_stream_owner, AU.prio);
+    unlock();
+    int rc = -1, err;
+    int16_t *mono = valid ? osal_malloc(frames * sizeof *mono, OSAL_MEM_EXTERNAL) : NULL;
+    if (mono) {
+        if (PC.stream != id) pcm_close();
+        if (!PC.resampler) PC.resampler = speex_resampler_init(1, rate, HAL_AUDIO_RATE, INK_AUDIO_PCM_QUALITY, &err);
+        PC.stream = id;
+        for (size_t i = 0; i < frames; i++) mono[i] = channels == 1 ? pcm[i] : (int16_t)(((int)pcm[2 * i] + pcm[2 * i + 1]) / 2);
+        if (PC.resampler && !speex_resampler_set_rate(PC.resampler, rate, HAL_AUDIO_RATE)) rc = queue_pcm(id, mono, frames);
+        osal_free(mono);
+    }
+    if (rc) pcm_close();
+    osal_mutex_unlock(guard);
+    return rc;
+}
+
+static void pcm_end(int id, bool drain) {
+    lock();
+    osal_mutex_t *guard = AU.pcm_stream == id ? PC.lock : NULL;
+    unlock();
+    if (!guard) return;
+    osal_mutex_lock(guard, OSAL_WAIT_FOREVER);
+    if (PC.stream == id && PC.resampler) {
+        if (drain) queue_pcm(id, NULL, (size_t)(2 * speex_resampler_get_input_latency(PC.resampler)));
+        pcm_close();
+    }
+    osal_mutex_unlock(guard);
+}
+
 void ink_audio_stream_finish(int id) {
+    pcm_end(id, true);
     lock();
     if (AU.stream == id) AU.finishing = true;
     unlock();
@@ -1200,6 +1285,7 @@ void ink_audio_stream_abort(int id) {
         AU.finishing = AU.started = false;
     }
     unlock();
+    pcm_end(id, false);
     osal_sem_give(AU.wake);
 }
 

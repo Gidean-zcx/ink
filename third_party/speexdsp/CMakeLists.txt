@@ -1,0 +1,5 @@
+add_library(ink_resampler STATIC resample.c)
+target_include_directories(ink_resampler PUBLIC include PRIVATE ../../platform/include)
+target_compile_definitions(ink_resampler PRIVATE FLOATING_POINT OS_SUPPORT_CUSTOM EXPORT=)
+target_compile_options(ink_resampler PRIVATE -w)
+target_link_libraries(ink_resampler PUBLIC m)

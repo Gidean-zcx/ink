@@ -73,6 +73,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 # ---------------------------------------------------------------- third party
+add_subdirectory(third_party/speexdsp)
 add_library(ink_tlsf STATIC third_party/tlsf/tlsf.c)
 target_include_directories(ink_tlsf PUBLIC third_party/tlsf)
 
@@ -304,7 +305,7 @@ add_library(ink_system STATIC
   system/ui/app.c
   system/apps/remote/remote.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn third_party/stb)
-target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256 PRIVATE ink_image_codec)
+target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256 PRIVATE ink_image_codec ink_resampler)
 # The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
 # leak into the system or the apps), and it puts the port after the system on every link line, which
 # GNU ld needs for HAL functions only the system references (e.g. hal_cell_*).
@@ -2095,6 +2096,20 @@ add_test(NAME music-product COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}
 set_tests_properties(music-product PROPERTIES TIMEOUT 180)
 
 add_dependencies(sim-music ink_fonts ink_ui_fonts ink_icons ink_test_content)
+
+ink_sim_executable(sim-audio-out tests/audio_out/device.c)
+target_link_libraries(sim-audio-out PRIVATE ink_apps ink_system)
+add_dependencies(sim-audio-out ink_fonts ink_ui_fonts ink_icons ink_test_content)
+add_test(NAME audio-out COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/audio_out/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(audio-out PROPERTIES TIMEOUT 240)
+add_test(NAME audio-out-alias-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/audio_out/control.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(audio-out-alias-reverse PROPERTIES TIMEOUT 120)
+add_executable(test-audio-out-bench tests/audio_out/bench.c system/services/audio/codec_formats.c
+  system/services/audio/vendor/kiikoread/metadata.c system/services/audio/vendor/kiikoread/music_lyrics.c)
+target_include_directories(test-audio-out-bench PRIVATE platform/include system/include)
+target_compile_options(test-audio-out-bench PRIVATE ${INK_WARN} -UNDEBUG)
+target_link_libraries(test-audio-out-bench PRIVATE ink_resampler)
+add_dependencies(sim-audio-out test-audio-out-bench)
 
 ink_sim_executable(sim-games2 tests/games2/device.c)
 target_link_libraries(sim-games2 PRIVATE ink_apps ink_system)

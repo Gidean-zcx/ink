@@ -1,0 +1,52 @@
+{
+  "before": {
+    "tone1k": {
+      "snr_db": 15.223100882666339,
+      "attenuation_db": 0.5140041726767565
+    },
+    "tone10k": {
+      "snr_db": 6.022725015951448,
+      "attenuation_db": 0.5902266216240099
+    }
+  },
+  "after": {
+    "tone1k": {
+      "underruns": 1,
+      "underrun_ms": 15,
+      "snr_db": 18.173449530092107,
+      "attenuation_db": 0.06599182578169949,
+      "signal_threshold_met": false
+    },
+    "tone10k": {
+      "underruns": 0,
+      "underrun_ms": 0,
+      "snr_db": -4.589181519416153,
+      "attenuation_db": 88.54301982436233,
+      "signal_threshold_met": true
+    },
+    "scenario": {
+      "underruns": 44,
+      "underrun_ms": 660,
+      "phase_frequencies": false,
+      "fresh_fir_prefixes": true
+    },
+    "music": {
+      "underruns": 1,
+      "underrun_ms": 15
+    }
+  },
+  "scenario": {
+    "audio.speaker.underrun_ms": 660,
+    "audio.speaker.underruns": 44,
+    "test.fail": 1,
+    "test.finished": 1,
+    "test.pass": 53,
+    "test.wav.flac": 47760,
+    "test.wav.member": 212261,
+    "test.wav.next": 111288,
+    "test.wav.resume": 172726,
+    "test.wav.seek": 85823,
+    "test.wav.speech": 125955
+  },
+  "boundary": "同一合成双声道音乐的 speaker.wav；改前使用 S31 相同固定点 Opus 源码。模拟器计时不是实机。"
+}

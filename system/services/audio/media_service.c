@@ -283,7 +283,11 @@ static void pump(void *arg) { /* executor: keep the queue filled, see how it goe
             ink_audio_stream_finish(M.stream);
             break;
         }
-        if (!playback_current() || ink_audio_stream_push(M.stream, data, len) != 0) break;
+        if (!playback_current()) break;
+        unsigned rate = ink_format_rate(M.r), channels = ink_format_channels(M.r);
+        int pushed = rate ? ink_audio_stream_push_pcm(M.stream, (const int16_t *)data, len / (channels * sizeof(int16_t)), rate, channels)
+                          : ink_audio_stream_push(M.stream, data, len);
+        if (pushed != 0) break;
         queued++;
     }
     uint32_t now_ms = M.base_ms + played * OGG_FRAME_MS;
