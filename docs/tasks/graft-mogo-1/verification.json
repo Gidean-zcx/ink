@@ -1,0 +1,78 @@
+{
+  "task_status": "incomplete",
+  "baseline": "6171c2bf8d59238c95f2d548663f8b2ab3c6f43a",
+  "implementation_commit": "bdf2b2b188dec8928a92e02728295d7e08112666",
+  "normal_full": {
+    "passed": 431,
+    "skipped": 3,
+    "failed": 0,
+    "summary": "100% tests passed out of 434",
+    "seconds": 806.12
+  },
+  "asan_ubsan_full": {
+    "passed": 433,
+    "skipped": 3,
+    "failed": 0,
+    "summary": "100% tests passed out of 436",
+    "seconds": 1480.7
+  },
+  "normal_final_focused": {
+    "passed": 13,
+    "skipped": 0,
+    "failed": 0,
+    "summary": "100% tests passed out of 13",
+    "seconds": 14.93
+  },
+  "asan_final_focused": {
+    "passed": 13,
+    "skipped": 0,
+    "failed": 0,
+    "summary": "100% tests passed out of 13",
+    "seconds": 11.39
+  },
+  "s31_host": {
+    "passed": 75,
+    "skipped": 0,
+    "failed": 0,
+    "summary": "100% tests passed out of 75",
+    "seconds": 107.66
+  },
+  "s31_firmware": {
+    "exit": 0,
+    "bytes": 4831360,
+    "sha256": "9e84349f4ea2f39a63eb7a0ffba708d5bd39f0929ad0bcb535ae2beb159b4511",
+    "slot_bytes": 5242880,
+    "remaining_bytes": 411520,
+    "compiler_warning_lines": 0,
+    "cmake_warning_count": 6,
+    "mogo_linked": false,
+    "graft_symbols_in_final_elf": 0,
+    "baseline_size_delta": null
+  },
+  "gcccheck": {
+    "reported_compiled": 10,
+    "findings": 0,
+    "header_skips": [
+      "third_party/mogo/main/book/zip_reader.c: host zlib.h unavailable to newlib"
+    ]
+  },
+  "reverse_controls": {
+    "utf16": "unpatched native decoder failed at chapter/byte-position assertion, exit 4",
+    "c_abi": "unguarded C++ declaration rejected for conflicting language linkage"
+  },
+  "provenance": {
+    "git_objects_verified": 109,
+    "adapted_files": 3,
+    "upstream_added_lines": 32,
+    "upstream_removed_lines": 28,
+    "graft_lines": 238
+  },
+  "mogo_acceptance": {
+    "real_application": false,
+    "screenshots": false,
+    "fifty_page_turns": false,
+    "memory_peaks": null,
+    "page_turn_latency": null
+  },
+  "privacy_matches": 0
+}

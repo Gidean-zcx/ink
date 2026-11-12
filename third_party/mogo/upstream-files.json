@@ -1,0 +1,550 @@
+{
+  "commit": "864f2f9dc75980a67d2d6b67b17365020b7a50ce",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "8d32fbcfba1f738a1d10f9bf62636137f240e41ff01ede576fcce1dc36626e64",
+      "bytes": 3383
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "4786cb1070b780dec8bf3b2e2582d58cc763419984b2fa691a6b27a6eb0afb0e",
+      "bytes": 9574
+    },
+    {
+      "path": "components/ble_page_turner/src/ble_page_turner.c",
+      "sha256": "aecedd6508723fad1e948ab8bb67e9ebdc9a24341dcc04aea7d4bbc903616ef2",
+      "bytes": 118777
+    },
+    {
+      "path": "components/board_support/include/board_sd.h",
+      "sha256": "c2818a9bba66afc6c6a392d17f7d77e82d8582e76e9c57035dd89bad521017c5",
+      "bytes": 2378
+    },
+    {
+      "path": "licenses/Apache-2.0.txt",
+      "sha256": "c2ede378097fb1fcdcd128c47880c918663f475eba53e1e2dc59d95b537c8809",
+      "bytes": 11340
+    },
+    {
+      "path": "licenses/kiikoread-Personal-Study-1.0.txt",
+      "sha256": "fd3c1789d4c0d4d4fd21d485666a2a7058bad0c74fd3ea875b346dcc444f8e52",
+      "bytes": 7413
+    },
+    {
+      "path": "main/apps/app_book.c",
+      "sha256": "1e495076222fa3b83b2ee6272c8a5dbd7eeb2cdfa942331bce891abb13bb8530",
+      "bytes": 438420
+    },
+    {
+      "path": "main/assets/ui_icons.h",
+      "sha256": "ed9cc9dccdfa490f3ee5569c5eb00ee895ae417c0648f5ecd38ef69335f8c563",
+      "bytes": 834162
+    },
+    {
+      "path": "main/book/book_bookmark_format.h",
+      "sha256": "d7333912ed76eb5abd2dcecead8363482446f3305a0969506dd0e57f9a17d5fc",
+      "bytes": 687
+    },
+    {
+      "path": "main/book/book_collection.c",
+      "sha256": "abc736b73468e803c6abdce5cd83e0f2fc3163398d75a70280eb2955dcc79de7",
+      "bytes": 25517
+    },
+    {
+      "path": "main/book/book_collection.h",
+      "sha256": "7eac1399271c923139018a363cb38d05c4147d4de20fe4e2ecb783dfa3962983",
+      "bytes": 4393
+    },
+    {
+      "path": "main/book/book_cover.h",
+      "sha256": "02670e8bec8a9c980b2337c8b14f6e87146ffe7f7bf4597c7ce78f1820420212",
+      "bytes": 3190
+    },
+    {
+      "path": "main/book/book_cover_jobs.h",
+      "sha256": "0ec422a038664b069242957142bb7e7dc3322b317a86fd68072fadffbe69a673",
+      "bytes": 1398
+    },
+    {
+      "path": "main/book/book_epub.c",
+      "sha256": "0cf5f944ff85fd6e357d5719d2f3adc7261594ae629c610b55e9d1b0ddf19641",
+      "bytes": 117689
+    },
+    {
+      "path": "main/book/book_epub.h",
+      "sha256": "fbc9e150d6a82e2e48bf72efed4998898e19a4366151f968f38e24088c60e348",
+      "bytes": 5398
+    },
+    {
+      "path": "main/book/book_file_path.h",
+      "sha256": "f47a051a73a9793c43d16e6f7b45ceb728582067065b65a3757f7a1197ecea04",
+      "bytes": 842
+    },
+    {
+      "path": "main/book/book_font_size.h",
+      "sha256": "a73ad4072236dc2fe31322e284048dcc579262dee324a1d9fa46915ed38a1738",
+      "bytes": 349
+    },
+    {
+      "path": "main/book/book_index_cache.c",
+      "sha256": "3beba38274dc0e96a27e8f4d7aa70318182266720e1cba97a1ec11fdb1f91fe3",
+      "bytes": 3336
+    },
+    {
+      "path": "main/book/book_index_cache.h",
+      "sha256": "d5aee566d7fe85b98d350041b93af7e78404a4672a1a15b7f8f46c064451bef6",
+      "bytes": 1461
+    },
+    {
+      "path": "main/book/book_layout.c",
+      "sha256": "b663d43a2e05a7fd8cbf9ead563b7d4157b708741c5fd34cdd32ac6d678ce003",
+      "bytes": 70155
+    },
+    {
+      "path": "main/book/book_layout.h",
+      "sha256": "dbffb9465b306c3db943e7cd107d54fd2f4168e3f9690e45c507e316758f0c65",
+      "bytes": 11020
+    },
+    {
+      "path": "main/book/book_path.h",
+      "sha256": "b4b2cb811147c7808cdf8b6efe1b3c6748ad26659bcda3079a944cab4f386f08",
+      "bytes": 310
+    },
+    {
+      "path": "main/book/book_policy.h",
+      "sha256": "7f98c8b52bbe7915396aacf1e4d05e8e14fbabd1380b9bed758a891f4444ad8c",
+      "bytes": 6348
+    },
+    {
+      "path": "main/book/book_progress.c",
+      "sha256": "e78ecefe56ee6c8e61d6315ef4185cf09ea0a829e839b35c7aed3f811ce713a7",
+      "bytes": 11535
+    },
+    {
+      "path": "main/book/book_progress.h",
+      "sha256": "c4cd76350c36a18e8ec8000030cee8d8e165d3f6de69f5b213119322535d4a43",
+      "bytes": 4715
+    },
+    {
+      "path": "main/book/book_reader_input.h",
+      "sha256": "b1064098f223dce2d3b618ffc9b6ee8b09ed80b414ae83e90f101bf8a84707e8",
+      "bytes": 1655
+    },
+    {
+      "path": "main/book/book_shelf_categories.h",
+      "sha256": "e5e41dcf0de37185b6dca4d99242e8f72e1994e6327fe7c77e05e08e7bbd1614",
+      "bytes": 1186
+    },
+    {
+      "path": "main/book/book_shelf_category_state.c",
+      "sha256": "49e4772b506aa28d7e4eff2ca79318f28c49088be6add5b0e380b9b88bc908d2",
+      "bytes": 11955
+    },
+    {
+      "path": "main/book/book_shelf_category_state.h",
+      "sha256": "2a0aa29bba9fd439579724361d7c1d99e62ea69c78182b8d77038875fad6052e",
+      "bytes": 7108
+    },
+    {
+      "path": "main/book/book_shelf_covers.c",
+      "sha256": "846af85edbd39d9e7027684c7b25e674e97506a896cd9276638367e6e57174c4",
+      "bytes": 5366
+    },
+    {
+      "path": "main/book/book_shelf_covers.h",
+      "sha256": "6b396b2c92f22793a7e5822798c1922f66599ea75f481276814b002d5304191c",
+      "bytes": 5677
+    },
+    {
+      "path": "main/book/book_shelf_manage.c",
+      "sha256": "af9f80421bfa0521a66fa7f80c0750f43b9d86b116932ffc3c7cbd83f74e5950",
+      "bytes": 4548
+    },
+    {
+      "path": "main/book/book_shelf_manage.h",
+      "sha256": "bc068ae94841da52624399d1b5fad01ee9f935d4916e393e9c7389fe6f8d5dfb",
+      "bytes": 3432
+    },
+    {
+      "path": "main/book/book_shelf_model.c",
+      "sha256": "c7a0900df5b333886c40310a80aa79e4c10658076d650187cfddc91220e20ffe",
+      "bytes": 3309
+    },
+    {
+      "path": "main/book/book_shelf_model.h",
+      "sha256": "f73153eb6de577f8ca33c6473ee4f4548397b84063902639d28e8bb491f0429a",
+      "bytes": 4282
+    },
+    {
+      "path": "main/book/book_shelf_scan.c",
+      "sha256": "2fed4b04d57d9161c26b1008e8030bcc789664607b78e2fc6d32337fe0a10c31",
+      "bytes": 10660
+    },
+    {
+      "path": "main/book/book_shelf_scan.h",
+      "sha256": "78692b83dfedc603589deb3790670c4e24ee613728f9919aed8584cfb1eb7eeb",
+      "bytes": 3036
+    },
+    {
+      "path": "main/book/book_source.c",
+      "sha256": "c0a609eb4025a544431ba1d5cc9f4b8904527b712efea725d4b82afe97bfd026",
+      "bytes": 6884
+    },
+    {
+      "path": "main/book/book_source.h",
+      "sha256": "db65757d9974f6b625e8dde0e937184329d1ba61835169e9ea94bf98de2d9232",
+      "bytes": 4351
+    },
+    {
+      "path": "main/book/book_source_internal.h",
+      "sha256": "eb0a69cfb43520eb3a6695c2cf37d235b0fc1e67de4e5b367e4089426be4c6d0",
+      "bytes": 1331
+    },
+    {
+      "path": "main/book/book_store.c",
+      "sha256": "94336ef7e32ea1d2fe392df550049b4dc769e45160eab5db72f9def300bac585",
+      "bytes": 9047
+    },
+    {
+      "path": "main/book/book_store.h",
+      "sha256": "cd2bb6b206686a8a475e4123c63cde013a1007a46bf0a381e8f1d92ef16c3994",
+      "bytes": 3290
+    },
+    {
+      "path": "main/book/book_txt.c",
+      "sha256": "0607e49e76b57922e4a30f16757ca715688ce1fb700c6e28266d42fc05ab8fd6",
+      "bytes": 14917
+    },
+    {
+      "path": "main/book/gbk.c",
+      "sha256": "9f51727255148ce5bd64cdf614c8886848d78ae842ca798cf4f2dc53b7bd4c25",
+      "bytes": 1530
+    },
+    {
+      "path": "main/book/gbk.h",
+      "sha256": "f61d98da87514277f6f2645980f493fc6a2424f5aa671cde8e1dc05ad8f3a49e",
+      "bytes": 789
+    },
+    {
+      "path": "main/book/gbk_table.h",
+      "sha256": "4df55b84ae3287c8e802c14a2b6de477ef84e5b47b10e885a7048848404d5518",
+      "bytes": 175412
+    },
+    {
+      "path": "main/book/html_text.c",
+      "sha256": "995e8f60156836cee020e67ec9e6a310d8fb25533e7b9ea690eeb50d0996ef9a",
+      "bytes": 48034
+    },
+    {
+      "path": "main/book/html_text.h",
+      "sha256": "fb600c1cd076324557d6d7d48a5819b92b845c671f39d48ff6cc039ddd1b5489",
+      "bytes": 7117
+    },
+    {
+      "path": "main/book/reader_book.h",
+      "sha256": "b7dcba90709b08b5d46234aeeb7d2b838572c047d23c62f28cd82685201e2889",
+      "bytes": 1011
+    },
+    {
+      "path": "main/book/reader_position.h",
+      "sha256": "c5f335a708fa3fc3b72d63b14255475dca7be67941f77cf5246b2555439b47a1",
+      "bytes": 460
+    },
+    {
+      "path": "main/book/reader_reflow.c",
+      "sha256": "645c47208fa70932798198e976358e9796bf7a2135806fb8d5b8fa947ab22529",
+      "bytes": 6955
+    },
+    {
+      "path": "main/book/reader_reflow.h",
+      "sha256": "cb15357fc659e2c96107027abbbd988d4d5b1c4a883ed36f3f0762eedf39874e",
+      "bytes": 4743
+    },
+    {
+      "path": "main/book/reader_session.c",
+      "sha256": "fcbc9c1b63ec3ea10a305514825a6fcd4e0ba282bf882ce51c7f7a0e1502bd4a",
+      "bytes": 2439
+    },
+    {
+      "path": "main/book/reader_session.h",
+      "sha256": "f43d3e145f269eef79e4b41306abd0be9ff671c41c249000d16ea89b6ba708ed",
+      "bytes": 3610
+    },
+    {
+      "path": "main/book/reader_session_layout.h",
+      "sha256": "3fdc4c04ac020261b8a45d5666ce036eb5a5bb201a5d8494660bedccfb32d5ef",
+      "bytes": 1092
+    },
+    {
+      "path": "main/book/reader_turn.c",
+      "sha256": "63c32f8e239bb3daf8336e44f2568142c7b16106b8f50d63cef5e4bf885e41f7",
+      "bytes": 1726
+    },
+    {
+      "path": "main/book/reader_turn.h",
+      "sha256": "0ba183975c8d7990b55d959c006992a724e89df503da4367d31bcb9989f63801",
+      "bytes": 3093
+    },
+    {
+      "path": "main/book/zip_reader.c",
+      "sha256": "80d91a7633534f4c0b991b8d2694dd9d41afc4a36f20f4691ef8d2e55db21619",
+      "bytes": 15048
+    },
+    {
+      "path": "main/book/zip_reader.h",
+      "sha256": "ed90f317413058f4d8f0da9777ba8bff03599ed6cb69b73a356fce522078ef98",
+      "bytes": 2380
+    },
+    {
+      "path": "main/diagnostics/reader_memory.h",
+      "sha256": "709020341e651a50334153036e1b640ac54d7964e1be4980b71deec6ddf275be",
+      "bytes": 6119
+    },
+    {
+      "path": "main/diagnostics/reader_perf.h",
+      "sha256": "8ba0da55cf27ad9b19bf204e6f06346eadff6ac383f03a38c601a6ded37b95ba",
+      "bytes": 1920
+    },
+    {
+      "path": "main/font/fallback.h",
+      "sha256": "555e4ae7837166f75bacc18033942ffee07c39dd23eb2747e08a6ce1bb853d5f",
+      "bytes": 37792
+    },
+    {
+      "path": "main/image/book_image_header.c",
+      "sha256": "234fd0264b28e9224ae9feb55c330fea47e738fc3bb8459ac7a54c72a33a28f8",
+      "bytes": 4377
+    },
+    {
+      "path": "main/image/image_decode.h",
+      "sha256": "2853bfe11e1069be071eaa6d8f40bea54f2920eb9db71ca1b6588821bab4a876",
+      "bytes": 2518
+    },
+    {
+      "path": "main/settings/settings.h",
+      "sha256": "b4bc5b3c5e9ac1865a349a000e04c24165947090adaae64fdbf0fa9c36f69c90",
+      "bytes": 29413
+    },
+    {
+      "path": "main/ui/ui_kit.h",
+      "sha256": "aab21509717cf1d499dc9e8e7a147a1b94648b9d299a6f2540ad5c26d6529c74",
+      "bytes": 23500
+    },
+    {
+      "path": "main/ui/ui_reader_settings.c",
+      "sha256": "0031b3489f9d0f43810141e0e9bcc8babf22aa91d2a3869a683ccd47483d91e1",
+      "bytes": 8550
+    },
+    {
+      "path": "main/ui/ui_reader_settings.h",
+      "sha256": "e75525d78a2e1d5dd3cff77eb55efe97538999a8bd1b64a0dce850d63d5fe27e",
+      "bytes": 3059
+    },
+    {
+      "path": "main/ui/ui_text_edit.c",
+      "sha256": "9a5e986cf7e408254ec78c6ce76ff272e093084d19df31aeb3e86016801798b6",
+      "bytes": 2624
+    },
+    {
+      "path": "main/ui/ui_text_edit.h",
+      "sha256": "ecccdbea34d7d0de162fc044bd0e52454c611c94ccf48939ed9545616f45d5d5",
+      "bytes": 1533
+    },
+    {
+      "path": "tools/book_epub_stubs/esp_err.h",
+      "sha256": "131787b9deab1dfa595af202ba4d05c89cd6709ebd762e5004a2fbe439134f8d",
+      "bytes": 572
+    },
+    {
+      "path": "tools/book_epub_stubs/esp_heap_caps.h",
+      "sha256": "849d74b4a70e08ebf1d33a10ed5a5e95026d8bfa4b83317431ac45613f19c6ab",
+      "bytes": 1143
+    },
+    {
+      "path": "tools/book_epub_stubs/esp_log.h",
+      "sha256": "64e01be1cf4a6dbd78ea16cb63820aab215fb00d9d0eb978ae9469f2a779b668",
+      "bytes": 373
+    },
+    {
+      "path": "tools/book_epub_stubs/ttf_font.h",
+      "sha256": "dc920a775194377e37829732f30c6a6508187ffa2c6566f6421a3f1f27b046e7",
+      "bytes": 671
+    },
+    {
+      "path": "tools/book_layout_host_test.c",
+      "sha256": "cdc71fac555eb0f7a9838f75da914eb7fe9ec6db8f6d45b550b931ae081ca832",
+      "bytes": 72958
+    },
+    {
+      "path": "tools/book_layout_stubs/epdiy.h",
+      "sha256": "759a0f631113695b0371c9c89b8cfeb09f6a2bcf123aed16482cc02135f944ea",
+      "bytes": 1001
+    },
+    {
+      "path": "tools/book_layout_stubs/esp_heap_caps.h",
+      "sha256": "3a51f24e930e03c94095a2bbf17159cd85a8825ce7434d1c3c732422ae0fe968",
+      "bytes": 879
+    },
+    {
+      "path": "tools/book_layout_stubs/ttf_font.h",
+      "sha256": "460b77283ce908574702672395a8a156dc86b18f258648ab2a3312f1da64929b",
+      "bytes": 2970
+    },
+    {
+      "path": "tools/book_policy_host_test.c",
+      "sha256": "0014c989e5d3a13b1a092cbb5b1655c65413302299743e9fb2a5746250dc2825",
+      "bytes": 6045
+    },
+    {
+      "path": "tools/book_shelf_test_code.py",
+      "sha256": "405a78fbe598028e310593222b2fa724117c4a896ae392dfd22a4373615546d5",
+      "bytes": 11177
+    },
+    {
+      "path": "tools/book_source_host_stubs/esp_err.h",
+      "sha256": "caf0f0aed8f01c234f8fefdc1131a597eed0d24c449d4bc777c8699f21181589",
+      "bytes": 545
+    },
+    {
+      "path": "tools/book_source_host_stubs/esp_heap_caps.h",
+      "sha256": "66622b6ce4095a00fa69926ece0e484c148b143aafa95536b316710125f8ab47",
+      "bytes": 430
+    },
+    {
+      "path": "tools/book_source_host_test.c",
+      "sha256": "7417f0feb2cd8ee6a45bed8d9b75ac45ade3762eb24575de344c718f0b59ebdb",
+      "bytes": 11626
+    },
+    {
+      "path": "tools/book_storage_host_test.c",
+      "sha256": "66f1113be52df0ef85b85d8c1ab08eae541786a9d7ffed69d95553085b9a88f1",
+      "bytes": 10385
+    },
+    {
+      "path": "tools/book_storage_stubs/esp_err.h",
+      "sha256": "780adb02c4bcc1ade6545886d29a1cb5d4c94179bf5b866e748407a9f8b533cb",
+      "bytes": 518
+    },
+    {
+      "path": "tools/book_storage_stubs/esp_log.h",
+      "sha256": "55746a62f016b9f5d456a67edebfe314f9bbcc879663cad5269285b874174856",
+      "bytes": 96
+    },
+    {
+      "path": "tools/book_storage_stubs/esp_vfs_fat.h",
+      "sha256": "072e559e8535061d3cc218fabb61acd5c7c79994cc59342aab5e8a69eb919935",
+      "bytes": 456
+    },
+    {
+      "path": "tools/book_storage_stubs/nvs.h",
+      "sha256": "a7b0a1574d6e691d7f2fcf36c80e6a319d052397125be53c25cebf22aa4d814a",
+      "bytes": 1653
+    },
+    {
+      "path": "tools/book_storage_stubs/wear_levelling.h",
+      "sha256": "487cba08aaa8a6e9a50d5d9677aa78547f2bb12c7d1b5da75692530de7fabbf3",
+      "bytes": 109
+    },
+    {
+      "path": "tools/book_store_host_test.c",
+      "sha256": "2ad9360f95a3739d8125e43578ef719046d87761cc63e43f757a4c9b497a4451",
+      "bytes": 10444
+    },
+    {
+      "path": "tools/book_ui_host_test.py",
+      "sha256": "728ec4ee10f9a055b62d01c410be825242aa697bf10849c57c09579ea7425bd5",
+      "bytes": 73299
+    },
+    {
+      "path": "tools/gen_book_fixtures.py",
+      "sha256": "744405d4d8630f77c824a7f229c4a588295be42746002f61977af95f5c3e9525",
+      "bytes": 13432
+    },
+    {
+      "path": "tools/home_cover_cache_host_test.py",
+      "sha256": "54a2ff60365f0d1540d02b5ad688a84214893e31639b9285dba722d444334d2a",
+      "bytes": 9829
+    },
+    {
+      "path": "tools/html_text_host_test.c",
+      "sha256": "25df9bce1c710eb90a9e56b00dfbecb87b86fa34af7b6838545c7e22ce76a3b3",
+      "bytes": 16228
+    },
+    {
+      "path": "tools/html_text_stubs/esp_err.h",
+      "sha256": "f5bacbc070949f10154417f21d77e1da8ea77aa7ce1466f331cec4ab2533eafa",
+      "bytes": 412
+    },
+    {
+      "path": "tools/html_text_stubs/esp_heap_caps.h",
+      "sha256": "cd91814f973dadb4a3b923bb0ce33cf155126598819927756526586a103bbc13",
+      "bytes": 764
+    },
+    {
+      "path": "tools/icons/lucide/LICENSE",
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+      "bytes": 3208
+    },
+    {
+      "path": "tools/reader_reflow_test_code.py",
+      "sha256": "8dfd64faa257273a657cafc26fe995fbddf0bc31a1e3fbfc86083c6738f2d801",
+      "bytes": 794
+    },
+    {
+      "path": "tools/reader_session_host_test.py",
+      "sha256": "079cba235589662b3fe17c2619abfb9f6a2c1af54a7aed29c18b2ec9da8976fe",
+      "bytes": 7700
+    },
+    {
+      "path": "tools/reader_session_no_layout_stubs.c",
+      "sha256": "3cdfafa0c6d249a70559a38b8f0dabad8de0d792154b1b3b4d29f3dffd236df0",
+      "bytes": 845
+    },
+    {
+      "path": "tools/reader_session_test_state.py",
+      "sha256": "9133cb380689f26158d85211b68f66a208200aaae2b2aab46af7dfb557710c76",
+      "bytes": 998
+    },
+    {
+      "path": "tools/reader_settings_stubs/epdiy.h",
+      "sha256": "8e7e0f4525cbb9c5d4e3bbe2f3efc29ad3e3b1733bdb342f9f3f4b3a18d8048e",
+      "bytes": 503
+    },
+    {
+      "path": "tools/reader_settings_view_host_test.c",
+      "sha256": "f3bac5f7efa504ea74c6046993a3225966fd22c0e8ae859f1f7121d03b7d5601",
+      "bytes": 6577
+    },
+    {
+      "path": "tools/reader_settings_view_host_test.py",
+      "sha256": "a09b66b1429c1032c123d6061dac9c11942de82c16ca5c14d4231f790222d5df",
+      "bytes": 3782
+    },
+    {
+      "path": "tools/shelf_categories_host_stubs/esp_heap_caps.h",
+      "sha256": "0dd172c54c8f70576e91acdae0fad4a6a6340300b306af14da7ff080da2f0f99",
+      "bytes": 384
+    },
+    {
+      "path": "tools/shelf_cover_test_support.py",
+      "sha256": "cca384ade3aa9a3acba33602126ed4d79633dda9b3ad2947310c89c39a600ab0",
+      "bytes": 1369
+    },
+    {
+      "path": "tools/zip_host_stubs/esp_err.h",
+      "sha256": "93238e14f2a92bb5d79d7cfd9ef27df5422d37a3f52199731f69eaadb6a65bdc",
+      "bytes": 472
+    },
+    {
+      "path": "tools/zip_host_stubs/esp_heap_caps.h",
+      "sha256": "32982d850675280b6c3b9106a606eb48f6d4cdd627850489b8dc80b06a323fd4",
+      "bytes": 480
+    },
+    {
+      "path": "tools/zip_host_stubs/miniz.h",
+      "sha256": "8f07eba673882bd33ee8f977047d3d8cf83d9d34dcfcb3a822fa56162f0d6a51",
+      "bytes": 2120
+    }
+  ]
+}
