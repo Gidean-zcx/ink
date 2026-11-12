@@ -120,7 +120,7 @@ static void run(void *arg) {
     cleanup_done=false; ink_exec_post(INK_EXEC_BG,&cleanup_barrier,after_cleanup,NULL);
     CHECK(WAIT_FOR(cleanup_done,15000),"old member background work drained");
     open_book();
-    CHECK(ready("页=1/") && strstr(view,"书签=0") && strstr(view,"字号=53"),"child sees neither adult progress, marks nor preferences: %.150s",view);
+    CHECK(ready("页=1/") && strstr(view,"章节=1") && strstr(view,"书签=0") && strstr(view,"字号=53"),"child sees neither adult progress, marks nor preferences: %.150s",view);
     close_book(); CHECK(!ink_member_switch("owner"),"return to synthetic adult"); open_book();
     CHECK(ready("字号=60") && strstr(view,"书签=1"),"adult settings and bookmark remain isolated");
     const int defaults[]={150,50,36,0,2,0,0};
