@@ -8,6 +8,36 @@ from ink_hub.bus.schema import validate
 from ink_hub.gateway.wire import ANSWER_BYTES, ANSWER_CUT, ProtocolError, answer as clip, chunks, frame, response
 
 
+# The model accepts at most 128 functions (DeepSeek). The device sends every capability usable right now
+# as "actions", so that list cannot rank them; the page snapshot text ends with "动作：" and the page's own
+# capability names. Keep those first, then the current app's domain, then the system's everyday domains,
+# then the rest in the device's order.
+TOOL_LIMIT = 128
+CORE_DOMAINS = ("shell", "settings", "system", "notify", "time", "caps", "ai", "text", "member", "media", "audio")
+# Apps whose registry id differs from their capability domain (the reader app is "book").
+APP_DOMAINS = {"book": "reader"}
+
+
+def rank_tools(available, snapshot):
+    app = snapshot.get("app") if isinstance(snapshot.get("app"), str) else ""
+    domain = APP_DOMAINS.get(app.split(".", 1)[0], app.split(".", 1)[0])
+    order = list(dict.fromkeys([*snapshot.get("actions", []), *available]))
+    names = [name for name in order if name in available]
+
+    text = snapshot.get("text") if isinstance(snapshot.get("text"), str) else ""
+    on_page = text.split("动作：", 1)[1] if "动作：" in text else ""
+
+    def rank(item):
+        index, name = item
+        head = name.split(".", 1)[0]
+        if on_page and name in on_page:
+            return (0, index)
+        return (1 if domain and head == domain else 2 if head in CORE_DOMAINS else 3, index)
+
+    kept = [name for _, name in sorted(enumerate(names), key=rank)[:TOOL_LIMIT]]
+    return {name: available[name] for name in kept}
+
+
 def sentences(text):
     for match in re.finditer(r"[^。！？.!?；;\n]*[。！？.!?；;\n]|[^。！？.!?；;\n]+$", text):
         yield from chunks(match.group())
@@ -111,9 +141,7 @@ async def run_turn(self, rid, method, params):
                 raise ProtocolError("语言无效")
             if len(available) > 128:
                 logging.getLogger(__name__).info("能力目录截断：%d", len(available) - 128)
-                order = list(dict.fromkeys([*snapshot.get("actions", []), *available]))
-                available = {name: available[name] for name in order if name in available}
-                available = dict(list(available.items())[:128])
+                available = rank_tools(available, snapshot)
             context = {"role": "child" if child else "adult", "name": member.get("name", "")}
             if question:
                 async for part in self.hub.model.stream(question, available, lang=lang, member=context):
