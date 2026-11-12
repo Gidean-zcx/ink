@@ -1,6 +1,6 @@
 # audio-out-2 执行报告
 
-基线：`a39e9693bb4dea2edd0b5549486d583122dc0a13`。状态：核心实现、定向和普通全量回归完成，ASan 与 S31 验证待补。未连接设备，未推送。
+基线：`a39e9693bb4dea2edd0b5549486d583122dc0a13`。状态：核心实现、普通全量、ASan 回归和 S31 编译完成（S31 由主会话补跑）。未连接设备，未推送。
 
 ## 验收表
 
@@ -8,11 +8,11 @@
 | --- | --- | --- | --- |
 | 1 | 通过 | 【实测】四场景均 0 次/0 ms 欠载；1 kHz SNR 91.96 dB、10 kHz 衰减 88.49 dB。原基线 44 次/660 ms；保留 540 ms 预缓冲再把滤波移回输出任务，仍 43 次/645 ms，欠载断言失败 | C1、C2 |
 | 2 | 通过 | 【实测】[改前频谱](before-spectrum.png)、[改后频谱](after-spectrum.png)，分别 71757 / 25697 B；[改前 WAV](before-music.wav)、[改后 WAV](after-music.wav)，均为同一原创双音样例的实际 speaker.wav | C2、C3 |
-| 3 | 部分通过，继续验证 | 【实测】普通全量 436 项执行通过、3 项按原条件跳过；ASan、S31 宿主和固件待补 | C4 |
+| 3 | 部分通过，继续验证 | 【实测】普通全量 436 项执行通过、3 项按原条件跳过；ASan/UBSan 相关 12/12、S31 宿主 77/77 通过；固件待补 | C4、C5、C6 |
 
 ## 没做到的
 
-- ASan 与 S31 编译验证仍在进行。未做真机试听、烧录或串口操作；宿主模拟与计算量估算不能冒充 S31 实机结果。未运行 Linux 全套测试，GCC 检查待补。
+- S31 编译验证仍在进行。未做真机试听、烧录或串口操作；宿主模拟与计算量估算不能冒充 S31 实机结果。未运行 Linux 全套测试。
 
 ## 和设计不一致的
 
@@ -30,8 +30,11 @@
 
 ## 顺手发现
 
-- Q8：1 kHz 与合成音乐各 1 次/255 ms 欠载；Q7：完整流程 2 次/285 ms 欠载。因此未采用。
+- 高档初版试运行：Q8 的 1 kHz 与合成音乐各 1 次/255 ms 欠载；Q7 的完整流程 2 次/285 ms 欠载。因此保守选用 Q4。高档试跑在锁改为首次 PCM 分配之前；最终版本仅完整验收 Q4，不把早期结果当作最终版本更高档一定不可用的证明。
 - 全量首轮发现新互斥锁启动时分配导致 ui-scene-ImeVoice 的内部内存余量为 32672 B，低于原有 32768 B 门槛；中止并改为首次 PCM 时分配。定向复跑余量 32776 B、无警告；Opus 的 finish/abort 不取得 PCM 锁。最终普通全量原话：`100% tests passed out of 439`，814.95 s；hub-contract、hub-json-crosscheck、hub-simulator-e2e 按原条件跳过。
+- 【实测】ASan/UBSan 原话：`100% tests passed out of 12`，44.60 s；覆盖 determinism、determinism-reader、integration-media、两项 handsfree/voice policy 场景、memo-record、voice-name-assist、privacy-records、music-formats、music-product、audio-out 和双反向对照。无 sanitizer 诊断；未运行 ASan 全量 439 项。
+- 【实测】GCC 警告检查原话：`gcccheck: 3 compiled, 0 with findings`，文件为 audio_service.c、bench.c、device.c；质量扫档工具另以 clang -O2 手动编译运行。
+- 【实测】S31 宿主测试原话：`100% tests passed out of 77`，108.63 s，退出 0。
 
 ## 新增的机制
 
@@ -45,14 +48,14 @@
 
 【实现】44.1 kHz 输入时，队列分配上界约 35×1920=67200 B（含一块在途输出），加单声道暂存 5292 B、FIR 请求 4328 B，共 76820 B；沿用原队列元数据与 staging，不另分配整块第二队列。所有这些大缓冲和 FIR 均显式请求 PSRAM。第一轮原速率队列上界为 185220 B，单比较队列减少 118020 B，未把它当作实机测量。唯一运行时内部增量是一把首次 PCM 才创建的 FreeRTOS 互斥锁，尺寸待 S31 编译核对；DMA 新增为 0。
 
-【实测】按 Q10→Q0 逐档运行同源 FIR，44.1 kHz 双声道同相信号混为单声道后降到 16 kHz。宿主耗时不含初始化和调度，是加载状态下的一次 CPU 计时；完整数字见 [qualities.json](qualities.json)，频响见 [档位图](quality-sweep.png)。
+【实测】按 Q10→Q0 逐档运行同源 FIR，44.1 kHz 单声道合成信号降到 16 kHz（与双声道同相混音等价）；完整播放另测真实双声道解码和混音。宿主耗时不含初始化和调度，是加载状态下的一次 CPU 计时；完整数字见 [qualities.json](qualities.json)，频响见 [档位图](quality-sweep.png)。
 
 | 档位 | tap | 宿主 ms/音频秒（1 kHz） | 10 kHz 衰减 dB | S31 ms/音频秒【估算】 | 取舍 |
 | --- | ---: | ---: | ---: | ---: | --- |
 | Q10 | 712 | 23.77 | 100.16 | ≥647 | 软件双精度，排除 |
 | Q9 | 536 | 21.20 | 100.16 | ≥487 | 软件双精度，排除 |
-| Q8 | 448 | 13.18 | 100.16 | 407 | 完整模拟存在欠载 |
-| Q7 | 352 | 9.06 | 100.16 | 320 | 完整模拟存在欠载 |
+| Q8 | 448 | 13.18 | 100.16 | 407 | 初版模拟存在欠载 |
+| Q7 | 352 | 9.06 | 100.16 | 320 | 初版模拟存在欠载 |
 | Q6 | 264 | 10.06 | 100.16 | 240 | 只做单独测量与估算，保留更多供流余量 |
 | Q5 | 224 | 7.85 | 98.35 | 204 | 同上，不认定为完整流程通过 |
 | **Q4** | **176** | **2.89** | **88.49** | **160** | **采用，完整流程零欠载** |
@@ -92,4 +95,22 @@ MPLCONFIGDIR=work/mpl-cache taskpolicy -c utility work/measure-env/bin/python -B
 # C4：最终普通全量，退出 0
 taskpolicy -c utility cmake --build build -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+# C5：配置与普通构建相同，只换 build-asan 并增加 -DINK_SANITIZE=ON
+taskpolicy -c utility cmake --build build-asan -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -R '(audio|media|music|determinism|voice|opus|record)' -j2
+# C6：S31 宿主机，全 77 项
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-tests
+taskpolicy -c utility cmake --build build-s31-tests -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-tests --output-on-failure -j2
+# C8：GCC 警告检查
+taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build system/services/audio/audio_service.c tests/audio_out/bench.c tests/audio_out/device.c
+# C9：逐档宿主测量，不是 S31 实机计时
+taskpolicy -c utility clang -O2 -DNDEBUG -UNDEBUG -DFLOATING_POINT -DOS_SUPPORT_CUSTOM -DEXPORT= -Iplatform/include -Isystem/include -Ithird_party/speexdsp/include -Ithird_party/speexdsp tests/audio_out/quality.c system/services/audio/codec_formats.c system/services/audio/vendor/kiikoread/metadata.c system/services/audio/vendor/kiikoread/music_lyrics.c third_party/speexdsp/resample.c -o work/audio-quality -lm
+taskpolicy -c utility work/audio-quality
+taskpolicy -c utility build/test-audio-out-bench tests/music/fixtures
 ```
+
+## 主会话补充（2026-11-12 晚）
+
+- 【实测】Codex 运行在 S31 编译前结束，主会话在本分支提交 `4f36aac6` 上补跑 `ports/esp32s31/build.sh`（独立构建目录）：退出 0，编译警告 0；镜像 4,277,152 B；DIRAM 已用 165,350 B。重采样器的分配经 `os_support_custom.h` 全部在 PSRAM，内部内存只多首次 PCM 时建的一把互斥锁。
+- 未做：真机试听（设备不在），合并后的试用版上机时请用户听。
