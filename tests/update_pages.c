@@ -150,7 +150,12 @@ static void flow(void) {
     CHECK(WAIT_FOR(page("UpdateReady"), 5000), "ready package enters UpdateReady");
     snprintf(scene, sizeof scene, "UpdateReady"); quiet(); on_ui(inspect);
     battery(23, false); CHECK(WAIT_FOR(page("UpdateBlocked"), 3000) && strstr(g_snap, "30%"), "low battery enters UpdateBlocked");
-    battery(23, true); CHECK(WAIT_FOR(page("UpdateReady"), 3000), "charging restores the installation choice");
+    battery(23, true);
+    /* When the device learns about the cable is the power service's business (the vendor polls the charger every
+     * 2 or 10 s, and later still while idle; backlog "charging shown late"); this page has 3 s from then. */
+    int64_t charging = 0;
+    CHECK(WAIT_FOR(ink_state_get_int(ink_state_find("battery.charging"), &charging) && charging, 70000), "the power service reports charging");
+    CHECK(WAIT_FOR(page("UpdateReady"), 3000), "charging restores the installation choice");
     CHECK(AI("system.upgrade", NULL) && g_rc.status == INK_RC_INVALID, "AI cannot install the update");
     press("以后再装"); CHECK(WAIT_FOR(!page("UpdateReady"), 2000), "later returns without installing");
     CHECK(AI("shell.update", NULL) && g_rc.status == INK_RC_DONE, "reopen the ready package");
