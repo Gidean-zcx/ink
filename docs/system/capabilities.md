@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 513 项：可调用能力 472、事件 41；设置 43 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 519 项：可调用能力 477、事件 42；设置 43 项、状态 58 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -265,12 +265,17 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `net.set_airplane` | 开关飞行模式（关掉 4G、Wi-Fi 和蓝牙，之后可以单独再开 Wi-Fi 和蓝牙） | 人、AI | 高 / system | 无需 | 仅成人 | [s34](#s34) | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `net.usage` | 移动流量和接入点（不含密码） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s28](#s28) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `net.usage_reset` | 清零流量统计 | 人、AI | 高 / system | 人、AI 均在设备确认 | 仅成人 | [s28](#s28) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `notify.act` | 执行通知动作（序号从 1 开始） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
 | `notify.channels` | 哪些通知渠道开着 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.clear` | 清空通知 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.dismiss` | 删一条通知 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.dnd_get` | 勿扰状态、时段、例外和快捷回复 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
+| `notify.dnd_set` | 修改自己的勿扰时段和例外（时段同时给 slot、days、start、end，分钟从零起） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
 | `notify.list` | 通知列表（新的在前） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.post` | 发一条通知（给用户看的提醒；来源记为 AI） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.read` | 标为已读（id 0 或不给：全部） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.replies_set` | 修改自己的快捷回复 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
+| `notify.reply` | 回复通知（快捷回复 index 1 至 5，或 text） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
 | `notify.set_channel` | 开关一个通知渠道 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `pairing.accept` | 确认加入屏幕上的家庭 | 仅人（设备） | 高 / system | 无需 | 仅成人 | [s32](#s32) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `pairing.configure` | 设置家庭服务器地址和公钥 | 人、AI | 高 / system | 无需 | 仅成人 | [s32](#s32) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
@@ -714,7 +719,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`backup.auto`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_background`、`display.lock_reading`、`display.lock_style`、`display.lock_todo`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`net.roaming`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`reader.font_size`、`reader.footer_mask`、`reader.line_spacing`、`reader.margins`、`reader.paragraph_spacing`、`system.language`、`text.assist`、`text.nine_key`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`、`wifi.enabled`。
 
-状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.config_readonly`、`cell.registered`、`cell.roaming`、`cell.signal`、`cell.sim`、`cell.sim_missing`、`confirm.pending`、`file.index_state`、`hub.online`、`interrupt.active`、`job.revision`、`job.running`、`media.state`、`member.authed`、`member.current`、`member.time_up`、`net.mobile_rev`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.lifted`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
+状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.config_readonly`、`cell.registered`、`cell.roaming`、`cell.signal`、`cell.sim`、`cell.sim_missing`、`confirm.pending`、`file.index_state`、`hub.online`、`interrupt.active`、`job.revision`、`job.running`、`media.state`、`member.authed`、`member.current`、`member.time_up`、`net.mobile_rev`、`net.online`、`net.signal`、`net.type`、`notify.dnd_active`、`notify.dnd_reason`、`notify.dnd_until`、`notify.unread`、`pairing.state`、`power.lifted`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
 事件：—。
 
@@ -844,9 +849,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`notify.dnd`。
 
-状态：`battery.low`、`interrupt.active`、`member.current`、`notify.unread`。
+状态：`alarm.revision`、`battery.low`、`interrupt.active`、`member.current`、`notify.dnd_active`、`notify.dnd_reason`、`notify.dnd_until`、`notify.unread`、`time.minute`。
 
-事件：`alarm.ended`、`alarm.fired`、`alarm.missed`、`battery.low`、`call.answered`、`call.ended`、`call.incoming`、`data.write_failed`、`message.received`、`notify.changed`、`notify.channels_changed`、`notify.posted`、`reminder.missed`、`usb.changed`。
+事件：`alarm.ended`、`alarm.fired`、`alarm.missed`、`battery.low`、`call.answered`、`call.ended`、`call.incoming`、`data.write_failed`、`message.received`、`notify.changed`、`notify.channels_changed`、`notify.dnd_changed`、`notify.posted`、`reminder.missed`、`time.changed`、`usb.changed`。
 
 <a id="s36"></a>
 
@@ -1237,6 +1242,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `net.online` | 在线 | `INK_ST_BOOL` | 是 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `net.signal` | 信号（dBm） | `INK_ST_INT` | 是 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `net.type` | 网络 | `INK_ST_STR` | 是 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
+| `notify.dnd_active` | 正在勿扰 | `INK_ST_BOOL` | 是 | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
+| `notify.dnd_reason` | 勿扰原因 | `INK_ST_STR` | 是 | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
+| `notify.dnd_until` | 勿扰结束时间 | `INK_ST_INT` | 是 | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
 | `notify.unread` | 没看的通知数 | `INK_ST_INT` | 是 | [system/services/notify/notify_service.c](../../system/services/notify/notify_service.c) |
 | `pairing.state` | 加入家庭的进度 | `INK_ST_STR` | 是 | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `power.lifted` | 刚被拿起亮屏（到下次锁屏） | `INK_ST_BOOL` | 是 | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
@@ -1293,6 +1301,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `message.received` | 收到短信 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s28](#s28) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `notify.changed` | 通知列表有变化 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.channels_changed` | 通知渠道有变化 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.dnd_changed` | 勿扰状态或偏好有变化 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s35](#s35) | [system/services/notify/notify_model.c](../../system/services/notify/notify_model.c) |
 | `notify.posted` | 有新通知 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s35](#s35) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `pairing.changed` | 加入家庭的进度变了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s32](#s32) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `reminder.fired` | 提醒到时间了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s39](#s39) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |

@@ -15,7 +15,9 @@
 
 ## 没做到的
 
-尚在执行，未将未验证项目记为完成。
+【实现】原文已入库，已接入跨午夜时段、成员偏好、例外、忙时、多动作和回复转发。正在运行服务验收。收藏枚举保留为 3，当前按不放行处理，等待 contacts-3 提供收藏接口。
+
+【实测，阶段结果】新用例 main 阶段 130 条断言、重启阶段 21 条断言都通过；重启阶段主任务栈估算超限 192 字节，已将首次偏好读取移到现有后台执行器，待复测。前两轮发现的外层超时和后台嵌套栈已集中修在动作转发点，未放宽预算。
 
 ## 和设计不一致的
 
@@ -31,7 +33,7 @@
 
 ## 顺手发现
 
-暂无。
+【实现】现有可信 `_meta.asked` 仅保留在能力层内部，公共嵌套调用接口不能继承。带该标记的 hub AI 请求经本服务转发时仍会再确认；本任务不改策略层，也不伪造 `CONFIRMED`。验收要求的触摸直发和 AI 无标记确认路径已实测。
 
 ## 新增的机制
 
@@ -39,4 +41,19 @@
 
 ## 要改的文档
 
-待补给通知页面与控制中心的接口清单。
+通知页和控制中心接入清单见下文；共享能力目录按任务书的明确例外重新生成。
+
+## 接口清单（notify-ui-1 / control-1）
+
+- 设置 `notify.dnd`：原名、原布尔语义；改为每成员保存。旧的全设备值在首次启动归给当前成员，其他成员默认关闭。
+- 状态 `notify.dnd_active`（布尔）、`notify.dnd_reason`（`off/manual/schedule/calendar`）、`notify.dnd_until`（UTC 秒，手动为 0）；事件 `notify.dnd_changed`。C 接口 `ink_notify_dnd_state()` 同时返回 `slot`（0–4，其他来源为 -1）。
+- `notify.dnd_get`：返回上述状态、`manual`、`calls/repeat/calendar`、`slots` 和 `replies`。`notify.dnd_set`：可只给例外；改时段必须同时给 `slot/days/start/end`。`days` 周日为 bit 0，工作日 62、周末 65；开始/结束用当天分钟数，结束不包含；days=0 禁用该条。
+- 来电枚举：0 无人、1 所有人、2 联系人、3 收藏（保留，当前不放行）。`repeat` 放行 15 分钟内同号码再次来电；内存保留最近 8 次来电，按成员区分，重启清空。
+- `notify.replies_set(index,text)`：序号 1–5，每人独立，最多 31 个字符。默认“好的 / 是 / 不是 / 给我回个电话 / 我晚点给你回电话”。
+- `notify.list` 和 `ink_notify_next` 增加 `actions`（最多 3 个，`label/cap/args`）和 `reply`（`cap/args`）。旧 `action/action_args` 字段与函数保留；旧单动作同时映射进新数组。
+- `notify.act(id,index)`：序号 1–3；`notify.reply(id,index)` 或 `notify.reply(id,text)`：快捷回复序号 1–5。回复目标的 args 是静态参数模板，转发时补 `text`。结果保留目标能力的状态、回执和结构化结果；目标能力自己裁决确认和成员权限。
+- 短信通知：动作 `sms.thread(peer)`，回复目标 `sms.send(to)`；未接来电：`call.dial(number)`、`sms.compose(number)`。
+
+## 架构审视
+
+【实现】通知服务只持有通知箱和自己的成员偏好，联系人通过公开匹配函数查询，时间通过现有 API 读取，外部动作通过能力总线转发。按钮与 AI 共用同一组能力；新能力已追加到 AI 覆盖表。服务不操作 LVGL，不新增常驻任务或线程。
