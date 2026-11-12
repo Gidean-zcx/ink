@@ -79,6 +79,24 @@ static bool click_label(lv_obj_t *root, const char *label) {
     return false;
 }
 static void open_pin(void) { ink_shell_member_pin_open("owner"); }
+static lv_point_t initial_at;
+static void initial(lv_obj_t *root) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *c = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_check_type(c, &lv_label_class) && !strcmp(lv_label_get_text(c), wanted) && lv_obj_check_type(root, &lv_button_class)) {
+            lv_area_t a; lv_obj_get_coords(root, &a); initial_at = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2}; found = true;
+        }
+        initial(c);
+    }
+}
+static void find_picture(void) { found = false; lv_obj_update_layout(lv_layer_sys()); initial(lv_layer_sys()); }
+/* lock-1: the camera is on the PIN page and the member gate, not on the cover; an adult's picture on the cover opens their PIN page. */
+static void pin_page_from_cover(void) {
+    wanted = "app.open"; on_ui(find); CHECK(!found, "the lock cover itself offers no camera");
+    wanted = "我"; on_ui(find_picture); CHECK(found, "the adult's picture is on the cover");
+    if (found) tap(initial_at.x, initial_at.y);
+    quiet(); CHECK(WAIT_FOR(!strcmp(ink_ui_top_name(), "member_gate"), 3000), "the picture opens the adult's PIN page");
+}
 static void enter_pin(void) {
     for (int i = 0; i < 4; i++) CHECK(click_label(lv_layer_sys(), "1"), "person enters a synthetic PIN digit on the device");
     CHECK(click_label(lv_layer_sys(), "确定"), "person submits the device PIN");
@@ -104,22 +122,30 @@ static void run(void *arg) {
     uint32_t cursor = 0; ink_fs_entry_t e;
     CHECK(ink_fs_index("/me", INK_FS_IMAGE, &cursor, &e) == 1, "old private photo has an id"); old_id = e.id;
     ok("system.home", NULL);
+    CHECK(ink_member_set_pin("owner", "", "1111", told, NULL) == 0 && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK, "set synthetic adult PIN");
+    CHECK(setting_by_hand("member.idle_return_s", 30), "use the existing minimum lock grace"); quiet();
     ink_power_lock(); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "seed session locks"); quiet();
+    CHECK(WAIT_FOR(!ink_member_space_open(), 35000), "adult grace expires without unlocking");
+    pin_page_from_cover();
     press("app.open"); CHECK(ink_camera_restricted(), "physical locked camera entry opens restricted view");
     ok("camera.photo", NULL); key(HAL_KEY_HOME); quiet();
     CHECK(!ink_camera_restricted() && ink_power_state() == INK_PWR_LOCKED, "seed session HOME returns to locked screen");
     key(HAL_KEY_POWER); quiet();
     bool gate = !strcmp(phase, "gate"), kid = !strcmp(phase, "kid");
-    if (gate) {
-        CHECK(ink_member_set_pin("owner", "", "1111", told, NULL) == 0 && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK, "set synthetic adult PIN");
-        CHECK(setting_by_hand("member.idle_return_s", 30), "use the existing minimum lock grace"); quiet();
-    }
     if (kid) CHECK(ink_member_switch("kid") == 0, "child is the active user before locking");
-    if (kid) {
+    if (!kid && !gate) { /* the adult's album open under the lock, as the child's phase had it before lock-1 */
+        on_ui(open_pin); on_ui(enter_pin); CHECK(WAIT_FOR(ink_member_space_open(), 6000), "the adult signs in before locking"); quiet();
+    }
+    if (!gate) {
         ok("app.open", "{\"id\":\"gallery\"}");
-        CHECK(WAIT_FOR((on_ui(read_screen), strstr(g_snap, "\"total\":1")), 10000), "old public album is open before locking");
+        CHECK(WAIT_FOR((on_ui(read_screen), strstr(g_snap, kid ? "\"total\":1" : "\"total\":2")), 10000), "old album is open before locking");
     }
     ink_power_lock(); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "test session locks"); quiet();
+    if (!kid && !gate) CHECK(WAIT_FOR(!ink_member_space_open(), 35000), "adult grace expires without unlocking");
+    if (kid) { /* lock-1: a child's space needs no unlocking, so a child's cover has no restricted camera */
+        wanted = "app.open"; on_ui(find); CHECK(!found, "a child's lock cover offers no camera");
+        capture("lock-entry"); ink_probe_count("test.finished"); return;
+    }
     if (gate) {
         CHECK(WAIT_FOR(!ink_member_space_open(), 35000), "adult grace expires without unlocking");
         key(HAL_KEY_POWER); quiet(); CHECK(!strcmp(ink_ui_top_name(), "member_gate"), "member gate appears");
@@ -128,7 +154,8 @@ static void run(void *arg) {
         CHECK(!strcmp(ink_ui_top_name(), "member_gate"), "PIN entry remains a locked member surface");
         capture("pin-entry");
     }
-    capture("lock-entry"); press("app.open");
+    capture("lock-entry"); if (!gate) { pin_page_from_cover(); capture("pin-entry"); }
+    press("app.open");
     CHECK(ink_camera_restricted() && shots.count == 0, "new session excludes every earlier locked photo");
     CHECK(BY_HAND("camera.review", NULL) && g_rc.status == INK_RC_FAILED, "empty session cannot review an earlier photo"); quiet();
     ok("camera.preview", NULL);
@@ -137,7 +164,7 @@ static void run(void *arg) {
     press("camera.photo"); CHECK(WAIT_FOR(shots.count == 1, 10000), "touch shutter saves the first session photo"); quiet();
     press("camera.photo"); CHECK(WAIT_FOR(shots.count == 2, 10000), "touch shutter saves the second session photo"); quiet();
     CHECK(count(LOCK_PHOTOS) == 3, "locked captures are stored outside every member");
-    CHECK(count("/me") == (kid ? 0u : 1u), "locked capture never enters the active child's or adult's private album");
+    CHECK(count("/me") == 1u, "locked capture never enters the adult's private album");
     CHECK(shots.ids[0] && shots.ids[1] && shots.ids[0] != shots.ids[1] && shots.ids[0] != old_id && shots.ids[1] != old_id, "only two new durable photo ids are reviewable");
     on_ui(inspect); capture("confirmation");
     press("camera.review"); CHECK(WAIT_FOR(shots.reviewing && shots.at == 0, 10000), "review cycles to first photo of this session"); quiet();
@@ -146,26 +173,24 @@ static void run(void *arg) {
     press("camera.preview"); CHECK(WAIT_FOR(!shots.reviewing && shots.count == 2, 10000), "tapping the picture resumes the viewfinder"); quiet();
     on_ui(inspect); blocked();
     key(HAL_KEY_HOME); quiet(); CHECK(!ink_camera_restricted() && ink_power_state() == INK_PWR_LOCKED, "HOME closes restricted capture and keeps the device locked");
-    if (gate) CHECK(!ink_member_space_open(), "HOME does not authenticate the adult");
+    CHECK(!ink_member_space_open(), "HOME does not authenticate the adult");
     key(HAL_KEY_POWER); quiet();
-    if (gate) {
-        CHECK(!ink_member_space_open(), "wake still requires a PIN"); on_ui(open_pin); on_ui(enter_pin);
-        CHECK(WAIT_FOR(ink_member_space_open(), 6000), "real device PIN UI authenticates the adult"); quiet();
-    }
+    CHECK(!ink_member_space_open(), "wake still requires a PIN"); on_ui(open_pin); on_ui(enter_pin);
+    CHECK(WAIT_FOR(ink_member_space_open(), 6000), "real device PIN UI authenticates the adult"); quiet();
     CHECK(ink_member_space_open(), "normal member space is open after wake/authentication");
     ok("app.open", "{\"id\":\"gallery\"}");
-    CHECK(WAIT_FOR((on_ui(read_screen), strstr(g_snap, kid ? "\"total\":3" : "\"total\":4")), 10000), "unlocked Gallery contains the public captures: %.150s", g_snap);
-    if (kid) CHECK(!strstr(g_snap, "1111"), "child gallery has no adult credential");
-    if (kid) {
-        ink_power_lock(); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "lock before interrupted child capture"); quiet();
-        press("app.open"); ok("camera.preview", NULL);
+    CHECK(WAIT_FOR((on_ui(read_screen), strstr(g_snap, "\"total\":4")), 10000), "unlocked Gallery contains the public captures: %.150s", g_snap);
+    if (!gate) { /* the in-flight capture, with the album open under the lock (the child's phase had it before lock-1) */
+        ink_power_lock(); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "lock before interrupted capture"); quiet();
+        CHECK(WAIT_FOR(!ink_member_space_open(), 35000), "adult grace expires again");
+        pin_page_from_cover(); press("app.open"); ok("camera.preview", NULL);
         CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "background index writes settle before interrupted capture");
         ink_call_opts_t o = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_DIRECT, .done = saved};
         photo_done = 0;
         CHECK(ink_cap_call("camera.photo", NULL, &o) == 0 && WAIT_FOR(__atomic_load_n(&taking, __ATOMIC_ACQUIRE), 1000), "shutter is actively capturing before HOME");
         CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "person's HOME capability closes an in-flight capture");
         CHECK(WAIT_FOR(__atomic_load_n(&photo_done, __ATOMIC_ACQUIRE), 10000) && photo_status == INK_RC_DONE, "accepted capture finishes after HOME"); quiet();
-        CHECK(count(LOCK_PHOTOS) == 4 && count("/me") == 0, "in-flight locked capture stays in public storage after HOME");
+        CHECK(count(LOCK_PHOTOS) == 4 && count("/me") == 1, "in-flight locked capture stays in public storage after HOME");
         CHECK(!ink_camera_restricted() && ink_power_state() == INK_PWR_LOCKED, "capture completion cannot reopen or unlock the camera: restricted=%d power=%s", ink_camera_restricted(), power_state());
     }
     CHECK(ink_cap_find("camera.review") != NULL, "session review is registered in the atomic capability table");

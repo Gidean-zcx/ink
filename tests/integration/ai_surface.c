@@ -157,6 +157,7 @@ static const struct {
     {"phone.emergency_close", "only a person leaves the emergency dialler", NULL},
     {"phone.emergency_hangup", "only a person ends an emergency call", NULL},
     {"shell.member_select", "only touch and keys may select an identity", "id"},
+    {"shell.lock_enter", "only the person's own finger on the lock cover's picture; the AI never unlocks (lock-1)", "id"},
     {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"pairing.accept", "only a person confirms joining a household", "txid"},
     {"confirm.accept", "only a person on the device can say yes", "token"},

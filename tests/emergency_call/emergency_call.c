@@ -9,7 +9,7 @@
 static char phase[16];
 static const char *wanted, *shot;
 static int x, y;
-static bool english;
+static bool english, kid_phase, picture;
 static volatile int pin_done;
 static int pin_result;
 static sim_cell_state_t cell;
@@ -28,7 +28,8 @@ static bool world(bool on, int call) {
 }
 static void locate(lv_obj_t *o) {
     if (!lv_obj_is_visible(o)) return;
-    if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), wanted)) {
+    if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), wanted) &&
+        (!picture || lv_obj_check_type(lv_obj_get_parent(o), &lv_button_class))) {
         lv_area_t a; lv_obj_get_coords(o, &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2;
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) locate(lv_obj_get_child(o, (int32_t)i));
@@ -60,6 +61,17 @@ static void no_cards(void *arg) { (void)arg; sim_net_set_card(0, false, false, f
 static void read_env(void *arg) {
     (void)arg; const char *s = getenv("INK_EMERGENCY_PHASE"); snprintf(phase, sizeof phase, "%s", s ? s : "lock");
 }
+/* lock-1: the cover has no emergency call. An adult reaches it on the member gate once the lock grace is over; a child
+ * through an adult's picture on the cover, which opens that adult's PIN page with the entry on it. */
+static void entry_surface(void) {
+    if (kid_phase) {
+        picture = true; press("我"); picture = false;
+        CHECK(WAIT_FOR(!strcmp(ink_ui_top_name(), "member_gate"), 3000), "the adult's picture opens the PIN page with the entry");
+        return;
+    }
+    CHECK(WAIT_FOR(!ink_member_space_open(), 35000), "adult authentication expires");
+    key(HAL_KEY_POWER); quiet(); CHECK(!strcmp(ink_ui_top_name(), "member_gate"), "PIN gate has the entry");
+}
 static void open_entry(void) {
     press(english ? "Emergency call" : "紧急呼叫");
     CHECK(E.root && !E.active, "physical emergency entry opens restricted keypad"); on_ui(privacy);
@@ -73,7 +85,8 @@ static void finish_call(bool airplane, bool remote, const char *number) {
     CHECK(WAIT_FOR(world(true, 1), 10000), "emergency AT call connects with RF on");
     CHECK(!strcmp(modem_number, number), "modem dialled the requested emergency number: %.20s", modem_number);
     CHECK(E.active, "emergency page tracks the active call");
-    CHECK(ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open(), "call did not authenticate or unlock");
+    CHECK(kid_phase ? !strcmp(ink_member_current()->id, "kid") : ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open(),
+          "call did not authenticate or unlock the adult");
     CHECK(ink_setting_get("net.airplane") == airplane, "airplane setting is unchanged during call");
     CHECK(BY_HAND("call.dial", "{\"number\":\"00000000001\"}") && g_rc.status == INK_RC_REJECTED, "ordinary call stays locked");
     CHECK(BY_HAND("phone.contacts", NULL) && g_rc.status == INK_RC_REJECTED, "contacts stay locked");
@@ -95,7 +108,9 @@ static void run(void *arg) {
     bool disabled = !strcmp(phase, "kid-disabled");
     bool gate = !strcmp(phase, "gate"), kid = disabled || !strcmp(phase, "kid");
     bool no_sim = !strcmp(phase, "nosim"), airplane = no_sim || !strcmp(phase, "airplane");
+    kid_phase = kid;
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "initial member opens"); test_start_home(); quiet();
+    if (!disabled) CHECK(!ink_member_set_pin("owner", "", "1111", told, NULL) && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK, "synthetic adult PIN set");
     if (kid && !disabled) CHECK(ink_member_switch("kid") == 0, "child selected before lock");
     CHECK(BY_HAND("phone.open", "{\"number\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "private number exists underneath"); quiet();
     if (disabled) {
@@ -110,21 +125,15 @@ static void run(void *arg) {
         CHECK(BY_HAND("call.hangup", NULL) && g_rc.status == INK_RC_REJECTED, "ordinary hangup remains owned by the disabled app");
     }
     if (english) CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "switch to English");
-    if (gate) {
-        CHECK(!ink_member_set_pin("owner", "", "1111", told, NULL) && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK, "synthetic adult PIN set");
-        CHECK(setting_by_hand("member.idle_return_s", 30), "existing lock grace set");
-    }
+    if (!kid) CHECK(setting_by_hand("member.idle_return_s", 30), "existing lock grace set");
     if (airplane) {
         CHECK(BY_HAND("net.set_airplane", "{\"enabled\":true}") && g_rc.status == INK_RC_DONE, "enable airplane mode");
         CHECK(WAIT_FOR(world(false, 0), 5000), "RF is off before emergency");
     } else CHECK(WAIT_FOR(world(true, 0) && cell.registered, 15000), "ordinary card registered");
     if (no_sim) { vtk_event_at(vtk_now() + SIM_MS(1), no_cards, NULL); delay_ms(5); }
     ink_power_lock(); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "device locked"); quiet();
-    if (gate) {
-        CHECK(WAIT_FOR(!ink_member_space_open(), 35000), "adult authentication expires");
-        key(HAL_KEY_POWER); quiet(); CHECK(!strcmp(ink_ui_top_name(), "member_gate"), "PIN gate has the entry");
-    }
-    frame("entry"); on_ui(entry_semantics);
+    entry_surface();
+    frame("entry"); if (!kid) on_ui(entry_semantics); /* the PIN page lists no actions of its own beyond the PIN (member_pages.c) */
     if (gate) {
         static const ink_cap_t synthetic[] = {
             {.id = "test.public_entry", .locked_entry = true, .while_locked = true, .child_ok = true, .run = public_entry},
@@ -137,7 +146,7 @@ static void run(void *arg) {
     CHECK(AI("phone.emergency_open", NULL) && g_rc.status == INK_RC_DONE && E.root, "AI opens the public entry from a locked surface");
     if (!E.root) { ink_probe_count("test.finished"); return; }
     CHECK(BY_HAND("phone.emergency_close", NULL) && g_rc.status == INK_RC_DONE, "human closes the AI-opened page"); quiet();
-    if (gate) { key(HAL_KEY_POWER); quiet(); CHECK(!strcmp(ink_ui_top_name(), "member_gate"), "return to the unauthenticated member gate"); }
+    entry_surface();
     open_entry(); frame("keypad");
     const char *const emergency_caps[] = {"phone.emergency_open", "phone.emergency", "phone.emergency_close", "phone.emergency_key", "phone.emergency_hangup"};
     for (unsigned i = 0; i < sizeof emergency_caps / sizeof *emergency_caps; i++) {
@@ -157,10 +166,10 @@ static void run(void *arg) {
     if (airplane) press(no_sim ? "112" : "110");
     else { press("1"); press("2"); press("0"); press(english ? "Dial" : "拨号"); }
     finish_call(airplane, gate || no_sim, airplane ? no_sim ? "112" : "110" : "120");
-    CHECK(!gate || !ink_member_space_open(), "expired adult remains unauthenticated");
+    CHECK(kid || !ink_member_space_open(), "expired adult remains unauthenticated");
     if (!strcmp(phase, "lock")) {
         const char *numbers[] = {"110", "119", "112"};
-        for (unsigned i = 0; i < sizeof numbers / sizeof *numbers; i++) { open_entry(); press(numbers[i]); finish_call(false, false, numbers[i]); }
+        for (unsigned i = 0; i < sizeof numbers / sizeof *numbers; i++) { entry_surface(); open_entry(); press(numbers[i]); finish_call(false, false, numbers[i]); }
     }
     frame("returned"); ink_probe_count("test.finished");
 }

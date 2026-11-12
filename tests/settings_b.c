@@ -228,13 +228,13 @@ static void run(void *arg) {
             snprintf(args, sizeof args, "{\"id\":\"display.lock_style\",\"value\":%d}", style);
             CHECK(AI("settings.set", args) && g_rc.status == INK_RC_DONE, "select lock style through the same capability"); quiet();
             CHECK(BY_HAND("shell.lock", NULL), "lock the selected style"); quiet(); on_ui(inspect_lock); capture(locks[style]);
-            CHECK(clock_label == (style == 1) && lock_image == (style == 2), "three styles keep clock and wallpaper separate");
+            CHECK(clock_label == (style != 2) && lock_image == (style == 2), "three styles keep clock and wallpaper separate (lock-1: the default cover has a clock)");
             CHECK(lock_strip == (style != 2), "image style has no labels over the photo"); wake();
         }
         CHECK(AI("settings.set", "{\"id\":\"display.wallpaper_file\",\"value\":0}") && g_rc.status == INK_RC_DONE, "remove the source image");
         CHECK(WAIT_FOR(!ink_wallpaper_ready(), 10000), "unavailable image is released"); quiet();
         CHECK(BY_HAND("shell.lock", NULL), "lock when the wallpaper is unavailable"); quiet(); on_ui(inspect_lock);
-        CHECK(!clock_label && !lock_image && lock_strip, "unavailable wallpaper falls back to the current-page mark"); capture("LockFallback"); wake();
+        CHECK(clock_label && !lock_image && lock_strip, "unavailable wallpaper falls back to the default cover, never the page"); capture("LockFallback"); wake();
         snprintf(args, sizeof args, "{\"id\":\"display.wallpaper_file\",\"value\":%u}", (unsigned)image);
         CHECK(AI("settings.set", args) && g_rc.status == INK_RC_DONE, "restore the indexed source for restart");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "restored wallpaper loads"); quiet();
