@@ -72,8 +72,8 @@ idf_component_get_property(transfer_platform ink_platform COMPONENT_LIB)
 target_sources(${transfer_platform} PRIVATE ../hal_transfer_s31.c ${ap}/read_pico_transfer.c ${ap}/ink_radio.cc
     ${ap}/qrcodegen.c ${cjson}/cJSON.c)
 target_include_directories(${transfer_platform} PRIVATE ${ap} ${cjson})
-set_source_files_properties(${ap}/read_pico_transfer.c PROPERTIES COMPILE_OPTIONS "-Wno-unused-function")
-target_link_libraries(${transfer_platform} PRIVATE idf::esp_http_server)
+set_source_files_properties(${ap}/read_pico_transfer.c TARGET_DIRECTORY ${transfer_platform} PROPERTIES COMPILE_OPTIONS "-Wno-unused-function")
+target_link_libraries(${transfer_platform} PRIVATE idf::esp_http_server ink_miniz) # HAL assets still use the shared inflater.
 set(page ${CMAKE_CURRENT_BINARY_DIR}/upload.html.gz)
 execute_process(COMMAND ${PYTHON} ${ap}/pack_upload.py ${ap}/upload.html ${page} COMMAND_ERROR_IS_FATAL ANY)
 target_add_binary_data(${COMPONENT_LIB} ${page} BINARY)

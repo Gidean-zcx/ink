@@ -1,0 +1,25 @@
+Baseline: 2747eea2e12bdc551fdba82f5a18b7c27e83cf77
+Main full ctest: 99% tests passed, 1 tests failed out of 438; 1620.78 s.
+Main full sole failure: unit-s31-cell-started, cell.c:16 at_ok assertion.
+Independent retry of that case: 100% tests passed out of 1; 11.88 s. No source fix claimed.
+Existing skipped cases: hub-contract, hub-json-crosscheck, hub-simulator-e2e.
+Existing disabled case: memo-save-busy.
+S31 host normal: 100% tests passed out of 78; 57.61 s.
+S31 host ASan/UBSan: 100% tests passed out of 78; 82.10 s.
+Main transfer ASan/UBSan: 100% tests passed out of 3; 31.55 s.
+S31 build.sh final: exit 0; compiler warnings/errors 0/0; packaging, size reports and stack report completed.
+Original AP glue: standalone normal and ASan/UBSan passed; fixed-name mutation rejected, exit -6.
+Browser TOC: 7 encodings passed, exact original-byte chapter offsets; failed-sidecar acknowledgement regression rejected.
+Native server actual GBK and browser-generated TOC payload: passed byte-for-byte.
+Every-request auth mutation: expiry-only assertion fails as required.
+Policy mutation cases: 10 expected failures detected.
+UI receipt row mutation: expected assertion failure, exit 1.
+UI default and maximum text: 33 checks each; 17 total before/after PNGs, each below 300 KB.
+ui-scale: 60 files, 0 violations.
+Capabilities regeneration: 611 definitions, unchanged generated document.
+gcccheck: main 2 compiled, 0 findings; S31 vendor/policy 2 compiled, 0 findings.
+Source SHA-256 checks: 24 passed.
+Report local links: 6 passed.
+Translation file: baseline bytes preserved, additions appended only.
+Browser screenshot: unavailable; browser origin approval denied. No alternate browser or CLI capture attempted.
+No physical device, serial, paid API, push or PR actions.

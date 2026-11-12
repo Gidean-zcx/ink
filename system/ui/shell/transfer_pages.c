@@ -127,7 +127,7 @@ static void draw(void) {
         } else if (P.active) text(TR("还没连上 Wi-Fi"), INK_FONT_LIST, middle);
         /* The note is one line in Chinese and two in English: it and the status above it move up a line when it
          * wraps, so the buttons never cover its end (i18n-shell-remaining, Transfer-en). */
-        const char *note = !strcmp(P.result, TR("文件已收到")) ? TR("文件已保存，可在文件中打开。") : TR("可以管理当前家人的文件。关掉这页就断开。");
+        const char *note = !strcmp(P.result, TR("文件已收到")) ? TR("文件已保存，可在文件中打开。") : TR("管理当前家人的文件。\n关掉这页就断开。");
         int note_y = bottom - INK_PRIMARY - INK_GAP - ink_ui_text_height(note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) - INK_GAP_S;
         if (!P.files) P.note_label = text(note, INK_FONT_NOTE, note_y);
         if (P.files || (P.active && !strcmp(P.code, "000000"))) {
@@ -245,7 +245,7 @@ static void open_page(ink_call_t *c) {
     memset(P.names, 0, sizeof P.names); P.file_text[0] = 0;
     P.result[0] = P.code[0] = P.progress[0] = 0;
     snprintf(P.title, sizeof P.title, TR("准备连电脑"));
-    snprintf(P.detail, sizeof P.detail, "%s", P.usb ? TR("开始前请先停下使用存储卡的应用。占用的应用暂不能查看。") : TR("可以管理当前家人的文件。关掉这页就断开。"));
+    snprintf(P.detail, sizeof P.detail, "%s", P.usb ? TR("开始前请先停下使用存储卡的应用。占用的应用暂不能查看。") : TR("管理当前家人的文件。\n关掉这页就断开。"));
     ink_ui_push(&PAGES[P.usb ? USB_BUSY : WIRELESS], (void *)(intptr_t)(P.usb ? USB_BUSY : WIRELESS));
 }
 static void confirmed(void *ctx, const char *id, const ink_args_t *a) {

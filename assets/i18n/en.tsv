@@ -1814,3 +1814,4 @@ Wi-Fi 已关闭	Wi-Fi is off
 可以管理当前家人的文件。关掉这页就断开。	Manage this family member’s files. Closing this page disconnects.
 文件已保存，可在文件中打开。	Saved. You can open it in Files.
 已收到 %u 个，%lld 字节	Received %u files, %lld bytes
+管理当前家人的文件。\n关掉这页就断开。	Manage this family member’s files.\nClosing this page disconnects.

@@ -1,5 +1,6 @@
 /* CloudZao/Metalio-E-INK4-Plus@874538e, MIT; see LICENSE-CloudZao. */
 #include "esp_wifi.h"
+#include "esp_mac.h"
 #include "esp_netif.h"
 #include "esp_log.h"
 #include "lwip/ip4_addr.h"
@@ -73,7 +74,16 @@ const char* StartRadio(const char* ssid) {
     return nullptr;
 }
 
-extern "C" int ink_pico_radio_start(void) { return StartRadio("ink-transfer") ? -1 : 0; }
+void FillSsid(char* out, size_t n) {
+    uint8_t mac[6] = {};
+    esp_read_mac(mac, ESP_MAC_WIFI_STA);
+    std::snprintf(out, n, "Metalio-%02X%02X", mac[4], mac[5]);
+}
+extern "C" int ink_pico_radio_start(void) {
+    char ssid[33];
+    FillSsid(ssid, sizeof ssid);
+    return StartRadio(ssid) ? -1 : 0;
+}
 extern "C" void ink_pico_radio_stop(void) {
     if (s_paused_sta || s_we_inited) {
         esp_wifi_stop(); esp_wifi_set_mode(WIFI_MODE_STA); ink_transfer_wifi_restore(true);

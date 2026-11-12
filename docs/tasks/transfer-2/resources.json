@@ -1,0 +1,39 @@
+{
+  "firmware_bytes": {
+    "baseline": 4270528,
+    "current": 4173152,
+    "delta": -97376,
+    "within_40_KiB": true
+  },
+  "static_bytes": {
+    "Flash": {
+      "baseline": 4149410,
+      "current": 4052386,
+      "delta": -97024
+    },
+    "External RAM": {
+      "baseline": 746744,
+      "current": 747576,
+      "delta": 832
+    },
+    "DIRAM": {
+      "baseline": 165358,
+      "current": 164486,
+      "delta": -872
+    },
+    "LP SRAM": {
+      "baseline": 16508,
+      "current": 16508,
+      "delta": 0
+    }
+  },
+  "browser_bytes": {
+    "current_raw": 35040,
+    "current_gzip": 12479,
+    "baseline_embedded_gzip": {
+      "ap_fileman_en.html.gz": 18043,
+      "ap_fileman_zh.html.gz": 18507
+    }
+  },
+  "runtime_measured_on_device": false
+}

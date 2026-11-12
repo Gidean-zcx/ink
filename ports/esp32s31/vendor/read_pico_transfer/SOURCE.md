@@ -11,7 +11,7 @@
 | `include/read_pico_transfer.h` | `c87c197c0d0c988888e591ad42ef13299eb9ac09ed2e4207484e0b8df14ecffc` | `c87c197c0d0c988888e591ad42ef13299eb9ac09ed2e4207484e0b8df14ecffc` |
 | `include/read_pico_transfer_network.h` | `9dfe436d1e63251119faea643d8c77cb5729839ace0aff9fe133a417621ad7bc` | `9dfe436d1e63251119faea643d8c77cb5729839ace0aff9fe133a417621ad7bc` |
 | `ink_adapter.h` | 项目胶水 | `193f81e41dc8bb27e877e8ed4c443806cccb1ff2b2bef95910b5eb3f67fdb098` |
-| `ink_radio.cc` | 项目胶水 | `30e28ebdcefa3e4ac23484270cd07a648e94c5aa3441b865cb84076c22dfd39c` |
+| `ink_radio.cc` | 项目胶水 | `eb31f7b3b3dc75152787e8bf2393fb97ae2a2281c6ee1d7417b25220049aba81` |
 | `ink_server.h` | 项目胶水 | `363a4e5863083409cae35c72056a112bae22cdad5352d9f3b1cb017264c636f0` |
 | `ink_server_impl.h` | 项目胶水 | `b0714c72d5a9bfdcf46b3a6e175b7502badba5dfdc950cbb396a0ad41aced3b0` |
 | `pack_upload.py` | 项目胶水 | `7f16b33b2bc0dff12aa69953d99fd388c0726b03f619c87f858661e40b386b69` |
@@ -40,7 +40,7 @@
 - `/wifi`、`/clock`、`/signature`、FTP 不注册。`/titles` 属于上游阅读器显示名数据库，现有阅读器未接，本次不注册；文件改名走 `/files`。媒体接口只上传普通文件，不设置字体或壁纸。
 - `upload.html` 保留成熟中文操作和目录算法。隐藏未接系统控制，增加取消当前 XHR 与授权失效提示；TXT 在发送前计算目录，原书提交后上传 `.toc.json`。批量补目录仍用原函数。
 - `pack_upload.py` 确定性 gzip 嵌入网页，保留版权头；文件名和压缩参数固定。
-- 二维码原文 `qrcodegen.*` 从原目录平移，来源 CloudZao/Metalio-E-INK4-Plus `874538e`，Nayuki MIT 声明保留。`ink_radio.cc` 的 `StartRadio` 整函数来自同一版本的已接线原文，参数、时序和暂停/恢复钩子不变；许可见 `LICENSE-CloudZao`。当前没有合入 hotspot-1，继续沿用现有热点行为。
+- 二维码原文 `qrcodegen.*` 从原目录平移，来源 CloudZao/Metalio-E-INK4-Plus `874538e`，Nayuki MIT 声明保留。`ink_radio.cc` 的 `FillSsid` 原文及 `StartRadio` 整函数来自同一版本的已接线原文，参数、时序和暂停/恢复钩子不变；许可见 `LICENSE-CloudZao`。当前没有合入 hotspot-1，继续沿用现有热点行为。
 
 ## 相对原文的全部修改范围
 
