@@ -1,0 +1,67 @@
+{
+  "before": {
+    "tone1k": {
+      "underruns": 1,
+      "underrun_ms": 15,
+      "snr_db": 18.173449530092107,
+      "attenuation_db": 0.06599182578169949,
+      "signal_threshold_met": false
+    },
+    "tone10k": {
+      "underruns": 0,
+      "underrun_ms": 0,
+      "snr_db": -4.589181519416153,
+      "attenuation_db": 88.54301982436233,
+      "signal_threshold_met": true
+    },
+    "scenario": {
+      "underruns": 44,
+      "underrun_ms": 660,
+      "phase_frequencies": false,
+      "fresh_fir_prefixes": true
+    },
+    "music": {
+      "underruns": 1,
+      "underrun_ms": 15
+    }
+  },
+  "after": {
+    "tone1k": {
+      "underruns": 0,
+      "underrun_ms": 0,
+      "snr_db": 91.96270032140029,
+      "attenuation_db": 0.0003542454280504846,
+      "signal_threshold_met": true
+    },
+    "tone10k": {
+      "underruns": 0,
+      "underrun_ms": 0,
+      "snr_db": -4.5156408394443375,
+      "attenuation_db": 88.49025562440893,
+      "signal_threshold_met": true
+    },
+    "scenario": {
+      "underruns": 0,
+      "underrun_ms": 0,
+      "phase_frequencies": true,
+      "fresh_fir_prefixes": true
+    },
+    "music": {
+      "underruns": 0,
+      "underrun_ms": 0
+    }
+  },
+  "scenario": {
+    "audio.speaker.underrun_ms": 0,
+    "audio.speaker.underruns": 0,
+    "test.finished": 1,
+    "test.pass": 54,
+    "test.wav.flac": 48720,
+    "test.wav.member": 255085,
+    "test.wav.next": 131372,
+    "test.wav.resume": 199728,
+    "test.wav.seek": 93681,
+    "test.wav.speech": 146039
+  },
+  "boundary": "同一合成双声道音乐的 speaker.wav；改前通路由命令参数指定。模拟器计时不是实机。"
+}

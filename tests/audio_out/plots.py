@@ -1,6 +1,7 @@
 """Manual export of spectra and numeric evidence; requires numpy and matplotlib."""
 import argparse
 import json
+import shutil
 from pathlib import Path
 import wave
 import numpy as np
@@ -13,13 +14,16 @@ p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
 p.add_argument('--out', type=Path, required=True)
 p.add_argument('--font', type=Path, required=True)
+p.add_argument('--before', default='audio-out-baseline-real')
+p.add_argument('--before-title', default='改前：抽点与真实 Opus 重编码')
 a = p.parse_args()
 a.out.mkdir(parents=True, exist_ok=True)
 font = FontProperties(fname=a.font)
 measurements = {}
-for name, binary, title in [('before', 'audio-out-baseline-real', '改前：抽点与真实 Opus 重编码'),
-                            ('after', 'sim-audio-out', '改后：SpeexDSP Q4 与 PCM 输出')]:
+for name, binary, title in [('before', a.before, a.before_title),
+                            ('after', 'sim-audio-out', '改后：生产侧 SpeexDSP Q4 与 PCM 输出')]:
     area = a.build / 'audio-out-evidence' / binary
+    shutil.copyfile(area / 'music/out/speaker.wav', a.out / (name + '-music.wav'))
     measurements[name] = json.loads((area / 'quality.json').read_text())
     with wave.open(str(area / 'music/out/speaker.wav')) as wav:
         assert wav.getframerate() == 16000 and wav.getnchannels() == 1
@@ -42,5 +46,5 @@ for name, binary, title in [('before', 'audio-out-baseline-real', '改前：抽�
     assert target.stat().st_size < 300000
 metrics = json.loads((a.build / 'audio-out-evidence/sim-audio-out/scenario/out/metrics.json').read_text())['metrics']
 measurements['scenario'] = {k: v for k, v in metrics.items() if k.startswith(('test.wav.', 'test.pass', 'test.fail', 'test.finished', 'audio.speaker.underrun'))}
-measurements['boundary'] = '同一合成双声道音乐的 speaker.wav；改前使用 S31 相同固定点 Opus 源码。模拟器计时不是实机。'
+measurements['boundary'] = '同一合成双声道音乐的 speaker.wav；改前通路由命令参数指定。模拟器计时不是实机。'
 (a.out / 'measurements.json').write_text(json.dumps(measurements, indent=2, ensure_ascii=False) + '\n')

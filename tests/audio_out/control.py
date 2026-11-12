@@ -15,6 +15,7 @@ p.add_argument('--build', required=True, type=Path)
 p.add_argument('--baseline', help='manual mode only; never required by ctest')
 p.add_argument('--opus-build', type=Path, help='manual baseline: real fixed-point codec from the S31 host build')
 p.add_argument('--playback-reverse', action='store_true', help='restore filtering in the output task using the checked-in patch')
+p.add_argument('--build-only', action='store_true', help='manual baseline relink only; measure separately with measure.py')
 a = p.parse_args()
 build = a.build.resolve()
 db = json.loads((build / 'compile_commands.json').read_text())
@@ -32,6 +33,11 @@ with tempfile.TemporaryDirectory(prefix='audio-out-control-', dir=build) as tmp:
             copy.write_text(source.read_text())
             subprocess.run(['patch', '-s', '-R', str(copy)], input=(ROOT / 'tests/audio_out/producer.patch').read_text(), text=True, check=True)
             text = copy.read_text()
+            # Keep the new 540 ms PCM preroll when moving the FIR back to output.
+            for comparison in ['<', '>=']:
+                old = f'AU.jb_count {comparison} JB_PREBUFFER'
+                assert text.count(old) == 1
+                text = text.replace(old, f'AU.jb_count {comparison} (AU.jb_count && AU.jb[AU.jb_head].rate ? 9 : JB_PREBUFFER)')
         else:
             text = source.read_text()
             old = 'int err = speex_resampler_process_int(PC.resampler, 0, mono, &in, copy, &out);'
@@ -82,6 +88,9 @@ int err = 0;''', 1)
     binary = build / ('audio-out-baseline-real' if a.opus_build else 'audio-out-baseline' if a.baseline else 'audio-out-playback-filter' if a.playback_reverse else 'audio-out-point-sampling')
     link[link.index('-o') + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True)
+    if a.build_only:
+        assert a.baseline, '--build-only is a manual baseline option'
+        raise SystemExit(0)
     if a.baseline:
         from run import run, samples, quality
         area = build / 'audio-out-evidence' / binary.name

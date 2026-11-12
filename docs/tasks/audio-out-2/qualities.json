@@ -1,0 +1,205 @@
+{
+  "method": "实测宿主机 O2 浮点标量；S31 按 320 MHz、Q4 3200 cycles/输出采样按 tap 比例估算，未实机标定。",
+  "qualities": {
+    "10": {
+      "1000": {
+        "taps": 712.0,
+        "psram": 49224.0,
+        "cpu_ms_per_s": 23.7653,
+        "snr_db": 89.1236,
+        "attenuation_db": 0.0004
+      },
+      "10000": {
+        "taps": 712.0,
+        "psram": 49224.0,
+        "cpu_ms_per_s": 18.3687,
+        "snr_db": -18.9209,
+        "attenuation_db": 100.1576
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 647.2727272727273,
+      "estimate_note": "仅单精度下界；实际走软件双精度，不能按此认定可实时。",
+      "selected": false
+    },
+    "9": {
+      "1000": {
+        "taps": 536.0,
+        "psram": 37256.0,
+        "cpu_ms_per_s": 21.2023,
+        "snr_db": 88.7226,
+        "attenuation_db": 0.0004
+      },
+      "10000": {
+        "taps": 536.0,
+        "psram": 37256.0,
+        "cpu_ms_per_s": 19.729,
+        "snr_db": -18.9209,
+        "attenuation_db": 100.1576
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 487.27272727272725,
+      "estimate_note": "仅单精度下界；实际走软件双精度，不能按此认定可实时。",
+      "selected": false
+    },
+    "8": {
+      "1000": {
+        "taps": 448.0,
+        "psram": 16936.0,
+        "cpu_ms_per_s": 13.182,
+        "snr_db": 89.2808,
+        "attenuation_db": 0.0004
+      },
+      "10000": {
+        "taps": 448.0,
+        "psram": 16936.0,
+        "cpu_ms_per_s": 13.8997,
+        "snr_db": -18.9209,
+        "attenuation_db": 100.1576
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 407.27272727272725,
+      "selected": false
+    },
+    "7": {
+      "1000": {
+        "taps": 352.0,
+        "psram": 13480.0,
+        "cpu_ms_per_s": 9.062,
+        "snr_db": 88.1279,
+        "attenuation_db": 0.0004
+      },
+      "10000": {
+        "taps": 352.0,
+        "psram": 13480.0,
+        "cpu_ms_per_s": 9.1223,
+        "snr_db": -18.9209,
+        "attenuation_db": 100.1576
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 320.0,
+      "selected": false
+    },
+    "6": {
+      "1000": {
+        "taps": 264.0,
+        "psram": 10312.0,
+        "cpu_ms_per_s": 10.0567,
+        "snr_db": 88.0561,
+        "attenuation_db": 0.0004
+      },
+      "10000": {
+        "taps": 264.0,
+        "psram": 10312.0,
+        "cpu_ms_per_s": 9.3503,
+        "snr_db": -18.9209,
+        "attenuation_db": 100.1576
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 240.0,
+      "selected": false
+    },
+    "5": {
+      "1000": {
+        "taps": 224.0,
+        "psram": 8872.0,
+        "cpu_ms_per_s": 7.8463,
+        "snr_db": 88.2962,
+        "attenuation_db": 0.0004
+      },
+      "10000": {
+        "taps": 224.0,
+        "psram": 8872.0,
+        "cpu_ms_per_s": 6.013,
+        "snr_db": -18.9671,
+        "attenuation_db": 98.3511
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 203.63636363636363,
+      "selected": false
+    },
+    "4": {
+      "1000": {
+        "taps": 176.0,
+        "psram": 4328.0,
+        "cpu_ms_per_s": 2.892,
+        "snr_db": 91.9627,
+        "attenuation_db": 0.0004
+      },
+      "10000": {
+        "taps": 176.0,
+        "psram": 4328.0,
+        "cpu_ms_per_s": 4.8137,
+        "snr_db": -4.5156,
+        "attenuation_db": 88.4903
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 160.0,
+      "selected": true
+    },
+    "3": {
+      "1000": {
+        "taps": 136.0,
+        "psram": 3528.0,
+        "cpu_ms_per_s": 3.361,
+        "snr_db": 90.2749,
+        "attenuation_db": 0.0002
+      },
+      "10000": {
+        "taps": 136.0,
+        "psram": 3528.0,
+        "cpu_ms_per_s": 3.684,
+        "snr_db": -12.4075,
+        "attenuation_db": 96.1727
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 123.63636363636364,
+      "selected": false
+    },
+    "2": {
+      "1000": {
+        "taps": 88.0,
+        "psram": 1864.0,
+        "cpu_ms_per_s": 2.1967,
+        "snr_db": 89.9182,
+        "attenuation_db": 0.0022
+      },
+      "10000": {
+        "taps": 88.0,
+        "psram": 1864.0,
+        "cpu_ms_per_s": 2.6097,
+        "snr_db": -13.5838,
+        "attenuation_db": 94.6662
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 80.0,
+      "selected": false
+    },
+    "1": {
+      "1000": {
+        "taps": 48.0,
+        "psram": 1384.0,
+        "cpu_ms_per_s": 1.52,
+        "snr_db": 86.1094,
+        "attenuation_db": 0.0035
+      },
+      "10000": {
+        "taps": 48.0,
+        "psram": 1384.0,
+        "cpu_ms_per_s": 1.714,
+        "snr_db": 19.1413,
+        "attenuation_db": 66.5294
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 43.63636363636363,
+      "selected": false
+    },
+    "0": {
+      "1000": {
+        "taps": 24.0,
+        "psram": 1096.0,
+        "cpu_ms_per_s": 0.6297,
+        "snr_db": 73.6052,
+        "attenuation_db": 0.0035
+      },
+      "10000": {
+        "taps": 24.0,
+        "psram": 1096.0,
+        "cpu_ms_per_s": 0.8113,
+        "snr_db": 20.9013,
+        "attenuation_db": 52.0323
+      },
+      "s31_ms_per_audio_s_single_precision_estimate": 21.818181818181817,
+      "selected": false
+    }
+  }
+}

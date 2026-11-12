@@ -7,9 +7,10 @@ from run import run, samples, quality, check_phases, check_fresh_prefixes
 
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
+p.add_argument('--binary', type=Path, help='manual reverse/baseline measurement')
 a = p.parse_args()
 build = a.build.resolve()
-binary = build / 'sim-audio-out'
+binary = a.binary.resolve() if a.binary else build / 'sim-audio-out'
 area = build / 'audio-out-evidence' / binary.name
 shutil.rmtree(area, ignore_errors=True)
 results, failed = {}, False

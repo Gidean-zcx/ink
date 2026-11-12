@@ -851,13 +851,12 @@ int ink_audio_init(void) {
     const char *prev = osal_mem_tag("audio");
     AU.lock = osal_mutex_create();
     AU.mic_lock = osal_mutex_create();
-    PC.lock = osal_mutex_create();
     AU.wake = osal_sem_create(0, 1);
     AU.ring = osal_malloc(CAP_RING * sizeof(int16_t), OSAL_MEM_EXTERNAL);
     AU.jb = osal_calloc(JB_MAX, sizeof(jb_frame_t), OSAL_MEM_EXTERNAL);
     AU.pcm = osal_malloc(FRAME * 4 * sizeof(int16_t), OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
-    if (!AU.lock || !AU.mic_lock || !PC.lock || !AU.wake || !AU.ring || !AU.jb || !AU.pcm) return -1;
+    if (!AU.lock || !AU.mic_lock || !AU.wake || !AU.ring || !AU.jb || !AU.pcm) return -1;
     if (ink_state_watch("member.", on_capture_owner, NULL, INK_EXEC_DIRECT) != 0) return -1;
     if (!AU.info.has_speaker && !AU.info.has_mic) return 0;
     osal_task_cfg_t cfg = {.name = "audio", .fn = audio_task, .stack_bytes = AU_STACK, .priority = AU_PRIO, .core = -1,
@@ -1233,7 +1232,12 @@ static void pcm_close(void) { /* producer lock held */
 
 int ink_audio_stream_push_pcm(int id, const int16_t *pcm, size_t frames, unsigned rate, unsigned channels) {
     if (!pcm || !frames || rate < 8000 || rate > 96000 || (channels != 1 && channels != 2) || frames > rate * 60 / 1000) return -1;
-    osal_mutex_lock(PC.lock, OSAL_WAIT_FOREVER);
+    lock();
+    if (!PC.lock) PC.lock = osal_mutex_create(); /* PCM only: leave the voice-only internal budget unchanged. */
+    osal_mutex_t *guard = PC.lock;
+    unlock();
+    if (!guard) return -1;
+    osal_mutex_lock(guard, OSAL_WAIT_FOREVER);
     lock();
     bool valid = AU.stream == id && !AU.finishing && AU.jb_count < JB_MAX && playback_owner_matches(&g_stream_owner, AU.prio);
     unlock();
@@ -1248,20 +1252,28 @@ int ink_audio_stream_push_pcm(int id, const int16_t *pcm, size_t frames, unsigne
         osal_free(mono);
     }
     if (rc) pcm_close();
-    osal_mutex_unlock(PC.lock);
+    osal_mutex_unlock(guard);
     return rc;
 }
 
-void ink_audio_stream_finish(int id) {
-    osal_mutex_lock(PC.lock, OSAL_WAIT_FOREVER);
+static void pcm_end(int id, bool drain) {
+    lock();
+    osal_mutex_t *guard = AU.pcm_stream == id ? PC.lock : NULL;
+    unlock();
+    if (!guard) return;
+    osal_mutex_lock(guard, OSAL_WAIT_FOREVER);
     if (PC.stream == id && PC.resampler) {
-        queue_pcm(id, NULL, (size_t)(2 * speex_resampler_get_input_latency(PC.resampler)));
+        if (drain) queue_pcm(id, NULL, (size_t)(2 * speex_resampler_get_input_latency(PC.resampler)));
         pcm_close();
     }
+    osal_mutex_unlock(guard);
+}
+
+void ink_audio_stream_finish(int id) {
+    pcm_end(id, true);
     lock();
     if (AU.stream == id) AU.finishing = true;
     unlock();
-    osal_mutex_unlock(PC.lock);
     osal_sem_give(AU.wake);
 }
 
@@ -1273,9 +1285,7 @@ void ink_audio_stream_abort(int id) {
         AU.finishing = AU.started = false;
     }
     unlock();
-    osal_mutex_lock(PC.lock, OSAL_WAIT_FOREVER);
-    if (PC.stream == id) pcm_close();
-    osal_mutex_unlock(PC.lock);
+    pcm_end(id, false);
     osal_sem_give(AU.wake);
 }
 
