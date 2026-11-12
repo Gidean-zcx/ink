@@ -21,7 +21,7 @@ class RemoteModel:
         self.provider, self.prefix = provider, prefix
         self.model = "deepseek-chat" if deepseek else os.environ.get(prefix + "_MODEL", "")
         default = "https://api.deepseek.com" if deepseek else "https://api.openai.com/v1" if provider == "openai" else "https://api.anthropic.com/v1"
-        self.base = os.environ.get(prefix + "_BASE_URL", default).rstrip("/")
+        self.base = (default if deepseek else os.environ.get(prefix + "_BASE_URL", default)).rstrip("/")
         url = urlsplit(self.base)
         if (not self.model or url.username or url.password or url.query or url.fragment
                 or not url.hostname or (url.scheme != "https" and

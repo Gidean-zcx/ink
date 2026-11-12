@@ -8,17 +8,19 @@
 | --- | --- | --- | --- |
 | 1 | 【实测】TLS、固定公钥、权限、路由隔离及远端协议判定通过 | `test_pairing.py`：4 passed；公钥独立经 openssl 算法核对 | `PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_pairing.py` |
 | 2 | 【实测】认领、nonce 恢复、过期、32 路上限、五次核对失败、预授权、txid 换令牌、7 天待生效和重启后认证通过 | `test_pairing.py`：8 passed；令牌原文未落入数据目录；去掉核对码校验后测试失败（exit 1） | 同第 1 条 |
-| 3 | 待验证：设备消息契约 | — | — |
+| 3 | 【实测】通过；654 条消息最多 110 词法单元 | 记录含 pair/offer 2 条、pair/complete 5 条、协议 2 hello 回答 3 条；生产 ink_json.c 解析通过 | `ctest --test-dir build -R hub-json-crosscheck --output-on-failure`（由中枢复跑产生样本） |
 | 4 | 【实测】假设备描述与参数原样传给模型，合法参数送达设备，缺参／越界不调用；真实设置能力另有范围外阻断，见顺手发现 | 同句前后对照已运行；恢复只传名字后 3 项失败（exit 1） | `PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/tests/pair_compare.py 36473cc4933e6fea2f2a78a4fbec16186d3be3f4`；反向 `hub/tests/pair_reverse.py schema` |
 | 5 | 【实测】统一产品提示、称呼默认不外发、开关开启才出现、无称呼不编名字、孩子口吻通过 | `test_hub_pair_model.py` | 下方专项命令 |
 | 6 | 【实测】三段间隔 300 ms；首段文字／语音早于流结束；UTF-8 分段；断流只补一次失败提示并正常 done | `test_hub_pair_model.py`；原有长答和朗读节奏待全量结果 | 下方专项命令 |
 | 7 | 【实测】默认配置、强制假模型、临时假文件检查模式、权限提醒和日志不含假密钥通过 | 没有真实服务请求；未读取真实环境文件 | 下方专项命令 |
 | 8 | 待验证：全量、内存、S31 与固件构建 | — | — |
-| 9 | 待完成：真机联调步骤 | — | — |
+| 9 | 【实现】启动、配对文件／人工认领、公钥核对、成功日志、退回步骤齐全 | 本报告“真机联调步骤”；称呼外发仍默认关 | 见该节命令；本轮未上机 |
 
 ## 没做到的
 
 - 网页认领页按任务书本次不做。
+- 没有真机、真实模型、真实语音或 Linux CI 验收；只执行本机编译和假服务测试。
+- 协议里的同 IP 每分钟 10 次限流未加；本次按任务明确的最小范围实现 32 个未完成配对和核对码五次作废。
 
 ## 和设计不一致的
 
@@ -43,18 +45,25 @@
 
 ## 要改的文档
 
+- `hub/README.md` 开头和“从零运行”仍有“配对为示例／只监听本机”的旧描述，任务只允许改连接和模型两节，留给主会话同步。
+
 - `docs/hub/device-protocol.md`：补充 `ai.ask`、`ai.listen` 的 `member: {name, role}` 参数及称呼默认不发给外部模型的约定。
 
 ## 新增的机制
 
-- TLS 证书文件与 `--lan`、`--lan-port`：任务书里程碑 1 要求。
-- `pin` 子命令：任务书里程碑 1 要求。
-
-- 配对令牌表 `hub.db/pairing_tokens`：任务书里程碑 2 要求；令牌及预授权码只存 SHA-256。
-- `claim`、`pair-file` 子命令、本机认领接口和配对过期计时：任务书里程碑 2 要求。
-
-- `INK_HUB_SHARE_MEMBER_NAME`：任务书里程碑 4 要求，默认关。
-- `INK_HUB_ENV_FILE`、`INK_HUB_PYTHON`、脚本 `--check`：任务书里程碑 6 要求安全读取和检查模式；沿用 `INK_HUB_DATA`。
+- `<data>/tls/cert.pem`、`key.pem`：里程碑 1 要求稳定 TLS 身份，私钥 600。
+- `--lan`：里程碑 1 要求另开 TLS 监听。
+- `--lan-port`：里程碑 1 要求 TLS 端口可指定，默认 8444。
+- `pin`：里程碑 1 要求只显示设备地址、公钥和核对码。
+- `hub.db/pairing_tokens`：里程碑 2 要求，存令牌／预授权哈希、待生效与有效状态。
+- 内存配对记录及 600 秒过期回调：里程碑 2 的认领、重连与 32 路限制要求；不是常驻任务。
+- `claim` 和本机 POST `/claim`：里程碑 2 要求人工核对。
+- `pair-file`：里程碑 2 要求导出现有设备格式的一次性配对文件。
+- `INK_HUB_SHARE_MEMBER_NAME`：里程碑 4 要求，默认关。
+- `DEEPSEEK_API_KEY`：里程碑 6 要求默认接法的凭据，只从环境读取。
+- `INK_HUB_ENV_FILE`：里程碑 6 要求指定启动密钥文件。
+- `INK_HUB_PYTHON`：启动脚本和假文件检查选择已有 Python 环境。
+- 脚本 `--check`：里程碑 6 允许的无请求检查模式；数据目录沿用 `INK_HUB_DATA`。
 - 没有新增常驻任务、线程、后台重试、代理循环或 Python 依赖。
 
 ## 专项验证与反向对照
@@ -65,7 +74,7 @@ taskpolicy -c utility env PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/te
 taskpolicy -c utility env PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/tests/pair_reverse.py schema
 ```
 
-【实测】专项 22 passed；单独扩展 TLS 正式配对、启动进程和 CLI 后，配对专项 10 passed。反向命令刻意返回 1：前者把错误核对码放行，被 403 断言拦住；后者恢复只传名字，3 个参数用例都失败。仅在内存中改被测函数，不修改工作区文件，不注册为依赖 Git 历史的 CTest。
+【实测】专项 22 passed；随后增加 TLS 正式配对、启动进程、CLI、10 秒等待及语音工厂接口验证，独立完整 pytest 190 passed。反向命令刻意返回 1：前者把错误核对码放行，被 403 断言拦住；后者恢复只传名字，3 个参数用例都失败。仅在内存中改被测函数，不修改工作区文件，不注册为依赖 Git 历史的 CTest。
 
 ## 同句前后对照
 
@@ -82,7 +91,7 @@ taskpolicy -c utility env PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/te
 
 ## 为什么不能更小
 
-任务同时要求独立 TLS 监听、稳定证书、完整配对及令牌恢复、真实工具 Schema、文字／语音流式和启动脚本，不能只放开一个地址或改协议版本号。复用 aiohttp、系统 openssl、现有 hub.db、ModelResult、发送队列和语音节奏；未选反向代理、新厂商 SDK、新表格式之外的持久文件或多轮代理。产品代码统计待最终核对。
+任务同时要求独立 TLS 监听、稳定证书、完整配对及令牌恢复、真实工具 Schema、文字／语音流式和启动脚本，不能只放开一个地址或改协议版本号。复用 aiohttp、系统 openssl、现有 hub.db、ModelResult、发送队列和语音节奏；未选反向代理、新厂商 SDK、新表格式之外的持久文件或多轮代理。产品新增行数按基线 diff 统计（含空行／注释，不含测试／文档）：中枢 471／700，设备 6／20，脚本 28／40。
 
 ## 真机联调步骤（交主会话）
 
@@ -130,3 +139,38 @@ taskpolicy -c utility env PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/te
 【实现】设备参数仅在现有 AI 请求构造处增加成员说明；按钮和 AI 仍使用同一设备能力及策略闸门。TLS／配对归网关、哈希凭据归数据层、外部模型协议归 models、流式调度归现有 voice 轮次。称呼和令牌不开放给模型作身份授权；本次没有新页面，G-002 页面快照继续沿用原接口。
 
 【实测】核对码输成中文时，字符串 compare_digest 原先抛 TypeError（专项失败、exit 1）；改用 UTF-8 字节比较后，同一测试通过，仍累计五次作废。中枢只记录“协议 2 已连接”和固定的操作回执状态，不记录令牌、称呼、问题或工具参数。
+
+## 构建与内存检查
+
+- 【实测】主工程普通首次全量原话：`99% tests passed, 2 tests failed out of 437`，1569.83 秒。失败为旧排队测试前文阻塞导致的 `hub-contract`，以及依赖它未运行的 `hub-json-crosscheck`；修正测试场景后这两项复跑通过。
+- 【实测】中枢专项复跑时，既有模拟器端到端测试出现 `turns=0`；清理本次生成的 `build/test-out/hub-e2e` 后单项复跑：`100% tests passed out of 1`，18.66 秒。首次全量中该项通过。这里记录复跑稳定性问题，不把清理后一次通过当作已证明根因。
+- 【实测】独立中枢 pytest：`190 passed in 81.31s`；含固件能力导出，无跳过。
+- 【实测】`ink-codex/tools/gcccheck.py build system/services/ai/ai_service.c tests/i18n_lang.c`：`gcccheck: 2 compiled, 0 with findings`，exit 0。
+- 【实测】S31 宿主机普通：`100% tests passed out of 77`，121.84 秒；ASan/UBSan：同样 77 项全部通过，131.05 秒。包含 WS、驱动、编解码、任务配置和原有反向对照，未报告 sanitizer 错误。
+- 【实测】S31 固件：同一检出、依赖、构建目录，临时仅还原设备 AI 文件到基线编译，再恢复实现重编；镜像 `4,268,048 → 4,268,096` 字节，增加 **48 字节**。内部 DIRAM 静态占用均为 `165,350` 字节。基线／最终编译器警告均 0；各 6 条 SDK CMake 组件告警。两次 `ports/esp32s31/build.sh` 均 exit 0，未连接设备。
+- 主工程 ASan/UBSan 全量进行中，最终结果在收尾时补齐。
+
+实际命令均带 `taskpolicy -c utility`；构建和 ctest 并发均为 2，串行执行不同构建与全量测试。主工程配置照总规则 §5，额外指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON`。
+
+```sh
+taskpolicy -c utility cmake --build build -j2
+taskpolicy -c utility env INK_KEEP_EVIDENCE=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility env INK_KEEP_EVIDENCE=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^hub-' --output-on-failure -j2
+taskpolicy -c utility env PYTHONPATH=hub INK_HUB_CAPS="$PWD/build/test-out/hub/caps.json" "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-tests -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"
+taskpolicy -c utility cmake --build build-s31-tests -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-tests --output-on-failure -j2
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-tests-asan -DINK_SANITIZE=ON -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"
+taskpolicy -c utility cmake --build build-s31-tests-asan -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-tests-asan --output-on-failure -j2
+taskpolicy -c utility env INK_DEPS="$INK_DEPS" INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" bash ports/esp32s31/build.sh
+```
+
+反复运行测试时先清本次生成的测试状态，保留原始失败记录；没有删除测试、放宽预算、跳过测试或延长等待来掩盖问题。本轮未运行 Linux CI；GCC 检查是本机交叉编译器检查，不能代替 Linux 运行。
+
+主工程内存构建在相同配置下换成 `build-asan` 并加 `-DINK_SANITIZE=ON`，随后：
+
+```sh
+taskpolicy -c utility cmake --build build-asan -j2
+taskpolicy -c utility env INK_KEEP_EVIDENCE=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```

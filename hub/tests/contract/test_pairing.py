@@ -1,4 +1,5 @@
 import hashlib
+import base64
 import asyncio
 import json
 import os
@@ -137,6 +138,19 @@ async def test_formal_member_scope_and_unauthenticated_gate(make_hub):
     assert hub.authority.role(connection.scope) == "child"
 
 
+async def test_pairing_can_wait_past_initial_handshake_deadline(make_hub):
+    _, client, url = await make_hub(lan=LAN)
+    device, reply = await begin(client, url)
+    assert "result" in reply
+    elapsed = asyncio.Event()
+    timer = asyncio.get_running_loop().call_later(10.2, elapsed.set)
+    try:
+        await elapsed.wait()  # Cross the protocol's ten-second handshake deadline.
+        assert (await device.call("caps/list"))["error"]["code"] == -32010
+    finally:
+        timer.cancel()
+
+
 async def cli(*args):
     root = Path(__file__).resolve().parents[3]
     process = await asyncio.create_subprocess_exec(sys.executable, "-m", "ink_hub", *args,
@@ -213,6 +227,7 @@ async def test_stable_tls_pin_and_exclusive_route(tmp_path):
     der = subprocess.check_output(["openssl", "pkey", "-pubin", "-outform", "DER"], input=pub)
     digest = subprocess.check_output(["openssl", "dgst", "-sha256"], input=der).decode().split()[-1]
     assert info["pin"] == digest == hashlib.sha256(der).hexdigest()
+    assert info["code"] == base64.b32encode(bytes.fromhex(info["pin"])).decode()[:12]
     assert verification_code("0" * 64) == "AAAAAAAAAAAA"
     assert verification_code("f" * 64) == "777777777777"
     hub = Hub(tmp_path, dev_allow_proto1=True, lan=info)
