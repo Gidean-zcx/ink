@@ -201,3 +201,15 @@ def test_deepseek_default_and_safe_start_script(tmp_path, monkeypatch, caplog):
     assert "权限" in reply.stderr and not marker.exists()
     assert "sk-test-0000" not in reply.stdout + reply.stderr + caplog.text
     assert "private-test-data" not in reply.stdout + reply.stderr
+
+
+async def test_speech_environment_extension_is_used(make_hub, monkeypatch):
+    import ink_hub.speech
+    from ink_hub.speech.fake import FakeASR, FakeTTS
+    asr, tts = FakeASR("合成识别"), FakeTTS()
+    monkeypatch.setattr(ink_hub.speech, "from_environment", lambda: (asr, tts), raising=False)
+    hub, _, _ = await make_hub()
+    assert hub.asr is asr and hub.tts is tts
+    monkeypatch.setattr(ink_hub.speech, "from_environment", lambda: None)
+    hub, _, _ = await make_hub()
+    assert isinstance(hub.asr, FakeASR) and isinstance(hub.tts, FakeTTS)

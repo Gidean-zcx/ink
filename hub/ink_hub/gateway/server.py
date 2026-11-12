@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 import secrets
 import time
 from dataclasses import dataclass, field
@@ -404,6 +405,7 @@ class Connection:
         self.tools = DeviceTools(self.request, params.get("fw", "development"), params.get("manifest_hash", ""))
         await self.send(response(rid, {"session": self.id, "proto": proto, "now_ms": int(self.hub.clock() * 1000),
                                        "hub_instance": self.hub.instance}))
+        logging.getLogger(__name__).info("设备已连接：协议 %d", proto)
 
     def member_scope(self, params):
         member, authed, epoch = params.get("member"), params.get("authed", False), params.get("epoch", 0)

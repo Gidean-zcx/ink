@@ -100,7 +100,7 @@ class Pairing:
         entry = self.codes.get(params.get("code"))
         if not entry or entry["expires"] <= self.hub.clock():
             raise web.HTTPBadRequest(text="认领码无效或已过期")
-        if not secrets.compare_digest(str(params.get("check", "")), self.hub.lan["code"]):
+        if not secrets.compare_digest(str(params.get("check", "")).encode(), self.hub.lan["code"].encode()):
             entry["errors"] += 1
             if entry["errors"] >= 5:
                 await self.expire(params["code"])

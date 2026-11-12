@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 import os
 import time
 from pathlib import Path
@@ -14,6 +15,7 @@ from ink_hub.ops.preflight import inspect
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = argparse.ArgumentParser(description="家庭服务器，第 1 步仅使用示例资料")
     parser.add_argument("command", choices=("serve", "doctor", "setup", "status", "pin", "claim", "pair-file"))
     parser.add_argument("values", nargs="*")

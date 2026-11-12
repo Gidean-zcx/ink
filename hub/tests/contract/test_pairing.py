@@ -79,8 +79,8 @@ async def test_nonce_resume_expiry_and_limits(make_hub):
     assert code not in hub.pairing.codes
     third, reply = await begin(client, url, "five-attempts")
     code = reply["result"]["code"]
-    for _ in range(5):
-        assert (await client.post(url + "/claim", json={"code": code, "check": "WRONG"})).status == 403
+    for check in ("不对", "WRONG", "WRONG", "WRONG", "WRONG"):
+        assert (await client.post(url + "/claim", json={"code": code, "check": check})).status == 403
     assert (await third.recv())["method"] == "pair/expired"
     assert (await client.post(url + "/claim", json={"code": code, "check": LAN["code"]})).status == 400
     for i in range(32):
@@ -97,6 +97,8 @@ async def test_preauth_resume_rotation_and_errors(make_hub):
     first, reply = await begin(client, url, preauth=preauth)
     assert "result" in reply
     old = await complete(first)
+    await first.ws.close()
+    hub, client, url = await make_hub(directory=hub.directory, lan=LAN, clock=lambda: now[0])
     second, reply = await begin(client, url, txid=old["txid"])
     new = await complete(second)
     assert new["device"] == old["device"] and new["token"] != old["token"]

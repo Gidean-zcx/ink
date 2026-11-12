@@ -135,6 +135,7 @@ async def run_turn(self, rid, method, params):
                     if not isinstance(receipt, dict) or "status" not in receipt:
                         raise ProtocolError("设备回执无效")
                     self.hub.metrics.tool_calls += 1
+                    logging.getLogger(__name__).info("设备操作回执：%s", "完成" if receipt["status"] == "done" else "未完成")
                     await emit(receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else ""))
                     if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
                         await self.tools.current([], guard=guard)
