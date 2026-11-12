@@ -211,9 +211,13 @@ typedef struct {
 static countdown_t timers[INK_MEMBERS_MAX] INK_PSRAM_BSS;
 static ink_exec_job_t timer_redraw;
 static char timer_text[48] INK_PSRAM_BSS, timer_status[32] INK_PSRAM_BSS;
+enum { TIMER_ADJUST = 4, TIMER_ACTIONS = 8 + TIMER_ADJUST };
+static lv_obj_t *timer_digits;
+static lv_timer_t *timer_ui_tick;
+static char timer_adjust_args[TIMER_ADJUST][32] INK_PSRAM_BSS;
 static ink_ui_field_spec_t timer_fields[3] INK_PSRAM_BSS;
-static ink_ui_action_spec_t timer_actions[8] INK_PSRAM_BSS;
-static ink_ui_page_spec_t timer_page = {.id = "ClockTimer", .title = TR_NOOP("计时"), .object = {"clock:timer", 1}, .fields = timer_fields, .field_count = 3, .actions = timer_actions, .action_count = 8};
+static ink_ui_action_spec_t timer_actions[TIMER_ACTIONS] INK_PSRAM_BSS;
+static ink_ui_page_spec_t timer_page = {.id = "ClockTimer", .title = TR_NOOP("计时"), .object = {"clock:timer", 1}, .fields = timer_fields, .field_count = 3, .actions = timer_actions, .action_count = TIMER_ACTIONS};
 static countdown_t *my_timer(void) { /* UI task */
     for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!strcmp(timers[i].owner, ink_member_current()->id)) return &timers[i];
     for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!timers[i].owner[0]) {
@@ -226,9 +230,26 @@ static uint64_t remaining(countdown_t *t) {
     uint64_t now = osal_now_us();
     return t->running ? (t->end > now ? t->end - now : 0) : t->left;
 }
+static void timer_format(uint64_t left) {
+    unsigned sec = (unsigned)((left + 999999) / 1000000);
+    if (sec >= 3600) snprintf(timer_text, sizeof timer_text, "%u:%02u:%02u", sec / 3600, sec / 60 % 60, sec % 60);
+    else snprintf(timer_text, sizeof timer_text, "%u:%02u", sec / 60, sec % 60);
+}
 static void timer_refresh(void *arg) {
     (void)arg;
-    if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), "ClockTimer")) ink_ui_redraw();
+    if (!ink_ui_page_current() || strcmp(ink_ui_page_name(), "ClockTimer") || ink_power_state() == INK_PWR_LOCKED) return;
+    countdown_t *t = my_timer();
+    ink_svc_lock(); uint64_t left = remaining(t); bool running = t->running; ink_svc_unlock();
+    if (!running || !left) { ink_ui_redraw(); return; }
+    timer_format(left);
+    lv_label_set_text(timer_digits, timer_text);
+    ink_ui_hint_obj(timer_digits, INK_REFRESH_FAST);
+    ink_ui_content_changed();
+}
+static void timer_ui_refresh(lv_timer_t *tick) { (void)tick; timer_refresh(NULL); }
+static void timer_destroy(void) {
+    if (timer_ui_tick) lv_timer_delete(timer_ui_tick);
+    timer_ui_tick = NULL; timer_digits = NULL;
 }
 static void timer_tick(void *arg) {
     countdown_t *t = arg;
@@ -237,7 +258,7 @@ static void timer_tick(void *arg) {
     if (active && !left) { t->running = false; t->left = 0; }
     ink_svc_unlock();
     if (!active) return;
-    if (left) ink_svc_at(&t->due, end - ((left - 1) / 60000000) * 60000000, timer_tick, t);
+    if (left) ink_svc_at(&t->due, end, timer_tick, t);
     else {
         ink_interrupt_t it = {.kind = INK_INT_ALARM, .ringing = true, .nactions = 2,
             .actions = {{.label = TR("关闭"), .cap = "clock.timer_dismiss"}, {.label = TR("知道了"), .cap = "clock.timer_dismiss"}}};
@@ -246,7 +267,7 @@ static void timer_tick(void *arg) {
         if (ink_member_exists(t->owner)) t->ringing = ink_interrupt_raise(&it);
         ink_power_release(INK_NEED_AWAKE);
     }
-    ink_exec_post(INK_EXEC_UI, &timer_redraw, timer_refresh, NULL);
+    if (!left) ink_exec_post(INK_EXEC_UI, &timer_redraw, timer_refresh, NULL);
 }
 static void timer_open(ink_call_t *c) { (void)c; ink_ui_push(&TIMER, NULL); }
 static void timer_dismiss(ink_call_t *c) {
@@ -275,7 +296,7 @@ static void timer_change(ink_call_t *c) {
 static void create_timer(lv_obj_t *screen, void *arg) {
     (void)arg; timer_page.title = TR("计时"); countdown_t *t = my_timer(); if (!t) return;
     ink_svc_lock(); uint64_t left = remaining(t); bool running = t->running, started = t->end != 0; ink_svc_unlock();
-    snprintf(timer_text, sizeof timer_text, TR("%llu 分钟"), (unsigned long long)((left + 59999999) / 60000000));
+    timer_format(left);
     snprintf(timer_status, sizeof timer_status, "%s", running ? TR("正在计时") : started ? (left ? TR("已暂停") : TR("计时结束")) : TR("设定时长"));
     timer_fields[0] = (ink_ui_field_spec_t){.id = "remaining", .label = TR("剩余时间"), .role = "text", .value = timer_text};
     timer_fields[1] = (ink_ui_field_spec_t){.id = "status", .label = TR("状态"), .role = "text", .value = timer_status};
@@ -284,9 +305,21 @@ static void create_timer(lv_obj_t *screen, void *arg) {
     const char *tabs[] = {TR("闹钟"), TR("计时")}; lv_obj_t *seg = ink_ui_segments(screen, tabs, 2, 1, INK_MARGIN, y, w, NULL, NULL);
     ink_shell_bind(lv_obj_get_child(seg, 0), "shell.back", "{}"); y += INK_SEGMENT + INK_GAP_L;
     ink_ui_line(screen, timer_status, INK_FONT_SUBTITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, y, w); y += INK_LINE_SUBTITLE + INK_GAP;
-    ink_ui_line(screen, timer_text, INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += INK_LINE_NUMBER + INK_GAP_L;
-    ink_ui_notice(screen, TR("按分钟显示剩余时间，到点响铃"), y);
-    y += ink_ui_text_height(TR("按分钟显示剩余时间，到点响铃"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP;
+    timer_digits = ink_ui_line(screen, timer_text, INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += INK_LINE_NUMBER + INK_GAP_L;
+    if (running) timer_ui_tick = lv_timer_create(timer_ui_refresh, 1000, NULL);
+    static const char *const adjust[] = {TR_NOOP("分－"), TR_NOOP("分＋"), TR_NOOP("秒－"), TR_NOOP("秒＋")};
+    static const int delta[] = {-60, 60, -1, 1};
+    _Static_assert(sizeof adjust / sizeof *adjust <= TIMER_ADJUST && sizeof delta / sizeof *delta <= TIMER_ADJUST, "timer controls fit");
+    for (unsigned i = 0; i < TIMER_ADJUST; i++) {
+        int sec = (int)((left + 999999) / 1000000) + delta[i];
+        bool enabled = !running && sec >= 1 && sec <= 86400;
+        snprintf(timer_adjust_args[i], sizeof timer_adjust_args[i], "{\"seconds\":%d}", enabled ? sec : 1);
+        timer_actions[8 + i] = (ink_ui_action_spec_t){.id = adjust[i], .label = TR(adjust[i]), .capability = "clock.timer_set", .args_json = timer_adjust_args[i], .enabled = enabled};
+        lv_obj_t *b = ink_ui_pill(screen, TR(adjust[i]), INK_MARGIN + (int)i * (w + INK_GAP_M) / TIMER_ADJUST, y, (w - (TIMER_ADJUST - 1) * INK_GAP_M) / TIMER_ADJUST, INK_CONTROL, false, NULL, NULL);
+        ink_shell_bind(b, "clock.timer_set", timer_adjust_args[i]);
+        if (!enabled) lv_obj_remove_flag(b, LV_OBJ_FLAG_CLICKABLE);
+    }
+    y += INK_CONTROL + INK_GAP;
     const char *labels[] = {TR("1 分钟"), TR("5 分钟"), TR("15 分钟"), TR("30 分钟"), started && !running && left ? TR("继续") : TR("开始"), TR("暂停"), TR("取消"), TR("闹钟")};
     const char *caps[] = {"clock.timer_set", "clock.timer_set", "clock.timer_set", "clock.timer_set", "clock.timer_start", "clock.timer_pause", "clock.timer_cancel", "shell.back"};
     const char *args[] = {"{\"seconds\":60}", "{\"seconds\":300}", "{\"seconds\":900}", "{\"seconds\":1800}", "{}", "{}", "{}", "{}"};
@@ -302,8 +335,13 @@ static void create_timer(lv_obj_t *screen, void *arg) {
     }
     ink_ui_notice(screen, timer_fields[2].value, y);
 }
-static int timer_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&timer_page, out, cap); }
-static const ink_activity_t TIMER = {.name = "ClockTimer", .app = "clock", .create = create_timer, .snapshot = timer_snapshot};
+static int timer_snapshot(char *out, size_t cap) {
+    int n = ink_ui_semantics_snapshot(&timer_page, out, cap); if (n < 0) return n;
+    countdown_t *t = my_timer(); ink_svc_lock(); uint64_t left = remaining(t); ink_svc_unlock();
+    int k = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"remaining_seconds\":%llu}", (unsigned long long)((left + 999999) / 1000000));
+    return k < 0 || (size_t)k >= cap - (size_t)n + 1 ? -1 : n - 1 + k;
+}
+static const ink_activity_t TIMER = {.name = "ClockTimer", .app = "clock", .create = create_timer, .destroy = timer_destroy, .snapshot = timer_snapshot};
 
 /* Durations are volatile and member-owned, like countdowns; only visible digits tick. */
 enum { EXTRA_ROWS = 3, EXTRA_FIELDS = EXTRA_ROWS + 1, EXTRA_ACTIONS = EXTRA_ROWS + 3, LAPS_MAX = 99 };
@@ -426,8 +464,8 @@ static void extra_destroy(void) {
 }
 static int extra_snapshot(char *out, size_t cap) {
     int n = ink_ui_semantics_snapshot(&X.model, out, cap); if (n < 0) return n;
-    int k = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"page_number\":%u,\"total\":%u,\"picking\":%s,\"elapsed_ms\":%llu,\"running\":%s}", X.page + 1, X.total,
-        X.world && X.picking ? "true" : "false", (unsigned long long)(!X.world && X.watch ? elapsed(X.watch) / 1000 : 0), !X.world && X.watch && X.watch->running ? "true" : "false");
+    int k = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"page_number\":%u,\"total\":%u,\"picking\":%s,\"elapsed_ms\":%llu,\"elapsed_seconds\":%llu,\"running\":%s}", X.page + 1, X.total,
+        X.world && X.picking ? "true" : "false", (unsigned long long)(!X.world && X.watch ? elapsed(X.watch) / 1000 : 0), (unsigned long long)(!X.world && X.watch ? elapsed(X.watch) / 1000000 : 0), !X.world && X.watch && X.watch->running ? "true" : "false");
     return k < 0 || (size_t)k >= cap - (size_t)n + 1 ? -1 : n - 1 + k;
 }
 static void extra_change(ink_call_t *c) {

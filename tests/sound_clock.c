@@ -107,12 +107,12 @@ static void timer(void) {
     call_ok("clock.timer_set", "{\"seconds\":2}"); call_ok("clock.timer_start", NULL); call_ok("clock.timer_cancel", NULL);
     delay_ms(3000); CHECK(strcmp(active_state(), "alarm"), "cancelled countdown does not ring");
     call_ok("clock.timer_set", "{\"seconds\":180}"); call_ok("clock.timer_start", NULL); capture("timer-running");
-    double refreshes = sim_metric_value("display.queue_wait_ms"); delay_ms(2000);
-    CHECK(sim_metric_value("display.queue_wait_ms") == refreshes, "minute countdown does not refresh every second");
-    delay_ms(60000); quiet(); on_ui(snapshot); CHECK(strstr(snap, "2 分钟"), "remaining time updates at the next minute boundary");
+    uint32_t refreshes = ink_display_commits(); delay_ms(2100);
+    CHECK(ink_display_commits() - refreshes >= 2 && ink_display_commits() - refreshes <= 3, "countdown updates once per second");
+    delay_ms(60000); quiet(); on_ui(snapshot); CHECK(strstr(snap, "1:5"), "remaining time includes elapsed seconds after a minute");
     CHECK(ink_member_switch("kid") == 0, "child has an independent timer"); quiet();
     call_ok("app.open", "{\"id\":\"clock\"}"); press("计时"); on_ui(snapshot);
-    CHECK(strstr(snap, "设定时长") && strstr(snap, "5 分钟"), "child snapshot contains no adult timer state");
+    CHECK(strstr(snap, "设定时长") && strstr(snap, "5:00"), "child snapshot contains no adult timer state");
     call_ok("clock.timer_set", "{\"seconds\":3}"); call_ok("clock.timer_start", NULL);
     CHECK(WAIT_FOR(!strcmp(active_state(), "alarm"), 10000), "child countdown can ring"); quiet();
     CHECK(sim_metric_last("audio.ring.alarm") == 1, "child countdown uses the selected alarm tone");

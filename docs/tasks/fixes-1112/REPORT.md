@@ -5,7 +5,7 @@
 | 任务 | 做了什么 / 文件 | 测试结果原话 |
 | --- | --- | --- |
 | ime-switch-key | 保留键盘浮层，更新映射；`keyboard.c`、`ime_keyboard1.*`、`memo.script`、`device_autotest/sim.c` | `ime-keyboard1` 与四项 `autotest-*` Passed；旧版反向对照 5 条断言失败；旧版丢字未稳定复现，详见分报告 |
-| timer-seconds | 待复现和修复 | 未运行 |
+| timer-seconds | `clock.c` 分秒选择、数字局刷、秒快照；新增验收，更新旧分钟断言，3 条英文、6 张截图 | `100% tests passed out of 5`；旧版反向失败；`gcccheck: 3 compiled, 0 with findings` |
 | memo-save-busy | 待复现和修复 | 未运行 |
 | cell-double-1 | 待复现和修复 | 未运行 |
 
