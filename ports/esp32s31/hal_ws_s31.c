@@ -167,12 +167,17 @@ static void ink_ws_task(void *arg) {
         if (w->cb) w->cb(w->ctx, HAL_WS_CONNECTED, NULL, 0);
     }
     while (ink_connected(w) && !ink_stopped(w)) {
-        osal_mutex_lock(w->lock, OSAL_WAIT_FOREVER);
+        /* Wait for data without the lock, so a sender never queues behind the 20 ms wait (CI on Linux,
+         * whose mutexes are not fair, starved a 2 s send this way); take it only to read. */
         int ready = esp_transport_poll_read(w->transport, 20);
-        bool ok = ready >= 0 && (!ready || ink_receive(w, scratch, &message, &used, &remaining, &kind));
-        bool deliver = ok && ready && kind && !remaining && esp_transport_ws_get_fin_flag(w->transport) &&
-            esp_transport_ws_get_read_opcode(w->transport) < WS_TRANSPORT_OPCODES_CLOSE;
-        osal_mutex_unlock(w->lock);
+        bool ok = ready >= 0, deliver = false;
+        if (ok && ready) {
+            osal_mutex_lock(w->lock, OSAL_WAIT_FOREVER);
+            ok = ink_receive(w, scratch, &message, &used, &remaining, &kind);
+            deliver = ok && kind && !remaining && esp_transport_ws_get_fin_flag(w->transport) &&
+                esp_transport_ws_get_read_opcode(w->transport) < WS_TRANSPORT_OPCODES_CLOSE;
+            osal_mutex_unlock(w->lock);
+        }
         if (!ok) break;
         if (deliver) {
             if (w->cb && !ink_stopped(w)) w->cb(w->ctx, kind == WS_TRANSPORT_OPCODES_TEXT ? HAL_WS_TEXT : HAL_WS_BINARY, message, used);
