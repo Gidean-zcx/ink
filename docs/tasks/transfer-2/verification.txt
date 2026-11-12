@@ -23,3 +23,6 @@ Report local links: 6 passed.
 Translation file: baseline bytes preserved, additions appended only.
 Browser screenshot: unavailable; browser origin approval denied. No alternate browser or CLI capture attempted.
 No physical device, serial, paid API, push or PR actions.
+Privacy diff scan after product commit: 0 matches, grep exit 1.
+Final diff scope and size reviewed; no unrelated or forbidden paths and no build artifacts.
+Product code commit: 8393445db9e95c8b6ed104a6a68daf0ee4244510.
