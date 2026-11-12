@@ -448,5 +448,59 @@
     "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/main/weread/weread_online.cc#L1",
     "sha256": "3b81a85776458e06f94604dd02bce8cf64f0711f00ab3065c56bcd540215000c",
     "finding": "在线读取适配代码，存在代码不等于正文接口可用。"
+  },
+  {
+    "id": "P10",
+    "repository": "crosspoint-reader",
+    "file": "lib/EpdFont/TtfEpdFont.cpp",
+    "line": 46,
+    "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/EpdFont/TtfEpdFont.cpp#L46",
+    "sha256": "23bb709504b67c5b1582df1c6d656ec86bb7c3d8c464ba42d7dd5920da79af99",
+    "finding": "TTF 字体流式来源与字重/字形处理。"
+  },
+  {
+    "id": "I5",
+    "repository": "CrossInk",
+    "file": "src/activities/reader/BookStatsView.cpp",
+    "line": 1,
+    "url": "https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/src/activities/reader/BookStatsView.cpp#L1",
+    "sha256": "34e2b94abe472b9ae34962a248f71840e7b450a220f679bd4750f306dfccd3f0",
+    "finding": "本书与全局统计展示。"
+  },
+  {
+    "id": "X9",
+    "repository": "kiikoread-xiugai",
+    "file": "MODIFICATIONS.md",
+    "line": 7,
+    "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/MODIFICATIONS.md#L7",
+    "sha256": "0dd19a4a5a76742012eeb35cb55f0446c67c3243e1f2fd8a2b24c60f7a4b16c9",
+    "finding": "改版声明 rc107 基线；不是模拟器 manifest 的 rc97。"
+  },
+  {
+    "id": "F1",
+    "repository": "factory",
+    "file": "main/reader/epub_document.cc",
+    "line": 380,
+    "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/epub_document.cc#L380",
+    "sha256": "1acb5a463f002cead84b7921af5a63e9623e5136ebc3320c0bceae8240353ef9",
+    "finding": "原厂 EPUB 使用 HtmlBlockParser 输出阅读块。"
+  },
+  {
+    "id": "F2",
+    "repository": "factory",
+    "file": "main/display/screen/book_screen/settings/book_settings_sheet.cc",
+    "line": 1,
+    "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/book_screen/settings/book_settings_sheet.cc#L1",
+    "sha256": "e0b4bd404e4151240532a1c2236298b5f14607df332c91c0bf07e487c3087f95",
+    "finding": "阅读设置和书内字号、边距等控件。"
+  },
+  {
+    "id": "F3",
+    "repository": "factory",
+    "file": "main/display/screen/cloud_screen/ap/ap_transfer.cc",
+    "line": 1142,
+    "url": "https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/cloud_screen/ap/ap_transfer.cc#L1142",
+    "sha256": "3fc762af1bffda80aac67aeacf9bee6a028ca72444cabcb607c98fa31fd26585",
+    "finding": "原厂网页文件管理路由；不是没有目录管理功能。"
   }
 ]

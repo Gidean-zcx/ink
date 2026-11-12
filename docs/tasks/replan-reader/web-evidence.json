@@ -132,6 +132,14 @@
       "url": "https://thingsos.scholarcn.com/release.json",
       "http": 200,
       "sha256": "a338764e3e24eb1740fd9f9578f6686f383ce71921e862286b170ac2a8378525"
+    },
+    {
+      "url": "https://github.com/Gidean-zcx/ink/issues",
+      "result": "read-only web fetch cache miss; current open issues not verified"
+    },
+    {
+      "url": "https://github.com/Gidean-zcx/ink/pulls",
+      "result": "read-only web fetch cache miss; current open PRs not verified"
     }
   ]
 }

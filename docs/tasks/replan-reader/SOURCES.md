@@ -54,3 +54,14 @@
 | T2 | 实际发送百分比作为 progress，不是 EPUB XPointer。 | [tingqu/main/reader/kosync.cc:334](https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/main/reader/kosync.cc#L334) |
 | T3 | 公开的书架服务代码；听趣不是只有闭源说明。 | [tingqu/main/weread/weread_service.cc:1](https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/main/weread/weread_service.cc#L1) |
 | T4 | 在线读取适配代码，存在代码不等于正文接口可用。 | [tingqu/main/weread/weread_online.cc:1](https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1/blob/89db82442e655340e6194db89d4d6c9e64031d93/main/weread/weread_online.cc#L1) |
+
+## 补充证据
+
+| 证据 | 核查内容 | 固定版本文件与起始行 |
+| --- | --- | --- |
+| P10 | TTF 字体流式来源与字重/字形处理。 | [crosspoint-reader/lib/EpdFont/TtfEpdFont.cpp:46](https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/EpdFont/TtfEpdFont.cpp#L46) |
+| I5 | 本书与全局统计展示。 | [CrossInk/src/activities/reader/BookStatsView.cpp:1](https://github.com/uxjulia/CrossInk/blob/9914146eeae7b46b300f475a16c32426fc02ec1f/src/activities/reader/BookStatsView.cpp#L1) |
+| X9 | 改版声明 rc107 基线；不是模拟器 manifest 的 rc97。 | [kiikoread-xiugai/MODIFICATIONS.md:7](https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/MODIFICATIONS.md#L7) |
+| F1 | 原厂 EPUB 使用 HtmlBlockParser 输出阅读块。 | [factory/main/reader/epub_document.cc:380](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/reader/epub_document.cc#L380) |
+| F2 | 阅读设置和书内字号、边距等控件。 | [factory/main/display/screen/book_screen/settings/book_settings_sheet.cc:1](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/book_screen/settings/book_settings_sheet.cc#L1) |
+| F3 | 原厂网页文件管理路由；不是没有目录管理功能。 | [factory/main/display/screen/cloud_screen/ap/ap_transfer.cc:1142](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/display/screen/cloud_screen/ap/ap_transfer.cc#L1142) |

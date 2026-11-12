@@ -34,12 +34,14 @@
     {
       "name": "dpreader",
       "commit": "84f81c39d92fec50301aacc9f811d238fdb8b26a",
-      "url": "https://github.com/dephia31/dpreader31.git"
+      "url": "https://github.com/dephia31/dpreader31.git",
+      "local_copy": "source-only snapshot; newly created clone Git cache and firmware files removed after deviation audit"
     },
     {
       "name": "tingqu",
       "commit": "89db82442e655340e6194db89d4d6c9e64031d93",
-      "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1.git"
+      "url": "https://github.com/TaoRone/Metalio-E-Ink4-Plus-TingQuS1.git",
+      "local_copy": "source-only snapshot; newly created clone Git cache and firmware files removed after deviation audit"
     },
     {
       "name": "thingsos-public",
