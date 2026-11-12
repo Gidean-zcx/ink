@@ -13,7 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 
-enum { VISIBLE_ROWS = 4, EDIT_FIELDS = 7, PICKER_PARTS = INK_UI_DATETIME_PARTS, REPEAT_PRESETS = 4, EDIT_ACTIONS = 13 };
+enum { VISIBLE_ROWS = 4, EDIT_FIELDS = 7, PICKER_PARTS = INK_UI_DATETIME_PARTS, REPEAT_PRESETS = 4, EDIT_ACTIONS = 13,
+       CONTROL_FIELDS = 2, CONTROL_ACTIONS = 6 };
 static const ink_activity_t UPCOMING, CALENDAR, REMINDER_EDIT, REMINDER_TIME;
 static void reminder_action(ink_call_t *call);
 static struct {
@@ -23,9 +24,10 @@ static struct {
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     ink_ui_page_spec_t controls;
-    ink_ui_field_spec_t date_field;
-    ink_ui_action_spec_t actions[5];
-    char member[16], date_text[96], select_args[32];
+    ink_ui_field_spec_t date_fields[CONTROL_FIELDS];
+    ink_ui_action_spec_t actions[CONTROL_ACTIONS];
+    char member[16], date_text[96], select_args[32], week_text[64];
+    int week_page, week_pages, week_rows;
     char ids[VISIBLE_ROWS][32], values[VISIBLE_ROWS][128], args[VISIBLE_ROWS][32];
     bool calendar;
 } C INK_PSRAM_BSS;
@@ -96,6 +98,7 @@ static void create(lv_obj_t *screen, void *arg) {
     (void)arg; C.calendar = !strcmp(ink_ui_page_name(), "Calendar");
     if (strcmp(C.member, ink_member_current()->id) || !C.date.year) {
         memset(&C.position, 0, sizeof C.position); ink_time_to_local(ink_time_now_s(), &C.date);
+        C.week_page = -1;
         snprintf(C.member, sizeof C.member, "%s", ink_member_current()->id);
     }
     ink_shell_statusbar(screen, true);
@@ -104,6 +107,7 @@ static void create(lv_obj_t *screen, void *arg) {
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, w = INK_CANVAS_W - 2 * INK_MARGIN, capacity = 4;
     memset(C.actions, 0, sizeof C.actions);
     if (C.calendar && ink_time_valid()) {
+        int controls_y = y;
         int x = INK_CANVAS_W - INK_MARGIN - 2 * INK_CONTROL - INK_GAP_XS;
         ink_shell_bind(ink_ui_circle(screen, "back", x, y, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_prev", "{}");
         ink_shell_bind(ink_ui_circle(screen, "next", x + INK_CONTROL + INK_GAP_XS, y, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_next", "{}");
@@ -117,9 +121,39 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         y += ink_ui_line_height(INK_FONT_NOTE);
         int day_h = ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_NOTE);
+        int week_rows = (INK_CANVAS_H - y - ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_XS -
+            2 * INK_CONTROL - INK_GAP_M - INK_GAP) / day_h;
+        C.week_pages = (rows + week_rows - 1) / week_rows;
+        if (C.week_rows != week_rows || C.week_page < 0 || C.week_page >= C.week_pages)
+            C.week_page = (first.wday + C.date.day - 1) / 7 / week_rows;
+        C.week_rows = week_rows;
+        int first_row = C.week_page * week_rows, end_row = LV_MIN(rows, first_row + week_rows);
+        snprintf(C.week_text, sizeof C.week_text, "%d/%d (%d-%d)", C.week_page + 1, C.week_pages,
+            LV_MAX(1, first_row * 7 - first.wday + 1), LV_MIN(days, end_row * 7 - first.wday));
+        if (C.week_pages > 1) {
+            const char *caps[] = {"calendar.grid_prev", "calendar.grid_next"};
+            const char *labels[] = {TR("上一页"), TR("下一页")};
+            _Static_assert(sizeof caps / sizeof *caps == CONTROL_ACTIONS - 4, "calendar paging actions fit");
+            _Static_assert(sizeof labels / sizeof *labels == sizeof caps / sizeof *caps, "calendar paging labels match");
+            for (int i = 0; i < 2; i++) {
+                bool enabled = i ? C.week_page + 1 < C.week_pages : C.week_page > 0;
+                lv_obj_t *b = ink_ui_circle(screen, i ? "next" : "back", INK_MARGIN + i * 2 * (INK_CONTROL + INK_GAP_XS),
+                    controls_y, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+                if (enabled) ink_shell_bind(b, caps[i], "{}");
+                else lv_obj_add_state(b, LV_STATE_DISABLED);
+                control(3 + i, i ? "grid-next" : "grid-prev", labels[i], caps[i], "{}");
+                C.actions[3 + i].enabled = enabled;
+            }
+            for (int i = 0; i < C.week_pages; i++)
+                ink_ui_box(screen, INK_MARGIN + INK_CONTROL + INK_GAP_XS +
+                    (INK_CONTROL - C.week_pages * INK_GAP_L + INK_GAP_L - INK_PAGE_DOT) / 2 + i * INK_GAP_L,
+                    controls_y + (INK_CONTROL - INK_PAGE_DOT) / 2, INK_PAGE_DOT, INK_PAGE_DOT, -1,
+                    i == C.week_page ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, i != C.week_page);
+        }
         for (int d = 1; d <= days; d++) {
             int pos = first.wday + d - 1; bool selected = d == C.date.day;
-            lv_obj_t *box = ink_ui_box(screen, INK_MARGIN + pos % 7 * cell, y + pos / 7 * day_h, cell, day_h, INK_RADIUS_KEY, selected ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, false);
+            if (pos / 7 < first_row || pos / 7 >= end_row) continue;
+            lv_obj_t *box = ink_ui_box(screen, INK_MARGIN + pos % 7 * cell, y + (pos / 7 - first_row) * day_h, cell, day_h, INK_RADIUS_KEY, selected ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, false);
             ink_tm_t date = {.year = C.date.year, .month = C.date.month, .day = d};
             int64_t from = ink_time_from_local(&date); date.day++;
             int64_t until = ink_time_from_local(&date); unsigned marks = 0; int cursor = 0; ink_alarm_t a;
@@ -139,7 +173,7 @@ static void create(lv_obj_t *screen, void *arg) {
                 lv_obj_set_style_border_color(mark, selected ? ink_ui_paper() : ink_ui_ink(), 0);
             }
         }
-        y += rows * day_h; capacity = 1;
+        y += (end_row - first_row) * day_h; capacity = 1;
         char lunar[32]; lunar_text(C.date.day, false, lunar, sizeof lunar);
         snprintf(C.date_text, sizeof C.date_text, TR("%d年%d月%d日 · %s"), C.date.year, C.date.month, C.date.day, lunar);
         ink_ui_notice(screen, C.date_text, y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
@@ -154,9 +188,12 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_shell_bind(ink_ui_pill(screen, TR("看月历"), INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE, INK_STATUS_BAR + INK_GAP_S, INK_CIRCLE_LARGE, INK_CONTROL, false, NULL, NULL), "calendar.open", "{}");
         ink_shell_bind(ink_ui_pill(screen, TR("加一件"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, false, NULL, NULL), "reminder.new", "{}");
     }
-    C.date_field = (ink_ui_field_spec_t){.id = "date", .role = "text", .label = C.calendar ? TR("所选日期") : TR("范围"), .value = C.date_text};
-    C.controls = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = C.calendar ? TR("月历") : TR("接下来"), .object = {"calendar", 1}, .fields = &C.date_field, .field_count = 1, .actions = C.actions, .action_count = 3};
-    control(3, "back", TR("返回"), "shell.back", "{}"); C.controls.action_count = 4;
+    C.date_fields[0] = (ink_ui_field_spec_t){.id = "date", .role = "text", .label = C.calendar ? TR("所选日期") : TR("范围"), .value = C.date_text};
+    C.date_fields[1] = (ink_ui_field_spec_t){.id = "weeks", .role = "status", .label = TR("月历"), .value = C.week_text};
+    bool paged_grid = C.calendar && ink_time_valid() && C.week_pages > 1;
+    C.controls = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = C.calendar ? TR("月历") : TR("接下来"), .object = {"calendar", 1}, .fields = C.date_fields, .field_count = paged_grid ? CONTROL_FIELDS : 1, .actions = C.actions, .action_count = 3};
+    int back = paged_grid ? CONTROL_ACTIONS - 1 : 3;
+    control(back, "back", TR("返回"), "shell.back", "{}"); C.controls.action_count = (size_t)back + 1;
     load_rows();
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = C.controls.title, .object = {"calendar", 1}, .actions = PAGING, .action_count = 2};
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
@@ -177,10 +214,15 @@ static const ink_activity_t UPCOMING = {.name = "Upcoming", .app = "upcoming", .
 static const ink_activity_t CALENDAR = {.name = "Calendar", .app = "upcoming", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static void navigate(ink_call_t *call) {
     const char *id = call->cap->id;
-    if (!strcmp(id, "calendar.open")) { memset(&C.position, 0, sizeof C.position); ink_ui_push(&CALENDAR, NULL); return; }
+    if (!strcmp(id, "calendar.open")) { memset(&C.position, 0, sizeof C.position); C.week_page = -1; ink_ui_push(&CALENDAR, NULL); return; }
     if (!C.list || strcmp(C.member, ink_member_current()->id)) { call->rc.status = INK_RC_STALE; return; }
     if (!strcmp(id, "calendar.next") || !strcmp(id, "calendar.prev")) { ink_ui_list_turn(C.list, !strcmp(id, "calendar.next") ? 1 : -1); return; }
     if (!C.calendar || !ink_time_valid()) { call->rc.status = INK_RC_STALE; return; }
+    if (!strcmp(id, "calendar.grid_next") || !strcmp(id, "calendar.grid_prev")) {
+        int page = C.week_page + (!strcmp(id, "calendar.grid_next") ? 1 : -1);
+        if (page < 0 || page >= C.week_pages) { call->rc.status = INK_RC_INVALID; return; }
+        C.week_page = page; ink_ui_redraw(); return;
+    }
     if (!strcmp(id, "calendar.select")) {
         int64_t day = 0; ink_args_get_int(&call->args, "day", &day);
         if (day > month_days(C.date.year, C.date.month)) { call->rc.status = INK_RC_INVALID; return; }
@@ -190,7 +232,7 @@ static void navigate(ink_call_t *call) {
         if (month < 1901 * 12 || month >= 2101 * 12) { call->rc.status = INK_RC_INVALID; return; }
         C.date.year = month / 12; C.date.month = month % 12 + 1; C.date.day = 1;
     }
-    memset(&C.position, 0, sizeof C.position); ink_ui_redraw();
+    C.week_page = -1; memset(&C.position, 0, sizeof C.position); ink_ui_redraw();
 }
 static struct {
     ink_alarm_t draft;
@@ -381,6 +423,8 @@ static const ink_cap_t CAPS[] = {
     {.id = "calendar.next", .app = "upcoming", .title = "当天事项或接下来下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "calendar.month_prev", .app = "upcoming", .title = "月历上个月", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "calendar.month_next", .app = "upcoming", .title = "月历下个月", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "calendar.grid_prev", .app = "upcoming", .title = "上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "calendar.grid_next", .app = "upcoming", .title = "下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "calendar.select", .app = "upcoming", .title = "选择当月一天查看闹钟和提醒", .input = "{\"type\":\"object\",\"properties\":{\"day\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":31}},\"required\":[\"day\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 static const ink_app_def_t APP = {.id = "upcoming", .title = TR_NOOP("接下来"), .icon = INK_UI_ICON(calendar), .entry = &UPCOMING, .system_app = true, .child_ok = true};
