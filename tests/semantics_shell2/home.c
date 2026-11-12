@@ -2,9 +2,13 @@
 #ifndef INK_TEST_SHELL_SOURCE
 #define INK_TEST_SHELL_SOURCE "../../system/ui/shell/navigation.c"
 #endif
+#ifndef INK_TEST_SHELL_HOME_SOURCE
+#define INK_TEST_SHELL_HOME_SOURCE "../../system/ui/shell/shell_home.c"
+#endif
 #define ink_ui_semantics_summary inspect_compact_model
 #define key shell2_source_key
 #include INK_TEST_SHELL_SOURCE
+#include INK_TEST_SHELL_HOME_SOURCE /* the home page moved here in shell-split-1 */
 #undef key
 #undef ink_ui_semantics_summary
 

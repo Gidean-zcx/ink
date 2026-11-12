@@ -148,7 +148,7 @@ class ScaleCheck(unittest.TestCase):
             'system/ui/search.c': 'S.field', 'system/ui/app_packages.c': 'obj',
             'system/ui/shell/ai_chat.c': 'field', 'system/ui/shell/boot_flow.c': 'B.field',
             'system/ui/shell/mobile_network.c': 'f', 'system/ui/shell/settings_family.c': 'S.field',
-            'system/ui/shell/navigation.c': 'search|password_field',
+            'system/ui/shell/shell_home.c': 'search', 'system/ui/shell/settings_body.c': 'password_field',
             'system/apps/calendar/calendar.c': 'E.name', 'system/apps/clock/clock.c': 'C.name',
             'system/apps/files/files.c': 'F.field', 'system/apps/weather/weather.c': 'W.field',
             'system/apps/remote/remote.c': 'RS.field', 'system/apps/memo/memo.c': 'M.field',
