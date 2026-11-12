@@ -7,9 +7,9 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 普通全量及指定 ASan | 分页前最终全量仅余 2 项旧断言失败；最终代码全量待重跑。ASan 指定 137 项仅 i18n-lang 失败，另加月历 3 项全过 | `build/design-lang-2/ctest-full.log`、`full-regressions.log`、`contacts-final-3.log` | 见下方命令 |
-| 2 S31 宿主机及固件 | 待执行 | — | — |
+| 2 S31 宿主机及固件 | 【实测】77/77；固件退出 0，编译器警告 0，已知 SDK/分区警告同前任务记录 | `s31-host-ctest.log`、`s31-firmware.log` | 见下方命令 |
 | 3 共用控件 108×108 | 【实测】共用部分 0 个不足；209 个页面自绘小目标单列 | `build/design-lang-1/after/targets.json` | `tests/design_lang_1.py --build build --check-targets` |
-| 4 30 页截图及失败逐项说明 | 【实测】最终代码 60 个场景的文字及页面修复检查为 0，72 张图已覆盖；逐项说明如下 | [对比图](../design-lang-1/SCREENSHOTS.md)、`capture-final-grid.log` | 见下方截图命令 |
+| 4 30 页截图及失败逐项说明 | 【实测】最终代码 60 个场景的文字及页面修复检查为 0 失败，72 张图已覆盖；逐项说明如下 | [对比图](../design-lang-1/SCREENSHOTS.md)、`capture-final-grid.log` | 见下方截图命令 |
 
 ## 没做到的
 
@@ -131,6 +131,21 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest"
 ```
 
 日志：`build/design-lang-2/build-asan.log`、`ctest-asan.log`、`ctest-asan-calendar.log`。
+
+【实测】S31 宿主机配置、构建退出 0，测试原话为 `100% tests passed out of 77`，116.15 秒，退出 0。 固件脚本完成链接、资源包、尺寸和栈检查，退出 0；`ink-s31.bin` 为 5001600 字节，编译器 `warning:` 为 0。保留 6 条组件私有 include 依赖 CMake 警告、2 次应用分区剩余 5% 的警告；类别和数量与 [前任务最终记录](../design-lang-1/VALIDATION.md#s31) 相同，没有新增编译器警告。已核对 `2792f39a..15589e0f` 的系统、端口、依赖及构建代码无变化；基线警告采用该记录对照，没有另跑基线固件构建。
+
+```sh
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host \
+  -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+taskpolicy -c utility cmake --build build-s31-host -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build-s31-host --output-on-failure -j2
+INK_DEPS="$INK_DEPS" INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" \
+  taskpolicy -c utility bash ports/esp32s31/build.sh
+```
+
+日志：`build/design-lang-2/s31-host-configure.log`、`s31-host-build.log`、`s31-host-ctest.log`、`s31-firmware.log`。
+
 
 ```sh
 INK_DEPS="$INK_DEPS" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" \
