@@ -182,7 +182,12 @@ static void on_key(lv_event_t *e) {
     if (lv_event_get_target_obj(e) == K.footer) id += 9;
     if (id >= (uint32_t)K.buttons || !K.codes[id]) return;
     char args[40]; snprintf(args, sizeof args, "{\"code\":%d}", (int)K.codes[id]);
+    bool invalidation = lv_display_is_invalidation_enabled(NULL);
+    int kind = K.built_for; ink_text_type_t type = ink_text_type();
+    if (!invalidation) lv_display_enable_invalidation(NULL, true);
     invoke("keyboard.key", args);
+    if (!invalidation && K.root && K.built_for == kind && ink_text_type() == type)
+        lv_display_enable_invalidation(NULL, false);
 }
 static void on_cand(lv_event_t *e) {
     char args[40]; snprintf(args, sizeof args, "{\"index\":%d}", K.first + (int)(intptr_t)lv_event_get_user_data(e));
@@ -281,7 +286,7 @@ static void map_key(const char *label, char code, int width) {
     snprintf(K.legends[i], sizeof K.legends[i], "%s", label);
     K.map[K.map_size++] = K.legends[i];
     K.codes[i] = code;
-    K.control[i] = (lv_buttonmatrix_ctrl_t)(width | (code == KEY_BACKSPACE ? 0 : LV_BUTTONMATRIX_CTRL_CLICK_TRIG | LV_BUTTONMATRIX_CTRL_NO_REPEAT) | (code ? 0 : LV_BUTTONMATRIX_CTRL_HIDDEN));
+    K.control[i] = (lv_buttonmatrix_ctrl_t)(width | LV_BUTTONMATRIX_CTRL_CLICK_TRIG | (code == KEY_BACKSPACE ? 0 : LV_BUTTONMATRIX_CTRL_NO_REPEAT) | (code ? 0 : LV_BUTTONMATRIX_CTRL_HIDDEN));
 }
 static void map_row(const char *letters) {
     for (const char *p = letters; *p; p++) {
@@ -363,6 +368,15 @@ static void draw_key_icon(lv_event_t *e) {
     lv_draw_image(label->base.layer, &image, &icon_area);
 }
 
+/* LVGL invalidates keys on every press even when their pressed style is identical.
+ * Suppress that native feedback; edits and layout changes inside on_key still invalidate. */
+static bool feedback_event(lv_event_t *e) {
+    lv_event_code_t code = lv_event_get_code(e);
+    return code == LV_EVENT_PRESSED || code == LV_EVENT_PRESSING || code == LV_EVENT_RELEASED ||
+           code == LV_EVENT_PRESS_LOST || code == LV_EVENT_LONG_PRESSED_REPEAT;
+}
+static void before_feedback(lv_event_t *e) { if (feedback_event(e)) lv_display_enable_invalidation(NULL, false); }
+static void after_feedback(lv_event_t *e) { if (feedback_event(e)) lv_display_enable_invalidation(NULL, true); }
 static lv_obj_t *make_board(int height) {
     lv_obj_t *board = lv_keyboard_create(K.keys);
     lv_obj_remove_event_cb(board, lv_keyboard_def_event_cb);
@@ -380,6 +394,8 @@ static lv_obj_t *make_board(int height) {
     lv_obj_set_style_text_color(board, ink_ui_ink(), LV_PART_ITEMS);
     lv_obj_set_style_bg_color(board, ink_ui_paper(), LV_PART_ITEMS | LV_STATE_PRESSED);
     lv_obj_set_style_text_color(board, ink_ui_ink(), LV_PART_ITEMS | LV_STATE_PRESSED);
+    lv_obj_add_event_cb(board, before_feedback, LV_EVENT_ALL | LV_EVENT_PREPROCESS, NULL);
+    lv_obj_add_event_cb(board, after_feedback, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(board, on_key, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_add_event_cb(board, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_add_event_cb(board, show_alternates, LV_EVENT_LONG_PRESSED, NULL);
@@ -438,6 +454,7 @@ static void build(int kind) {
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         K.cand_btn[i] = lv_button_create(K.cands);
         ink_ui_style_button(K.cand_btn[i]);
+        lv_obj_set_style_radius(K.cand_btn[i], 0, 0);
         lv_obj_set_style_pad_all(K.cand_btn[i], ink_ui_px(INK_GAP_XS), 0);
         lv_obj_set_height(K.cand_btn[i], ink_ui_px(candidates_height()));
         lv_obj_set_flex_grow(K.cand_btn[i], 1);
@@ -456,6 +473,7 @@ static void build(int kind) {
     lv_obj_set_flex_grow(space, 1);
     K.more = lv_button_create(K.cands);
     ink_ui_style_button(K.more);
+    lv_obj_set_style_radius(K.more, 0, 0);
     lv_obj_set_style_pad_all(K.more, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_height(K.more, ink_ui_px(candidates_height()));
     lv_obj_set_width(K.more, ink_ui_px(candidates_height()));
@@ -467,9 +485,11 @@ static void build(int kind) {
     lv_obj_center(ml);
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     K.fold = ink_ui_pill(K.cands, TR("键盘"), 0, 0, INK_PRIMARY, candidates_height(), false, on_fold, NULL);
+    lv_obj_set_style_radius(K.fold, 0, 0);
     lv_obj_add_event_cb(K.fold, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
     K.previous = ink_ui_pill(K.cands, "◀", 0, 0, candidates_height(), candidates_height(), false, on_previous, NULL);
+    lv_obj_set_style_radius(K.previous, 0, 0);
     lv_obj_add_event_cb(K.previous, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_add_flag(K.previous, LV_OBJ_FLAG_HIDDEN);
     /* The microphone shares the function-key size, at the right of the candidates. */
@@ -719,7 +739,7 @@ int ink_shell_keyboard_init(void) {
     static const ink_cap_t caps[] = {
         {.id = "keyboard.key", .title = "按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII）", .input = "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"description\":\"1 符号；2 大写；3 中英切换（仅普通输入框，先提交拼音）；4 全键/九键（按成员记住）；8 删除；10 回车；其余 ASCII，标点随中英模式\",\"minimum\":1,\"maximum\":127}},\"required\":[\"code\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = press_key},
         {.id = "keyboard.pick", .title = "选输入法候选（从 0 开始）", .input = "{\"type\":\"object\",\"properties\":{\"index\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"index\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = pick},
-        {.id = "keyboard.candidates", .title = "展开下一页候选，或 fold 收回键盘", .input = "{\"type\":\"object\",\"properties\":{\"fold\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = candidates},
+        {.id = "keyboard.candidates", .title = "展开候选，或 fold 收回键盘", .input = "{\"type\":\"object\",\"properties\":{\"fold\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = candidates},
         {.id = "keyboard.edit", .title = "编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销", .input = "{\"type\":\"object\",\"properties\":{\"action\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":5}},\"required\":[\"action\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = edit},
         {.id = "keyboard.page", .title = "候选翻页", .input = "{\"type\":\"object\",\"properties\":{\"direction\":{\"type\":\"integer\",\"enum\":[-1,1]}},\"required\":[\"direction\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = page_candidates},
         {.id = "keyboard.panel", .title = "切换键盘面板", .input = "{\"type\":\"object\",\"properties\":{\"panel\":{\"type\":\"string\",\"enum\":[\"letters\",\"symbols\",\"number\"]}},\"required\":[\"panel\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = panel_action},

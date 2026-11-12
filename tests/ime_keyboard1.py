@@ -12,6 +12,9 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--build', type=Path, required=True)
 parser.add_argument('--reverse', action='store_true')
 parser.add_argument('--pages', action='store_true')
+parser.add_argument('--baseline-pictures', action='store_true')
+parser.add_argument('--key-height108', action='store_true')
+parser.add_argument('--refresh-reverse', action='store_true')
 parser.add_argument('--switch-reverse', action='store_true')
 args = parser.parse_args()
 build = args.build.resolve()
@@ -51,6 +54,48 @@ def exercise(binary, tag, expected=None, verify=False, state=None):
         shutil.rmtree(out)
     return ok
 
+
+if args.baseline_pictures or args.key_height108 or args.refresh_reverse:
+    area = build / 'test-out' / ('keyboard-baseline' if args.baseline_pictures else 'keyboard-108' if args.key_height108 else 'keyboard-refresh-reverse')
+    area.mkdir(parents=True, exist_ok=True)
+    source = ROOT / 'tests/ime_keyboard1.c'
+    contents = source.read_text()
+    keyboard_source = ROOT / 'system/ui/shell/keyboard.c'
+    if args.baseline_pictures:
+        def baseline(path):
+            return subprocess.run(['git', 'show', 'd7bc63aeee29ce9280cb15bc9c866d5e400ef4ca:' + path], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+        contents = baseline('tests/ime_keyboard1.c')
+        keyboard_source = area / 'keyboard.c'
+        keyboard_source.write_text(baseline('system/ui/shell/keyboard.c'))
+        contents = contents.replace('for (int kind = 0; kind < 6; kind++)', 'for (int kind = 0; kind < 7; kind++)').replace('"Nine", "Password"}', '"Nine", "Password", "Expanded"}')
+        contents = contents.replace('    if (screenshot_kind == 0) chinese_scene();', '    if (screenshot_kind == 6) { chinese_scene(); ink_call_t call = {0}; candidates(&call); }\n    if (screenshot_kind == 0) chinese_scene();')
+        contents = contents.replace('    lv_obj_update_layout(K.root);\n    lv_area_t root;', '    if (K.expanded) return;\n    lv_obj_update_layout(K.root);\n    lv_area_t root;')
+    elif args.refresh_reverse:
+        keyboard_source = area / 'keyboard.c'
+        original = (ROOT / 'system/ui/shell/keyboard.c').read_text()
+        before = '    ink_ui_hint_obj(K.composing, INK_REFRESH_FAST);'
+        assert original.count(before) == 1
+        keyboard_source.write_text(original.replace(before, before + '\n    lv_obj_invalidate(K.keys);'))
+        args.pages = True
+    replacement = area / 'ime_keyboard1.c'
+    contents = contents.replace('"../system/ui/shell/keyboard.c"', '"' + str(keyboard_source) + '"')
+    replacement.write_text(contents)
+    entry = next(e for e in json.loads((build / 'compile_commands.json').read_text()) if Path(e['file']) == source)
+    command = shlex.split(entry['command'])
+    obj = area / 'ime_keyboard1.o'
+    command[command.index('-o') + 1] = str(obj)
+    command[command.index(str(source))] = str(replacement)
+    command += ['-I' + str(source.parent), '-I' + str(ROOT / 'system/ui/shell')]
+    if args.key_height108:
+        command += ['-DINK_KBD_KEY_HEIGHT=108']
+    subprocess.run(command, cwd=entry['directory'], check=True)
+    link = shlex.split((build / 'CMakeFiles/sim-ime-keyboard1.dir/link.txt').read_text())
+    binary = area / 'sim-ime-keyboard1'
+    link[link.index('-o') + 1] = str(binary)
+    link[link.index('CMakeFiles/sim-ime-keyboard1.dir/tests/ime_keyboard1.c.o')] = str(obj)
+    subprocess.run(link, cwd=build, check=True)
+    expected = 'letters only refresh composition and candidates' if args.refresh_reverse else None
+    raise SystemExit(0 if exercise(binary, area.name, expected=expected) else 1)
 
 if args.switch_reverse:
     # Manual baseline control: CI does not need repository history.

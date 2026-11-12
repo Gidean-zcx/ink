@@ -1,6 +1,20 @@
 /* Additional keyboard pages use the actual pointer driver and the same AI capabilities. */
 static lv_obj_t *pages_found;
 static const char *pages_label;
+static bool pages_down;
+static void pages_pointer_state(void) {
+    pages_down = false;
+    for (lv_indev_t *d = lv_indev_get_next(NULL); d; d = lv_indev_get_next(d))
+        if (lv_indev_get_type(d) == LV_INDEV_TYPE_POINTER && lv_indev_get_state(d) == LV_INDEV_STATE_PRESSED) pages_down = true;
+}
+static bool pages_pointer_is(bool down) { on_ui(pages_pointer_state); return pages_down == down; }
+static void pages_tap(void) {
+    hw(HW_PRESS, pointer_x, pointer_y);
+    CHECK(WAIT_FOR(pages_pointer_is(true), 1000), "LVGL received the pointer press");
+    hw(HW_RELEASE, pointer_x, pointer_y);
+    CHECK(WAIT_FOR(pages_pointer_is(false), 1000), "LVGL received the pointer release");
+}
+static void pages_key(int code) { pointer_code = code; on_ui(pointer_target); pages_tap(); }
 static void pages_find(lv_obj_t *o) {
     if (!lv_obj_is_visible(o)) return;
     if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), pages_label)) pages_found = lv_obj_get_parent(o);
@@ -18,7 +32,7 @@ static void pages_press(const char *text) {
     CHECK(WAIT_FOR(settled(), 15000), "page settles before touch");
     pages_label = text; on_ui(pages_target);
     double delivered = sim_metric_value("input.touch_delivery_ms");
-    if (pages_found) tap(pointer_x, pointer_y);
+    if (pages_found) pages_tap();
     CHECK(WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > delivered, 1000), "driver received page touch: %s", text);
     CHECK(WAIT_FOR(settled(), 15000), "page settles after touch");
 }
@@ -56,6 +70,12 @@ static void pages_setup(void) {
     ink_cap_invoke_json("keyboard.panel", "{\"panel\":\"letters\"}", INK_SRC_TOUCH, 0, &rc);
     if (ink_text_english()) touch(INK_TEXT_KEY_LANGUAGE);
     ink_text_select(0, ink_text_char_offset(ink_text_value(), strlen(ink_text_value()))); ink_text_backspace();
+}
+static bool pages_durable;
+static void pages_read_durable(void) { pages_durable = ink_text_draft_saved() != 0; }
+static bool pages_ready(void) {
+    on_ui(pages_read_durable);
+    return pages_durable && settled() && !ink_storage_pending() && ink_db_idle();
 }
 static ink_text_cand_t pages_candidates[60];
 static int pages_china;
@@ -122,9 +142,10 @@ static void pages_password(void) {
 static void keyboard_pages(void) {
     for (int ai = 0; ai < 2; ai++) {
         CHECK(BY_HAND("memo.edit", NULL) && WAIT_FOR(ink_text_focused(), 10000), "open real memo"); on_ui(pages_setup);
+        CHECK(WAIT_FOR(pages_ready(), 15000), "memo setup and initial draft write settle before typing");
         for (const char *p = "nihao"; *p; p++) {
             if (ai) { char args[40]; snprintf(args, sizeof args, "{\"code\":%d}", *p); pages_call("keyboard.key", args); }
-            else { pointer_key(*p); CHECK(WAIT_FOR(settled(), 15000), "pinyin key settles"); }
+            else { pages_key(*p); CHECK(WAIT_FOR(settled(), 15000), "pinyin key settles"); }
         }
         on_ui(pages_check_hello); pages_capture(ai ? "AI-01-nihao" : "Touch-01-nihao");
         if (ai) pages_call("keyboard.candidates", "{}"); else pages_press("▾");
@@ -135,7 +156,7 @@ static void keyboard_pages(void) {
             const char *word = pages_candidates[6].word; pages_press(word);
         }
         on_ui(pages_check_picked); pages_capture(ai ? "AI-04-picked" : "Touch-04-picked");
-        if (ai) pages_call("keyboard.panel", "{\"panel\":\"symbols\"}"); else { pointer_key(KEY_SWITCH); CHECK(WAIT_FOR(settled(), 15000), "symbol panel settles"); }
+        if (ai) pages_call("keyboard.panel", "{\"panel\":\"symbols\"}"); else { pages_key(KEY_SWITCH); CHECK(WAIT_FOR(settled(), 15000), "symbol panel settles"); }
         pages_capture(ai ? "AI-05-symbols" : "Touch-05-symbols");
         if (ai) pages_call("keyboard.category", "{\"category\":1}"); else pages_press(TR("数学"));
         pages_capture(ai ? "AI-06-math" : "Touch-06-math");
@@ -157,7 +178,7 @@ static void keyboard_pages(void) {
         on_ui(pages_nine); CHECK(WAIT_FOR(settled(), 15000), "nine-key input settles");
         for (const char *p = "94664"; *p; p++) {
             if (ai) { char args[40]; snprintf(args, sizeof args, "{\"code\":%d}", *p); pages_call("keyboard.key", args); }
-            else { pointer_key(*p); CHECK(WAIT_FOR(settled(), 15000), "nine-key key settles"); }
+            else { pages_key(*p); CHECK(WAIT_FOR(settled(), 15000), "nine-key key settles"); }
         }
         on_ui(pages_find_china); pages_capture(ai ? "AI-13-nine" : "Touch-13-nine");
         if (ai) { char args[40]; snprintf(args, sizeof args, "{\"index\":%d}", pages_china); pages_call("keyboard.pick", args); }
@@ -171,10 +192,10 @@ static void keyboard_pages(void) {
     }
     on_ui(pages_input_setup); CHECK(WAIT_FOR(settled(), 15000), "refresh setup settles"); on_ui(pages_track);
     keyboard_updates = keyboard_outside = keyboard_full = 0; keyboard_tracking = true;
-    for (const char *p = "nihaozhongg"; *p; p++) { pointer_key(*p); CHECK(WAIT_FOR(settled(), 15000), "local key settles"); }
+    for (const char *p = "nihaozhongg"; *p; p++) { pages_key(*p); CHECK(WAIT_FOR(settled(), 15000), "local key settles"); }
     keyboard_tracking = false;
     CHECK(keyboard_updates && !keyboard_outside && !keyboard_full, "letters only refresh composition and candidates: updates=%u keys=%u full=%u", keyboard_updates, keyboard_outside, keyboard_full);
-    keyboard_tracking = true; pointer_key(KEY_SWITCH); CHECK(WAIT_FOR(settled(), 15000), "layout refresh settles"); keyboard_tracking = false;
+    keyboard_tracking = true; pages_key(KEY_SWITCH); CHECK(WAIT_FOR(settled(), 15000), "layout refresh settles"); keyboard_tracking = false;
     CHECK(keyboard_outside, "layout switch refreshes the keys area");
     pages_call("keyboard.panel", "{\"panel\":\"letters\"}"); on_ui(pages_delete_setup); CHECK(WAIT_FOR(settled(), 15000), "deletion setup settles");
     on_ui(pages_read_length); size_t before = pages_length;

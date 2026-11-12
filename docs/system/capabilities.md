@@ -215,7 +215,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `job.cancel` | 停下一件后台在做的事 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s37](#s37) | [system/services/res/task.c](../../system/services/res/task.c) |
 | `job.list` | 后台在做什么、做到哪了、做完的结果 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s37](#s37) | [system/services/res/task.c](../../system/services/res/task.c) |
 | `keyboard.alternates` | 展开字母备选符号，code 为 ASCII，0 收起 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
-| `keyboard.candidates` | 展开下一页候选，或 fold 收回键盘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.candidates` | 展开候选，或 fold 收回键盘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.category` | 符号分类：0 中文、1 数学、2 英文 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.edit` | 编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.key` | 按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s54](#s54) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
