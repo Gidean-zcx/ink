@@ -1,0 +1,37 @@
+replan-media 收尾核查，2026-11-12
+基线 d09b79195e2dc57908e33219216048e529e082c6
+
+$ taskpolicy -c utility python3 docs/tasks/replan-media/verify_report.py --baseline d09b79195e2dc57908e33219216048e529e082c6
+exit=0
+Scope: task directory only; product code 0 lines; privacy matches 0
+Registry: 53 unique records; all named candidates covered
+Sources: 22 fixed sources; 96 file/line anchors verified; 2 source ZIPs
+Links, JSON, file sizes, vendor HEAD and 220 matching blobs: PASS
+No product builds, tests, ASan, S31 compile or gcccheck run (research exemption)
+
+$ git diff --check d09b79195e2dc57908e33219216048e529e082c6..HEAD
+exit=0
+(无输出)
+
+$ git diff --check
+exit=0
+(无输出)
+
+规则第6节指定的隐私 grep 模式：0命中，grep exit=1（无匹配），未打印模式以免扫描记录自身命中。
+git diff --stat <基线>..HEAD：exit=0，已人工复核；6个文件，均在本任务目录。
+docs/tasks/replan-media/REPORT.md
+docs/tasks/replan-media/SOURCES.md
+docs/tasks/replan-media/registry-evidence.json
+docs/tasks/replan-media/source-evidence.json
+docs/tasks/replan-media/verification.txt
+docs/tasks/replan-media/verify_report.py
+
+另行只读核对原话：Fixed local source files matched Git objects: 27
+固定原厂只读克隆HEAD前后均为 690a023c66862af103a3187464373ee7c5efcd14。
+源码95个文本文件仅对相关段落核查；源码行号链接96处，另核7处完整包内路径/行范围。
+未执行上游代码；source ZIP仅提取文本，未下载固件镜像、重链接包、ELF或ROM。
+
+全量测试结果：未运行（本任务明确豁免）。
+ASan/内存检查：未运行；S31：未编译；gcccheck.py：未运行；产品代码：0行。
+没有修改已有测试期望、断言或预算；反向修复对照不适用。
+没有推送、开PR或修改远端设置。

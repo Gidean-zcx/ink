@@ -1,0 +1,1196 @@
+{
+  "retrieved_on": "2026-11-12",
+  "registry_url": "https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all",
+  "http": 200,
+  "business_code": 0,
+  "reported_total": 53,
+  "response_sha256": "73fcb7968d9c98c85ad4868f02622ebc3fb67e961fd37eedc9582fa740933d27",
+  "records": [
+    {
+      "id": "32b9b8d0790fe483d8b24a9909c5bdac",
+      "name": "Metalio E-Ink4 Plus",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "2.0.79",
+      "groups": [
+        "lock",
+        "audio"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "8272dcd4854f0b6b83bc3ed3cc9c741f58e3f750636c94feba2b8a50dd76610d",
+      "version_status": "latest",
+      "historical_versions": [
+        "2.0.79",
+        "2.0.78",
+        "2.0.77",
+        "2.0.76",
+        "2.0.75",
+        "2.0.74",
+        "2.0.73",
+        "2.0.72",
+        "2.0.71",
+        "2.0.70",
+        "2.0.69",
+        "2.0.68",
+        "2.0.67",
+        "2.0.66",
+        "2.0.65",
+        "2.0.64",
+        "2.0.63"
+      ]
+    },
+    {
+      "id": "92c82de9caa4249c4270e76bb10290c8",
+      "name": "CrossLink Pixel 4.7",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v4.3.0T",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W02"
+      ],
+      "short_quote": null,
+      "description_and_remarks_sha256": "f1cfb0ffa58d3e0fa779379ac71996cb0f2e69a830db97dbacd0201309b8355a",
+      "version_status": "latest",
+      "historical_versions": [
+        "v4.3.0T",
+        "v4.2.5T-beta",
+        "v4.2.4-1101",
+        "v4.2.4T",
+        "v4.2.3.2T",
+        "v4.2.3T",
+        "v4.2.2T",
+        "v0.9.10",
+        "v0.9.9"
+      ]
+    },
+    {
+      "id": "64795eef17390ae50771ef0e564baac0",
+      "name": "Metalio E-Ink4",
+      "board": "Metalio E-Ink4",
+      "current_version": "2.0.65",
+      "groups": [
+        "lock",
+        "desktop",
+        "audio"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "baf171a64549d829034d0cddd5ffb606b6742ffb582d20d3eb8e64bc38a7b872",
+      "version_status": "latest",
+      "historical_versions": [
+        "2.0.65",
+        "2.0.64",
+        "2.0.63",
+        "2.0.61",
+        "2.0.60",
+        "2.0.59",
+        "2.0.58",
+        "2.0.57",
+        "2.0.56",
+        "2.0.55",
+        "2.0.53",
+        "2.0.54"
+      ]
+    },
+    {
+      "id": "5580fff7f2e8b382283557fa37080944",
+      "name": "Mogo E4p",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v1.0.10",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W06"
+      ],
+      "short_quote": "新增迷你书库组件",
+      "description_and_remarks_sha256": "036dd1f9c13c5d53a6e1cde17974b8e428ad30d7161069d08ffa05d046344226",
+      "version_status": "latest",
+      "historical_versions": [
+        "v1.0.10",
+        "v1.0.9",
+        "v1.0.8",
+        "v1.0.7",
+        "v1.0.6",
+        "v1.0.5",
+        "v1.0.4",
+        "v1.0.3",
+        "v1.0.2",
+        "v1.0.1",
+        "v1.0.0",
+        "rc101",
+        "rc100",
+        "rc99",
+        "rc98",
+        "rc97"
+      ]
+    },
+    {
+      "id": "f6d56eb1d84e723014012b0d87e4fcb8",
+      "name": "Crossslink_2.0（Metalio E-Ink4）",
+      "board": "Metalio E-Ink4",
+      "current_version": "10.10 修复BUG最新版",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "81e8e08db24b3d6bbb47624f6a5155630f3f25a0241b519856874a71ad46541b",
+      "version_status": "test",
+      "historical_versions": [
+        "10.10 修复BUG最新版",
+        "10.02 Bug修复更新版",
+        "09.24(翻页动画)更新版",
+        "09.22(语音控制)更新版",
+        "09.18(AI键自定义)更新版",
+        "09.17(阅星瞳同步)更新版",
+        "09.16(自动旋转)更新版",
+        "09.15更新版",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "f5c35ac9c523aac3bd307090a0fded68",
+      "name": "RickyOS",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v1.2.14",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "b4d84711c0a3019521a79c1bf7816b49bfeb137968d46b2e10f355bbba66f814",
+      "version_status": "latest",
+      "historical_versions": [
+        "v1.2.14",
+        "v1.2.13",
+        "v1.2.11",
+        "v1.2.5"
+      ]
+    },
+    {
+      "id": "b9df44db099418cd836cb32d74941b05",
+      "name": "kiikoread · Metalio EINK 4 Plus",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "rc110",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W09"
+      ],
+      "short_quote": "多种锁屏",
+      "description_and_remarks_sha256": "4687afc389b633f5f73a2f87238413191a8d22b4be104a37d74dffc4ac03c2a6",
+      "version_status": "latest",
+      "historical_versions": [
+        "rc110",
+        "rc107",
+        "rc100"
+      ]
+    },
+    {
+      "id": "d932f06a5906b6a283c38c37d031a8f3",
+      "name": "Crosslink2 无名4.7",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "4.2.9",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W03"
+      ],
+      "short_quote": "增加png透明锁屏壁纸",
+      "description_and_remarks_sha256": "18ffa996b3d4b95bbbf3dc3546916abc9241be43097e05003e1b7bfd231b6105",
+      "version_status": "latest",
+      "historical_versions": [
+        "4.2.9",
+        "4.2.8",
+        "4.2.7",
+        "4.2.6",
+        "4.2.5",
+        "4.2.4",
+        "4.2.3",
+        "4.22"
+      ]
+    },
+    {
+      "id": "de8a2e4c73ff82fd5bacc9ce81dcacc2",
+      "name": "Crosslink2 无名3.97寸",
+      "board": "Metalio E-Ink4",
+      "current_version": "v1.2.10",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W03"
+      ],
+      "short_quote": null,
+      "description_and_remarks_sha256": "5868cc96584f340848de027a50002ec4a72c82237ba4a0289698dc73f5e08bbc",
+      "version_status": "latest",
+      "historical_versions": [
+        "v1.2.10",
+        "v1.2.9"
+      ]
+    },
+    {
+      "id": "b9909c6fbbb253f105cc65befbb89ee5",
+      "name": "ThingOS",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.7",
+      "groups": [
+        "audio"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W12"
+      ],
+      "short_quote": "原 AI 按键快捷开始录音",
+      "description_and_remarks_sha256": "6db78468ef1b956093b12464dbc0e37f535acf351e1f9b095b18adf3a57ec4e8",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.7",
+        "v0.1.6",
+        "v0.1.5",
+        "v0.1.4",
+        "v0.1.3",
+        "v0.1.2"
+      ]
+    },
+    {
+      "id": "4fea71b49b8bf6fa4a22dc1798423be4",
+      "name": "CrossLink Pixel",
+      "board": "Metalio E-Ink4",
+      "current_version": "v4.3.0T",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W02"
+      ],
+      "short_quote": "新增待办功能和待办锁屏",
+      "description_and_remarks_sha256": "0c56fce494ade6a265c782244d9bec853619dc823e89c545594ac00720205fc9",
+      "version_status": "latest",
+      "historical_versions": [
+        "v4.3.0T",
+        "v4.2.0T"
+      ]
+    },
+    {
+      "id": "abaa819e9eec5e0c390ffb66cf63d7f8",
+      "name": "lnkboot",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v1.0.6",
+      "groups": [
+        "lock",
+        "desktop"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W07"
+      ],
+      "short_quote": "非官方多固件切换启动器",
+      "description_and_remarks_sha256": "5cd9ff604894fec482a4251243f02e56a9d97d05526fc6ba334e1b551fecad61",
+      "version_status": "latest",
+      "historical_versions": [
+        "v1.0.6",
+        "v1.0.5-bev",
+        "v1.0.4-bev",
+        "v1.0.3-bev",
+        "v1.0.2-bev",
+        "v1.0.1-bev",
+        "v1.0.0-bev"
+      ]
+    },
+    {
+      "id": "810ce64e8e7e58a21843dcd0cfafcee6",
+      "name": "Metalio Claw4",
+      "board": "Metalio Claw4",
+      "current_version": "2.0.5.2",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "e7048035c02a7485b0a81bc88d9f066d2d2fae8d0e2c03327261002ee940a701",
+      "version_status": "latest",
+      "historical_versions": [
+        "2.0.5.2",
+        "2.0.5.1"
+      ]
+    },
+    {
+      "id": "d343fb172427c7418e0d90f6361f757c",
+      "name": "CrossMux_Metalio E-ink4 (倾斜翻页增强版）",
+      "board": "Metalio E-Ink4",
+      "current_version": "v1.6.5",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "651138d545f6d70a19ca7c3f114fdd969e22cf81a6ec5a6920856b788065c136",
+      "version_status": "test",
+      "historical_versions": [
+        "v1.6.5"
+      ]
+    },
+    {
+      "id": "630bc329e6ca929d99907209e05824b6",
+      "name": "墨集",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.3",
+      "groups": [
+        "desktop"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "f656f1da12b7d3b0661115f1dba8b8c8b9f6f38868be131c16fe1fd4b9df5161",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.3",
+        "v0.1.2",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "4a86a7934a9fc5c2b96295a92e7966e0",
+      "name": "AgentUI",
+      "board": "Metalio Claw4",
+      "current_version": "v0.2.0",
+      "groups": [
+        "desktop"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "3ae5b3b60b7ed18de4a5b2eb4df6fee082feb2d0acb151fd6cbe792286bd0924",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.2.0",
+        "v0.1.1"
+      ]
+    },
+    {
+      "id": "d339eb28f76779495b909d1129ce994f",
+      "name": "固件口袋",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v1.0.8-plus.15",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W08"
+      ],
+      "short_quote": "单个应用镜像最大支持13 MiB",
+      "description_and_remarks_sha256": "3e246807f2012426fec623d02c859611b750ae92f52a5fe173e2564f194e770e",
+      "version_status": "latest",
+      "historical_versions": [
+        "v1.0.8-plus.15"
+      ]
+    },
+    {
+      "id": "71addc365d3f31a53ed5dacca7855582",
+      "name": "PageRest",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.7.103",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W01"
+      ],
+      "short_quote": "把喜欢的句子留在锁屏上",
+      "description_and_remarks_sha256": "5eaf3915e7548c55013bfd15097a48ef6278c2ec1139c98739ac47114113605e",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.7.103",
+        "v0.7.102",
+        "v0.7.91",
+        "v0.7.69",
+        "v0.7.68"
+      ]
+    },
+    {
+      "id": "115a7819e14f902deda0f085e5a502db",
+      "name": "Metalio E-Ink4微信读书适配自用",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.1",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "5867d6ab444333c2380b5954466432792074b86282e2f8e5d6cb9aa6fd4036e6",
+      "version_status": "test",
+      "historical_versions": [
+        "v0.1.1",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "8751908357ff9fa272b7678fcaef17e6",
+      "name": "Metalio-WhiteAI",
+      "board": "Metalio E-Ink4",
+      "current_version": "v2.0.51",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "e605f146d13f4490449b4030b2705248973b07d531b0242630175d84c4bf631e",
+      "version_status": "test",
+      "historical_versions": [
+        "v2.0.51"
+      ]
+    },
+    {
+      "id": "c08c65e5a4ec74f2025efb64c9a56594",
+      "name": "固件口袋",
+      "board": "Metalio E-Ink4",
+      "current_version": "1.0.7-s3.20",
+      "groups": [],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W08"
+      ],
+      "short_quote": "单个应用镜像最大支持13 MiB",
+      "description_and_remarks_sha256": "c257807f879050bb0e1d3acaf21a98625d038d46d9034f8cfcf1cf559ddef578",
+      "version_status": "latest",
+      "historical_versions": [
+        "1.0.7-s3.20",
+        "1.0.7"
+      ]
+    },
+    {
+      "id": "f4576587b25c738295eb196468c20307",
+      "name": "布丁",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "audio"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W11"
+      ],
+      "short_quote": "测试版哈，有bug",
+      "description_and_remarks_sha256": "d3996614d83d59dde14ce4e3af805e35fef634e2d3574390615a128f46886773",
+      "version_status": "test",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "722e1e8f7ab139c77e5d3cbe540f73f8",
+      "name": "boboos-前往官网 https://bobo.sh.creativone.cn",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.2.3.1",
+      "groups": [],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W10"
+      ],
+      "short_quote": "完成系统账户配置",
+      "description_and_remarks_sha256": "f082d857a4230b16afcd2e4aaca902d8df7c4f6115287705e2cd0cf8f188f880",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.2.3.1",
+        "v0.2.3",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "b3f2d73a185865867bc5cea29caa18e0",
+      "name": "Eink4Boy",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "audio",
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W18"
+      ],
+      "short_quote": "不支持 GBC 专用游戏",
+      "description_and_remarks_sha256": "6f624a3f2d9abc84e80436535856d12954ff74e8c174bf2e2f7893903954f909",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "10833b0d56572c7d2ad525122dea3d1c",
+      "name": "BoBoOS--AIOS 用AI重塑你的生活 建议前往官网https://bobo.sh.creativone.cn完成刷写",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W10"
+      ],
+      "short_quote": null,
+      "description_and_remarks_sha256": "d75950c9f0991c4eab4df0dcad2bad44e009c193d65c7fc3a4434cc5ef30ebc8",
+      "version_status": "test",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "bfcb9610aefbedd1b9c3f718cccd5fcc",
+      "name": "Metalio_Claw4_2.0.51_gba_full",
+      "board": "Metalio Claw4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W14"
+      ],
+      "short_quote": "音频由ext DAC设为dummy 可以显著改善帧率",
+      "description_and_remarks_sha256": "2bb973e2ec3fba79abd08ee0b74badff3364ba979443db4429290eea865f03f9",
+      "version_status": "test",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "2c1297cb3a6c846e7d1345b78039221e",
+      "name": "黑猩猩测试——黑猩猩发起对人类的智力挑战",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W17"
+      ],
+      "short_quote": "音效、通关画面",
+      "description_and_remarks_sha256": "edd339b2f806d98d5b38a61aaa5c0f9a2cfb47591db4a720b5a7717b734d6642",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "83ecfee765f538299e850d41b0509674",
+      "name": "森林里的朋友——简单的认识",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W20"
+      ],
+      "short_quote": "3-8岁儿童",
+      "description_and_remarks_sha256": "fd42f7f287772b857573ca4d77efec9e02f7c4b1669f1fbc4912e35769a6ecad",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "bd72665970facddcc7beff3b9fc13d72",
+      "name": "五子棋",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.0.2",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W15"
+      ],
+      "short_quote": "支持人机和双人对战",
+      "description_and_remarks_sha256": "af0be7736268f9b2fdc73b2e1d9b6ad12757a2b63c578ac7e824e7f5dcac8f36",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.0.2",
+        "v0.0.1",
+        "v0.0.0"
+      ]
+    },
+    {
+      "id": "759b008fdff7a846affd925f928dee90",
+      "name": "ModernClassicOS",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.1",
+      "groups": [
+        "lock",
+        "desktop",
+        "audio"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W05"
+      ],
+      "short_quote": "16 kHz 单声道 PCM",
+      "description_and_remarks_sha256": "a58550a416d5053d4e51f54158b0d18c5c3c8bc965c1310d9b1224589e08bba3",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.1",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "2c220821474d3b922f6aa2367037edc1",
+      "name": "小智畅享版",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "lock"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W04"
+      ],
+      "short_quote": "日历或壁纸",
+      "description_and_remarks_sha256": "f45fda3a1fd2866bd04e10f338b56a8efcd9d195cffcd88fff04c39a77df4841",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "70f1b605d2619ed18663264729e7d933",
+      "name": "记事本",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.1",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "13ea7e2d3aaa708e573c1060f24b0f5a255bb8266e74d37042f28c58764be588",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.1",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "4d45ca7e57e235b067a0753877232d0a",
+      "name": "retro-go-gba",
+      "board": "Metalio Claw4",
+      "current_version": "0.4.13",
+      "groups": [],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W14"
+      ],
+      "short_quote": null,
+      "description_and_remarks_sha256": "94fa119f65112a265a575a34161586d13ddd07689dbf0b7bf35583e7c6095d4f",
+      "version_status": "latest",
+      "historical_versions": [
+        "0.4.13",
+        "0.4.11",
+        "v0.4.10"
+      ]
+    },
+    {
+      "id": "80cb722919f9f1439f5f8d72703ed04e",
+      "name": "天气查询",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.1",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "dbc63b7e724b68d9821528233a9f0da7f9a7aad5f2447ebb050950b5eebcbc6f",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.1",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "0946fcb2f2dddbf7021d56a65e3a4338",
+      "name": "录音机",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [
+        "lock",
+        "audio"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W13"
+      ],
+      "short_quote": "支持锁屏录音",
+      "description_and_remarks_sha256": "023eb2bd22dc8b521b7b67ec971785a5d087d89bca1eb85affd9a67311c8f0bd",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "1c8740d464481571da51c61bad9880fd",
+      "name": "贪吃蛇",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W16"
+      ],
+      "short_quote": "一个适合一个人打发时光",
+      "description_and_remarks_sha256": "38c6cc9cf10c98beeb44f57e8bde26327f75446f1465be930e41b2be9ac58f98",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "a743751c5a6ad3d2f2d6066a223770cd",
+      "name": "ardmos",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W19"
+      ],
+      "short_quote": "提供 Moji 应用版与独立固件版",
+      "description_and_remarks_sha256": "a36f4cdbcd94eebc4752605d8859c63396e4b4f29e8516c242e7cc9e2fdbaa23",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "095cb50f66803ac98b4ba2b1f149067d",
+      "name": "浏览器",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.1",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "5185462c2f7778caa27069f391ee68c8040c2c2372c1b77deeeda76e5f22df25",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.1",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "7e591796e0c3c512e9376e5b259778ee",
+      "name": "Crosspoint (自用非官方）",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "f2351df59ad38a6a89da92554bbc9bfebd564b58ff20079e76833ba7fb612889",
+      "version_status": "test",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "2b8842ea27543007d9512228e7e0029b",
+      "name": "亮证",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "4ccc1294a99d5ee7ca37f632cd3466494f45aa95539c1a2aa7499a7e5c60611d",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "8fa583addfc017c28cd3451dbe830227",
+      "name": "浏览器",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "529b938540fb587090a4ca05b53d6ab97762cf1855aa6caa9ca847cfad7e8154",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "e806162c097a7cacfba6d1a15e4a1a27",
+      "name": "天气查询",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "2bf5aa6707e42878f3ee887dab62cfa32d4cc3d3a08103728b3d9afe86b2c0b1",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "15905a3185d83b9892dc250d413a8199",
+      "name": "五子棋",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W15"
+      ],
+      "short_quote": "支持人机和双人对战",
+      "description_and_remarks_sha256": "26abc7e54b34e8f7cf09d3754bd79a57c15c57fc84268335e4c16aabf8a7eef2",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "05e5348f7de0541d608b2304a4aef839",
+      "name": "测试固件",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "3f4432cb94f3ac6426c732bec3009370",
+      "name": "点读机",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W20"
+      ],
+      "short_quote": "开发示范使用",
+      "description_and_remarks_sha256": "2fa6e971d8fad2415ee3d3ab28079cbcf3bd09733491be21432b4d6d04ca7c5a",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "d4d65b5755d72436962217644c87cc80",
+      "name": "默认版本",
+      "board": "Metalio 1.54",
+      "current_version": "v1.8.2",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "20b8901c2dfae926546b5dbe11c0566831102ea5667a14cf2a3459ed0c371a7a",
+      "version_status": "latest",
+      "historical_versions": [
+        "v1.8.2"
+      ]
+    },
+    {
+      "id": "180b786c0fcee631ae05234a46f8b8f5",
+      "name": "kiikoread xiugai",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "rc109.1",
+      "groups": [
+        "audio"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "7b8e130d43d3c3269a5de669cfe2478f409cb5ea53b01f8665263a80f1419f27",
+      "version_status": "test",
+      "historical_versions": [
+        "rc109.1",
+        "rc107.1"
+      ]
+    },
+    {
+      "id": "7a938d02f2d778d9da494a4cc67e4816",
+      "name": "dpReader",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v1.2.1",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "ff020f9c16783d5f3a7301811d54f28e49c1458f1b853516b5f9ca9196eb3e47",
+      "version_status": "latest",
+      "historical_versions": [
+        "v1.2.1"
+      ]
+    },
+    {
+      "id": "d3aa1246e9a9f567f8e34e4f854828a0",
+      "name": "记事本",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.0",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "369c4db5d32270311a1723709dd6dc7eb0b4a4ac2c1709702e3e67899f86c725",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "144740d278df42d7cf22863139326a9a",
+      "name": "听趣S1-E4P",
+      "board": "Metalio E-Ink4 Plus",
+      "current_version": "v0.1.1",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "825675a9d1e5ddac7b2f8168d7e4ac1f3bc3bec1fa71128b574b48c12861a6d2",
+      "version_status": "test",
+      "historical_versions": [
+        "v0.1.1",
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "8ee3f683562ecbb1016bf7154aa9c20d",
+      "name": "测试发布dsad",
+      "board": "Metalio 1.54",
+      "current_version": "1.4.9",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "0ee911618445e011e9524ed63cbe9e47d5832327c110e761856f51e482cc39a3",
+      "version_status": "latest",
+      "historical_versions": [
+        "1.4.9"
+      ]
+    },
+    {
+      "id": "d7828a3721330a505de95599560e2af7",
+      "name": "森林里的朋友——简单的认识",
+      "board": "Metalio E-Ink4",
+      "current_version": "v0.1.0",
+      "groups": [
+        "games"
+      ],
+      "scope": "ranked/grouped or source reference",
+      "evidence_ids": [
+        "W20"
+      ],
+      "short_quote": "3-8岁儿童",
+      "description_and_remarks_sha256": "fd42f7f287772b857573ca4d77efec9e02f7c4b1669f1fbc4912e35769a6ecad",
+      "version_status": "latest",
+      "historical_versions": [
+        "v0.1.0"
+      ]
+    },
+    {
+      "id": "25dc29688ee3b504bbab9df18e77eea1",
+      "name": "测试",
+      "board": "AI玩具盒",
+      "current_version": "1.0.1",
+      "groups": [],
+      "scope": "本题未见相关声明；不是功能不存在的证明",
+      "evidence_ids": [],
+      "short_quote": null,
+      "description_and_remarks_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "version_status": "latest",
+      "historical_versions": [
+        "1.0.1"
+      ]
+    }
+  ],
+  "additional_sources": [
+    {
+      "source_id": "S01",
+      "repo": "chopper1026/mogo-e4p"
+    },
+    {
+      "source_id": "S02",
+      "repo": "0x1abin/crossmux"
+    },
+    {
+      "source_id": "S03",
+      "repo": "uxjulia/CrossInk"
+    },
+    {
+      "source_id": "S04",
+      "repo": "CloudZao/Metalio-E-INK4-Plus"
+    },
+    {
+      "source_id": "S05",
+      "repo": "wegooo-cell/Metalio-S31-kiikoread"
+    },
+    {
+      "source_id": "S06",
+      "repo": "oouu00/Metalio-S31-kiikoread-xiugai"
+    },
+    {
+      "source_id": "S07",
+      "repo": "NinthCode/MoJi"
+    },
+    {
+      "source_id": "S08",
+      "repo": "bmorcelli/Launcher"
+    },
+    {
+      "source_id": "S09",
+      "repo": "Changkai9888/CloudZao-Projects"
+    },
+    {
+      "source_id": "S10",
+      "repo": "AlayaElla/MetalioClaw4-AgentUI"
+    },
+    {
+      "source_id": "S11",
+      "repo": "espressif/esp-adf"
+    },
+    {
+      "source_id": "S12",
+      "repo": "espressif/esp-adf"
+    },
+    {
+      "source_id": "S13",
+      "repo": "espressif/esp-brookesia"
+    },
+    {
+      "source_id": "S14",
+      "repo": "schreibfaul1/ESP32-audioI2S"
+    },
+    {
+      "source_id": "S15",
+      "repo": "FFmpeg/FFmpeg"
+    },
+    {
+      "source_id": "S16",
+      "repo": "ducalex/retro-go"
+    },
+    {
+      "source_id": "S17",
+      "repo": "deltabeard/Peanut-GB"
+    },
+    {
+      "source_id": "S18",
+      "repo": "tiberiusbrown/Ardens"
+    },
+    {
+      "source_id": "S19",
+      "repo": "patorjk/JavaScript-Snake"
+    },
+    {
+      "source_id": "S20",
+      "repo": "taniarascia/memory"
+    },
+    {
+      "source_id": "S21",
+      "repo": "DaisonChun/crosslink"
+    },
+    {
+      "source_id": "S22",
+      "repo": "6tail/lunar-javascript"
+    }
+  ],
+  "public_pages": [
+    {
+      "url": "https://bobo.sh.creativone.cn/",
+      "http": 200,
+      "bytes": 26224,
+      "sha256": "fb47fb01984fc958051a77685b2e43e810b8d01db3a50926d10aabce140747c6"
+    },
+    {
+      "url": "https://bobo.sh.creativone.cn/developer/docs",
+      "http": 200,
+      "bytes": 72491,
+      "sha256": "a6e7e8bbdcac53e460d0e987bf106cd8d827f90734dd6ca9f36538f321cc02d9"
+    },
+    {
+      "url": "https://bobo.sh.creativone.cn/apps",
+      "http": 200,
+      "bytes": 58085,
+      "sha256": "aaf03972a56adc1c910bd4f933d09fa08a84522b89d85063fd0a7c033d0942c3"
+    }
+  ],
+  "failures": [
+    {
+      "url": "https://mogo.mantake.shop/",
+      "result": "HTTP 403; source repository found separately"
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr/",
+      "result": "HTTP 403; no bypass"
+    },
+    {
+      "url": "https://www.crosslink-reader.top/",
+      "result": "DNS lookup failed"
+    },
+    {
+      "url": "https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft",
+      "result": "web tool inaccessible; no decisions synchronized"
+    }
+  ],
+  "source_searches": {
+    "confirmed": [
+      "Mogo E4p -> chopper1026/mogo-e4p; siliscar/mogo-e4p also visible but older scope",
+      "Metalio Launcher -> NinthCode/MoJi -> bmorcelli/Launcher"
+    ],
+    "no_relevant_match": [
+      "PageRest",
+      "CrossLink Pixel",
+      "Pudding E-INK4",
+      "ModernClassicOS",
+      "ModernClassic ESP32",
+      "BoBoOS Metalio",
+      "bobo crosspoint",
+      "Eink4Boy",
+      "inkboot Metalio"
+    ],
+    "unrelated_results_rejected": [
+      "ThingOS -> ccrisan Linux project",
+      "ardmos -> billieblaze I2C project",
+      "inkboot -> unrelated/nonmatching result; exact README unavailable"
+    ]
+  },
+  "local_context_checked": [
+    "README.md",
+    "docs/project.md",
+    "docs/requirements.md",
+    "docs/process.md",
+    "docs/decisions/README.md",
+    "docs/background.md",
+    "docs/ideas.md",
+    "docs/tasks/registry-research-1/REPORT.md",
+    "docs/tasks/reuse-crosspoint-1/REPORT.md",
+    "docs/tasks/reuse-crosspoint-1/picks.md",
+    "docs/tasks/picks-status.md"
+  ],
+  "open_issue_pr_query": "repo:Gidean-zcx/ink is:open replan -> no matches; not a global proof of no issues"
+}
