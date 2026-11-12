@@ -1,6 +1,12 @@
 import hashlib
+import asyncio
+import json
+import os
+import socket
 import ssl
 import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 from aiohttp import ClientError, ClientSession, web
@@ -129,6 +135,64 @@ async def test_formal_member_scope_and_unauthenticated_gate(make_hub):
     assert hub.authority.role(connection.scope) == "child"
 
 
+async def cli(*args):
+    root = Path(__file__).resolve().parents[3]
+    process = await asyncio.create_subprocess_exec(sys.executable, "-m", "ink_hub", *args,
+        env={**os.environ, "PYTHONPATH": str(root / "hub")},
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    stdout, stderr = await asyncio.wait_for(process.communicate(), 10)
+    return process.returncode, stdout.decode(), stderr.decode()
+
+
+async def test_claim_cli_and_pair_file(make_hub, tmp_path):
+    info = identity(tmp_path)
+    hub, client, url = await make_hub(directory=tmp_path, lan=info)
+    output = tmp_path / "ink-pair.json"
+    rc, stdout, stderr = await cli("pair-file", "--data", str(tmp_path), "--out", str(output))
+    assert rc == 0, stderr
+    config = json.loads(output.read_text())
+    assert set(config) == {"url", "console", "pin", "preauth"}
+    assert config["url"].startswith("wss://") and config["console"].startswith("https://")
+    assert config["pin"] == info["pin"] and config["preauth"] not in stdout + stderr
+    assert output.stat().st_mode & 0o777 == 0o600
+    device, _ = await begin(client, url, preauth=config["preauth"])
+    await complete(device)
+    device, reply = await begin(client, url, nonce="cli-claim")
+    code = reply["result"]["code"]
+    rc, stdout, stderr = await cli("claim", code, info["code"], "--name", "合成终端", "--port", url.rsplit(":", 1)[1])
+    assert rc == 0 and json.loads(stdout) == {"offered": True}, stderr
+    assert (await device.recv())["params"]["name"] == "合成终端"
+
+
+async def test_serve_lan_prints_stable_identity(tmp_path):
+    with socket.socket() as reserve:
+        reserve.bind(("127.0.0.1", 0))
+        port = reserve.getsockname()[1]
+    root = Path(__file__).resolve().parents[3]
+    process = await asyncio.create_subprocess_exec(sys.executable, "-m", "ink_hub", "serve", "--lan",
+        "--data", str(tmp_path), "--port", "0", "--lan-port", str(port),
+        env={**os.environ, "PYTHONPATH": str(root / "hub")},
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    output = ""
+    try:
+        async with asyncio.timeout(10):
+            while "家庭服务器已就绪" not in output:
+                line = await process.stdout.readline()
+                assert line, (await process.stderr.read()).decode()
+                output += line.decode()
+        rc, pin_output, stderr = await cli("pin", "--data", str(tmp_path), "--lan-port", str(port))
+        assert rc == 0 and all(line in output for line in pin_output.splitlines()), stderr
+        context = ssl.create_default_context(cafile=str(tmp_path / "tls/cert.pem"))
+        context.check_hostname = False
+        async with ClientSession() as client:
+            async with client.get(f"https://127.0.0.1:{port}/setup", ssl=context) as reply:
+                assert reply.status == 404
+    finally:
+        process.terminate()
+        _, errors = await asyncio.wait_for(process.communicate(), 10)
+        assert "Traceback" not in errors.decode(), errors.decode()
+
+
 @pytest.mark.parametrize("remote", ["192.0.2.8", "2001:db8::1"])
 def test_remote_protocol_gate(remote):
     assert not proto_allowed(1, remote, True, True)
@@ -149,7 +213,7 @@ async def test_stable_tls_pin_and_exclusive_route(tmp_path):
     assert info["pin"] == digest == hashlib.sha256(der).hexdigest()
     assert verification_code("0" * 64) == "AAAAAAAAAAAA"
     assert verification_code("f" * 64) == "777777777777"
-    hub = Hub(tmp_path, dev_allow_proto1=True)
+    hub = Hub(tmp_path, dev_allow_proto1=True, lan=info)
     runner = web.AppRunner(hub.tls_application(), access_log=None)
     await runner.setup()
     site = web.TCPSite(runner, "127.0.0.1", 0, ssl_context=info["context"])
@@ -169,6 +233,14 @@ async def test_stable_tls_pin_and_exclusive_route(tmp_path):
                 assert hashlib.sha256(observed).hexdigest() == info["pin"]
                 await ws.send_json({"jsonrpc": "2.0", "id": 1, "method": "hello", "params": {"proto": 1}})
                 assert (await ws.receive_json())["error"]["code"] == -32012
+                await ws.send_json({"jsonrpc": "2.0", "id": 2, "method": "pair/begin", "params": {
+                    "proto": 2, "nonce": "tls-synthetic-nonce", "preauth": hub.tokens.preauth()}})
+                assert (await ws.receive_json())["result"]["expires_s"] == 600
+                credentials = (await ws.receive_json())["params"]
+                await ws.send_json({"jsonrpc": "2.0", "id": 3, "method": "hello", "params": {
+                    "proto": 2, "device": credentials["device"], "token": credentials["token"],
+                    "member": "kid", "epoch": 1, "authed": False}})
+                assert (await ws.receive_json())["result"]["proto"] == 2
             with pytest.raises((ClientError, OSError)):
                 await client.get(f"http://127.0.0.1:{port}/v1/device")
     finally:

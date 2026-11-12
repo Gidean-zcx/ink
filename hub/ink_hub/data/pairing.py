@@ -41,9 +41,12 @@ class PairingStore:
             raise ProtocolError("pair_expired", -32031)
         device = rows[0]["device"] if rows else "dv_" + secrets.token_hex(12)
         token = secrets.token_hex(24)
-        self.query("DELETE FROM pairing_tokens WHERE txid=?", (txid,))
-        self.query("INSERT INTO pairing_tokens VALUES(?,?,?,?,?,?)",
-                   (self.digest(token), device, nonce, txid, "pending", self.clock() + 7 * 86400))
+        if rows:
+            self.query("UPDATE pairing_tokens SET hash=?,expires=? WHERE hash=?",
+                       (self.digest(token), self.clock() + 7 * 86400, rows[0]["hash"]))
+        else:
+            self.query("INSERT INTO pairing_tokens VALUES(?,?,?,?,?,?)",
+                       (self.digest(token), device, nonce, txid, "pending", self.clock() + 7 * 86400))
         return device, token
 
     def authenticate(self, device, token):

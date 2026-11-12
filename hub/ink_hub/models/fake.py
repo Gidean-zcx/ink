@@ -12,7 +12,7 @@ class ModelResult:
 
 
 class Model(Protocol):
-    async def answer(self, question: str, tools: list[str], lang: str = "zh") -> ModelResult: ...
+    async def stream(self, question: str, tools: dict, lang: str = "zh", member=None): ...
 
 
 class FakeModel:
@@ -37,3 +37,17 @@ class FakeModel:
         if self.fail:
             raise RuntimeError("fake vendor failure")
         return ModelResult(self.texts.get(lang, self.text), self.tool if self.tool in tools else None, self.arguments)
+
+    async def stream(self, question, tools, lang="zh", member=None):
+        if self.provider is not None:
+            self.calls += 1
+            self.started.set()
+            async for part in self.provider.stream(question, tools, lang, member):
+                yield part
+            return
+        from ink_hub.gateway.wire import chunks
+        result = await self.answer(question, tools, lang)
+        for text in chunks(result.text):
+            yield ModelResult(text)
+        if result.tool:
+            yield ModelResult("", result.tool, result.arguments)

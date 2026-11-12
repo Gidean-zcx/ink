@@ -7,12 +7,20 @@ from aiohttp import ClientError, ClientSession, ClientTimeout
 
 from .fake import ModelResult
 
+SYSTEM_PROMPT = (
+    "你是这家人用的墨水屏设备上的助手。不要给自己起名字，不要自称哪个模型或代号；"
+    "被问你是谁，就说是这台设备上的助手。屏幕小，回答还要朗读，回答简短，默认三句以内。"
+    "要操作设备就调用一个能力，按说明填全参数；拿不准先问一句，不要编参数。"
+    "设备回执回来之前不要说已经做好了。不知道的事不要编。孩子在用时用孩子听得懂的话。"
+    "按设备给的 lang 回答。"
+)
+
 
 class RemoteModel:
-    def __init__(self, provider, prefix):
+    def __init__(self, provider, prefix, *, deepseek=False):
         self.provider, self.prefix = provider, prefix
-        self.model = os.environ.get(prefix + "_MODEL", "")
-        default = "https://api.openai.com/v1" if provider == "openai" else "https://api.anthropic.com/v1"
+        self.model = "deepseek-chat" if deepseek else os.environ.get(prefix + "_MODEL", "")
+        default = "https://api.deepseek.com" if deepseek else "https://api.openai.com/v1" if provider == "openai" else "https://api.anthropic.com/v1"
         self.base = os.environ.get(prefix + "_BASE_URL", default).rstrip("/")
         url = urlsplit(self.base)
         if (not self.model or url.username or url.password or url.query or url.fragment
@@ -54,12 +62,17 @@ class RemoteModel:
             # Vendor bodies, URLs, headers and exception messages may contain credentials.
             raise RuntimeError("模型服务请求失败") from None
 
-    async def stream(self, question, tools, lang="zh"):
+    async def stream(self, question, tools, lang="zh", member=None):
+        tools = tools or {}
         names = {"ink_" + str(i): name for i, name in enumerate(tools)}
-        schema = {"type": "object", "properties": {}, "additionalProperties": True}
-        descriptors = [{"name": key, "description": "设备能力：" + name, "parameters": schema}
+        descriptors = [{"name": key, "description": tools[name].get("title", "设备能力：" + name),
+                        "parameters": tools[name].get("inputSchema", {"type": "object"})}
                        for key, name in names.items()]
-        instruction = "请用" + lang + "回答；需要操作设备时调用提供的能力，每轮最多调用一次。"
+        instruction = SYSTEM_PROMPT + "\nlang=" + lang
+        if member:
+            instruction += "\n当前使用者：" + ("孩子，用孩子听得懂的话。" if member.get("role") == "child" else "大人。")
+            if os.environ.get("INK_HUB_SHARE_MEMBER_NAME") == "1" and member.get("name"):
+                instruction += "\n称呼：" + str(member["name"])
         payload = {"model": self.model, "stream": True, "messages": [{"role": "user", "content": question}]}
         if self.provider == "openai":
             payload["messages"].insert(0, {"role": "system", "content": instruction})
@@ -124,9 +137,9 @@ class RemoteModel:
         except (KeyError, TypeError, ValueError, IndexError, AttributeError):
             raise RuntimeError("模型回复无效") from None
 
-    async def answer(self, question, tools, lang="zh"):
+    async def answer(self, question, tools, lang="zh", member=None):
         text, tool, arguments = [], None, None
-        async for part in self.stream(question, tools, lang):
+        async for part in self.stream(question, tools, lang, member):
             text.append(part.text)
             if part.tool:
                 tool, arguments = part.tool, part.arguments

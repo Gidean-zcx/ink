@@ -50,7 +50,7 @@ async def vendor(monkeypatch):
                 if gate:
                     await gate.wait()
                 if tool:
-                    assert body["tools"][0]["function"]["description"].endswith("reader.next_page")
+                    assert body["tools"][0]["function"]["description"] == "下一页"
                     for function in ({"name": "ink_0", "arguments": "{"}, {"arguments": "}"}):
                         await emit({"choices": [{"delta": {"tool_calls": [{"index": 0, "function": function}]}}]})
                 await emit({"choices": [{"delta": {}, "finish_reason": "tool_calls" if tool else "stop"}]})
@@ -62,7 +62,7 @@ async def vendor(monkeypatch):
                 if gate:
                     await gate.wait()
                 if tool:
-                    assert body["tools"][0]["description"].endswith("reader.next_page")
+                    assert body["tools"][0]["description"] == "下一页"
                     await emit({"type": "content_block_start", "index": 1,
                                 "content_block": {"type": "tool_use", "id": "test-call", "name": "ink_0", "input": {}}})
                     for part in ("{", "}"):

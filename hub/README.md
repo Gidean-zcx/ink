@@ -44,37 +44,58 @@ INK_HUB_CAPS=../build/test-out/hub/caps.json .venv/bin/python -m pytest -q
 
 所有流程只用假厂商、替身 Opus 包，不代表真实语音可用。模拟器桥只接受 `--hub-url ws://127.0.0.1:端口/v1/device`，强制 1× 实时；省略参数就用原来的确定性模拟中枢。模拟任务只排队；专用宿主网络线程经 `vtk_inject_external` 回到模拟世界，关闭或代次过期的回调丢弃。继续交互可使用原来的 `ink-sim` / `ink-sim-gui` 加同一个参数。
 
+## 怎么连设备
+
+本机 HTTP 保持 `127.0.0.1:8443`，设置页和认领命令只走这个入口；模拟器桥仍加 `--dev-allow-proto1`。真实设备加 `--lan`，另开 `0.0.0.0:8444` 的 TLS 入口，那里只提供 `/v1/device`，只收正式协议 2：
+
+```sh
+PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m ink_hub serve --lan --data work/hub-data
+PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m ink_hub pin --data work/hub-data
+```
+
+启动和 `pin` 都打印设备地址、公钥 SHA-256、12 位核对码。首次用系统 openssl 在 `work/hub-data/tls/` 生成证书和私钥，以后复用；私钥权限 600，备份数据目录时保留它。端口可用 `--lan-port` 改；自动选出的地址需要主会话核对是否能从设备所在局域网访问。这里的 pin 是 SPKI DER 的 SHA-256，不是证书文件哈希。
+
+推荐通过配对文件带外交付公钥和一次性预授权码：
+
+```sh
+PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m ink_hub pair-file --data work/hub-data --out work/ink-pair.json
+```
+
+由主会话将文件放到 TF 根目录（设备上 `/content/ink-pair.json`），调用 `pairing.import`。文件权限 600，一次有效，24 小时过期，不含 Wi-Fi；用后删除，不提交或打印其内容。`console` 是设备配置要求的 HTTPS 地址占位，本次没有网页认领页；预授权配对不访问它。
+
+也可在设备上调用 `pairing.configure`，填写打印的 `url`、`pin` 和同主机的 HTTPS `console`，设备显示 8 位认领码后，在中枢本机运行：
+
+```sh
+PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m ink_hub claim <认领码> <核对码> --name "我的设备"
+```
+
+核对码必须从设备上核对，不能只照抄服务器终端。认领后在设备确认家庭和设备名。设备收到令牌后重新 `hello`，`hub.online=true` 才算完成；TLS connected 只说明加密连接已建立。令牌和一次性码在 `hub.db` 只存哈希。网页 `/claim/<码>` 本次没有实现。停止中枢即可退回；去掉 `--lan` 可只保留开发入口，保留数据目录可继续使用原公钥和令牌。
+
 ## 怎么换成真模型
 
-默认仍为假模型。`INK_HUB_MODEL_PROVIDER` 可选 `fake`、`openai`、`anthropic`；选了真实接法但没有对应环境密钥时，自动用假模型。沿用上面的 `serve` 命令，不要设置旧的 `INK_HUB_MODEL`。本任务没有发送真实模型请求；启用真实服务可能产生费用，须先由用户选择厂商和模型。
+不显式设置接法、但环境里有 `DEEPSEEK_API_KEY` 时，默认使用 OpenAI 兼容接口 `https://api.deepseek.com` 和 `deepseek-chat`（D-130）。没有密钥时仍用假模型；`INK_HUB_MODEL_PROVIDER=fake` 始终强制假模型。显式 `openai`、`anthropic` 沿用原接法，缺少对应密钥时用假模型。
 
 | 接法 | 必填环境变量 | 可选环境变量 |
 | --- | --- | --- |
-| OpenAI 兼容 Chat Completions（DeepSeek、方舟、通义、Kimi 等） | `INK_HUB_OPENAI_API_KEY`、`INK_HUB_OPENAI_MODEL` | `INK_HUB_OPENAI_BASE_URL`，默认 `https://api.openai.com/v1` |
-| Anthropic Messages | `INK_HUB_ANTHROPIC_API_KEY`、`INK_HUB_ANTHROPIC_MODEL` | `INK_HUB_ANTHROPIC_BASE_URL`，默认 `https://api.anthropic.com/v1` |
+| DeepSeek 默认 | `DEEPSEEK_API_KEY` | 不需要设置 provider |
+| OpenAI 兼容 | `INK_HUB_MODEL_PROVIDER=openai`、`INK_HUB_OPENAI_API_KEY`、`INK_HUB_OPENAI_MODEL` | `INK_HUB_OPENAI_BASE_URL`，默认 `https://api.openai.com/v1` |
+| Anthropic | `INK_HUB_MODEL_PROVIDER=anthropic`、`INK_HUB_ANTHROPIC_API_KEY`、`INK_HUB_ANTHROPIC_MODEL` | `INK_HUB_ANTHROPIC_BASE_URL`，默认 `https://api.anthropic.com/v1` |
 
-Base URL 填厂商的 API 前缀，代码追加 `/chat/completions` 或 `/messages`。例如方舟的前缀可能含 `/api/v3`，按所选厂商文档填写。正式服务必须 HTTPS，仅本机假服务器允许 HTTP。密钥用终端静默读取或由进程环境注入，不写 YAML、命令参数或仓库文件。以 Bash 为例（先填好选定服务的地址与模型名）：
-
-```sh
-export INK_HUB_MODEL_PROVIDER=openai
-export INK_HUB_OPENAI_BASE_URL=https://example.com/v1
-export INK_HUB_OPENAI_MODEL=user-selected-model
-IFS= read -r -s -p '模型服务密钥：' INK_HUB_OPENAI_API_KEY
-export INK_HUB_OPENAI_API_KEY
-hub/.venv/bin/python -m ink_hub serve --data work/hub-data --dev-allow-proto1
-```
-
-`example.com` 是占位地址。Anthropic 按表换环境变量名和 provider。没有安装厂商 SDK，复用锁定的 aiohttp。请求使用 SSE，`RemoteModel.stream()` 逐段输出文字并在参数完整后返回一次工具调用；现有网关的 `answer()` 接口会先汇总流，再按原来的设备协议发送。工具沿用设备当前允许的能力名、校验和授权路径；现有网关只把名字交给模型，因此适配发送通用对象参数，完整参数 Schema 仍由网关验证。每轮最多一个工具，不新增自动代理循环或会话记忆。
-
-无需密钥、也不会访问外网的验证：
+Mac 启动脚本由主会话使用；只读环境文件的 `DEEPSEEK_API_KEY=` 行，不执行文件里的其他内容，不回显密钥，权限比 600 宽会提醒：
 
 ```sh
-PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_models.py
+INK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python" INK_HUB_DATA=work/hub-data bash hub/deploy/start-mac.sh
 ```
 
-它在随机本机端口启动两种假服务器，检查分段文字、分片工具参数、一次设备能力调用、缺密钥回退，以及 HTTP 错误和日志脱敏。真实厂商的兼容性和效果还需用户授权后的联调。接口依据：[OpenAI Chat Completions 流事件](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events)、[Anthropic streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)（查阅：2026-11-12）。
+环境文件默认在 `$HOME/Documents/Workspace/ink-hw/private/hub.env`，可用 `INK_HUB_ENV_FILE` 指定。`--check` 只显示接法、地址和模型，不请求服务、不显示密钥。开发测试只用临时假文件；执行本任务时没有读取真实环境文件或调用真实模型。
 
-设备连接边界仍见 [hub-link-1 报告](../docs/tasks/hub-link-1/REPORT.md)：当前 CLI 只监听本机、HTTP、开发协议 1；它不是已经支持局域网 WSS 和生产配对的中枢入口。
+网关把设备 `tools/list` 的 `title`、`inputSchema` 原样交给模型；超过 128 个时页面能力优先。文字逐段按整字切到 511 字节以内，语音整句到达即合成，工具回执接在已发文字后。每轮仍只调用一个工具，仍经 Schema 校验和授权，不加自动重试。统一中文提示限定产品身份、简短回答和真实回执。默认只发送“大人／孩子”；`INK_HUB_SHARE_MEMBER_NAME=1` 才允许把设备给的称呼写进外部模型提示，不从成员编号编名字。
+
+语音接法由 `ink_hub.speech.from_environment()`（若存在）选择，返回 `(asr, tts)`；未提供时使用假语音。本任务没有修改 speech 模块。
+
+```sh
+PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_models.py hub/tests/contract/test_hub_pair_model.py hub/tests/contract/test_pairing.py
+```
 
 ## 安装骨架
 

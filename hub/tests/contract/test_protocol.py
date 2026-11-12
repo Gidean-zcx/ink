@@ -63,7 +63,7 @@ async def test_voice_order_and_tool(make_hub):
     assert kinds.count("ai.stt") == 1 and kinds.count("tools/call") == 1
     end = next(i for i, m in enumerate(messages) if isinstance(m, dict) and m.get("method") == "ai.tts.end")
     audio = [i for i, m in enumerate(messages) if isinstance(m, bytes)]
-    assert len(audio) == 5 and max(audio) < end < len(messages) - 1
+    assert len(audio) == 10 and max(audio) < end < len(messages) - 1
     assert messages[-1]["id"] == rid
     assert all(m[10] == 0xA5 for m in messages if isinstance(m, bytes))
     assert hub.metrics.tool_calls == 1

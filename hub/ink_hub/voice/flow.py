@@ -1,10 +1,11 @@
 import asyncio
 import re
+import logging
 import secrets
 
 from ink_hub.bus.policy import authorize
 from ink_hub.bus.schema import validate
-from ink_hub.gateway.wire import ProtocolError, answer as clip, chunks, frame, response
+from ink_hub.gateway.wire import ANSWER_BYTES, ANSWER_CUT, ProtocolError, answer as clip, chunks, frame, response
 
 
 def sentences(text):
@@ -30,7 +31,47 @@ async def run_turn(self, rid, method, params):
     sid = params.get("stream", 0)
     session = self.sessions.get(sid)
     guard = lambda: self.valid_output(scope, epoch, sid, session)
-    count = 0
+    count, seq, sent, text, speech, cut = 0, 0, 0, "", "", False
+    loop = asyncio.get_running_loop()
+    target, turn_timeout = loop.time() - 0.24, None
+
+    async def emit(value="", final=False):
+        nonlocal count, seq, sent, text, speech, cut, target
+        if not cut:
+            combined = text + value
+            text = clip(combined)
+            cut = text != combined
+        safe = text if final or cut else "".join(chunks(text, total=ANSWER_BYTES - len(ANSWER_CUT.encode())))
+        addition = safe[sent:]
+        for part in chunks(addition):
+            await self.notify("ai.delta", {"id": rid, "text": part, "seq": seq}, guard)
+            seq += 1
+        sent += len(addition)
+        if not session:
+            return
+        speech += addition
+        ready = list(sentences(speech))
+        speech = ""
+        if ready and not final and not re.search(r"[。！？.!?；;\n]$", ready[-1]):
+            speech = ready.pop()
+        for sentence in ready:
+            audio = await self.hub.tts.synthesize(sentence)
+            for packet in audio:
+                target = max(target, loop.time() - 0.24)
+                delay = target - loop.time()
+                if delay > 0:
+                    future = loop.create_future()
+                    timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
+                    try:
+                        await future
+                    finally:
+                        timer.cancel()
+                await self.send(frame(2, sid, count, packet), guard=guard)
+                count += 1
+                if turn_timeout is not None and not turn_timeout.expired():
+                    turn_timeout.reschedule(min(total_deadline, loop.time() + 10))
+                target += 0.06
+
     try:
         if not guard():
             return
@@ -47,7 +88,11 @@ async def run_turn(self, rid, method, params):
             if any(not isinstance(n, str) or len(n.encode()) > 47 for n in snapshot.get("actions", [])):
                 raise ProtocolError("能力名无效")
             available = await self.tools.current(snapshot.get("actions", []), guard=guard)
-            if self.hub.authority.role(scope) == "child":
+            member = params.get("member", {})
+            if not isinstance(member, dict):
+                raise ProtocolError("家人信息无效")
+            child = self.hub.authority.role(scope) == "child" or member.get("role") == "child"
+            if child:
                 available = {n: t for n, t in available.items() if t.get("effect") != "system" and t.get("confirm") != "parent"}
             if session:
                 await session.ended.wait()
@@ -64,58 +109,43 @@ async def run_turn(self, rid, method, params):
             lang = params.get("lang", "zh")
             if not isinstance(lang, str) or not lang.isalpha() or len(lang) > 8:
                 raise ProtocolError("语言无效")
-            # Chinese is the default; another language is passed so the model answers in it.
-            extra = {"lang": lang} if lang != "zh" else {}
-            answer = await self.hub.model.answer(question, list(available), **extra) if question else None
-            if not guard():
-                return
-            text = answer.text if answer else ""
-            if answer and answer.tool:
-                descriptor = available[answer.tool]
-                if not isinstance(answer.arguments, dict) or "_meta" in answer.arguments:
-                    raise ProtocolError("工具参数无效")
-                validate(answer.arguments, descriptor.get("inputSchema", {"type": "object"}))
-                meta = authorize(self.hub.authority, scope, epoch=epoch, connection=self.id,
-                                 action=answer.tool, arguments=answer.arguments, now=asyncio.get_running_loop().time(),
-                                 effect=descriptor.get("effect", "read"))
-                meta["request_id"] = secrets.token_hex(16)
-                receipt = await self.request("tools/call", {"name": answer.tool, "arguments": answer.arguments,
-                                                           "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
-                if not isinstance(receipt, dict) or "status" not in receipt:
-                    raise ProtocolError("设备回执无效")
-                self.hub.metrics.tool_calls += 1
-                text = receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else text)
-                if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
-                    await self.tools.current([], guard=guard)
-            text = clip(text)
-            for seq, part in enumerate(chunks(text)):
-                await self.notify("ai.delta", {"id": rid, "text": part, "seq": seq}, guard)
-            if session:
-                target = loop.time() - 0.24  # five-frame prefill; never catch up in a large burst
-                for sentence in sentences(text):
-                    audio = await self.hub.tts.synthesize(sentence)
-                    for packet in audio:
-                        target = max(target, loop.time() - 0.24)
-                        delay = target - loop.time()
-                        if delay > 0:
-                            future = loop.create_future()
-                            timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
-                            try:
-                                await future
-                            finally:
-                                timer.cancel()
-                        await self.send(frame(2, sid, count, packet), guard=guard)
-                        count += 1
-                        now = loop.time()
-                        turn_timeout.reschedule(min(total_deadline, now + 10))
-                        target += 0.06
+            if len(available) > 128:
+                logging.getLogger(__name__).info("能力目录截断：%d", len(available) - 128)
+                order = list(dict.fromkeys([*snapshot.get("actions", []), *available]))
+                available = {name: available[name] for name in order if name in available}
+                available = dict(list(available.items())[:128])
+            context = {"role": "child" if child else "adult", "name": member.get("name", "")}
+            if question:
+                async for part in self.hub.model.stream(question, available, lang=lang, member=context):
+                    if not guard():
+                        return
+                    await emit(part.text)
+                    if not part.tool:
+                        continue
+                    descriptor = available.get(part.tool)
+                    if not descriptor or not isinstance(part.arguments, dict) or "_meta" in part.arguments:
+                        raise ProtocolError("工具参数无效")
+                    validate(part.arguments, descriptor.get("inputSchema", {"type": "object"}))
+                    meta = authorize(self.hub.authority, scope, epoch=epoch, connection=self.id,
+                                     action=part.tool, arguments=part.arguments, now=loop.time(),
+                                     effect=descriptor.get("effect", "read"))
+                    meta["request_id"] = secrets.token_hex(16)
+                    receipt = await self.request("tools/call", {"name": part.tool, "arguments": part.arguments,
+                                                               "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
+                    if not isinstance(receipt, dict) or "status" not in receipt:
+                        raise ProtocolError("设备回执无效")
+                    self.hub.metrics.tool_calls += 1
+                    await emit(receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else ""))
+                    if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
+                        await self.tools.current([], guard=guard)
+            await emit(final=True)
     except asyncio.CancelledError:
         return
     except (TimeoutError, ProtocolError, PermissionError, ConnectionError, RuntimeError):
         if guard():
             try:
-                await self.notify("ai.delta", {"id": rid, "text": "这次没有完成，请重试。"}, guard)
-            except ConnectionError:
+                await emit("这次没有完成，请重试。", final=True)
+            except (ConnectionError, RuntimeError, TimeoutError):
                 pass
     finally:
         if guard() and not asyncio.current_task().cancelling():
