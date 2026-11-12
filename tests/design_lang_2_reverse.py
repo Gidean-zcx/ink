@@ -50,6 +50,7 @@ for name, path, scene, expected in cases:
     out = area / f'{name}-out'
     run = subprocess.run([str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
         '--script', str(ROOT / 'tests/ui_shell.script'), '--hub', str(ROOT / 'tests/ui_shell.hub.json'),
+        '--budget', str(ROOT / 'tests/ui_scene.budget.json'),
         '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(out),
         '--quiet', '--no-random-outages'], env={**os.environ, 'INK_UI_SCENE': scene, 'INK_UI_SCENE_TEXT': '3'},
         capture_output=True, text=True, timeout=120)

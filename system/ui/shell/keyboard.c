@@ -1,5 +1,5 @@
 /* LVGL keyboard maps feed the existing text capabilities; the service owns all edits. */
-/* ui-scale-runtime: dimension area.y1,key_height,candidates_height,keyboard_height,keyboard_height_for,make_board,height Theme-derived keyboard geometry scales with the current text line. */
+/* ui-scale-runtime: dimension area.y1,key_height,candidates_height,candidate_band_height,keyboard_height,keyboard_height_for,make_board,height Theme-derived keyboard geometry scales with the current text line. */
 /* ui-scale-runtime: dimension keyboard.y1 The keyboard safe area includes the wrapped edit toolbar. */
 #include <stdio.h>
 #include <string.h>
@@ -50,6 +50,10 @@ static int key_height(bool digits) {
     return ink_ui_line_height(INK_FONT_LIST) * (digits ? INK_KB_DIGIT : INK_KB_KEY) / INK_LINE_LIST;
 }
 static int candidates_height(void) { return ink_ui_line_height(INK_FONT_LIST) * INK_KB_CAND / INK_LINE_LIST; }
+static int candidate_band_height(void) {
+    return LV_MAX(ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP,
+        2 * INK_CONTROL + INK_GAP_XS + INK_KB_GAP);
+}
 static bool editing(void) {
     size_t start, end; ink_text_selection(&start, &end);
     return ink_text_type() != INK_TEXT_PASSWORD && (start != end || (!ink_text_composing()[0] &&
@@ -58,8 +62,7 @@ static bool editing(void) {
 static int keyboard_height_for(ink_text_type_t type) {
     bool number = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE;
     bool nine = type == INK_TEXT_PLAIN && !ink_text_english() && !K.symbols && ink_setting_get("text.nine_key");
-    int top = type == INK_TEXT_PASSWORD ? 0 : ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP;
-    if (type != INK_TEXT_PASSWORD && editing()) top += 2 * INK_CONTROL + INK_GAP_XS - candidates_height();
+    int top = type == INK_TEXT_PASSWORD ? 0 : candidate_band_height();
     /* Nine-key pinyin is as tall as the full keyboard (phone keyboards keep one height when switching layouts):
      * three letter-height rows of digit keys and the function row. The number pad keeps its tall digits. */
     return top + (number ? 3 * key_height(true) + 2 * key_height(false) + 4 * INK_KB_GAP :
@@ -389,7 +392,7 @@ static void build(int kind) {
     K.keys = lv_obj_create(K.root);
     lv_obj_remove_style_all(K.keys);
     lv_obj_set_size(K.keys, LV_PCT(100), ink_ui_px(keyboard_height()));
-    lv_obj_set_style_pad_row(K.keys, ink_ui_px(INK_GAP_XS), 0);
+    lv_obj_set_style_pad_row(K.keys, ink_ui_px(INK_KB_GAP), 0);
     lv_obj_set_flex_flow(K.keys, LV_FLEX_FLOW_COLUMN);
     K.composing = lv_label_create(K.keys);
     lv_obj_set_height(K.composing, ink_ui_px(ink_ui_line_height(INK_FONT_LIST)));
@@ -608,6 +611,7 @@ static void sync(void) { /* UI task */
     if (K.shown != n) { K.revision++; ink_ui_content_changed(); }
     K.shown = n;
     bool show_edit = editing();
+    lv_obj_set_flag(K.composing, LV_OBJ_FLAG_HIDDEN, password || show_edit);
     lv_obj_t *undo = lv_obj_get_child(K.edit, 5), *redo = lv_obj_get_child(K.edit, 6);
     if (ink_text_can_undo()) lv_obj_remove_state(undo, LV_STATE_DISABLED);
     else lv_obj_add_state(undo, LV_STATE_DISABLED);
@@ -631,7 +635,8 @@ static void sync(void) { /* UI task */
         else lv_obj_remove_flag(row, LV_OBJ_FLAG_HIDDEN);
     }
     lv_obj_set_flex_flow(K.cands, K.expanded ? LV_FLEX_FLOW_ROW_WRAP : LV_FLEX_FLOW_ROW);
-    lv_obj_set_height(K.cands, K.expanded ? LV_SIZE_CONTENT : ink_ui_px(candidates_height()));
+    lv_obj_set_height(K.cands, K.expanded ? LV_SIZE_CONTENT :
+        ink_ui_px(candidate_band_height() - ink_ui_line_height(INK_FONT_LIST) - 2 * INK_KB_GAP));
     lv_obj_update_layout(K.cands);
     int gap = ink_ui_px(INK_GAP_XS);
     int remaining = lv_obj_get_content_width(K.cands) - ink_ui_px(candidates_height()) - gap;

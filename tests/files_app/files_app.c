@@ -1,4 +1,5 @@
 /* Synthetic files, real pages, real service and a second-process restart. */
+#include <inttypes.h>
 #include "../../system/apps/files/files.c"
 #define ink_main product_main
 #include "../../system/boot/main.c"
@@ -234,7 +235,7 @@ static void verify_restart(void) {
     ink_fs_file_t *f = NULL; char ids[64] = {0};
     CHECK(ink_fs_open("/me/SYNTH_IDS.txt", INK_FS_READ, &f) == 0, "restart reads synthetic expected ids");
     if (f) { CHECK(ink_fs_read(f, ids, sizeof ids - 1) > 0, "read expected ids"); CHECK(ink_fs_close(f) == 0, "close expected ids"); }
-    CHECK(sscanf(ids, "%u %u", &kept, &removed) == 2, "parse synthetic expected ids");
+    CHECK(sscanf(ids, "%" SCNu32 " %" SCNu32, &kept, &removed) == 2, "parse synthetic expected ids");
     ink_fs_entry_t e;
     CHECK(ink_fs_lookup(kept, &e) == 0 && !strcmp(e.path, "/me/SYNTH_FILES/SYNTH_DEST/SYNTH_FINAL.txt"), "rename and move survive a new process with the same id");
     CHECK(ink_fs_lookup(removed, &e) == INK_FS_ERR_NOT_FOUND, "confirmed deletion survives restart");

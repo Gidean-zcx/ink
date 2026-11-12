@@ -66,13 +66,21 @@ static bool row_has_icon(lv_obj_t *slot) {
             for (uint32_t k = 0; k < lv_obj_get_child_count(bg); k++) {
                 lv_obj_t *part = lv_obj_get_child(bg, (int32_t)k);
                 if (lv_obj_get_y(part)) continue;
-                if (lv_obj_get_width(part) == lv_obj_get_width(bg)) joined = true;
+                CHECK(!lv_obj_get_style_border_width(part, 0) ||
+                    lv_obj_get_style_border_side(part, 0) != (LV_BORDER_SIDE_LEFT | LV_BORDER_SIDE_RIGHT), "settings groups have no orphan side frames");
                 if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_separator()) &&
                     lv_obj_get_height(part) == ink_ui_px(INK_DIVIDER)) divided = true;
             }
+            lv_obj_t *parent = lv_obj_get_parent(slot);
+            int previous_bottom = 0;
+            for (uint32_t k = 0; k < lv_obj_get_child_count(parent); k++) {
+                lv_obj_t *previous = lv_obj_get_child(parent, (int32_t)k);
+                if (!lv_obj_has_flag(previous, LV_OBJ_FLAG_HIDDEN) && lv_obj_get_y(previous) < lv_obj_get_y(slot))
+                    previous_bottom = LV_MAX(previous_bottom, lv_obj_get_y(previous) + lv_obj_get_height(previous));
+            }
+            joined = previous_bottom > 0 && previous_bottom == lv_obj_get_y(slot) && !lv_obj_get_y(bg);
             CHECK(joined == divided, "every joined settings row uses the shared divider, including later pages");
             if (joined) {
-                lv_obj_t *parent = lv_obj_get_parent(slot);
                 int bottom = 0;
                 for (uint32_t k = 0; k < lv_obj_get_child_count(parent); k++) {
                     lv_obj_t *previous = lv_obj_get_child(parent, (int32_t)k);

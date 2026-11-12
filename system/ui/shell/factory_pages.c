@@ -85,19 +85,23 @@ static void draw(void) {
     const char *titles[] = {TR("会清除（所有家人）"), F.media ? TR("备份保留，卡上另选") : TR("不会动")};
     const char *rows[] = {TR("家人、设置和 Wi-Fi"), TR("备忘、录音、照片（含卡上个人资料）"), TR("家庭服务器上的备份"), TR("存储卡的书和音频")};
     const char *icons[] = {"family", "memo", "cloud", "sd"};
-    for (int i = 0; i < 2; i++) {
+    enum { GROUPS = 2, GROUP_ROWS = 2 };
+    _Static_assert(sizeof titles / sizeof *titles <= GROUPS, "factory groups fit");
+    _Static_assert(sizeof rows / sizeof *rows <= GROUPS * GROUP_ROWS, "factory rows fit");
+    _Static_assert(sizeof icons / sizeof *icons <= GROUPS * GROUP_ROWS, "factory icons fit");
+    for (int i = 0; i < GROUPS; i++) {
         ink_ui_label(F.screen, titles[i], INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, w);
         y += ink_ui_text_height(titles[i], INK_FONT_LIST, INK_WEIGHT_BOLD, w) + INK_GAP_XS;
-        int heights[2], left = INK_CIRCLE_SMALL + INK_GAP_XL, at = 0;
+        int heights[GROUP_ROWS], left = INK_CIRCLE_SMALL + INK_GAP_XL, at = 0;
         const char *note = F.media ? TR("删除，找不回来") : TR("默认保留");
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < GROUP_ROWS; k++) {
             int text_h = ink_ui_text_height(rows[2 * i + k], INK_FONT_NOTE, INK_WEIGHT_MEDIUM,
                 w - left - (i && k ? INK_PRIMARY + INK_GAP : INK_GAP));
             if (i && k) text_h += INK_GAP_XS + ink_ui_text_height(note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w - left - INK_PRIMARY - INK_GAP);
             heights[k] = LV_MAX(INK_CONTROL, text_h + 2 * INK_GAP_XS);
         }
         lv_obj_t *card = ink_ui_card(F.screen, INK_MARGIN, y, w, heights[0] + heights[1], INK_SURFACE_STATIC);
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < GROUP_ROWS; k++) {
             ink_ui_circle(card, icons[2 * i + k], INK_GAP, at + (heights[k] - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
             ink_ui_label(card, rows[2 * i + k], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, left, at + INK_GAP_XS, w - left - (i && k ? INK_PRIMARY + INK_GAP : INK_GAP));
             at += heights[k];

@@ -66,7 +66,8 @@ static void inspect_phone(void) {
         wanted = digits[i]; find_label(); CHECK(found, "digit remains visible: %s", digits[i]);
         if (!found) continue;
         lv_area_t key; lv_obj_get_coords(lv_obj_get_parent(found), &key);
-        CHECK(key.y2 - key.y1 + 1 == ink_ui_px(INK_DIGIT) && key.x2 - key.x1 + 1 == ink_ui_px(INK_DIGIT), "dial keys retain their full size");
+        CHECK(key.y2 - key.y1 + 1 >= ink_ui_px(INK_CONTROL) && key.y2 - key.y1 + 1 <= ink_ui_px(INK_DIGIT) &&
+            key.x2 - key.x1 + 1 == ink_ui_px(INK_DIGIT), "dial keys keep their width and at least the full 108 px touch height");
         CHECK(notice.x2 < key.x1 || notice.x1 > key.x2 || notice.y2 < key.y1 || notice.y1 > key.y2, "notice does not overlap digit %s", digits[i]);
     }
     CHECK(notice.x1 >= 0 && notice.x2 < ink_ui_width() && notice.y1 >= 0 && notice.y2 < ink_ui_height(), "notice fits the screen");

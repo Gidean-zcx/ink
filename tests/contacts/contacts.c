@@ -172,17 +172,20 @@ static void write_phase(void) {
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "PhoneContacts"), 10000), "confirmed deletion returns to the list");
     for (int i = 0; i < 3; i++) CHECK(put("合成联系人", "00000000004", 0), "add fixture %d for a full page", i);
     quiet();
-    page("four"); CHECK(strstr(snap, "\"pages\":1,\"total\":4"), "four contacts fit one complete page");
+    page("four"); CHECK(strstr(snap, "\"pages\":2,\"total\":4,\"offset\":0,\"visible\":3"), "four contacts use two complete pages of three and one");
     CHECK(put("末页测试", "00000000005", 0), "add a second-page fixture"); quiet(); page("multi");
     vtk_event_at(vtk_now() + SIM_MS(1), capture_frame, NULL); delay_ms(5);
     key(INK_KEY_NEXT); quiet(); page("last");
-    CHECK(strstr(snap, "\"page\":2,\"pages\":2,\"total\":5,\"offset\":4,\"visible\":1"), "physical paging exposes only the final row");
+    CHECK(strstr(snap, "\"page\":2,\"pages\":2,\"total\":5,\"offset\":3,\"visible\":2"), "physical paging exposes exactly the final two rows");
     CHECK(AI("contacts.prev", NULL) && g_rc.status == INK_RC_DONE, "AI paging uses the registered page operation"); quiet();
     on_ui(inspect_records); isolation();
 }
 static void verify_phase(void) {
     first_id = 1; deleted_id = 2; open_list(); page("reboot");
-    CHECK(strstr(snap, "\"total\":5") && strstr(snap, "改过的测试家人"), "contacts survive a new simulator process");
+    CHECK(strstr(snap, "\"total\":5"), "all contacts survive a new simulator process");
+    CHECK(AI("contacts.next", NULL) && g_rc.status == INK_RC_DONE, "read restored second page"); quiet(); page("reboot-last");
+    CHECK(strstr(snap, "改过的测试家人"), "the edited contact survives on its actual page");
+    CHECK(AI("contacts.prev", NULL) && g_rc.status == INK_RC_DONE, "return after checking restored contact"); quiet();
     on_ui(inspect_records);
     switch_to("kid"); page("kid-reboot");
     CHECK(strstr(snap, "\"total\":1") && strstr(snap, "孩子测试") && !strstr(snap, "测试家人"), "child's isolated contacts survive reboot too");
