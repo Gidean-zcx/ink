@@ -25,6 +25,16 @@ bool ink_text_nine(void);
 bool py_dict_loaded(void);
 void py_init(void);
 
+/* Google decoder; all callers are the text service, never the keyboard. */
+void py_google_init(void);
+bool py_google_enabled(void);
+bool py_google_loaded(void);
+bool py_google_open(void);
+void py_google_close(void);
+int py_google_lookup(const char *s, bool nine, py_cand_t *out, int max);
+void py_google_pick(const char *word, unsigned consumed);
+int py_google_predict(const char *history, py_cand_t *out, int max);
+
 /* Dictation (voice_input.c). */
 int text_voice_init(void);
 void text_voice_on_blur(void);

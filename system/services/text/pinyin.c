@@ -89,6 +89,12 @@ static void ready_job(void *arg) { /* UI task */
 
 static void load_job(void *arg) { /* exec.bg */
     (void)arg;
+    if (py_google_enabled()) {
+        bool loaded = py_google_open();
+        ink_svc_lock(); PY.loading = false; ink_svc_unlock();
+        if (loaded) { ink_probe_count("text.google_loaded"); ink_exec_post(INK_EXEC_UI, &PY.ready_job, ready_job, NULL); }
+        return;
+    }
     uint8_t *b = NULL;
     bool held = ink_fs_card_hold() == INK_FS_OK; /* on a computer now: the small table until next time */
     int64_t size = held ? hal_fs_size(PY_DICT_PATH) : -1;
@@ -145,8 +151,10 @@ static void load_job(void *arg) { /* exec.bg */
 }
 
 void py_want_dict(void (*ready)(void)) {
+    if (py_google_enabled()) py_google_init();
+    bool loaded = py_google_enabled() ? py_google_loaded() : PY.block != NULL;
     ink_svc_lock();
-    bool go = !PY.block && !PY.loading;
+    bool go = !loaded && !PY.loading;
     if (go) PY.loading = true;
     PY.ready = ready;
     ink_svc_unlock();
@@ -158,6 +166,7 @@ void py_want_dict(void (*ready)(void)) {
 }
 
 bool py_dict_loaded(void) {
+    if (py_google_enabled()) return py_google_loaded();
     ink_svc_lock();
     bool b = PY.block != NULL;
     ink_svc_unlock();
@@ -173,6 +182,7 @@ static int key_cmp(uint32_t i, const char *s, size_t n) {
 }
 
 int py_lookup(const char *composing, py_cand_t *out, int max) {
+    if (py_google_enabled()) return py_google_lookup(composing, false, out, max);
     size_t len = strlen(composing);
     int got = 0;
     for (size_t n = len; n > 0 && got < max; n--) {
@@ -214,6 +224,7 @@ static int nine_add(py_cand_t *out, int got, int max, py_cand_t candidate) {
 }
 
 int py_lookup_nine(const char *composing, py_cand_t *out, int max) {
+    if (py_google_enabled()) return py_google_lookup(composing, true, out, max);
     size_t len = strlen(composing);
     if (!len || max <= 0) return 0;
     int got = 0;

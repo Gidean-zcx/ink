@@ -1,0 +1,7 @@
+function(ink_google_pinyin target)
+    set(ime ${CMAKE_CURRENT_FUNCTION_LIST_DIR})
+    file(GLOB decoder ${ime}/vendor/googlepinyin/share/*.cpp)
+    target_sources(${target} PRIVATE ${decoder})
+    set_source_files_properties(${decoder} PROPERTIES COMPILE_OPTIONS "-include;${ime}/google_port.h;-w;-fno-exceptions;-fno-rtti")
+    set_source_files_properties(${ime}/google_pinyin.cpp ${ime}/google_port.cpp PROPERTIES COMPILE_OPTIONS "-fno-exceptions;-fno-rtti")
+endfunction()

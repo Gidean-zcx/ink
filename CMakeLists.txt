@@ -260,6 +260,8 @@ add_library(ink_system STATIC
   system/apps/music/music.c
   system/services/bt/bt_service.c
   system/services/text/text_service.c
+  system/services/text/google_port.cpp
+  system/services/text/google_pinyin.cpp
   system/services/text/pinyin.c
   system/services/text/clipboard.c
   system/services/text/text_caps.c
@@ -309,6 +311,8 @@ target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256
 target_link_libraries(ink_system INTERFACE $<LINK_ONLY:ink_port_sim>)
 target_sources(ink_system PRIVATE system/apps/clock/clock.c)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
+include(system/services/text/google_build.cmake)
+ink_google_pinyin(ink_system)
 target_sources(ink_system PRIVATE system/apps/gomoku/gomoku.c system/apps/gomoku/engine.cpp
   system/apps/gomoku/vendor/crossmux/GomokuBoard.cpp system/apps/gomoku/vendor/crossmux/GomokuAI.cpp)
 target_sources(ink_system PRIVATE system/apps/memory/memory.c system/apps/memory/engine.c
@@ -2093,3 +2097,14 @@ ink_sim_executable(sim-games2 tests/games2/device.c)
 target_link_libraries(sim-games2 PRIVATE ink_apps ink_system)
 add_dependencies(sim-games2 ink_fonts ink_test_content)
 add_test(NAME games2 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/games2/run.py --build ${CMAKE_BINARY_DIR})
+
+# Google Pinyin uses the same simulator and public text session as the shipping IME.
+set(INK_GOOGLE_SENTENCES ${CMAKE_BINARY_DIR}/generated/google_sentences.h)
+add_custom_command(OUTPUT ${INK_GOOGLE_SENTENCES}
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/google_fixtures.py ${INK_GOOGLE_SENTENCES}
+  DEPENDS tests/ime_lexicon/google_fixtures.py tests/ime_lexicon/google_sentences.tsv)
+ink_sim_executable(sim-google-ime tests/ime_lexicon/google_device.c ${INK_IME_CASES} ${INK_GOOGLE_SENTENCES})
+target_include_directories(sim-google-ime PRIVATE ${CMAKE_BINARY_DIR}/generated)
+target_link_libraries(sim-google-ime PRIVATE ink_apps ink_system)
+add_dependencies(sim-google-ime ink_fonts ink_ui_fonts ink_icons ink_test_content)
+add_test(NAME ime-google COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/google_run.py --build ${CMAKE_BINARY_DIR})
