@@ -1,6 +1,7 @@
 /* Real service/output model, synthetic member-scoped media only. */
 #include "../services_finish/product.h"
 #include "ink/hal_codec.h"
+#include <sys/stat.h>
 static char mode[24];
 static void read_mode(void *arg) { (void)arg; sim_copy_name(mode, sizeof mode, getenv("INK_AUDIO_OUT_MODE")); }
 static ink_media_status_t status(void) { ink_media_status_t s; ink_media_status(&s); return s; }
@@ -8,13 +9,22 @@ static void ok(const char *cap, const char *args) {
     CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "%.40s: %.100s", cap, g_rc.detail);
 }
 static void redraw(void) { ink_ui_redraw(); }
+static void wav_cursor(void *arg) {
+    char path[512]; struct stat st;
+    int n = snprintf(path, sizeof path, "%s/speaker.wav", g_sim.out_dir);
+    *(int64_t *)arg = n > 0 && (size_t)n < sizeof path && fflush(NULL) == 0 && !stat(path, &st) ? (st.st_size - 44) / 2 : -1;
+}
+static void mark(const char *name) {
+    int64_t sample; vtk_host_call(wav_cursor, &sample);
+    CHECK(sample >= 0, "WAV cursor"); sim_metric_set(name, (double)sample);
+}
 static void play(const char *path) {
     char args[200]; snprintf(args, sizeof args, "{\"path\":\"%s\",\"start_ms\":0}", path);
     ok("media.play", args);
     CHECK(WAIT_FOR(status().state == INK_MEDIA_PLAYING, 4000), "playing");
 }
 static void until(unsigned ms) {
-    CHECK(WAIT_FOR(status().position_ms >= ms, 10000), "heard %u ms (at %u)", ms, status().position_ms);
+    CHECK(WAIT_FOR(status().position_ms >= ms, 10000), "heard %u ms (at %u)", ms, (unsigned)status().position_ms);
 }
 static void stopped(void) {
     ink_media_stop();
@@ -37,6 +47,7 @@ static void test(void *arg) {
         until(1200);
         on_ui(redraw);
         CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "refresh during FLAC");
+        mark("test.wav.flac");
         ink_media_pause();
         CHECK(WAIT_FOR(status().state == INK_MEDIA_PAUSED, 3000), "pause");
         delay_ms(100);
@@ -48,9 +59,11 @@ static void test(void *arg) {
         ink_media_resume();
         CHECK(WAIT_FOR(status().state == INK_MEDIA_PLAYING, 3000), "resume");
         until(61200);
+        mark("test.wav.seek");
         /* Next file through the same media executor used by music.next. */
         play("/family/audio/02.mp3");
         until(1200);
+        mark("test.wav.next");
         int focus = ink_audio_focus_acquire(INK_AUDIO_PRIO_VOICE, NULL, NULL, INK_EXEC_DIRECT);
         CHECK(focus > 0 && WAIT_FOR(status().state == INK_MEDIA_PAUSED, 3000), "speech preempts music");
         int voice = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
@@ -60,11 +73,13 @@ static void test(void *arg) {
         for (int i = 0; i < 15; i++) CHECK(ink_audio_stream_push(voice, packet, (size_t)n) == 0, "speech frame");
         ink_audio_stream_finish(voice);
         CHECK(WAIT_FOR(ink_audio_stream_progress(voice, NULL, NULL) < 0, 5000), "speech finishes");
+        mark("test.wav.speech");
         ink_audio_focus_release(focus);
         CHECK(WAIT_FOR(status().state == INK_MEDIA_PLAYING, 3000), "music resumes after speech");
         until(1200);
         on_ui(redraw);
         CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "refresh during MP3");
+        mark("test.wav.resume");
         CHECK(BY_HAND("system.switch_member", "{\"id\":\"kid\"}") && g_rc.status == INK_RC_DONE, "switch member");
         CHECK(WAIT_FOR(status().state == INK_MEDIA_IDLE, 4000), "member stops old music");
         delay_ms(100);
@@ -73,6 +88,7 @@ static void test(void *arg) {
         CHECK(sim_audio_played_ms() == silent, "old member output stops");
         play("/family/audio/03.wav");
         until(1200);
+        mark("test.wav.member");
         stopped();
     }
     uint64_t underruns; double gap, idle;

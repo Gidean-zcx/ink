@@ -41,6 +41,41 @@ def quality(pcm, freq):
             'attenuation_db': 10 * math.log10((16000 ** 2 / 2) / max(power, 1e-20))}
 
 
+def check_phases(pcm, metrics):
+    # Inspect the last 200 ms of each actual output phase, including the resumed track.
+    for phase, frequencies in [('flac', [440, 660]), ('seek', [880, 1320]), ('next', [330]),
+                               ('speech', [2200]), ('resume', [330]), ('member', [1600])]:
+        end = int(metrics['test.wav.' + phase])
+        block = pcm[end - 3200:end]
+        power = sum(x * x for x in block) / len(block)
+        wanted = 0
+        for freq in frequencies:
+            a = 2 * sum(x * math.sin(2 * math.pi * freq * i / 16000) for i, x in enumerate(block)) / len(block)
+            b = 2 * sum(x * math.cos(2 * math.pi * freq * i / 16000) for i, x in enumerate(block)) / len(block)
+            wanted += (a * a + b * b) / 2
+        fraction = wanted / max(power, 1)
+        print(f'speaker.wav {phase}: expected_tone_power={fraction:.6f}', flush=True)
+        assert power > 10000 and fraction > 0.95, (phase, power, fraction)
+
+
+def check_fresh_prefixes(build, sd, folder, pcm, metrics):
+    previous = 0
+    for phase, file, at, gain in [('flac', '01.flac', 0, 10000), ('seek', '01.flac', 60000, 10000),
+                                  ('next', '02.mp3', 0, 10000), ('resume', '02.mp3', 0, 10000),
+                                  ('member', '03.wav', 0, 3600)]:
+        reference = folder / (phase + '.pcm')
+        subprocess.run([str(build / 'test-audio-out-bench'), str(sd / file), str(at), str(reference)], check=True)
+        prefix = array.array('h', reference.read_bytes())
+        prefix = array.array('h', ((1 if x >= 0 else -1) * (abs(x) * gain // 10000) for x in prefix))
+        assert len(prefix) >= 960 and max(prefix) > 100, 'non-silent full first frame'
+        if phase == 'resume':
+            previous = int(metrics['test.wav.speech'])
+        end = int(metrics['test.wav.' + phase])
+        assert prefix.tobytes() in pcm[previous:end].tobytes(), (phase, 'first frame differs from a fresh FIR')
+        print(f'speaker.wav {phase}: full first PCM frame matches fresh FIR', flush=True)
+        previous = end
+
+
 def run(build, binary, case, area):
     folder = area / case
     sd = folder / 'sd/content/audio'
@@ -65,21 +100,25 @@ def run(build, binary, case, area):
     print(f'{case}: exit={result.returncode}, finished={m.get("test.finished", 0)}, '
           f'fail={m.get("test.fail", 0)}, underruns={m.get("audio.speaker.underruns", 0)}', flush=True)
     assert result.returncode == 0 and m.get('test.finished') == 1 and not m.get('test.fail') and not data.get('warnings'), result.stderr[-12000:]
-    return samples(folder / 'out/speaker.wav')
+    pcm = samples(folder / 'out/speaker.wav')
+    if case == 'scenario':
+        check_phases(pcm, m)
+        check_fresh_prefixes(build, sd, folder, pcm, m)
+    return pcm
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--build', required=True, type=Path)
     p.add_argument('--binary', type=Path)
-    p.add_argument('--case', choices=['tone1k', 'tone10k', 'scenario', 'music', 'all'], default='all')
+    p.add_argument('--case', choices=['tone1k', 'tone10k', 'scenario', 'music', 'quality', 'all'], default='all')
     p.add_argument('--no-thresholds', action='store_true', help='manual baseline measurement only')
     a = p.parse_args()
     build = a.build.resolve()
     binary = a.binary.resolve() if a.binary else build / 'sim-audio-out'
     area = build / 'audio-out-evidence' / binary.name
     shutil.rmtree(area, ignore_errors=True)
-    cases = ['tone1k', 'tone10k', 'scenario', 'music'] if a.case == 'all' else [a.case]
+    cases = ['tone1k', 'tone10k', 'scenario', 'music'] if a.case == 'all' else ['tone1k', 'tone10k', 'music'] if a.case == 'quality' else [a.case]
     measurements = {}
     for case in cases:
         pcm = run(build, binary, case, area)

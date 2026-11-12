@@ -3,7 +3,28 @@
 #include "../music/formats.c"
 #undef main
 #include "speex/speex_resampler.h"
+static int prefix(const char *path, unsigned ms, const char *output) {
+    ink_format_t *r; int err;
+    assert(!ink_format_open_for("test", path, &r, &err));
+    if (ms) assert(ink_format_seek(r, ms) == ms);
+    unsigned rate = ink_format_rate(r), ch = ink_format_channels(r);
+    size_t count = rate * 60 / 1000;
+    int16_t *raw = osal_malloc(count * ch * 2, 0), *mono = osal_malloc(count * 2, 0);
+    int16_t *out = osal_malloc((HAL_OPUS_FRAME_SAMPLES + 1) * 2, 0);
+    assert(raw && mono && out);
+    size_t n = ink_format_pcm(r, raw, count);
+    for (size_t i = 0; i < n; i++) mono[i] = ch == 1 ? raw[i] : (int16_t)(((int)raw[2 * i] + raw[2 * i + 1]) / 2);
+    SpeexResamplerState *s = speex_resampler_init(1, rate, 16000, 4, &err);
+    spx_uint32_t in = (spx_uint32_t)n, len = HAL_OPUS_FRAME_SAMPLES + 1;
+    assert(s && !speex_resampler_process_int(s, 0, mono, &in, out, &len) && in == n);
+    FILE *f = fopen(output, "wb"); assert(f);
+    assert(fwrite(out, 2, len, f) == len && !fclose(f));
+    speex_resampler_destroy(s); ink_format_close(r);
+    osal_free(raw); osal_free(mono); osal_free(out);
+    return 0;
+}
 int main(int argc, char **argv) {
+    if (argc == 4) return prefix(argv[1], (unsigned)strtoul(argv[2], NULL, 10), argv[3]);
     assert(argc == 2);
     const char *names[] = {"tone-44100-2.wav", "tone-44100-2.flac", "tone-44100-2.mp3", "tone-44100-2.ogg"};
     for (unsigned k = 0; k < sizeof names / sizeof *names; k++) {

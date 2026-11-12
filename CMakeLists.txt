@@ -2089,6 +2089,7 @@ add_executable(test-audio-out-bench tests/audio_out/bench.c system/services/audi
 target_include_directories(test-audio-out-bench PRIVATE platform/include system/include)
 target_compile_options(test-audio-out-bench PRIVATE ${INK_WARN} -UNDEBUG)
 target_link_libraries(test-audio-out-bench PRIVATE ink_resampler)
+add_dependencies(sim-audio-out test-audio-out-bench)
 
 ink_sim_executable(sim-games2 tests/games2/device.c)
 target_link_libraries(sim-games2 PRIVATE ink_apps ink_system)
