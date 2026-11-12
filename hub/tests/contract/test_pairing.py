@@ -7,6 +7,126 @@ from aiohttp import ClientError, ClientSession, web
 
 from ink_hub.gateway.server import Hub
 from ink_hub.gateway.tls import identity, proto_allowed, verification_code
+from ink_hub.gateway.wire import ProtocolError
+from tests.fake_device import FakeDevice
+
+LAN = {"url": "wss://example.com:8444/v1/device", "pin": "1" * 64, "code": verification_code("1" * 64)}
+
+
+async def begin(client, url, nonce="synthetic-nonce", **params):
+    device = FakeDevice(client, url)
+    device.ws = await client.ws_connect(url + "/v1/device")
+    reply = await device.call("pair/begin", {"proto": 2, "nonce": nonce, **params})
+    return device, reply
+
+
+async def complete(device):
+    message = await device.recv()
+    assert message["method"] == "pair/complete"
+    await device.answer(message)
+    return message["params"]
+
+
+async def hello(device, credentials, **params):
+    return await device.call("hello", {"proto": 2, "device": credentials["device"],
+        "token": credentials["token"], "member": "kid", "authed": False, "epoch": 17, **params})
+
+
+async def test_claim_and_restart_keep_hashed_token(make_hub):
+    hub, client, url = await make_hub(lan=LAN)
+    device, reply = await begin(client, url)
+    code = reply["result"]["code"]
+    assert len(code) == 8 and reply["result"]["expires_s"] == 600
+    denied = await client.post(url + "/claim", json={"code": code, "check": "WRONG"})
+    assert denied.status == 403
+    claimed = await client.post(url + "/claim", json={"code": code, "check": LAN["code"], "name": "合成设备"})
+    assert claimed.status == 200
+    offer = await device.recv()
+    assert offer["method"] == "pair/offer" and offer["params"]["name"] == "合成设备"
+    assert {"family", "by", "txid"} <= offer["params"].keys()
+    await device.answer(offer)
+    assert (await device.call("pair/accept", {"txid": offer["params"]["txid"]}))["result"] == {}
+    credentials = await complete(device)
+    assert credentials["urls"] == [LAN["url"]] and credentials["pins"] == [LAN["pin"]]
+    assert (await hello(device, credentials))["result"]["proto"] == 2
+    await device.ws.close()
+    restarted, second_client, second_url = await make_hub(directory=hub.directory, lan=LAN)
+    second = FakeDevice(second_client, second_url)
+    second.ws = await second_client.ws_connect(second_url + "/v1/device")
+    assert {"session", "proto", "now_ms", "hub_instance"} <= (await hello(second, credentials))["result"].keys()
+    for path in restarted.directory.rglob("*"):
+        if path.is_file():
+            assert credentials["token"].encode() not in path.read_bytes()
+
+
+async def test_nonce_resume_expiry_and_limits(make_hub):
+    now = [1000.0]
+    hub, client, url = await make_hub(lan=LAN, clock=lambda: now[0])
+    first, reply = await begin(client, url)
+    second, again = await begin(client, url)
+    code = reply["result"]["code"]
+    assert again == reply
+    assert first.ws.closed or await first.ws.receive()
+    now[0] += 601
+    await hub.pairing.expire(code)
+    assert (await second.recv())["method"] == "pair/expired"
+    assert code not in hub.pairing.codes
+    third, reply = await begin(client, url, "five-attempts")
+    code = reply["result"]["code"]
+    for _ in range(5):
+        assert (await client.post(url + "/claim", json={"code": code, "check": "WRONG"})).status == 403
+    assert (await third.recv())["method"] == "pair/expired"
+    assert (await client.post(url + "/claim", json={"code": code, "check": LAN["code"]})).status == 400
+    for i in range(32):
+        _, result = await begin(client, url, f"capacity-{i}")
+        assert "result" in result
+    _, result = await begin(client, url, "capacity-full")
+    assert result["error"]["code"] == -32022
+
+
+async def test_preauth_resume_rotation_and_errors(make_hub):
+    now = [1000.0]
+    hub, client, url = await make_hub(lan=LAN, clock=lambda: now[0])
+    preauth = hub.tokens.preauth()
+    first, reply = await begin(client, url, preauth=preauth)
+    assert "result" in reply
+    old = await complete(first)
+    second, reply = await begin(client, url, txid=old["txid"])
+    new = await complete(second)
+    assert new["device"] == old["device"] and new["token"] != old["token"]
+    assert (await hello(second, old))["error"]["code"] == -32010
+    assert (await hello(second, new, token="synthetic-wrong-token"))["error"]["code"] == -32010
+    _, reused = await begin(client, url, "another-nonce", preauth=preauth)
+    assert reused["error"]["code"] == -32030
+    _, reused = await begin(client, url, preauth=preauth)
+    assert reused["error"]["code"] == -32030
+    expired = hub.tokens.preauth()
+    now[0] += 86401
+    _, invalid = await begin(client, url, "expired-file", preauth=expired)
+    assert invalid["error"]["code"] == -32030
+    now[0] += 7 * 86400
+    assert (await hello(second, new))["error"]["code"] == -32013
+    with pytest.raises(ProtocolError) as caught:
+        hub.tokens.authenticate("another-device", new["token"])
+    assert caught.value.code == -32010
+
+
+async def test_formal_member_scope_and_unauthenticated_gate(make_hub):
+    hub, client, url = await make_hub(lan=LAN)
+    device, _ = await begin(client, url, preauth=hub.tokens.preauth())
+    credentials = await complete(device)
+    assert (await device.call("caps/list"))["error"]["code"] == -32010
+    assert (await hello(device, credentials))["result"]["proto"] == 2
+    connection = hub.connections[credentials["device"]]
+    assert connection.scope.member == "kid" and hub.authority.role(connection.scope) == "child"
+    await device.send("ink/member", {"member": "parent", "authed": True, "epoch": 18}, rid=False)
+    assert (await device.recv())["method"] == "caps/changed"
+    assert connection.scope.member == "parent" and hub.authority.role(connection.scope) == "adult"
+    await device.send("ink/member", {"member": "parent", "authed": False, "epoch": 19}, rid=False)
+    assert (await device.recv())["method"] == "caps/changed"
+    assert hub.authority.role(connection.scope) == "child"
+    assert (await device.call("ink/member", {"member": "parent", "authed": True, "epoch": 18}))["error"]
+    assert hub.authority.role(connection.scope) == "child"
 
 
 @pytest.mark.parametrize("remote", ["192.0.2.8", "2001:db8::1"])

@@ -21,7 +21,7 @@ async def make_hub(tmp_path):
     runners, clients, hubs = [], [], []
 
     async def create(**kwargs):
-        hub = Hub(tmp_path / str(len(hubs)), dev_allow_proto1=kwargs.pop("dev_allow_proto1", True), record_wire=True, **kwargs)
+        hub = Hub(kwargs.pop("directory", tmp_path / str(len(hubs))), dev_allow_proto1=kwargs.pop("dev_allow_proto1", True), record_wire=True, **kwargs)
         runner = web.AppRunner(hub.application(), access_log=None)
         await runner.setup()
         site = web.TCPSite(runner, "127.0.0.1", 0)

@@ -25,10 +25,10 @@ class FakeDevice:
         self.rpc_error = None
         self.member, self.epoch = "default", 0
 
-    async def connect(self, device="example-device", proto=1):
+    async def connect(self, device="example-device", proto=1, **params):
         self.ws = await self.client.ws_connect(self.url + "/v1/device")
         return await self.call("hello", {"proto": proto, "device": device, "member": self.member,
-                                         "epoch": self.epoch, "authed": False})
+                                         "epoch": self.epoch, "authed": False, **params})
 
     async def send(self, method, params=None, rid=True):
         self.rid += 1
@@ -67,6 +67,8 @@ class FakeDevice:
             result = {"tools": self.tools[start:start + self.page_size]}
             if start + self.page_size < len(self.tools):
                 result["nextCursor"] = str(start + self.page_size)
+        elif method in ("pair/offer", "pair/complete"):
+            result = {"shown": True} if method == "pair/offer" else {"ok": True}
         elif method == "tools/call":
             meta = params["_meta"]
             assert len(meta["request_id"].encode()) <= 39

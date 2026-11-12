@@ -46,7 +46,7 @@ async def test_handshake_and_unauthed_restrictions(make_hub):
     device = FakeDevice(client, url)
     device.ws = await client.ws_connect(url + "/v1/device")
     assert (await device.call("caps/list"))["error"]["code"] == -32010
-    assert (await device.call("hello", {"proto": 2, "device": "example"}))["error"]["code"] == -32012
+    assert (await device.call("hello", {"proto": 2, "device": "example"}))["error"]["code"] == -32010
     assert "result" in await device.call("hello", {"proto": 1, "device": "example", "member": "demo-adult"})
     caps = (await device.call("caps/list"))["result"]
     assert {c["name"] for c in caps["tools"]} >= {"voice.chat", "asr.stream"}

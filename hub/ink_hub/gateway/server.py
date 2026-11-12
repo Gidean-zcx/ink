@@ -12,16 +12,19 @@ from ink_hub.bus.registry import Capability, Registry, object_schema
 from ink_hub.content.weather import Weather
 from ink_hub.console.setup import Setup
 from ink_hub.data.scope import Authority
+from ink_hub.data.pairing import PairingStore
 from ink_hub.jobs.queue import JobQueue
 from ink_hub.jobs.runner import Runner
 from ink_hub.models.fake import FakeModel
 from ink_hub.remote.input import handle_input
 from ink_hub.ops.metrics import Metrics
 from ink_hub.speech.fake import FakeASR, FakeTTS
+import ink_hub.speech
 from ink_hub.voice.flow import run_turn, run_dictation, validate_photos
 from .wire import (ProtocolError, chunks, dumps, encode, frame,
                    notification, page, parse_frame, response)
 from .tls import loopback, proto_allowed
+from .pairing import Pairing
 
 
 @dataclass
@@ -39,6 +42,7 @@ class Connection:
     def __init__(self, hub, ws, remote="127.0.0.1", secure=False):
         self.hub, self.ws = hub, ws
         self.remote, self.secure = remote, secure
+        self.proto, self.pair_code = 1, None
         self.id = secrets.token_hex(8)
         self.device = None
         self.scope = None
@@ -247,6 +251,9 @@ class Connection:
             if not isinstance(method, str) or len(method.encode()) > 31 or not isinstance(params, dict):
                 raise ProtocolError("方法或参数无效")
             if not self.scope:
+                if method.startswith("pair/"):
+                    await self.hub.pairing.receive(self, rid, method, params)
+                    return
                 if method != "hello":
                     raise ProtocolError("请先连接", -32010)
                 await self.hello(rid, params)
@@ -324,6 +331,14 @@ class Connection:
                     self.turn_sessions[f"asr:{sid}"] = sid
                     task.add_done_callback(lambda t, key=f"asr:{sid}": self.forget_turn(key))
             elif method == "ink/member":
+                if self.proto == 2:
+                    if type(params.get("epoch")) is not int or params["epoch"] <= self.epoch:
+                        raise ProtocolError("家人代次无效")
+                    scope, authed, epoch = self.member_scope(params)
+                    self.scope, self.authed, self.epoch = scope, authed, epoch
+                    await self.cancel_work()
+                    await self.notify("caps/changed", {})
+                    return
                 # Only synthetic configured identities exist in proto1 development mode.
                 member, epoch = params.get("member"), params.get("epoch")
                 if (type(epoch) is not int or not self.epoch < epoch <= 0xffffffff or
@@ -360,7 +375,8 @@ class Connection:
                                  str(exc) if isinstance(exc, (ProtocolError, PermissionError)) else "参数无效")
 
     async def hello(self, rid, params):
-        if rid is None or params.get("proto") != 1 or not proto_allowed(params.get("proto"), self.remote, self.secure, self.hub.dev_allow_proto1):
+        proto = params.get("proto")
+        if rid is None or type(proto) is not int or not proto_allowed(proto, self.remote, self.secure, self.hub.dev_allow_proto1):
             raise ProtocolError("只开放显式启用的开发握手", -32012)
         device = params.get("device")
         if not isinstance(device, str) or not 1 <= len(device.encode()) <= 64:
@@ -368,16 +384,37 @@ class Connection:
         epoch = params.get("epoch", 0)
         if type(epoch) is not int or not 0 <= epoch <= 0xffffffff or type(params.get("authed", False)) is not bool:
             raise ProtocolError("家人代次无效")
+        if proto == 2:
+            token = params.get("token")
+            if not isinstance(token, str):
+                raise ProtocolError("auth_invalid", -32010)
+            self.hub.tokens.authenticate(device, token)
+            scope, authed, epoch = self.member_scope(params)
+        else:
+            scope, authed = self.hub.authority.issue("demo", "default"), False
         old = self.hub.connections.get(device)
         if old and old is not self:
             await old.close()
         self.device = device
         self.hub.connections[device] = self
-        self.scope = self.hub.authority.issue("demo", "default")
-        self.epoch = epoch
+        self.scope, self.authed, self.epoch, self.proto = scope, authed, epoch, proto
+        entry = self.hub.pairing.codes.pop(self.pair_code, None)
+        if entry:
+            entry["timer"].cancel()
         self.tools = DeviceTools(self.request, params.get("fw", "development"), params.get("manifest_hash", ""))
-        await self.send(response(rid, {"session": self.id, "proto": 1, "now_ms": int(time.time() * 1000),
+        await self.send(response(rid, {"session": self.id, "proto": proto, "now_ms": int(self.hub.clock() * 1000),
                                        "hub_instance": self.hub.instance}))
+
+    def member_scope(self, params):
+        member, authed, epoch = params.get("member"), params.get("authed", False), params.get("epoch", 0)
+        if (not isinstance(member, str) or not 1 <= len(member.encode()) <= 15 or type(authed) is not bool
+                or type(epoch) is not int or not 0 <= epoch <= 0xffffffff):
+            raise ProtocolError("家人或代次无效")
+        authority, role = self.hub.authority, "adult" if authed else "child"
+        old = authority._members.get(("home", member))
+        if not old or old[0] != role:
+            authority.add("home", member, role)
+        return authority.issue("home", member), authed, epoch
 
     async def end_session(self, sid):
         session = self.sessions.pop(sid, None)
@@ -405,10 +442,17 @@ class Connection:
 
 
 class Hub:
-    def __init__(self, directory, *, dev_allow_proto1=False, model=None, asr=None, tts=None, request_timeout=3, record_wire=False, weather_source=None):
+    def __init__(self, directory, *, dev_allow_proto1=False, model=None, asr=None, tts=None, request_timeout=3, record_wire=False, weather_source=None, lan=None, clock=time.time):
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
         self.dev_allow_proto1 = dev_allow_proto1
+        self.lan, self.clock = lan, clock
+        self.tokens = PairingStore(self.directory / "hub.db", clock)
+        self.pairing = Pairing(self)
+        factory = getattr(ink_hub.speech, "from_environment", None)
+        providers = factory() if factory else None
+        if providers:
+            asr, tts = asr or providers[0], tts or providers[1]
         self.model, self.asr, self.tts = model or FakeModel(), asr or FakeASR(), tts or FakeTTS()
         self.request_timeout = request_timeout
         self.weather = Weather(weather_source)
@@ -465,7 +509,7 @@ class Hub:
         ws = web.WebSocketResponse(max_msg_size=32768, heartbeat=20)
         await ws.prepare(request)
         connection = Connection(self, ws, request.remote, request.secure)
-        timer = asyncio.get_running_loop().call_later(10, lambda: asyncio.create_task(ws.close()) if not connection.scope else None)
+        timer = asyncio.get_running_loop().call_later(10, lambda: asyncio.create_task(ws.close()) if not connection.scope and not connection.pair_code else None)
         try:
             async for msg in ws:
                 if msg.type in (WSMsgType.TEXT, WSMsgType.BINARY):
@@ -490,6 +534,7 @@ class Hub:
         app.router.add_get("/metrics", self.metric_page)
         app.router.add_get("/setup", self.setup.page)
         app.router.add_post("/setup", self.setup.save)
+        app.router.add_post("/claim", self.pairing.claim)
 
         async def lifespan(application):
             await asyncio.to_thread(self.jobs.recover)
@@ -500,6 +545,8 @@ class Hub:
             jobs.cancel()
             await asyncio.gather(monitor, jobs, return_exceptions=True)
             await asyncio.gather(*(c.close() for c in list(self.connections.values())))
+            for entry in self.pairing.codes.values():
+                entry["timer"].cancel()
 
         app.cleanup_ctx.append(lifespan)
         return app

@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import time
 from pathlib import Path
 
 from aiohttp import web
@@ -8,12 +9,14 @@ from aiohttp import web
 from ink_hub.console.setup import Setup
 from ink_hub.gateway.server import Hub
 from ink_hub.gateway.tls import identity, print_identity
+from ink_hub.data.pairing import PairingStore
 from ink_hub.ops.preflight import inspect
 
 
 def main():
     parser = argparse.ArgumentParser(description="家庭服务器，第 1 步仅使用示例资料")
-    parser.add_argument("command", choices=("serve", "doctor", "setup", "status", "pin"))
+    parser.add_argument("command", choices=("serve", "doctor", "setup", "status", "pin", "claim", "pair-file"))
+    parser.add_argument("values", nargs="*")
     parser.add_argument("--data", default=os.environ.get("INK_HUB_DATA", "data"))
     parser.add_argument("--host", default=os.environ.get("INK_HUB_HOST", "127.0.0.1"))
     parser.add_argument("--port", type=int, default=int(os.environ.get("INK_HUB_PORT", "8443")))
@@ -21,11 +24,36 @@ def main():
     parser.add_argument("--config")
     parser.add_argument("--lan", action="store_true")
     parser.add_argument("--lan-port", type=int, default=8444)
+    parser.add_argument("--name", default="我的设备")
+    parser.add_argument("--out")
     args = parser.parse_args()
     if args.host != "127.0.0.1":
         parser.error("第 1 步只监听 127.0.0.1；远程设置请使用 SSH 转发")
     if args.command == "pin":
         print_identity(identity(args.data, args.lan_port))
+    elif args.command == "claim":
+        from urllib.request import Request, build_opener, ProxyHandler
+        from urllib.error import HTTPError
+        if len(args.values) != 2:
+            parser.error("请提供认领码和核对码")
+        values = {"code": args.values[0], "check": args.values[1], "name": args.name}
+        request = Request(f"http://127.0.0.1:{args.port}/claim", data=json.dumps(values).encode(),
+                          headers={"Content-Type": "application/json"})
+        try:
+            with build_opener(ProxyHandler({})).open(request, timeout=5) as reply:
+                print(reply.read().decode())
+        except HTTPError:
+            parser.error("认领失败，请核对认领码和核对码")
+    elif args.command == "pair-file":
+        if not args.out:
+            parser.error("请提供 --out 路径")
+        info = identity(args.data, args.lan_port)
+        token = PairingStore(Path(args.data) / "hub.db", time.time).preauth()
+        values = {"url": info["url"], "console": info["url"].replace("wss://", "https://").removesuffix("/v1/device"),
+                  "pin": info["pin"], "preauth": token}
+        with os.fdopen(os.open(args.out, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w") as output:
+            json.dump(values, output, ensure_ascii=False)
+        print("配对文件已生成，有效期 24 小时，请用后删除。")
     elif args.command == "doctor":
         print(json.dumps(inspect(args.data), ensure_ascii=False))
     elif args.command == "setup":
@@ -40,10 +68,10 @@ def main():
     elif args.command == "status":
         print(json.dumps(Setup(args.data).progress, ensure_ascii=False))
     else:
-        hub = Hub(args.data, dev_allow_proto1=args.dev_allow_proto1)
+        info = identity(args.data, args.lan_port) if args.lan else None
+        hub = Hub(args.data, dev_allow_proto1=args.dev_allow_proto1, lan=info)
         app = hub.application()
         if args.lan:
-            info = identity(args.data, args.lan_port)
             print_identity(info)
             async def start_lan(application):
                 runner = web.AppRunner(hub.tls_application(), access_log=None)
