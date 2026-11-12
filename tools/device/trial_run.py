@@ -21,6 +21,8 @@ but the console showed no system start.
 import argparse
 import hashlib
 import os
+import shlex
+import subprocess
 import sys
 import time
 
@@ -100,9 +102,30 @@ def install_and_run(r, p):
     return base.capture(r, "trial", r.a.seconds, r.a.until or "\0never\0")
 
 
+LOG_RING = (FONT_DATA[0] + FONT_DATA[1] - 0x80000, 0x80000)
+
+
+def save_device(r):
+    """Read the device's own /user (model), core dump and log ring before a restore overwrites them.
+
+    2026-11-12 a restore wiped the user's data: the *_backup.bin files are copies of the factory backup,
+    not reads of the device. Read-only; nothing is written if any read fails."""
+    saved = os.path.join(r.a.out, "device-before-restore")
+    os.makedirs(saved, exist_ok=True)
+    for name, (start, size) in (("model", MODEL), ("coredump", COREDUMP), ("logs", LOG_RING)):
+        cmd = r.a.esptool + ["--chip", "esp32s31", "--port", r.a.port_now, "--baud", str(r.a.baud),
+                             "--before", "default-reset", "--after", "no-reset", "read-flash",
+                             "0x%x" % start, "0x%x" % size, os.path.join(saved, f"{name}.bin")]
+        r.say("run: " + " ".join(shlex.quote(t) for t in cmd))
+        if not r.a.dry_run and subprocess.call(cmd) != 0:
+            raise RuntimeError(f"could not save the device's {name} region; nothing written")
+    r.say(f"device regions saved to {saved}")
+
+
 def restore(r, p):
-    r.step("5. write otadata, ota_1, model, font_data and coredump back from the backup")
+    r.step("5. save the device's own data, then write otadata, ota_1, model, font_data and coredump back from the backup")
     pairs = [(REGIONS[n][0], p[n]) for n in ("otadata", "ota_1", "model", "font_data", "coredump")]
+    saved = False
     for _attempt in range(1 if r.a.dry_run else base.RESTORE_TRIES):
         try:
             port = base.wait_port_idle(r, "restore")
@@ -111,6 +134,9 @@ def restore(r, p):
             port = None
         if port is not None:
             r.a.port_now = port
+            if not saved:
+                save_device(r)
+                saved = True
             if r.esptool("no-reset", "write-flash", pairs) == 0 and r.esptool("no-reset", "verify-flash", pairs) == 0:
                 r.say("would verify (dry run)" if r.a.dry_run else "RESTORE VERIFIED")
                 return True
