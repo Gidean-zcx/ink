@@ -266,7 +266,7 @@ void SpellingTrie::free_son_trie(SpellingNode* node) {
   }
 
   if (NULL != node->first_son)
-    delete [] node->first_son;
+    ink_gp_delete(node->first_son);
 }
 
 bool SpellingTrie::construct(const char* spelling_arr, size_t item_size,
@@ -315,6 +315,9 @@ bool SpellingTrie::construct(const char* spelling_arr, size_t item_size,
   node_num_ = 1;
 #endif
 
+  if (root_) { free_son_trie(root_); ink_gp_delete(root_); }
+  ink_gp_delete(dumb_node_);
+  ink_gp_delete(splitter_node_);
   root_ = ink_gp_new<SpellingNode>();
   memset(root_, 0, sizeof(SpellingNode));
 

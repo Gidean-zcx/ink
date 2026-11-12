@@ -7,7 +7,8 @@ static constexpr size_t USER_BYTES = 65536;
 struct ink_gp_file { uint8_t *data; size_t size, pos, cap; bool writing, failed; };
 static ink_gp_file *writer;
 void *ink_gp_alloc(size_t n) { const char *tag = osal_mem_tag("google-ime"); void *p = osal_malloc(n, OSAL_MEM_EXTERNAL); osal_mem_tag(tag); return p; }
-char *ink_gp_strdup(const char *s) { char *p = (char *)ink_gp_alloc(strlen(s) + 1); if (p) strcpy(p, s); return p; }
+char *ink_gp_strdup(const char *s) { char *p = (char *)ink_gp_alloc(strlen(s) + 1); if (p) strcpy(p, s);
+    return p; }
 ink_gp_file *ink_gp_fopen(const char *path, const char *mode) {
     bool system = !strcmp(path, "/content/ime/dict_pinyin.dat"), writing = strchr(mode, '+') || strchr(mode, 'w');
     if (!system && strcmp(path, "/me/ime/google.user")) return nullptr;
@@ -70,13 +71,17 @@ int ink_gp_open(const char *path, int flags) {
 }
 ssize_t ink_gp_write(int fd, const void *p, size_t n) { return fd == 1 && writer ? (ssize_t)ink_gp_fwrite(p, 1, n, writer) : -1; }
 off_t ink_gp_lseek(int fd, off_t off, int whence) { return fd == 1 && writer && !ink_gp_fseek(writer, off, whence) ? (off_t)writer->pos : -1; }
-int ink_gp_truncate(int fd, off_t n) { if (fd != 1 || !writer || n < 0 || (size_t)n > writer->cap) return -1; writer->size = (size_t)n; return 0; }
-int ink_gp_close(int fd) { if (fd != 1 || !writer) return -1; ink_gp_file *f = writer; writer = nullptr; return ink_gp_fclose(f); }
+int ink_gp_truncate(int fd, off_t n) { if (fd != 1 || !writer || n < 0 || (size_t)n > writer->cap) return -1;
+    writer->size = (size_t)n; return 0; }
+int ink_gp_close(int fd) { if (fd != 1 || !writer) return -1;
+    ink_gp_file *f = writer; writer = nullptr; return ink_gp_fclose(f); }
 int ink_gp_unlink(const char *path) { return ink_fs_remove(path); }
 int ink_gp_mutex_lock(osal_mutex_t **m, bool wait) {
     if (!*m) *m = osal_mutex_create();
     return *m && osal_mutex_lock(*m, wait ? OSAL_WAIT_FOREVER : OSAL_NO_WAIT) == OSAL_OK ? 0 : -1;
 }
 int ink_gp_mutex_unlock(osal_mutex_t **m) { osal_mutex_unlock(*m); return 0; }
-int ink_gp_gettimeofday(timeval *v, void *unused) { (void)unused; int64_t t = osal_wall_us(); if (!t) t = 1262304000000000LL + (int64_t)osal_now_us(); v->tv_sec = t / 1000000; v->tv_usec = t % 1000000; return 0; }
-time_t ink_gp_time(time_t *out) { timeval v; ink_gp_gettimeofday(&v, nullptr); if (out) *out = v.tv_sec; return v.tv_sec; }
+int ink_gp_gettimeofday(timeval *v, void *unused) { (void)unused; int64_t t = osal_wall_us(); if (!t) t = 1262304000000000LL + (int64_t)osal_now_us();
+    v->tv_sec = t / 1000000; v->tv_usec = t % 1000000; return 0; }
+time_t ink_gp_time(time_t *out) { timeval v; ink_gp_gettimeofday(&v, nullptr); if (out) *out = v.tv_sec;
+    return v.tv_sec; }

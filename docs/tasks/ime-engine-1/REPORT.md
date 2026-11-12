@@ -9,9 +9,9 @@
 | 1 对比 | 【实测】不通过默认替换门槛 | 新引擎首选 76/90，全拼 71/73、前五 72/73；简拼 4/16、前五 12/16。旧默认和资源包保留 | `python tests/ime_lexicon/google_run.py --build build` |
 | 2 组句和选词 | 【实测】全拼通过；九宫格仍有缺口 | 完整句、部分选择、剩余组句和联想检查通过；九宫格逐条结果待汇总 | 同上 |
 | 3 家人隔离 | 【实测】正向通过；反向待跑 | 同音对照词“北京／背景”的成人、孩子、切回和重启检查通过；密码及词库哈希检查通过 | 同上 |
-| 4 64 位词库 | 待验证 | 宿主机、S31、反向对照 | 待补 |
-| 5 截图 | 待验证 | 五组输入、两种字号、新旧引擎 | 待补 |
-| 6 工程验证 | 【实测】S31 首轮通过；其余在跑 | 首轮 text +44,622 B、data +24 B；资源包不变 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 4 64 位词库 | 【实测】通过 | 模拟器及 S31 宿主机打开同一文件；撤掉固定宽度读取后 SIGSEGV | `python tests/ime_lexicon/google_run.py --build build --reverse` |
+| 5 截图 | 【实测】通过 | 本目录 20 张 PNG，五组输入、两种字号、新旧各一套，均小于 300 KiB | `python tests/ime_lexicon/google_run.py --build build` |
+| 6 工程验证 | 【实测】部分通过，最终 S31 复核在跑 | 普通全量 438 项有 5 项失败；修正后相关 11/11 通过；ASan 输入法和文本服务 7/7 通过。设计文档漏项未越界修改 | `ctest --test-dir build --output-on-failure -j2`；`ctest --test-dir build-asan -R '^(ime-\|integration-text)' --output-on-failure -j2` |
 
 ## 没做到的
 
@@ -19,11 +19,11 @@
 
 ## 和设计不一致的
 
-待核对。
+九宫格长句排序未达到要求；新默认替换门槛未过。现有候选结构只有 40 字节，超长整句不在本次验证范围。
 
 ## 改过的已有测试
 
-无。
+仅在 `tests/integration/ai_surface.c` 的设置表末尾追加 `text.google`。原 90 条用例、原断言和键盘测试未改。
 
 ## 要用户定的
 
@@ -31,7 +31,7 @@
 
 ## 顺手发现
 
-待核对。
+普通全量首次 `unit-s31-cell-nat` 在 `at_ok` 中止，单项复跑通过；本任务未改蜂窝代码。
 
 ## 新增的机制
 
@@ -41,7 +41,7 @@
 
 ## 要改的文档
 
-待核对。
+服务设计文档 §1.3 的设置表需追加按成员的 `text.google`。这是 `services-mid-capability-doc` 唯一漏项；该文件不在任务允许范围，留给主会话合并。
 
 ## 上机核对清单
 

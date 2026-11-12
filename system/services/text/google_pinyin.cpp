@@ -32,14 +32,17 @@ static size_t utf8(const char16 *s, char *out, size_t cap) {
         unsigned c = *s; size_t k = c < 128 ? 1 : c < 2048 ? 2 : 3;
         if (n + k >= cap) break;
         if (k == 1) out[n++] = (char)c;
-        else { if (k == 3) out[n++] = (char)(224 | (c >> 12)); out[n++] = (char)((k == 3 ? 128 : 192) | ((c >> 6) & (k == 3 ? 63 : 31))); out[n++] = (char)(128 | (c & 63)); }
+        else { if (k == 3) out[n++] = (char)(224 | (c >> 12));
+            out[n++] = (char)((k == 3 ? 128 : 192) | ((c >> 6) & (k == 3 ? 63 : 31))); out[n++] = (char)(128 | (c & 63)); }
     }
     out[n] = 0; return n;
 }
 extern "C" bool py_google_enabled(void) { return ink_setting_get("text.google") != 0; }
-extern "C" void py_google_init(void) { GP.lock = osal_mutex_create(); }
-extern "C" bool py_google_loaded(void) { lock(); bool ready = current(); unlock(); return ready; }
+extern "C" void py_google_init(void) { if (!GP.lock) GP.lock = osal_mutex_create(); }
+extern "C" bool py_google_loaded(void) { if (!GP.lock) return false;
+    lock(); bool ready = current(); unlock(); return ready; }
 extern "C" void py_google_close(void) {
+    if (!GP.lock) return;
     lock(); GP.ready = false; GP.count = 0; GP.fixed_letters = GP.fixed_chars = 0; im_close_decoder(); unlock();
 }
 extern "C" bool py_google_open(void) {
@@ -102,6 +105,19 @@ static void nine(const char *digits) {
         }
     }
     for (int i = 0; i < GP.counts[length]; i++) collect(GP.paths[length][i].roman, i * 100, 7);
+    int seeds = GP.count;
+    for (int i = 0; i < seeds && GP.count < CANDIDATES; i++) {
+        Choice seed = GP.choices[i];
+        if (seed.id != 0 || strlen(seed.word) != 3) continue;
+        im_reset_search(); im_search(seed.roman, strlen(seed.roman));
+        char16 word[LETTERS + 1] = {}; im_get_candidate(0, word, LETTERS + 1);
+        char16 (*tails)[kMaxPredictSize + 1] = nullptr; size_t count = im_get_predicts(word, tails);
+        for (size_t k = 0; k < count && k < 4 && GP.count < CANDIDATES; k++) {
+            char16 joined[LETTERS + 1] = {}; joined[0] = word[0];
+            utf16_strcpy(joined + 1, tails[k]);
+            add(seed.roman, -1, joined, (unsigned)length, seed.rank - 1 - (unsigned)k);
+        }
+    }
 }
 extern "C" int py_google_lookup(const char *s, bool is_nine, py_cand_t *out, int max) {
     lock(); GP.count = 0;

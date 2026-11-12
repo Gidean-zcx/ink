@@ -32,6 +32,11 @@ def run(mode, state, binary=None, expected=False):
                        env={**os.environ, 'INK_GOOGLE_MODE': mode, 'UBSAN_OPTIONS': 'halt_on_error=1'})
     (state / (mode + '.stdout')).write_text(r.stdout)
     (state / (mode + '.stderr')).write_text(r.stderr)
+    assert 'SYNTHETIC_SECRET' not in r.stdout + r.stderr, 'password must not appear in logs'
+    if expected and not (out / 'metrics.json').exists():
+        assert r.returncode < 0, (mode, r.returncode, r.stderr)
+        print(json.dumps({'mode': mode, 'signal': -r.returncode, 'metrics': 'unavailable after the expected crash'}), flush=True)
+        return r, {}, out
     report = json.loads((out / 'metrics.json').read_text())
     m = report['metrics']
     if expected:

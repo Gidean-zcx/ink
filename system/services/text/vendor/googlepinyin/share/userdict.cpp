@@ -316,6 +316,7 @@ bool UserDict::close_dict() {
   dict_file_ = NULL;
   lemmas_ = NULL;
 #ifdef ___SYNC_ENABLED___
+  free(syncs_);
   syncs_ = NULL;
   sync_count_size_ = 0;
 #endif

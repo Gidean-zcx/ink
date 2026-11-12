@@ -41,7 +41,8 @@ template<class T> T *ink_gp_new(size_t n = 1) {
 template<class T> void ink_gp_delete(T *p) { if (p) { p->~T(); osal_free(p); } }
 template<class T> size_t ink_gp_read_32(T *p, size_t n, ink_gp_file *f) {
     size_t i = 0;
-    for (; i < n; i++) { uint32_t v; if (ink_gp_fread(&v, 4, 1, f) != 1) break; p[i] = v; }
+    for (; i < n; i++) { uint32_t v; if (ink_gp_fread(&v, 4, 1, f) != 1) break;
+        p[i] = v; }
     return i;
 }
 template<class T> size_t ink_gp_write_32(T *p, size_t n, ink_gp_file *f) {

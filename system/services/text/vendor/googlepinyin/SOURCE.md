@@ -2,12 +2,11 @@
 
 来源：[LineageOS/PinyinIME](https://github.com/LineageOS/android_packages_inputmethods_PinyinIME/tree/a08d08cdea4319fb74b55289e1b4e1b1a5249bc2/jni)，查阅日期 2026-11-12。
 
-`a08d08cdea4319fb74b55289e1b4e1b1a5249bc2` 与 `1702573e` 的 `jni/` 完全相同（`git diff --exit-code` 返回 0）。
-保留 Apache-2.0 文件头及原 NOTICE（本目录 LICENSE）。仅编译十二个运行文件；dictbuilder/spellingtable 头文件是运行文件的编译依赖，未引入建库工具、同步实现或 Java。
+`a08d08cdea4319fb74b55289e1b4e1b1a5249bc2` 与 `1702573e` 的 `jni/` 完全相同。保留原 NOTICE（本目录 LICENSE，含 Apache-2.0 全文）和文件头。十二个运行文件完整移植，未引入建库工具、Java 和同步入口；dictbuilder/spellingtable 仅带编译依赖的头文件。
 
-词库 `assets/ime/dict_pinyin.dat`：1,068,442 字节，SHA-256 `6bf0bbde4e3134cce38d08524a9f4dc1af40435243c8e36b38eb68d1e14462b2`。对比未达门槛，未复制到构建资源包；使用时需存储卡 `/content/ime/dict_pinyin.dat`。
+词库 `assets/ime/dict_pinyin.dat`：1,068,442 字节，SHA-256 `6bf0bbde4e3134cce38d08524a9f4dc1af40435243c8e36b38eb68d1e14462b2`。未放入构建资源包；使用时放存储卡 `/content/ime/dict_pinyin.dat`。
 
-## 原始及入库 SHA-256
+## 文件哈希
 
 | 文件 | 上游 SHA-256 | 入库 SHA-256 |
 | --- | --- | --- |
@@ -28,34 +27,38 @@
 | `include/userdict.h` | `3710026e255998961a5eece771635b682401b8fbb0f860cc8c1f0b77295537d5` | `3710026e255998961a5eece771635b682401b8fbb0f860cc8c1f0b77295537d5` |
 | `include/utf16char.h` | `90bf7e256ad0c050f59a22acdd79a9eaebe0de32aae9684ed7b68e44cdbd6126` | `90bf7e256ad0c050f59a22acdd79a9eaebe0de32aae9684ed7b68e44cdbd6126` |
 | `share/dictlist.cpp` | `fa95e96cac5e28a8b3a254de36df06cc8936795a6b93163139d1b37fb333efd3` | `b32d5a17af59b08da8f83f1c9e06fd7b37caa2d88e2cf471519a8cf55968efdf` |
-| `share/dicttrie.cpp` | `b5da1225d9d941844396e9d7dacd825e757fbe7c1c9097ac674468e4be21c32e` | `ce8fe9521d02929f25b436e15204d1bfba41eb81dd9cc037fcc6a71d29755cbd` |
+| `share/dicttrie.cpp` | `b5da1225d9d941844396e9d7dacd825e757fbe7c1c9097ac674468e4be21c32e` | `3aa127a42cfac23f68e0700d3306034f55b83c055302b6a313c5a2d0ba439d2a` |
 | `share/lpicache.cpp` | `b61f8175d834a976bde9e8faac8d074784b12011429ce4ad48bdb24fd9efbd47` | `8b1b9bbaa4a97eda15f7106aa50cd00ff186b59b4bbf45a16ad81bb78b82cc38` |
 | `share/matrixsearch.cpp` | `1cb744bd5d4ea9851586e3fd08940cf443786c0c259380043fb73b104b70524d` | `4d2ae74051a353f67185c88b589ca87d3dea46d3d6152ca256ac06bdf4026867` |
 | `share/mystdlib.cpp` | `753725a943da62462feeaa33d9f7c0c2aa1083bfc7b256299663b63567760c37` | `753725a943da62462feeaa33d9f7c0c2aa1083bfc7b256299663b63567760c37` |
 | `share/ngram.cpp` | `070bcdec1128ec056f71b788b7a6c77f3421f230267cd94fda9f224ae572c5aa` | `55dea25cf1855070eb27457d31e2693eb58ad8f54715bb254be8b8ab18bb5780` |
 | `share/pinyinime.cpp` | `512e6716d77d63ab8ad5e4cd2372430b00a4f0c6e34b9ff0a797a96e578f4cf9` | `10fc92abc7bc020fe7815f16e54688d68b026b99773fbd9e7897041dcc19ed16` |
 | `share/searchutility.cpp` | `72b5b4de7065b675cd7d2dd50e2ece9a25cded2d4359865e943ae832994f7d73` | `72b5b4de7065b675cd7d2dd50e2ece9a25cded2d4359865e943ae832994f7d73` |
-| `share/spellingtrie.cpp` | `5df7f65cbe4f63e84e182d9ba2af35227327c8268b057bdf0aec204ca2a05f60` | `ed0a4bcad26495798ca1f4ff5ab67d468f97aa49d50a735d65c7422817ef60ec` |
+| `share/spellingtrie.cpp` | `5df7f65cbe4f63e84e182d9ba2af35227327c8268b057bdf0aec204ca2a05f60` | `adcc012ff983e4f00ed5b533eedf9961184f9332faa43289bd85c9b05154b9c8` |
 | `share/splparser.cpp` | `33c150844d15e36474e3da12eb2d36efd23645a658d49f8ebaf529bf1223b03d` | `33c150844d15e36474e3da12eb2d36efd23645a658d49f8ebaf529bf1223b03d` |
-| `share/userdict.cpp` | `dab022028d2f299a03f697a1015a4e391f1371877ab4dcfd7b7962b9624ecda6` | `72241b9e48dfe611da0c5bcc94381daa68638926ca2e70f26ccd4f2ee570922e` |
+| `share/userdict.cpp` | `dab022028d2f299a03f697a1015a4e391f1371877ab4dcfd7b7962b9624ecda6` | `2cb67fc1cd45afcba3b7da5973e5c7b98c2aff8d9947ff50b6339b69f26abad5` |
 | `share/utf16char.cpp` | `bd3da194b3b694c2dd4c44553d4602253014948746dd50810759b8a5557de9dc` | `bd3da194b3b694c2dd4c44553d4602253014948746dd50810759b8a5557de9dc` |
 
-## 必要适配
+## 适配理由
 
-- 各序列化 size_t 的读取/写入使用固定 uint32 转换，内存索引仍为 size_t；LE0 节点中的两个磁盘偏移改 uint32。支持项目的 little-endian 32/64 位目标。
-- new/delete、malloc/realloc/free/strdup 接 OSAL 的 PSRAM；单例私有构造函数保留其调用点的 placement new，未全局替换 C++ 分配器。
-- 构建时只对运行文件预包含 `google_port.h`：文件读写接文件服务/存储 HAL，用户文件整份原子写回，pthread 锁接 OSAL，时间接 OSAL；未使用 Android 日志。Android fd 打开入口不使用，适配返回失败。
-- 用户词库上限 512 条、词条区 16 KiB，回收 20%；文件适配上限 64 KiB，包括索引和频率，超过时保留旧文件并记录失败计数。
-- 原文使用微秒实时时钟严格比较更新时间；OSAL 可以同一微秒内完成操作，改为允许相等，确保选词后 flush 生效。
-- 预测静态缓冲放 PSRAM；不引入任务或线程。
+- 文件里的 size_t 读写改 uint32 转换；LE0 节点的两个磁盘偏移改 uint32。内存索引保持 size_t，适用项目的 little-endian 目标。
+- new/delete、malloc/realloc/free/strdup 接 OSAL，全部动态缓冲放 PSRAM。私有单例构造保留原调用点的 placement new。
+- 仅对原文预包含 `google_port.h`：文件接成员文件服务和存储 HAL，用户文件原子写回，锁和时间接 OSAL，Android 日志禁用。不使用的 Android fd 打开入口返回失败。
+- 用户词库上限 512 条、词条区 16 KiB，回收 20%；适配器的 64 KiB 上限含索引和频率，失败保留旧文件。
+- OSAL 时钟可能在同一微秒完成操作，允许 flush 的更新时间相等。
+- 重开时回收旧拼音树、词条索引、同步数组，避免换人后 PSRAM 持续增长；修正遗漏的数组 delete，统一走 OSAL。
+- 预测静态缓冲放 PSRAM。上游原文编译使用 -w；胶水保留工程警告检查。
 
-改动共 119 个上游行位置（每段取新旧行数最大值），逐项如下：
+## 逐段改动
+
+共 127 个行位置；每段按新旧行数的最大值计。
 
 - `include/dictdef.h:112`（上游 112–113）：uint32 son_1st_off;；uint32 homo_idx_buf_off;
 - `share/dictlist.cpp:387`（上游 387–390）：if (ink_gp_write_32(&scis_num_, 1, fp) != 1)；return false;；；if (ink_gp_write_32(start_pos_, kMaxLemmaSize + 1, fp) !=
 - `share/dictlist.cpp:394`（上游 394–394）：if (ink_gp_write_32(start_id_, kMaxLemmaSize + 1, fp) !=
 - `share/dictlist.cpp:417`（上游 417–420）：if (ink_gp_read_32(&scis_num_, 1, fp) != 1)；return false;；；if (ink_gp_read_32(start_pos_, kMaxLemmaSize + 1, fp) !=
 - `share/dictlist.cpp:424`（上游 424–424）：if (ink_gp_read_32(start_id_, kMaxLemmaSize + 1, fp) !=
+- `share/dicttrie.cpp:64`（上游 64–66）：if (NULL != lma_idx_buf_)；free(lma_idx_buf_);；lma_idx_buf_ = NULL;
 - `share/dicttrie.cpp:70`（上游 70–70）：ink_gp_delete(dict_list_);
 - `share/dicttrie.cpp:76`（上游 76–76）：ink_gp_delete(parsing_marks_);
 - `share/dicttrie.cpp:80`（上游 80–80）：ink_gp_delete(mile_stones_);
@@ -107,22 +110,24 @@
 - `share/spellingtrie.cpp:108`（上游 108–108）：ink_gp_delete(ym_buf_);
 - `share/spellingtrie.cpp:111`（上游 111–111）：ink_gp_delete(f2h_);
 - `share/spellingtrie.cpp:233`（上游 233–233）：instance_ = new (ink_gp_alloc(sizeof(SpellingTrie))) SpellingTrie();
+- `share/spellingtrie.cpp:269`（上游 269–269）：ink_gp_delete(node->first_son);
 - `share/spellingtrie.cpp:286`（上游 286–287）：ink_gp_delete(spelling_buf_);；spelling_buf_ = ink_gp_new<char>(item_size * item_num);
 - `share/spellingtrie.cpp:300`（上游 300–301）：ink_gp_delete(splstr_queried_);；splstr_queried_ = ink_gp_new<char>(spelling_size_);
 - `share/spellingtrie.cpp:306`（上游 306–307）：ink_gp_delete(splstr16_queried_);；splstr16_queried_ = ink_gp_new<char16>(spelling_size_);
-- `share/spellingtrie.cpp:318`（上游 318–318）：root_ = ink_gp_new<SpellingNode>();
-- `share/spellingtrie.cpp:321`（上游 321–321）：dumb_node_ = ink_gp_new<SpellingNode>();
-- `share/spellingtrie.cpp:325`（上游 325–325）：splitter_node_ = ink_gp_new<SpellingNode>();
-- `share/spellingtrie.cpp:369`（上游 369–369）：SpellingTable *spl_table = ink_gp_new<SpellingTable>();
-- `share/spellingtrie.cpp:389`（上游 389–390）：ink_gp_delete(ym_buf_);；ym_buf_ = ink_gp_new<char>(ym_item_size * ym_num);
-- `share/spellingtrie.cpp:392`（上游 392–392）：ink_gp_delete(spl_table);
-- `share/spellingtrie.cpp:400`（上游 400–400）：ink_gp_delete(spl_table);
-- `share/spellingtrie.cpp:404`（上游 404–405）：ink_gp_delete(spl_ym_ids_);；spl_ym_ids_ = ink_gp_new<uint8>(spelling_num_ + kFullSplIdStart);
-- `share/spellingtrie.cpp:456`（上游 456–456）：first_son = ink_gp_new<SpellingNode>(num_of_son);
-- `share/spellingtrie.cpp:643`（上游 643–646）：if (ink_gp_write_32(&spelling_size_, 1, fp) != 1)；return false;；；if (ink_gp_write_32(&spelling_num_, 1, fp) != 1)
-- `share/spellingtrie.cpp:666`（上游 666–669）：if (ink_gp_read_32(&spelling_size_, 1, fp) != 1)；return false;；；if (ink_gp_read_32(&spelling_num_, 1, fp) != 1)
-- `share/spellingtrie.cpp:679`（上游 679–681）：ink_gp_delete(spelling_buf_);；；spelling_buf_ = ink_gp_new<char>(spelling_size_ * spelling_num_);
-- `share/spellingtrie.cpp:695`（上游 695–696）：ink_gp_delete(f2h_);；f2h_ = ink_gp_new<uint16>(spelling_num_);
+- `share/spellingtrie.cpp:318`（上游 318–318）：if (root_) { free_son_trie(root_); ink_gp_delete(root_); }；ink_gp_delete(dumb_node_);；ink_gp_delete(splitter_node_);；root_ = ink_gp_new<SpellingNode>();
+- `share/spellingtrie.cpp:324`（上游 321–321）：dumb_node_ = ink_gp_new<SpellingNode>();
+- `share/spellingtrie.cpp:328`（上游 325–325）：splitter_node_ = ink_gp_new<SpellingNode>();
+- `share/spellingtrie.cpp:372`（上游 369–369）：SpellingTable *spl_table = ink_gp_new<SpellingTable>();
+- `share/spellingtrie.cpp:392`（上游 389–390）：ink_gp_delete(ym_buf_);；ym_buf_ = ink_gp_new<char>(ym_item_size * ym_num);
+- `share/spellingtrie.cpp:395`（上游 392–392）：ink_gp_delete(spl_table);
+- `share/spellingtrie.cpp:403`（上游 400–400）：ink_gp_delete(spl_table);
+- `share/spellingtrie.cpp:407`（上游 404–405）：ink_gp_delete(spl_ym_ids_);；spl_ym_ids_ = ink_gp_new<uint8>(spelling_num_ + kFullSplIdStart);
+- `share/spellingtrie.cpp:459`（上游 456–456）：first_son = ink_gp_new<SpellingNode>(num_of_son);
+- `share/spellingtrie.cpp:646`（上游 643–646）：if (ink_gp_write_32(&spelling_size_, 1, fp) != 1)；return false;；；if (ink_gp_write_32(&spelling_num_, 1, fp) != 1)
+- `share/spellingtrie.cpp:669`（上游 666–669）：if (ink_gp_read_32(&spelling_size_, 1, fp) != 1)；return false;；；if (ink_gp_read_32(&spelling_num_, 1, fp) != 1)
+- `share/spellingtrie.cpp:682`（上游 679–681）：ink_gp_delete(spelling_buf_);；；spelling_buf_ = ink_gp_new<char>(spelling_size_ * spelling_num_);
+- `share/spellingtrie.cpp:698`（上游 695–696）：ink_gp_delete(f2h_);；f2h_ = ink_gp_new<uint16>(spelling_num_);
 - `share/userdict.cpp:23`（上游 23–23）：// Android logging is disabled by the port.
 - `share/userdict.cpp:298`（上游 298–298）：load_time_.tv_usec >= g_last_update_.tv_usec)) {
-- `share/userdict.cpp:1729`（上游 1729–1729）：SpellingParser * spl_parser = ink_gp_new<SpellingParser>();
+- `share/userdict.cpp:319`（上游 319–318）：free(syncs_);
+- `share/userdict.cpp:1730`（上游 1729–1729）：SpellingParser * spl_parser = ink_gp_new<SpellingParser>();

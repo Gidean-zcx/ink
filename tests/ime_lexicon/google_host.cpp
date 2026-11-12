@@ -1,6 +1,7 @@
 /* The S31 host suite opens the exact shipping decoder file, without a simulator. */
 #include <algorithm>
 #include <cassert>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -10,17 +11,22 @@
 #include "ink/sys/file.h"
 #include "ink/probe.h"
 #include "../../system/services/text/vendor/googlepinyin/include/pinyinime.h"
+#include "../../system/services/text/vendor/googlepinyin/include/userdict.h"
+#include "../../system/services/text/vendor/googlepinyin/include/splparser.h"
 struct hal_file { FILE *fp; };
 struct ink_fs_file { size_t pos; };
 struct osal_mutex {};
 static const char *dictionary;
 static std::vector<unsigned char> user;
 static const char *tag;
+struct alignas(std::max_align_t) Allocation { size_t size; };
+static size_t live;
+
 extern "C" {
-void *osal_malloc(size_t n, uint32_t caps) { assert(caps == OSAL_MEM_EXTERNAL); return malloc(n); }
-void *osal_calloc(size_t n, size_t size, uint32_t caps) { assert(caps == OSAL_MEM_EXTERNAL); return calloc(n, size); }
-void *osal_realloc(void *p, size_t n, uint32_t caps) { assert(caps == OSAL_MEM_EXTERNAL); return realloc(p, n); }
-void osal_free(void *p) { free(p); }
+void *osal_malloc(size_t n, uint32_t caps) { assert(caps == OSAL_MEM_EXTERNAL); auto *p = (Allocation *)malloc(sizeof(Allocation) + n); assert(p); p->size = n; live += n; return p + 1; }
+void *osal_calloc(size_t n, size_t size, uint32_t caps) { void *p = osal_malloc(n * size, caps); memset(p, 0, n * size); return p; }
+void *osal_realloc(void *p, size_t n, uint32_t caps) { if (!p) return osal_malloc(n, caps); auto *old = (Allocation *)p - 1; size_t count = std::min(old->size, n); void *next = osal_malloc(n, caps); memcpy(next, p, count); osal_free(p); return next; }
+void osal_free(void *p) { if (p) { auto *a = (Allocation *)p - 1; live -= a->size; free(a); } }
 const char *osal_mem_tag(const char *next) { const char *old = tag; tag = next; return old; }
 osal_mutex_t *osal_mutex_create(void) { static osal_mutex_t mutex; return &mutex; }
 osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout) { (void)m; (void)timeout; return OSAL_OK; }
@@ -52,5 +58,25 @@ int main(int argc, char **argv) {
     const char16 expected[] = {0x6211, 0x7231, 0x5317, 0x4eac, 0x5929, 0x5b89, 0x95e8, 0};
     assert(!memcmp(word, expected, sizeof expected));
     im_close_decoder();
+    size_t retained = live;
+    for (int i = 0; i < 4; i++) {
+        assert(im_open_decoder("/content/ime/dict_pinyin.dat", "/me/ime/google.user"));
+        assert(im_search(key, strlen(key)) > 0);
+        im_close_decoder();
+        if (live != retained) fprintf(stderr, "retained %zu -> %zu bytes on reopen %d\n", retained, live, i);
+        assert(live == retained && "reopening must not leak PSRAM");
+    }
+    UserDict learned;
+    assert(learned.load_dict("/me/ime/google.user", kUserDictIdStart, kUserDictIdEnd));
+    learned.set_limit(512, 16384, 20);
+    SpellingParser parser; bool prefix = false;
+    uint16 ids[] = {parser.get_splid_by_str("bei", 3, &prefix), parser.get_splid_by_str("jing", 4, &prefix)};
+    char16 custom[] = {0x80cc, 0x666f, 0};
+    assert(learned.put_lemma(custom, ids, 2, 1) >= kUserDictIdStart);
+    learned.flush_cache();
+    assert(user.size() > 40);
+    assert(learned.get_lemma_id(custom, ids, 2) >= kUserDictIdStart);
+    learned.close_dict();
+    assert(live == retained);
     puts("same dictionary opened; 64-bit decode and full sentence passed");
 }

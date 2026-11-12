@@ -30,9 +30,14 @@ static void query_ui(void) {
     ink_receipt_t rc; ink_setting_set("text.nine_key", nine_now, INK_SRC_TOUCH, &rc);
     while (*ink_text_composing()) ink_text_backspace();
     ink_text_select(0, ink_text_char_offset(ink_text_value(), strlen(ink_text_value()))); ink_text_backspace();
-    vtk_host_call(host_start, NULL);
-    for (const char *p = key_now; *p; p++) { ink_text_key(*p); count = ink_text_candidates(0, choices, 60); }
-    vtk_host_call(host_stop, NULL);
+    double total = 0;
+    for (const char *p = key_now; *p; p++) {
+        vtk_host_call(host_start, NULL);
+        ink_text_key(*p); count = ink_text_candidates(0, choices, 60);
+        vtk_host_call(host_stop, NULL);
+        ink_probe_value("ime.host_key_us", elapsed); total += elapsed;
+    }
+    elapsed = total;
 }
 static void query(const char *key, bool nine) { key_now = key; nine_now = nine; on_ui(query_ui); }
 static int find(const char *word) { for (int i = 0; i < count; i++) if (!strcmp(choices[i].word, word)) return i; return -1; }
@@ -65,6 +70,7 @@ static void composition(void) {
     selected = 0; on_ui(pick_ui);
     CHECK(!strcmp(ink_text_value(), "我爱北京天安门") && !*ink_text_composing(), "sentence commits once");
     CHECK(count > 0, "local continuation candidates follow the selection");
+    query("94664", true); CHECK(find("中国") >= 0, "nine-key prefix offers China through decoder prediction");
     query("946644862", true); selected = find("中国");
     ink_probe_value("ime.google_nine_china", selected >= 0);
     if (selected >= 0) { on_ui(pick_ui); ink_probe_value("ime.google_nine_suffix", !strcmp(ink_text_composing(), "2")); }

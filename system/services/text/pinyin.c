@@ -151,6 +151,7 @@ static void load_job(void *arg) { /* exec.bg */
 }
 
 void py_want_dict(void (*ready)(void)) {
+    if (py_google_enabled()) py_google_init();
     bool loaded = py_google_enabled() ? py_google_loaded() : PY.block != NULL;
     ink_svc_lock();
     bool go = !loaded && !PY.loading;
@@ -270,7 +271,6 @@ static size_t reclaim(void *ctx, size_t want) { /* memory is short: it can be re
 }
 
 void py_init(void) {
-    py_google_init();
     ink_mem_budget("ime", INK_MEM_PSRAM, DICT_MAX);
     ink_mem_reclaimer("ime-dict", 30, reclaim, NULL);
 }
