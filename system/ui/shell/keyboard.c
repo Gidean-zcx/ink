@@ -495,7 +495,7 @@ static void build(int kind) {
         lv_obj_center(l);
     }
     lv_obj_add_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
-    if (!replacing) ink_ui_capture_touch(K.root);
+    ink_ui_capture_touch(K.root);
     ink_ui_overlay_add(&OVERLAY, K.root);
     ink_ui_hint_obj(K.root, replacing ? INK_REFRESH_FAST : INK_REFRESH_FLASH_UI);
 }

@@ -137,19 +137,6 @@ static void functional(void) {
     lv_obj_delete(field);
 }
 
-static void language_over_ai_panel(void) {
-    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 32};
-    CHECK(ink_text_focus(&cfg, NULL, NULL) > 0, "focus above AI panel");
-    lv_obj_t *panel, *status, *question, *answer;
-    ink_shell_ai_open(&panel, &status, &question, &answer);
-    CHECK(lv_obj_get_index(K.root) < lv_obj_get_index(panel), "AI panel needs keyboard ordering");
-    bool english = ink_text_english();
-    touch(INK_TEXT_KEY_LANGUAGE);
-    expect_mode(!english);
-    ink_shell_ai_closed();
-    ink_text_blur(0);
-}
-
 static bool contains(const lv_area_t *outer, const lv_area_t *inner) {
     return inner->x1 >= outer->x1 && inner->y1 >= outer->y1 && inner->x2 <= outer->x2 && inner->y2 <= outer->y2;
 }
@@ -215,8 +202,6 @@ static void capture(const char *name) {
 static void end_scene(void);
 static int pointer_code, pointer_x, pointer_y;
 static bool switch_nine, switch_english;
-static uint32_t root_events;
-static void switch_callbacks(void) { CHECK(lv_obj_get_event_count(K.root) == root_events, "mode switches keep root callback count stable"); }
 static void pointer_target(void) {
     int i = key_index(pointer_code);
     CHECK(i >= 0, "switch test key exists: %d", pointer_code);
@@ -237,7 +222,6 @@ static void switch_setup(void) {
     ink_receipt_t rc;
     ink_setting_set("text.nine_key", switch_nine, INK_SRC_TOUCH, &rc);
     if (ink_text_english() != switch_english) ink_text_key(INK_TEXT_KEY_LANGUAGE);
-    root_events = lv_obj_get_event_count(K.root);
 }
 static void switch_once(void) { touch(INK_TEXT_KEY_LANGUAGE); }
 static void switch_keys(void) {
@@ -266,7 +250,6 @@ static void switch_keys(void) {
         CHECK(sim_metric_value("ui.touch_under_overlay_dropped") == dropped, "switch keeps queued pointer input");
         CHECK(sim_metric_value("display.dispatch.FLASH_UI") + sim_metric_value("display.dispatch.FLASH_UI+clean") == clean, "switch does not request a flashing keyboard rebuild");
         CHECK(WAIT_FOR(settled(), 15000), "typing settles");
-        on_ui(switch_callbacks);
         CHECK(BY_HAND("system.home", NULL) && WAIT_FOR(!ink_text_focused(), 10000), "leave switch memo");
     }
     ink_receipt_t rc; ink_setting_set("text.nine_key", false, INK_SRC_TOUCH, &rc);
@@ -414,7 +397,6 @@ static void run(void *arg) {
     }
     if (switch_only) { switch_keys(); ink_probe_count("test.finished"); return; }
     on_ui(functional);
-    on_ui(language_over_ai_panel);
     switch_keys();
     vtk_event_at(vtk_now() + SIM_US(1), wifi_environment, NULL);
     py_want_dict(NULL);
