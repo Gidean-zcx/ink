@@ -1,6 +1,6 @@
 # audio-out-2 执行报告
 
-基线：`a39e9693bb4dea2edd0b5549486d583122dc0a13`。状态：核心实现、普通全量、ASan 回归和 S31 编译完成（S31 由主会话补跑）。未连接设备，未推送。
+基线：`a39e9693bb4dea2edd0b5549486d583122dc0a13`。状态：本次实现与验收验证完成；主会话另有独立 S31 编译记录，保留在文末。未连接设备，未推送。
 
 ## 验收表
 
@@ -8,21 +8,22 @@
 | --- | --- | --- | --- |
 | 1 | 通过 | 【实测】四场景均 0 次/0 ms 欠载；1 kHz SNR 91.96 dB、10 kHz 衰减 88.49 dB。原基线 44 次/660 ms；保留 540 ms 预缓冲再把滤波移回输出任务，仍 43 次/645 ms，欠载断言失败 | C1、C2 |
 | 2 | 通过 | 【实测】[改前频谱](before-spectrum.png)、[改后频谱](after-spectrum.png)，分别 71757 / 25697 B；[改前 WAV](before-music.wav)、[改后 WAV](after-music.wav)，均为同一原创双音样例的实际 speaker.wav | C2、C3 |
-| 3 | 部分通过，继续验证 | 【实测】普通全量 436 项执行通过、3 项按原条件跳过；ASan/UBSan 相关 12/12、S31 宿主 77/77 通过；固件待补 | C4、C5、C6 |
+| 3 | 通过 | 【实测】普通全量 436 项执行通过、3 项按原条件跳过；ASan/UBSan 相关 12/12、S31 宿主 77/77 通过；S31 基线及最终固件均编译成功、编译警告 0；镜像 +304 B、内部静态 RAM −32 B，新增锁申请 92 B，DMA +0 B | C4～C8 |
 
 ## 没做到的
 
-- S31 编译验证仍在进行。未做真机试听、烧录或串口操作；宿主模拟与计算量估算不能冒充 S31 实机结果。未运行 Linux 全套测试。
+- 未做真机试听、烧录或串口操作；宿主模拟与计算量估算不能冒充 S31 实机结果。未运行 Linux 全套测试。
 
 ## 和设计不一致的
 
-- 暂无；保留原厂 HAL 及 DMA 4×240 帧。复用原 PSRAM 队列保存处理后的 16 kHz PCM，未另建队列。
+- 公共 finish/abort 增加 PCM 专用收尾分支，第一轮报告所述“四个 Opus 函数逐字不变”不再成立；Opus ID 跳过该分支，相关媒体、语音和焦点回归通过。第二轮的生产侧 FIR 排尾与销毁复用这两个入口，HAL、DMA 4×240 帧不变。
 
 ## 改过的已有测试
 
 - `bench.c` 的独立 FIR 参考改用共享质量常量，仍为 Q4；所有逐样本断言保留。
 - `control.py` 适配生产侧滤波的位置，并增加把滤波放回输出任务的反向对照；使用随测试提交的补丁，不依赖 CI Git 历史。欠载和音质断言未放宽。
 - `measure.py` 增加手动指定基线程序；继续保留失败并返回非零。`plots.py` 增加基线标题及 WAV 导出。既有断言、预算、超时、合成素材均未改。
+- 新增 `mutex_size.py` 只按 S31 构建参数编译 sizeof 探针并读取对象符号，不运行设备代码，不修改原构建对象或依赖文件。
 
 ## 要用户定的
 
@@ -46,7 +47,9 @@
 
 【实现】媒体执行器仍为优先级 4，声音任务仍为 7，DMA 仍为 4×240 帧。滤波、混为单声道、FIR 排尾全部在调用 PCM 入口的生产端；AU.lock 只管入队和状态，滤波时不持有它。处理后的 PSRAM 队列由原媒体循环限制在约 2.04 秒，启动至少准备 540 ms；短文件沿用 EOF 直接排完的规矩。
 
-【实现】44.1 kHz 输入时，队列分配上界约 35×1920=67200 B（含一块在途输出），加单声道暂存 5292 B、FIR 请求 4328 B，共 76820 B；沿用原队列元数据与 staging，不另分配整块第二队列。所有这些大缓冲和 FIR 均显式请求 PSRAM。第一轮原速率队列上界为 185220 B，单比较队列减少 118020 B，未把它当作实机测量。唯一运行时内部增量是一把首次 PCM 才创建的 FreeRTOS 互斥锁，尺寸待 S31 编译核对；DMA 新增为 0。
+【实现】44.1 kHz 输入时，队列分配上界约 35×1920=67200 B（含一块在途输出），加单声道暂存 5292 B、FIR 请求 4328 B，共 76820 B；沿用原队列元数据与 staging，不另分配整块第二队列。所有这些大缓冲和 FIR 均显式请求 PSRAM。第一轮原速率队列上界为 185220 B，单比较队列减少 118020 B，未把它当作实机测量。唯一运行时内部增量是一把首次 PCM 才创建的 FreeRTOS 互斥锁；按相同 S31 编译参数探测 `sizeof(StaticSemaphore_t)` 为 **92 B**，不含分配器开销，DMA 新增为 0。内部增量低于 4 KB；实际设备堆余量未上机测。
+
+【实测】同一目录、SDK、配置先将两份产品文件换成基线原文，编译成功后逐字恢复最终源码，再编译成功；全部源码哈希、节尺寸及警告计数见 [firmware-size.json](firmware-size.json)。镜像 **4276672→4276976 B（+304 B）**；DRAM bss **44392→44360 B（−32 B）**；data 26368 B、IRAM text 94622 B 均不变；静态 PSRAM **746504→746520 B（+16 B）**。没有新增 DMA 描述符、内部缓冲或任务栈。版本标签为各次构建时的 HEAD 与定长时间戳，不作为源码基线凭据。
 
 【实测】按 Q10→Q0 逐档运行同源 FIR，44.1 kHz 单声道合成信号降到 16 kHz（与双声道同相混音等价）；完整播放另测真实双声道解码和混音。宿主耗时不含初始化和调度，是加载状态下的一次 CPU 计时；完整数字见 [qualities.json](qualities.json)，频响见 [档位图](quality-sweep.png)。
 
@@ -77,7 +80,7 @@
 
 ## 要改的文档
 
-- 暂无；不修改共享文档。
+- 合并时在声音服务设计中同步生产侧重采样、540 ms PCM 预缓冲及资源数字；本任务不修改共享文档。能力表与用户流程无需变更。
 
 ## 复核命令
 
@@ -102,6 +105,10 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest"
 taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-tests
 taskpolicy -c utility cmake --build build-s31-tests -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-tests --output-on-failure -j2
+# C7：S31 仅编译；两份基线产品文件来自 git show，编后逐字恢复并核对
+INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" taskpolicy -c utility bash ports/esp32s31/build.sh
+# 互斥锁内部申请大小：使用同一 S31 编译器，只读取目标文件的符号大小
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/audio_out/mutex_size.py --build build-s31
 # C8：GCC 警告检查
 taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build system/services/audio/audio_service.c tests/audio_out/bench.c tests/audio_out/device.c
 # C9：逐档宿主测量，不是 S31 实机计时
@@ -114,3 +121,10 @@ taskpolicy -c utility build/test-audio-out-bench tests/music/fixtures
 
 - 【实测】Codex 运行在 S31 编译前结束，主会话在本分支提交 `4f36aac6` 上补跑 `ports/esp32s31/build.sh`（独立构建目录）：退出 0，编译警告 0；镜像 4,277,152 B；DIRAM 已用 165,350 B。重采样器的分配经 `os_support_custom.h` 全部在 PSRAM，内部内存只多首次 PCM 时建的一把互斥锁。
 - 未做：真机试听（设备不在），合并后的试用版上机时请用户听。
+- 本次接续复核又完成同目录的基线与最终源码比较，数字见上文和 firmware-size.json；独立构建目录的绝对镜像大小不直接相减。
+
+## 上机核对清单
+
+- 外放和蓝牙各播放 44.1 kHz FLAC、MP3，覆盖暂停、定位一分钟、切歌、语音插话恢复、换成员，确认无断续与旧声音残留。
+- 标定生产侧每块解码与滤波耗时、缓冲余量；检查内部堆和媒体任务栈余量。特别核对 96 kHz 输入和刷新并发；本次完整播放证据为 44.1 kHz 模拟数据。
+- HAL 既有日志没有等价的短欠载计数，不能把无错误日志直接记成零欠载。

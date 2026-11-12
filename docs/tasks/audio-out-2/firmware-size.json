@@ -1,0 +1,42 @@
+{
+  "baseline": "a39e9693bb4dea2edd0b5549486d583122dc0a13",
+  "method": "相同检出目录、SDK 和配置，临时换回基线两份产品文件编译后逐字恢复，再编译最终源码；版本标签为当时 HEAD，长度一致。",
+  "source_hashes": {
+    "system/services/audio/audio_service.c": {
+      "before": "7b926b3b2f08aa70cfbf8d0adb2d2cacdbec445b6df81801ac7aca1fb4b2f58d",
+      "after": "de63a1b08e9b689c072a153b14a637b883b8570da557871dbf1433c95a18de34"
+    },
+    "system/include/ink/sys/audio.h": {
+      "before": "9919ac5c681a3c0073411f9b4e4396908358b0b454ad8a0df8a036873379bb4a",
+      "after": "e761aed22cf3125f72fd02ba04f27547656f483cc21584f7ad7439334330d896"
+    }
+  },
+  "sizes": {
+    "before": {
+      "bin_bytes": 4276672,
+      "sections": {
+        ".iram0.text": 94622,
+        ".iram0.text_end": 98,
+        ".dram0.data": 26368,
+        ".dram0.bss": 44392,
+        ".ext_ram.bss": 746504
+      }
+    },
+    "after": {
+      "bin_bytes": 4276976,
+      "sections": {
+        ".iram0.text": 94622,
+        ".iram0.text_end": 98,
+        ".dram0.data": 26368,
+        ".dram0.bss": 44360,
+        ".ext_ram.bss": 746520
+      }
+    }
+  },
+  "compiler_warning_counts": {
+    "before": 0,
+    "after": 0
+  },
+  "mutex_request_bytes": 92,
+  "compiler_arch": "rv32i2p1_m2p0_a2p1_f2p2_c2p0_zicsr2p0_zifencei2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0_zcf1p0_xesploop1p0_xespv2p2"
+}
