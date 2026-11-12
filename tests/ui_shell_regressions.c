@@ -156,6 +156,9 @@ static void check_theme(void) {
         for (int on = 0; on < 2; on++) {
             lv_obj_t *toggle = ink_ui_toggle(root, "合成开关", on, 0, 0, w, theme_clicked, &clicks);
             lv_obj_t *track = lv_obj_get_child(toggle, 1), *knob = lv_obj_get_child(track, 0);
+            lv_obj_update_layout(track);
+            CHECK(lv_obj_get_width(track) == ink_ui_px(96) && lv_obj_get_height(track) == ink_ui_px(56) &&
+                  lv_obj_get_width(knob) == ink_ui_px(on ? 40 : 24), "switch state has the requested track and distinct knob sizes");
             CHECK(lv_obj_get_style_bg_opa(toggle, 0) == LV_OPA_TRANSP &&
                   lv_obj_get_style_bg_opa(track, 0) == LV_OPA_COVER && lv_obj_get_style_bg_opa(knob, 0) == LV_OPA_COVER &&
                   lv_color_eq(lv_obj_get_style_bg_color(track, 0), on ? ink_ui_ink() : ink_ui_paper()) &&
@@ -175,6 +178,9 @@ static void check_theme(void) {
         lv_obj_t *tile = ink_ui_switch_tile(root, "wifi", "网络", "已开启", true, true, 0, 0, w / 2 - INK_GAP_M / 2, NULL, NULL);
         CHECK(lv_color_eq(lv_obj_get_style_bg_color(tile, 0), ink_ui_ink()) &&
               lv_color_eq(lv_obj_get_style_text_color(tile, 0), ink_ui_paper()), "enabled switch tile uses black and white");
+        lv_obj_t *off = ink_ui_switch_tile(root, "wifi", "网络", "未开启", false, false, 0, 0, w / 2 - INK_GAP_M / 2, NULL, NULL);
+        CHECK(lv_obj_get_style_border_width(off, 0) == ink_ui_px(2) && lv_obj_has_state(off, LV_STATE_DISABLED) &&
+              lv_color_eq(lv_obj_get_style_text_color(off, 0), ink_ui_secondary()), "unavailable off tile retains its outline and gray text");
         lv_obj_t *empty = ink_ui_empty(root, "没有内容", "添加", theme_clicked, &clicks);
         CHECK(lv_obj_get_child_count(empty) == 2 && !lv_obj_get_style_border_width(empty, 0), "empty state has one line and at most one action");
         lv_obj_t *dots = ink_ui_pagebar(root, 2, 5, 0, NULL);

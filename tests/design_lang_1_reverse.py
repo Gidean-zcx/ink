@@ -1,4 +1,4 @@
-"""Withdraw three shared-control fixes without editing product sources or requiring Git history."""
+"""Withdraw four shared-control fixes without editing product sources or requiring Git history."""
 import argparse
 import json
 import os

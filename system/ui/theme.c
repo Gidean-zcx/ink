@@ -354,16 +354,16 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
     if (value < 0) value = 0;
     if (value > 10) value = 10;
     lv_obj_t *b = ink_ui_box(parent, x, y, w, INK_SLIDER, 0, INK_SURFACE_WHITE, false);
-    int left = INK_CONTROL, span = w - 2 * left, cy = INK_SLIDER - INK_SLIDER_KNOB / 2;
+    int left = INK_CONTROL, span = w - 2 * left, cy = INK_SLIDER - INK_ICON_SMALL / 2 - INK_STROKE;
     ink_ui_line(b, title, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, left, 0, span - INK_CONTROL);
     char s[8];
     snprintf(s, sizeof s, "%d", value);
     lv_obj_t *v = ink_ui_line(b, s, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, w - 2 * INK_CONTROL, 0, INK_CONTROL);
     lv_obj_set_style_text_align(v, LV_TEXT_ALIGN_RIGHT, 0);
     ink_ui_icon(b, "minus", INK_ICON_SMALL, INK_ICON_LINE, (INK_CONTROL - INK_ICON_SMALL) / 2,
-                (INK_SLIDER - INK_ICON_SMALL) / 2, false);
+                cy - INK_ICON_SMALL / 2, false);
     ink_ui_icon(b, "plus", INK_ICON_SMALL, INK_ICON_LINE, w - (INK_CONTROL + INK_ICON_SMALL) / 2,
-                (INK_SLIDER - INK_ICON_SMALL) / 2, false);
+                cy - INK_ICON_SMALL / 2, false);
     ink_ui_box(b, left, cy - INK_SLIDER_TRACK / 2, span, INK_SLIDER_TRACK, 0, INK_SURFACE_BLACK, false);
     ink_ui_box(b, left, cy - INK_SLIDER_FILL / 2, span * value / 10, INK_SLIDER_FILL, 0, INK_SURFACE_BLACK, false);
     ink_ui_box(b, left + span * value / 10 - INK_SLIDER_KNOB / 2, cy - INK_SLIDER_KNOB / 2,
