@@ -194,3 +194,10 @@ if(APPLE)
   # Keep upstream cJSON unchanged; newer SDKs deprecate its bounded sprintf calls.
   set_source_files_properties(${cjson}/cJSON.c PROPERTIES COMPILE_OPTIONS -Wno-error=deprecated-declarations)
 endif()
+
+add_executable(test-s31-google-ime ${root}/tests/ime_lexicon/google_host.cpp
+  ${root}/system/services/text/google_port.cpp)
+target_include_directories(test-s31-google-ime PRIVATE ${root}/system/include)
+include(${root}/system/services/text/google_build.cmake)
+ink_google_pinyin(test-s31-google-ime)
+add_test(NAME s31-google-ime COMMAND test-s31-google-ime ${root}/assets/ime/dict_pinyin.dat)

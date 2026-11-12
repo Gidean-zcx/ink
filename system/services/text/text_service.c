@@ -182,6 +182,13 @@ static void on_dict_ready(void) { /* UI task: the keyboard asks again */
     if (TS.session && TS.presenter) TS.presenter();
 }
 
+static void on_engine(void *ctx, int handle, const char *id) {
+    (void)ctx; (void)handle; (void)id;
+    py_google_close(); TS.cands_valid = false;
+    if (TS.session && TS.type == INK_TEXT_PLAIN) py_want_dict(on_dict_ready);
+    text_presenter_kick();
+}
+
 int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, void *ctx) {
     if (!cfg) return -1;
     if (cfg->draft_page && (cfg->type == INK_TEXT_PASSWORD || cfg->ai_hidden || strlen(cfg->draft_page) >= sizeof TS.draft_page)) return -1;
@@ -294,6 +301,7 @@ void ink_text_blur(int session) {
     TS.session = 0;
     assist_changed();
     TS.client = NULL;
+    py_google_close();
     ink_db_close(TS.freq);
     ink_db_close(TS.drafts); TS.drafts = NULL; TS.draft_id = 0;
     TS.freq = NULL;
@@ -377,7 +385,9 @@ static void compute_cands(void) {
     if (TS.cands_valid) return;
     TS.cands_valid = true;
     TS.ncands = 0;
-    if (!TS.composing[0]) return;
+    if (TS.type != INK_TEXT_PLAIN) return;
+    bool google = py_google_enabled();
+    if (!TS.composing[0] && !google) return;
     py_cand_t *raw = osal_malloc(sizeof *raw * MAX_CANDS, OSAL_MEM_EXTERNAL);
     uint32_t *score = osal_malloc(sizeof *score * MAX_CANDS, OSAL_MEM_EXTERNAL);
     if (!raw || !score) {
@@ -385,8 +395,8 @@ static void compute_cands(void) {
         osal_free(score);
         return;
     }
-    ink_svc_lock();
-    int n = ink_text_nine() ? py_lookup_nine(TS.composing, raw, MAX_CANDS) : py_lookup(TS.composing, raw, MAX_CANDS);
+    if (!google) ink_svc_lock();
+    int n = !TS.composing[0] ? py_google_predict(TS.value, raw, MAX_CANDS) : ink_text_nine() ? py_lookup_nine(TS.composing, raw, MAX_CANDS) : py_lookup(TS.composing, raw, MAX_CANDS);
     for (int i = 0; i < n; i++) {
         size_t len = raw[i].word_len < sizeof TS.cands[0].word - 1 ? raw[i].word_len : sizeof TS.cands[0].word - 1;
         memcpy(TS.cands[i].word, raw[i].word, len);
@@ -395,7 +405,7 @@ static void compute_cands(void) {
         TS.cands[i].ai = false;
         score[i] = raw[i].freq;
     }
-    ink_svc_unlock();
+    if (!google) ink_svc_unlock();
     /* what this member picks comes first within what is as long; the database has its own lock */
     for (int i = 0; i < n; i++) score[i] += picked_count(&TS.cands[i]) * 65536u;
     for (int i = 1; i < n; i++) { /* a short list: insertion keeps the longest keys first and the order stable */
@@ -417,7 +427,7 @@ static void compute_cands(void) {
 
 int ink_text_candidates(int first, ink_text_cand_t *out, int max) {
     if (!TS.session) return 0;
-    if (!TS.composing[0] && assist_allowed()) {
+    if (!TS.composing[0] && assist_allowed() && AS.n) {
         int n = 0;
         for (int i = first; i >= 0 && i < AS.n && n < max; i++) out[n++] = AS.words[i];
         return n;
@@ -448,6 +458,7 @@ void ink_text_pick(int index) {
     ink_text_cand_t c = TS.cands[index];
     before_edit(EDIT_KEYS);
     put(c.word);
+    if (py_google_enabled()) py_google_pick(c.word, c.consumed);
     learn(&c);
     memmove(TS.composing, TS.composing + c.consumed, strlen(TS.composing + c.consumed) + 1);
     ink_probe_count("text.picks");
@@ -715,6 +726,7 @@ static void on_member(void *ctx, int h, const char *id) { /* UI task */
 
 static const ink_state_def_t ST_FOCUSED = {.id = "text.focused", .type = INK_ST_BOOL, .title = "有文本框在输入"};
 static const ink_setting_def_t TEXT_SETTINGS[] = {
+    {.id = "text.google", .title = TR_NOOP("谷歌拼音"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
     {.id = "text.nine_key", .title = TR_NOOP("九宫格拼音"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
     {.id = "text.assist", .title = TR_NOOP("打字时帮你接话"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
     {.id = "ai.read_clipboard", .title = TR_NOOP("AI 可以读剪贴板"), .type = INK_SET_BOOL, .def = 0, .ask_by_hand = true},
@@ -726,6 +738,7 @@ int ink_text_service_init(void) {
     py_init();
     clip_init();
     if (text_voice_init() != 0) return -1;
+    if (ink_settings_watch("text.google", on_engine, NULL, INK_EXEC_UI)) return -1;
     if (ink_settings_watch("text.assist", assist_setting, NULL, INK_EXEC_UI)) return -1;
     if (ink_db_register(&DRAFTS) != 0 || ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, sizeof TEXT_SETTINGS / sizeof *TEXT_SETTINGS) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
     return text_caps_init();

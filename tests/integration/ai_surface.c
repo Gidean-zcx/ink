@@ -180,7 +180,7 @@ static const char *const STATES[] = {
     "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", "audio.now_playing", "audio.route", "audio.listening", "audio.mic", "audio.recording", "job.running", "media.state", "bt.connected", "bt.device", "bt.available", "wifi.state", "wifi.ssid", "member.authed", "update.state", "update.version", "update.progress", "text.voice", NULL,
 };
 
-static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", "member.idle_return_s", "update.auto_download", NULL};
+static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", "member.idle_return_s", "update.auto_download", "text.google", NULL};
 
 /* Events the design promises the AI hears about (the rest of the table by the same rule: registered is forwarded). */
 static const char *const EVENTS[] = {"backup.changed", "backup.failed", "pairing.changed", "data.write_failed", "file.changed", "file.job_done", "job.finished", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", "update.available", "update.result", "text.voice_ended", "call.dialed", "call.connected", "contacts.selected", NULL};
