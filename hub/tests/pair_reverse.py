@@ -16,6 +16,17 @@ if sys.argv[1] == "claim":
 elif sys.argv[1] == "schema":
     import ink_hub.voice.flow as flow
     import ink_hub.gateway.server as server
+    from ink_hub.models.remote import RemoteModel
+    original_stream = RemoteModel.stream
+
+    async def names_only(self, question, tools, lang="zh", member=None):
+        # Preserve the old adapter's behavior, rather than crashing on the old argument type.
+        tools = {name: {"title": "设备能力：" + name, "inputSchema": {
+            "type": "object", "properties": {}, "additionalProperties": True}} for name in tools}
+        async for part in original_stream(self, question, tools, lang, member):
+            yield part
+
+    RemoteModel.stream = names_only
     source = inspect.getsource(flow.run_turn)
     old = "question, available, lang=lang"
     assert old in source

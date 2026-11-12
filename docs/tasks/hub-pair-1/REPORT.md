@@ -1,19 +1,19 @@
 # hub-pair-1 执行报告
 
-基线：`36473cc4933e6fea2f2a78a4fbec16186d3be3f4`。仅本地分支工作，不连接设备、不读取真实密钥、不请求真实模型、不推送。
+基线：`36473cc4933e6fea2f2a78a4fbec16186d3be3f4`。仅本地分支工作，不连接设备、不读取真实密钥、不请求真实模型、不推送。日期：2026-11-12。实现和本机验证已完成，普通轮的原始失败及补验结果如下保留。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】TLS、固定公钥、权限、路由隔离及远端协议判定通过 | `test_pairing.py`：4 passed；公钥独立经 openssl 算法核对 | `PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_pairing.py` |
-| 2 | 【实测】认领、nonce 恢复、过期、32 路上限、五次核对失败、预授权、txid 换令牌、7 天待生效和重启后认证通过 | `test_pairing.py`：8 passed；令牌原文未落入数据目录；去掉核对码校验后测试失败（exit 1） | 同第 1 条 |
+| 1 | 【实测】TLS、固定公钥、权限、路由隔离及远端协议判定通过 | 配对 11 项已纳入最终 hub-contract；公钥经 openssl 独立核对，核对码经标准 base32 独立核对 | `PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_pairing.py` |
+| 2 | 【实测】认领、nonce 恢复、过期、32 路上限、五次核对失败、预授权、txid 换令牌、7 天待生效和重启后认证通过 | 完整配对、CLI、TLS 和超过 10 秒等待均通过；令牌原文未落入数据目录；去掉核对码校验后测试失败（exit 1） | 同第 1 条 |
 | 3 | 【实测】通过；654 条消息最多 110 词法单元 | 记录含 pair/offer 2 条、pair/complete 5 条、协议 2 hello 回答 3 条；生产 ink_json.c 解析通过 | `ctest --test-dir build -R hub-json-crosscheck --output-on-failure`（由中枢复跑产生样本） |
 | 4 | 【实测】假设备描述与参数原样传给模型，合法参数送达设备，缺参／越界不调用；真实设置能力另有范围外阻断，见顺手发现 | 同句前后对照已运行；恢复只传名字后 3 项失败（exit 1） | `PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/tests/pair_compare.py 36473cc4933e6fea2f2a78a4fbec16186d3be3f4`；反向 `hub/tests/pair_reverse.py schema` |
 | 5 | 【实测】统一产品提示、称呼默认不外发、开关开启才出现、无称呼不编名字、孩子口吻通过 | `test_hub_pair_model.py` | 下方专项命令 |
 | 6 | 【实测】三段间隔 300 ms；首段文字／语音早于流结束；UTF-8 分段；断流只补一次失败提示并正常 done | `test_hub_pair_model.py`；原有长答和朗读节奏待全量结果 | 下方专项命令 |
 | 7 | 【实测】默认配置、强制假模型、临时假文件检查模式、权限提醒和日志不含假密钥通过 | 没有真实服务请求；未读取真实环境文件 | 下方专项命令 |
-| 8 | 待验证：全量、内存、S31 与固件构建 | — | — |
+| 8 | 【实测】普通全量已跑并补验；ASan/UBSan 437 项全部通过；pytest 190 项；S31 普通／内存各 77 项；固件通过、增加 48 字节；GCC 无发现 | 普通原始失败和端到端复跑波动见“构建与内存检查”；未伪报单轮普通全绿 | 该节完整命令及结果 |
 | 9 | 【实现】启动、配对文件／人工认领、公钥核对、成功日志、退回步骤齐全 | 本报告“真机联调步骤”；称呼外发仍默认关 | 见该节命令；本轮未上机 |
 
 ## 没做到的
@@ -74,7 +74,7 @@ taskpolicy -c utility env PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/te
 taskpolicy -c utility env PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/tests/pair_reverse.py schema
 ```
 
-【实测】专项 22 passed；随后增加 TLS 正式配对、启动进程、CLI、10 秒等待及语音工厂接口验证，独立完整 pytest 190 passed。反向命令刻意返回 1：前者把错误核对码放行，被 403 断言拦住；后者恢复只传名字，3 个参数用例都失败。仅在内存中改被测函数，不修改工作区文件，不注册为依赖 Git 历史的 CTest。
+【实测】专项 22 passed；随后增加 TLS 正式配对、启动进程、CLI、10 秒等待及语音工厂接口验证，独立完整 pytest 190 passed。反向命令刻意返回 1：前者把错误核对码放行，被 403 断言拦住；后者恢复只传名字，并保留旧适配器的空对象参数行为，3 个用例均在收到真实 HTTP 请求后因函数描述不匹配而失败；不是靠参数类型崩溃获得反向结果。仅在内存中改被测函数，不修改工作区文件，不注册为依赖 Git 历史的 CTest。
 
 ## 同句前后对照
 
@@ -147,8 +147,8 @@ taskpolicy -c utility env PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" hub/te
 - 【实测】独立中枢 pytest：`190 passed in 81.31s`；含固件能力导出，无跳过。
 - 【实测】`ink-codex/tools/gcccheck.py build system/services/ai/ai_service.c tests/i18n_lang.c`：`gcccheck: 2 compiled, 0 with findings`，exit 0。
 - 【实测】S31 宿主机普通：`100% tests passed out of 77`，121.84 秒；ASan/UBSan：同样 77 项全部通过，131.05 秒。包含 WS、驱动、编解码、任务配置和原有反向对照，未报告 sanitizer 错误。
-- 【实测】S31 固件：同一检出、依赖、构建目录，临时仅还原设备 AI 文件到基线编译，再恢复实现重编；镜像 `4,268,048 → 4,268,096` 字节，增加 **48 字节**。内部 DIRAM 静态占用均为 `165,350` 字节。基线／最终编译器警告均 0；各 6 条 SDK CMake 组件告警。两次 `ports/esp32s31/build.sh` 均 exit 0，未连接设备。
-- 主工程 ASan/UBSan 全量进行中，最终结果在收尾时补齐。
+- 【实测】S31 固件：同一检出、依赖、构建目录，临时仅还原设备 AI 文件到基线编译，再恢复实现重编；镜像 `4,268,048 → 4,268,096` 字节，增加 **48 字节**。内部 DIRAM 静态占用均为 `165,350` 字节。基线／最终编译器警告均 0；各 6 条 SDK CMake 组件告警，正文完全相同。两次 `ports/esp32s31/build.sh` 均 exit 0，未连接设备。
+- 【实测】主工程 ASan/UBSan 全量原话：`100% tests passed out of 437`，2059.22 秒，exit 0；无跳过，未报告 sanitizer 错误。该轮 hub-contract、hub-json-crosscheck、hub-simulator-e2e 均通过，包含最终实现和完整 190 项中枢 pytest。
 
 实际命令均带 `taskpolicy -c utility`；构建和 ctest 并发均为 2，串行执行不同构建与全量测试。主工程配置照总规则 §5，额外指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON`。
 
@@ -174,3 +174,19 @@ taskpolicy -c utility env INK_DEPS="$INK_DEPS" INK_UPSTREAM="$INK_DEPS/../ink-hw
 taskpolicy -c utility cmake --build build-asan -j2
 taskpolicy -c utility env INK_KEEP_EVIDENCE=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
+
+## 最终差异与隐私检查
+
+- 【实测】对指定基线检查差异，23 个文件均在任务允许范围；没有修改 speech、设备配对／WebSocket、需求、决策或共享能力表。
+- 【实测】`git diff --check` 通过。按总规则 §6 扫描基线到最终提交的差异，无命中，grep exit 1（没有匹配）。未提交真实密钥、配对文件、设备标识、本机绝对路径、设计稿或构建产物。
+- 产品新增行数（含空行和注释）：中枢 **471／700**；设备 **6／20**；启动脚本 **28／40**。未增加依赖。
+- 本机日志与原始对照保留在忽略目录 `work/hub-pair-1/`；契约样本、固件和测试生成物保留在忽略的构建目录。只完成本地提交，没有 push 或 PR。
+
+## 本地里程碑
+
+- `d8e0d009`：稳定 TLS 入口与报告骨架。
+- `887bc0d0`：协议 2、认领和哈希令牌。
+- `52c2202c`：真实工具 Schema、口吻、流式、DeepSeek 脚本与设备成员字段。
+- `99088be5`：CLI、连接日志与核对码边界验证。
+- `61b97b9d`：固件、S31 内存检查与独立核对证据。
+- 最后提交包含本报告最终全量结果和加强的参数反向对照。
