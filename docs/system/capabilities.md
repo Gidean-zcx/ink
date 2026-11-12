@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 513 项：可调用能力 472、事件 41；设置 44 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 514 项：可调用能力 473、事件 41；设置 44 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -468,6 +468,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `text.voice_cancel` | 取消语音输入，什么都不写进去 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s38](#s38) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
 | `text.voice_finish` | 说完了，结束语音输入 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s38](#s38) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
 | `text.voice_start` | 打开语音输入：说的话变成文字进文本框 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s38](#s38) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `time.almanac` | 老黄历（日期不给就是系统时区的今天，民俗说法） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s39](#s39) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `time.lunar` | 公历和农历互查（不给日期就是今天） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s39](#s39) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `time.now` | 现在几点（含时区和农历） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s39](#s39) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `time.set` | 改系统时间 | 人、AI | 高 / system | 无需 | 仅成人 | [s39](#s39) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |

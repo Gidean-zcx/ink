@@ -6,6 +6,7 @@ list(REMOVE_ITEM sources ${root}/system/boot/main.c ${root}/system/ui/lv_mem_osa
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/generated)
 idf_component_register(SRCS ${sources} INCLUDE_DIRS ${root}/system/include
     PRIV_INCLUDE_DIRS ${root}/system/services/display ${root}/third_party/jsmn ${root}/third_party/stb ${root}/third_party/quirc ${CMAKE_BINARY_DIR}/generated
+    ${root}/system/services/time/vendor/mogo-calendar/main
     REQUIRES ink_platform ink_lvgl)
 target_compile_options(${COMPONENT_LIB} PRIVATE -fstack-usage -fcallgraph-info=su -Wextra -Wno-unused-parameter -include esp_attr.h)
 target_compile_definitions(${COMPONENT_LIB} PRIVATE INK_PSRAM_BSS=EXT_RAM_BSS_ATTR)
