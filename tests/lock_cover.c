@@ -224,11 +224,11 @@ static void run(void *arg) {
     ink_time_set(ink_time_now_s() + 60, false); quiet();
     CHECK(visible("14:06"), "the minute ticks on the cover"); frame("minute-after");
     on_ui(minute_redraw);
-    CHECK(minute_ok, "a new minute invalidates only the clock's digits (%d,%d-%d,%d)", dirty.x1, dirty.y1, dirty.x2, dirty.y2);
+    CHECK(minute_ok, "a new minute invalidates only the clock's digits (%d,%d-%d,%d)", (int)dirty.x1, (int)dirty.y1, (int)dirty.x2, (int)dirty.y2);
     CHECK(same_ok, "the same minute invalidates nothing and keeps the revision");
     frame("count-before");
     on_ui(count_redraw);
-    CHECK(count_ok, "a new message invalidates only the message row's number (%d,%d-%d,%d)", dirty.x1, dirty.y1, dirty.x2, dirty.y2);
+    CHECK(count_ok, "a new message invalidates only the message row's number (%d,%d-%d,%d)", (int)dirty.x1, (int)dirty.y1, (int)dirty.x2, (int)dirty.y2);
     frame("count-after");
     CHECK(shows("\"label\":\"短信\",\"value\":\"3\""), "the snapshot follows the count");
     private_text_absent("after a new message");
