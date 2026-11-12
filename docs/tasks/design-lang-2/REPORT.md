@@ -2,11 +2,13 @@
 
 基线：`15589e0fe20fd856c0ee93aeae01ae4e6218eddc`。本地分支：`claude/codex-design-lang-2`。仅本地提交，不推送。
 
+结论：原 32 项中 30 项通过；语言、文件及共享能力目录三项仍未通过，尚不能合并。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 普通全量及指定 ASan | 分页前最终全量仅余 2 项旧断言失败；最终代码全量待重跑。ASan 指定 137 项仅 i18n-lang 失败，另加月历 3 项全过 | `build/design-lang-2/ctest-full.log`、`full-regressions.log`、`contacts-final-3.log` | 见下方命令 |
+| 1 普通全量及指定 ASan | 【未通过】全量 4 失败；补 AI 穷举表后复验余 3 项。ASan 指定 137 项仅 i18n-lang 失败，追加 4 项全过 | `ctest-acceptance-final.log`、`ctest-failures-final.log`、`ctest-asan.log` | 见下方命令 |
 | 2 S31 宿主机及固件 | 【实测】77/77；固件退出 0，编译器警告 0，已知 SDK/分区警告同前任务记录 | `s31-host-ctest.log`、`s31-firmware.log` | 见下方命令 |
 | 3 共用控件 108×108 | 【实测】共用部分 0 个不足；209 个页面自绘小目标单列 | `build/design-lang-1/after/targets.json` | `tests/design_lang_1.py --build build --check-targets` |
 | 4 30 页截图及失败逐项说明 | 【实测】最终代码 60 个场景的文字及页面修复检查为 0 失败，72 张图已覆盖；逐项说明如下 | [对比图](../design-lang-1/SCREENSHOTS.md)、`capture-final-grid.log` | 见下方截图命令 |
@@ -15,6 +17,7 @@
 
 - `i18n-lang` 第三轮仍失败：重启阶段还按旧首页同时核对九个设置项，第二页的锁屏、存储、关于触发三次断言。切换阶段已经通过。本任务按总规则第 7 节“三次还不过就停”保留失败，不继续修改这个测试。
 - `files-app` 第三轮仍失败：新增第二页的 `FileMoveLong-2`、`FileListLong-2` 截图名未被原有快照名称检查识别，各一次；写入和重启验证已过。达到同一三次上限，保留失败。
+- `capability-table-doc` 因两个新月历导航能力而失败：静态目录应从 513/472 项变为 515/474 项（总定义/可调用）。总规则第 7 节禁止修改共享生成的 `docs/system/capabilities.md`，本任务保持文件和严格断言，交主会话重新生成。
 - 本机 Linux CI 未运行；实机触摸、灰阶和固件运行未验证。
 
 ## 和设计不一致的
@@ -46,11 +49,12 @@
 | `contacts` | 默认每页四条 → 三条；四条变 3+1，五条变 3+2；重启后翻到真实第二页检查修改过的联系人，数量、唯一 ID、动作、成员隔离和恢复检查保留。 |
 | `calendar_events`、`time_settings` | 两条同页 → 真实翻页读取第二条；时区投影和可听/静默事件、月份标记、跨日语义断言保留。 |
 | `ime_keyboard1` | 密码框去掉的顶部高度改为完整候选/编辑保留区；普通候选与两行编辑工具保持同一键盘区域，`ui_input_host` 和快照的固定区域断言没有放宽。 |
+| `integration-ai-surface` | 穷举表补入 `calendar.grid_prev` / `calendar.grid_next` 两项无参数能力；仍要求每个能力恰好归属一张表、AI 工具可见、参数与标题完整，没有跳过新能力。 |
 | `files_app` 的输入解析 | `%u` → `SCNu32`，匹配 `uint32_t` 的实际类型；只修 GCC 的格式类型诊断，没有改变断言或结果。 |
 
 ## 要用户定的
 
-外观仍需用户看图验收。两个未通过的测试需主会话按上文接续；本任务没有选择新的产品范围。
+外观仍需用户看图验收。剩余未通过项需主会话按上文接续；本任务没有选择新的产品范围。
 
 ## 顺手发现
 
@@ -64,11 +68,11 @@
 
 ## 要改的文档
 
-主会话需重新生成 `docs/system/capabilities.md`，纳入月历两项导航能力，并同步 `docs/system/ui-dependencies.md` 的页面接入状态，以及前任务 `LAYOUT.md` / `PAGE-FOLLOWUPS.md` 中已经解决的条目；本任务不修改共享清单。
+主会话需重新生成 `docs/system/capabilities.md`，纳入月历两项导航能力（定义总数 513 → 515、可调用 472 → 474，新增两行）；运行 `python3 tools/capabilities.py`。还需同步 `docs/system/ui-dependencies.md` 的页面接入状态，以及前任务 `LAYOUT.md` / `PAGE-FOLLOWUPS.md` 中已经解决的条目；本任务不修改共享清单。
 
 ## 32 项逐项处理
 
-下列“通过”先指各次定向实测，最终全量结果另列；两个上下文项在本次基线就已通过。
+清单中最终 30 项通过、2 项保留失败；其中 28 项由本次修复，两个上下文项在基线已通过。
 
 | 项目 | 处理 / 结论 |
 | --- | --- |
@@ -120,7 +124,17 @@ taskpolicy -c utility cmake --build build -j2
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
 
-ASan 同样配置换 `build-asan`，只加 `-DINK_SANITIZE=ON`。最终代码构建退出 0；指定组原话为 `99% tests passed, 1 tests failed out of 137`，121.14 秒，退出 8；唯一失败是上述 `i18n-lang` 重启旧断言。另加月历、日程和时区 3 项：`100% tests passed out of 3`，11.86 秒。两份运行日志未见 AddressSanitizer / UBSan 诊断。
+【实测】最终产品代码普通全量原话：`99% tests passed, 4 tests failed out of 423`，733.91 秒，退出 8；三项中枢测试 Skipped。失败为 `i18n-lang`、`files-app`、`capability-table-doc`、`integration-ai-surface`。随后仅在测试穷举表补入两个新能力、重新构建该测试，失败项复验原话为 `25% tests passed, 3 tests failed out of 4`，5.32 秒；AI 检查通过，剩余三项原因见“没做到的”。全量之后仅修改了 AI 测试穷举表；补表后复验上述 4 项，产品代码相同。
+
+```sh
+taskpolicy -c utility cmake --build build --target sim-ai-surface -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build --output-on-failure -j2 --rerun-failed
+```
+
+日志：`build/design-lang-2/ctest-acceptance-final.log`、`ctest-failures-final.log`。其余验收表中的裸日志名也均位于 `build/design-lang-2/`。
+
+ASan 同样配置换 `build-asan`，只加 `-DINK_SANITIZE=ON`。最终代码构建退出 0；指定组原话为 `99% tests passed, 1 tests failed out of 137`，121.14 秒，退出 8；唯一失败是上述 `i18n-lang` 重启旧断言。另加月历、日程和时区 3 项：`100% tests passed out of 3`，11.86 秒。再追加补表后的 AI 检查 1 项：`100% tests passed out of 1`，1.55 秒。三份运行日志未见 AddressSanitizer / UBSan 诊断。
 
 ```sh
 taskpolicy -c utility cmake --build build-asan -j2
@@ -128,11 +142,14 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest"
   --test-dir build-asan --output-on-failure -j2 -R '^(ui-|i18n-|scenario-reader_)'
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
   --test-dir build-asan --output-on-failure -j2 -R '^(calendar|calendar-events|time-settings)$'
+taskpolicy -c utility cmake --build build-asan --target sim-ai-surface -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build-asan --output-on-failure -j2 -R '^integration-ai-surface$'
 ```
 
-日志：`build/design-lang-2/build-asan.log`、`ctest-asan.log`、`ctest-asan-calendar.log`。
+日志：`build/design-lang-2/build-asan.log`、`ctest-asan.log`、`ctest-asan-calendar.log`、`ctest-asan-ai-surface-final.log`。
 
-【实测】S31 宿主机配置、构建退出 0，测试原话为 `100% tests passed out of 77`，116.15 秒，退出 0。 固件脚本完成链接、资源包、尺寸和栈检查，退出 0；`ink-s31.bin` 为 5001600 字节，编译器 `warning:` 为 0。保留 6 条组件私有 include 依赖 CMake 警告、2 次应用分区剩余 5% 的警告；类别和数量与 [前任务最终记录](../design-lang-1/VALIDATION.md#s31) 相同，没有新增编译器警告。已核对 `2792f39a..15589e0f` 的系统、端口、依赖及构建代码无变化；基线警告采用该记录对照，没有另跑基线固件构建。
+【实测】S31 宿主机配置、构建退出 0，测试原话为 `100% tests passed out of 77`，116.15 秒，退出 0。固件脚本完成链接、资源包、尺寸和栈检查，退出 0；`ink-s31.bin` 为 5001600 字节，编译器 `warning:` 为 0。保留 6 条组件私有 include 依赖 CMake 警告、2 次应用分区剩余 5% 的警告；类别和数量与 [前任务最终记录](../design-lang-1/VALIDATION.md#s31) 相同，没有新增编译器警告。已核对 `2792f39a..15589e0f` 的系统、端口、依赖及构建代码无变化；基线警告采用该记录对照，没有另跑基线固件构建。
 
 ```sh
 taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host \
@@ -146,6 +163,7 @@ INK_DEPS="$INK_DEPS" INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-P
 
 日志：`build/design-lang-2/s31-host-configure.log`、`s31-host-build.log`、`s31-host-ctest.log`、`s31-firmware.log`。
 
+截图在指定基线先采集 `--label before`，在任务代码采集 `--label after`。复跑先移走已存在的原始 `after` 证据目录，脚本不会覆盖原始证据。
 
 ```sh
 INK_DEPS="$INK_DEPS" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" \
@@ -156,7 +174,7 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/design_lang_
 
 【实测】七项反向对照均执行到 `test.finished=1` 后退出 1：今日 5 次、关于 6 次、联系人 1 次、短信 2 次、拨号 1 次、月历 60 次、空页页码 1 次。只将对应基线页面对象链接到最终探针，没有回写产品源码。结果在 `build/design-lang-2/reverse/results.json`。其余失败的修前复现在 `baseline-failures.log`。
 
-【实测】`gcccheck.py` 检查主工程编译数据库中的 40 个改动 C 文件：`gcccheck: 40 compiled, 0 with findings`，退出 0，最终月历与测试改动后复查仍为同一结果（`gcccheck-acceptance-final.log`）。截图探针不在数据库中，明确跳过，由截图脚本按真实编译参数编译成功；此结果不等于 Linux CI 已执行。
+【实测】`gcccheck.py` 最终检查主工程编译数据库中的 41 个改动 C 文件：`gcccheck: 41 compiled, 0 with findings`，退出 0（`gcccheck-delivery.log`）。截图探针不在数据库中，明确跳过，由截图脚本按真实编译参数编译成功；此结果不等于 Linux CI 已执行。
 
 ## 规模及架构核对
 
@@ -170,3 +188,5 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/design_lang_
 - 构建和测试使用 `taskpolicy -c utility`，构建及 ctest 均最多 `-j2`；不运行窗口模拟器、不碰设备。
 
 【实测】月历最后一轮定向 6 项全过（`calendar-pagination-tests.log`）；已目视核对六行月份最大字号的[第一页](calendar-six-weeks-max-1.png)和[第二页](calendar-six-weeks-max-2.png)，正文及页码完整可见。
+
+【实测】收尾检查：60 对图片的左右原始画布像素与清单哈希逐一一致；72 张主图/总览及 2 张月历补图均小于 300 KB；报告和截图索引的 76 处本地链接有效。指定隐私过滤扫描退出 1、无匹配，`git diff --check` 通过；差异没有夹带任务禁止的目录或构建产物。
