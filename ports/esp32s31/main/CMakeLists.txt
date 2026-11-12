@@ -19,6 +19,7 @@ option(INK_AUTOTEST "Embed and run a device test script" OFF)
 set(INK_AUTOTEST_SCRIPT "" CACHE FILEPATH "Script embedded in a test image")
 idf_component_register(SRCS main.c ../osal_selftest.c ../s31_boot.c ../s31_panic.c ../s31_coproc.c ${root}/system/boot/main.c
     KCONFIG ${usb}/esp_tinyusb/Kconfig
+    LDFRAGMENTS mogo.lf
     PRIV_INCLUDE_DIRS ..
     REQUIRES ink_apps ink_system ink_drivers app_update esp_app_format esp_hal_lcd esp_hal_gpio esp_http_server
         tcp_transport esp-tls mbedtls http_parser esp_driver_usb_serial_jtag esp_hal_usb wear_levelling)

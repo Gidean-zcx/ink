@@ -1,0 +1,6 @@
+# The new reader's own statics (TrueType slots, layout runs and link hits, about 13 KB) live in PSRAM: they are
+# used from ordinary tasks only, and the device's internal RAM is kept for Wi-Fi, Bluetooth, 4G and DMA.
+[mapping:ink_mogo_native]
+archive: libink_mogo_native.a
+entries:
+    * (extram_bss)
