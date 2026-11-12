@@ -1,0 +1,149 @@
+{
+  "baseline": "346d0ce9e8c76dd784b9193726a207c9f62d744e",
+  "s31": {
+    "baseline_image_bytes": 4267664,
+    "baseline_compiler_warnings": 0,
+    "native_image_bytes": 4426878,
+    "native_compiler_warnings": 0,
+    "baseline_bin_bytes": 4268080,
+    "native_bin_bytes": 4427296,
+    "bin_delta_bytes": 159216,
+    "partition_bytes": 5242880,
+    "remaining_bytes": 815584,
+    "bin_sha256": "92876fefa554b67721689785ebb1d10b5bd08af0ff7bd03816d6dc7eda26e453",
+    "static_diram_delta_bytes": 14984,
+    "linked_symbols": [
+      "ink_appdef_mogo",
+      "ink_mogo_init",
+      "ink_mogo_page_command",
+      "book_progress_save",
+      "book_toc_render",
+      "ink_appdef_reader"
+    ]
+  },
+  "gcccheck": {
+    "compiled": 8,
+    "findings": 0
+  },
+  "native_flow": {
+    "assertions": 142,
+    "failed": 0,
+    "finished": 1
+  },
+  "screenshots": {
+    "default-shelf.png": {
+      "bytes": 16030,
+      "sha256": "f9d9e10fd9d7da3f1bfd9ccf65d5d8b5800d8d937d22cdb117bb4dbc3b770672"
+    },
+    "default-body.png": {
+      "bytes": 58326,
+      "sha256": "71077db97994ea6433413e61a01734e9340d32b6978d1480bcbc8b788105299c"
+    },
+    "default-toc.png": {
+      "bytes": 32334,
+      "sha256": "d21a6244c0fa91da6a37011efbef9e203c48faad2061b1f0dd044cd15fcda606"
+    },
+    "default-bookmarks.png": {
+      "bytes": 35306,
+      "sha256": "83953d743cc6f861ba48d87c1820fd3d8931b254f7260efc020bd890fd3a5ba5"
+    },
+    "default-settings.png": {
+      "bytes": 30208,
+      "sha256": "a1053fa619514dc1f091d9272b6cd3a1a5a5d0a5a2845697af50c7f82defc7d9"
+    },
+    "default-body-size60.png": {
+      "bytes": 45306,
+      "sha256": "02f016f2570a04ed0590cf1b7f8920062a9a9d819e1c06a79c53ea48bac61859"
+    },
+    "maximum-shelf.png": {
+      "bytes": 16466,
+      "sha256": "a02b440d4a92b919a5eb0cef405fc956e3c53a5c6a7f88d69c70f264c6938396"
+    },
+    "maximum-body.png": {
+      "bytes": 44856,
+      "sha256": "8542fbb2e375ca7d5c55e4325bc7c3b1bcb964fc4a3ceeeeb28baeea901d6869"
+    },
+    "maximum-toc.png": {
+      "bytes": 39970,
+      "sha256": "f4680f87fa9acde110d867a61fdedcc0ccab6d3cc3c63caa67f95ee2615f9164"
+    },
+    "maximum-bookmarks.png": {
+      "bytes": 28569,
+      "sha256": "5ea78c08ae6ad05d4476ea891670a7ff563c39436a324e3ad7c417ca69fa039b"
+    },
+    "maximum-settings.png": {
+      "bytes": 25615,
+      "sha256": "8b2ce5485957b7ad73e66aa78095a5bde739740341f3e019375bfa0eecb74893"
+    },
+    "maximum-body-size60.png": {
+      "bytes": 39327,
+      "sha256": "d0211d55356f988e3ad45d4ea4ee08a7451b2083f25f2e2232c91db1ebbcc01f"
+    }
+  },
+  "save_reverse": {
+    "exit": 1,
+    "failed": 3,
+    "reopen_failure": true
+  },
+  "memory_simulator": {
+    "mem.external.min_free_bytes": 6877112,
+    "mem.internal_total.min_free_bytes": 50040,
+    "mem.tag.exec.bg.external.peak_bytes": 4835904,
+    "mem.tag.ui.external.peak_bytes": 1593368
+  },
+  "tests": {
+    "s31_host": {
+      "total": 77,
+      "failed": 0,
+      "seconds": 112.0
+    },
+    "sanitizers": {
+      "total": 16,
+      "failed": 0,
+      "seconds": 48.57,
+      "selection": "Mogo tests plus graft-carrier",
+      "instrumentation": "ASan and UBSan for built executables; Python provenance/render checks also run"
+    },
+    "normal_full": {
+      "total": 440,
+      "passed": 436,
+      "failed": [
+        "unit-s31-cell"
+      ],
+      "skipped": [
+        "hub-contract",
+        "hub-json-crosscheck",
+        "hub-simulator-e2e"
+      ],
+      "seconds": 707.74,
+      "exit": 8
+    },
+    "cell_followup": {
+      "total": 1,
+      "failed": 0,
+      "seconds": 11.63,
+      "exit": 0,
+      "same_binary": true
+    }
+  },
+  "font": {
+    "virtual_path": "/me/fonts/InkSC.ttf",
+    "bytes": 3897328,
+    "sha256": "15ffa9ea43e5d6aec1cae8c1b1347c7390f29b5cb3cde97b185e7d7482bfa778",
+    "license": "OFL; placed beside the generated font"
+  },
+  "product_lines": {
+    "glue_changed": 685,
+    "glue_budget": 800,
+    "native_adapted": 8,
+    "native_budget": 1500
+  },
+  "checks": {
+    "diff_whitespace": "pass",
+    "report_links": "pass",
+    "screenshot_count": 12,
+    "screenshot_max_bytes": 58326,
+    "privacy_regex_matches": 0,
+    "scope": "allowed files only"
+  }
+}

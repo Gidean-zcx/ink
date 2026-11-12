@@ -56,6 +56,8 @@ target_link_libraries(${ink_system_lib} PRIVATE ink_resampler)
 ink_reader_build(__idf_ink_apps __idf_ink_system __idf_ink_lvgl)
 include(${root}/system/graft/graft_build.cmake)
 ink_graft_build(__idf_ink_system)
+include(${root}/apps/mogo/mogo.cmake)
+ink_mogo_build(__idf_ink_apps __idf_ink_system ${COMPONENT_LIB})
 # Share the reader's pinned inflate implementation with uploads.
 set(miniz ${root}/third_party/reader_miniz/miniz.c)
 get_target_property(reader_sources ink_reader_vendor SOURCES)
@@ -70,6 +72,8 @@ target_compile_options(ink_miniz PRIVATE -w -fstack-usage)
 target_link_libraries(ink_reader_vendor PRIVATE ink_miniz)
 file(GLOB reader_tables ${root}/assets/i18n/*.tsv)
 ink_reader_translations(reader_tables)
+set(INK_I18N_TABLES ${reader_tables})
+include(${root}/apps/mogo/translations.cmake)
 execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${reader_tables}
     --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
     --sources ${root}/system/apps/memory/memory.c ${root}/system/apps/snake/snake.c

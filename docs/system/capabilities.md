@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 516 项：可调用能力 475、事件 41；设置 44 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 537 项：可调用能力 496、事件 41；设置 44 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -68,6 +68,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `bt.scan` | 找附近的蓝牙耳机（要几秒） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s27](#s27) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
 | `calc.eval` | 给一个算式求值（加减乘除、百分号，十进制 8 位小数） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s03](#s03) | [system/apps/calculator/calculator.c](../../system/apps/calculator/calculator.c) |
 | `calc.key` | 按计算器的一个键（back 删除一位，neg 正负号，clear 清除） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Calculator | [s03](#s03) | [system/apps/calculator/calculator.c](../../system/apps/calculator/calculator.c) |
+| `calendar.grid_next` | 下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/apps/calendar/calendar.c](../../system/apps/calendar/calendar.c) |
+| `calendar.grid_prev` | 上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/apps/calendar/calendar.c](../../system/apps/calendar/calendar.c) |
 | `calendar.list` | 按本地日期列出我的日程和提醒（from 含当天，until 不含当天；日程 ring=false；end 为结束时间，不含） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s40](#s40) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `calendar.month_next` | 月历下个月 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/apps/calendar/calendar.c](../../system/apps/calendar/calendar.c) |
 | `calendar.month_prev` | 月历上个月 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/apps/calendar/calendar.c](../../system/apps/calendar/calendar.c) |
@@ -251,9 +253,28 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `memo.voice` | 把录好的音存成语音备忘，或填上中枢整理的文字 | 仅人（设备） | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `message.list` | 最近的短信 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `message.send` | 发短信 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `mogo.add_bookmark` | 新阅读加书签 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.bookmarks` | 打开新阅读书签 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.goto_bookmark` | 跳到新阅读书签 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.goto_chapter` | 新阅读跳章 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
 | `mogo.next` | 新阅读下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
 | `mogo.open` | 打开新阅读图书 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
 | `mogo.previous` | 新阅读上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.reader` | 返回新阅读正文 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_font_size` | 新阅读字号 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_footer` | 新阅读页脚 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_header` | 新阅读页眉 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_indent` | 新阅读缩进 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_line_spacing` | 新阅读行距 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_margin` | 新阅读边距 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_paragraph_spacing` | 新阅读段距 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.set_weight` | 新阅读字重 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.settings` | 打开新阅读设置 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.shelf` | 打开新阅读书架 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.shelf_open` | 从新阅读书架打开 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.toc` | 打开新阅读目录 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.toc_percent` | 新阅读目录位置 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
+| `mogo.tools` | 打开新阅读工具 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 MogoReader | [s01](#s01) | [apps/mogo/mogo.c](../../apps/mogo/mogo.c) |
 | `music.favorite` | 收藏或取消收藏当前歌曲 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s13](#s13) | [system/apps/music/music.c](../../system/apps/music/music.c) |
 | `music.list` | 音乐列表和文件夹 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s13](#s13) | [system/apps/music/music.c](../../system/apps/music/music.c) |
 | `music.next` | 下一首 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s13](#s13) | [system/apps/music/music.c](../../system/apps/music/music.c) |
@@ -505,7 +526,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s01 — `apps/mogo`
 
-设置：—。
+设置：`display.font_size`。
 
 状态：—。
 

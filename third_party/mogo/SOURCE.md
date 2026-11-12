@@ -57,3 +57,28 @@
 帧缓冲改由 L8 平台绘图原语承接，再经 `ink_graft_present` 交给同一个 UI 和显示服务。
 未接入功能及空实现表见 [本轮报告](../../docs/tasks/graft-mogo-3/REPORT.md)。
 不改排版、TXT、EPUB、字形栅格化算法。新增原函数仅链接模拟器应用，不进入 S31 固件。
+
+## graft-mogo-4 导航、成员保存与设备构建
+
+固定来源与许可不变，查阅日期 2026-11-12。新增文件与整函数的原始 SHA-256、
+原路径和行号见 [flow-upstream-files.json](flow-upstream-files.json)。
+
+- `main/apps/book_toc.c/.h` 整文件原文复用。目录绘制、章节锚点及命中调用原函数。
+- `main/apps/ink_book_page.c` 追加原 `app_book.c` 的 15 个整函数，复用书签格式、
+  读写、绘制和当前目录项判断。仅 `draw_reader_bookmarks` 隐藏管理入口六行：
+  本轮连接添加、列表和跳回，未连接批量删除；适配后哈希单独记录。
+- `main/book/book_progress.c` 原文加入产品；原 NVS 调用经 `apps/mogo/port/nvs.h`
+  和 `preferences.c` 映射到 `ink_graft_preferences_open` 的成员集合。
+  没有访问设备原 NVS。进度保留原版本、完整路径、文件大小和章节内 UTF-8 偏移校验。
+- `main/book/ink_reader_open.c` 从原 `reader_open.c` 整文件复制，只修改一行字号边界：
+  对 18～90 的逻辑字号应用系统缩放，避免最大系统字号下把 108 px 误判成无效值。
+  原文件继续供原主机测试和既有来源检查使用。
+- `main/book/book_shelf_model.c` 原文进入产品，沿用原排序与可见性规则；
+  当前成员书籍由文件服务扫描，封面尚未解码，使用书名卡片。分类管理尚未连接。
+- `apps/mogo/` 的设置页使用原面板壳，八项设置经原章节加载/排版事务重建，
+  尚未完整移植原字号滑杆、四向独立边距及六槽页眉页脚子面板。
+
+同一份 `ink_mogo_build` 接线供模拟器和 S31 使用。无新线程、直接推屏或硬件访问。
+画面经原嫁接层合成；输入和 AI 共用 `mogo.*` 能力。字体位于各成员虚拟路径
+`/me/fonts/InkSC.ttf`，不嵌入应用映像。这里的设备接线是否编译、容量及实测边界
+以 [本轮报告](../../docs/tasks/graft-mogo-4/REPORT.md) 为准。
