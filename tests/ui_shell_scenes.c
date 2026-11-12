@@ -212,7 +212,7 @@ static void assert_identity(void) {
     bool kid = ink_member_current()->role == INK_ROLE_CHILD;
     /* D-135: Today is the one page with its cards; Apps is the second page behind 全部应用. */
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today")) {
-        top = "home"; home_board = kid ? "KidHome" : "Main"; expected_text = !strcmp(scene, "Today") ? "继续读《星星邮差》" : home_board;
+        top = "home"; home_board = kid ? "KidHome" : "Main"; expected_text = !strcmp(scene, "Today") ? "继续读：《星星邮差》" : home_board;
     } else if (!strcmp(scene, "Apps")) { top = page = "Apps"; home_board = expected_text = kid ? "KidApps" : "Apps"; }
     else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) { top = "LockPage"; expected_text = "设备已锁定"; }
     else if (!strcmp(scene, "Members") || !strcmp(scene, "MembersBack") || !strncmp(scene, "Pin", 3)) { top = "member_gate"; expected_text = !strncmp(scene, "Pin", 3) ? "密码内容不可见" : "请选择家人"; }
@@ -253,7 +253,7 @@ static void assert_identity(void) {
     if (!strcmp(scene, "SetNetwork")) CHECK(snapshot_has("网络组=1") && snapshot_has("SIM="), "network selection context is present");
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today")) { /* the cards drawn, the favourites, no empty placeholder */
         CHECK(!strcmp(scene, "Main") ? snapshot_has("卡片=没有") && !label_visible("继续读") && !label_visible("接下来")
-                                     : snapshot_has("卡片=继续读《星星邮差》：第 1 页 · 0%；接下来：接孩子 15:00") &&
+                                     : snapshot_has("卡片=继续读：《星星邮差》第 1 页 · 0%；接下来：接孩子 15:00") &&
                                        label_visible("第 1 页 · 0%") && label_visible("接下来"),
               "%s: cards with content are drawn and named, cards without are not", scene);
         CHECK(snapshot_has("常用=电话（phone）；短信（message）；阅读（reader）") && label_visible("全部应用") && !snapshot_has("home.next"),

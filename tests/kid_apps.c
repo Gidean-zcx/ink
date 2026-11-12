@@ -60,9 +60,7 @@ static void capture_event(void *arg) {
 }
 static void capture(const char *name) { scene = name; quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, NULL); delay_ms(5); }
 static void home(void) { ink_ui_home(); }
-static void all_apps(void) {
-    for (int i = 0; i < 2 && strcmp(ink_shell_board(), "KidApps"); i++) ink_shell_home_swipe(INK_SWIPE_LEFT);
-}
+static void all_apps(void) { ink_receipt_t rc; ink_cap_invoke("shell.apps", NULL, INK_SRC_TOUCH, 0, &rc); } /* D-135: 全部应用 */
 static void denied(const char *cap, const char *args, bool by_hand) {
     CHECK(call_as(cap, args, by_hand ? INK_SRC_TOUCH : INK_SRC_AI) && g_rc.status == INK_RC_REJECTED, "list denies %s (%s)", cap, ink_rc_name(g_rc.status));
     CHECK(strstr(g_rc.detail, "家长没有打开这个应用"), "denial explains the parent application list: %.150s", g_rc.detail);
@@ -79,12 +77,12 @@ static void policy(void) {
     child(); on_ui(home); quiet(); on_ui(inspect);
     CHECK(strstr(g_snap, "页面=KidHome"), "inspect the actual child home: %.120s", g_snap);
     wanted = "时钟"; on_ui(find_label); CHECK(!found, "KidHome hides the removed app");
-    ok("home.next", NULL); on_ui(inspect); CHECK(strstr(g_snap, "KidApps"), "open the actual child All page");
+    ok("shell.apps", NULL); on_ui(inspect); CHECK(strstr(g_snap, "KidApps"), "open the actual child All page");
     int at = 0, pages = 0; const char *paging = strstr(g_snap, "工具页=");
     CHECK(paging && sscanf(paging, "工具页=%d/%d", &at, &pages) == 2 && pages > 0, "read the actual All page count");
     for (int i = 0; i < pages; i++) {
         wanted = "时钟"; on_ui(find_label); CHECK(!found, "every All page hides the removed app");
-        if (i + 1 < pages) ok("home.next", NULL);
+        if (i + 1 < pages) ok("shell.apps_next", NULL);
     }
     ok("app.list", NULL); CHECK(!strstr(g_result, "\"id\":\"clock\"") && !strstr(g_result, "\"id\":\"memo\""), "AI directory hides removed apps");
     denied("app.open", "{\"id\":\"clock\"}", false);
@@ -107,9 +105,11 @@ static void policy(void) {
     ok("app.open", "{\"id\":\"reader\"}");
     delay_ms(61000); CHECK(WAIT_FOR(page("KidTimeUp"), 5000), "the existing deadline enters TimeUp at the start boundary");
     key(HAL_KEY_HOME); quiet(); CHECK(page("home"), "restricted hours allow the real HOME key to reach permitted applications");
-    on_ui(all_apps); quiet(); wanted = "时钟"; on_ui(find_label); CHECK(found, "the permitted clock tile is visible");
+    on_ui(all_apps); quiet(); wanted = "时钟"; on_ui(find_label);
+    for (int i = 0; i < 6 && !found; i++) { ok("shell.apps_next", NULL); on_ui(find_label); }
+    CHECK(found, "the permitted clock row is visible");
     double touches = sim_metric_value("home.taps");
-    if (found) tap(point.x, point.y - ink_ui_px(INK_CIRCLE / 2 + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) / 2));
+    if (found) tap(point.x, point.y); /* the whole row takes the tap */
     CHECK(WAIT_FOR(sim_metric_value("home.taps") > touches, 1000), "the real clock tap reaches its shared capability");
     quiet(); CHECK(page("Clock"), "the actual app tile opens an exempt clock during restricted hours: %.60s", g_top);
     ok("app.open", "{\"id\":\"clock\"}"); CHECK(page("Clock"), "an explicitly exempt app opens during restricted hours");

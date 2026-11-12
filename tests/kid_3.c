@@ -80,32 +80,28 @@ static void find(void) {
         x = (area.x1 + area.x2) / 2; y = (area.y1 + area.y2) / 2;
     }
 }
-static void touch(const char *text, bool tile) {
+static void touch(const char *text) { /* a favourite's whole cell and an apps row both take the tap on their name */
     wanted = text; on_ui(find);
     CHECK(label, "visible child touch target: %s", text);
-    if (label) {
-        if (tile) y -= ink_ui_px(INK_CIRCLE / 2 + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) / 2);
-        tap(x, y);
-    }
+    if (label) tap(x, y);
     quiet();
 }
 static void check_note(void) {
     wanted = "爸爸妈妈可以看到你的记录"; find();
-    CHECK(label, "KidToday draws the parent visibility notice");
+    CHECK(label, "KidHome draws the parent visibility notice");
     if (label) {
         lv_area_t area; lv_obj_get_coords(label, &area);
-        CHECK(area.y1 >= 0 && area.y2 < ink_ui_px(INK_CANVAS_H - INK_DOCK - INK_MARGIN), "the complete child notice fits above the dock");
+        CHECK(area.y1 >= 0 && area.y2 < ink_ui_px(INK_CANVAS_H), "the complete child notice fits on the page");
     }
 }
+static char child_apps[3072]; /* every page of the child's directory, for what is anywhere in it */
 static void check_apps(void) {
     inspect();
     CHECK(strstr(view, "KidApps"), "child Apps snapshot uses KidApps");
     CHECK(!strstr(view, "文件（") && !strstr(view, "网页（") && !strstr(view, "设置（") &&
         !strstr(view, "合成家长应用") && !strstr(view, "合成未授权"), "child Apps hides forbidden and unavailable applications");
-    if (strstr(view, "工具页=1/")) {
-        CHECK(strstr(view, "报纸（news）"), "child Apps respects the existing capability whitelist");
-        CHECK(strstr(view, "电话（phone）") && strstr(view, "短信（message）"), "phone and SMS remain in the child directory");
-    }
+    size_t n = strlen(child_apps);
+    snprintf(child_apps + n, sizeof child_apps - n, "%.1500s", view);
     const char *absent[] = {"文件", "网页", "设置", "合成家长应用", "合成未授权"};
     for (unsigned i = 0; i < sizeof absent / sizeof *absent; i++) {
         wanted = absent[i]; find(); CHECK(!label, "no forbidden visible tile: %s", wanted);
@@ -116,25 +112,29 @@ static void check_home(void) {
     CHECK(strstr(view, "页面=KidHome") && strstr(view, "第 2 页") && !strstr(view, "第 4 页"), "KidHome shows only the child's provider reading position");
     CHECK(strstr(view, "今天不限时"), "KidHome reads the actual unlimited policy");
     wanted = "今天不限时"; find();
-    lv_area_t time_area = {0}, icon_label = {0};
+    lv_area_t time_area = {0}, tile = {0};
     CHECK(label, "the real time allowance is visible on KidHome");
     if (label) lv_obj_get_coords(label, &time_area);
     wanted = "听"; find();
-    CHECK(label, "the first child application row is visible");
-    if (label) lv_obj_get_coords(label, &icon_label);
+    CHECK(label, "the child's favourite is visible");
     if (label) {
-        lv_obj_t *icon = lv_obj_get_child(lv_obj_get_parent(label), lv_obj_get_index(label) - 1);
-        lv_area_t tile; lv_obj_get_coords(icon, &tile);
-        CHECK(ink_shell_bound_cap(icon) && !strcmp(ink_shell_bound_cap(icon), "shell.launch") && tile.y2 < icon_label.y1 &&
-            time_area.y2 + ink_ui_px(INK_GAP_S) < tile.y1, "KidHome allowance clears the actual application touch target");
+        lv_obj_t *cell = lv_obj_get_parent(label);
+        lv_obj_get_coords(cell, &tile);
+        CHECK(ink_shell_bound_cap(cell) && !strcmp(ink_shell_bound_cap(cell), "shell.launch") &&
+            (time_area.y1 > tile.y2 + ink_ui_px(INK_GAP_S) || time_area.y2 + ink_ui_px(INK_GAP_S) < tile.y1), "KidHome allowance clears the actual application touch target");
     }
     wanted = "设置"; find(); CHECK(!label, "KidHome has no adult settings tile");
 }
 static void check_activity(void) {
     inspect();
     CHECK(strstr(view, "合成正在进行") && strstr(view, "shell.tasks"), "KidHome exposes the child's actual running work");
+    wanted = "合成正在进行"; find();
+    lv_obj_t *work = label;
     wanted = "今天不限时"; find();
-    CHECK(!label, "KidHome gives active work its own row without an overlapping allowance");
+    if (work && label) {
+        lv_area_t a, b; lv_obj_get_coords(work, &a); lv_obj_get_coords(label, &b);
+        CHECK(a.y2 < b.y1 || b.y2 < a.y1, "KidHome gives active work its own row without an overlapping allowance");
+    } else CHECK(work, "KidHome draws the active work");
     char clock[16], date[96]; ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
     wanted = date; find();
     CHECK(label, "the active child home retains its date");
@@ -173,71 +173,78 @@ static void set_time(void) {
     quiet();
 }
 static void expired_apps(void) {
-    /* Inspect the underlying directory while KidTimeUp owns the foreground. */
-    ink_shell_kid_close(); ink_ui_home();
-    for (int i = 0; i < 2 && strcmp(ink_shell_board(), "KidApps"); i++) ink_shell_home_swipe(INK_SWIPE_LEFT);
-    ink_shell_home_snapshot(view, sizeof view);
-    CHECK(ink_member_time_up() && strstr(view, "KidApps"), "inspect KidApps under the existing time-up overlay");
-    CHECK(strstr(view, "电话（phone）") && strstr(view, "短信（message）") && strstr(view, "联系人（contacts）"), "time-up directory retains communication apps");
+    /* Under KidTimeUp, what the child's home lists: only what may still be used (D-135: one page, no directory to
+     * swipe to; all apps is a capability the day's time no longer allows). */
+    ink_shell_kid_close(); ink_ui_home(); ink_ui_redraw();
+    ink_ui_snapshot(view, sizeof view, NULL);
+    CHECK(ink_member_time_up() && strstr(view, "KidHome"), "inspect KidHome after the time is up");
+    CHECK(strstr(view, "电话（phone）") && strstr(view, "短信（message）"), "the time-up home retains communication apps");
     int entries = 0;
     for (const char *at = view; (at = strstr(at, "（")); at += strlen("（")) entries++;
-    CHECK(entries == 3, "the time-up directory contains exactly the three communication applications");
-    const char *absent[] = {"阅读（", "听（", "报纸（", "单词（", "备忘（", "接下来（", "时钟（", "相机（", "相册（", "对话记录（", "合成白名单"};
+    CHECK(entries == 2, "the time-up home lists exactly the two communication favourites");
+    const char *absent[] = {"阅读（", "听（", "报纸（", "单词（", "备忘（", "接下来（", "时钟（", "相机（", "相册（", "问 AI（", "合成白名单"};
     for (unsigned i = 0; i < sizeof absent / sizeof *absent; i++) CHECK(!strstr(view, absent[i]), "time-up hides %s", absent[i]);
-    wanted = "时钟"; find(); CHECK(!label, "time-up also removes actual noncommunication tiles");
+    wanted = "相机"; find(); CHECK(!label, "time-up also removes actual noncommunication tiles");
+    ink_receipt_t rc;
+    CHECK(ink_cap_invoke("shell.apps", NULL, INK_SRC_TOUCH, 0, &rc) == INK_RC_REJECTED, "all apps waits for tomorrow, like the other apps");
 }
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
     call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", "{\"page\":4}");
     on_ui(home); quiet(); on_ui(inspect);
-    CHECK(strstr(view, "页面=Main"), "adult Main name stays unchanged");
-    call_ok("home.prev", NULL); on_ui(inspect);
-    CHECK(!strcmp(ink_shell_board(), "Today") && strstr(view, "\"page\":\"home\""), "adult Today snapshot stays unchanged");
+    CHECK(strstr(view, "页面=Main") && strstr(view, "第 4 页"), "adult Main name stays unchanged, with the adult's book");
     call_ok("shell.today_edit", NULL); call_ok("shell.today_card", "{\"card\":\"listen:resume\"}"); call_ok("shell.back", NULL);
-    call_ok("home.next", NULL); call_ok("home.next", NULL); on_ui(inspect);
+    call_ok("shell.apps", NULL); on_ui(inspect);
     bool files = false, remote = false, settings = false;
     const char *at = strstr(view, "工具页="); int page = 0, pages = 0;
     CHECK(at && sscanf(at, "工具页=%d/%d", &page, &pages) == 2 && page == 1, "adult Apps starts at the first directory page");
     for (int i = 0; i < pages; i++) {
         files |= strstr(view, "文件（") != NULL; remote |= strstr(view, "网页（") != NULL; settings |= strstr(view, "设置（") != NULL;
-        if (i + 1 < pages) { call_ok("home.next", NULL); on_ui(inspect); }
+        if (i + 1 < pages) { call_ok("shell.apps_next", NULL); on_ui(inspect); }
     }
     CHECK(!strncmp(view, "Apps；", strlen("Apps；")) && files && remote && settings, "adult Apps retains its original entries and name");
     CHECK(ink_member_switch("kid") == 0, "enter the child's actual member space"); quiet();
     call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", "{\"page\":2}");
-    on_ui(home); quiet(); on_ui(check_home); capture("KidHome");
+    on_ui(home); quiet();
+    /* The child's own six: a full home refuses a seventh, one off makes room (shell.favorite, as the long press). */
+    CHECK(AI("shell.favorite", "{\"id\":\"listen\"}") && g_rc.status == INK_RC_REJECTED, "a seventh favourite is refused, nothing replaced");
+    call_ok("shell.favorite", "{\"id\":\"clock\"}"); call_ok("shell.favorite", "{\"id\":\"listen\"}");
+    CHECK(AI("shell.favorite", "{\"id\":\"settings\"}") && g_rc.status == INK_RC_REJECTED, "a child cannot put settings on the home");
+    on_ui(check_home); capture("KidHome");
     int job = ink_task_begin("example", "合成正在进行", false, NULL, NULL);
     CHECK(job > 0, "start synthetic work through the actual task service");
     ink_task_progress(job, -1, "正在准备"); on_ui(ink_ui_redraw); quiet(); on_ui(check_activity);
     ink_task_end(job, INK_TASK_DONE, "做好了", NULL); on_ui(ink_ui_redraw); quiet(); on_ui(check_home);
     unsigned before = opened;
-    touch("听", true); CHECK(opened == before + 1, "KidHome touch launches through shell.launch");
+    touch("听"); CHECK(opened == before + 1, "KidHome touch launches through shell.launch");
     on_ui(home); quiet(); call_ok("shell.launch", "{\"id\":\"listen\"}");
     CHECK(opened == before + 2, "KidHome AI launches the same application entry"); on_ui(home); quiet();
-    call_ok("home.prev", NULL); on_ui(inspect); on_ui(check_note);
-    CHECK(strstr(view, "\"page\":\"KidToday\"") && strstr(view, "孩子合成故事") && !strstr(view, "大人合成"), "KidToday uses only the child's providers and page name");
-    memcpy(child_today, view, sizeof child_today); capture("KidToday");
-    before = opened; touch("孩子合成故事", false);
-    CHECK(opened == before + 1 && opened_by == INK_SRC_TOUCH, "KidToday touch uses the provider capability");
+    on_ui(inspect); on_ui(check_note);
+    CHECK(strstr(view, "页面=KidHome") && strstr(view, "孩子合成故事") && !strstr(view, "大人合成"), "KidHome's cards use only the child's providers");
+    memcpy(child_today, view, sizeof child_today);
+    before = opened; touch("孩子合成故事");
+    CHECK(opened == before + 1 && opened_by == INK_SRC_TOUCH, "the KidHome card touch uses the provider capability");
     on_ui(home); quiet(); call_ok(CAPS[0].id, NULL);
-    CHECK(opened == before + 2 && opened_by == INK_SRC_AI, "KidToday AI uses the identical provider handler");
-    on_ui(home); quiet(); call_ok("home.next", NULL); call_ok("home.next", NULL); on_ui(check_apps); capture("KidApps");
+    CHECK(opened == before + 2 && opened_by == INK_SRC_AI, "the AI uses the identical provider handler");
+    on_ui(home); quiet(); call_ok("shell.apps", NULL); on_ui(check_apps); capture("KidApps");
     const char *child_at = strstr(view, "工具页="); int child_page = 0, child_pages = 0;
     CHECK(child_at && sscanf(child_at, "工具页=%d/%d", &child_page, &child_pages) == 2 && child_page == 1, "child app directory exposes its real pagination");
-    for (int i = 1; i < child_pages; i++) { call_ok("home.next", NULL); on_ui(check_apps); }
-    for (int i = 1; i < child_pages; i++) call_ok("home.prev", NULL);
-    before = opened; touch("听", true);
+    for (int i = 1; i < child_pages; i++) { call_ok("shell.apps_next", NULL); on_ui(check_apps); }
+    CHECK(strstr(child_apps, "报纸（news）") && strstr(child_apps, "电话（phone）") && strstr(child_apps, "短信（message）"),
+          "child Apps respects the existing capability whitelist, phone and SMS remain");
+    for (int i = 1; i < child_pages; i++) call_ok("shell.apps_prev", NULL);
+    before = opened; touch("听");
     CHECK(opened == before + 1, "KidApps touch launches the registered entry"); on_ui(home); quiet();
     call_ok("shell.launch", "{\"id\":\"listen\"}"); CHECK(opened == before + 2, "KidApps AI launches the same entry");
     on_ui(home); quiet();
     CHECK(ink_member_switch("owner") == 0, "return to the adult without a password"); quiet();
     call_ok("shell.today_edit", NULL); call_ok("shell.today_card", "{\"card\":\"news:daily\"}"); call_ok("shell.back", NULL);
-    CHECK(ink_member_switch("kid") == 0, "return to the child's Today after changing adult choices"); quiet();
-    call_ok("home.prev", NULL); on_ui(inspect);
-    CHECK(strstr(view, "孩子合成故事") && strstr(view, "孩子合成报纸") && !strstr(view, "大人合成"), "adult TodayEdit changes cannot remove the child's cards (counterexample)");
-    CHECK(strstr(child_today, "孩子合成故事") && strstr(child_today, "孩子合成报纸"), "the child's initial cards are independent of earlier adult selections");
+    CHECK(ink_member_switch("kid") == 0, "return to the child's home after changing adult choices"); quiet();
+    on_ui(home); quiet(); on_ui(inspect);
+    CHECK(strstr(view, "孩子合成故事") && !strstr(view, "大人合成"), "adult TodayEdit changes cannot remove the child's cards (counterexample)");
+    CHECK(strstr(child_today, "孩子合成故事"), "the child's initial cards are independent of earlier adult selections");
     set_time(); on_ui(ink_ui_redraw); quiet(); on_ui(inspect);
-    CHECK(strstr(view, "今天还能用") && !strstr(view, "今天不限时"), "KidToday reads the changed real time allowance");
+    CHECK(strstr(view, "今天还能用") && !strstr(view, "今天不限时"), "KidHome reads the changed real time allowance");
     delay_ms(121000);
     CHECK(ink_member_time_up(), "virtual usage really reaches the child limit");
     on_ui(expired_apps); quiet();
@@ -248,7 +255,7 @@ static void run(void *arg) {
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
-    snprintf(capture_name, sizeof capture_name, "%s", getenv("INK_KID3_SCENE") ? getenv("INK_KID3_SCENE") : "KidToday");
+    snprintf(capture_name, sizeof capture_name, "%s", getenv("INK_KID3_SCENE") ? getenv("INK_KID3_SCENE") : "KidHome");
     product_main(); test_start_home();
     CHECK(ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) == 0, "register synthetic provider capabilities");
     for (unsigned i = 0; i < sizeof APPS / sizeof *APPS; i++) CHECK(ink_app_register(&APPS[i]) == 0, "register synthetic application");

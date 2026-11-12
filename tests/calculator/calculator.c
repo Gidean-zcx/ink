@@ -74,24 +74,22 @@ static void ai_refused(const char *expr, const char *say) {
 static void capture_event(void *arg) { CHECK(settled(), "the captured frame is presented"); sim_display_snapshot(arg); }
 static void capture(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, (void *)name); delay_ms(5); }
 static void go_home(void) { CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "back home"); quiet(); }
-/* From home to the Apps page, then turn its pages until the tile named `title` shows; tap its circle. */
+/* From home to all apps (D-135: its second page, behind 全部应用), then turn its pages until the row named `title`
+ * shows; tap the row. */
 static void first_apps_page(void) {
     go_home();
-    for (int i = 0; i < 12; i++) {
-        on_ui(read_snapshot);
-        if (strstr(snapshot, "工具页=1/")) return;
-        key(strstr(snapshot, "工具页=") ? HAL_KEY_PREV : HAL_KEY_NEXT); quiet();
-    }
-    CHECK(false, "the first Apps page is reachable");
+    CHECK(BY_HAND("shell.apps", NULL) && g_rc.status == INK_RC_DONE, "全部应用 opens"); quiet();
+    on_ui(read_snapshot);
+    CHECK(strstr(snapshot, "工具页=1/"), "all apps opens on its first page");
 }
 static bool open_from_apps(const char *title) {
     first_apps_page();
-    for (int page = 0; page < 8; page++) {
+    for (int page = 0; page < 12; page++) {
         lv_obj_t *label = find(title, false, false);
         if (label) {
-            lv_obj_t *circle = lv_obj_get_child(lv_obj_get_parent(label), (int32_t)lv_obj_get_index(label) - 1);
-            CHECK(circle && ink_shell_bound_cap(circle) && !strcmp(ink_shell_bound_cap(circle), "shell.launch"), "the tile of %s is tappable", title);
-            if (circle) tap_obj(circle);
+            lv_obj_t *row = lv_obj_get_parent(label);
+            CHECK(ink_shell_bound_cap(row) && !strcmp(ink_shell_bound_cap(row), "shell.launch"), "the row of %s is tappable", title);
+            tap_obj(row);
             return true;
         }
         key(HAL_KEY_NEXT); quiet();

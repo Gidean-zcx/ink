@@ -40,7 +40,7 @@ static void export_page(void *arg) {
 static void locate_app(void) {
     found = NULL; wanted = "联系人"; find_label(lv_screen_active()); CHECK(found, "contacts appears in the app list");
     if (!found) return;
-    lv_obj_t *button = lv_obj_get_child(lv_obj_get_parent(found), lv_obj_get_index(found) - 1);
+    lv_obj_t *button = lv_obj_get_parent(found); /* D-135: the whole row in all apps */
     lv_area_t a; lv_obj_update_layout(button); lv_obj_get_coords(button, &a);
     CHECK(lv_area_get_height(&a) >= ink_ui_px(INK_CONTROL), "app icon keeps the standard touch target");
     g_btn_x[0] = (a.x1 + a.x2) / 2; g_btn_y[0] = (a.y1 + a.y2) / 2;
@@ -81,7 +81,7 @@ static void contact_footer(void) {
 }
 static void contacts(void) {
     CHECK(AI("data.list", "{\"collection\":\"phone.contacts\"}") && g_rc.status == INK_RC_DONE, "load empty member contacts");
-    CHECK(BY_HAND("system.home", NULL) && BY_HAND("home.next", NULL), "open the full app list"); quiet(); scene("app-list");
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("shell.apps", NULL), "open the full app list"); quiet(); scene("app-list");
     on_ui(locate_app); if (found) tap(g_btn_x[0], g_btn_y[0]); quiet();
     CHECK(!strcmp(ink_ui_page_name(), "PhoneContacts"), "step 1: app-list touch opens independent contacts");
     click("添加联系人"); CHECK(!strcmp(ink_ui_page_name(), "ContactEdit"), "step 2: new contact form"); scene("contacts-new");

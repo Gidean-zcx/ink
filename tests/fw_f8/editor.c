@@ -83,29 +83,35 @@ static void check_settings_entry(void) {
 }
 static void home(void) { ink_ui_home(); }
 static void child_space(void) { CHECK(ink_member_switch("kid") == 0, "switch to child"); }
+/* D-135: the one page shows the first two chosen cards that have content, in their order. */
 static void check_order(void) {
     inspect();
-    const char *b = strstr(snapshot, "\"id\":\"example:b\""), *listen = strstr(snapshot, "\"id\":\"listen:resume\"");
-    const char *word = strstr(snapshot, "\"id\":\"word:review\""), *a = strstr(snapshot, "\"id\":\"example:a\"");
-    const char *vb = strstr(snapshot, "成人合成合成卡乙"), *vl = strstr(snapshot, "成人合成听");
-    const char *vw = strstr(snapshot, "成人合成单词"), *va = strstr(snapshot, "成人合成合成卡甲");
-    CHECK(b && listen && word && a && vb && vl && vw && va && b < vb && vb < listen && listen < vl && vl < word &&
-        word < vw && vw < a && a < va, "four selected cards retain their exact order");
-    const char *contents[] = {"成人合成合成卡乙", "成人合成听", "成人合成单词", "成人合成合成卡甲"};
+    const char *b = strstr(snapshot, "合成卡乙：成人合成合成卡乙"), *listen = strstr(snapshot, "听：成人合成听");
+    CHECK(b && listen && b < listen && !strstr(snapshot, "成人合成单词") && !strstr(snapshot, "成人合成合成卡甲") &&
+        !strstr(snapshot, "成人合成报纸"), "the home shows the first two chosen cards in their exact order");
+    const char *contents[] = {"成人合成合成卡乙", "成人合成听"};
     for (unsigned i = 0; i < sizeof contents / sizeof *contents; i++) {
         wanted = contents[i]; find();
         CHECK(label, "selected card content is really drawn: %s", contents[i]);
     }
-    CHECK(!strstr(snapshot, "成人合成报纸") && strstr(snapshot, "\"id\":\"reader\""), "reading stays above the four selected cards");
+}
+/* All four chosen, in order, as the editor numbers them. */
+static void check_saved_order(void) {
+    inspect();
+    const char *want[] = {"\"id\":\"example:b\",\"role\":\"card\",\"label\":\"合成卡乙\",\"value\":\"第 1 张\"",
+        "\"id\":\"listen:resume\",\"role\":\"card\",\"label\":\"听\",\"value\":\"第 2 张\"",
+        "\"id\":\"word:review\",\"role\":\"card\",\"label\":\"单词\",\"value\":\"第 3 张\"",
+        "\"id\":\"example:a\",\"role\":\"card\",\"label\":\"合成卡甲\",\"value\":\"第 4 张\""};
+    for (unsigned i = 0; i < sizeof want / sizeof *want; i++) CHECK(strstr(snapshot, want[i]), "four selected cards retain their exact order: %s", want[i]);
 }
 static void check_child_default(void) {
     inspect();
-    CHECK(strstr(snapshot, "\"id\":\"listen\"") && !strstr(snapshot, "example:b") && !strstr(snapshot, "成人合成"),
-        "adult choices and adult card data do not affect the child default Today");
+    CHECK(strstr(snapshot, "听：孩子合成听") && !strstr(snapshot, "合成卡乙") && !strstr(snapshot, "成人合成"),
+        "adult choices and adult card data do not affect the child's default home");
 }
 static void check_child_saved(void) {
     inspect();
-    CHECK(strstr(snapshot, "\"id\":\"example:a\"") && !strstr(snapshot, "\"id\":\"listen:resume\"") && !strstr(snapshot, "成人合成"),
+    CHECK(strstr(snapshot, "合成卡甲：孩子合成合成卡甲") && !strstr(snapshot, "听：孩子合成听") && !strstr(snapshot, "成人合成"),
         "child has an independent saved selection after restart");
 }
 static void snapshot_event(void *name) { sim_display_snapshot(name); }
@@ -140,10 +146,9 @@ static void record_menu(void) {
     }
     vtk_host_call(save_snap, "IconMenu");
 }
-static void locate_listen_icon(void) {
+static void locate_listen_icon(void) { /* the row in all apps, which takes the tap on its name */
     wanted = "听"; find();
-    CHECK(label, "listen tile has its original label");
-    if (label) y -= ink_ui_px(INK_CIRCLE / 2 + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) / 2);
+    CHECK(label, "listen row has its original label");
 }
 static void locate_up_b(void) {
     wanted = "合成卡乙"; find();
@@ -160,10 +165,9 @@ static void run(void *arg) {
         ink_alarm_t alarm = {.kind = INK_ALARM, .at_utc = ink_time_now_s() + 3600, .hour = 7, .min = 45, .src = INK_SRC_TOUCH};
         snprintf(alarm.title, sizeof alarm.title, "合成待办");
         CHECK(ink_alarm_add(&alarm) > 0, "seed the existing upcoming card provider");
-        CHECK(BY_HAND("home.prev", NULL), "open the unchanged default Today"); quiet(); on_ui(inspect);
-        CHECK(strstr(snapshot, "\"id\":\"listen\"") && strstr(snapshot, "\"id\":\"upcoming\""), "unconfigured Today retains its defaults");
-        on_ui(check_today_entry); touch("今日");
-        CHECK(!strcmp(ink_ui_page_name(), "home") && !strcmp(ink_shell_board(), "Today"), "Today heading no longer opens the editor");
+        on_ui(home); quiet(); on_ui(ink_ui_redraw); quiet(); on_ui(inspect);
+        CHECK(strstr(snapshot, "卡片=接下来：合成待办 7:45；听：成人合成听"), "the unconfigured home shows the next thing first, then listening");
+        on_ui(check_today_entry);
         CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open Settings"); quiet();
         CHECK(!strcmp(ink_ui_page_name(), "Settings"), "start the visible editor path in Settings");
         touch("显示和亮度");
@@ -185,11 +189,12 @@ static void run(void *arg) {
         for (int i = 0; i < 2; i++) CHECK(AI("shell.today_card", "{\"card\":\"example:b\",\"up\":true}") && g_rc.status == INK_RC_DONE, "AI uses the same up capability as touch");
         CHECK(AI("shell.today_card", "{\"card\":\"news:daily\"}") && g_rc.status == INK_RC_REJECTED, "a fifth card is refused without replacing a selection");
         CHECK(BY_HAND("shell.back", NULL) && BY_HAND("shell.back", NULL) && BY_HAND("shell.back", NULL),
-            "return to Today through display settings and Settings"); quiet(); on_ui(check_order); capture("TodayOrder");
-        CHECK(BY_HAND("home.next", NULL) && BY_HAND("home.next", NULL), "open All apps"); quiet();
+            "return to the home through display settings and Settings"); quiet(); on_ui(check_order); capture("TodayOrder");
+        CHECK(AI("shell.today_edit", NULL), "open the editor"); quiet(); on_ui(check_saved_order); CHECK(BY_HAND("shell.back", NULL), "back home"); quiet();
+        CHECK(BY_HAND("shell.apps", NULL), "open All apps"); quiet();
         on_ui(locate_listen_icon); unsigned before = opens, prior_launches = launches; if (label) tap(x, y); quiet();
         CHECK(launches == prior_launches + 1 && opens == before && !strcmp(ink_ui_page_name(), LISTEN_PAGE.name), "short press still opens the application");
-        on_ui(home); quiet(); on_ui(locate_listen_icon); before = opens;
+        CHECK(BY_HAND("shell.back", NULL), "back to all apps"); quiet(); on_ui(locate_listen_icon); before = opens;
         hw(HW_PRESS, x, y); delay_ms(650); hw(HW_RELEASE, x, y); quiet();
         CHECK(opens == before && !strcmp(ink_ui_top_name(), "IconMenu"), "long press opens only the menu, without launching the app");
         on_ui(record_menu); capture("IconMenu"); ink_probe_count("test.snapshot.IconMenu");
@@ -200,29 +205,26 @@ static void run(void *arg) {
         CHECK(AI(RESUME.id, NULL) && g_rc.status == INK_RC_DONE && opens == before + 2 && opened_by == INK_SRC_AI, "AI resumes through the identical app handler");
         on_ui(home); quiet();
         CHECK(AI("shell.today_card", "{\"card\":\"listen:resume\"}") && g_rc.status == INK_RC_DONE, "remove listen before testing the menu's Today action");
-        CHECK(AI("shell.icon_menu", "{\"id\":\"listen\"}") && g_rc.status == INK_RC_DONE, "open menu to add its card"); quiet(); touch("放到今日屏");
-        CHECK(BY_HAND("home.prev", NULL) && BY_HAND("home.prev", NULL), "return to Today after adding"); quiet(); on_ui(inspect);
-        CHECK(strstr(snapshot, "\"id\":\"listen:resume\""), "menu's Today switch adds the app card to Today");
+        CHECK(AI("shell.icon_menu", "{\"id\":\"listen\"}") && g_rc.status == INK_RC_DONE, "open menu to add its card"); quiet(); touch("卡片放在主屏");
         CHECK(AI("shell.today_card", "{\"card\":\"listen:resume\",\"up\":true}") && g_rc.status == INK_RC_DONE, "restore listener to third");
         CHECK(AI("shell.today_card", "{\"card\":\"listen:resume\",\"up\":true}") && g_rc.status == INK_RC_DONE, "restore listener to second");
         on_ui(check_order);
     } else {
-        CHECK(BY_HAND("home.prev", NULL), "open persisted Today in a new process"); quiet(); on_ui(check_order);
+        on_ui(home); quiet(); on_ui(check_order); /* persisted, in a new process */
     }
-    on_ui(child_space); quiet();
-    CHECK(BY_HAND("home.prev", NULL), "open child's Today"); quiet();
+    on_ui(child_space); quiet(); on_ui(home); quiet();
     if (!restarting) {
         on_ui(check_child_default);
-        CHECK(AI("shell.today_edit", NULL) && g_rc.status == INK_RC_DONE, "child can edit only their own Today"); quiet(); on_ui(inspect);
+        CHECK(AI("shell.today_edit", NULL) && g_rc.status == INK_RC_DONE, "child can edit only their own home cards"); quiet(); on_ui(inspect);
         CHECK(strstr(snapshot, "\"selected\":\"\""), "child editor does not retain the adult navigation selection");
         CHECK(!strstr(snapshot, "news:daily"), "adult-only app is absent from the child editor");
         CHECK(AI("shell.today_card", "{\"card\":\"news:daily\"}") && g_rc.status == INK_RC_REJECTED, "child cannot select an adult-only card via AI");
         CHECK(AI("shell.today_card", "{\"card\":\"listen:resume\"}") && g_rc.status == INK_RC_DONE, "child changes their own selection");
         CHECK(AI("shell.today_card", "{\"card\":\"example:a\"}") && g_rc.status == INK_RC_DONE, "child adds an independent card");
-        CHECK(BY_HAND("shell.back", NULL), "child returns to Today"); quiet();
+        CHECK(BY_HAND("shell.back", NULL), "child returns to the home"); quiet();
     }
     on_ui(check_child_saved);
-    ink_member_test_reset(); quiet(); CHECK(BY_HAND("home.prev", NULL), "adult returns to Today"); quiet(); on_ui(check_order);
+    ink_member_test_reset(); quiet(); on_ui(home); quiet(); on_ui(check_order);
     ink_db_flush_all(); CHECK(WAIT_FOR(ink_db_idle(), 10000), "member selections are durable before restart");
     ink_probe_count("test.snapshot.settled"); ink_power_release(INK_NEED_NET); ink_probe_count("test.finished");
 }
