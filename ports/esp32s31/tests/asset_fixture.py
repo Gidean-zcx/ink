@@ -6,7 +6,9 @@ from asset_pack import pack
 
 out = Path(sys.argv[1])
 first = pack([('fonts/a.inkf', b'font')])
-second = pack([('icons/z.inki', b'icon')])
+second = pack([('icons/z.inki', b'icon'), ('icons/compressed.inki', b'icon' * 1024),
+               ('icons/corrupt.inki', b'icon' * 1024)], compress=True)
+second = second[:-1] + bytes([second[-1] ^ 0xff])  # break the last entry's Adler-32
 (out / 'first.bin').write_bytes(first)
 section = '.section __TEXT,__const' if platform.system() == 'Darwin' else '.section .rodata'
 (out / 'embedded.S').write_text(section + '\n.globl _binary_ink_embedded_bin_start\n'
