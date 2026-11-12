@@ -25,6 +25,22 @@ taskpolicy -c utility env INK_DEPS=$INK_DEPS INK_UPSTREAM=$INK_DEPS/../ink-hw/up
 
 截图采集的先后顺序不可颠倒：本次 `before` 是在产品四文件仍为基线、基线构建完成时采集，之后才改产品并构建 `after`。不要在修改后代码上重跑 `--label before` 冒充基线。驱动拒绝覆盖已有证据目录；重新采集时应换一个构建目录。
 
+从干净检出复现基线时，手动建立临时 worktree，再把两个采集文件复制进去。基线已有场景入口只加测试复用的条件编译保护，产品源码保持基线。此步骤需要本地具有基线提交，不属于 ctest：
+
+```sh
+git worktree add --detach work/design-lang-before bf95f981b9594b563d23d43fe7667513d8cca49d
+cp tests/design_lang_1.c tests/design_lang_1.py work/design-lang-before/tests/
+$INK_DEPS/build-deps/pyenv/bin/python - <<'PY'
+from pathlib import Path
+p = Path('work/design-lang-before/tests/ui_shell_scenes.c')
+s = p.read_text()
+assert s.count('void ink_main(void) {') == 1
+p.write_text(s.replace('void ink_main(void) {', '#ifndef INK_DESIGN_LANG\nvoid ink_main(void) {') + '\n#endif\n')
+PY
+```
+
+随后复用上方全部配置参数，把 `-S . -B build` 换成 `-S work/design-lang-before -B build-before`，构建 `build-before`，运行 `work/design-lang-before/tests/design_lang_1.py --build build-before --label before --capture`。修改后版本在另一新构建目录采集 `after`，再把两个采集目录放在同一个 `design-lang-1/` 下调用 `--compare`。这样不需要回退当前分支，也不会更改基线的产品文件。
+
 ```sh
 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1.py --build build --label before --capture
 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1.py --build build --label after --capture
@@ -37,6 +53,6 @@ taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1_
 
 截图取 `clean-scene.png`（无模拟残影），不画调试框、不裁掉页面。每个对比图都有完整左右画布；SHA-256 在 `screenshots.json`。模拟显示模型的 `snap-scene.png` 也保留在构建目录，可另行检查残影。
 
-反向对照临时编译撤去字体合并、自动分组去框、清除按钮透明底、输入焦点边框的版本，运行同一组共用控件断言，要求明确失败且测试执行到结束。脚本不修改产品文件，不依赖 Git 历史，未注册进 ctest。
+反向对照临时编译撤去字体合并、自动分组去框、清除按钮透明底、输入焦点边框、负坐标舍入、图标热区的版本，运行同一组共用控件断言，要求明确失败且测试执行到结束。脚本不修改产品文件，不依赖 Git 历史，未注册进 ctest。
 
 Linux 警告核对使用任务指定的 `ink-codex/tools/gcccheck.py`，读取 `build/compile_commands.json`，检查改过的可编译 C 文件；结果及跳过项在报告中单列。源码范围、链接、图片大小及隐私检查同样在报告中列出。

@@ -93,6 +93,8 @@ static void check_group_row(lv_obj_t *row, bool separated) {
     CHECK(circles == 1 && dividers == (separated ? 1 : 0), "shared group has one icon circle and a divider only between rows");
 }
 static void check_theme(void) {
+    CHECK(ink_ui_px(0) == 0 && ink_ui_px(0 - INK_STROKE) == 0 - ink_ui_px(INK_STROKE) &&
+          ink_ui_px(0 - INK_CONTROL) == 0 - ink_ui_px(INK_CONTROL), "negative layout coordinates round symmetrically");
     CHECK(ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_MEDIUM) == ink_ui_font_px(INK_FONT_BODY, INK_WEIGHT_MEDIUM),
           "the legacy reading option and the UI body resolve to the same 38 px face");
     CHECK(INK_CONTROL == 108 && INK_PRIMARY == 108 && INK_FIELD_HEIGHT == 108 && INK_SEGMENT == 108 && INK_SLIDER == 108,
@@ -143,6 +145,9 @@ static void check_theme(void) {
               "a directly bound icon button has no circle outline");
         lv_obj_send_event(button, LV_EVENT_CLICKED, NULL);
         ink_shell_bind(decor, "shell.back", NULL);
+        lv_area_t hit; lv_obj_update_layout(decor); lv_obj_get_click_area(decor, &hit);
+        CHECK(lv_area_get_width(&hit) >= ink_ui_px(INK_CONTROL) && lv_area_get_height(&hit) >= ink_ui_px(INK_CONTROL),
+              "an icon reserves the minimum target even when its capability is bound later");
         CHECK(!lv_obj_get_style_border_width(decor, 0) &&
               lv_obj_has_flag(decor, LV_OBJ_FLAG_CLICKABLE) && !strcmp(ink_shell_bound_cap(decor), "shell.back"),
               "an icon bound after construction keeps its capability without a circle");

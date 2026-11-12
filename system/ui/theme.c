@@ -123,8 +123,9 @@ int ink_ui_width(void) { return lv_display_get_horizontal_resolution(NULL); }
 int ink_ui_height(void) { return lv_display_get_vertical_resolution(NULL); }
 int ink_ui_px(int px) {
     int w = ink_ui_width(), h = ink_ui_height();
-    if (w * INK_CANVAS_H <= h * INK_CANVAS_W) return (px * w + INK_CANVAS_W / 2) / INK_CANVAS_W;
-    return (px * h + INK_CANVAS_H / 2) / INK_CANVAS_H;
+    int sign = px < 0 ? -1 : 1;
+    if (w * INK_CANVAS_H <= h * INK_CANVAS_W) return (px * w + sign * INK_CANVAS_W / 2) / INK_CANVAS_W;
+    return (px * h + sign * INK_CANVAS_H / 2) / INK_CANVAS_H;
 }
 static int offset_x(lv_obj_t *parent) {
     return lv_obj_get_width(parent) == ink_ui_width() ? (ink_ui_width() - ink_ui_px(INK_CANVAS_W)) / 2 : 0;
@@ -328,6 +329,7 @@ lv_obj_t *ink_ui_circle(lv_obj_t *parent, const char *icon, int x, int y, int di
     int size = cb && diameter < INK_CONTROL ? INK_CONTROL : diameter;
     lv_obj_t *b = ink_ui_box(parent, x, y, size, size, 0, INK_SURFACE_WHITE, false);
     lv_obj_set_style_bg_opa(b, LV_OPA_TRANSP, 0);
+    if (size < INK_CONTROL) lv_obj_set_ext_click_area(b, ink_ui_px((INK_CONTROL - size + 1) / 2));
     bind(b, cb, ctx);
     bool white = ink_ui_surface_kind(parent) == INK_SURFACE_BLACK;
     ink_ui_icon(b, icon, icon_px, surface == INK_SURFACE_BLACK ? INK_ICON_SOLID : INK_ICON_LINE,

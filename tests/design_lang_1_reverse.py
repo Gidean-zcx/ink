@@ -1,4 +1,4 @@
-"""Withdraw four shared-control fixes without editing product sources or requiring Git history."""
+"""Withdraw shared-control fixes without editing product sources or requiring Git history."""
 import argparse
 import json
 import os
@@ -19,14 +19,22 @@ for line in (build / 'CMakeFiles/ink_system.dir/flags.make').read_text().splitli
         key, value = line.split(' = ', 1)
         flags[key] = shlex.split(value)
 mutations = [
+    ('late-icon-target', 'theme.c',
+     '    if (size < INK_CONTROL) lv_obj_set_ext_click_area(b, ink_ui_px((INK_CONTROL - size + 1) / 2));\n', ''),
+    ('negative-rounding', 'theme.c',
+     '    int sign = px < 0 ? -1 : 1;\n'
+     '    if (w * INK_CANVAS_H <= h * INK_CANVAS_W) return (px * w + sign * INK_CANVAS_W / 2) / INK_CANVAS_W;\n'
+     '    return (px * h + sign * INK_CANVAS_H / 2) / INK_CANVAS_H;',
+     '    if (w * INK_CANVAS_H <= h * INK_CANVAS_W) return (px * w + INK_CANVAS_W / 2) / INK_CANVAS_W;\n'
+     '    return (px * h + INK_CANVAS_H / 2) / INK_CANVAS_H;'),
     ('font-merge', 'theme.c',
      '    if (px == INK_FONT_LIST) px = INK_FONT_BODY;\n', ''),
     ('group-frame', 'theme.c',
      'lv_obj_set_style_border_width(obj, border ? ink_ui_px(INK_STROKE) : 0, 0);',
      'lv_obj_set_style_border_width(obj, border || surface == INK_SURFACE_STATIC ? ink_ui_px(INK_STROKE) : 0, 0);'),
     ('clear-background', 'theme.c',
-     'lv_obj_set_style_bg_opa(b, LV_OPA_TRANSP, 0);\n    bind(b, cb, ctx);',
-     'lv_obj_set_style_bg_opa(b, LV_OPA_COVER, 0);\n    bind(b, cb, ctx);'),
+     'lv_obj_t *b = ink_ui_box(parent, x, y, size, size, 0, INK_SURFACE_WHITE, false);\n    lv_obj_set_style_bg_opa(b, LV_OPA_TRANSP, 0);',
+     'lv_obj_t *b = ink_ui_box(parent, x, y, size, size, 0, INK_SURFACE_WHITE, false);\n    lv_obj_set_style_bg_opa(b, LV_OPA_COVER, 0);'),
     ('field-focus', 'textfield.c',
      'lv_obj_set_style_border_width(f->area, ink_ui_px(INK_STROKE_FOCUS), LV_STATE_FOCUSED);',
      'lv_obj_set_style_border_width(f->area, ink_ui_px(INK_FIELD_STROKE), LV_STATE_FOCUSED);'),
