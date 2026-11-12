@@ -1,22 +1,23 @@
 # hub-link-1 执行报告
 
 基线：`6171c2bf8d59238c95f2d548663f8b2ab3c6f43a`。日期：2026-11-12。
-状态：执行中；只做离线开发和本机测试，不接设备、不请求真实模型、不推送。
+状态：本机实现和验证完成，已本地提交；未接设备、未请求真实模型、未推送。完整生产配对尚有下述范围外缺口。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 待验证 | S31 WebSocket 连接、pin、重连、大消息和反向对照 | 待补 |
-| 2 | 【实测】首轮通过 | 本机假服务器，两种接法各完成对话、流式文字和设备工具调用；无密钥回退，错误路径脱敏。9 passed in 0.29s | `PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_models.py` |
-| 3 | 【实测】已通过主工程、hub 和固件；最终 S31/内存检查进行中 | CTest：100% tests passed out of 423，847.65 秒；pytest：166 passed in 59.70s；固件编过、无新告警 | 见下方命令和固件对照 |
+| 1 | 【实测】宿主机通过 | 真实 HAL + 替身 TLS/transport：连接、错误 pin 在升级前拒绝、CA 默认校验、断线后新建连接、70 KB 二进制/文字、分片及 ping、flush/free。撤去比较后断言失败，exit -6，普通和 ASan 均复现 | 下方 S31 CTest；单项 `ctest --test-dir build-s31-tests -R unit-s31-ws --output-on-failure` |
+| 2 | 【实测】本机假服务器通过 | 两种接法各完成对话、流式文字和设备工具调用；无密钥回退，错误路径脱敏。专项 9 项、独立完整 pytest 166 项通过 | `PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/test_models.py` |
+| 3 | 【实测】本机全部通过 | CTest：100% tests passed out of 423，847.65 秒；pytest：166 passed in 59.70s；S31 普通和 ASan/UBSan 各 77 项；固件编过、无新告警 | 见下方命令和固件对照 |
 | 4 | 【实现】步骤已写，未上机 | Mac 启动、地址/SPKI、日志判据和现有配对阻断已列出 | 见“真机联调步骤” |
 
 ## 没做到的
 
 - 真机联调按任务要求留给主会话。
-- 手机首次设置暂未补：原厂 v2.0.77 已删除网页配网；现有传书热点不提供配网路由，完整补齐超过 150 行。出处与缺口在收尾时补全。
+- 手机首次设置未补：原厂 v2.0.77 已删除网页配网；现有传书热点不提供配网路由。【估算】完整补齐超过 150 行，按任务书只报告缺口，见下文出处。
 - 当前中枢只支持 loopback HTTP 和开发协议 1；设备配对使用协议 2。完整配对联调仍有跨范围缺口。
+- Linux CI 未运行；未上机测 TLS 握手和内部堆最低值。宿主机替身测试不等于实机验证。
 
 ## 和设计不一致的
 
@@ -45,7 +46,9 @@
 - `INK_HUB_ANTHROPIC_API_KEY`：仅环境读取的凭据，任务书第 3 项要求。
 - `INK_HUB_ANTHROPIC_MODEL`：可配置模型名，任务书第 3 项要求。
 - `INK_HUB_ANTHROPIC_BASE_URL`：可配置 Messages 前缀，任务书第 3 项要求。
-- 选择 SDK 既有 `MBEDTLS_EXTERNAL_MEM_ALLOC`、`MBEDTLS_CERTIFICATE_BUNDLE`、`MBEDTLS_SSL_KEEP_PEER_CERTIFICATE`：分别满足 PSRAM、无 pin 正常校验、握手后读取公钥的要求。
+- SDK 既有 `MBEDTLS_EXTERNAL_MEM_ALLOC`：任务书第 1 项要求 TLS 缓冲尽量放 PSRAM。
+- SDK 既有 `MBEDTLS_CERTIFICATE_BUNDLE`：HAL 要求无 pin 时正常验证证书。
+- SDK 既有 `MBEDTLS_SSL_KEEP_PEER_CERTIFICATE`：任务书第 1 项要求读取握手后的公钥哈希。
 
 ## 要改的文档
 
@@ -84,7 +87,8 @@
 - 【实现】`sdkconfig.defaults:11` 强制 mbedTLS 动态分配到 PSRAM；SDK `components/mbedtls/port/esp_mem.c:18–19` 明确使用 `MALLOC_CAP_SPIRAM`。连接对象、6 KiB 栈、1 KiB 接收片段、大消息收发副本都放 PSRAM。TLS 输入/输出缓冲分别保留 SDK 默认 16 KiB/4 KiB，没有缩小 TLS 接收记录上限。
 - 【估算】以任务书内部空闲约 114 KiB、历史最低约 78 KiB 为起点，固定增量 88 字节；lwIP 收发窗口各 5760 字节（本次生成的 sdkconfig），再留 RTOS/信号量、TCP PCB、pbuf 及报文突发余量，新增内部堆按 16–24 KiB 估计。则连接时空闲约 90–98 KiB，最低约 **54–62 KiB**。假设同时只开一个中枢连接、没有其他新增负载；这不是实机最低值。TLS 证书和握手临时分配归 PSRAM，不能把模拟器原先的 6 KiB TLS 内部估计当作本次实测。
 - 【实现】本次连接栈为 6 KiB，模拟器档案仍是未标定的 4 KiB 估计；没有修改共享资源预算。主会话需上机测高水位后同步档案。
-- 【实测】`ink-codex/tools/gcccheck.py build-s31` 检查 `hal_ws_s31.c` 和 `hal_stubs.c`：`gcccheck: 2 compiled, 0 with findings`。Apple clang 的通过没有被当成 Linux 验证。
+- 【实测】`ink-codex/tools/gcccheck.py build-s31` 检查 `hal_ws_s31.c` 和 `hal_stubs.c`：`gcccheck: 2 compiled, 0 with findings`。
+- 【实测】S31 宿主机普通测试：`100% tests passed out of 77`，106.08 秒；同一测试集 ASan/UBSan：`100% tests passed out of 77`，121.03 秒，未报告 sanitizer 错误。内存检查包含新 WS 的连接、收发、释放和反向对照。主工程按 `vendor-common.md` 第 7 条跑普通全量，未另外跑主工程 ASan。
 - 产品新增行数按 diff 的新增行计（含注释和空行，保守统计，不含测试/文档）：设备 **287/500**，中枢 **153/600**。
 
 ## 验证命令
@@ -98,15 +102,23 @@ taskpolicy -c utility env INK_HUB_MODEL_PROVIDER=fake INK_HUB_CAPS="$PWD/build/t
 taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-tests -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"
 taskpolicy -c utility cmake --build build-s31-tests -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-tests --output-on-failure -j2
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-tests-asan -DINK_SANITIZE=ON -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"
+taskpolicy -c utility cmake --build build-s31-tests-asan -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-tests-asan --output-on-failure -j2
 taskpolicy -c utility env INK_DEPS="$INK_DEPS" bash ports/esp32s31/build.sh
 taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build-s31 ports/esp32s31/hal_ws_s31.c ports/esp32s31/hal_stubs.c
 ```
 
-本机原始日志在忽略目录 `work/hub-link-1/`，未把构建产物或本机路径提交。内存检查结果和最终隐私扫描待收尾补入。
+本机原始日志在忽略目录 `work/hub-link-1/`，未把构建产物或本机路径提交。
+
+## 最终差异和隐私检查
+
+- 【实测】按总规则第 6 节扫描 `git diff 6171c2bf8d59238c95f2d548663f8b2ab3c6f43a..HEAD`：无命中，grep 退出 1（表示没有匹配）。未提交密钥、MAC 样式值、本机绝对路径或构建产物。
+- 【实测】`git diff --check` 通过；差异仅包含任务允许的端口接线/新 WS、S31 宿主机测试、模型/测试/说明和本报告，没有共享文档或其他任务的文件。
 
 ## 里程碑
 
-- 已核对工作区干净，当前 HEAD 与指定基线一致，使用既有任务分支。
-- 模型实现首轮 9 项通过，未请求外部服务。S31 宿主机首轮 76 项通过；新增 pin 反向对照也通过（去掉比较后断言失败）。正在构建指定基线固件，以取得同环境的大小对照。
-- 指定基线和本次固件已编过，大小和告警比较见上；主工程普通全量 CTest 正在执行。
-- 主工程 423 项和独立 hub pytest 166 项通过；GCC 检查两份固件源文件无问题。正在运行最终 S31 宿主机全量和 ASan/UBSan。
+- 开工时工作区干净，HEAD 与指定基线一致，使用既有任务分支；先提交验收报告骨架。
+- 模型实现和本机专项测试已提交。
+- S31 实现、宿主机测试、反向对照和固件对照已提交。
+- 普通全量、独立 pytest、S31 普通/内存检查及 GCC 检查全部通过，报告随收尾提交。
