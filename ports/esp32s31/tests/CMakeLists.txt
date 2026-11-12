@@ -57,8 +57,7 @@ foreach(case nat baud started silent dhcp throttle detect privacy)
   add_test(NAME unit-s31-cell-${case} COMMAND test-s31-cell ${case})
 endforeach()
 set_tests_properties(unit-s31-cell unit-s31-cell-nat unit-s31-cell-baud unit-s31-cell-started
-    unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120
-  RUN_SERIAL TRUE) # the vendor modem waits 100 ms for an ACK: under a loaded parallel run the fake peer misses it
+    unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120)
 add_test(NAME unit-s31-wifi COMMAND test-s31-wifi)
 add_executable(test-s31-log ${root}/tests/log/s31.c ${port}/hal_log_s31.c)
 target_include_directories(test-s31-log PRIVATE ${root}/tests/log/s31_stub)
