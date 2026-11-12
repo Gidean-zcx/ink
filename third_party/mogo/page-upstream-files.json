@@ -1,0 +1,172 @@
+{
+  "commit": "864f2f9dc75980a67d2d6b67b17365020b7a50ce",
+  "files": [
+    {
+      "path": "main/book/reader_open.c",
+      "sha256": "8345a3de77db8b81aeb8230347fa3c65269d80a1701a1127c8f52cad30b98f64",
+      "bytes": 1736
+    },
+    {
+      "path": "main/book/reader_open.h",
+      "sha256": "7064606cdbff265676c1256ce2ae946e331bfcf071a353154d600eda2ecd5ac6",
+      "bytes": 3562
+    },
+    {
+      "path": "main/book/reader_chapter.c",
+      "sha256": "64fd40238a03894864fab53ab1e0b1c1694ad3a3230d1e6105d43be1677811b3",
+      "bytes": 6385
+    },
+    {
+      "path": "main/book/reader_chapter.h",
+      "sha256": "c57067bfbbbd21bd2a4b119e05980de56e11039a8f4fc0bae040e756fa0da543",
+      "bytes": 3563
+    },
+    {
+      "function": "reader_footer_height",
+      "source": "main/apps/app_book.c",
+      "first_line": 675,
+      "last_line": 677,
+      "sha256": "03b6ce2d2d85caf5d89bd118e9d4debd736152c97013bde0e697e4c4eb498780"
+    },
+    {
+      "function": "reader_area",
+      "source": "main/apps/app_book.c",
+      "first_line": 680,
+      "last_line": 690,
+      "sha256": "88c27ccff6f43561d831410ce4299d29581205c409cd53b714f839964b39aeb7"
+    },
+    {
+      "function": "body_rect_for_tracking",
+      "source": "main/apps/app_book.c",
+      "first_line": 700,
+      "last_line": 717,
+      "sha256": "c84c8153e6d84e10a83a246a92dac0dac126da84833914cc58984510a5ca80a4"
+    },
+    {
+      "function": "body_rect",
+      "source": "main/apps/app_book.c",
+      "first_line": 718,
+      "last_line": 720,
+      "sha256": "98e8aee00aebcda8bb208abdde5b3095dfa117e5bb8dce599c56ef81978f77be"
+    },
+    {
+      "function": "percent",
+      "source": "main/apps/app_book.c",
+      "first_line": 1317,
+      "last_line": 1324,
+      "sha256": "ac1b5acc86e05a2f9caca698d20fb360316478607d80da6f62750ac798a477bc"
+    },
+    {
+      "function": "draw_reader_outer",
+      "source": "main/apps/app_book.c",
+      "first_line": 3509,
+      "last_line": 3567,
+      "sha256": "2bd0f111a87660853eb63f50b300ec1686e174fa8254aa299e8b2678901d0a7d"
+    },
+    {
+      "function": "draw_reader",
+      "source": "main/apps/app_book.c",
+      "first_line": 3568,
+      "last_line": 3572,
+      "sha256": "069ea2b15acddafb81d74220a68b2283fe1414c7bc333a999e7db90441f8d2a4"
+    },
+    {
+      "function": "reader_bind_chapter",
+      "source": "main/apps/app_book.c",
+      "first_line": 4058,
+      "last_line": 4071,
+      "sha256": "b5b6bf85fcf7587e95f28b9cf7e9c7aa6cd71f19f5c07ef3ff9d981bdb02807e"
+    },
+    {
+      "function": "chapter_restore_images",
+      "source": "main/apps/app_book.c",
+      "first_line": 4234,
+      "last_line": 4238,
+      "sha256": "73ce086ce50d707f680c451f34cd193ab741ded6cbdf91dc402b7fbdc33e0b42"
+    },
+    {
+      "function": "chapter_restore_lead",
+      "source": "main/apps/app_book.c",
+      "first_line": 4240,
+      "last_line": 4247,
+      "sha256": "0367c21d1b9127ddec57512475ea5c47846aabd400838dc4d4d3ee2bd326d56e"
+    },
+    {
+      "function": "load_chapter_at",
+      "source": "main/apps/app_book.c",
+      "first_line": 4249,
+      "last_line": 4317,
+      "sha256": "8cd80d17e3e2d8647c2dcff843f651c0065b09246687c3fb3e7b260a4cdcdec3"
+    },
+    {
+      "function": "load_chapter",
+      "source": "main/apps/app_book.c",
+      "first_line": 4318,
+      "last_line": 4320,
+      "sha256": "7dcf1615bed5805b9647cbe21eadfd450fff806bcca849cf70b4613276e9ad10"
+    },
+    {
+      "function": "skip_hidden_image_pages",
+      "source": "main/apps/app_book.c",
+      "first_line": 4322,
+      "last_line": 4333,
+      "sha256": "ceacf80ce162cac3785ccf8cc73e1577e34bf1cc00650c8a3d28d8d272625f2a"
+    },
+    {
+      "function": "reader_open_replace",
+      "source": "main/apps/app_book.c",
+      "first_line": 4334,
+      "last_line": 4339,
+      "sha256": "de9c00e98edc81c78e645eea891ebb9a90cb0076961ba7f70b2777fb17953c7a"
+    },
+    {
+      "function": "reader_open_describe",
+      "source": "main/apps/app_book.c",
+      "first_line": 4340,
+      "last_line": 4351,
+      "sha256": "b4eb4470eb269844938edd8da18b2ae3ee6d25089c2dc9e233b63d17bdc53a0c"
+    },
+    {
+      "function": "reader_open_load",
+      "source": "main/apps/app_book.c",
+      "first_line": 4352,
+      "last_line": 4356,
+      "sha256": "7e72e61fdbc74eb021f0494df4f1f2d71d6a09b7177c07a6aebf9cc426605565"
+    },
+    {
+      "function": "open_book_impl",
+      "source": "main/apps/app_book.c",
+      "first_line": 4357,
+      "last_line": 4471,
+      "sha256": "0f8d7aba2134b01154c1e7fc6adcb630c1bb48eeab88665d4f32a738141829d2"
+    },
+    {
+      "function": "reader_turn_chrome",
+      "source": "main/apps/app_book.c",
+      "first_line": 5058,
+      "last_line": 5068,
+      "sha256": "4070f6bb228c333ef638e0362215b04a0b69c159de8fff4a62435b77c446f6e2"
+    },
+    {
+      "function": "reader_turn_save",
+      "source": "main/apps/app_book.c",
+      "first_line": 5069,
+      "last_line": 5072,
+      "sha256": "c88bf9191aadc19ec1d29800ee2b7e470e567d6911ee733054e0d8b533ef67b9"
+    },
+    {
+      "function": "reader_turn_load",
+      "source": "main/apps/app_book.c",
+      "first_line": 5074,
+      "last_line": 5076,
+      "sha256": "f281cf65b75f1881fad9ff5e807a08fff4dc118e0abbbf38350c69bd6f534a12"
+    },
+    {
+      "function": "turn_page",
+      "source": "main/apps/app_book.c",
+      "first_line": 5078,
+      "last_line": 5148,
+      "sha256": "ee8010c5a51365c89c958e2d762da5c839e68abe14b2cf470845ca479b9365b5"
+    }
+  ]
+}
