@@ -48,7 +48,7 @@
 
 ## 来源与实现
 
-- 【实现】MP3/WAV/FLAC/Vorbis 解码结果直接交新入口，删除抽点和 Opus 重编码。Ogg Opus 保留原入口。PCM 以源采样率混为单声道，在音频任务中用同一份 SpeexDSP Q4 浮点标量代码转换至 16 kHz，每次最多输出 240 帧；沿用音量、焦点、成员校验及 HAL。新流重建 FIR，停止释放历史及输入，正常 EOF 补零排尽 FIR。
+- 【实现】MP3/WAV/FLAC/Vorbis 解码结果直接交新入口，删除抽点和 Opus 重编码。Ogg Opus 保留原入口。PCM 以源采样率混为单声道，在音频任务中用同一份 SpeexDSP Q4 浮点标量代码转换至 16 kHz，每次最多输出 240 帧；沿用音量、焦点、成员校验及 HAL。新流重建 FIR，停止释放历史及输入，正常 EOF 补零排尽 FIR。打断测试使用原模拟器 Opus 桩的语音优先级流，未连真实中枢朗读。
 - 【实测】SpeexDSP 1.2.1，提交 `1b28a0f61bc31162979e1f26f3981fc3637095c8`，6/6 原文哈希一致，BSD-3-Clause；[SOURCE.md](../../../third_party/speexdsp/SOURCE.md) 列出文件与本地分配适配。
 - 【实现】Q4 基长 64，在 44.1→16 kHz 时为 176 tap；最终 10 kHz 衰减达标。S31 构建配置 `CONFIG_SOC_CPU_HAS_FPU=1`，采用浮点，临时 4 KB 数组落在既有 26624 B 的 PSRAM 音频栈中，没有增栈。Q4 的完整播放仍未达标。
 - 【实现】原厂 `874538e:main/boards/common/audio/bt_audio_codec.cc:66-98` 为 slave/stereo32，`:138-163` 把同一样本复制到两槽；`main/boards/metalio-e-ink4-plus/periph/metalio_audio.cc:94-110,304-312` 没有耳机左右独立发送证据。未证明 mode 2 分离左右，按任务书保持单声道。
@@ -120,4 +120,5 @@
 
 ## 最终检查
 
-- 文件范围、链接、第三方哈希与隐私差异检查：待最终提交后补结果。
+- 【实测】基线至提交差异共 30 个文件，均在任务许可范围；git diff --stat 已检查，未夹带构建产物、共享文档或设计稿。
+- 【实测】任务书指定的隐私正则匹配 0；本报告及新增说明的本地链接全部存在；SpeexDSP 6/6 文件哈希及原文一致。两张 PNG 已目视检查且各小于 300 KB。
