@@ -21,6 +21,7 @@ from ink_hub.speech.fake import FakeASR, FakeTTS
 from ink_hub.voice.flow import run_turn, run_dictation, validate_photos
 from .wire import (ProtocolError, chunks, dumps, encode, frame,
                    notification, page, parse_frame, response)
+from .tls import loopback, proto_allowed
 
 
 @dataclass
@@ -35,8 +36,9 @@ class Session:
 
 
 class Connection:
-    def __init__(self, hub, ws):
+    def __init__(self, hub, ws, remote="127.0.0.1", secure=False):
         self.hub, self.ws = hub, ws
+        self.remote, self.secure = remote, secure
         self.id = secrets.token_hex(8)
         self.device = None
         self.scope = None
@@ -358,7 +360,7 @@ class Connection:
                                  str(exc) if isinstance(exc, (ProtocolError, PermissionError)) else "参数无效")
 
     async def hello(self, rid, params):
-        if rid is None or params.get("proto") != 1 or not self.hub.dev_allow_proto1:
+        if rid is None or params.get("proto") != 1 or not proto_allowed(params.get("proto"), self.remote, self.secure, self.hub.dev_allow_proto1):
             raise ProtocolError("只开放显式启用的开发握手", -32012)
         device = params.get("device")
         if not isinstance(device, str) or not 1 <= len(device.encode()) <= 64:
@@ -458,11 +460,11 @@ class Hub:
         return {"status": "done", "result": {"state": row["state"] if row else "unknown"}}
 
     async def device(self, request):
-        if request.remote not in ("127.0.0.1", "::1"):
+        if not request.secure and not loopback(request.remote):
             raise web.HTTPForbidden(text="开发设备只能从本机连接")
         ws = web.WebSocketResponse(max_msg_size=32768, heartbeat=20)
         await ws.prepare(request)
-        connection = Connection(self, ws)
+        connection = Connection(self, ws, request.remote, request.secure)
         timer = asyncio.get_running_loop().call_later(10, lambda: asyncio.create_task(ws.close()) if not connection.scope else None)
         try:
             async for msg in ws:
@@ -474,6 +476,11 @@ class Hub:
             if self.connections.get(connection.device) is connection:
                 self.connections.pop(connection.device)
         return ws
+
+    def tls_application(self):
+        app = web.Application(client_max_size=4096)
+        app.router.add_get("/v1/device", self.device)
+        return app
 
     def application(self):
         app = web.Application(client_max_size=4096)

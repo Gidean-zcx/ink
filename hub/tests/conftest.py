@@ -2,6 +2,12 @@ import json
 import os
 from pathlib import Path
 
+CAPS_PATH = os.environ.get("INK_HUB_CAPS", "../build/test-out/hub/caps.json")
+SAMPLE_PATH = os.environ.get("INK_HUB_SAMPLES")
+for key in list(os.environ):
+    if key == "DEEPSEEK_API_KEY" or key.startswith("INK_HUB_"):
+        del os.environ[key]
+
 import pytest
 from aiohttp import ClientSession, web
 
@@ -38,14 +44,14 @@ async def make_hub(tmp_path):
 
 @pytest.fixture(scope="session")
 def firmware_caps():
-    path = Path(os.environ.get("INK_HUB_CAPS", "../build/test-out/hub/caps.json"))
+    path = Path(CAPS_PATH)
     if not path.exists():
         pytest.skip("需要先从当前固件导出能力表：见 hub/README.md")
     return json.loads(path.read_text())
 
 
 def pytest_sessionfinish(session, exitstatus):
-    path = os.environ.get("INK_HUB_SAMPLES")
+    path = SAMPLE_PATH
     if path and exitstatus == 0:
         output = Path(path)
         output.parent.mkdir(parents=True, exist_ok=True)
