@@ -14,7 +14,9 @@ def validate(value, schema):
              "string": lambda v: isinstance(v, str), "integer": lambda v: type(v) is int,
              "number": lambda v: type(v) in (int, float), "boolean": lambda v: type(v) is bool,
              "null": lambda v: v is None}
-    if kind and (kind not in types or not types[kind](value)):
+    # JSON Schema allows a list of types (the device exports settings.set value as integer|boolean|string).
+    kinds = kind if isinstance(kind, list) else ([kind] if kind else [])
+    if any(not isinstance(k, str) or k not in types for k in kinds) or (kinds and not any(types[k](value) for k in kinds)):
         raise ProtocolError("参数类型不符合定义")
     if "enum" in schema and value not in schema["enum"]:
         raise ProtocolError("参数不在允许范围")
