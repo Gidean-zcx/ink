@@ -92,14 +92,14 @@ static void component_scene(lv_obj_t *screen, void *arg) {
     ink_ui_pill(screen, "主要", INK_MARGIN, y, 2 * INK_CONTROL, INK_PRIMARY, true, NULL, NULL);
     ink_ui_pill(screen, "次要", INK_MARGIN + 2 * INK_CONTROL + INK_GAP, y, 2 * INK_CONTROL, INK_PRIMARY, false, NULL, NULL);
     ink_ui_circle(screen, "ai", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, y, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
-    y += INK_PRIMARY + INK_GAP;
-    ink_ui_toggle(screen, "开关", true, INK_MARGIN, y, w, NULL, NULL); y += INK_CONTROL + INK_GAP;
-    ink_ui_slider(screen, "亮度", 4, INK_MARGIN, y, w, NULL, NULL); y += INK_SLIDER + INK_GAP;
+    y += INK_PRIMARY + INK_GAP_M;
+    ink_ui_toggle(screen, "开关", true, INK_MARGIN, y, w, NULL, NULL); y += INK_CONTROL + INK_GAP_M;
+    ink_ui_slider(screen, "亮度", 4, INK_MARGIN, y, w, NULL, NULL); y += INK_SLIDER + INK_GAP_M;
     const char *const labels[] = {"自动", "Wi-Fi", "4G"};
-    ink_ui_segments(screen, labels, 3, 0, INK_MARGIN, y, w, NULL, NULL); y += INK_SEGMENT + INK_GAP;
-    ink_ui_list_row(screen, "wifi", "网络", "没有连接", INK_MARGIN, y, w, false, NULL, NULL); y += INK_CONTROL + INK_GAP;
-    ink_ui_card(screen, INK_MARGIN, y, w, INK_ROW_DOUBLE, INK_SURFACE_WHITE); y += INK_ROW_DOUBLE + INK_GAP;
-    ink_ui_pagebar(screen, 1, 3, y, NULL); y += INK_CONTROL + INK_GAP;
+    ink_ui_segments(screen, labels, 3, 0, INK_MARGIN, y, w, NULL, NULL); y += INK_SEGMENT + INK_GAP_M;
+    ink_ui_list_row(screen, "wifi", "网络", "没有连接", INK_MARGIN, y, w, false, NULL, NULL); y += INK_CONTROL + INK_GAP_M;
+    ink_ui_card(screen, INK_MARGIN, y, w, INK_ROW_DOUBLE, INK_SURFACE_WHITE); y += INK_ROW_DOUBLE + INK_GAP_M;
+    ink_ui_pagebar(screen, 1, 3, y, NULL); y += INK_CONTROL + INK_GAP_M;
     ink_ui_notice(screen, "动作的结果就是反馈", y);
 }
 static const ink_activity_t COMPONENTS = {.name = "Components", .create = component_scene, .snapshot = text_snapshot};

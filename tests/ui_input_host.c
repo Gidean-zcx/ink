@@ -135,8 +135,8 @@ static void inspect_focus(void) {
     lv_obj_get_coords(field, &actual); lv_obj_get_coords(heading, &other);
     CHECK(actual.y1 == y && lv_area_get_height(&actual) == height && same_area(&other, &heading_original),
           "snapshot geometry matches LVGL and surrounding content stays in place");
-    CHECK(lv_obj_has_state(field, LV_STATE_FOCUSED) && lv_obj_get_style_outline_width(lv_obj_get_child(field, 1), 0) == ink_ui_px(INK_STROKE),
-          "the real focused field has a visible black outline using the standard stroke");
+    CHECK(lv_obj_has_state(field, LV_STATE_FOCUSED) && lv_obj_get_style_border_width(lv_obj_get_child(field, 1), 0) == ink_ui_px(INK_STROKE_FOCUS) &&
+          !lv_obj_get_style_outline_width(lv_obj_get_child(field, 1), 0), "the focused field has one 3 px border and no extra outline");
     lv_obj_t *space = ink_test_matrix(lv_layer_sys());
     CHECK(space != NULL, "the real system keyboard has a space key");
     if (space) {
@@ -247,7 +247,7 @@ static void check_specs(void) {
             CHECK(lv_obj_get_width(row) == ink_ui_px(INK_CANVAS_W / 2) && lv_obj_get_height(row) == lv_obj_get_height(alone),
                   "a narrowed field in a row keeps its width and the kind's height");
             lv_obj_delete(row); lv_obj_delete(alone);
-            CHECK(lv_obj_get_style_pad_left(area, 0) == ink_ui_px(style == INK_FIELD_SEARCH ? INK_GAP_L + INK_FIELD_SEARCH_ICON + INK_GAP_M : INK_FIELD_PAD) &&
+            CHECK(lv_obj_get_style_pad_left(area, 0) == ink_ui_px(style == INK_FIELD_SEARCH ? INK_FIELD_PAD + INK_FIELD_SEARCH_ICON + INK_GAP_M : INK_FIELD_PAD) &&
                   lv_obj_get_style_border_width(area, 0) == ink_ui_px(INK_FIELD_STROKE), "native inputs use theme padding and stroke");
             CHECK(lv_obj_get_height(label) >= ink_ui_px(ink_ui_line_height(INK_FONT_FIELD_LABEL)) &&
                   lv_obj_get_y(area) >= lv_obj_get_height(label) + ink_ui_px(INK_FIELD_LABEL_GAP), "label fits and stays above its input");

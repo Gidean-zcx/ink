@@ -189,13 +189,13 @@ static ink_font_t *face_of(int px, ink_ui_weight_t weight) {
     char name[64];
     if (px > INK_FONT_HEADING) snprintf(name, sizeof name, "fonts/outfit-%d-%d.inkf", (int)weight, px);
     else if (weight == INK_WEIGHT_REGULAR) snprintf(name, sizeof name, "fonts/sans-44.inkf");
-    /* The existing medium asset remains at its source size; glyphs scale to the token. */
-    else snprintf(name, sizeof name, "fonts/ui-%d-%d.inkf", (int)weight, weight == INK_WEIGHT_MEDIUM ? 36 : INK_FONT_TITLE);
+    else snprintf(name, sizeof name, "fonts/ui-%d-%d.inkf", (int)weight, weight == INK_WEIGHT_MEDIUM ? INK_FONT_LIST : INK_FONT_TITLE);
     *slot = ink_font_open(name);
     return *slot;
 }
 
 const lv_font_t *ink_ui_font_px(int px, ink_ui_weight_t weight) {
+    if (px == INK_FONT_LIST) px = INK_FONT_BODY;
     int level = text_level(), at = token_at(px);
     if ((unsigned)weight > INK_WEIGHT_BOLD) weight = INK_WEIGHT_REGULAR;
     lv_font_t *font = &fitted[level][weight][at];

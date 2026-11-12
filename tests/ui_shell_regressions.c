@@ -93,6 +93,8 @@ static void check_group_row(lv_obj_t *row, bool separated) {
     CHECK(circles == 1 && dividers == (separated ? 1 : 0), "shared group has one icon circle and a divider only between rows");
 }
 static void check_theme(void) {
+    CHECK(ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_MEDIUM) == ink_ui_font_px(INK_FONT_BODY, INK_WEIGHT_MEDIUM),
+          "the legacy reading option and the UI body resolve to the same 38 px face");
     CHECK(INK_CONTROL == 108 && INK_PRIMARY == 108 && INK_FIELD_HEIGHT == 108 && INK_SEGMENT == 108 && INK_SLIDER == 108,
           "all shared single-row controls use the requested 108 px token");
     CHECK(INK_ROW_DOUBLE == 136 && INK_ROW_TRIPLE == 164 && INK_GROUP_TITLE == 64,
@@ -229,6 +231,23 @@ static void inspect(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *o = lv_obj_get_child(root, (int32_t)i);
         if (lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) continue;
+        if (lv_obj_get_child_count(o) == 3) {
+            lv_obj_t *indicator = lv_obj_get_child(o, 1);
+            unsigned dots = lv_obj_get_child_count(indicator);
+            if (lv_obj_check_type(indicator, &lv_label_class) && dots && dots <= 5 &&
+                lv_obj_get_width(lv_obj_get_child(indicator, 0)) == ink_ui_px(INK_PAGE_DOT)) {
+                pages = (int)dots; pager_fits = true;
+                lv_area_t bounds; lv_obj_get_coords(o, &bounds); pager_bottom = bounds.y2;
+                for (unsigned dot = 0; dot < dots; dot++) {
+                    lv_obj_t *mark = lv_obj_get_child(indicator, (int32_t)dot);
+                    lv_area_t a; lv_obj_get_coords(mark, &a);
+                    pager_fits = pager_fits && a.x1 >= bounds.x1 && a.x2 <= bounds.x2 && a.y1 >= bounds.y1 && a.y2 <= bounds.y2;
+                    if (lv_color_eq(lv_obj_get_style_bg_color(mark, 0), ink_ui_ink())) page = (int)dot + 1;
+                }
+                lv_area_t next; lv_obj_get_coords(lv_obj_get_child(o, 2), &next);
+                next_x = (next.x1 + next.x2) / 2; next_y = (next.y1 + next.y2) / 2;
+            }
+        }
         if (lv_obj_check_type(o, &lv_label_class)) {
             const char *s = lv_label_get_text(o);
             lv_obj_t *parent = lv_obj_get_parent(o);
@@ -426,7 +445,9 @@ static void context_tests(void) {
     CHECK(AI("settings.set", "{\"id\":\"power.lock_after_s\",\"value\":600}") && g_rc.status == INK_RC_DONE, "set the actual automatic lock time");
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "return to the settings overview"); quiet();
     wanted = "叫名字已关闭"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the wake setting");
+    CHECK(AI("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "read the next settings page at the larger row size"); quiet();
     wanted = "10 分钟"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the automatic lock time");
+    CHECK(AI("shell.page_prev", NULL) && g_rc.status == INK_RC_DONE, "return to the first settings page"); quiet();
     /* A UI-only connection-state fixture; no pairing or real radio is used. */
     ink_state_set_bool(ink_state_find("bt.connected"), true); quiet();
     wanted = "已连接"; on_ui(read_view); CHECK(label_x >= 0, "a connection-state event updates the visible Bluetooth status");
@@ -509,8 +530,9 @@ static void read_answer(void) {
 static void check_long_layout(void) {
     lv_obj_update_layout(answer_root);
     int height = ink_ui_height() - lv_obj_get_y(answer_root);
-    CHECK(height * 100 >= ink_ui_height() * 53 && height * 100 <= ink_ui_height() * 55,
-          "a long answer expands to about 54 percent of the screen");
+    int expected = 2 * INK_GAP_L + 2 * INK_CONTROL + 3 * INK_GAP_S +
+        5 * ink_ui_line_height(INK_FONT_BODY) + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M;
+    CHECK(height == ink_ui_px(expected), "a long answer uses the exact shared spacing and five body lines");
     CHECK(lv_obj_get_height(answer_label) >= ink_ui_px(5 * ink_ui_line_height(INK_FONT_BODY)), "the expanded answer has five body lines");
     lv_obj_t *source = find_label(answer_root, "出自这一页");
     lv_obj_t *next = bound(answer_root, "ai.panel.next");
@@ -671,7 +693,7 @@ static void snapshot_tests(void) {
     CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open the populated control center"); quiet(); on_ui(read_context);
     for (int i = 0; i < 3; i++) {
         wanted = titles[i]; on_ui(read_view);
-        CHECK((label_x >= 0) == (i > 0) && (strstr(context, titles[i]) != NULL) == (i > 0), "control notification %d agrees between screen and snapshot", i);
+        CHECK((label_x >= 0) == (i == 2) && (strstr(context, titles[i]) != NULL) == (i == 2), "control notification %d agrees between screen and snapshot", i);
     }
     char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)ids[2]);
     CHECK(AI("notify.read", args) && g_rc.status == INK_RC_DONE, "AI marks the displayed notification read"); quiet(); on_ui(read_context);

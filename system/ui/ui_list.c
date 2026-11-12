@@ -68,7 +68,7 @@ ink_ui_list_t *ink_ui_list_create(lv_obj_t *parent, const ink_ui_page_spec_t *pa
     l->fixed = page->action_count; memcpy(l->actions, page->actions, l->fixed * sizeof *l->actions);
     l->page.fields = l->fields; l->page.actions = l->actions;
     l->empty = ink_ui_empty(parent, empty, NULL, NULL, NULL);
-    lv_obj_set_y(l->empty, (lv_obj_get_height(parent) - ink_ui_px(ink_ui_line_height(INK_FONT_NOTE))) / 2);
+    lv_obj_center(l->empty);
     lv_obj_add_event_cb(parent, deleted, LV_EVENT_DELETE, l);
     return l;
 }

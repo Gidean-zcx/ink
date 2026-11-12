@@ -1,0 +1,42 @@
+# 验证与复现
+
+命令中的 `INK_DEPS`、`INK_DESIGN` 使用任务提供的只读目录。所有构建、截图原图、控件树、日志与反向变体留在忽略的构建目录。以下均不启动窗口、不连接设备、不调用真实远端服务。
+
+```sh
+taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON \
+  -DINK_CJK_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 \
+  -DINK_CJK_MEDIUM_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf \
+  -DINK_CJK_BOLD_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf \
+  -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python \
+  -DFETCHCONTENT_SOURCE_DIR_LVGL=$INK_DEPS/build/_deps/lvgl-src \
+  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+taskpolicy -c utility cmake --build build -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2
+```
+
+内存检查：以上命令的构建目录全部换成 `build-asan`，配置时另加 `-DINK_SANITIZE=ON`。不调整资源预算或其他功能开关。普通全量的原始输出在报告中按原话列出；内存构建出现的布局失败与 sanitizer 报错分开统计。
+
+```sh
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python
+taskpolicy -c utility cmake --build build-s31-host -j2
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build-s31-host --output-on-failure -j2
+taskpolicy -c utility env INK_DEPS=$INK_DEPS INK_UPSTREAM=$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus ports/esp32s31/build.sh
+```
+
+截图采集的先后顺序不可颠倒：本次 `before` 是在产品四文件仍为基线、基线构建完成时采集，之后才改产品并构建 `after`。不要在修改后代码上重跑 `--label before` 冒充基线。驱动拒绝覆盖已有证据目录；重新采集时应换一个构建目录。
+
+```sh
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1.py --build build --label before --capture
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1.py --build build --label after --capture
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1.py --build build --label after --check-targets
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1.py --build build --compare docs/tasks/design-lang-1
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1_reverse.py --build build
+```
+
+控件树检查包括有事件或能力绑定的可点对象，以及原生矩阵中的独立按键。按画布及祖先容器裁切后的实际区域检查宽、高；不以整个键盘的大小代替每个键。小于 108 的项会使检查命令返回 1，完整列表在 `build/design-lang-1/after/targets.json`。它是几何检查，不代表已经验证所有控件重叠时的实际命中顺序。
+
+截图取 `clean-scene.png`（无模拟残影），不画调试框、不裁掉页面。每个对比图都有完整左右画布；SHA-256 在 `screenshots.json`。模拟显示模型的 `snap-scene.png` 也保留在构建目录，可另行检查残影。
+
+反向对照临时编译撤去字体合并、自动分组去框、清除按钮透明底、输入焦点边框的版本，运行同一组共用控件断言，要求明确失败且测试执行到结束。脚本不修改产品文件，不依赖 Git 历史，未注册进 ctest。
+
+Linux 警告核对使用任务指定的 `ink-codex/tools/gcccheck.py`，读取 `build/compile_commands.json`，检查改过的可编译 C 文件；结果及跳过项在报告中单列。源码范围、链接、图片大小及隐私检查同样在报告中列出。

@@ -43,7 +43,8 @@ static void tree_node(lv_obj_t *obj, lv_area_t clip, unsigned depth) {
     if (matrix && !lv_obj_has_state(obj, LV_STATE_DISABLED)) {
         lv_buttonmatrix_t *keys = (lv_buttonmatrix_t *)obj;
         for (uint32_t i = 0; i < keys->btn_cnt; i++) {
-            if (lv_buttonmatrix_has_button_ctrl(obj, i, LV_BUTTONMATRIX_CTRL_HIDDEN | LV_BUTTONMATRIX_CTRL_DISABLED)) continue;
+            if (lv_buttonmatrix_has_button_ctrl(obj, i, LV_BUTTONMATRIX_CTRL_HIDDEN) ||
+                lv_buttonmatrix_has_button_ctrl(obj, i, LV_BUTTONMATRIX_CTRL_DISABLED)) continue;
             lv_area_t cell = keys->button_areas[i];
             cell.x1 += own.x1; cell.x2 += own.x1; cell.y1 += own.y1; cell.y2 += own.y1;
             cell.x1 = LV_MAX(cell.x1, clip.x1); cell.x2 = LV_MIN(cell.x2, clip.x2);

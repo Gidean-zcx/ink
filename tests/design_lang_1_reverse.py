@@ -19,6 +19,8 @@ for line in (build / 'CMakeFiles/ink_system.dir/flags.make').read_text().splitli
         key, value = line.split(' = ', 1)
         flags[key] = shlex.split(value)
 mutations = [
+    ('font-merge', 'theme.c',
+     '    if (px == INK_FONT_LIST) px = INK_FONT_BODY;\n', ''),
     ('group-frame', 'theme.c',
      'lv_obj_set_style_border_width(obj, border ? ink_ui_px(INK_STROKE) : 0, 0);',
      'lv_obj_set_style_border_width(obj, border || surface == INK_SURFACE_STATIC ? ink_ui_px(INK_STROKE) : 0, 0);'),

@@ -5,12 +5,11 @@
 #include "ink/sys/ui.h"
 #include "ink/ui_icon_names.h"
 
-/* The design's numbers x 1.2, all of them together, so that its proportions stay (docs/product/legibility.md).
- * Only the keys are not: ten have to fit across the panel. */
+/* Theme sizes precede the text setting. Canvas and side margins stay fixed. */
 enum {
     INK_CANVAS_W = 684, INK_CANVAS_H = 1216, /* Panel geometry, not control sizes. */
     INK_STATUS_BAR = 108,
-    INK_FONT_STATUS = 31, INK_FONT_NOTE = 31, INK_FONT_LIST = 38,
+    INK_FONT_STATUS = 31, INK_FONT_NOTE = 31, INK_FONT_LIST = 36, /* Legacy reading option; UI renders it at 38. */
     INK_FONT_BODY = 38, INK_FONT_SUBTITLE = 38, INK_FONT_TITLE = 53,
     INK_FONT_HEADING = 72, INK_FONT_NUMBER = 106, INK_FONT_CLOCK = 211,
     INK_LINE_STATUS = 43, INK_LINE_NOTE = 43, INK_LINE_LIST = 62,
