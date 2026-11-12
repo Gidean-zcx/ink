@@ -25,6 +25,10 @@ elif case == "late":
     assert block in source
     source = source.replace(block, "").replace("            session.seq = (seq + 1)", block + "            session.seq = (seq + 1)")
     target, name, test = Connection, "receive", "late_uplink"
+elif case == "heard_complete":
+    source = textwrap.dedent(inspect.getsource(Connection.end_session))
+    source = source[:source.index("    if (session and session.history")]
+    target, name, test = Connection, "end_session", "close_after_generation"
 else:
     assert case in ("vendor", "model_close")
     source = textwrap.dedent(inspect.getsource(flow.run_turn))

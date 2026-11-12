@@ -162,7 +162,7 @@ async def run_turn(self, rid, method, params):
         if session:
             logging.getLogger(__name__).info("语音阶段时间：%s", session.times)
         if session and question and self.valid_output(scope, epoch):
-            self.voice_history = (question, text if completed else heard_text(session))
+            self.voice_history = session.history = (question, text if completed else heard_text(session))
         if guard() and not asyncio.current_task().cancelling():
             try:
                 if session:

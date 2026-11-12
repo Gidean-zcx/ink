@@ -262,3 +262,21 @@ async def test_abort_closes_model_suspended_at_yield(make_hub, vendors, opus):
     await device.send("rt.close", {"sid": 7}, rid=False)
     await device.call("caps/list")
     assert closed.is_set()
+
+
+@pytest.mark.parametrize("close,answer", [({"reason": "barge_in", "heard_frames": 0}, ""), ({}, ANSWER)])
+async def test_close_after_generation_finished_preserves_heard_history(make_hub, vendors, opus, close, answer):
+    asr, tts = vendors.providers("doubao", opus)
+    hub, client, url = await make_hub(asr=asr, tts=tts, model=FakeModel(text=ANSWER))
+    device = FakeDevice(client, url)
+    await device.connect()
+    rid = await start_voice(device, encode(opus, 5))
+    connection = hub.connections["example-device"]
+    task = connection.turns[rid]
+    assert (await device.until(rid))["result"]["done"]
+    await task
+    assert connection.voice_history == (TEXT, ANSWER)
+    # Device playback can still lag the completed upstream generation.
+    await device.send("rt.close", {"sid": 7, **close}, rid=False)
+    await device.call("caps/list")
+    assert connection.voice_history == (TEXT, answer)

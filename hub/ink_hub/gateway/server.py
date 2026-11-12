@@ -22,6 +22,7 @@ from ink_hub.ops.metrics import Metrics
 from ink_hub.speech.fake import FakeASR, FakeTTS
 import ink_hub.speech
 from ink_hub.voice.flow import run_turn, run_dictation, validate_photos
+from ink_hub.voice.stream import heard_text
 from .wire import (ProtocolError, chunks, dumps, encode, frame,
                    notification, page, parse_frame, response)
 from .tls import loopback, proto_allowed
@@ -43,6 +44,7 @@ class Session:
     spoken: list = field(default_factory=list)
     sent_frames: int = 0
     heard_frames: int | None = None
+    history: tuple | None = None
 
 
 class Connection:
@@ -326,7 +328,7 @@ class Connection:
                 heard = params.get("heard_frames")
                 if session and type(heard) is int and heard >= 0:
                     session.heard_frames = heard
-                await self.end_session(params.get("sid"))
+                await self.end_session(params.get("sid"), params.get("reason") in ("barge_in", "dismiss", "cancel"))
             elif method == "ai.replay":
                 raise ProtocolError("unavailable", -32021)
             elif method in ("ai.listen", "ai.ask"):
@@ -442,7 +444,7 @@ class Connection:
             authority.add("home", member, role)
         return authority.issue("home", member), authed, epoch
 
-    async def end_session(self, sid):
+    async def end_session(self, sid, interrupted=False):
         session = self.sessions.pop(sid, None)
         if session:
             session.ended.set()
@@ -450,6 +452,9 @@ class Connection:
         for task in tasks:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
+        if (session and session.history is not None and self.voice_history is session.history
+                and (interrupted or session.heard_frames is not None)):
+            self.voice_history = (session.history[0], heard_text(session))
 
     def forget_turn(self, key):
         self.turns.pop(key, None)

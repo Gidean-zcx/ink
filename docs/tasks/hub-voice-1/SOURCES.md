@@ -19,6 +19,8 @@
 | `core/providers/tts/aliyun_stream.py` | `16cbc677d28e87f4295d8ab07285b07ca60c5e4c48aa10ad415ec06c7918f0b3` | `speech/aliyun.py`：FlowingSpeechSynthesizer Start/Run/Stop 和二进制 PCM |
 | `core/providers/tts/huoshan_double_stream.py` | `c3b93c746001ab3b494e34e88b0344554fc829696aabfc9f873804c509b1ebae` | 借其 `audio_params` 请求结构；豆包朗读改接官方 HTTP Chunked-V3，不宣称逐字复制双向协议 |
 
+静音时长按本项目设计的 0.3～0.6 秒收尾预算暂用 600 ms，小智 Silero 默认值为 1000 ms；没有把这个选择写成实机校准值。
+
 这是有出处的适配和裁剪，未把整个小智 Python 项目作为依赖导入。保留一条可背压、可取消的链，未另外增加模型/朗读队列或设备连接管理。成员、儿童提示和工具策略使用本项目既有路径；没有补造一个额度或内容审核系统。
 
 ## 另外核查的官方接口
