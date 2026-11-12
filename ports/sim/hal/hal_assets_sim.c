@@ -1,13 +1,10 @@
-/*
- * Assets in the simulator: host files from the --assets directories, loaded
- * once and treated as flash-mapped (no heap cost). The total must fit the
- * profile's assets partition.
- */
+/* The simulator reads the device packs; compressed mappings use reclaimable PSRAM. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "ink/hal_assets.h"
+#include "reader_miniz/miniz.h"
 #include "sim.h"
 
 #define MAX_ASSETS 256 /* the device looks each name up in the packs, with no table: 64 ran out on a tour of every page */
@@ -16,36 +13,65 @@ static struct {
     char name[96];
     void *data;
     size_t size;
-    int maps;
+    bool compressed;
 } AS[MAX_ASSETS];
 static int nAS;
 static size_t total_bytes;
 
-/* Reads the asset into AS[nAS] from the first --assets directory that has it.
- * Returns 1 if loaded, 0 if not found, -1 on a read error. */
+static uint32_t word(const uint8_t *p) {
+    return (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16 | (uint32_t)p[3] << 24;
+}
 static int load(const char *name) {
-    for (int d = 0; d < g_sim.nasset_dirs; d++) {
+    static const char *const packs[] = {"ink-fonts.bin", "ink-embedded.bin"};
+    for (int d = 0; d < g_sim.nasset_dirs; d++) for (unsigned k = 0; k < 2; k++) {
         char path[600];
-        snprintf(path, sizeof path, "%s/%s", g_sim.asset_dirs[d], name);
+        snprintf(path, sizeof path, "%s/%s", g_sim.asset_dirs[d], packs[k]);
         FILE *f = fopen(path, "rb");
         if (!f) continue;
-        fseek(f, 0, SEEK_END);
-        long n = ftell(f);
-        fseek(f, 0, SEEK_SET);
-        void *buf = sim_host_malloc((size_t)n ? (size_t)n : 1);
-        if (!buf || fread(buf, 1, (size_t)n, f) != (size_t)n) {
+        uint8_t h[12], e[104];
+        if (fread(h, 1, sizeof h, f) != sizeof h || memcmp(h, "INKA", 4) ||
+            word(h + 8) < 12 || word(h + 4) > (word(h + 8) - 12) / 104) { fclose(f); return -1; }
+        uint32_t count = word(h + 4), bytes = word(h + 8);
+        for (uint32_t i = 0; i < count; i++) {
+            if (fread(e, 1, sizeof e, f) != sizeof e || !memchr(e, 0, 96)) { fclose(f); return -1; }
+            if (strcmp((const char *)e, name)) continue;
+            uint32_t off = word(e + 96), n = word(e + 100) & 0x7fffffffu;
+            if (off < 12 + count * 104 || off > bytes || n > bytes - off || fseek(f, off, SEEK_SET)) {
+                fclose(f); return -1;
+            }
+            void *buf = sim_host_malloc(n ? n : 1);
+            if (!buf || fread(buf, 1, n, f) != n) { fclose(f); sim_host_free(buf); return -1; }
             fclose(f);
-            sim_host_free(buf);
-            return -1;
+            sim_copy_name(AS[nAS].name, sizeof AS[nAS].name, name);
+            AS[nAS].data = buf;
+            AS[nAS].size = n;
+            AS[nAS].compressed = (word(e + 100) & 0x80000000u) != 0;
+            return 1;
         }
         fclose(f);
-        snprintf(AS[nAS].name, sizeof AS[nAS].name, "%s", name);
-        AS[nAS].data = buf;
-        AS[nAS].size = (size_t)n;
-        AS[nAS].maps = 1;
-        return 1;
     }
     return 0;
+}
+static const void *mapped(int i, size_t *size) {
+    const uint8_t *p = AS[i].data;
+    size_t n = AS[i].size;
+    if (!AS[i].compressed) { if (size) *size = n; return p; }
+    if (n < 4 || !word(p) || word(p) > 5 * 1024 * 1024) return NULL;
+    size_t want = word(p), in = n - 4, out = want;
+    const char *prev = osal_mem_tag("assets");
+    uint8_t *buf = osal_malloc(want, OSAL_MEM_EXTERNAL);
+    tinfl_decompressor *d = osal_malloc(sizeof *d, OSAL_MEM_EXTERNAL);
+    osal_mem_tag(prev);
+    tinfl_status status = TINFL_STATUS_FAILED;
+    if (d && buf) {
+        tinfl_init(d);
+        status = tinfl_decompress(d, p + 4, &in, buf, buf, &out,
+            TINFL_FLAG_PARSE_ZLIB_HEADER | TINFL_FLAG_USING_NON_WRAPPING_OUTPUT_BUF);
+    }
+    osal_free(d);
+    if (status != TINFL_STATUS_DONE || out != want || in != n - 4) { osal_free(buf); return NULL; }
+    if (size) *size = want;
+    return buf;
 }
 
 typedef struct {
@@ -59,30 +85,28 @@ static void load_on_host(void *p) {
 }
 
 const void *hal_asset_map(const char *name, size_t *size) {
+    if (size) *size = 0;
+    if (!name) return NULL;
     for (int i = 0; i < nAS; i++)
         if (!strcmp(AS[i].name, name)) {
-            AS[i].maps++;
-            if (size) *size = AS[i].size;
-            return AS[i].data;
+            return mapped(i, size);
         }
     if (nAS >= MAX_ASSETS || strstr(name, "..")) return NULL;
     load_t l = {name, 0};
     vtk_host_call(load_on_host, &l); /* reading the host file is not the caller's stack */
     if (l.result < 0) return NULL;
     if (l.result > 0) {
-        void *buf = AS[nAS].data;
         size_t n = AS[nAS].size;
-        nAS++;
+        int i = nAS++;
         total_bytes += n;
         sim_metric_set("assets.mapped_bytes", (double)total_bytes);
         if (g_profile.assets_partition_bytes && total_bytes > g_profile.assets_partition_bytes)
             sim_warn("assets: %zu KiB mapped exceeds the %zu KiB assets partition of this device", total_bytes / 1024,
                      g_profile.assets_partition_bytes / 1024);
         sim_charge_ns_always(SIM_US(200)); /* partition table lookup + MMU mapping */
-        if (size) *size = n;
-        return buf;
+        return mapped(i, size);
     }
-    sim_warn("asset '%s' not found in the --assets directories", name);
+    sim_warn("asset '%s' not found in the device asset packs", name);
     return NULL;
 }
 
@@ -152,6 +176,5 @@ void sim_assets_report(void) {
 }
 
 void hal_asset_unmap(const void *data) {
-    for (int i = 0; i < nAS; i++)
-        if (AS[i].data == data && AS[i].maps > 0) AS[i].maps--;
+    if (data && pools_owns(data)) osal_free((void *)data);
 }

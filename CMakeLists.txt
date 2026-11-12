@@ -323,6 +323,14 @@ target_link_libraries(ink_apps PUBLIC ink_system)
 target_compile_options(ink_apps PRIVATE ${INK_WARN})
 include(apps/reader/reader_build.cmake)
 ink_reader_build(ink_apps ink_system ink_lvgl)
+# The existing inflater; the HAL supplies its PSRAM output and workspace.
+add_library(ink_miniz STATIC ${reader_third_party}/reader_miniz/miniz.c)
+target_include_directories(ink_miniz PUBLIC third_party PRIVATE system/include platform/include)
+target_compile_definitions(ink_miniz PUBLIC MINIZ_NO_MALLOC MINIZ_NO_ZLIB_APIS MINIZ_NO_ARCHIVE_APIS
+  MINIZ_NO_STDIO MINIZ_NO_TIME MINIZ_NO_DEFLATE_APIS mz_version=ink_asset_mz_version
+  miniz_def_alloc_func=ink_asset_alloc miniz_def_realloc_func=ink_asset_realloc miniz_def_free_func=ink_asset_free)
+target_compile_options(ink_miniz PRIVATE -w)
+target_link_libraries(ink_port_sim PRIVATE ink_miniz)
 add_executable(sim-reader-epub simulator/runtime/sim_main.c tests/reader_epub/device.c)
 target_include_directories(sim-reader-epub PRIVATE tests apps/reader)
 target_link_libraries(sim-reader-epub PRIVATE ink_apps ink_system ink_port_sim)
@@ -531,6 +539,14 @@ add_custom_command(OUTPUT ${INK_ASSETS_DIR}/ime/base.ikd
   COMMENT "imedict: the shipping word list in the asset pack")
 add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt ${INK_TEST_CONTENT}/.system/ime/base.ikd
   ${INK_ASSETS_DIR}/ime/base.ikd)
+add_custom_target(ink_assets ALL
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/asset_pack.py ${INK_ASSETS_DIR} --out ${INK_ASSETS_DIR}
+  BYPRODUCTS ${INK_ASSETS_DIR}/ink-fonts.bin ${INK_ASSETS_DIR}/ink-embedded.bin
+  DEPENDS ink_icons ink_test_content ink_sample)
+if(INK_HAVE_FONTS)
+  add_dependencies(ink_assets ink_fonts ink_ui_fonts)
+endif()
+add_dependencies(ink_port_sim ink_assets)
 
 # Keep the engine's original ordering fixture separate from the shipping data.
 set(INK_MINI_CONTENT ${CMAKE_BINARY_DIR}/mini-content)
@@ -706,6 +722,10 @@ add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i
 add_test(NAME ui-icons-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_icon_check_test.py)
 add_test(NAME ui-assets COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_assets_check.py ${INK_ASSETS_DIR})
 add_test(NAME unit-asset-pack COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/asset_pack_test.py)
+add_executable(sim-asset-pack simulator/runtime/sim_main.c tests/asset_pack/device.c)
+target_link_libraries(sim-asset-pack PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-asset-pack PRIVATE ${INK_WARN})
+add_test(NAME integration-asset-pack COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/asset_pack/run.py --build ${CMAKE_BINARY_DIR})
 add_test(NAME unit-flash-plan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/flash_plan_test.py)
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
 target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)

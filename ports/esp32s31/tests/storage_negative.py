@@ -50,10 +50,13 @@ def main():
         for name, old, new in [
             ('first-pack', 'find(g_fonts, 4608 * 1024, name, size)', 'find(NULL, 4608 * 1024, name, size)'),
             ('second-pack', 'return p ? p : find(ink_embedded_start,', 'return p ? p : find(NULL,'),
+            ('inflate', 'if (stored & 0x80000000u)', 'if (false)'),
+            ('asset-unmap', 'osal_free((void *)data)', '(void)data'),
         ]:
             changed = work / 'assets.c'; changed.write_text(asset_source.replace(old, new))
             command = ['cc', '-std=gnu11', '-Wall', '-Wextra', '-Werror', '-I', str(tests / 'storage_stub'),
                        '-I', str(root / 'platform/include'), str(tests / 'assets.c'), str(changed),
+                       '-I', str(root / 'third_party'), str(build / 'libtest-asset-miniz.a'),
                        str(build / 'embedded.S'), '-o', str(work / 'test')]
             c = subprocess.run(command, capture_output=True, text=True); assert c.returncode == 0, c.stderr
             r = subprocess.run([str(work / 'test'), str(build / 'first.bin')], capture_output=True, text=True)
@@ -74,7 +77,7 @@ def main():
             r = subprocess.run(['python3', str(script)], capture_output=True, text=True)
             assert r.returncode != 0 and 'FAIL:' in r.stderr, f'{name}: {r.stderr}'
             print(f'{name}: unittest={r.returncode}')
-    print('reverse controls: 8/8 rejected; both storage baselines passed')
+    print('reverse controls: 10/10 rejected; both storage baselines passed')
 
 
 if __name__ == '__main__':

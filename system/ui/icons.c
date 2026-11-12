@@ -41,6 +41,7 @@ lv_obj_t *ink_ui_icon(lv_obj_t *parent, const char *name, int px, ink_ui_icon_lo
             osal_panic("missing or invalid required icon: %s", key);
         hal_asset_access(data, size);
         if (!unpack(data + 8, size - 8, pixels, want)) osal_panic("damaged icon: %s", key);
+        hal_asset_unmap(data);
         asset = &cache[used++];
         snprintf(asset->key, sizeof asset->key, "%s", key);
         asset->dsc.header.magic = LV_IMAGE_HEADER_MAGIC;

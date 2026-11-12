@@ -29,17 +29,18 @@ empty.mkdir()
 bare = work / "assets-no-ime"
 bare.mkdir()
 for item in (build / "assets").iterdir():
-    if item.name != "ime":
+    if item.name != "ime" and not item.name.startswith('ink-'):
         (bare / item.name).symlink_to(item)
 (bare / "ime").mkdir()
 (bare / "ime/base.ikd").write_bytes(b"")
+subprocess.run([sys.executable, str(ROOT / 'tools/asset_pack.py'), str(bare), '--out', str(bare)], check=True)
 # flash: the card's copy is rubbish, so the engine falls through to the pack's.
 spoilt = work / "spoilt-content"
 (spoilt / ".system/ime").mkdir(parents=True)
 (spoilt / ".system/ime/base.ikd").write_bytes(b"IKD1" + bytes(60))
 summary = {"cases": len(corpus), "bytes": shipping.stat().st_size,
            "sha256": hashlib.sha256(shipping.read_bytes()).hexdigest(), "reproducible": True}
-# flash: no usable card copy, the asset pack's word list mapped in place: the same answers, and no RAM for it.
+# flash: no usable card copy; the embedded word list inflates to PSRAM through the asset HAL.
 for phase in ("dictionary", "flash", "fallback", "reverse"):
     output = work / phase
     result = subprocess.run([str(build / "sim-ime-lexicon"),
@@ -84,14 +85,16 @@ for phase in ("dictionary", "flash", "fallback", "reverse"):
         assert groups["initials"]["first"] >= 10 and groups["initials"]["five"] >= 14, groups
     summary[phase] = {"first": first, "five": five, "first_percent": round(first * 100 / len(corpus), 2),
                       "five_percent": round(five * 100 / len(corpus), 2),
-                      "load_ms": metrics["ime.load_ms"], "external_bytes": metrics["ime.external_bytes"], "groups": groups}
+                      "load_ms": metrics["ime.load_ms"], "external_bytes": metrics["ime.external_bytes"],
+                      "asset_external_bytes": metrics.get('mem.tag.assets.external.live_bytes', 0), "groups": groups}
     (work / (phase + "-candidates.json")).write_text(json.dumps(details, ensure_ascii=False, indent=2) + "\n")
 assert summary["dictionary"]["first"] > summary["fallback"]["first"]
 assert summary["dictionary"]["five"] > summary["fallback"]["five"]
 assert summary["dictionary"]["external_bytes"]["max"] == shipping.stat().st_size
 assert summary["fallback"]["external_bytes"]["max"] == 0
 assert (summary["flash"]["first"], summary["flash"]["five"]) == (summary["dictionary"]["first"], summary["dictionary"]["five"])
-assert summary["flash"]["external_bytes"]["max"] == 0, "the mapped word list must not be copied into RAM"
+assert summary["flash"]["external_bytes"]["max"] == 0, "the service owns no second copy of the HAL mapping"
+assert shipping.stat().st_size <= summary['flash']['asset_external_bytes'] < shipping.stat().st_size + 16, "compressed word list is accounted in PSRAM (allocator alignment)"
 (work / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
 print(json.dumps(summary, ensure_ascii=False, indent=2))
 if os.environ.get("INK_KEEP_EVIDENCE"):

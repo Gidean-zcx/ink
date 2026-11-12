@@ -3,6 +3,7 @@
 import argparse
 from pathlib import Path
 import struct
+import zlib
 
 FONT_LIMIT = 4608 * 1024
 APP_LIMIT = 5 * 1024 * 1024
@@ -13,14 +14,19 @@ HEADER = struct.Struct('<4sII')
 ENTRY = struct.Struct('<96sII')
 
 
-def pack(items):
+def pack(items, compress=False):
     offset = HEADER.size + ENTRY.size * len(items)
     table, payload = bytearray(), bytearray()
     for name, data in items:
         key = name.encode('utf-8')
         if len(key) >= 96 or b'\0' in key:
             raise ValueError(f'asset name exceeds 95 bytes: {name}')
-        table += ENTRY.pack(key, offset, len(data))
+        stored = len(data)
+        if compress:
+            zipped = struct.pack('<I', len(data)) + zlib.compress(data, 9)
+            if len(zipped) < len(data):
+                data, stored = zipped, len(zipped) | 0x80000000
+        table += ENTRY.pack(key, offset, stored)
         payload += data
         offset += len(data)
     return HEADER.pack(b'INKA', len(items), offset) + table + payload
@@ -46,7 +52,7 @@ def split(assets, font_limit=FONT_LIMIT, embedded_limit=EMBEDDED_LIMIT):
         groups[group].append((path.relative_to(assets).as_posix(), data))
         if not second:
             used += cost
-    result = tuple(pack(group) for group in groups)
+    result = tuple(pack(group, compress=(i == 1)) for i, group in enumerate(groups))
     for label, data, limit in zip(('font_data', 'embedded'), result, (font_limit, embedded_limit)):
         if len(data) > limit:
             raise ValueError(f'{label}: {len(data)} bytes exceed {limit} by {len(data) - limit} bytes')
