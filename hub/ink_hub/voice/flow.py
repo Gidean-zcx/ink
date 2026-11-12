@@ -11,11 +11,6 @@ from ink_hub.gateway.wire import ANSWER_BYTES, ANSWER_CUT, ProtocolError, answer
 from .stream import heard_text, recognize, speak, split_speech
 
 
-def sentences(text):
-    for match in re.finditer(r"[^。！？.!?；;\n]*[。！？.!?；;\n]|[^。！？.!?；;\n]+$", text):
-        yield from chunks(match.group())
-
-
 def validate_photos(attachments):
     if not isinstance(attachments, list) or len(attachments) > 1:
         raise ProtocolError("照片附件无效")

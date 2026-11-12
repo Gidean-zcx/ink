@@ -99,42 +99,68 @@ PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/contract/
 
 ## 怎么开真的语音
 
-识别用本机 whisper.cpp 的 `whisper-cli`，朗读用 macOS 自带 `say`；音频统一为真 Opus、16 kHz 单声道、60 ms（960 个采样）。不新增 Python 依赖。先在仓库根目录编设备同源的定点 libopus（只读已有压缩包，校验 SHA-256，不联网）：
+识别支持常驻 whisper.cpp HTTP 服务、sherpa-onnx 的流式 Paraformer，以及豆包、阿里的流式接口；朗读保留 macOS `say`，增加豆包 HTTP Chunked 和阿里 WebSocket 流式朗读。音频仍为真 Opus、16 kHz 单声道、60 ms。没有下载新模型、安装可选 Python 库或调用真实厂商。
+
+先设置 `INK_DEPS`，编译已有同源 Opus（最多两个编译进程）：
 
 ```sh
 taskpolicy -c utility sh hub/tools/build_opus.sh
-```
-
-先设置 `INK_DEPS` 指向已有构建依赖目录。输出为 `work/hub-opus/libopus.dylib`（Mac）或 `libopus.so`（Linux）；Linux 无 `taskpolicy`，直接 `sh hub/tools/build_opus.sh`。脚本最多两个编译进程，源包的 BSD-3-Clause 许可证保留在输出目录的 `esp-opus/COPYING` 中。没有压缩包就明确失败，不自动下载。
-
-Whisper 程序和模型须另行取得用户同意后准备；[本次报告](../docs/tasks/hub-real-1/REPORT.md)列出版本、模型大小、哈希和编译命令。本任务没有下载模型，也没有编译或运行真实 Whisper。
-
-```sh
-export INK_HUB_ASR=whisper
-export INK_HUB_TTS=say
 export INK_HUB_LIBOPUS="$PWD/work/hub-opus/libopus.dylib"
-export INK_HUB_WHISPER_CLI="$PWD/work/whisper.cpp/build/bin/whisper-cli"
-export INK_HUB_WHISPER_MODEL="$PWD/work/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin"
-export INK_HUB_SAY_VOICE=Tingting
-say -v '?'
 ```
 
-`say -v '?'` 的 `zh_CN` 行是普通话声音；默认 `Tingting`。`SayTTS.synthesize(text, lang="en")` 用 `Samantha` 英文声音。当前网关还不传 `lang`，由 `hub-pair-1` 或主会话接上；接口默认中文。Linux 可以用真识别、假朗读（`INK_HUB_TTS=fake`），原生 `say` 只能在 Mac 运行。
-
-`speech.from_environment()` 返回 `(asr, tts)`；`INK_HUB_ASR` 只接受 `fake`/`whisper`，`INK_HUB_TTS` 只接受 `fake`/`say`，假实现返回 `None` 以沿用 `Hub` 的默认值。都不设仍用假语音；显式选真实实现而缺程序、模型或共享库会抛中文启动错误，不回退成假的。
-
-网关启动时调用 `ink_hub.speech.from_environment()` 选识别和朗读（`hub-pair-1` 接上），设好上面的环境变量后用 `hub/deploy/start-mac.sh` 起中枢即可。
-
-识别先拦截不足 0.3 秒或 RMS 低于 100（约 -50 dBFS）的 PCM，再写入 700 权限的临时目录；Whisper 使用 `-l zh` 和简体普通话提示词。阈值是暂定经验值，需按设备麦克风实测调校。朗读文字只经标准输入交给 `say`，不出现在命令行参数；音频和识别结果用完删除，子进程输出不进日志。两种程序均有 20 秒超时，取消时终止并回收子进程。
-
-无需模型、无需外网的语音测试（缺 libopus 时可从 `INK_DEPS` 中的同一压缩包编译）：
+Linux 的共享库后缀是 `.so`，命令去掉 `taskpolicy -c utility`。Whisper 要先启动常驻服务端；使用已有源码，在可写副本里构建，避免上游 CMake 写入只读依赖：
 
 ```sh
-INK_HUB_CAPS="$INK_DEPS/build/test-out/hub/caps.json" PYTHONPATH=hub \
-  taskpolicy -c utility "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/speech
+mkdir -p work/whisper-src
+git -C "$INK_DEPS/work/whisper.cpp" archive HEAD | tar -x -C work/whisper-src
+taskpolicy -c utility cmake -S work/whisper-src -B work/whisper-server-build \
+  -DCMAKE_BUILD_TYPE=Release -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_SERVER=ON
+taskpolicy -c utility cmake --build work/whisper-server-build --target whisper-server -j2
+VECLIB_MAXIMUM_THREADS=2 taskpolicy -c utility work/whisper-server-build/bin/whisper-server \
+  -m "$INK_DEPS/work/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin" \
+  --host 127.0.0.1 --port 8080 -t 2 -l zh -fa -ng
 ```
 
-假 Whisper 检查 WAV 的实际格式与时长，假 `say` 输出正弦波 WAV，设备问答和听写仍经过真实编解码。Mac 上还会运行原生 `say` 往返测试；Linux 明确跳过这项。需要保留解码 WAV 时加测试变量 `INK_HUB_SAY_EVIDENCE=docs/tasks/hub-real-1/say-roundtrip.wav`。语音专项不证明设备音频输出或真实识别质量。
+另开终端设置中枢并启动：
+
+```sh
+export INK_HUB_ASR=whisper INK_HUB_TTS=say
+export INK_HUB_WHISPER_URL=http://127.0.0.1:8080/inference
+export INK_HUB_SAY_VOICE=Tingting
+export INK_HUB_LIBOPUS="$PWD/work/hub-opus/libopus.dylib"
+PYTHONPATH=hub "$INK_DEPS/hub/.venv/bin/python" -m ink_hub serve --data work/hub-data
+```
+
+`-ng` 使用 CPU：本任务 Metal 初始化分配失败，因此报告数字用两个 CPU 线程；不要把它当作 GPU 速度。Whisper 服务端没有原生中间结果，这个接法在说完后只推理一次；实时中间结果用 Paraformer 或云端接法。模型由服务端加载一次，不再为每句起 `whisper-cli`。取消 HTTP 会触发该固定上游版本的原生 abort 回调。模型、程序版本与时延见[执行报告](../docs/tasks/hub-voice-1/REPORT.md)。
+
+`speech.from_environment()` 仍返回 `(asr, tts)`，`fake` 返回 `None` 沿用默认假实现。可选值：`INK_HUB_ASR=fake/whisper/sherpa/doubao/aliyun`，`INK_HUB_TTS=fake/say/doubao/aliyun`。`sherpa` 需要已安装 `numpy`、`sherpa-onnx`，以及 `INK_HUB_SHERPA_MODEL` 目录中的 `encoder.int8.onnx`、`decoder.int8.onnx`、`tokens.txt`；不自动取得它们。`INK_HUB_VAD_MODEL` 可指定 Silero ONNX 文件，需要 `numpy`、`onnxruntime`；未配置时沿用 RMS 100 的能量判断，连续 600 ms 静音结束。能量判断的噪声适应性没有实机验证。
+
+豆包使用 `INK_HUB_DOUBAO_APPID/TOKEN`，阿里使用 `INK_HUB_ALIYUN_APPKEY/TOKEN`；朗读还需要对应前缀的 `VOICE`。这些是环境变量名称，不应写进配置文件、日志或提交。本任务仅使用本机假服务器；真实账号接入、额度和云端延迟没有验证，不提供自动获取或刷新令牌。选择厂商必须由运行者显式配置。
+
+按设备 `interim_ms` 节流中间结果，0 只发定稿；听写走 `rt.asr`，对话走 `ai.stt`。第一句至少 8 字后可在逗号切开；厂商返回的 PCM 足够一帧即转 Opus 发送，仍按实时限速。`rt.close` 取消当前识别、模型、朗读和未发输出。最近一轮历史按 `heard_frames` 截断；缺少位置时减去 5 帧预缓冲，句内暂按每秒 5 字估算。历史仅在本连接内存保留，换成员或断线清空。
+
+阶段时间记录在会话 `times`，日志只记阶段时间，不记正文。`say` 仍先完成每个短句 WAV，再发送这一句的音频；云端接法会在整句合成完成前发首包。专项与手动反向对照：
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=hub taskpolicy -c utility \
+  "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/speech
+# 下条必须退出 1，显示三个取消测试失败；不修改文件，不加入 CTest。
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=hub taskpolicy -c utility \
+  "$INK_DEPS/hub/.venv/bin/python" hub/tests/speech/reverse_cancel.py
+```
+
+基准只读已有模型，用 `say` 生成三句中文上行，假 LLM，分常驻 Whisper＋say、本机假云端两组。它量中枢发出时间，未覆盖实际设备播放和真实网络：
+
+```sh
+env -u DEEPSEEK_API_KEY -u INK_HUB_ASR -u INK_HUB_TTS \
+  PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=hub INK_HUB_MODEL_PROVIDER=fake \
+  taskpolicy -c utility "$INK_DEPS/hub/.venv/bin/python" hub/tests/speech/benchmark.py \
+  --whisper-server "$PWD/work/whisper-server-build/bin/whisper-server" \
+  --model "$INK_DEPS/work/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin" \
+  --runs 3 --out work/voice-latency.json
+```
+
+[设备回声消除调研](../docs/tasks/hub-voice-1/AEC.md)仅为代码核查，不能据此开启 S31 AFE。
 
 ## 安装骨架
 

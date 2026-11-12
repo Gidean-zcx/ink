@@ -1,0 +1,317 @@
+{
+  "runs_per_phrase": 3,
+  "phrases": [
+    "现在几点了。",
+    "请给我讲一个简短的故事。",
+    "今天适合读什么书。"
+  ],
+  "boundary": "最后一个上行采样提交后到中枢文字/音频发出；假 LLM；无设备播放和真实云网络",
+  "local": {
+    "summary": {
+      "successes": 9,
+      "failures": 0,
+      "first_text": {
+        "p50_ms": 17737.4,
+        "p95_ms": 18472.83
+      },
+      "first_audio": {
+        "p50_ms": 18909.91,
+        "p95_ms": 19957.54
+      },
+      "asr_final": {
+        "p50_ms": 17736.99,
+        "p95_ms": 18469.65
+      },
+      "model_first_text": {
+        "p50_ms": 17737.23,
+        "p95_ms": 18471.53
+      },
+      "first_sentence": {
+        "p50_ms": 17737.41,
+        "p95_ms": 18472.85
+      }
+    },
+    "samples": [
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 14414.53,
+          "model_first_text": 14415.21,
+          "first_text": 14415.62,
+          "first_sentence": 14415.63,
+          "first_audio": 15719.49
+        },
+        "recognized": "现在几点了?",
+        "uplink_ms": 1140,
+        "phrase": "现在几点了。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 13388.84,
+          "model_first_text": 13389.35,
+          "first_text": 13390.09,
+          "first_sentence": 13390.1,
+          "first_audio": 14433.6
+        },
+        "recognized": "请给我讲一个简短的故事。",
+        "uplink_ms": 2280,
+        "phrase": "请给我讲一个简短的故事。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 11421.84,
+          "model_first_text": 11422.11,
+          "first_text": 11422.33,
+          "first_sentence": 11422.35,
+          "first_audio": 12528.87
+        },
+        "recognized": "今天适合读什么书?",
+        "uplink_ms": 1800,
+        "phrase": "今天适合读什么书。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 18469.65,
+          "model_first_text": 18471.53,
+          "first_text": 18472.83,
+          "first_sentence": 18472.85,
+          "first_audio": 19511.44
+        },
+        "recognized": "现在几点了?",
+        "uplink_ms": 1140,
+        "phrase": "现在几点了。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 18400.58,
+          "model_first_text": 18401.46,
+          "first_text": 18402.05,
+          "first_sentence": 18402.07,
+          "first_audio": 19581.87
+        },
+        "recognized": "请给我讲一个简短的故事。",
+        "uplink_ms": 2280,
+        "phrase": "请给我讲一个简短的故事。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 18133.16,
+          "model_first_text": 18133.51,
+          "first_text": 18133.81,
+          "first_sentence": 18133.83,
+          "first_audio": 19381.43
+        },
+        "recognized": "今天适合读什么书?",
+        "uplink_ms": 1800,
+        "phrase": "今天适合读什么书。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 17736.99,
+          "model_first_text": 17737.23,
+          "first_text": 17737.4,
+          "first_sentence": 17737.41,
+          "first_audio": 18909.91
+        },
+        "recognized": "现在几点了?",
+        "uplink_ms": 1140,
+        "phrase": "现在几点了。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 18249.03,
+          "model_first_text": 18249.28,
+          "first_text": 18249.53,
+          "first_sentence": 18249.56,
+          "first_audio": 19957.54
+        },
+        "recognized": "请给我讲一个简短的故事。",
+        "uplink_ms": 2280,
+        "phrase": "请给我讲一个简短的故事。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 17721.33,
+          "model_first_text": 17721.83,
+          "first_text": 17722.63,
+          "first_sentence": 17722.66,
+          "first_audio": 18765.94
+        },
+        "recognized": "今天适合读什么书?",
+        "uplink_ms": 1800,
+        "phrase": "今天适合读什么书。"
+      }
+    ]
+  },
+  "fake_cloud": {
+    "summary": {
+      "successes": 9,
+      "failures": 0,
+      "first_text": {
+        "p50_ms": 2.51,
+        "p95_ms": 3.63
+      },
+      "first_audio": {
+        "p50_ms": 7.52,
+        "p95_ms": 19.8
+      },
+      "asr_final": {
+        "p50_ms": 1.51,
+        "p95_ms": 1.71
+      },
+      "model_first_text": {
+        "p50_ms": 2.26,
+        "p95_ms": 2.88
+      },
+      "first_sentence": {
+        "p50_ms": 2.53,
+        "p95_ms": 3.75
+      }
+    },
+    "samples": [
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 1.58,
+          "model_first_text": 2.34,
+          "first_text": 2.68,
+          "first_sentence": 2.7,
+          "first_audio": 11.47
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 1140,
+        "phrase": "现在几点了。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 0.66,
+          "model_first_text": 1.19,
+          "first_text": 1.51,
+          "first_sentence": 1.53,
+          "first_audio": 4.86
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 2280,
+        "phrase": "请给我讲一个简短的故事。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 1.27,
+          "model_first_text": 1.93,
+          "first_text": 2.38,
+          "first_sentence": 2.39,
+          "first_audio": 7.52
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 1800,
+        "phrase": "今天适合读什么书。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 1.71,
+          "model_first_text": 2.26,
+          "first_text": 2.52,
+          "first_sentence": 2.54,
+          "first_audio": 6.28
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 1140,
+        "phrase": "现在几点了。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 1.51,
+          "model_first_text": 1.93,
+          "first_text": 2.15,
+          "first_sentence": 2.16,
+          "first_audio": 19.8
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 2280,
+        "phrase": "请给我讲一个简短的故事。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 1.65,
+          "model_first_text": 2.26,
+          "first_text": 2.51,
+          "first_sentence": 2.53,
+          "first_audio": 5.71
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 1800,
+        "phrase": "今天适合读什么书。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 1.16,
+          "model_first_text": 1.7,
+          "first_text": 1.88,
+          "first_sentence": 1.89,
+          "first_audio": 5.91
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 1140,
+        "phrase": "现在几点了。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 1.56,
+          "model_first_text": 2.88,
+          "first_text": 3.31,
+          "first_sentence": 3.33,
+          "first_audio": 10.73
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 2280,
+        "phrase": "请给我讲一个简短的故事。"
+      },
+      {
+        "success": true,
+        "ms": {
+          "speech_end": 0.0,
+          "asr_final": 0.75,
+          "model_first_text": 2.75,
+          "first_text": 3.63,
+          "first_sentence": 3.75,
+          "first_audio": 16.64
+        },
+        "recognized": "这是本机合成的测试文字。",
+        "uplink_ms": 1800,
+        "phrase": "今天适合读什么书。"
+      }
+    ]
+  }
+}

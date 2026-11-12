@@ -73,16 +73,10 @@ class WhisperASR:
             raise RuntimeError("常驻 Whisper 服务不可用或已超时，请重试") from None
 
     async def stream(self, audio):
-        pcm, last, text = bytearray(), 0, ""
+        pcm = bytearray()
         async for part in audio:
             pcm.extend(part)
-            if len(pcm) - last >= RATE * 2:
-                text = await self.infer(bytes(pcm))
-                last = len(pcm)
-                yield text, False
-        if len(pcm) != last:
-            text = await self.infer(bytes(pcm))
-        yield text, True
+        yield await self.infer(bytes(pcm)), True
 
     async def transcribe(self, frames):
         with self.opus.decoder() as decoder:

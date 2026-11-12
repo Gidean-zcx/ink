@@ -151,3 +151,43 @@ def test_split_and_history():
     assert heard_text(session) == "一二三四五"
     session.heard_frames = None
     assert heard_text(session) == "一二三四五甲乙丙"
+
+
+async def test_first_clause_is_spoken_while_model_still_streams(make_hub, vendors, opus):
+    release = asyncio.Event()
+    class Model:
+        async def stream(self, *args, **kwargs):
+            yield ModelResult("这是一句超过八个字的回答，")
+            await release.wait()
+            yield ModelResult("这是后半句。")
+    asr, tts = vendors.providers("doubao", opus)
+    _, client, url = await make_hub(asr=asr, tts=tts, model=Model())
+    device = FakeDevice(client, url)
+    await device.connect()
+    rid = await start_voice(device, encode(opus, 5))
+    while not isinstance(await device.recv(), bytes):
+        pass
+    assert not release.is_set() and vendors.texts == ["这是一句超过八个字的回答，"]
+    release.set()
+    assert (await device.until(rid))["result"]["done"]
+
+
+async def test_interim_interval_allows_next_update_and_final_bypasses_it(monkeypatch):
+    from types import SimpleNamespace
+    from ink_hub.voice import stream
+    clock = SimpleNamespace(now=0.)
+    monkeypatch.setattr(stream, "asyncio", SimpleNamespace(get_running_loop=lambda: SimpleNamespace(time=lambda: clock.now)))
+    class ASR:
+        async def stream(self, audio):
+            for now, text, final in ((0., "甲", False), (.799, "乙", False), (.8, "丙", False), (.801, "丁", True)):
+                clock.now = now
+                yield text, final
+    sent = []
+    async def notify(method, params, guard):
+        sent.append(params)
+    connection = SimpleNamespace(hub=SimpleNamespace(asr=ASR()), scope="synthetic", notify=notify,
+                                 valid_output=lambda *args: True)
+    session = Session("asr.stream", 0, interim_ms=800)
+    assert await stream.recognize(connection, 9, session) == ("丁", 1)
+    assert [value["text"] for value in sent] == ["甲", "丙", "丁"]
+    assert sent[-1]["final"]

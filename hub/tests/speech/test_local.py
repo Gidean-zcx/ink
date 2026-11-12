@@ -46,7 +46,7 @@ async def test_voice_protocol(make_hub, speech_tools, caplog, capfd):
         for seq, (_, (kind, sid, number, ms, flags, packet)) in enumerate(audio):
             assert (kind, sid, number, ms, flags) == (2, 7, seq, seq * 60, 0)
             assert len(tools.opus.decode(decoder, packet)) == 1920
-    assert [event["samples"] for event in tools.events() if event["kind"] == "whisper"] == [17 * 960, 25 * 960]
+    assert [event["samples"] for event in tools.events() if event["kind"] == "whisper"] == [25 * 960]
     assert next(event for event in tools.events() if event["kind"] == "say")["text"] == SPOKEN
     logs = caplog.text + "".join(capfd.readouterr())
     assert TRANSCRIPT not in logs and SPOKEN not in logs

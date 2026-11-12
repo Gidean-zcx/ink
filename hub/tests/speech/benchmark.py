@@ -66,21 +66,22 @@ async def trial(asr, tts, packets, directory):
                 await asyncio.gather(task, return_exceptions=True)
             session = hub.connections["example-device"].sessions[7]
             times = session.times
-            assert result["result"]["done"] and all(key in times for key in (
-                "speech_end", "asr_final", "model_first_text", "first_sentence", "first_text", "first_audio")), times
+            assert result["result"]["done"]
+            success = all(key in times for key in ("speech_end", "asr_final", "model_first_text", "first_sentence", "first_text", "first_audio"))
             stt = [m["params"]["text"] for m in device.messages if isinstance(m, dict) and m.get("method") == "ai.stt"]
-            return {"ms": {key: round((value - times["speech_end"]) * 1000, 2) for key, value in times.items()},
-                    "recognized": stt[-1], "uplink_ms": len(packets) * 60}
+            return {"success": success, "ms": {key: round((value - times["speech_end"]) * 1000, 2) for key, value in times.items()},
+                    "recognized": stt[-1] if stt else "", "uplink_ms": len(packets) * 60}
     finally:
         await runner.cleanup()
 
 
 def summary(rows):
-    result = {}
+    good = [row for row in rows if row["success"]]
+    result = {"successes": len(good), "failures": len(rows) - len(good)}
     for field in ("first_text", "first_audio", "asr_final", "model_first_text", "first_sentence"):
-        values = sorted(row["ms"][field] for row in rows)
+        values = sorted(row["ms"][field] for row in good)
         result[field] = {"p50_ms": round(statistics.median(values), 2),
-                         "p95_ms": values[math.ceil(.95 * len(values)) - 1]}
+                         "p95_ms": values[math.ceil(.95 * len(values)) - 1]} if values else None
     return result
 
 
@@ -99,8 +100,9 @@ async def main(args):
                 port = sock.getsockname()[1]
             with log.open("wb") as output:
                 process = subprocess.Popen([args.whisper_server, "-m", args.model, "--host", "127.0.0.1",
-                                            "--port", str(port), "-t", "2", "-l", "zh", "-fa"],
-                                           stdin=subprocess.DEVNULL, stdout=output, stderr=output)
+                                            "--port", str(port), "-t", "2", "-l", "zh", "-fa", "-ng"],
+                                           stdin=subprocess.DEVNULL, stdout=output, stderr=output,
+                                           env={**os.environ, "VECLIB_MAXIMUM_THREADS": "2"})
             loop = asyncio.get_running_loop()
             deadline = loop.time() + 90
             while True:
