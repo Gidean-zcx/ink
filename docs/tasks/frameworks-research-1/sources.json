@@ -1,0 +1,1418 @@
+[
+  {
+    "id": "I01",
+    "title": "AOSP 拼音（Lineage 保留分支）",
+    "repository": "LineageOS/android_packages_inputmethods_PinyinIME",
+    "commit": "a08d08cdea4319fb74b55289e1b4e1b1a5249bc2",
+    "files": [
+      {
+        "path": "jni/include/pinyinime.h",
+        "first": 28,
+        "last": 204,
+        "note": "打开词库、增量搜索、整句候选、选择、预测和首字母开关",
+        "sha256": "44b4693855433f41662d8af0e516dc7c9ce6b06d72c6610e370bb2c4c25b7015",
+        "bytes": 7268,
+        "url": "https://github.com/LineageOS/android_packages_inputmethods_PinyinIME/blob/a08d08cdea4319fb74b55289e1b4e1b1a5249bc2/jni/include/pinyinime.h#L28-L204"
+      },
+      {
+        "path": "jni/share/matrixsearch.cpp",
+        "first": 665,
+        "last": 850,
+        "note": "更新词频与组词学习",
+        "sha256": "1cb744bd5d4ea9851586e3fd08940cf443786c0c259380043fb73b104b70524d",
+        "bytes": 61038,
+        "url": "https://github.com/LineageOS/android_packages_inputmethods_PinyinIME/blob/a08d08cdea4319fb74b55289e1b4e1b1a5249bc2/jni/share/matrixsearch.cpp#L665-L850"
+      },
+      {
+        "path": "jni/share/spellingtrie.cpp",
+        "first": 662,
+        "last": 682,
+        "note": "按 size_t 读取词库并分配缓冲",
+        "sha256": "5df7f65cbe4f63e84e182d9ba2af35227327c8268b057bdf0aec204ca2a05f60",
+        "bytes": 22984,
+        "url": "https://github.com/LineageOS/android_packages_inputmethods_PinyinIME/blob/a08d08cdea4319fb74b55289e1b4e1b1a5249bc2/jni/share/spellingtrie.cpp#L662-L682"
+      },
+      {
+        "path": "src/com/android/inputmethod/pinyin/InputModeSwitcher.java",
+        "first": 37,
+        "last": 155,
+        "note": "中文、英文、数字、符号输入模式",
+        "sha256": "56453d0f09e05cbdae69902679f4d318d383995dda297d1955fb853ff2ed1784",
+        "bytes": 28502,
+        "url": "https://github.com/LineageOS/android_packages_inputmethods_PinyinIME/blob/a08d08cdea4319fb74b55289e1b4e1b1a5249bc2/src/com/android/inputmethod/pinyin/InputModeSwitcher.java#L37-L155"
+      },
+      {
+        "path": "src/com/android/inputmethod/pinyin/CandidatesContainer.java",
+        "first": 75,
+        "last": 205,
+        "note": "候选容器和翻页",
+        "sha256": "bf12b713d9880273f4cbb4e93bd8f13d8906585c6888e4f850923e69dbdd689c",
+        "bytes": 15629,
+        "url": "https://github.com/LineageOS/android_packages_inputmethods_PinyinIME/blob/a08d08cdea4319fb74b55289e1b4e1b1a5249bc2/src/com/android/inputmethod/pinyin/CandidatesContainer.java#L75-L205"
+      },
+      {
+        "path": "src/com/android/inputmethod/pinyin/EnglishInputProcessor.java",
+        "first": 25,
+        "last": 95,
+        "note": "英文由前端单独处理，不等于中文引擎混输",
+        "sha256": "9a26286cfa91aaa79b3ff21a654d6e3110b1f925c522c21dd0c9c55ae1b5b144",
+        "bytes": 3207,
+        "url": "https://github.com/LineageOS/android_packages_inputmethods_PinyinIME/blob/a08d08cdea4319fb74b55289e1b4e1b1a5249bc2/src/com/android/inputmethod/pinyin/EnglishInputProcessor.java#L25-L95"
+      }
+    ]
+  },
+  {
+    "id": "I02",
+    "title": "Qt Virtual Keyboard 的 Google 拼音派生版本",
+    "repository": "qt/qtvirtualkeyboard",
+    "commit": "705290a76114fc5b39102e838eed82d83abef33e",
+    "files": [
+      {
+        "path": "src/plugins/pinyin/3rdparty/pinyin/include/pinyinime.h",
+        "first": 27,
+        "last": 216,
+        "note": "解码 API 与预测、用户词典开关",
+        "sha256": "0806f9847b5d9de67b7f16813343c2fe1897dfceac0183c074a65ba0f6ee22e3",
+        "bytes": 7568,
+        "url": "https://github.com/qt/qtvirtualkeyboard/blob/705290a76114fc5b39102e838eed82d83abef33e/src/plugins/pinyin/3rdparty/pinyin/include/pinyinime.h#L27-L216"
+      },
+      {
+        "path": "src/plugins/pinyin/3rdparty/pinyin/share/dicttrie.cpp",
+        "first": 170,
+        "last": 217,
+        "note": "词典读入及内存分配",
+        "sha256": "cacaa59d1ae9b9cddd0fa95136793aec955fa5189a7b7a8b0066dcc5507cf571",
+        "bytes": 30680,
+        "url": "https://github.com/qt/qtvirtualkeyboard/blob/705290a76114fc5b39102e838eed82d83abef33e/src/plugins/pinyin/3rdparty/pinyin/share/dicttrie.cpp#L170-L217"
+      },
+      {
+        "path": "src/plugins/pinyin/3rdparty/pinyin/share/dicttrie.cpp",
+        "first": 243,
+        "last": 270,
+        "note": "QFile 依赖，不能把 Qt 版当纯标准库代码",
+        "sha256": "cacaa59d1ae9b9cddd0fa95136793aec955fa5189a7b7a8b0066dcc5507cf571",
+        "bytes": 30680,
+        "url": "https://github.com/qt/qtvirtualkeyboard/blob/705290a76114fc5b39102e838eed82d83abef33e/src/plugins/pinyin/3rdparty/pinyin/share/dicttrie.cpp#L243-L270"
+      },
+      {
+        "path": "src/plugins/pinyin/3rdparty/pinyin/CMakeLists.txt",
+        "first": 14,
+        "last": 68,
+        "note": "源码清单、Qt::Core 和 Threads 依赖",
+        "sha256": "92bbabbc13e87331a3dc37b4e49d1dc17d90483318a022c20aae39b337d6417a",
+        "bytes": 2053,
+        "url": "https://github.com/qt/qtvirtualkeyboard/blob/705290a76114fc5b39102e838eed82d83abef33e/src/plugins/pinyin/3rdparty/pinyin/CMakeLists.txt#L14-L68"
+      },
+      {
+        "path": "src/plugins/pinyin/pinyininputmethod.cpp",
+        "first": 60,
+        "last": 155,
+        "note": "Qt 输入方式适配，不是商业 Google 输入法",
+        "sha256": "c8777229ff72f3007a15494e8ba94778a2607ed786431967838ef8a2ca6b5bfc",
+        "bytes": 15295,
+        "url": "https://github.com/qt/qtvirtualkeyboard/blob/705290a76114fc5b39102e838eed82d83abef33e/src/plugins/pinyin/pinyininputmethod.cpp#L60-L155"
+      }
+    ]
+  },
+  {
+    "id": "I03",
+    "title": "librime",
+    "repository": "rime/librime",
+    "commit": "bb56876890ba60f446fa2640c244b1794b965eda",
+    "files": [
+      {
+        "path": "CMakeLists.txt",
+        "first": 60,
+        "last": 157,
+        "note": "Boost、线程、yaml-cpp、LevelDB、Marisa、OpenCC 依赖",
+        "sha256": "f2e67950039048a66099e797bb4e5be3aa98e1425fae0018c6fedecbb2bec354",
+        "bytes": 9792,
+        "url": "https://github.com/rime/librime/blob/bb56876890ba60f446fa2640c244b1794b965eda/CMakeLists.txt#L60-L157"
+      },
+      {
+        "path": "src/rime/gear/script_translator.cc",
+        "first": 214,
+        "last": 246,
+        "note": "用户词典与拼音翻译",
+        "sha256": "4e647469fbaf791655d9cfe712868e826ad7d7fddc3585d6c56294f5180593dd",
+        "bytes": 25391,
+        "url": "https://github.com/rime/librime/blob/bb56876890ba60f446fa2640c244b1794b965eda/src/rime/gear/script_translator.cc#L214-L246"
+      },
+      {
+        "path": "src/rime/gear/script_translator.cc",
+        "first": 351,
+        "last": 398,
+        "note": "提交后的学习",
+        "sha256": "4e647469fbaf791655d9cfe712868e826ad7d7fddc3585d6c56294f5180593dd",
+        "bytes": 25391,
+        "url": "https://github.com/rime/librime/blob/bb56876890ba60f446fa2640c244b1794b965eda/src/rime/gear/script_translator.cc#L351-L398"
+      },
+      {
+        "path": "src/rime/gear/script_translator.cc",
+        "first": 705,
+        "last": 753,
+        "note": "词图与整句组合",
+        "sha256": "4e647469fbaf791655d9cfe712868e826ad7d7fddc3585d6c56294f5180593dd",
+        "bytes": 25391,
+        "url": "https://github.com/rime/librime/blob/bb56876890ba60f446fa2640c244b1794b965eda/src/rime/gear/script_translator.cc#L705-L753"
+      }
+    ]
+  },
+  {
+    "id": "I04",
+    "title": "Rime 明月拼音数据和方案",
+    "repository": "rime/rime-luna-pinyin",
+    "commit": "56b934b099dfbeab842320f13aa8b461a6ab3e42",
+    "files": [
+      {
+        "path": "luna_pinyin.schema.yaml",
+        "first": 41,
+        "last": 91,
+        "note": "输入流水线、字母表、简拼补丁；custom_phrase 的 enable_sentence=false 不代表主引擎禁用整句",
+        "sha256": "668b4d4957e4cc8f9cea32ed3f08f0ecf4a7be8cdba058700507487bd96dd5c7",
+        "bytes": 2809,
+        "url": "https://github.com/rime/rime-luna-pinyin/blob/56b934b099dfbeab842320f13aa8b461a6ab3e42/luna_pinyin.schema.yaml#L41-L91"
+      },
+      {
+        "path": "luna_pinyin.dict.yaml",
+        "first": 1,
+        "last": 36,
+        "note": "词典来源、版本与 use_preset_vocabulary；本文件不是完整运行内存",
+        "sha256": "75bcf6eb3ff62b129882ed89cc22b2d80a5347aa72bcfa2ccc839bac298e7314",
+        "bytes": 889896,
+        "url": "https://github.com/rime/rime-luna-pinyin/blob/56b934b099dfbeab842320f13aa8b461a6ab3e42/luna_pinyin.dict.yaml#L1-L36"
+      }
+    ]
+  },
+  {
+    "id": "I05",
+    "title": "libpinyin",
+    "repository": "libpinyin/libpinyin",
+    "commit": "85905e59cb19d0343cae84d831027aee113420b8",
+    "files": [
+      {
+        "path": "src/pinyin.h",
+        "first": 369,
+        "last": 411,
+        "note": "整句和上下文预测",
+        "sha256": "e1138482d06766163608406fe1083539b21ff8c44ea04f329f3db0c78a312d47",
+        "bytes": 31902,
+        "url": "https://github.com/libpinyin/libpinyin/blob/85905e59cb19d0343cae84d831027aee113420b8/src/pinyin.h#L369-L411"
+      },
+      {
+        "path": "src/pinyin.h",
+        "first": 610,
+        "last": 618,
+        "note": "训练接口",
+        "sha256": "e1138482d06766163608406fe1083539b21ff8c44ea04f329f3db0c78a312d47",
+        "bytes": 31902,
+        "url": "https://github.com/libpinyin/libpinyin/blob/85905e59cb19d0343cae84d831027aee113420b8/src/pinyin.h#L610-L618"
+      },
+      {
+        "path": "src/storage/pinyin_custom2.h",
+        "first": 20,
+        "last": 65,
+        "note": "不完整拼音等配置",
+        "sha256": "a02990532aeb25a57c5682af2986048c86550297daf9fcb2b00accc3e5cb216a",
+        "bytes": 3340,
+        "url": "https://github.com/libpinyin/libpinyin/blob/85905e59cb19d0343cae84d831027aee113420b8/src/storage/pinyin_custom2.h#L20-L65"
+      },
+      {
+        "path": "configure.ac",
+        "first": 69,
+        "last": 118,
+        "note": "GLib 与 Berkeley DB / Kyoto Cabinet",
+        "sha256": "70331c008158be6ed093099630be3dd44e1858cab918e85f95a9a5dc8190cacd",
+        "bytes": 5116,
+        "url": "https://github.com/libpinyin/libpinyin/blob/85905e59cb19d0343cae84d831027aee113420b8/configure.ac#L69-L118"
+      },
+      {
+        "path": "data/CMakeLists.txt",
+        "first": 1,
+        "last": 58,
+        "note": "模型和 bigram 数据单独下载生成",
+        "sha256": "fac4d8bcc60692ef8cb97f39d65655ee8c6b399260ddcb39aee5735d7b60b631",
+        "bytes": 2594,
+        "url": "https://github.com/libpinyin/libpinyin/blob/85905e59cb19d0343cae84d831027aee113420b8/data/CMakeLists.txt#L1-L58"
+      }
+    ]
+  },
+  {
+    "id": "I06",
+    "title": "SunPinyin",
+    "repository": "sunpinyin/sunpinyin",
+    "commit": "e4be7e64e4a168a684b26679b7e076118a2c97f7",
+    "files": [
+      {
+        "path": "README.md",
+        "first": 1,
+        "last": 9,
+        "note": "二元、三元统计语言模型，上游说明",
+        "sha256": "7fef2ab7ad4a8e43f8f2e6732aa1db4fadb149805438b7e95f7a09610a1465fe",
+        "bytes": 384,
+        "url": "https://github.com/sunpinyin/sunpinyin/blob/e4be7e64e4a168a684b26679b7e076118a2c97f7/README.md#L1-L9"
+      },
+      {
+        "path": "src/ime-core/imi_context.h",
+        "first": 207,
+        "last": 221,
+        "note": "历史学习权重",
+        "sha256": "658988e270ee56f7c5fb646f03789771c7ae86805a76fd180e612e7821cf3a83",
+        "bytes": 13179,
+        "url": "https://github.com/sunpinyin/sunpinyin/blob/e4be7e64e4a168a684b26679b7e076118a2c97f7/src/ime-core/imi_context.h#L207-L221"
+      },
+      {
+        "path": "src/ime-core/imi_context.h",
+        "first": 284,
+        "last": 325,
+        "note": "整句和候选接口",
+        "sha256": "658988e270ee56f7c5fb646f03789771c7ae86805a76fd180e612e7821cf3a83",
+        "bytes": 13179,
+        "url": "https://github.com/sunpinyin/sunpinyin/blob/e4be7e64e4a168a684b26679b7e076118a2c97f7/src/ime-core/imi_context.h#L284-L325"
+      },
+      {
+        "path": "src/pinyin/syllable.h",
+        "first": 98,
+        "last": 146,
+        "note": "声母和不完整音节处理",
+        "sha256": "afd8b2e78ea1ce16df5467219b36aae6c42eeb22cbbeaf3738adb9ffa0f69c2b",
+        "bytes": 6159,
+        "url": "https://github.com/sunpinyin/sunpinyin/blob/e4be7e64e4a168a684b26679b7e076118a2c97f7/src/pinyin/syllable.h#L98-L146"
+      },
+      {
+        "path": "src/ime-core/userdict.cpp",
+        "first": 34,
+        "last": 70,
+        "note": "SQLite 用户词库",
+        "sha256": "d15bc074d4d7379ee5f3941252c0b80f11d8af6718d2fecac2c167b62d10582b",
+        "bytes": 9305,
+        "url": "https://github.com/sunpinyin/sunpinyin/blob/e4be7e64e4a168a684b26679b7e076118a2c97f7/src/ime-core/userdict.cpp#L34-L70"
+      },
+      {
+        "path": "SConstruct",
+        "first": 399,
+        "last": 432,
+        "note": "mmap 与 SQLite 等构建探测",
+        "sha256": "a1835fffc77f68cd4399e527880d9afab1bb923c2965746c9f64d88018ad7d5c",
+        "bytes": 15422,
+        "url": "https://github.com/sunpinyin/sunpinyin/blob/e4be7e64e4a168a684b26679b7e076118a2c97f7/SConstruct#L399-L432"
+      }
+    ]
+  },
+  {
+    "id": "I07",
+    "title": "fcitx5-android 前端和引擎归属",
+    "repository": "fcitx5-android/fcitx5-android",
+    "commit": "eb5b50216e70484a009933d9519db76005f1faf3",
+    "files": [
+      {
+        "path": "README.md",
+        "first": 30,
+        "last": 72,
+        "note": "内置中文引擎、Rime 插件、候选展开和截图入口",
+        "sha256": "bfc0662bbb82709356195a965d35ef8b6a796b6018c99b87a810af93ee0f7d77",
+        "bytes": 8443,
+        "url": "https://github.com/fcitx5-android/fcitx5-android/blob/eb5b50216e70484a009933d9519db76005f1faf3/README.md#L30-L72"
+      },
+      {
+        "path": ".gitmodules",
+        "first": 1,
+        "last": 37,
+        "note": "libime、chinese-addons 与 Rime 的独立来源",
+        "sha256": "4e0543e84d25af4df44f4613c9a22b96751561c30d80fd1e9bd3e232d61fe6cc",
+        "bytes": 2876,
+        "url": "https://github.com/fcitx5-android/fcitx5-android/blob/eb5b50216e70484a009933d9519db76005f1faf3/.gitmodules#L1-L37"
+      },
+      {
+        "path": "app/src/main/java/org/fcitx/fcitx5/android/input/keyboard/TextKeyboard.kt",
+        "first": 33,
+        "last": 82,
+        "note": "QWERTY、语言和数字符号切换布局",
+        "sha256": "9e08d518a94370bfa631a6c286e7ff34bb4a8f4eb37fa81a0ddd1fbe2eed60e2",
+        "bytes": 9346,
+        "url": "https://github.com/fcitx5-android/fcitx5-android/blob/eb5b50216e70484a009933d9519db76005f1faf3/app/src/main/java/org/fcitx/fcitx5/android/input/keyboard/TextKeyboard.kt#L33-L82"
+      },
+      {
+        "path": "app/src/main/java/org/fcitx/fcitx5/android/input/keyboard/KeyboardWindow.kt",
+        "first": 47,
+        "last": 88,
+        "note": "键盘与符号面板切换",
+        "sha256": "575bfe5108beb335529ab944f2937125d906f4823771f8e66b58d2fadff0b150",
+        "bytes": 6863,
+        "url": "https://github.com/fcitx5-android/fcitx5-android/blob/eb5b50216e70484a009933d9519db76005f1faf3/app/src/main/java/org/fcitx/fcitx5/android/input/keyboard/KeyboardWindow.kt#L47-L88"
+      },
+      {
+        "path": "app/src/main/java/org/fcitx/fcitx5/android/input/keyboard/NumberKeyboard.kt",
+        "first": 25,
+        "last": 66,
+        "note": "数字与符号入口",
+        "sha256": "338163244460df50b21114d3aa87a7fa44d46ba94dd1732030d346bc16e69c6c",
+        "bytes": 2818,
+        "url": "https://github.com/fcitx5-android/fcitx5-android/blob/eb5b50216e70484a009933d9519db76005f1faf3/app/src/main/java/org/fcitx/fcitx5/android/input/keyboard/NumberKeyboard.kt#L25-L66"
+      }
+    ]
+  },
+  {
+    "id": "I08",
+    "title": "libime（Fcitx 拼音核心）",
+    "repository": "fcitx/libime",
+    "commit": "53df6a248793f9a00c1769e658630de313f3e419",
+    "files": [
+      {
+        "path": "src/libime/pinyin/pinyincontext.h",
+        "first": 75,
+        "last": 143,
+        "note": "候选、选词与学习接口",
+        "sha256": "7307d839953c5944501138dee37e982945df53e4293c1defdc0e47e8cc754009",
+        "bytes": 5789,
+        "url": "https://github.com/fcitx/libime/blob/53df6a248793f9a00c1769e658630de313f3e419/src/libime/pinyin/pinyincontext.h#L75-L143"
+      },
+      {
+        "path": "src/libime/pinyin/pinyincontext.cpp",
+        "first": 1089,
+        "last": 1139,
+        "note": "用户词与历史学习",
+        "sha256": "1450e2fcd60da9b21ec2802a60dbe5aec563245e3e308b14a9dd324a7909c79b",
+        "bytes": 41073,
+        "url": "https://github.com/fcitx/libime/blob/53df6a248793f9a00c1769e658630de313f3e419/src/libime/pinyin/pinyincontext.cpp#L1089-L1139"
+      },
+      {
+        "path": "src/libime/pinyin/pinyinprediction.h",
+        "first": 20,
+        "last": 72,
+        "note": "拼音联想接口",
+        "sha256": "4c48cbce7f16f8860b06ef3967df2dcce63d7e71e5740329f700ac03e32def28",
+        "bytes": 2043,
+        "url": "https://github.com/fcitx/libime/blob/53df6a248793f9a00c1769e658630de313f3e419/src/libime/pinyin/pinyinprediction.h#L20-L72"
+      },
+      {
+        "path": "src/libime/pinyin/pinyinencoder.h",
+        "first": 20,
+        "last": 59,
+        "note": "拼写与部分音节匹配配置",
+        "sha256": "b8792eabc3c81347d09f71b222d5a573e1ea2748414366f8e966d87f5646b683",
+        "bytes": 9408,
+        "url": "https://github.com/fcitx/libime/blob/53df6a248793f9a00c1769e658630de313f3e419/src/libime/pinyin/pinyinencoder.h#L20-L59"
+      },
+      {
+        "path": "data/CMakeLists.txt",
+        "first": 1,
+        "last": 51,
+        "note": "语言模型与词典包的 URL、版本和哈希",
+        "sha256": "c73cbe828525a0c3f9da52d483d2a7edc3cad6211afdc5ce61b4878624cd7c73",
+        "bytes": 3375,
+        "url": "https://github.com/fcitx/libime/blob/53df6a248793f9a00c1769e658630de313f3e419/data/CMakeLists.txt#L1-L51"
+      },
+      {
+        "path": "CMakeLists.txt",
+        "first": 33,
+        "last": 47,
+        "note": "Fcitx5Utils 与 Boost 依赖",
+        "sha256": "c05b841e5a2dd88a5ce752e83c130c8d0606aa57d57b37874a26c2360e2281b8",
+        "bytes": 3156,
+        "url": "https://github.com/fcitx/libime/blob/53df6a248793f9a00c1769e658630de313f3e419/CMakeLists.txt#L33-L47"
+      }
+    ]
+  },
+  {
+    "id": "I09",
+    "title": "Trime 同文输入法",
+    "repository": "osfans/trime",
+    "commit": "76a9e763b148d747f6245f61d65e02595082f080",
+    "files": [
+      {
+        "path": "app/src/main/assets/shared/trime.yaml",
+        "first": 22,
+        "last": 45,
+        "note": "键盘固定高度和边距",
+        "sha256": "44d29a6ace16ca9f59b3d6bc32b457a8ce41f8b080d94fdbe67e8d89900983f6",
+        "bytes": 78253,
+        "url": "https://github.com/osfans/trime/blob/76a9e763b148d747f6245f61d65e02595082f080/app/src/main/assets/shared/trime.yaml#L22-L45"
+      },
+      {
+        "path": "app/src/main/assets/shared/trime.yaml",
+        "first": 686,
+        "last": 710,
+        "note": "分类符号与历史面板",
+        "sha256": "44d29a6ace16ca9f59b3d6bc32b457a8ce41f8b080d94fdbe67e8d89900983f6",
+        "bytes": 78253,
+        "url": "https://github.com/osfans/trime/blob/76a9e763b148d747f6245f61d65e02595082f080/app/src/main/assets/shared/trime.yaml#L686-L710"
+      },
+      {
+        "path": "app/src/main/assets/shared/trime.yaml",
+        "first": 920,
+        "last": 929,
+        "note": "数字、符号和键盘切换",
+        "sha256": "44d29a6ace16ca9f59b3d6bc32b457a8ce41f8b080d94fdbe67e8d89900983f6",
+        "bytes": 78253,
+        "url": "https://github.com/osfans/trime/blob/76a9e763b148d747f6245f61d65e02595082f080/app/src/main/assets/shared/trime.yaml#L920-L929"
+      },
+      {
+        "path": "app/src/main/assets/shared/trime.yaml",
+        "first": 975,
+        "last": 1035,
+        "note": "默认键盘布局",
+        "sha256": "44d29a6ace16ca9f59b3d6bc32b457a8ce41f8b080d94fdbe67e8d89900983f6",
+        "bytes": 78253,
+        "url": "https://github.com/osfans/trime/blob/76a9e763b148d747f6245f61d65e02595082f080/app/src/main/assets/shared/trime.yaml#L975-L1035"
+      },
+      {
+        "path": "app/src/main/java/com/osfans/trime/ime/composition/CandidatesView.kt",
+        "first": 40,
+        "last": 145,
+        "note": "候选视图；Android 实现需翻译",
+        "sha256": "591bbd767c333b9d18a9013e154f58a767d6ffb2b83809827714f2bd384d1f84",
+        "bytes": 12230,
+        "url": "https://github.com/osfans/trime/blob/76a9e763b148d747f6245f61d65e02595082f080/app/src/main/java/com/osfans/trime/ime/composition/CandidatesView.kt#L40-L145"
+      },
+      {
+        "path": "doc/Keyboard.md",
+        "first": 7,
+        "last": 58,
+        "note": "符号固定按键条及横屏布局",
+        "sha256": "18d7a04367de38b7a1b693f0fd5b9d8468d5d4fa475c1839e43dd0f0a2123077",
+        "bytes": 2200,
+        "url": "https://github.com/osfans/trime/blob/76a9e763b148d747f6245f61d65e02595082f080/doc/Keyboard.md#L7-L58"
+      }
+    ]
+  },
+  {
+    "id": "I10",
+    "title": "mogo-e4p 输入法",
+    "repository": "chopper1026/mogo-e4p",
+    "commit": "864f2f9dc75980a67d2d6b67b17365020b7a50ce",
+    "files": [
+      {
+        "path": "main/ui/ui_ime.c",
+        "first": 14,
+        "last": 34,
+        "note": "有界工作区和 PSRAM",
+        "sha256": "76b8a548bbca9fbbd2c747d681fc2d242b4ae23bda3f49996fc6ae0e0bb1af80",
+        "bytes": 9918,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_ime.c#L14-L34"
+      },
+      {
+        "path": "main/ui/ui_ime.c",
+        "first": 47,
+        "last": 63,
+        "note": "九键数字映射",
+        "sha256": "76b8a548bbca9fbbd2c747d681fc2d242b4ae23bda3f49996fc6ae0e0bb1af80",
+        "bytes": 9918,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_ime.c#L47-L63"
+      },
+      {
+        "path": "main/ui/ui_ime.c",
+        "first": 94,
+        "last": 158,
+        "note": "词组接续和动态规划组词",
+        "sha256": "76b8a548bbca9fbbd2c747d681fc2d242b4ae23bda3f49996fc6ae0e0bb1af80",
+        "bytes": 9918,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_ime.c#L94-L158"
+      },
+      {
+        "path": "main/ui/ui_ime.h",
+        "first": 8,
+        "last": 29,
+        "note": "48 原始字符、24 候选及 API",
+        "sha256": "2e278ed75cb758c0f2eeec3cb0b45ba47712746e71d84c5a8e6ba27011dfca82",
+        "bytes": 1688,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_ime.h#L8-L29"
+      },
+      {
+        "path": "main/ui/ui_ime_phrases.h",
+        "first": 1,
+        "last": 25,
+        "note": "静态常用短语表",
+        "sha256": "bc3f4a1b9cb65129ffdb481c1a30f5ccc9100b090896cd758f1153260f5a8ea5",
+        "bytes": 13842,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_ime_phrases.h#L1-L25"
+      },
+      {
+        "path": "main/ui/ui_keyboard.c",
+        "first": 1,
+        "last": 82,
+        "note": "键盘模式与墨水屏刷新说明",
+        "sha256": "2d95bf1f7953464fc96ad23cc73102217691aef1708a5edf1d3c07758021c5aa",
+        "bytes": 28388,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_keyboard.c#L1-L82"
+      },
+      {
+        "path": "main/ui/ui_keyboard.c",
+        "first": 180,
+        "last": 238,
+        "note": "候选与键盘绘制",
+        "sha256": "2d95bf1f7953464fc96ad23cc73102217691aef1708a5edf1d3c07758021c5aa",
+        "bytes": 28388,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_keyboard.c#L180-L238"
+      },
+      {
+        "path": "main/ui/ui_keyboard.c",
+        "first": 420,
+        "last": 448,
+        "note": "区域更新处理",
+        "sha256": "2d95bf1f7953464fc96ad23cc73102217691aef1708a5edf1d3c07758021c5aa",
+        "bytes": 28388,
+        "url": "https://github.com/chopper1026/mogo-e4p/blob/864f2f9dc75980a67d2d6b67b17365020b7a50ce/main/ui/ui_keyboard.c#L420-L448"
+      }
+    ]
+  },
+  {
+    "id": "I11",
+    "title": "kiikoread 输入法",
+    "repository": "wegooo-cell/Metalio-S31-kiikoread",
+    "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+    "files": [
+      {
+        "path": "main/ui/ui_ime.c",
+        "first": 14,
+        "last": 34,
+        "note": "有界工作区和 PSRAM",
+        "sha256": "f54f815481be5e761069a1c79704107f67ce28201884ae43aa7b150cd9a598c3",
+        "bytes": 9958,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_ime.c#L14-L34"
+      },
+      {
+        "path": "main/ui/ui_ime.c",
+        "first": 47,
+        "last": 63,
+        "note": "九键数字映射",
+        "sha256": "f54f815481be5e761069a1c79704107f67ce28201884ae43aa7b150cd9a598c3",
+        "bytes": 9958,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_ime.c#L47-L63"
+      },
+      {
+        "path": "main/ui/ui_ime.c",
+        "first": 94,
+        "last": 158,
+        "note": "词组接续和动态规划组词",
+        "sha256": "f54f815481be5e761069a1c79704107f67ce28201884ae43aa7b150cd9a598c3",
+        "bytes": 9958,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_ime.c#L94-L158"
+      },
+      {
+        "path": "main/ui/ui_ime.h",
+        "first": 8,
+        "last": 29,
+        "note": "48 原始字符、24 候选及 API",
+        "sha256": "2e278ed75cb758c0f2eeec3cb0b45ba47712746e71d84c5a8e6ba27011dfca82",
+        "bytes": 1688,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_ime.h#L8-L29"
+      },
+      {
+        "path": "main/ui/ui_ime_phrases.h",
+        "first": 1,
+        "last": 25,
+        "note": "静态常用短语表",
+        "sha256": "bc3f4a1b9cb65129ffdb481c1a30f5ccc9100b090896cd758f1153260f5a8ea5",
+        "bytes": 13842,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_ime_phrases.h#L1-L25"
+      },
+      {
+        "path": "main/ui/ui_keyboard.c",
+        "first": 1,
+        "last": 82,
+        "note": "键盘模式与墨水屏刷新说明",
+        "sha256": "d120bc26ecb656d2a7ae0c72fdf4fbf94bd7a1d05b8ce4bed55cdecda4946c7a",
+        "bytes": 29441,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_keyboard.c#L1-L82"
+      },
+      {
+        "path": "main/ui/ui_keyboard.c",
+        "first": 180,
+        "last": 238,
+        "note": "候选与键盘绘制",
+        "sha256": "d120bc26ecb656d2a7ae0c72fdf4fbf94bd7a1d05b8ce4bed55cdecda4946c7a",
+        "bytes": 29441,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_keyboard.c#L180-L238"
+      },
+      {
+        "path": "main/ui/ui_keyboard.c",
+        "first": 420,
+        "last": 448,
+        "note": "区域更新处理",
+        "sha256": "d120bc26ecb656d2a7ae0c72fdf4fbf94bd7a1d05b8ce4bed55cdecda4946c7a",
+        "bytes": 29441,
+        "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_keyboard.c#L420-L448"
+      }
+    ]
+  },
+  {
+    "id": "I12",
+    "title": "固件口袋 Plus 源码包",
+    "repository": "Changkai9888/CloudZao-Projects",
+    "commit": "90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8",
+    "files": [
+      {
+        "path": "main/ime/notepad_ime.cc",
+        "first": 9,
+        "last": 50,
+        "note": "最多六字母，精确单音节查表，逐个单字候选",
+        "sha256": "f57c1eb1c24d10c9b259ec50c4472adbef40c92b931c72b4226ac13b9b91dbbe",
+        "bytes": 1741,
+        "url": "https://github.com/Changkai9888/CloudZao-Projects/blob/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip"
+      },
+      {
+        "path": "main/ime/pocket_keyboard.cc",
+        "first": 121,
+        "last": 179,
+        "note": "五候选、翻页、中文英文切换",
+        "sha256": "f1ecd7261bc37b1949e3ab8ea9bb07a314001644c502775c202d45f6284dcd74",
+        "bytes": 16762,
+        "url": "https://github.com/Changkai9888/CloudZao-Projects/blob/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip"
+      },
+      {
+        "path": "main/ime/pocket_keyboard.cc",
+        "first": 245,
+        "last": 285,
+        "note": "LVGL 键盘布局",
+        "sha256": "f1ecd7261bc37b1949e3ab8ea9bb07a314001644c502775c202d45f6284dcd74",
+        "bytes": 16762,
+        "url": "https://github.com/Changkai9888/CloudZao-Projects/blob/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip"
+      },
+      {
+        "path": "sources/pinyin-generation.json",
+        "first": 1,
+        "last": 23,
+        "note": "Rime 数据固定提交、哈希和裁剪统计",
+        "sha256": "02ddc84ba767025c94885f46a2ff4f4483f6a64799e8d21ae0a92d4c110fdc90",
+        "bytes": 2792,
+        "url": "https://github.com/Changkai9888/CloudZao-Projects/blob/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip"
+      },
+      {
+        "path": "scripts/generate_pinyin.py",
+        "first": 30,
+        "last": 79,
+        "note": "只保留单字的读音和排序数据",
+        "sha256": "71cfa07cfd99f11f071d0d6b86946f28d25cf8e692dae98a6d042d11bdbc4ee9",
+        "bytes": 6386,
+        "url": "https://github.com/Changkai9888/CloudZao-Projects/blob/90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8/firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip"
+      }
+    ],
+    "archive": "firmware-pocket/firmware-pocket-plus-1.0.7-plus.16-source.zip"
+  },
+  {
+    "id": "I13",
+    "title": "ink 基线现状",
+    "repository": "Gidean-zcx/ink",
+    "commit": "6171c2bf8d59238c95f2d548663f8b2ab3c6f43a",
+    "files": [
+      {
+        "path": "system/services/text/pinyin.c",
+        "first": 1,
+        "last": 26,
+        "note": "查表、词库上限，非自动音节切分",
+        "sha256": "18b555b3abeae82179bdbead76f72870c1113d0b5ebdf5908eedb0d78cd4cf83",
+        "bytes": 10036,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/services/text/pinyin.c#L1-L26"
+      },
+      {
+        "path": "system/services/text/pinyin.c",
+        "first": 173,
+        "last": 238,
+        "note": "全拼与九键最长前缀匹配",
+        "sha256": "18b555b3abeae82179bdbead76f72870c1113d0b5ebdf5908eedb0d78cd4cf83",
+        "bytes": 10036,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/services/text/pinyin.c#L173-L238"
+      },
+      {
+        "path": "system/services/text/text_service.c",
+        "first": 30,
+        "last": 32,
+        "note": "按成员隔离的词频集合",
+        "sha256": "1971bf10a036bfb1e8fbe09851312ba0972a3eaa2425357f819d75292a960120",
+        "bytes": 27716,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/services/text/text_service.c#L30-L32"
+      },
+      {
+        "path": "system/services/text/text_service.c",
+        "first": 355,
+        "last": 415,
+        "note": "已有候选重排学习，不是整句语言模型",
+        "sha256": "1971bf10a036bfb1e8fbe09851312ba0972a3eaa2425357f819d75292a960120",
+        "bytes": 27716,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/services/text/text_service.c#L355-L415"
+      },
+      {
+        "path": "system/ui/shell/keyboard.c",
+        "first": 198,
+        "last": 214,
+        "note": "AI 快照及按钮能力",
+        "sha256": "0e69664012ceb4ad4760e4ac41b4808285259ec1cd5cede98b1fb31fe33992ca",
+        "bytes": 37994,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/ui/shell/keyboard.c#L198-L214"
+      },
+      {
+        "path": "system/ui/shell/keyboard.c",
+        "first": 264,
+        "last": 303,
+        "note": "九键、全键、符号布局",
+        "sha256": "0e69664012ceb4ad4760e4ac41b4808285259ec1cd5cede98b1fb31fe33992ca",
+        "bytes": 37994,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/ui/shell/keyboard.c#L264-L303"
+      },
+      {
+        "path": "system/ui/shell/keyboard.c",
+        "first": 649,
+        "last": 660,
+        "note": "键盘能力注册",
+        "sha256": "0e69664012ceb4ad4760e4ac41b4808285259ec1cd5cede98b1fb31fe33992ca",
+        "bytes": 37994,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/ui/shell/keyboard.c#L649-L660"
+      },
+      {
+        "path": "tools/imedict/README.md",
+        "first": 22,
+        "last": 54,
+        "note": "1 MiB、全拼和首字母键、学习边界",
+        "sha256": "18c6bf0e3688b8c7c3c79b35cb83a1416ee00bffd88c04ca216663433fa88793",
+        "bytes": 7233,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/tools/imedict/README.md#L22-L54"
+      }
+    ]
+  },
+  {
+    "id": "H01",
+    "title": "Zinnia 识别核心",
+    "repository": "taku910/zinnia",
+    "commit": "581faa8f6f15e4a7b21964be3a5ec36265c80e5b",
+    "files": [
+      {
+        "path": "index.html",
+        "first": 18,
+        "last": 58,
+        "note": "SVM 识别及模型独立安装，上游说明",
+        "sha256": "63aa286fae72463c1f13f816e8f79a5f1eb25845dbfee52800afc227b7faba3d",
+        "bytes": 11235,
+        "url": "https://github.com/taku910/zinnia/blob/581faa8f6f15e4a7b21964be3a5ec36265c80e5b/index.html#L18-L58"
+      },
+      {
+        "path": "zinnia/recognizer.cpp",
+        "first": 73,
+        "last": 119,
+        "note": "C++ 分类、文件映射和缓冲区打开接口",
+        "sha256": "5004186e88d6de8b30a5ef453e85e99503f8f9e6d40960af9cef5e8c8f25a1cd",
+        "bytes": 4872,
+        "url": "https://github.com/taku910/zinnia/blob/581faa8f6f15e4a7b21964be3a5ec36265c80e5b/zinnia/recognizer.cpp#L73-L119"
+      },
+      {
+        "path": "zinnia/mmap.h",
+        "first": 154,
+        "last": 180,
+        "note": "POSIX mmap 路径，MCU 需另接存储",
+        "sha256": "6dcfb49702670c09b9bd299f402390dd2aa13af82c95fef2e866bef4137a196c",
+        "bytes": 4973,
+        "url": "https://github.com/taku910/zinnia/blob/581faa8f6f15e4a7b21964be3a5ec36265c80e5b/zinnia/mmap.h#L154-L180"
+      }
+    ]
+  },
+  {
+    "id": "H02",
+    "title": "Tegaki 模型与 Wagomu",
+    "repository": "tegaki/tegaki",
+    "commit": "7a74e442c4130cccc226a7e7c2b683ac94c0cccb",
+    "files": [
+      {
+        "path": "tegaki-models/tegaki-zinnia-simplified-chinese/handwriting-zh_CN.meta",
+        "first": 1,
+        "last": 3,
+        "note": "官方简体中文模型标识",
+        "sha256": "dbf5ec0bbddef2f20266426ca736544aef62b737ec2442d4aeaefca5de63b1ba",
+        "bytes": 59,
+        "url": "https://github.com/tegaki/tegaki/blob/7a74e442c4130cccc226a7e7c2b683ac94c0cccb/tegaki-models/tegaki-zinnia-simplified-chinese/handwriting-zh_CN.meta#L1-L3"
+      },
+      {
+        "path": "tegaki-models/README.in",
+        "first": 21,
+        "last": 49,
+        "note": "模型与元数据独立，仓库并未提供已测 MCU 运行占用",
+        "sha256": "d3c8c8b4444da76500f13b2f8edb7cd7b41ce7070444172c02c4a1b7d2c72d67",
+        "bytes": 1374,
+        "url": "https://github.com/tegaki/tegaki/blob/7a74e442c4130cccc226a7e7c2b683ac94c0cccb/tegaki-models/README.in#L21-L49"
+      },
+      {
+        "path": "tegaki-engines/tegaki-wagomu/README",
+        "first": 1,
+        "last": 22,
+        "note": "DTW 识别及旧 Python 包装依赖",
+        "sha256": "04a18130c7ae87c31ba6069fed8902069ad04238bb88f5a828ec164301230f37",
+        "bytes": 694,
+        "url": "https://github.com/tegaki/tegaki/blob/7a74e442c4130cccc226a7e7c2b683ac94c0cccb/tegaki-engines/tegaki-wagomu/README#L1-L22"
+      },
+      {
+        "path": "tegaki-engines/tegaki-wagomu/wagomu.cpp",
+        "first": 277,
+        "last": 313,
+        "note": "DTW 计算及缓冲",
+        "sha256": "d65c8f3d99b6c3e5147894bebbc503aa15288b1e1c7452e0f3846d5d384eb016",
+        "bytes": 15865,
+        "url": "https://github.com/tegaki/tegaki/blob/7a74e442c4130cccc226a7e7c2b683ac94c0cccb/tegaki-engines/tegaki-wagomu/wagomu.cpp#L277-L313"
+      }
+    ]
+  },
+  {
+    "id": "N01",
+    "title": "AOSP SystemUI / Lineage 衍生实现",
+    "repository": "LineageOS/android_frameworks_base",
+    "commit": "22de88b7b8eb979c816669c7963dee66ae4953cd",
+    "files": [
+      {
+        "path": "packages/SystemUI/src/com/android/systemui/statusbar/notification/collection/ShadeListBuilder.java",
+        "first": 94,
+        "last": 146,
+        "note": "过滤、分组、排序的列表构建",
+        "sha256": "ffe0380e1a220d064213ec949229325b09d02e191eb1edd6593dd8a3be5bf5b0",
+        "bytes": 85836,
+        "url": "https://github.com/LineageOS/android_frameworks_base/blob/22de88b7b8eb979c816669c7963dee66ae4953cd/packages/SystemUI/src/com/android/systemui/statusbar/notification/collection/ShadeListBuilder.java#L94-L146"
+      },
+      {
+        "path": "packages/SystemUI/src/com/android/systemui/statusbar/notification/row/NotificationContentView.java",
+        "first": 1480,
+        "last": 1535,
+        "note": "直接回复视图的实际绑定和可见性回调",
+        "sha256": "4e1eda4ed318c735b43d98bb79bedd578dc21f76c7055cf3062021ce6db18996",
+        "bytes": 104970,
+        "url": "https://github.com/LineageOS/android_frameworks_base/blob/22de88b7b8eb979c816669c7963dee66ae4953cd/packages/SystemUI/src/com/android/systemui/statusbar/notification/row/NotificationContentView.java#L1480-L1535"
+      },
+      {
+        "path": "services/core/java/com/android/server/notification/ZenModeFiltering.java",
+        "first": 185,
+        "last": 267,
+        "note": "闹钟、对话、来电、重复来电与消息的勿扰例外",
+        "sha256": "26c53b4728029e11405a60eb954cd8b8d81f40779116bad5f32764a9bb63e15d",
+        "bytes": 24940,
+        "url": "https://github.com/LineageOS/android_frameworks_base/blob/22de88b7b8eb979c816669c7963dee66ae4953cd/services/core/java/com/android/server/notification/ZenModeFiltering.java#L185-L267"
+      },
+      {
+        "path": "packages/SystemUI/src/com/android/systemui/qs/tiles/InternetTileNewImpl.kt",
+        "first": 91,
+        "last": 118,
+        "note": "点击与长按设置入口",
+        "sha256": "d0469ce569feaf9f434eaa52df9c955aa269c36d66034632ca31ae435a2bf35c",
+        "bytes": 4472,
+        "url": "https://github.com/LineageOS/android_frameworks_base/blob/22de88b7b8eb979c816669c7963dee66ae4953cd/packages/SystemUI/src/com/android/systemui/qs/tiles/InternetTileNewImpl.kt#L91-L118"
+      },
+      {
+        "path": "packages/SystemUI/src/com/android/systemui/qs/tiles/ModesTile.kt",
+        "first": 103,
+        "last": 142,
+        "note": "模式切换和次级动作",
+        "sha256": "1d1808e022e59bd129b95f9089b9bd922b33da3dfcf3c4f952eabad91845460a",
+        "bytes": 6515,
+        "url": "https://github.com/LineageOS/android_frameworks_base/blob/22de88b7b8eb979c816669c7963dee66ae4953cd/packages/SystemUI/src/com/android/systemui/qs/tiles/ModesTile.kt#L103-L142"
+      }
+    ]
+  },
+  {
+    "id": "N02",
+    "title": "PebbleOS 通知和设置",
+    "repository": "coredevices/PebbleOS",
+    "commit": "aa0c27e8330d010e9202f9a706a56002db5861ee",
+    "files": [
+      {
+        "path": "pebble/popups/notifications/notification_window.c",
+        "first": 241,
+        "last": 280,
+        "note": "清除全部通知及完成回调",
+        "sha256": "6f354d12321a918480650b6f37a96e44ef7f5973b05570f9b82d499eb0df3aa4",
+        "bytes": 69653,
+        "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/popups/notifications/notification_window.c#L241-L280"
+      },
+      {
+        "path": "pebble/services/timeline/timeline_actions.c",
+        "first": 1143,
+        "last": 1168,
+        "note": "回复菜单入口",
+        "sha256": "c1fc0ccc91fb14c7e04463d9d1e6f971111c606698fe96a710f84591b685189f",
+        "bytes": 47493,
+        "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/services/timeline/timeline_actions.c#L1143-L1168"
+      },
+      {
+        "path": "pebble/services/notifications/do_not_disturb.c",
+        "first": 148,
+        "last": 185,
+        "note": "跨日勿扰时间段",
+        "sha256": "fa14e67fbdcc3a2f8e38edbb5b8ccc3846402a3137e399a6c3bc81de47ff10d0",
+        "bytes": 12646,
+        "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/services/notifications/do_not_disturb.c#L148-L185"
+      },
+      {
+        "path": "pebble/apps/system/settings/quiet_time.c",
+        "first": 56,
+        "last": 110,
+        "note": "手动、智能、计划、来电例外与背光",
+        "sha256": "005869f719ed509412b793518bc082e51a194faf5f23459652e301b1525d3f1f",
+        "bytes": 24604,
+        "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/settings/quiet_time.c#L56-L110"
+      },
+      {
+        "path": "pebble/apps/system/settings/menu.c",
+        "first": 23,
+        "last": 50,
+        "note": "设置模块目录和入栈",
+        "sha256": "1770708ad6d8f1850b873c351087106095d4a5414a40de2e5a2a319520cc51e7",
+        "bytes": 1803,
+        "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/settings/menu.c#L23-L50"
+      },
+      {
+        "path": "pebble/apps/system/settings/option_menu.c",
+        "first": 26,
+        "last": 80,
+        "note": "选项行和选择回调",
+        "sha256": "6914cc956cf491f0b61279a3ae989cd83273bdad154678762e17fd2d5d66e125",
+        "bytes": 3629,
+        "url": "https://github.com/coredevices/PebbleOS/blob/aa0c27e8330d010e9202f9a706a56002db5861ee/pebble/apps/system/settings/option_menu.c#L26-L80"
+      }
+    ]
+  },
+  {
+    "id": "N03",
+    "title": "MuditaOS Pure 的通知和设置",
+    "repository": "mudita/MuditaOS",
+    "commit": "2cd0e4721405c0bf263f311f27d38aadae6ac89f",
+    "files": [
+      {
+        "path": "README.md",
+        "first": 1,
+        "last": 15,
+        "note": "E Ink / FreeRTOS / Pure 产品身份",
+        "sha256": "e4a74f891d29c37fce9583fe4d15dddfb20e53680646485d3ed79e4e58e9fad1",
+        "bytes": 3055,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/README.md#L1-L15"
+      },
+      {
+        "path": "module-gui/gui/widgets/StatusBar.cpp",
+        "first": 30,
+        "last": 105,
+        "note": "状态栏控件与手机模式",
+        "sha256": "ed9176af8e7f35006ea5d158e48b14a33a93f338b2cba4704020844089a4cdcd",
+        "bytes": 16213,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-gui/gui/widgets/StatusBar.cpp#L30-L105"
+      },
+      {
+        "path": "module-apps/apps-common/notifications/NotificationsModel.cpp",
+        "first": 43,
+        "last": 94,
+        "note": "通知列表、清除与可见性",
+        "sha256": "245107835420432bab09008df14fd43dae56810ff8209e3c1589d2ae5041c758",
+        "bytes": 3312,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/apps-common/notifications/NotificationsModel.cpp#L43-L94"
+      },
+      {
+        "path": "module-apps/application-settings/windows/SettingsMainWindow.cpp",
+        "first": 14,
+        "last": 39,
+        "note": "网络、显示、手机模式、安全、系统等分类",
+        "sha256": "3d63c388b7279d63b9b0a7c173a80d2526900e1d2ac91f702a8ef89f06f7ec63",
+        "bytes": 1792,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/SettingsMainWindow.cpp#L14-L39"
+      },
+      {
+        "path": "module-apps/application-settings/windows/phone-modes/PhoneModesWindow.cpp",
+        "first": 22,
+        "last": 80,
+        "note": "当前模式与勿扰、离线入口",
+        "sha256": "6c2330af6dcc2c433d2bec2a437d3f5b8d2db3f9493cba88a5ad7df310ff478e",
+        "bytes": 3175,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/phone-modes/PhoneModesWindow.cpp#L22-L80"
+      },
+      {
+        "path": "module-apps/application-settings/windows/phone-modes/DoNotDisturbWindow.cpp",
+        "first": 43,
+        "last": 71,
+        "note": "锁屏通知、收藏联系人来电例外",
+        "sha256": "f351b54f3e3ade0f71d967b74fc6c0de9d0642916c0a427513d763b416601fa8",
+        "bytes": 3672,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/phone-modes/DoNotDisturbWindow.cpp#L43-L71"
+      },
+      {
+        "path": "module-apps/application-settings/windows/display-keypad/DisplayLightWindow.cpp",
+        "first": 9,
+        "last": 49,
+        "note": "前光当前值和调节",
+        "sha256": "418edf0f9aa1d2489510291233fd9087c663b6b980cca2ac93da33632e6cd7aa",
+        "bytes": 5578,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/display-keypad/DisplayLightWindow.cpp#L9-L49"
+      },
+      {
+        "path": "module-apps/application-settings/windows/network/SimCardsWindow.cpp",
+        "first": 20,
+        "last": 120,
+        "note": "SIM 页面",
+        "sha256": "8cd18750301f09efad09d637f1c1a18f460935bab61a31ac384e7234b8e5f99f",
+        "bytes": 7740,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/network/SimCardsWindow.cpp#L20-L120"
+      },
+      {
+        "path": "module-apps/application-settings/windows/network/ApnSettingsWindow.cpp",
+        "first": 20,
+        "last": 103,
+        "note": "APN 页面",
+        "sha256": "4c0fdfb6243cb619bd03dca713c6d694429095e8e320d65d34ac922e4d65ce74",
+        "bytes": 4796,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/network/ApnSettingsWindow.cpp#L20-L103"
+      },
+      {
+        "path": "module-apps/application-settings/windows/apps/SoundSelectWindow.cpp",
+        "first": 22,
+        "last": 65,
+        "note": "铃声选择页和声音模型",
+        "sha256": "3fb6fafb7da68989cca0f773fba65cbea0f0d60dfb70decdd6ff94ae12dca160",
+        "bytes": 2421,
+        "url": "https://github.com/mudita/MuditaOS/blob/2cd0e4721405c0bf263f311f27d38aadae6ac89f/module-apps/application-settings/windows/apps/SoundSelectWindow.cpp#L22-L65"
+      }
+    ]
+  },
+  {
+    "id": "N04",
+    "title": "InfiniTime",
+    "repository": "InfiniTimeOrg/InfiniTime",
+    "commit": "9ad16304f5fd526b781a760cf1313813d232645e",
+    "files": [
+      {
+        "path": "src/components/ble/NotificationManager.h",
+        "first": 31,
+        "last": 84,
+        "note": "100 字节消息、最多 5 条通知",
+        "sha256": "a31fa505f6ed4725469121e23fdb4489bbee214955fce0e6e9aaee3629e5369b",
+        "bytes": 2486,
+        "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/components/ble/NotificationManager.h#L31-L84"
+      },
+      {
+        "path": "src/displayapp/screens/Notifications.cpp",
+        "first": 320,
+        "last": 367,
+        "note": "来电动作和静音",
+        "sha256": "db3a16995542b99cfde4beb8e05ce8dff4aed07dc31bfb41de1bf3177194e086",
+        "bytes": 15708,
+        "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/displayapp/screens/Notifications.cpp#L320-L367"
+      },
+      {
+        "path": "src/displayapp/screens/settings/QuickSettings.cpp",
+        "first": 54,
+        "last": 118,
+        "note": "四个快捷按钮及刷新任务",
+        "sha256": "07bb3c8948a42d455d54c6b50f2398cdafc32648e84b029f6a4f5444a3bc833e",
+        "bytes": 7405,
+        "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/displayapp/screens/settings/QuickSettings.cpp#L54-L118"
+      },
+      {
+        "path": "src/displayapp/screens/settings/QuickSettings.cpp",
+        "first": 136,
+        "last": 166,
+        "note": "亮度、通知与睡眠状态切换",
+        "sha256": "07bb3c8948a42d455d54c6b50f2398cdafc32648e84b029f6a4f5444a3bc833e",
+        "bytes": 7405,
+        "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/displayapp/screens/settings/QuickSettings.cpp#L136-L166"
+      },
+      {
+        "path": "src/displayapp/screens/settings/Settings.cpp",
+        "first": 20,
+        "last": 42,
+        "note": "手表设置页面结构",
+        "sha256": "1abf1bc3736ee477d389c11078c65eba0cbefe8af0f00e1aaf43962339db9044",
+        "bytes": 1395,
+        "url": "https://github.com/InfiniTimeOrg/InfiniTime/blob/9ad16304f5fd526b781a760cf1313813d232645e/src/displayapp/screens/settings/Settings.cpp#L20-L42"
+      }
+    ]
+  },
+  {
+    "id": "N05",
+    "title": "ESP-Brookesia v0.4.2 LVGL 壳",
+    "repository": "espressif/esp-brookesia",
+    "commit": "2c0c83fad95b81c81ee560ba8af684ff32a402f4",
+    "files": [
+      {
+        "path": "src/widgets/status_bar/esp_brookesia_status_bar.cpp",
+        "first": 18,
+        "last": 57,
+        "note": "Wi-Fi、电池状态栏",
+        "sha256": "eef18070b1c73b10777b24ce569901815082f7bdf5eef8d1682f08f1d74295fa",
+        "bytes": 27105,
+        "url": "https://github.com/espressif/esp-brookesia/blob/2c0c83fad95b81c81ee560ba8af684ff32a402f4/src/widgets/status_bar/esp_brookesia_status_bar.cpp#L18-L57"
+      },
+      {
+        "path": "src/widgets/navigation_bar/esp_brookesia_navigation_bar.cpp",
+        "first": 18,
+        "last": 90,
+        "note": "返回、主页、最近任务导航条",
+        "sha256": "58eb6b44e332b5d71e97bbc104eee89c7211caf7ce934f7eeefbb4f2e6359786",
+        "bytes": 27927,
+        "url": "https://github.com/espressif/esp-brookesia/blob/2c0c83fad95b81c81ee560ba8af684ff32a402f4/src/widgets/navigation_bar/esp_brookesia_navigation_bar.cpp#L18-L90"
+      },
+      {
+        "path": "src/widgets/recents_screen/esp_brookesia_recents_screen_snapshot.cpp",
+        "first": 37,
+        "last": 104,
+        "note": "最近任务截图对象及图像分配",
+        "sha256": "1a8145bc0120bd2ae853fedb792aeeacfe441b2ccf66d891ab315e3ad55a6258",
+        "bytes": 8467,
+        "url": "https://github.com/espressif/esp-brookesia/blob/2c0c83fad95b81c81ee560ba8af684ff32a402f4/src/widgets/recents_screen/esp_brookesia_recents_screen_snapshot.cpp#L37-L104"
+      }
+    ]
+  },
+  {
+    "id": "N06",
+    "title": "ESP-Brookesia v0.8 master",
+    "repository": "espressif/esp-brookesia",
+    "commit": "65d66c810ad706c9e2f82fe9177b11816acee546",
+    "files": [
+      {
+        "path": "README.md",
+        "first": 37,
+        "last": 49,
+        "note": "当前与历史版本、S31 的 IDF 要求",
+        "sha256": "2ecf6dc0be3ef73308805fce89f38e0d22bac94d53b121020c0f44efd3147a41",
+        "bytes": 20624,
+        "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/README.md#L37-L49"
+      },
+      {
+        "path": "app/brookesia_app_settings/src/settings_app.cpp",
+        "first": 61,
+        "last": 90,
+        "note": "JSON 资源入口；每个 Wi-Fi 行约 25 KB 是上游注释",
+        "sha256": "e623351d2293ab02c98f6da294440b197233bd2910d7e85380fefe2e63029e97",
+        "bytes": 47387,
+        "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_settings/src/settings_app.cpp#L61-L90"
+      },
+      {
+        "path": "app/brookesia_app_settings/package/res/screens/settings_home.json",
+        "first": 29,
+        "last": 82,
+        "note": "行标题、当前值、事件动作",
+        "sha256": "39a4fc99d8b4250497c6c0c9f2285debcea0a1078a4e10955aac1035f497083d",
+        "bytes": 10729,
+        "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_settings/package/res/screens/settings_home.json#L29-L82"
+      },
+      {
+        "path": "app/brookesia_app_settings/package/res/templates/search_card.json",
+        "first": 25,
+        "last": 60,
+        "note": "只有搜索占位文案，不是可验证搜索引擎",
+        "sha256": "7d3e04b53db6dd3146a6064d9aa6f2aba19747be4f05c4e8aec08c74f9daa504",
+        "bytes": 1607,
+        "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_settings/package/res/templates/search_card.json#L25-L60"
+      },
+      {
+        "path": "app/brookesia_app_settings/package/res/screens/sound.json",
+        "first": 48,
+        "last": 80,
+        "note": "声音页面和音量动作",
+        "sha256": "81a689cf39c8713ade2f5a183c5b5cee7849a9516dfa92cd6c8c9539cce75de3",
+        "bytes": 7090,
+        "url": "https://github.com/espressif/esp-brookesia/blob/65d66c810ad706c9e2f82fe9177b11816acee546/app/brookesia_app_settings/package/res/screens/sound.json#L48-L80"
+      }
+    ]
+  },
+  {
+    "id": "N07",
+    "title": "ZSWatch 通知",
+    "repository": "ZSWatch/ZSWatch",
+    "commit": "821c340366a0bc55b536f7feb5d45ca3836c44c3",
+    "files": [
+      {
+        "path": "app/src/managers/zsw_notification_manager.h",
+        "first": 25,
+        "last": 107,
+        "note": "通知管理器和字段上限",
+        "sha256": "4714d60e7adaea2244677c13a48cdad052f80dddd4332a23018da9810ba5cdff",
+        "bytes": 4738,
+        "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/managers/zsw_notification_manager.h#L25-L107"
+      },
+      {
+        "path": "app/src/ui/notification/zsw_popup_notification.c",
+        "first": 40,
+        "last": 135,
+        "note": "通知弹层",
+        "sha256": "99ed59977911850a2ced0ea30104185266b22ebd6db7c81e8bc4ae93e5059343",
+        "bytes": 9967,
+        "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/ui/notification/zsw_popup_notification.c#L40-L135"
+      },
+      {
+        "path": "app/src/ui/notification/zsw_notification_reply.c",
+        "first": 39,
+        "last": 102,
+        "note": "录音、转写、草稿、发送和失败状态；依赖手机链路",
+        "sha256": "656f38a5b70b6628af3067d1c5721e466845752524fb3af1298110d6f1a677be",
+        "bytes": 21285,
+        "url": "https://github.com/ZSWatch/ZSWatch/blob/821c340366a0bc55b536f7feb5d45ca3836c44c3/app/src/ui/notification/zsw_notification_reply.c#L39-L102"
+      }
+    ]
+  },
+  {
+    "id": "N08",
+    "title": "LilyPhone",
+    "repository": "dparnell/lilyphone1",
+    "commit": "de10fc3882292b9be1cfcd14632726590fdef262",
+    "files": [
+      {
+        "path": "src/ui/ui_phone1.cpp",
+        "first": 448,
+        "last": 465,
+        "note": "从顶端下拉快捷设置",
+        "sha256": "4515a8a8f64b8ed35dbacf6ddc6e278aa175ca3997e467b872ab01b6ed3240cb",
+        "bytes": 246053,
+        "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/ui/ui_phone1.cpp#L448-L465"
+      },
+      {
+        "path": "src/ui/ui_phone1.cpp",
+        "first": 4706,
+        "last": 4751,
+        "note": "快捷开关与当前值行",
+        "sha256": "4515a8a8f64b8ed35dbacf6ddc6e278aa175ca3997e467b872ab01b6ed3240cb",
+        "bytes": 246053,
+        "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/ui/ui_phone1.cpp#L4706-L4751"
+      },
+      {
+        "path": "src/main.cpp",
+        "first": 39,
+        "last": 54,
+        "note": "拖动刷新节流和定期全刷参数，不能照搬 Plus",
+        "sha256": "db45c193aa14b63aa40e18e98012d4ee43a57575d020ae9da11bdad3fb58179e",
+        "bytes": 23243,
+        "url": "https://github.com/dparnell/lilyphone1/blob/de10fc3882292b9be1cfcd14632726590fdef262/src/main.cpp#L39-L54"
+      }
+    ]
+  },
+  {
+    "id": "S01",
+    "title": "Lineage / AOSP 设置",
+    "repository": "LineageOS/android_packages_apps_Settings",
+    "commit": "f82184028165ea108335a9745428c26fea3cec47",
+    "files": [
+      {
+        "path": "res/xml/top_level_settings.xml",
+        "first": 30,
+        "last": 94,
+        "note": "分类层级、当前值和控制器",
+        "sha256": "18be8bc607ae52ead908c49f4f799cb72162d83afa90130000e31b177898ad08",
+        "bytes": 15044,
+        "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/res/xml/top_level_settings.xml#L30-L94"
+      },
+      {
+        "path": "src/com/android/settings/search/BaseSearchIndexProvider.java",
+        "first": 52,
+        "last": 110,
+        "note": "可索引 XML 和原始数据",
+        "sha256": "e6ba7f880c86b5a3149979878abffec026f2206d8d7ec624d028a908ace8a3d8",
+        "bytes": 11755,
+        "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/search/BaseSearchIndexProvider.java#L52-L110"
+      },
+      {
+        "path": "src/com/android/settings/search/SearchFeatureProvider.java",
+        "first": 82,
+        "last": 140,
+        "note": "搜索界面委托给外部 Activity",
+        "sha256": "728e2456140a2cdaab0b8b923215164eabb10b269e6ed9d22d9cc25c036ce88f",
+        "bytes": 5920,
+        "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/search/SearchFeatureProvider.java#L82-L140"
+      },
+      {
+        "path": "src/com/android/settings/dashboard/DashboardFragment.java",
+        "first": 462,
+        "last": 481,
+        "note": "控制器更新当前状态",
+        "sha256": "24073002ab3b560583b8710f10df21bc86707f5b27f1cb3f06c25d9160ec062c",
+        "bytes": 30078,
+        "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/dashboard/DashboardFragment.java#L462-L481"
+      },
+      {
+        "path": "src/com/android/settings/notification/RingVolumePreferenceController.java",
+        "first": 30,
+        "last": 96,
+        "note": "响铃音量分类",
+        "sha256": "16a433c6783c925707b46913c31d8d18af63db51c206dd1e4c85eecd7a1387b7",
+        "bytes": 4754,
+        "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/notification/RingVolumePreferenceController.java#L30-L96"
+      },
+      {
+        "path": "src/com/android/settings/security/ChangeSimPinPreferenceController.java",
+        "first": 30,
+        "last": 90,
+        "note": "SIM PIN 与设备锁不同",
+        "sha256": "4b7f88776adfa0ffc39be8fdcac17d7ae36024f0dc156060ba33674b45ae8b07",
+        "bytes": 10358,
+        "url": "https://github.com/LineageOS/android_packages_apps_Settings/blob/f82184028165ea108335a9745428c26fea3cec47/src/com/android/settings/security/ChangeSimPinPreferenceController.java#L30-L90"
+      }
+    ]
+  },
+  {
+    "id": "C01",
+    "title": "ink 接入合同与现有服务",
+    "repository": "Gidean-zcx/ink",
+    "commit": "6171c2bf8d59238c95f2d548663f8b2ab3c6f43a",
+    "files": [
+      {
+        "path": "system/ui/shell/navigation.c",
+        "first": 980,
+        "last": 1008,
+        "note": "控制中心 AI 快照",
+        "sha256": "15e2178d853202e31bed42a094a212743be07b71c2dac76cbfc202402ec10fd0",
+        "bytes": 133125,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/ui/shell/navigation.c#L980-L1008"
+      },
+      {
+        "path": "system/ui/shell/navigation.c",
+        "first": 1011,
+        "last": 1135,
+        "note": "快捷设置、成员分流与通知摘要",
+        "sha256": "15e2178d853202e31bed42a094a212743be07b71c2dac76cbfc202402ec10fd0",
+        "bytes": 133125,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/ui/shell/navigation.c#L1011-L1135"
+      },
+      {
+        "path": "system/services/notify/notify_caps.c",
+        "first": 149,
+        "last": 192,
+        "note": "通知原子能力与事件",
+        "sha256": "f0bb680c37da247b622cabe222a477070cf2f7c8ce643814d4ab26ac85eee556",
+        "bytes": 8465,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/services/notify/notify_caps.c#L149-L192"
+      },
+      {
+        "path": "system/services/display/light.c",
+        "first": 74,
+        "last": 87,
+        "note": "亮度和暖光设置",
+        "sha256": "8752afd93c1d75bf170c73cd0c63e64ab75fc1ca816f969622f86abb30585660",
+        "bytes": 2970,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/services/display/light.c#L74-L87"
+      },
+      {
+        "path": "system/policy/settings.c",
+        "first": 414,
+        "last": 434,
+        "note": "统一读写设置能力",
+        "sha256": "56626c588f707533894d4441f17aa16b515b660249e4fa1aa006393d984f7d75",
+        "bytes": 16768,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/policy/settings.c#L414-L434"
+      },
+      {
+        "path": "system/policy/members.c",
+        "first": 1034,
+        "last": 1054,
+        "note": "家人能力与只能本人输入的 PIN",
+        "sha256": "bcb58c29dfaac0fdf1e6fd67ad509db6a26a408c98e07452757e49c5f3d65042",
+        "bytes": 49025,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/policy/members.c#L1034-L1054"
+      },
+      {
+        "path": "system/ui/shell/settings_pages.c",
+        "first": 181,
+        "last": 191,
+        "note": "设置行和能力绑定",
+        "sha256": "7b916119da6da659eae1838835ac992531cbbbc032ec8f5c976c032db5a0d093",
+        "bytes": 38213,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/system/ui/shell/settings_pages.c#L181-L191"
+      },
+      {
+        "path": "docs/process.md",
+        "first": 46,
+        "last": 58,
+        "note": "软总线、原子能力与 AI 原生审视",
+        "sha256": "f76f37871892c24875e36460a7ce8d485185917a52d70b4f238756656556616a",
+        "bytes": 6456,
+        "url": "https://github.com/Gidean-zcx/ink/blob/6171c2bf8d59238c95f2d548663f8b2ab3c6f43a/docs/process.md#L46-L58"
+      }
+    ]
+  }
+]
