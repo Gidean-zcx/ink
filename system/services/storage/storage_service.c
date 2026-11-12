@@ -50,9 +50,8 @@
  * writes must always find a free slot (submit fails when all MAX_JOBS are taken). */
 #define BG_MAX_WAIT_US 10000000ull
 #define MAX_DEFER_US 30000000ull /* writes held off longer than this are forced (counted) */
-/* direct-drive panels (async) can pause between drive phases for a flash operation: a write waits
- * this long for a quiet panel, then goes ahead and pauses the drive (a hiccup, no garbage) instead
- * of waiting behind continuous updates (AI text streaming keeps such a panel busy) */
+/* Async panels wait briefly for quiet before pausing between phases. Other panels request the
+ * guard as soon as a write is ready: the current waveform finishes, and new refreshes wait. */
 #define ASYNC_PANEL_WAIT_US 500000
 #define CACHE_MAX 32
 #define CACHE_FILE_MAX 1024 /* larger files are not cached */
@@ -483,35 +482,43 @@ static void storage_task(void *arg) {
         for (int i = 0; i < PREFETCH_MAX && !waiting; i++) waiting = ST.prefetch[i] != NULL;
         osal_mutex_unlock(ST.lock);
         osal_sem_take(ST.kick, waiting ? IDLE_POLL_US * 4 : 30000000);
+        bool guarded = false;
         for (;;) {
-            serve_read();
-            /* the log is background work: user writes waiting in the queue go first (index-durable: a log that kept
-             * growing while it was written took the task again and again and held a file's indexing up) */
-            osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
-            bool jobs = ST.pending > 0;
-            osal_mutex_unlock(ST.lock);
-            if (!jobs) ink_log_poll(ink_display_busy() <= 0 && osal_now_us() >= ink_power_last_activity() + BG_QUIET_US);
-            prefetch_one();
+            if (!guarded) {
+                serve_read();
+                /* the log is background work: user writes waiting in the queue go first (index-durable: a log that kept
+                 * growing while it was written took the task again and again and held a file's indexing up) */
+                osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+                bool jobs = ST.pending > 0;
+                osal_mutex_unlock(ST.lock);
+                if (!jobs) ink_log_poll(ink_display_busy() <= 0 && osal_now_us() >= ink_power_last_activity() + BG_QUIET_US);
+                prefetch_one();
+            }
             job_t job;
             /* wait for a quiet panel and no write hold (reads are still served meanwhile) */
             uint64_t t_wait = osal_now_us();
             bool forced = false;
             int slot;
             for (;;) {
-                serve_read();
+                if (!guarded) serve_read();
                 bool held = writes_held();
-                bool pause = !held && ST.panel_async && osal_now_us() - t_wait >= ASYNC_PANEL_WAIT_US;
+                bool pause = !held && (!ST.panel_async || osal_now_us() - t_wait >= ASYNC_PANEL_WAIT_US);
                 bool audio = ink_audio_capture_busy() || ink_audio_focus_top() >= INK_AUDIO_PRIO_VOICE;
-                slot = take_job(&job, ink_display_busy() <= 0 || pause, audio, ink_power_last_activity(), &forced);
+                slot = take_job(&job, guarded || ink_display_busy() <= 0 || pause, audio, ink_power_last_activity(), &forced);
                 if (slot != -2) {
                     if (slot >= 0 && pause) ink_probe_count("storage.writes_pausing_panel");
                     break;
                 }
+                if (guarded) { ink_display_flash_guard(false); guarded = false; }
                 osal_sem_take(ST.kick, IDLE_POLL_US); /* a new read wakes us early */
             }
-            if (slot < 0) break;
+            if (slot < 0) {
+                if (guarded) ink_display_flash_guard(false);
+                break;
+            }
             if (forced) ink_probe_count("storage.forced_writes");
-            ink_display_flash_guard(true);
+            if (!guarded) ink_display_flash_guard(true);
+            guarded = !ST.panel_async;
             uint64_t t0 = osal_now_us();
             int r = run_job(&job);
             if (r == NO_PARENT) {
@@ -519,7 +526,7 @@ static void storage_task(void *arg) {
                 r = run_job(&job);
                 if (r == NO_PARENT) r = -1;
             }
-            ink_display_flash_guard(false);
+            if (!guarded) ink_display_flash_guard(false);
             ink_probe_value("storage.write_ms", (double)(osal_now_us() - t0) / 1000.0);
             ink_probe_value("storage.wait_for_idle_ms", (double)(t0 - t_wait) / 1000.0);
             if (r != 0) {
@@ -532,6 +539,8 @@ static void storage_task(void *arg) {
             }
             finish_job(slot);
             if (job.done) job.done(job.ctx, r);
+            /* Finish ready writes together; do not insert another waveform between queued writes. */
+            if (guarded && !ink_storage_pending()) { ink_display_flash_guard(false); guarded = false; }
         }
     }
 }
