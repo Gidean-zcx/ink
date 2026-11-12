@@ -4,6 +4,14 @@
 
 本任务只读公开网页和源码，只修改本目录；不接设备，不下载或运行固件二进制，不构建主工程。结论按源码证据、作者自述和推测分开；没有实机体验证据时不宣称体验胜出。所有候选按功能成熟度与体验证据评价，许可证不作筛选条件。
 
+## 已核实的阶段结论
+
+- 【实测／实现】RickyOS 旧版源码匿名可读，官网说明 1.2 起不再公开源码；不能再把整个品牌记成“没有源码”。
+- 【实测／实现】CrossLink Gitee 当前树只有许可和两份说明；GitHub 保留旧版代码，所查五个 fork 没有当前 Plus／Pixel 发布版的对应证据。
+- 【实测／实现】ThingsOS 同名作者仓库只有说明、许可证、图片；PageRest 官方硬件文档留下的源码链接当前返回 404。均未冒充为取得应用实现。
+- 【实现】CrossMux 文档明确参考 weread.koplugin 和 papers3-weread；retro-go-tab5 明确指向 gpSP／HowBoyAdvance，另找到独立 retro-go-claw4 源码。正在补逐文件证据与31组覆盖表。
+- 【实测】BoBo 开发文档公开了 `.crosspoint/plugins`、`manifest.json`／`device.json` 和 ELF 应用包约定；只能支持协议来自 CrossPoint 系的线索，不能断定具体 fork。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
