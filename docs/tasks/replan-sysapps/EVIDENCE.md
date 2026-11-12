@@ -101,6 +101,8 @@ local_links=134 task_files=8 scope_only_task_docs=true product_lines=0 test_line
 
 【实测】`git diff --cached --check`退出0。一次文档检查发现home.c引用终点越界，已改为实际28行；一次空白检查发现SOURCES末尾多空行，已修正并复核。没有改任何产品测试来通过检查。
 
-最终提交后再核对基线至HEAD范围与隐私，结果另记；外部HTTP链接没有逐个发HEAD请求，检查的是固定Git对象中的文件/行号和本地链接，不虚报全部网页可访问。
+【实测】对指定基线至HEAD执行 `git diff --check`退出0；`git diff --stat`和文件列表只有本任务目录8个文档/证据文件，产品/测试改动0。按总规则§6原隐私表达式扫描差异，无输出、grep退出1（0匹配）；`git status --short`无输出，工作树干净。收尾提交后重复核对同一范围/检查。
+
+外部HTTP链接没有逐个发HEAD请求，检查的是固定Git对象中的文件/行号和本地链接，不虚报全部网页可访问。
 
 构建/测试原话：**未运行主工程构建；未运行全量ctest；未运行ASan；未编译S31；未运行gcccheck。** 本任务为纯调研，任务书豁免构建/全量测试；没有产品修复和反向对照适用项。
