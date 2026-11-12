@@ -1,0 +1,1161 @@
+{
+  "read_on": "2026-11-12",
+  "ink_baseline": "d09b79195e2dc57908e33219216048e529e082c6",
+  "revisions": {
+    "ink": "d09b79195e2dc57908e33219216048e529e082c6",
+    "freeink-sdk": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+    "crosspoint-reader": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+    "kiikoread": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+    "kiikoread-xiugai": "746ce316faf61ce5228eceee618eacb50a02a395",
+    "crossmux": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61"
+  },
+  "files": [
+    {
+      "id": "O01",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/ui.h",
+      "ranges": [
+        [
+          36,
+          52
+        ],
+        [
+          71,
+          147
+        ]
+      ],
+      "lines": 158,
+      "sha256": "1b26761e73af5e8053630fefbb0e45d872b6c69c02db5d7404562a818a142d6f",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/ui.h"
+    },
+    {
+      "id": "O02",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/appreg.h",
+      "ranges": [
+        [
+          25,
+          99
+        ]
+      ],
+      "lines": 104,
+      "sha256": "02cdee3b093d436ceecc4c8e0902a0cbd3d0c3e050d1043887d8da2f9e017f7c",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/appreg.h"
+    },
+    {
+      "id": "O03",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/cap.h",
+      "ranges": [
+        [
+          64,
+          138
+        ],
+        [
+          155,
+          195
+        ]
+      ],
+      "lines": 222,
+      "sha256": "f727059b7d58d747ea00b8d86836831bd0b62d35cefda98bf124b29ba904bc15",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/cap.h"
+    },
+    {
+      "id": "O04",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/ui_semantics.h",
+      "ranges": [
+        [
+          10,
+          56
+        ]
+      ],
+      "lines": 61,
+      "sha256": "f964a087daeebce2faf6477b54521088bba4ba50ac9befd440f686286cd93314",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/ui_semantics.h"
+    },
+    {
+      "id": "O05",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/file.h",
+      "ranges": [
+        [
+          1,
+          14
+        ],
+        [
+          74,
+          102
+        ]
+      ],
+      "lines": 158,
+      "sha256": "eeb3630ddebc87dfc094fe5077c9f147f3ee4c025fe812fcabba2ab6b1a424e4",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/file.h"
+    },
+    {
+      "id": "O06",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/members.h",
+      "ranges": [
+        [
+          35,
+          64
+        ]
+      ],
+      "lines": 91,
+      "sha256": "b3af779add182b27c0c107b6bd24c739a58b3f6b20604a6b56159ae8290ed62e",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/members.h"
+    },
+    {
+      "id": "O07",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/ui/ui_task.c",
+      "ranges": [
+        [
+          190,
+          225
+        ],
+        [
+          424,
+          455
+        ],
+        [
+          900,
+          922
+        ],
+        [
+          37,
+          37
+        ]
+      ],
+      "lines": 979,
+      "sha256": "124fa9d32b55d97b41629b80c23133d36051bd2fa9deef58b488053cb0b4242a",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/ui/ui_task.c"
+    },
+    {
+      "id": "O08",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/services/display/refresh_policy.c",
+      "ranges": [
+        [
+          94,
+          168
+        ]
+      ],
+      "lines": 174,
+      "sha256": "90ea0847fc36708373224fbf1b75d4df04d931c9aa7b12062cfd250c0d74d4c7",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/services/display/refresh_policy.c"
+    },
+    {
+      "id": "O09",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/services/display/refresh_policy.h",
+      "ranges": [
+        [
+          12,
+          16
+        ]
+      ],
+      "lines": 58,
+      "sha256": "530637428790c1e278965efee474f1f8959f9477bdb6dc92cc0f328c152ad0d0",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/services/display/refresh_policy.h"
+    },
+    {
+      "id": "O10",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/display.h",
+      "ranges": [
+        [
+          23,
+          52
+        ]
+      ],
+      "lines": 80,
+      "sha256": "c591ae1e5002d912504f65d9818d58101343f877fe39c2e908c38874d90cf269",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/display.h"
+    },
+    {
+      "id": "O11",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/ui/app_packages.c",
+      "ranges": [
+        [
+          122,
+          153
+        ]
+      ],
+      "lines": 454,
+      "sha256": "ae6f7e3a22cede27eaaafece29c619e95b6d1b73fcd2769f2d9cb601b991911a",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/ui/app_packages.c"
+    },
+    {
+      "id": "O12",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "apps/reader/reader.c",
+      "ranges": [
+        [
+          601,
+          624
+        ],
+        [
+          994,
+          1014
+        ],
+        [
+          1066,
+          1073
+        ]
+      ],
+      "lines": 1252,
+      "sha256": "36ff1666fb7b244b872fc9b029eba32f15b391d2775a325c6191777e313192e7",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/apps/reader/reader.c"
+    },
+    {
+      "id": "O13",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/include/ink/sys/i18n.h",
+      "ranges": [
+        [
+          2,
+          23
+        ]
+      ],
+      "lines": 36,
+      "sha256": "8d8cf1c5a02bf40187fd634d44e8be6e43a370401b48624951fbd62d11a948de",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/include/ink/sys/i18n.h"
+    },
+    {
+      "id": "O14",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "ports/esp32s31/partitions.csv",
+      "ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "lines": 10,
+      "sha256": "a3015d0956af91a21aeb9ca7435b3395ec613a439a0311c59f6831c088643d90",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/ports/esp32s31/partitions.csv"
+    },
+    {
+      "id": "O15",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "docs/hardware/flash-layout.md",
+      "ranges": [
+        [
+          7,
+          23
+        ]
+      ],
+      "lines": 23,
+      "sha256": "2464b4f31f9bd6180ea20ed058d37738b08e33cc26462364e565e8bde85d5d30",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/docs/hardware/flash-layout.md"
+    },
+    {
+      "id": "O16",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/apps/remote/remote.c",
+      "ranges": [
+        [
+          17,
+          20
+        ],
+        [
+          157,
+          205
+        ],
+        [
+          540,
+          555
+        ]
+      ],
+      "lines": 850,
+      "sha256": "c269d45db3a67d90b0d80a52a325fc146208f49f70651929f2046ac00bea1033",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/apps/remote/remote.c"
+    },
+    {
+      "id": "O17",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/services/display/display_service.c",
+      "ranges": [
+        [
+          210,
+          225
+        ]
+      ],
+      "lines": 313,
+      "sha256": "267f3ad070fca290a95bb2d15ed21086a7d007a5b7e8268b83f8e82c096a638c",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/services/display/display_service.c"
+    },
+    {
+      "id": "O18",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "simulator/profiles/metalio-plus.json",
+      "ranges": [
+        [
+          30,
+          42
+        ]
+      ],
+      "lines": 291,
+      "sha256": "469bcabb1baa450bc3ab61703a887493f813e141fb9d5ad99e022128804fd053",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/simulator/profiles/metalio-plus.json"
+    },
+    {
+      "id": "O19",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "tests/sdk_boundary.cmake",
+      "ranges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "lines": 39,
+      "sha256": "8383bd0134f8632f6a0a05f3a58453a89af60f97173576de0196cdcabc29b761",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/tests/sdk_boundary.cmake"
+    },
+    {
+      "id": "O20",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "CMakeLists.txt",
+      "ranges": [
+        [
+          303,
+          325
+        ]
+      ],
+      "lines": 2044,
+      "sha256": "bce9ff3e3e71d8efb32b743bc9c8d3c423beab1b91fb12c313735334bb2a48e2",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/CMakeLists.txt"
+    },
+    {
+      "id": "O21",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "docs/tasks/fw-size-1/REPORT.md",
+      "ranges": [
+        [
+          9,
+          48
+        ]
+      ],
+      "lines": 129,
+      "sha256": "6d741505acb55270f057c61feca703fd159ac140082d635842fe3692cb924d1c",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/docs/tasks/fw-size-1/REPORT.md"
+    },
+    {
+      "id": "O22",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "docs/tasks/fw-size-1/RESOURCE-PLAN.md",
+      "ranges": [
+        [
+          5,
+          18
+        ]
+      ],
+      "lines": 20,
+      "sha256": "58c2530f9014432549af4271be0f8e747c3423128918bb34969afcd98a977115",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/docs/tasks/fw-size-1/RESOURCE-PLAN.md"
+    },
+    {
+      "id": "O23",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "ports/esp32s31/vendor/metalio_display/SOURCE.md",
+      "ranges": [
+        [
+          1,
+          7
+        ]
+      ],
+      "lines": 54,
+      "sha256": "6b960680358dcb0553ee741c1de4cb6d4dc81e4084505e1beefa662a91caec48",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/ports/esp32s31/vendor/metalio_display/SOURCE.md"
+    },
+    {
+      "id": "O24",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "system/policy/cap.c",
+      "ranges": [
+        [
+          86,
+          145
+        ]
+      ],
+      "lines": 1749,
+      "sha256": "0a0c28cc0293326e50029ea278c9503158c9b568cca1d102d2a910cf2f57e756",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/system/policy/cap.c"
+    },
+    {
+      "id": "O25",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "docs/tasks/picks-status.md",
+      "ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "lines": 80,
+      "sha256": "147857a515b0501de85a6d9dcd7a7d32dbba54e1b5a0b5f8d0808eeeb73b6630",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/docs/tasks/picks-status.md"
+    },
+    {
+      "id": "O26",
+      "project": "ink",
+      "revision": "d09b79195e2dc57908e33219216048e529e082c6",
+      "path": "docs/tasks/reuse-crosspoint-1/REPORT.md",
+      "ranges": [
+        [
+          94,
+          98
+        ]
+      ],
+      "lines": 377,
+      "sha256": "cfe7872f0e42a459a0748a0f39bb2770e392f42e397219938c0b6c13765978d9",
+      "url": "https://github.com/Gidean-zcx/ink/blob/d09b79195e2dc57908e33219216048e529e082c6/docs/tasks/reuse-crosspoint-1/REPORT.md"
+    },
+    {
+      "id": "C01",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/activities/Activity.h",
+      "ranges": [
+        [
+          16,
+          73
+        ]
+      ],
+      "lines": 73,
+      "sha256": "5dd92aaa9dd804cd04e64f2281329a2f510e3f969453e26cca6dd84848f4871e",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/Activity.h"
+    },
+    {
+      "id": "C02",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/activities/ActivityManager.h",
+      "ranges": [
+        [
+          24,
+          68
+        ],
+        [
+          76,
+          135
+        ]
+      ],
+      "lines": 138,
+      "sha256": "202ad316028a3020f44a8746f0f6219fd9158694652ce43dcb089bfa4c4ebb5b",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/ActivityManager.h"
+    },
+    {
+      "id": "C03",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/activities/ActivityManager.cpp",
+      "ranges": [
+        [
+          40,
+          70
+        ]
+      ],
+      "lines": 546,
+      "sha256": "c084ee9ed4ab557d9b21144d1e0f8d16bb48cada106a8819e02d694e9916c025",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/ActivityManager.cpp"
+    },
+    {
+      "id": "C04",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "lib/GfxRenderer/GfxRenderer.h",
+      "ranges": [
+        [
+          31,
+          83
+        ],
+        [
+          235,
+          275
+        ],
+        [
+          103,
+          223
+        ]
+      ],
+      "lines": 488,
+      "sha256": "af51f8b9cf1af28deed2415273e1e9ca44b70b06ca18be9137952fb62cb51afd",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/GfxRenderer/GfxRenderer.h"
+    },
+    {
+      "id": "C05",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "lib/GfxRenderer/GfxRenderer.cpp",
+      "ranges": [
+        [
+          170,
+          178
+        ],
+        [
+          1772,
+          1795
+        ],
+        [
+          2420,
+          2480
+        ],
+        [
+          2483,
+          2556
+        ]
+      ],
+      "lines": 2600,
+      "sha256": "01c3c8e23a303e8f533f43e4b5748ecc85e3dbc94c19878d9cffd60bb93be3a8",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/GfxRenderer/GfxRenderer.cpp"
+    },
+    {
+      "id": "C06",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "lib/hal/HalDisplay.h",
+      "ranges": [
+        [
+          27,
+          129
+        ]
+      ],
+      "lines": 135,
+      "sha256": "6feb2d443dbf64643905f6c2bad0cdc7e650dc4145e0781d96a983b649fc02a1",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/hal/HalDisplay.h"
+    },
+    {
+      "id": "C07",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/MappedInputManager.h",
+      "ranges": [
+        [
+          18,
+          131
+        ]
+      ],
+      "lines": 172,
+      "sha256": "eac05f4a64d31f521d384b317be99af4f98532a23356f09d33af5f6c7b3d8850",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/MappedInputManager.h"
+    },
+    {
+      "id": "C08",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "lib/hal/HalStorage.h",
+      "ranges": [
+        [
+          24,
+          76
+        ],
+        [
+          97,
+          129
+        ]
+      ],
+      "lines": 135,
+      "sha256": "4acb31dd1ec0d6790c405abfe946584a8609e5b598979bce5ab5fde88efea33a",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/hal/HalStorage.h"
+    },
+    {
+      "id": "C09",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "lib/I18n/I18n.h",
+      "ranges": [
+        [
+          18,
+          40
+        ]
+      ],
+      "lines": 40,
+      "sha256": "97b494ffa41fbee90c554b3c1cd96133ee12126f409f58ca594d205513198b7a",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/lib/I18n/I18n.h"
+    },
+    {
+      "id": "C10",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/components/UITheme.h",
+      "ranges": [
+        [
+          23,
+          43
+        ]
+      ],
+      "lines": 64,
+      "sha256": "cef9915a2f7664aa9a1abe9a4dd4bea17c21019a3dcac40e82bb34a9c3f00328",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/components/UITheme.h"
+    },
+    {
+      "id": "C11",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/components/UiAppHost.h",
+      "ranges": [
+        [
+          22,
+          75
+        ]
+      ],
+      "lines": 78,
+      "sha256": "1844366b35d66adf3f45efdad0715e79ff63130e75356a2d1116209472618f06",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/components/UiAppHost.h"
+    },
+    {
+      "id": "C12",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/activities/network/NetworkModeSelectionActivity.cpp",
+      "ranges": [
+        [
+          22,
+          88
+        ]
+      ],
+      "lines": 96,
+      "sha256": "40c5c799699f6a7b953e3084e5106889de10d799c7f95cff74385c360d717eaa",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/network/NetworkModeSelectionActivity.cpp"
+    },
+    {
+      "id": "C13",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "src/activities/reader/EpubReaderActivity.cpp",
+      "ranges": [
+        [
+          1,
+          62
+        ],
+        [
+          257,
+          300
+        ]
+      ],
+      "lines": 3500,
+      "sha256": "2ac8eb8cc362137cf32c006dd5f1abf55cd0a8f8cc0aef2a85bb3c0b63a66d67",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/src/activities/reader/EpubReaderActivity.cpp"
+    },
+    {
+      "id": "C14",
+      "project": "crosspoint-reader",
+      "revision": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "path": "docs/webserver-endpoints.md",
+      "ranges": [
+        [
+          70,
+          100
+        ]
+      ],
+      "lines": 748,
+      "sha256": "eda0e0d35e46bbb82b91c1990d48e44cf1dc37bbfdf7f7a4ae0866a74ef81c64",
+      "url": "https://github.com/crosspoint-reader/crosspoint-reader/blob/0333cbbe4649f80afafe83061bf1afe9fd372fcf/docs/webserver-endpoints.md"
+    },
+    {
+      "id": "K01",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/app/app.h",
+      "ranges": [
+        [
+          35,
+          205
+        ]
+      ],
+      "lines": 205,
+      "sha256": "2681e2e88ded1903163bdcc74b108e50dce8eef9fd6e47c388545f2acfac1e3b",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/app/app.h"
+    },
+    {
+      "id": "K02",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/app/app_registry.c",
+      "ranges": [
+        [
+          10,
+          47
+        ]
+      ],
+      "lines": 48,
+      "sha256": "1bcb9a9da2b91aae670d21865dbdd8d354afa2883e458146cf362f0d5dce9eb6",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/app/app_registry.c"
+    },
+    {
+      "id": "K03",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/app/app_loop.c",
+      "ranges": [
+        [
+          397,
+          517
+        ],
+        [
+          1650,
+          1682
+        ]
+      ],
+      "lines": 1855,
+      "sha256": "bbb4f1de314ca77883bb5498c44e7dcfed7507347a7e1e27ca664ce7abeb88d2",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/app/app_loop.c"
+    },
+    {
+      "id": "K04",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/apps/app_book.c",
+      "ranges": [
+        [
+          124,
+          196
+        ],
+        [
+          258,
+          274
+        ],
+        [
+          1890,
+          1910
+        ],
+        [
+          3868,
+          3889
+        ],
+        [
+          8449,
+          8461
+        ]
+      ],
+      "lines": 8461,
+      "sha256": "f12fe6b0e3b51dec2910a24e9d9cfba3c30eef842e43bfe240bce8b473eb7a2f",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/apps/app_book.c"
+    },
+    {
+      "id": "K05",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/ui/ui_kit.h",
+      "ranges": [
+        [
+          25,
+          67
+        ],
+        [
+          93,
+          117
+        ]
+      ],
+      "lines": 367,
+      "sha256": "a50fd962f64b619e1dd174b624670dc692bd6b89363cacc05485ed774b32214c",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_kit.h"
+    },
+    {
+      "id": "K06",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/ui/ui_kit.c",
+      "ranges": [
+        [
+          17,
+          29
+        ],
+        [
+          82,
+          110
+        ]
+      ],
+      "lines": 1771,
+      "sha256": "48cfe368e297bc37f4600556e17f21d1941c758fc7e511cd8a16a2b52f186358",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_kit.c"
+    },
+    {
+      "id": "K07",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/book/book_progress.c",
+      "ranges": [
+        [
+          5,
+          33
+        ]
+      ],
+      "lines": 288,
+      "sha256": "154b19379430505931b21adc8b8b6d4f42bcd2b29eb54ba026c947cf23527243",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_progress.c"
+    },
+    {
+      "id": "K08",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/settings.c",
+      "ranges": [
+        [
+          216,
+          218
+        ],
+        [
+          760,
+          764
+        ]
+      ],
+      "lines": 1529,
+      "sha256": "17e4fcc5b8a74b9510792daeeb40eadcc8a0ceb89d3a520fa153b019bdeabbaf",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/settings.c"
+    },
+    {
+      "id": "K09",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "boards/metalio47/partitions.csv",
+      "ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "lines": 8,
+      "sha256": "2ffd6167a2a9fdc65fe777c46276254b058d78079a5828ac273056d5806eef9c",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/boards/metalio47/partitions.csv"
+    },
+    {
+      "id": "K10",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "boards/metalio47/sdkconfig.defaults",
+      "ranges": [
+        [
+          89,
+          95
+        ]
+      ],
+      "lines": 133,
+      "sha256": "d5f8e38ccaddadf43f86e207dfff970883a8fa0b14b4ac52ff9afab82f74b738",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/boards/metalio47/sdkconfig.defaults"
+    },
+    {
+      "id": "K11",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "README.zh-CN.md",
+      "ranges": [
+        [
+          3,
+          31
+        ]
+      ],
+      "lines": 64,
+      "sha256": "4dba0ccc256e14eb47d13accbfcc8c502611a6843e885f3b0cb22cc2c21c9e0c",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/README.zh-CN.md"
+    },
+    {
+      "id": "K12",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/ui/ui_nav.c",
+      "ranges": [
+        [
+          109,
+          122
+        ],
+        [
+          149,
+          175
+        ],
+        [
+          190,
+          258
+        ]
+      ],
+      "lines": 258,
+      "sha256": "cd21e1bd733f014d5a9a1229286135839a2fd86dea9524694356604c9b0d1e56",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/ui/ui_nav.c"
+    },
+    {
+      "id": "K13",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/book/book_layout.h",
+      "ranges": [
+        [
+          18,
+          102
+        ]
+      ],
+      "lines": 114,
+      "sha256": "91701414c06165fbd771cc8306aa612f4b3867c5499c873bf34c9a31f726436c",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_layout.h"
+    },
+    {
+      "id": "K14",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/font/ttf_font.c",
+      "ranges": [
+        [
+          5,
+          14
+        ]
+      ],
+      "lines": 3386,
+      "sha256": "21fcfd1969d9c68f1dcaff384a2432a4bcda39bb6edc044e4e8b878f6b982d78",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/font/ttf_font.c"
+    },
+    {
+      "id": "X01",
+      "project": "kiikoread-xiugai",
+      "revision": "746ce316faf61ce5228eceee618eacb50a02a395",
+      "path": "main/music/music_player.c",
+      "ranges": [
+        [
+          5,
+          17
+        ]
+      ],
+      "lines": 1628,
+      "sha256": "a98e87294803647031c656d290e7a70241e9783e01c29c976ebcabf318d70e85",
+      "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/music/music_player.c"
+    },
+    {
+      "id": "X02",
+      "project": "kiikoread-xiugai",
+      "revision": "746ce316faf61ce5228eceee618eacb50a02a395",
+      "path": "main/music/music_tags.h",
+      "ranges": [
+        [
+          5,
+          35
+        ]
+      ],
+      "lines": 39,
+      "sha256": "1318da3a58203f5c9d01e3718967636157b17c49fbe721be1af6014480c3286b",
+      "url": "https://github.com/oouu00/Metalio-S31-kiikoread-xiugai/blob/746ce316faf61ce5228eceee618eacb50a02a395/main/music/music_tags.h"
+    },
+    {
+      "id": "M01",
+      "project": "crossmux",
+      "revision": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "src/activities/apps/standby/StandbyFace.h",
+      "ranges": [
+        [
+          18,
+          59
+        ]
+      ],
+      "lines": 77,
+      "sha256": "312793bac94f2a5378bf531f1d688ad96c4de16333707644efc0940f0ff8704f",
+      "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/standby/StandbyFace.h"
+    },
+    {
+      "id": "M02",
+      "project": "crossmux",
+      "revision": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "path": "src/activities/apps/gomoku/GomokuBoard.h",
+      "ranges": [
+        [
+          9,
+          50
+        ]
+      ],
+      "lines": 57,
+      "sha256": "7c3be2c37f528b6a8408d69662614e5df5f0774598a3c9d73c2dd37933570aa3",
+      "url": "https://github.com/0x1abin/crossmux/blob/a6fd569f7552db4ea1a6550ced7bc06568ae0e61/src/activities/apps/gomoku/GomokuBoard.h"
+    },
+    {
+      "id": "F01",
+      "project": "freeink-sdk",
+      "revision": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+      "path": "libs/ui/FreeInkUI/include/FreeInkUICore.h",
+      "ranges": [
+        [
+          121,
+          145
+        ],
+        [
+          709,
+          746
+        ],
+        [
+          1013,
+          1038
+        ]
+      ],
+      "lines": 1870,
+      "sha256": "3e158365d00b14594722a9f9e6b83bbda0790bf745ff3c89bc78b1c17531b8e5",
+      "url": "https://github.com/Free-Ink/freeink-sdk/blob/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/ui/FreeInkUI/include/FreeInkUICore.h"
+    },
+    {
+      "id": "F02",
+      "project": "freeink-sdk",
+      "revision": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+      "path": "libs/ui/FreeInkUI/include/FreeInkApp.h",
+      "ranges": [
+        [
+          875,
+          890
+        ],
+        [
+          923,
+          985
+        ]
+      ],
+      "lines": 1054,
+      "sha256": "863c489a8f7fe324a8c3ccbdadb444e5d86931faba4b593ceeba37b75c979737",
+      "url": "https://github.com/Free-Ink/freeink-sdk/blob/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/ui/FreeInkUI/include/FreeInkApp.h"
+    },
+    {
+      "id": "F03",
+      "project": "freeink-sdk",
+      "revision": "6a208c0c46cce99bafa334bc4f171f5e558c5195",
+      "path": "libs/ui/FreeInkUI/include/FreeInkUIGfxRenderer.h",
+      "ranges": [
+        [
+          33,
+          99
+        ]
+      ],
+      "lines": 405,
+      "sha256": "41ce2594ea4e5c198c855fd60f4df133e8c35f3be1cae5d70f82c4d0d7f157ad",
+      "url": "https://github.com/Free-Ink/freeink-sdk/blob/6a208c0c46cce99bafa334bc4f171f5e558c5195/libs/ui/FreeInkUI/include/FreeInkUIGfxRenderer.h"
+    },
+    {
+      "id": "K15",
+      "project": "kiikoread",
+      "revision": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "path": "main/book/book_layout.c",
+      "ranges": [
+        [
+          1,
+          21
+        ]
+      ],
+      "lines": 1256,
+      "sha256": "7982b34cc5df2e293ae4e30369b2524e407ec398c97448b055656a520ac83d6a",
+      "url": "https://github.com/wegooo-cell/Metalio-S31-kiikoread/blob/83942eb45d13064a47aca7ff04c2faf8fd51f98a/main/book/book_layout.c"
+    }
+  ],
+  "api_inventory": {
+    "crosspoint_gfx_haldisplay": [
+      "cleanupGrayscaleBuffers",
+      "clearScreen",
+      "copyGrayscaleLsbBuffers",
+      "copyGrayscaleMsbBuffers",
+      "displayBuffer",
+      "displayBufferAsync",
+      "displayGrayBuffer",
+      "displayGrayscaleBase",
+      "drawImage",
+      "getBufferSize",
+      "getDisplayHeight",
+      "getDisplayWidth",
+      "getDisplayWidthBytes",
+      "getFrameBuffer",
+      "grayscaleCapabilities",
+      "isInverted",
+      "lendFrameBufferStorage",
+      "preconditionGrayscale",
+      "returnFrameBufferStorage",
+      "supportsAsyncRefresh",
+      "waitRefreshComplete",
+      "writeGrayscalePlaneStrip"
+    ],
+    "kiikoread_app_callbacks": [
+      "grayscale_ui",
+      "navigation_enabled",
+      "menu_handle_enabled",
+      "main_page_visible",
+      "edge_back_enabled",
+      "back_swipe_area",
+      "on_enter",
+      "on_exit",
+      "on_media_lost",
+      "on_media_ready",
+      "on_before_lock",
+      "on_power_short",
+      "render",
+      "present",
+      "on_gesture",
+      "wants_pinch",
+      "on_pinch",
+      "on_touch",
+      "on_key",
+      "on_main_key",
+      "on_key_long",
+      "on_tick",
+      "area_hint"
+    ],
+    "kiikoread_graphics_calls": [
+      "epd_draw_circle",
+      "epd_draw_line",
+      "epd_draw_pixel",
+      "epd_draw_rotated_image",
+      "epd_fill_circle",
+      "epd_fill_circle_helper",
+      "epd_fill_rect",
+      "epd_get_pixel",
+      "epd_get_rotation",
+      "epd_height",
+      "epd_poweron",
+      "epd_rotated_display_height",
+      "epd_rotated_display_width",
+      "epd_width"
+    ],
+    "kiikoread_reader_display_calls": [
+      "display_main_gray_waveform",
+      "display_main_normal_waveform",
+      "display_main_transition_cover_bands",
+      "display_main_transition_gray_bands",
+      "display_main_transition_shelf_page",
+      "display_page_prepare_begin",
+      "display_page_prepare_end",
+      "display_pipeline_enabled",
+      "display_reader_fast_panels_enabled",
+      "display_reader_panel_gray4_prepare",
+      "display_reader_soft_turn_waveform",
+      "update_display_area_diff_with",
+      "update_display_area_full_with",
+      "update_display_area_with",
+      "update_display_fast_page",
+      "update_display_full",
+      "update_display_mode_diff",
+      "update_display_reader_panel",
+      "update_display_reader_panel_fast",
+      "update_display_reader_panel_gray4",
+      "update_display_text_turn",
+      "update_display_water_turn",
+      "update_display_with"
+    ]
+  },
+  "counting_note": "Unique active call names; comments excluded, overloads not counted separately. Calls inventory is the inspected slice, not a full firmware dependency closure."
+}

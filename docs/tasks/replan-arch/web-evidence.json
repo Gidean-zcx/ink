@@ -1,0 +1,62 @@
+{
+  "read_on": "2026-11-12",
+  "requests": [
+    {
+      "url": "https://mogo.mantake.shop",
+      "status": 200,
+      "bytes": 1737,
+      "sha256": "200617223d4e03af0fb392aadd03d47710b34440ef080e164d61e7613dfcf9b9"
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr",
+      "status": 200,
+      "bytes": 1035,
+      "sha256": "7c052644c7c1edf0beb16122054e364d86bdec4a276d53be2b132196c8ac9c83"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/wegooo-cell/Metalio-S31-kiikoread/83942eb45d13064a47aca7ff04c2faf8fd51f98a/README.zh-CN.md",
+      "status": 200,
+      "bytes": 5480,
+      "sha256": "4dba0ccc256e14eb47d13accbfcc8c502611a6843e885f3b0cb22cc2c21c9e0c",
+      "opening": [
+        "# kiikoread · Metalio S31",
+        "",
+        "为 **Metalio E-INK4 Plus / 无名4.7** 专门适配的 kiikoread 阅读固件，源码公开。本仓库面向 **ESP32-S31、V1.5、34Pin E0470A14-AF** 设备，是独立适配项目，并非 Metalio 官方固件。",
+        ""
+      ]
+    },
+    {
+      "url": "https://mogo.mantake.shop/assets/index-CZ3RRlK6.js",
+      "status": 200,
+      "sha256": "b424266840663dc670ed8140dfb6a99aa9cf9765e86248c4ce4d1e8bbffbddb7",
+      "bytes": 68415,
+      "source_links": [
+        "https://github.com/wegooo-cell/read-pico-reader"
+      ],
+      "excerpts": [
+        "ell/read-pico-reader`,target:`_blank`,rel:`noopener`},`kiikoread`,-1),O(` 开发，感谢原项目作者及贡献者。 `,-1)]])):ve(``,!0),r[8]||=k(`p`,{class:`site-footer__photo-credit`},"
+      ]
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr/assets/index-BAmR7mhW.js",
+      "status": 200,
+      "sha256": "b63cab78ce03c5a2d1903f9065050d3cdf95a59598d4e68ac6854ffa23b91f1e",
+      "bytes": 629709,
+      "source_links": [],
+      "excerpts": []
+    },
+    {
+      "url": "https://kiikoread.com/",
+      "method": "web search/open",
+      "boundary": "Official feature descriptions only; current releases are not matched to the fixed source tree."
+    },
+    {
+      "url": "https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft",
+      "result": "web open inaccessible; collection content not read; no decisions changed."
+    }
+  ],
+  "mogo_footer_quote": "Mogo 固件基于 kiikoread 开发，感谢原项目作者及贡献者。",
+  "mogo_upstream": "https://github.com/wegooo-cell/read-pico-reader",
+  "pagerest_description_quote": "TXT/EPUB 阅读、六封面书架、阅读手帐、个人摘录锁屏、BLE 翻页器",
+  "boundary": "Only public text and website JavaScript were read. No firmware, login, device, publishing or paid API."
+}
