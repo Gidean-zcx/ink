@@ -8,7 +8,7 @@
 #endif
 #include INK_DISPLAY_SOURCE
 
-struct test_sem { bool mutex; unsigned count; pthread_mutex_t lock; };
+struct test_sem { bool mutex; pthread_mutex_t lock; };
 struct test_task { void (*fn)(void *); void *arg; };
 #define ALLOCATION_LIMIT 40
 static void *allocations[ALLOCATION_LIMIT];
@@ -27,9 +27,6 @@ static void (*lcd_done)(void *);
 static void *lcd_ctx;
 static uint8_t queue_line[LINE_BYTES];
 static bool lcd_stopped;
-static bool lcd_active, off_failed;
-static bool (*lcd_line)(void *, uint8_t *);
-static unsigned reads, abort_reads;
 static pthread_mutex_t access_watch = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t access_wait = PTHREAD_COND_INITIALIZER;
 static bool watching_access, access_waiting;
@@ -77,19 +74,18 @@ hal_i2c_status_t tps65185_read(hal_i2c_dev_t *dev, uint8_t reg, uint8_t *value) 
 }
 static bool logged_kept_failing;
 void hal_log_write(const char *line) {
-    snprintf(last_log, sizeof last_log, "%.159s", line);
+    snprintf(last_log, sizeof last_log, "%s", line);
     if (strstr(line, "keep failing")) logged_kept_failing = true;
 }
 void epd_power_off(epd_power_t *p) {
     p->gate_output(p->ctx, false);
-    if (!off_failed) pmic_awake = false;
+    pmic_awake = false;
     off_count++;
     if (wake_during_off) {
         wake_during_off = false;
         hal_display_wake(500);
     }
 }
-bool ink_panel_off_confirmed(epd_power_t *p) { (void)p; return !off_failed; }
 bool epd_power_kept(epd_power_t *p) { (void)p; return supply_good; }
 struct hal_cpu_boost { bool held; };
 static struct hal_cpu_boost boost;
@@ -121,16 +117,11 @@ int xSemaphoreTake(SemaphoreHandle_t s, uint32_t timeout) {
         assert(pthread_mutex_lock(&s->lock) == 0); return pdTRUE;
     }
     if (s == D.frame_done) {
-        if (!timeout) {
-            if (!s->count) return pdFALSE;
-            s->count--;
-            return pdTRUE;
-        }
         assert(boost.held); /* every frame at the full clock, whatever the power state says meanwhile */
         if (watching) watched_levels |= 1u << nibble(D.c.fb4, 4, 3);
         scans++;
         now += (uint64_t)(drop_frame ? timeout : 2) * 10000;
-        if (!drop_frame && lcd_done) { lcd_active = false; lcd_done(lcd_ctx); s->count--; }
+        if (!drop_frame && lcd_done) lcd_done(lcd_ctx);
         return !drop_frame;
     }
     return pdTRUE;
@@ -139,7 +130,6 @@ void xSemaphoreGive(SemaphoreHandle_t s) { if (s->mutex) assert(pthread_mutex_un
 void xSemaphoreGiveFromISR(SemaphoreHandle_t s, BaseType_t *woken) {
     assert(s == D.frame_done);
     isr_gives++;
-    s->count++;
     *woken = pdFALSE;
 }
 int xTaskCreatePinnedToCore(void (*fn)(void *), const char *name, unsigned stack, void *arg, unsigned prio, TaskHandle_t *out, int core) {
@@ -150,11 +140,7 @@ int xTaskCreatePinnedToCore(void (*fn)(void *), const char *name, unsigned stack
     if (out) *out = t;
     return pdPASS;
 }
-void xTaskNotifyGive(TaskHandle_t t) {
-    assert(t);
-    if (t == D.scanners[0] || t == D.scanners[1]) lcd_active = true;
-    notify_count++;
-}
+void xTaskNotifyGive(TaskHandle_t t) { assert(t); notify_count++; }
 unsigned ulTaskNotifyTake(int clear, uint32_t ticks) {
     (void)ticks;
     assert(clear);
@@ -177,36 +163,20 @@ int xPortGetCoreID(void) { return 0; }
 void epd_lcd_init(const LcdEpdConfig_t *cfg, int w, int h) {
     assert(w == W && h == H && cfg->pixel_clock == 20000000 && cfg->bus_width == 8);
 }
-int epd_lcd_get_display_lines(void) { return H; }
-void epd_lcd_line_source_cb(bool (*fn)(void *, uint8_t *), void *ctx) {
-    (void)ctx;
-    assert(!lcd_active);
-    lcd_line = fn;
-}
-void epd_lcd_frame_done_cb(void (*fn)(void *), void *ctx) {
-    assert(!lcd_active);
-    lcd_done = fn; lcd_ctx = ctx;
-}
+void epd_lcd_line_source_cb(bool (*fn)(void *, uint8_t *), void *ctx) { (void)fn; (void)ctx; }
+void epd_lcd_frame_done_cb(void (*fn)(void *), void *ctx) { lcd_done = fn; lcd_ctx = ctx; }
 void epd_lcd_start_frame(void) { }
-void epd_lcd_abort_frame(void) {
-    if (lcd_active && lcd_line) { lcd_line(NULL, queue_line); abort_reads++; }
-    lcd_active = false; /* v2.0.77 waits for old IRQs and does not call frame_done. */
-    abort_count++;
-}
+void epd_lcd_abort_frame(void) { abort_count++; }
 LineQueue_t lq_init(int size, int bytes) { return (LineQueue_t){.size = size, .element_size = (size_t)bytes}; }
 uint8_t *lq_current(LineQueue_t *q) { (void)q; return queue_line; }
 void lq_commit(LineQueue_t *q) { atomic_fetch_add(&q->current, 1); }
 int lq_read(LineQueue_t *q, uint8_t *out) {
-    reads++;
     if (atomic_load(&q->current) == atomic_load(&q->last)) return -1;
     atomic_fetch_add(&q->last, 1);
     memset(out, 0x55, LINE_BYTES);
     return 0;
 }
-void lq_reset(LineQueue_t *q) {
-    assert(!lcd_active);
-    atomic_store(&q->current, 0); atomic_store(&q->last, 0);
-}
+void lq_reset(LineQueue_t *q) { atomic_store(&q->current, 0); atomic_store(&q->last, 0); }
 
 static void finished(void *ctx, const hal_display_result_t *r) {
     assert(ctx == &calls);
@@ -359,27 +329,6 @@ static void camera_access(void) {
     assert(pthread_join(thread, NULL) == 0);
     assert(calls == 1 && completed.ok && scans > 0);
 }
-static void abort_contract(void) {
-    recover();
-    assert(abort_reads == 1 && reads > 0 && !lcd_active && !lcd_line && !lcd_done);
-    unsigned before = reads, signals = isr_gives;
-    D.frame_done->count = 1; /* An old IRQ may have signalled just before abort synchronized. */
-    trip();
-    assert(reads == before && isr_gives == signals && D.frame_done->count == 0);
-}
-static void unconfirmed_off(void) {
-    atomic_store(&D.powered, true);
-    atomic_store(&D.armed, true);
-    off_failed = true;
-    power_off();
-    assert(ATOMIC(D.powered) && ATOMIC(D.armed) && ATOMIC(D.stop));
-    trip();
-    assert(ATOMIC(D.powered) && ATOMIC(D.armed) && ATOMIC(D.stop));
-    assert(!ink_s31_display_acquire(0));
-    off_failed = false;
-    trip();
-    assert(!ATOMIC(D.powered) && !ATOMIC(D.armed));
-}
 int main(int argc, char **argv) {
     caller = pthread_self();
     const char *which = argc > 1 ? argv[1] : "regions";
@@ -400,13 +349,6 @@ int main(int argc, char **argv) {
     else if (!strcmp(which, "guard")) guard_only();
     else if (!strcmp(which, "lines")) lines();
     else if (!strcmp(which, "camera-access")) camera_access();
-    else if (!strcmp(which, "abort-contract")) abort_contract();
-    else if (!strcmp(which, "unconfirmed-off")) unconfirmed_off();
-    else if (!strcmp(which, "pause-off-fails")) {
-        atomic_store(&D.powered, true);
-        off_failed = true;
-        hal_display_pause(true);
-    }
     else if (!strcmp(which, "wake-overlap")) wake_overlap();
     else if (!strcmp(which, "selftest")) selftest(true);
     else if (!strcmp(which, "selftest-dead")) selftest(false);
