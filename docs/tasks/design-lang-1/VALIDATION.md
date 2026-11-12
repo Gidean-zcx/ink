@@ -97,4 +97,4 @@ ctest 退出 8，三个 hub 项 Skipped。30 个失败项等于普通全量的 3
 
 【实测】S31 宿主机独立配置并完整构建，ctest 退出 0：`100% tests passed out of 77`，128.86 秒。原始记录为 `build/design-lang-1/validation/s31-host-ctest.log`。
 
-固件首轮 `bash ports/esp32s31/build.sh` 退出 0，完成链接、资源包、栈与尺寸检查。该轮有 6 条 SDK/组件私有 include 依赖的 CMake 警告、2 次应用分区剩余 5% 的尺寸警告，没有编译器 `warning:`。没有固件基线警告对照，不能宣称整个构建无新警告。最终两行排版与字重修正后的重编待核对。
+固件首轮及最终产品提交 `2792f39a` 上的 `bash ports/esp32s31/build.sh` 均退出 0，完成链接、资源包、栈与尺寸检查。最终 `ink-s31.bin` 为 4999200 字节，没有编译器 `warning:`；仍有 6 条 SDK/组件私有 include 依赖的 CMake 警告、2 次应用分区剩余 5% 的尺寸警告。没有固件基线警告对照，不能宣称整个构建无新警告。原始记录为 `build/design-lang-1/validation/s31-firmware-first.log`、`s31-firmware-final.log`，均未提交。

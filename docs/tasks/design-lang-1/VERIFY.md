@@ -16,6 +16,15 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest -
 
 内存检查：以上命令的构建目录全部换成 `build-asan`，配置时另加 `-DINK_SANITIZE=ON`。不调整资源预算或其他功能开关。普通全量的原始输出在报告中按原话列出；内存构建出现的布局失败与 sanitizer 报错分开统计。
 
+最后两轮定向复核分别为：
+
+```sh
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2 -R '^ui-|^settings-a$'
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2 -R '^ui-(theme|slider|context)-regressions-|^ui-input-host$|^ui-scale$|^ui-list-'
+```
+
+内存版换为 `--test-dir build-asan`，其余不变。前一轮 118 项是在负坐标与热区修正后；后一轮 10 项是在最终排版和字重修正后，不能合并为最终全量通过。
+
 ```sh
 taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python
 taskpolicy -c utility cmake --build build-s31-host -j2
@@ -57,4 +66,13 @@ taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/design_lang_1_
 
 反向对照临时编译撤去数字字重、两行上下排、黑色占位文字、字体合并、自动分组去框、清除按钮透明底、输入焦点边框、负坐标舍入、图标热区的版本，运行同一组共用控件断言，要求明确失败且测试执行到结束。脚本不修改产品文件，不依赖 Git 历史，未注册进 ctest。
 
-Linux 警告核对使用任务指定的 `ink-codex/tools/gcccheck.py`，读取 `build/compile_commands.json`，检查改过的可编译 C 文件；结果及跳过项在报告中单列。源码范围、链接、图片大小及隐私检查同样在报告中列出。
+Linux 警告核对使用任务指定的 `ink-codex/tools/gcccheck.py`，读取 `build/compile_commands.json`：
+
+```sh
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python $INK_DEPS/../ink-codex/tools/gcccheck.py build \
+  system/ui/theme.c system/ui/textfield.c system/ui/ui_list.c \
+  tests/settings_a.c tests/ui_input_host.c tests/ui_list_paging.c \
+  tests/ui_shell_regressions.c tests/ui_shell_scenes.c tests/design_lang_1.c
+```
+
+结果及跳过项在报告中单列。源码范围、链接、图片大小及隐私检查同样在报告中列出。
