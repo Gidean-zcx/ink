@@ -136,7 +136,8 @@ static void replies(void) {
     snprintf(args, sizeof args, "{\"id\":%u,\"index\":1}", (unsigned)notice.id);
     CHECK(BY_HAND("notify.act", args) && g_rc.status == INK_RC_DONE, "missed call action forwards to call.dial");
     CHECK(BY_HAND("call.hangup", NULL), "hang up synthetic outbound call");
-    ink_notify_action_t acts[3] = {{.label = "SYNTH 1", .cap = "notify.dnd_get"}, {.label = "SYNTH 2", .cap = "notify.dnd_get"}, {.label = "SYNTH 3", .cap = "notify.dnd_get"}};
+    ink_notify_action_t acts[] = {{.label = "SYNTH 1", .cap = "notify.dnd_get"}, {.label = "SYNTH 2", .cap = "notify.dnd_get"}, {.label = "SYNTH 3", .cap = "notify.dnd_get"}};
+    _Static_assert(sizeof acts / sizeof *acts <= INK_NOTIFY_ACTIONS_MAX, "notification actions");
     ink_notify_t n = {.title = "SYNTH_THREE", .actions = acts, .nactions = 3, .prio = INK_NOTIFY_LOW};
     CHECK(ink_notify_post(&n, &id) == 0 && find_notice("SYNTH_THREE") && notice.nactions == 3 && !strcmp(notice.actions[2].label, "SYNTH 3"), "all three actions round-trip");
     snprintf(args, sizeof args, "{\"id\":%u,\"index\":3}", (unsigned)id);

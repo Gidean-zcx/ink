@@ -622,11 +622,12 @@ static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the mod
         ink_svc_unlock();
         if (h) ink_interrupt_end(h);
         if (h && missed) {
-            ink_notify_action_t acts[2] = {{.label = "回电", .cap = "call.dial"}, {.label = "发短信", .cap = "sms.compose"}};
+            ink_notify_action_t acts[] = {{.label = "回电", .cap = "call.dial"}, {.label = "发短信", .cap = "sms.compose"}};
+            _Static_assert(sizeof acts / sizeof *acts <= INK_NOTIFY_ACTIONS_MAX, "notification actions");
             snprintf(acts[0].label, sizeof acts[0].label, "%s", TR("回电")); snprintf(acts[1].label, sizeof acts[1].label, "%s", TR("发短信"));
             number_args(acts[0].args, sizeof acts[0].args, "number", from);
             number_args(acts[1].args, sizeof acts[1].args, "number", from);
-            ink_notify_t n = {.channel = "call", .title = TR("未接来电"), .body = from, .group = "missed-calls", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM, .actions = acts, .nactions = 2};
+            ink_notify_t n = {.channel = "call", .title = TR("未接来电"), .body = from, .group = "missed-calls", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM, .actions = acts, .nactions = sizeof acts / sizeof *acts};
             ink_notify_post(&n, NULL);
         }
     }
