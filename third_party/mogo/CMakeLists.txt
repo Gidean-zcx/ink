@@ -49,3 +49,14 @@ add_test(NAME mogo-session COMMAND ${Python3_EXECUTABLE} ${mogo_tools}/reader_se
 add_test(NAME mogo-utf16 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/graft_mogo/run_utf16.py $<TARGET_FILE:mogo-utf16>)
 add_test(NAME mogo-settings-drawing COMMAND ${Python3_EXECUTABLE} ${mogo_tools}/reader_settings_view_host_test.py)
 add_test(NAME mogo-provenance COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/graft_mogo/verify_import.py)
+
+# The original file font loader, not the layout tests' fixed-width stand-in.
+mogo_host(font-file ${CMAKE_SOURCE_DIR}/tests/graft_mogo_font/font.c
+  main/font/ttf_font.c main/font/ttf_font_source.c main/font/ttf_block_cache.c main/font/ttf_glyph_cache.c)
+target_include_directories(mogo-font-file BEFORE PRIVATE
+  ${CMAKE_SOURCE_DIR}/tests/graft_mogo_font/stubs ${mogo_main}/font ${mogo_tools}/book_epub_stubs)
+target_link_libraries(mogo-font-file PRIVATE m)
+add_test(NAME mogo-font-file COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/graft_mogo_font/run.py
+  --source ${INK_CJK_FONT} --face ${INK_CJK_FACE} --engine $<TARGET_FILE:mogo-font-file>
+  --work ${CMAKE_CURRENT_BINARY_DIR})
+set_tests_properties(mogo-font-file PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 300)

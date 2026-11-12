@@ -1,0 +1,47 @@
+{
+  "commit": "864f2f9",
+  "files": [
+    {
+      "path": "main/font/ttf_font.c",
+      "sha256": "855e01b0be9b4425d813fa2ffad71a6f4936740ebf65c8fdbc62ff84de58d351",
+      "adapted_sha256": "c590cf07e1d2c82ddff0bde46d2938d7310f4a000ee45bb1cb09168762ea88fa"
+    },
+    {
+      "path": "main/font/ttf_font.h",
+      "sha256": "10700ebf0c83b711ed9e91934a09b2ec06f74ac391a26338eff3d7ad93e3c650",
+      "adapted_sha256": "0aaeefdd31252badfebc75dc5204cd3207c877e9abac48f90fa9f93c95428325"
+    },
+    {
+      "path": "main/font/ttf_font_source.c",
+      "sha256": "18e9995c12aba969634688d4992075c177e5e6e62c7e1e3c532fb7c42cce9a2d"
+    },
+    {
+      "path": "main/font/ttf_font_source.h",
+      "sha256": "7c2dfb829530db9efb51c13c05eeee1f0db2b4dff62021585cc9027a5db56859"
+    },
+    {
+      "path": "main/font/ttf_block_cache.c",
+      "sha256": "6ba5f9225ee31e1d36e52892caabfce27d13b5f9b19ec628c7c7d787f4d71913"
+    },
+    {
+      "path": "main/font/ttf_block_cache.h",
+      "sha256": "b85c339e746d3857fba7a514ba0de5f6f9ab3106e75a5acda0c96aac74f1bca3"
+    },
+    {
+      "path": "main/font/ttf_glyph_cache.c",
+      "sha256": "87a8318e682aab2b08316f8c4df95f974c23d1ea1030ccf7795f569c6b4092a8"
+    },
+    {
+      "path": "main/font/ttf_glyph_cache.h",
+      "sha256": "92d988631a490960da2270148cdb96f08297feaa9ccd75e9f58c3a720cc3a5a5"
+    },
+    {
+      "path": "main/font/ttf_stroke_filter.h",
+      "sha256": "1128500e25171ad52d2b7ffa874365f3cd5d3027c07e956463655abd772518e0"
+    },
+    {
+      "path": "main/font/stb_truetype.h",
+      "sha256": "ecd30b05e0dd4fea3a13c26810dd9e1992dc379049482c393d5a19e6b5090aab"
+    }
+  ]
+}
