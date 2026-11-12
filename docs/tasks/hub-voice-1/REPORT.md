@@ -6,9 +6,9 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】最终中枢 239 项通过，hub-* 6/6；普通全量 438 通过/1 超时/1 原禁用；内存检查进行中 | `hub-contract`、`hub-json-crosscheck` 通过；全量与内存检查原话见下 | 下方构建和验证命令 |
+| 1 | 【实测】最终 pytest 241 项、hub-* 6/6、内存全量 439 项通过；普通全量曾超时，集中复测通过 | `hub-contract`、`hub-json-crosscheck` 通过；全量与内存检查原话见下 | 下方构建和验证命令 |
 | 2 | 【实测】流式专项通过，取消负对照失败符合预期 | `20 passed in 4.87s`；两家假厂商、节流跨间隔、0 禁中间结果、VAD 端点、首句逗号、模型未结束先发首包、三阶段取消 <100 ms、已听历史、隔离与迟到上行 | `python -m pytest -q hub/tests/speech/test_streaming.py`；`python hub/tests/speech/reverse_cancel.py` |
-| 3 | 【实测】完成测量，本地未达标 | 各 9/9 成功，原始样本 [latency.json](latency.json)；下表对比目标 | `python hub/tests/speech/benchmark.py`，完整参数见 [语音运行说明](../../../hub/README.md#怎么开真的语音) |
+| 3 | 【实测】完成测量，本地未达标 | 各 9/9 流程完成（不是字词准确率统计），原始样本 [latency.json](latency.json)；下表对比目标 | `python hub/tests/speech/benchmark.py`，完整参数见 [语音运行说明](../../../hub/README.md#怎么开真的语音) |
 | 4 | 【实现】完成代码调研；未做真机验证 | [AEC.md](AEC.md)，原厂提交、文件和行号齐全：BH 声明麦＋回采；S31 未引入 ESP-SR | `git show 874538e:<原厂文件>`；仅只读核查 |
 
 | 组别 | 第一句文字 p50/p95 | 第一帧朗读 p50/p95 | 和目标比较 |
@@ -27,7 +27,7 @@
 
 ## 和设计不一致的
 
-- 只在本连接内存保存最近一轮历史；按已发帧减 5 帧缓冲、句内每秒 5 字估算，支持 `heard_frames`。没有持久化、多轮记忆或精确文字对时，保持可逆。正常完成的回复保留全文；活跃任务的中止截断已听部分。上游完成而设备仍在播放时，带 reason 或 heard_frames 的中止也会修正历史；旧设备不带这两个字段时，不能区分这个阶段的中止和正常关闭。
+- 【实现】只在本连接内存保存最近一轮历史；【估算】按已发帧减 5 帧缓冲、句内每秒 5 字估算，支持 `heard_frames`。没有持久化、多轮记忆或精确文字对时，保持可逆。正常完成的回复保留全文；活跃任务的中止截断已听部分。上游完成而设备仍在播放时，带 reason 或 heard_frames 的中止也会修正历史；旧设备不带这两个字段时，不能区分这个阶段的中止和正常关闭。
 - 厂商连接本次按流/短句创建，未实现设计中的跨轮连接复用；保留单条可背压链，没有复制小智的多线程队列。跨境时延未验证。
 - 儿童提示、工具过滤、成员和授权沿用基线；基线没有独立额度结算及逐句儿童审核服务，本次没有补造，也不声称具备这些保护。听写规范里的多种限时/额度边界未新增，非本次验收用例。
 
@@ -45,7 +45,7 @@
 
 ## 顺手发现
 
-- 普通全量 `backup-restore-recovery` 触发原有 240 秒上限；多个内部阶段已通过。未改相关 C 代码、测试或超时上限，整轮结果待下方最终记录。
+- 普通全量 `backup-restore-recovery` 触发原有 240 秒上限；多个内部阶段已通过；同一测试在内存版 95.79 秒通过。普通版集中复测 59.38 秒通过。未改相关 C 代码、测试或超时上限；首次超时原因未单独证明，保留该次失败。
 - 只读依赖里的 Whisper CMake 会生成 `bindings/javascript/package.json`；首次配置被沙箱拒绝。后续用固定源码的本任务副本编译，源文件 SHA-256 与依赖副本一致；没有修改依赖目录。
 
 ## 新增的机制
@@ -80,6 +80,8 @@
 INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility \
   "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 # 内存检查使用同一命令，test-dir 换为 build-asan。
+# 最终普通版集中复测：同一命令另加以下筛选。
+# -R '^(hub-.*|backup-restore-recovery)$'
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=hub taskpolicy -c utility \
   "$INK_DEPS/hub/.venv/bin/python" -m pytest -q hub/tests/speech/test_streaming.py
 # 反向对照：默认 cancel 应失败 3 项；其他模式各失败 1 项，均不改文件。
@@ -90,38 +92,26 @@ PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility \
   "$INK_DEPS/build-deps/pyenv/bin/python" "$INK_DEPS/../ink-codex/tools/gcccheck.py" build
 ```
 
-普通全量退出 8，原话：`99% tests passed, 1 tests failed out of 439`，`Total Test time (real) = 1903.38 sec`；`backup-restore-recovery (Timeout)`，`memo-save-busy (Disabled)`。最终 `hub-*` 退出 0，原话：`100% tests passed out of 6`，`Total Test time (real) = 91.84 sec`；其中完整 pytest：`239 passed in 89.66s (0:01:29)`。内存检查结果待补。gcccheck 已实跑退出 0：`gcccheck: 0 compiled, 0 with findings`（本任务没有 C 改动，不当作 Linux GCC 编译证明）。S31 完整固件未编，设备代码未改；全量中的 S31 宿主负向编译检查已跑，不等于完整固件构建。ASan/UBSan 检查宿主 C 工程，不等于检查了 Python/Whisper 第三方库本体。
+【实测】普通与内存版配置、构建均退出 0。验证原话：
 
-隐私检查和最终 diff 核对待收尾；仅提交任务范围文件。
+| 运行 | 退出码 | 原话 / 证据 |
+| --- | --- | --- |
+| 普通全量 | 8 | `99% tests passed, 1 tests failed out of 439`；`Total Test time (real) = 1903.38 sec`；`backup-restore-recovery (Timeout)`；原有 `memo-save-busy (Disabled)` |
+| 最终普通版 hub-*＋备份恢复复测 | 0 | `100% tests passed out of 7`；`Total Test time (real) = 93.46 sec`；备份恢复 59.38 秒通过；其中完整 pytest：`241 passed in 87.35s (0:01:27)` |
+| ASan/UBSan 全量 | 0 | `100% tests passed out of 439`；`Total Test time (real) = 1494.25 sec`；原有 `memo-save-busy (Disabled)` 未运行；其中完整 pytest：`241 passed in 95.14s (0:01:35)` |
+| 流式专项 | 0 | `20 passed in 4.87s` |
+| 手动反向对照 | 每个模式均为 1，符合预期 | cancel：`3 failed, 17 deselected in 0.30s`；legacy/late/vendor/model_close 各 1 failed；heard_complete：`1 failed, 1 passed, 18 deselected in 1.51s` |
+| gcccheck | 0 | `gcccheck: 0 compiled, 0 with findings`，没有 C 改动，不当作 Linux GCC 编译证明 |
+
+内存版 `INK_SANITIZE=ON`、`INK_WERROR=ON`，跑完全部 439 个启用测试。S31 完整固件未编，设备代码未改；全量中的 S31 宿主负向编译检查已跑，不等于完整固件构建。ASan/UBSan 检查宿主 C 工程，不等于检查了 Python/Whisper 第三方库本体。Linux 未在本机实跑。
+
+【实测】基线到提交及工作区的禁止绝对路径/硬件地址扫描无匹配（grep 退出 1）；收尾提交后再次核对。`git diff --check`、24 个变更文件的范围检查、文档本地链接和 5 MB 文件上限检查均通过；没有设备代码、共享文档或构建产物夹带。两组基准各 9 条样本保留。
 
 ## 里程碑与验证记录
 
-- 已读取任务总规则、任务书与项目入口，确认当前 HEAD 等于基线。
-
-### 里程碑 1：语音核心与假厂商
-
-- 【实现】小智来源固定为 `4b1a54a41c28112bc06b1ab605d2ba723f678ad3`，MIT，许可证随适配代码保留。迁入 VAD 双阈值/窗口、音频收发并行、首句断句和取消旧输出逻辑；沿用现有网关、成员和工具授权。
-- 【实测】原有语音专项 `23 passed in 21.12s`；流式专项及两处测试前提修正 `14 passed in 6.54s`。
-- 【实测】手动反向对照 `hub/tests/speech/reverse_cancel.py` 退出 1：`3 failed, 9 deselected in 0.28s`。仅在进程内移除 `end_session` 的取消及等待；三个阶段均因未取消失败，文件未改。
-- 初次 `hub-*`：`2 failed, 231 passed in 98.97s`。旧隔离测试直接启动听写时未设置结束；安装假环境测试遇到真实 8443 占用。分别显式标记录音结束、在假环境模拟预检成功，未删或放宽断言。
-- 常驻 Whisper 已在本任务忽略目录编译。依赖目录的 CMake 有写源码动作，首次配置被沙箱拒绝；改用固定版本源码副本，不改只读依赖。真实时延仍待测。
-
-### 里程碑 2：真实测量与回声消除
-
-- 【实测】三句 say 中文录音各跑 3 次，两组均 9/9 成功，原始结果见 [latency.json](latency.json)。常驻 Whisper＋say：第一句文字 p50/p95 **17737.40/18472.83 ms**，首帧朗读 **18909.91/19957.54 ms**；本机假云端：文字 **2.51/3.63 ms**，首帧 **7.52/19.80 ms**。真实 LLM、网络、设备播放均未包含。
-- 本地组未达到文字 ≤3 秒、声音 ≤4 秒；识别定稿 p50/p95 17736.99/18469.65 ms，是主瓶颈。Metal 因缓冲分配失败退出，最终改用两个 CPU 线程。保留逐样本数据，没有放宽 20 秒单次识别超时或删除慢样本。
-- 初次尝试对已收音频反复重识别，加重了 CPU 推理负担，并发生超时；已删除该额外行为。Whisper 只在端点后推理一次、模型常驻；中间结果由真正流式的 Paraformer/云端接法提供。没有冒充 Whisper 原生流式。
-- 【实现】[AEC.md](AEC.md)记录原厂固定版本的文件和行号；BH 驱动声明双通道麦＋回采，但 S31 的依赖条件未引入 ESP-SR。没有实机测过参考槽或开启 AFE。
-- 【实测】补充首句在模型尚未结束时发声、跨节流间隔及定稿越过节流：`14 passed in 3.43s`。
-
-### 里程碑 3：收尾回归
-
-- 【实测】完整流式专项更新为 `20 passed in 4.87s`。修正旧识别接口重复拼接、VAD 结束后迟到上行误关会话、厂商失败时异常收尾；模型生成器在 yield 处暂停时也显式关闭，避免依赖垃圾回收来取消上游。
-- 【实测】对应反向对照由 `reverse_cancel.py` 的 `legacy`、`late`、`vendor`、`model_close` 模式提供，各撤掉该处修复后预期退出 1。最终命令结果见验收记录。
-- 普通全量正在运行；其中 `hub-contract`、`hub-json-crosscheck` 已通过，最终版本还会用内存检查运行整套中枢测试。
-
-### 普通全量中的非语音失败（待整轮结束）
-
-- `backup-restore-recovery` 在原有 240 秒上限超时（`***Timeout 240.06 sec`）；已输出 seed～deep 等多个阶段通过。涉及 `tests/backup_restore/`，没有修改该处或提高超时，不把它写成通过。
-
-- 补测上游已完成而设备仍播放时的中止：在同一关闭入口修正当前那一轮历史；正常关闭仍保留全文。带位置的后完成中止和正常关闭共 2 项，反向对照移除修正后中止项失败。
+- `c1c4cf60`：开工报告；当时 HEAD 等于基线，工作区干净。
+- `4d7dc063`：语音核心和假厂商。初次 hub 测试 `2 failed, 231 passed in 98.97s`；修正旧听写测试未标结束、安装假环境依赖真实 8443 的前提，所有原断言保留。
+- `06498592`：完成原生 Whisper＋say 与假云端两组基准、原厂 AEC 调研。尝试反复识别已收前缀造成额外 CPU 负担和超时，删掉该行为；最终只在端点推理一次，不伪称 Whisper 有原生中间结果。
+- `8fc56ba4`：回归修正重复识别文字、迟到上行、厂商异常收尾；显式关闭暂停在 yield 处的模型流，避免靠垃圾回收取消上游。
+- `3059a8ba`：上游完成后中止也在同一关闭入口修正当前那一轮历史；正常关闭保留全文，专项和反向对照验证。
+- 最终全量、复测、内存检查与六种反向对照结果见上表；没有删除失败记录或提高预算。最终普通中枢 241 项通过，先前超时的普通备份恢复集中复测通过，内存全量 439 项通过。
