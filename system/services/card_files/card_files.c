@@ -382,8 +382,11 @@ static void step_again(void *ctx) { (void)ctx; ink_exec_post(INK_EXEC_BG, &CF.st
 static void check_step(void *arg) {
     (void)arg;
     /* Reading a whole file waits while the screen draws or someone is using the device (as background storage does):
-     * the shared executor and the card stay free for what they are doing. */
-    if (ink_display_busy() > 0 || osal_now_us() < ink_power_last_activity() + CF_QUIET_US) {
+     * the shared executor and the card stay free for what they are doing. At boot it also waits for the first screen:
+     * until then the home is still being built and the boot is still starting services and apps, and reading the
+     * reader's font from the card would take a core from them (the boot then waits behind the first refresh, and
+     * the apps it starts late redraw the home once more). */
+    if (!ink_display_commits() || ink_display_busy() > 0 || osal_now_us() < ink_power_last_activity() + CF_QUIET_US) {
         ink_svc_at(&CF.quiet_at, osal_now_us() + CF_QUIET_US, step_again, NULL);
         return;
     }
