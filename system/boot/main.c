@@ -132,8 +132,8 @@ void ink_main(void) {
     MUST(ink_memory_init(), "memory failed to start"); MUST(ink_snake_init(), "snake failed to start");
     extern int ink_weather_init(void);
     if (ink_weather_init() != 0) osal_panic("weather failed to start");
-    extern int ink_music_init(void);
-    if (ink_music_init() != 0) osal_panic("music failed to start");
+    extern int ink_music_app_init(void);
+    if (ink_music_app_init() != 0) osal_panic("music failed to start");
     extern int ink_files_init(void);
     if (ink_files_init() != 0) osal_panic("files failed to start");
     extern int ink_camera_app_init(void), ink_gallery_init(void);

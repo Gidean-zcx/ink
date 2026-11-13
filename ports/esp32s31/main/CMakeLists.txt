@@ -67,9 +67,12 @@ include(${root}/apps/mogo/mogo.cmake)
 ink_mogo_build(__idf_ink_apps __idf_ink_system)
 include(${root}/apps/mogo_lock/mogo_lock.cmake)
 ink_mogo_lock_build(__idf_ink_apps __idf_ink_system)
+include(${root}/apps/music/music.cmake)
+ink_music_build(__idf_ink_apps __idf_ink_system)
 target_include_directories(__idf_ink_apps PRIVATE ${CMAKE_BINARY_DIR}/generated) # the reader page uses the theme (icon names)
 file(GLOB INK_I18N_TABLES ${root}/assets/i18n/*.tsv)
 include(${root}/apps/mogo/translations.cmake)
+include(${root}/apps/music/translations.cmake)
 execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
     --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
     --sources ${root}/system/apps/memory/memory.c ${root}/system/apps/snake/snake.c

@@ -351,8 +351,8 @@ static void flac_parse(FILE *f, char *title, size_t tcap, char *artist, size_t a
             if (fread(si, 1, 34, f) != 34) return;
             const uint32_t sample_rate = ((uint32_t)si[10] << 12) | ((uint32_t)si[11] << 4) |
                                          (si[12] >> 4);
-            const uint64_t total = ((uint64_t)(si[12] & 0x0F) << 32) | ((uint64_t)si[13] << 24) |
-                                   ((uint64_t)si[14] << 16) | ((uint64_t)si[15] << 8) | si[16];
+            const uint64_t total = ((uint64_t)(si[13] & 0x0F) << 32) | ((uint64_t)si[14] << 24) |
+                                   ((uint64_t)si[15] << 16) | ((uint64_t)si[16] << 8) | si[17];
             if (sample_rate && total)
                 *duration_ms = (uint32_t)((total * 1000) / sample_rate);
         } else if (type == 4) {  // VORBIS_COMMENT / VORBIS_COMMENT

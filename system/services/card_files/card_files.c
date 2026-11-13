@@ -139,12 +139,30 @@ static void swap_bg(void *arg) {
     else check_finish();
 }
 
+/* An entry's app is one id or several joined by commas ("reader,music": both draw with the reader's font).
+ * The n-th of them into out; false past the last. */
+static bool app_at(const char *list, int n, char *out, size_t cap) {
+    for (; n > 0 && list; n--) if ((list = strchr(list, ','))) list++;
+    if (!list) return false;
+    size_t len = strcspn(list, ",");
+    snprintf(out, cap, "%.*s", (int)(len < cap ? len : cap - 1), list);
+    return true;
+}
+static bool wants(const char *list, const char *app) {
+    char id[24];
+    for (int n = 0; app_at(list, n, id, sizeof id); n++) if (!strcmp(id, app)) return true;
+    return false;
+}
+
 static void swap_ui(void *arg) { /* app states and notices are the UI task's */
     (void)arg;
     CF.let_go = 0;
     for (int i = 0; i < INK_CARD_FILES_COUNT; i++) {
-        const char *app = INK_CARD_FILES[i].app; /* stopped, or its page shows the notice */
-        if (ink_app_state_of(app) == INK_APP_STOPPED || ink_card_files_notice_snapshot(app, NULL, 0)) CF.let_go |= 1u << i;
+        bool free = true; /* every app that wants it is stopped, or its page shows the notice */
+        char app[24];
+        for (int n = 0; free && app_at(INK_CARD_FILES[i].app, n, app, sizeof app); n++)
+            free = ink_app_state_of(app) == INK_APP_STOPPED || ink_card_files_notice_snapshot(app, NULL, 0);
+        if (free) CF.let_go |= 1u << i;
     }
     ink_exec_post(INK_EXEC_BG, &CF.swap_job, swap_bg, NULL);
 }
@@ -469,7 +487,7 @@ unsigned ink_card_files_checks(void) { return __atomic_load_n(&CF.concluded, __A
 ink_card_state_t ink_card_files_state(const char *app, int *percent) {
     bool mine = false, all = true;
     for (int i = 0; i < INK_CARD_FILES_COUNT; i++)
-        if (CF.valid[i] && !strcmp(app, INK_CARD_FILES[i].app)) mine = true, all = all && CF.st[i] == E_OK;
+        if (CF.valid[i] && wants(INK_CARD_FILES[i].app, app)) mine = true, all = all && CF.st[i] == E_OK;
     if (percent) *percent = CF.pct;
     return !mine || all ? INK_CARD_READY : CF.phase == INK_CARD_READY ? INK_CARD_CHECKING : (ink_card_state_t)CF.phase;
 }

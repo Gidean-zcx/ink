@@ -48,7 +48,7 @@ def check(entries, sized=True):
         if e["path"] in seen:
             raise SystemExit(f"card files: {e['path']} twice")
         seen.add(e["path"])
-        if not re.fullmatch(r"[a-z][a-z0-9_]{0,15}", str(e.get("app", ""))):
+        if not re.fullmatch(r"[a-z][a-z0-9_]{0,15}(,[a-z][a-z0-9_]{0,15}){0,3}", str(e.get("app", ""))):  # one id, or up to four joined by commas
             raise SystemExit(f"card files: {e['path']}: bad app id {e.get('app')!r}")
         if sized:
             if not 0 <= int(e["size"]) <= MAX_FILE:

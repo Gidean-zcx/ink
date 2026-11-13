@@ -1,10 +1,10 @@
 # 卡上必需文件（D-138）
 
-应用要的东西如果放在存储卡上（现在是阅读（应用 id `reader`）的字体），由系统自动放进去，用户不用进 U 盘模式、不用拷文件。固件带一份清单，开机核对；插着装机电脑时经 USB 串口自动补齐；缺的时候应用页面说清楚原因，不白屏。任务书：auto-provision-1。
+应用要的东西如果放在存储卡上（现在是阅读（应用 id `reader`）和音乐（`music`）共用的字体），由系统自动放进去，用户不用进 U 盘模式、不用拷文件。固件带一份清单，开机核对；插着装机电脑时经 USB 串口自动补齐；缺的时候应用页面说清楚原因，不白屏。任务书：auto-provision-1。
 
 ## 1. 清单
 
-- 唯一的手写来源 `tools/card_files.json`：每项 `path`（卡上物理路径）、`app`（要它的应用 id）、`make`（怎么做出来）。现在两项：`/content/fonts/InkSC.ttf`（`mogo_font`，由 `tools/mogo_font.py` 的 `convert()` 从 `INK_CJK_FONT` 转出）和旁边的 `/content/fonts/InkSC.OFL.txt`（`mogo_font_ofl`，字体许可）。
+- 唯一的手写来源 `tools/card_files.json`：每项 `path`（卡上物理路径）、`app`（要它的应用 id；几个应用都要时用逗号连起来，最多四个，如 `reader,music`。核对状态按其中每个应用算，换文件要等其中每个应用都放开它）、`make`（怎么做出来）。现在两项：`/content/fonts/InkSC.ttf`（`mogo_font`，由 `tools/mogo_font.py` 的 `convert()` 从 `INK_CJK_FONT` 转出）和旁边的 `/content/fonts/InkSC.OFL.txt`（`mogo_font_ofl`，字体许可）。
 - 构建时生成，不提交哈希（不同机器的 fontTools 可能做出不同字节）：
   - `tools/card_files.py bundle` 做出文件，写 `build/card-files/files/<序号>` 和 `build/card-files/manifest.json`：`{"version":1,"digest":"<16位十六进制>","entries":[{"path","size","sha256","app","file"}]}`。
   - `tools/card_files.py header` 写 `build/generated/ink/card_files_manifest.h`（C 表 `INK_CARD_FILES[]`、`INK_CARD_FILES_COUNT`、`INK_CARD_FILES_DIGEST`）；内容没变就不改文件。

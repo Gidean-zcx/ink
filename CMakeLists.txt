@@ -264,7 +264,6 @@ add_library(ink_system STATIC
   system/services/audio/codec_formats.c
   system/services/audio/vendor/kiikoread/metadata.c
   system/services/audio/vendor/kiikoread/music_lyrics.c
-  system/apps/music/music.c
   system/services/bt/bt_service.c
   system/services/text/text_service.c
   system/services/text/google_port.cpp
@@ -360,6 +359,7 @@ add_custom_target(ink_sample ALL
 find_package(Python3 COMPONENTS Interpreter)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
 include(apps/mogo/translations.cmake)
+include(apps/music/translations.cmake)
 set(INK_HAVE_FONTS OFF)
 set(INK_RAW_FONTS_DIR ${CMAKE_BINARY_DIR}/assets-raw/fonts) # the same faces uncompressed (INKF v1), for tests/font_pack
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
@@ -680,6 +680,7 @@ include(system/graft/graft_build.cmake)
 ink_graft_build(ink_system)
 include(apps/mogo/mogo.cmake)
 include(apps/mogo_lock/mogo_lock.cmake)
+include(apps/music/music.cmake)
 add_executable(sim-graft-carrier simulator/runtime/sim_main.c tests/graft_mogo/device.c)
 target_link_libraries(sim-graft-carrier PRIVATE ink_apps ink_system ink_port_sim)
 target_include_directories(sim-graft-carrier PRIVATE tests)
@@ -2186,13 +2187,35 @@ target_include_directories(test-music-formats PRIVATE platform/include system/in
 target_compile_options(test-music-formats PRIVATE ${INK_WARN} -UNDEBUG)
 target_link_libraries(test-music-formats PRIVATE m)
 add_test(NAME music-formats COMMAND test-music-formats ${CMAKE_SOURCE_DIR}/tests/music/fixtures)
+# music-3: the kiikoread library rules as copied, on a fake file index.
+add_executable(test-music-library tests/music/library.c third_party/kiikoread_music/music_library.c)
+target_include_directories(test-music-library PRIVATE platform/include system/include third_party/kiikoread_music system/services/audio/vendor/kiikoread)
+target_compile_options(test-music-library PRIVATE ${INK_WARN} -UNDEBUG -include ${CMAKE_SOURCE_DIR}/tests/music/library_port.h)
+add_test(NAME music-library COMMAND test-music-library)
+add_test(NAME music-kiikoread-provenance COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/verify_kiikoread.py)
 
 ink_sim_executable(sim-music tests/music/product.c)
 target_link_libraries(sim-music PRIVATE ink_apps ink_system)
+target_include_directories(sim-music PRIVATE apps/music/port third_party/kiikoread_music)
 add_test(NAME music-product COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(music-product PROPERTIES TIMEOUT 180)
 
 add_dependencies(sim-music ink_fonts ink_ui_fonts ink_icons ink_test_content)
+# music-3: the kiikoread walk by touch and by AI, playing on, members, old data, refreshes, what is missing.
+ink_sim_executable(sim-music-player tests/music/player.c)
+target_link_libraries(sim-music-player PRIVATE ink_apps ink_system)
+target_include_directories(sim-music-player PRIVATE system/graft apps/music/port third_party/kiikoread_music)
+target_compile_definitions(sim-music-player PRIVATE INK_MOGO_SIM=1)
+add_dependencies(sim-music-player ink_fonts ink_ui_fonts ink_icons ink_test_content)
+add_test(NAME music-player COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases "main restart")
+add_test(NAME music-player-missing COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases nofont --no-font)
+add_test(NAME music-player-empty COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases empty --content empty)
+add_test(NAME music-player-flat COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases flat --content flat)
+set_tests_properties(music-player music-player-missing music-player-empty music-player-flat PROPERTIES TIMEOUT 300)
 
 ink_sim_executable(sim-audio-out tests/audio_out/device.c)
 target_link_libraries(sim-audio-out PRIVATE ink_apps ink_system)
