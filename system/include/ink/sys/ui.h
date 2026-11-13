@@ -109,6 +109,9 @@ bool ink_ui_busy(void);
 /** Messages (input or posted jobs) are waiting for the UI task: background work in the UI task
  *  (rendering the next page ahead) waits for them (UI task). */
 bool ink_ui_queue_pending(void);
+/** A finger is down on the foreground (LVGL holds a press). A redraw now deletes what it pressed and the tap is
+ *  lost: a page redrawing for something the person did not just do (a status poll) can wait for it to lift (UI task). */
+bool ink_ui_pressing(void);
 
 /** Refresh intent for an area that is about to change (UI task). Without a hint, changes use UI. */
 void ink_ui_hint_area(const lv_area_t *logical, ink_refresh_t intent);

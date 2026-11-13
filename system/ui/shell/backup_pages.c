@@ -25,7 +25,7 @@ static struct {
     lv_timer_t *timer;
     uint32_t epoch, generation;
     int page;
-    bool pending, restore, restart;
+    bool pending, restore, restart, stale; /* stale: a status redraw waits for the finger to lift */
     char member[32], phase[24], preview[33], args[80], title[96], info[160], detail[256];
     char automatic[96], auto_args[64];
     ink_ui_page_spec_t model;
@@ -43,6 +43,9 @@ static bool current(void) {
 }
 static void draw(void);
 static void show(int page) {
+    /* A redraw deletes the button under a finger and its tap is lost: a status reply that comes during a press
+     * redraws at the next poll (the weekly backup's two redraws fell between press and release, small-gaps-3). */
+    if (page == B.page && ink_ui_pressing()) { B.stale = true; return; }
     if (page == B.page) { ink_ui_content_changed(); draw(); return; }
     ink_ui_drop_app("backup");
     ink_ui_push(&PAGES[page], (void *)(intptr_t)page);
@@ -56,6 +59,7 @@ static void request(const char *cap, const char *args) {
 }
 static void poll(lv_timer_t *timer) {
     (void)timer;
+    if (B.stale && current() && !ink_ui_pressing()) { ink_ui_content_changed(); draw(); }
     if (current() && !B.pending) request("backup.status", NULL);
 }
 static void clicked(lv_event_t *e) {
@@ -80,6 +84,7 @@ static void text(const char *s, int font, int y, bool center) {
     if (center) lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
 }
 static void draw(void) {
+    B.stale = false;
     lv_obj_clean(B.screen);
     int mode = (int)ink_setting_get("backup.auto");
     snprintf(B.automatic, sizeof B.automatic, TR("自动备份：%s"), mode == 1 ? TR("每天") : mode == 2 ? TR("每周") : TR("关"));
