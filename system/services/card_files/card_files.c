@@ -60,7 +60,7 @@ static struct {
     uint32_t swap, apps_stopped;
     uint8_t *buf, *chunk; /* PSRAM, with line */
     char *line, rx[512], out[200];
-    osal_sem_t *swapped;
+    volatile bool swapped; /* the task's install is done (no semaphore: internal RAM) */
     ink_exec_job_t kick_job, step_job, ui_job, swap_job, end_job;
 } CF;
 
@@ -129,7 +129,7 @@ static void swap_bg(void *arg) {
     }
     CF.swap = 0;
     if (changed) ink_fs_changed_outside();
-    if (CF.swap_from_task) osal_sem_give(CF.swapped);
+    if (CF.swap_from_task) CF.swapped = true;
     else check_finish();
 }
 
@@ -315,8 +315,9 @@ static int fetch_file(const ink_card_source_t *src, int i) {
         if (!got) return D_IO; /* stopped for the card's loan: the .part stays */
         if (same) {
             ink_probe_count("card_files.written");
+            CF.swapped = false;
             swap_start(1u << i, true);
-            osal_sem_take(CF.swapped, OSAL_WAIT_FOREVER);
+            while (!CF.swapped) osal_task_delay_us(10000);
             return D_OK;
         }
         CF.done_bytes -= e->size;
@@ -460,8 +461,7 @@ int ink_card_files_init(void) {
     CF.h_files = ink_state_define(&ST_FILES);
     CF.h_progress = ink_state_define(&ST_PROGRESS);
     CF.buf = osal_malloc(CF_BUF + INK_CARD_CHUNK + INK_CARD_LINE_MAX + 1, OSAL_MEM_EXTERNAL);
-    CF.swapped = osal_sem_create(0, 1);
-    if (CF.h_files < 0 || CF.h_progress < 0 || !CF.buf || !CF.swapped) return -1;
+    if (CF.h_files < 0 || CF.h_progress < 0 || !CF.buf) return -1;
     CF.chunk = CF.buf + CF_BUF, CF.line = (char *)CF.chunk + INK_CARD_CHUNK;
     publish(INK_CARD_CHECKING, 0);
     CF.h_card = ink_state_find("storage.card"); /* the file service's, defined before this */

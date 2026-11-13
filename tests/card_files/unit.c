@@ -59,10 +59,7 @@ void ink_power_release(ink_power_need_t n) { (void)n; }
 static int probes_rejected;
 void ink_probe_count(const char *m) { probes_rejected += !strcmp(m, "card_files.rejected"); }
 osal_err_t osal_task_create(const osal_task_cfg_t *c, osal_task_t **o) { (void)c; (void)o; return OSAL_NO_MEM; }
-static int sem;
-osal_sem_t *osal_sem_create(uint32_t i, uint32_t m) { (void)i; (void)m; return (osal_sem_t *)&sem; }
-void osal_sem_give(osal_sem_t *s) { (void)s; }
-osal_err_t osal_sem_take(osal_sem_t *s, int64_t t) { (void)s; (void)t; return OSAL_OK; }
+void osal_task_delay_us(uint64_t us) { now_us += us; }
 static uint8_t heap[CF_BUF + INK_CARD_CHUNK + INK_CARD_LINE_MAX + 64];
 void *osal_malloc(size_t n, uint32_t caps) { (void)caps; return n <= sizeof heap ? heap : NULL; }
 int ink_state_define(const ink_state_def_t *d) { (void)d; return 1; }
