@@ -43,6 +43,9 @@ typedef struct {
     double i2c_faults;         /* share of hal_i2c transfers that time out (fault injection) */
     const char *i2c_fault_dev; /* only this device ("pmic", "touch"...), NULL = all */
     unsigned panel_vcom_mv;    /* override the panel's VCOM (0 = profile): a panel with another label */
+    bool touch_worst;          /* --touch-worst: the touch controller's monitor scan always costs its full period */
+    bool pmic_hold_bus;        /* --pmic-hold-bus (tests only): the panel power-up holds the I2C bus throughout */
+    bool flash_holds_i2c;      /* --flash-holds-i2c: each flash operation holds the I2C bus (the S31 port's lock) */
     bool trace;               /* write Chrome/Perfetto trace JSON */
     bool frames;              /* write a PNG after every completed display update */
     bool quiet;
@@ -195,6 +198,14 @@ void sim_power_gui_state(sim_power_gui_t *out); /* ISR context (desktop simulato
 /* Shared I2C bus model (touch, PMIC, fuel gauge, RTC). Task context. */
 void sim_i2c_init(void);
 void sim_i2c_transfer(const char *who, int bytes);       /* blocks for the bus + transfer time */
+/* When the current hal_i2c transfer started on the bus (set just before a chip model is called) and
+ * the time the read data's first byte begins, `before` bytes into the transfer. */
+extern uint64_t sim_i2c_xfer_t0;
+uint64_t sim_i2c_byte_at(uint64_t t0, int before);
+uint64_t sim_i2c_transfer_at(const char *who, int bytes); /* sim_i2c_transfer, returns when it started on the bus */
+bool sim_i2c_lock_for_flash(void);          /* the bus lock around a flash operation, as the S31 port */
+void sim_flash_last_erase(uint64_t *t0, uint64_t *t1); /* the last erase's stall window, virtual ns (tests) */
+void sim_i2c_unlock_for_flash(bool taken);
 void sim_i2c_hold(const char *who, uint64_t ns);         /* occupy the bus (e.g. PMIC power-up sequence) */
 
 /* Register-level chip models answering hal_i2c transfers (hal_i2c_sim.c, dev_*.c) */

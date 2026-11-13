@@ -293,6 +293,12 @@ static bool notes_moved(void) { /* the rows it would draw now are not the ones d
 }
 
 /* Called for every change that may show here: what changed is redrawn alone (a tile, a slider, the day, the card). */
+static void control_redraw(void *unused) {
+    (void)unused;
+    if (N.control) draw_control();
+}
+void control_redraw_later(void) { ink_ui_after_press(control_redraw, NULL); }
+
 void draw_control(void) {
     if (!N.control) return;
     if (C.airplane && !ink_setting_get("net.airplane")) { /* off again: back to the page, by touch or by the AI */

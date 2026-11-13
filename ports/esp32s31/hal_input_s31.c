@@ -91,6 +91,22 @@ static void sample_keys(uint64_t now) {
     }
 }
 
+/* The touch controller's frame. A new contact counts from the INT edge when that is newer than the last read. */
+static void read_touch(void) {
+    static uint64_t last_read;
+    uint64_t now = osal_now_us(), edge = s31_irq_edge_us(S31_GPIO_TOUCH_INT);
+    ft6336u_point_t pts[FT6336U_MAX_POINTS];
+    int n = 0;
+    if (ft6336u_read(g_touch, pts, FT6336U_MAX_POINTS, &n) == HAL_I2C_OK) {
+        for (int i = 0; i < n; ++i)
+            if (!metalio_touch_cover_key(pts[i].x, pts[i].y))
+                map_to_logical(pts[i].x, pts[i].y, &pts[i].x, &pts[i].y);
+        s31_touch_frame_at(g_contacts, pts, n, osal_now_us(), edge > last_read && edge <= now ? edge : now, emit, NULL);
+        g_touch_poll = n > 0;
+    } else g_touch_poll = true;
+    last_read = now;
+}
+
 static void input_task(void *arg) {
     (void)arg;
     TickType_t wait = portMAX_DELAY;
@@ -105,18 +121,10 @@ static void input_task(void *arg) {
             uint8_t p0;
             metalio_board_read(0, &p0); /* release PWR_GOOD's interrupt too */
         }
+        bool touch_first = g_touch && (bits & INPUT_TOUCH); /* woken by the touch INT: its frame before the keys' reads */
+        if (touch_first) read_touch();
         if (metalio_board_ready()) sample_keys(now);
-        if (g_touch) {
-            ft6336u_point_t pts[FT6336U_MAX_POINTS];
-            int n = 0;
-            if (ft6336u_read(g_touch, pts, FT6336U_MAX_POINTS, &n) == HAL_I2C_OK) {
-                for (int i = 0; i < n; ++i)
-                    if (!metalio_touch_cover_key(pts[i].x, pts[i].y))
-                        map_to_logical(pts[i].x, pts[i].y, &pts[i].x, &pts[i].y);
-                s31_touch_frame(g_contacts, pts, n, osal_now_us(), emit, NULL);
-                g_touch_poll = n > 0;
-            } else g_touch_poll = true;
-        }
+        if (g_touch && !touch_first) read_touch();
         if (metalio_board_ready()) motor_poll(osal_now_us());
         wait = g_touch_poll || s31_haptic_busy() || ink_s31_bh_headset() ? pdMS_TO_TICKS(S31_TOUCH_POLL_MS) :
                g_touch ? pdMS_TO_TICKS(20) : pdMS_TO_TICKS(50);
@@ -135,7 +143,7 @@ void s31_input_init(hal_i2c_dev_t *touch) {
         osal_panic("input HAL: task setup failed");
     if (s31_irq_watch(S31_GPIO_AI_KEY, irq, (void *)(uintptr_t)INPUT_AI) ||
         s31_irq_watch(S31_GPIO_EXP_INT, irq, (void *)(uintptr_t)INPUT_EXP) ||
-        (touch && s31_irq_watch(S31_GPIO_TOUCH_INT, irq, (void *)(uintptr_t)INPUT_TOUCH)))
+        (touch && s31_irq_watch_task(S31_GPIO_TOUCH_INT, g_task, INPUT_TOUCH)))
         osal_panic("input HAL: interrupt setup failed");
     xTaskNotify(g_task, INPUT_EXP | INPUT_TOUCH, eSetBits);
 }

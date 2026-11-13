@@ -865,6 +865,22 @@ ink_sim_executable(sim-semantics-shell2 tests/semantics_shell2/main.c tests/sema
   tests/semantics_shell2/ai.c tests/semantics_shell2/member.c tests/semantics_shell2/kid.c
   tests/semantics_shell2/battery.c tests/semantics_shell2/home.c)
 target_link_libraries(sim-semantics-shell2 PRIVATE ink_apps ink_system)
+# tap-loss-1: a held finger and changes it did not make (redraws, cards, banner, overlays, keyboard suggestions).
+ink_sim_executable(sim-tap-held tests/tap_loss/held.c tests/tap_loss/held_text.c)
+target_link_libraries(sim-tap-held PRIVATE ink_apps ink_system)
+add_test(NAME tap-held
+  COMMAND sim-tap-held --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --script ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.script --budget ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.budget.json
+          --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/tap-held --quiet --no-random-outages)
+set_tests_properties(tap-held PROPERTIES TIMEOUT 180)
+ink_sim_executable(sim-tap-erase tests/tap_loss/erase.c)
+target_link_libraries(sim-tap-erase PRIVATE ink_apps ink_system)
+add_test(NAME tap-erase
+  COMMAND sim-tap-erase --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --script ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.script --budget ${CMAKE_SOURCE_DIR}/tests/tap_loss/erase.budget.json
+          --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/tap-erase --quiet
+          --no-random-outages --flash-timing max)
+set_tests_properties(tap-erase PROPERTIES TIMEOUT 180)
 ink_sim_executable(sim-ime-keyboard1 tests/ime_keyboard1.c)
 target_link_libraries(sim-ime-keyboard1 PRIVATE ink_apps ink_system)
 add_test(NAME ime-keyboard1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ime_keyboard1.py
@@ -1155,6 +1171,18 @@ add_test(NAME selftest-board-wiring-pqbn
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.pqbn.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board-pqbn --quiet --end 90s --no-random-outages)
 set_tests_properties(selftest-board-wiring-pqbn PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
+# Taps in every phase of the panel power-up (tap-loss-1), the monitor scan at its worst.
+add_test(NAME selftest-power-tap
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/power_tap.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-power-tap --quiet --end 14s --no-random-outages --touch-worst)
+set_tests_properties(selftest-power-tap PROPERTIES ENVIRONMENT "INK_SELFTEST_POWERTAP=1")
+# The touch controller model's timing (tap-loss-1): frame sample time, detection delay.
+add_test(NAME selftest-touch-timing
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/touch_timing.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-touch-timing --quiet --end 3s --no-random-outages)
+set_tests_properties(selftest-touch-timing PROPERTIES ENVIRONMENT "INK_SELFTEST_TOUCH=1")
 add_test(NAME selftest-expander-dead
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/expander_dead.budget.json
@@ -1715,6 +1743,8 @@ ink_sim_executable(sim-sound-clock tests/sound_clock.c)
 target_link_libraries(sim-sound-clock PRIVATE ink_apps ink_system)
 add_test(NAME sound-clock COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sound_clock.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(sound-clock PROPERTIES TIMEOUT 300)
+add_test(NAME listen-mark COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/tap_loss/listen_mark.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(listen-mark PROPERTIES TIMEOUT 150)
 add_test(NAME sound-clock-input COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sound_clock_input.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(sound-clock-input PROPERTIES TIMEOUT 90)
 ink_sim_executable(sim-vendor-haptic tests/vendor_haptic.c tests/vendor_haptic_hal.c)

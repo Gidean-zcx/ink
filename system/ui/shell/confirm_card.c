@@ -29,7 +29,7 @@ static struct {
     bool drawn, read, watching;
     bool expired;
     bool pin_present;
-    uint32_t version, revision;
+    uint32_t version, revision, pressed_revision;
     ink_member_identity_t owner;
     int pin_result;
     uint32_t pin_wait;
@@ -41,7 +41,7 @@ static void close_card(void);
 static void on_answer(lv_event_t *e);
 static ink_ui_page_spec_t model(void);
 static void changed(void) { C.revision++; C.version = ink_ui_content_version(); }
-static void pressed(lv_event_t *e) { (void)e; C.version = ink_ui_content_version(); }
+static void pressed(lv_event_t *e) { (void)e; C.version = ink_ui_content_version(); C.pressed_revision = C.revision; }
 static void pin_changed(lv_event_t *e) {
     (void)e;
     if (!C.pin_dots) return;
@@ -143,7 +143,7 @@ static void parent_page(void) {
 }
 
 static void on_answer(lv_event_t *e) {
-    if (C.version != ink_ui_content_version()) return;
+    if (!ink_ui_touch_current(C.version) || C.pressed_revision != C.revision) return; /* the card changed under the finger */
     bool yes = lv_event_get_user_data(e) != NULL;
     if (yes && (C.page + 1 != C.pages || !C.read)) return;
     if (yes && C.now.parent) { /* a yes here takes a parent */
@@ -230,8 +230,8 @@ static void read_ready(lv_timer_t *timer) {
     if (C.page + 1 == C.pages) lv_obj_remove_state(C.accept, LV_STATE_DISABLED);
 }
 static void read_pressed(lv_event_t *e) {
-    pressed(e);
     if (!C.read && C.drawn && !ink_display_busy()) { C.read = true; changed(); }
+    pressed(e); /* after: the press's own change is not a change under the finger */
 }
 static void page_action(ink_call_t *call) {
     int64_t token = 0, delta = 0;

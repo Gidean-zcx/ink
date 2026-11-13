@@ -25,7 +25,7 @@ static struct {
     lv_timer_t *timer;
     uint32_t epoch, generation;
     int page;
-    bool pending, restore, restart, stale; /* stale: a status redraw waits for the finger to lift */
+    bool pending, restore, restart;
     char member[32], phase[24], preview[33], args[80], title[96], info[160], detail[256];
     char automatic[96], auto_args[64];
     ink_ui_page_spec_t model;
@@ -42,14 +42,16 @@ static bool current(void) {
         !strcmp(ink_ui_page_name(), NAMES[B.page]);
 }
 static void draw(void);
-static void show(int page) {
-    /* A redraw deletes the button under a finger and its tap is lost: a status reply that comes during a press
-     * redraws at the next poll (the weekly backup's two redraws fell between press and release, small-gaps-3). */
-    if (page == B.page && ink_ui_pressing()) { B.stale = true; return; }
+static void show_now(void *arg) {
+    int page = (int)(intptr_t)arg;
+    if (!current()) return; /* the tap that ended the press left the page */
     if (page == B.page) { ink_ui_content_changed(); draw(); return; }
     ink_ui_drop_app("backup");
     ink_ui_push(&PAGES[page], (void *)(intptr_t)page);
 }
+/* A redraw deletes the button under a finger and its tap is lost: a status reply that comes during a press is shown
+ * once the finger lifts (the weekly backup's two redraws fell between press and release, small-gaps-3). */
+static void show(int page) { ink_ui_after_press(show_now, (void *)(intptr_t)page); }
 static void reply(void *ctx, const ink_receipt_t *rc);
 static void request(const char *cap, const char *args) {
     ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .args_json = args, .reply_exec = INK_EXEC_UI,
@@ -59,7 +61,6 @@ static void request(const char *cap, const char *args) {
 }
 static void poll(lv_timer_t *timer) {
     (void)timer;
-    if (B.stale && current() && !ink_ui_pressing()) { ink_ui_content_changed(); draw(); }
     if (current() && !B.pending) request("backup.status", NULL);
 }
 static void clicked(lv_event_t *e) {
@@ -84,7 +85,6 @@ static void text(const char *s, int font, int y, bool center) {
     if (center) lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
 }
 static void draw(void) {
-    B.stale = false;
     lv_obj_clean(B.screen);
     int mode = (int)ink_setting_get("backup.auto");
     snprintf(B.automatic, sizeof B.automatic, TR("自动备份：%s"), mode == 1 ? TR("每天") : mode == 2 ? TR("每周") : TR("关"));
@@ -152,7 +152,7 @@ static void draw(void) {
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if (!current() || (uint32_t)(uintptr_t)ctx != B.generation) return;
     B.pending = false;
-    if (rc->status == INK_RC_PENDING_CONFIRMATION || rc->status == INK_RC_CANCELLED) { draw(); return; }
+    if (rc->status == INK_RC_PENDING_CONFIRMATION || rc->status == INK_RC_CANCELLED) { show(B.page); return; }
     if (rc->status != INK_RC_DONE && rc->status != INK_RC_QUEUED) {
         snprintf(B.title, sizeof B.title, "%s", B.restore ? TR("没有恢复成功") : TR("还没备份好"));
         snprintf(B.detail, sizeof B.detail, "%s", rc->say[0] ? rc->say : TR("暂时读不出来，请检查网络和存储卡后再试。"));

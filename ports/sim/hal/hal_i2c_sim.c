@@ -81,9 +81,10 @@ static hal_i2c_status_t xfer(hal_i2c_dev_t *d, const uint8_t *w, size_t wlen, ui
         sim_metric_add("i2c.timeouts", 1);
         return HAL_I2C_TIMEOUT;
     }
-    sim_i2c_transfer(d->name, 1 + (int)wlen + (rlen ? 1 + (int)rlen : 0));
+    uint64_t t0 = sim_i2c_transfer_at(d->name, 1 + (int)wlen + (rlen ? 1 + (int)rlen : 0));
     for (int i = 0; i < n_models; i++)
         if (MODELS[i].bus == d->bus && MODELS[i].addr == d->addr) {
+            sim_i2c_xfer_t0 = t0; /* nothing blocks between here and the model: it is this transfer's */
             hal_i2c_status_t s = (hal_i2c_status_t)MODELS[i].model->xfer(MODELS[i].state, w, wlen, r, rlen);
             if (s == HAL_I2C_NACK) sim_metric_add("i2c.nacks", 1);
             return s;

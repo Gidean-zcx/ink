@@ -57,6 +57,10 @@ void ink_input_set_power_key_hook(bool (*fn)(void));
 /** The power key held down long enough (the timer task, keep it short): the power menu, unless something on screen cannot be
  *  left. Its release does nothing more. */
 void ink_input_set_power_long_hook(void (*fn)(void));
+/** A finger or a key is down now (any task). */
+bool ink_input_touch_held(void);
+/** When the last finger or key was let go (osal_now_us), 0 if never (any task). */
+uint64_t ink_input_last_release_us(void);
 /** A volume key went down: -1 or 1. Locked as well; the keys go nowhere else. The input task: short. */
 void ink_input_set_volume_key_hook(void (*fn)(int delta, bool locked));
 

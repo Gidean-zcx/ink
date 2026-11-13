@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ink/sys/confirm.h"
+#include "ink/sys/input.h"
 #include "ink/sys/interrupt.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/textfield.h"
@@ -28,7 +29,9 @@ static const ink_cap_t CAPS[] = {
     {.id = "test.long_confirm", .title = "删除测试文件", .ask = "{detail}", .effect = INK_FX_LOCAL_DESTRUCTIVE, .child_ok = true,
      .input = "{\"type\":\"object\",\"properties\":{\"detail\":{\"type\":\"string\",\"maxLength\":512}},\"required\":[\"detail\"]}", .run = effect}
 };
-static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
+/* A finger let go is settled once its release reached the input service (the controller reports it at
+ * its next frame, tap-loss-1), not when the UI happens to be idle before that. */
+static bool settled(void) { return !ink_input_touch_held() && !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "the panel settles"); }
 static int count_icons(lv_obj_t *root) {
     int count = lv_obj_check_type(root, &lv_image_class) ? 1 : 0;

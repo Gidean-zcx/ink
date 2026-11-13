@@ -53,6 +53,9 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
 void ink_shell_ai_closed(void);
 void ink_shell_ai_status(const char *status, ink_ai_error_t error);
 void ink_shell_ai_words(const char *text);
+/** The AI turned the microphone on in this UI round ('s' sending): the status bars show it in this frame, with the
+ *  panel, and the audio task's later report of the same state draws nothing more (D-127). UI task. */
+void ink_shell_bar_note_mic(char mic);
 bool ink_shell_ai_hide(void);
 /** The AI panel's root on the system layer, or NULL: the keyboard keeps itself above it while a field is focused. */
 lv_obj_t *ink_shell_ai_panel_root(void);

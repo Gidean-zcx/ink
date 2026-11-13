@@ -70,6 +70,9 @@ void ink_text_key(char c);
 void ink_text_backspace(void);
 /** A candidate, by its place in the whole list. */
 void ink_text_pick(int index);
+/** A candidate as the keyboard showed it, though the list changed since without the person (a suggestion came, the
+ * dictionary loaded): a touch picks what it was on. */
+void ink_text_pick_shown(const ink_text_cand_t *c);
 void ink_text_enter(void);
 /** Text as it is: what is being composed goes in as typed, then this. In place of what is selected, or at the cursor. */
 void ink_text_commit_utf8(const char *s);
@@ -78,6 +81,7 @@ void ink_text_commit_utf8(const char *s);
  * there. Nobody drags on electronic paper: a tap puts the cursor, a long press selects a word, the arrows adjust (system UI spec). */
 size_t ink_text_cursor(void);
 uint32_t ink_text_edit_revision(void); /* UI task: revision of the current input. */
+int ink_text_target_session(void);       /* UI task: the current input (0: none) */
 /** start == end: nothing is selected. */
 void ink_text_selection(size_t *start, size_t *end);
 void ink_text_set_cursor(size_t at);

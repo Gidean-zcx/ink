@@ -82,8 +82,14 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
 void ink_ui_pop(void);
 /** Back to the root activity (one rebuild). */
 void ink_ui_home(void);
-/** Build the top activity again, after something that changes how everything looks (UI task only). */
+/** Build the top activity again, after something that changes how everything looks (UI task only). While a finger is
+ *  down and the UI is not handling input (a reply, a timer, a watched state), the rebuild waits until the finger
+ *  lifts and comes in the frame of the tap's result; a new screen meanwhile drops it (tap-loss-1). */
 void ink_ui_redraw(void);
+/** Run fn(arg) now, or, while a finger is down and the UI is not handling input, once it lifts (before the next
+ *  frame; at most ~2 s held). For changes that delete or rebuild controls on the page without ink_ui_redraw. The
+ *  same fn and arg wait once. fn checks its page is still up. UI task. */
+void ink_ui_after_press(void (*fn)(void *), void *arg);
 /** Built-in home surface. Only the home app uses this framework presenter. */
 void ink_shell_home_create(lv_obj_t *screen);
 void ink_shell_home_destroy(void);
@@ -156,6 +162,10 @@ uint32_t ink_ui_generation(void);
 uint32_t ink_ui_content_version(void);
 /** The foreground activity's content changed without a new screen (a page turned). UI task. */
 void ink_ui_content_changed(void);
+/** For touch controls: `version` (taken when the finger came down) is still what the page shows, or what the press in
+ *  progress (until its release is handled) came down on, on the same screen and overlays. Content that changed
+ *  elsewhere during the press does not refuse the tap; a control checks its own revision for changes to itself. */
+bool ink_ui_touch_current(uint32_t version);
 
 /* Shared look for e-ink: white background, black text, inverted press state. */
 void ink_ui_style_screen(lv_obj_t *scr);

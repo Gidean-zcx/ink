@@ -231,8 +231,28 @@ static bool power_filter(const hal_input_event_t *h) {
     return false;
 }
 
+/* What is held down now (a bit per finger, a bit per key) and when the last one was let go: the
+ * storage service starts no flash erase under a tap (an erase stops both cores, tap-loss-1). Written
+ * only here, in the input task; read by any task. */
+static uint32_t g_held;
+static uint64_t g_last_release_us;
+bool ink_input_touch_held(void) { return __atomic_load_n(&g_held, __ATOMIC_ACQUIRE) != 0; }
+uint64_t ink_input_last_release_us(void) { return __atomic_load_n(&g_last_release_us, __ATOMIC_ACQUIRE); }
+static void note_held(const hal_input_event_t *h) {
+    if (h->type == HAL_IN_TOUCH && h->touch.phase == HAL_TOUCH_MOVE) return;
+    uint32_t bit = h->type == HAL_IN_TOUCH ? 1u << (h->touch.id & 3) : h->type == HAL_IN_KEY ? 16u << (h->key.key & 15) : 0;
+    if (!bit) return;
+    if (h->type == HAL_IN_TOUCH ? h->touch.phase == HAL_TOUCH_DOWN : h->key.pressed) {
+        __atomic_or_fetch(&g_held, bit, __ATOMIC_ACQ_REL);
+    } else {
+        __atomic_store_n(&g_last_release_us, osal_now_us(), __ATOMIC_RELEASE);
+        __atomic_and_fetch(&g_held, ~bit, __ATOMIC_ACQ_REL);
+    }
+}
+
 static void hal_sink(const hal_input_event_t *h, void *ctx) {
     (void)ctx;
+    note_held(h);
     if (!power_filter(h)) {
         if ((h->type == HAL_IN_TOUCH && h->touch.phase != HAL_TOUCH_MOVE) || h->type == HAL_IN_KEY)
             hal_display_wake(WAKE_HOLD_MS);

@@ -30,7 +30,7 @@ static void binding_event(lv_event_t *e) {
         b->version = ink_ui_content_version(); b->generation = ink_ui_generation();
         return;
     }
-    if (b->versioned && b->version && (b->version != ink_ui_content_version() || b->generation != ink_ui_generation())) return;
+    if (b->versioned && b->version && (!ink_ui_touch_current(b->version) || b->generation != ink_ui_generation())) return;
     const ink_cap_t *cap = ink_cap_find(b->cap);
     bool locked_action = ink_ui_locked_activity() ? ink_ui_locked_allows(b->cap) : cap && cap->while_locked;
     if (!current_session(b->epoch) && (b->member_epoch != ink_member_epoch() || !locked_action)) return;
@@ -233,7 +233,7 @@ static void refresh(void *unused) {
     if (!current_session(N.epoch)) return;
     if (child() && N.home) kid_time_read();
     bool body = __atomic_exchange_n(&N.need_body, false, __ATOMIC_ACQ_REL);
-    if (body && N.control && ink_member_space_open()) draw_control();
+    if (body && N.control && ink_member_space_open()) control_redraw_later();
     if (body && N.page_body && ink_member_space_open() && !N.picked_ssid[0]) draw_page_body();
     for (unsigned i = 0; i < sizeof N.status / sizeof *N.status; i++)
         if (N.status[i]) {
@@ -305,9 +305,8 @@ int ink_shell_init(void) {
 
 void ink_shell_activity_refresh(void) {
     if (!current_session(N.epoch)) return;
-    ink_ui_content_changed();
-    if (N.home) draw_home_content();
-    if (N.control) draw_control();
+    if (N.home) home_redraw_later();
+    if (N.control) control_redraw_later();
 }
 
 static void notify_open(ink_call_t *c) {

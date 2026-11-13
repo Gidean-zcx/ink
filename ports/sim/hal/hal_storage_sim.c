@@ -62,6 +62,9 @@ static uint64_t sample_us(uint32_t typ, uint32_t max) {
     }
 }
 
+static uint64_t g_erase_t0, g_erase_t1; /* the last erase's stall window (tests) */
+void sim_flash_last_erase(uint64_t *t0, uint64_t *t1) { *t0 = g_erase_t0; *t1 = g_erase_t1; }
+
 /* The flash is busy for ns: caches off (MCU) -> stall window; the caller polls the status. */
 static void flash_busy(uint64_t ns, const char *what) {
     uint64_t t0 = vtk_now();
@@ -77,10 +80,16 @@ static void flash_busy(uint64_t ns, const char *what) {
         }
     }
     if (g_profile.flash_stalls_cpu) {
+        /* --flash-holds-i2c: the S31 port's I2C lock around each operation (s31_flash_begin). Off by default: the
+         * modelled mutex hands nothing to a waiter and no time passes between two operations, so a long littlefs job
+         * would starve every touch read (546 ms seen), which the device is not shown to do (tap-loss-1 report) */
+        bool bus = g_sim.flash_holds_i2c && sim_board_present() && sim_i2c_lock_for_flash();
+        if (!strcmp(what, "erase")) g_erase_t0 = vtk_now(), g_erase_t1 = vtk_now() + ns;
         vtk_lock();
         vtk_stall_begin_locked(vtk_now() + ns);
         vtk_unlock(); /* every task, the caller included (it spins in IRAM), is frozen until the window ends */
         vtk_sched_point();
+        sim_i2c_unlock_for_flash(bus);
         if (ns > FL.max_stall_ns) FL.max_stall_ns = ns;
         sim_metric_sample("flash.stall_ms", ns / 1e6);
     } else {

@@ -289,7 +289,7 @@ static void today_call(ink_call_t *c) {
 void icon_event(lv_event_t *e) {
     if (!current_session(N.epoch)) return;
     if (lv_event_get_code(e) == LV_EVENT_PRESSED) { N.icon_version = ink_ui_content_version(); N.icon_generation = ink_ui_generation(); return; }
-    if (N.icon_version && (N.icon_version != ink_ui_content_version() || N.icon_generation != ink_ui_generation())) return;
+    if (N.icon_version && (!ink_ui_touch_current(N.icon_version) || N.icon_generation != ink_ui_generation())) return;
     const char *id = lv_event_get_user_data(e);
     bool menu = lv_event_get_code(e) != LV_EVENT_SHORT_CLICKED, ask = !menu && !strcmp(id, "ai") && !strcmp(ink_ui_page_name(), "home");
     char args[96]; snprintf(args, sizeof args, "{\"id\":\"%s\"}", id);

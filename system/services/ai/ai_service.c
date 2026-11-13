@@ -780,6 +780,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
             osal_mutex_unlock(AI.lock);
             if (sid > 0 && ink_audio_capture_begin(on_frame, NULL) == 0) {
                 AI.capturing = true;
+                ink_shell_bar_note_mic('s'); /* the mark in this frame, with the sheet (tap-loss-1) */
                 AI.req_id = request("ai.listen", true);
                 if (AI.req_id < 0) { /* the hub link took no request: what it says is on the sheet */
                     end_capture(true);

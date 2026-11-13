@@ -20,7 +20,7 @@ static struct {
     ink_interrupt_t now;
     lv_obj_t *icon, *date, *notice, *context;
     char clock[16], date_text[96];
-    uint32_t version, revision;
+    uint32_t version, revision, pressed_revision;
     bool touching;
 } C;
 
@@ -45,13 +45,14 @@ static ink_ui_page_spec_t model(void) {
     return (ink_ui_page_spec_t){"interrupt", C.now.title, {"interrupt", C.revision}, fields,
         count, actions, (size_t)C.now.nactions};
 }
-static void pressed(lv_event_t *e) { (void)e; C.version = ink_ui_content_version(); C.touching = true; }
+static void pressed(lv_event_t *e) { (void)e; C.version = ink_ui_content_version(); C.pressed_revision = C.revision; C.touching = true; }
 
 static void on_button(lv_event_t *e) {
     int index = (int)(intptr_t)lv_event_get_user_data(e);
     uint32_t version = C.touching ? C.version : ink_ui_content_version();
+    bool same = !C.touching || C.pressed_revision == C.revision; /* the card itself changed under the finger: refused */
     C.touching = false;
-    if (version != ink_ui_content_version()) return;
+    if (!same || !ink_ui_touch_current(version)) return;
     ink_ui_page_spec_t page = model();
     ink_ui_action_target_t target = {version, page.object};
     ink_receipt_t rc;

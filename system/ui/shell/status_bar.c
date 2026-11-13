@@ -134,6 +134,16 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     return bar;
 }
 
+void ink_shell_bar_note_mic(char mic) {
+    if (ink_power_state() == INK_PWR_LOCKED) return;
+    bar_state_t s;
+    read_state(&s);
+    s.mic = mic;
+    for (int i = 0; i < BARS_MAX; i++)
+        if (B.bar[i] && memcmp(&s, &B.shown[i], sizeof s))
+            lv_obj_clean(B.icons[i]), draw_icons(B.icons[i], &s, B.left[i]), B.shown[i] = s; /* no hint: as the frame */
+}
+
 /* UI task: a new minute changes the time label alone; other changes redraw the icons, if what they show changed. */
 static void bar_refresh(void *arg) {
     (void)arg;
@@ -150,7 +160,7 @@ static void bar_refresh(void *arg) {
         lv_obj_clean(B.icons[i]), draw_icons(B.icons[i], &s, B.left[i]), B.shown[i] = s;
         ink_ui_hint_obj(B.icons[i], INK_REFRESH_FAST);
     }
-    if (N.control) draw_control(); /* its tiles read the same states */
+    if (N.control) control_redraw_later(); /* its tiles read the same states */
 }
 static void bar_changed(void *ctx, int h, const char *id) { /* any task: a state or the airplane setting */
     (void)ctx; (void)h;

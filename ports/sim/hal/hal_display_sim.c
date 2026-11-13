@@ -502,6 +502,7 @@ static bool power_up_locked(void) {
     if (g_profile.pmic_tps65185) {
         /* first use, in the driver task that runs the sequence anyway (keeps I2C off the boot stack) */
         if (!g_epd.ioexp) board_init();
+        if (g_sim.pmic_hold_bus) sim_i2c_hold("pmic", SIM_MS(140)); /* tests only: as if the sequence never let go */
         epd_power_result_t r = epd_power_on(&g_epd);
         sim_metric_sample("display.power_up_ms", (double)(vtk_now() - t0) / 1e6);
         if (r != EPD_POWER_OK) {

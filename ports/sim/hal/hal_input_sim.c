@@ -6,7 +6,8 @@
  * RTC): the controller notices a finger after touch_detect_us and raises INT;
  * the driver task then reads it over I2C (touch_read_bytes at i2c_khz, waits if the bus is
  * busy, e.g. during the e-ink PMIC power-up) and keeps polling every
- * touch_poll_ms (RTOS-tick quantized) until the finger lifts.
+ * touch_poll_ms (RTOS-tick quantized) until the finger lifts; with
+ * touch_idle_poll_ms it also reads without an INT (the S31 port: every 20 ms).
  * Keys, per the profile's key_sources:
  *   gpio      interrupt + debounce timer (AI key = BOOT on the Plus)
  *   expander  IO expander INT, then I2C reads on the shared bus: one when the
@@ -49,6 +50,8 @@ typedef struct {
     int nx, ny;
     int lx, ly;        /* the same point in logical (UI) coordinates */
     uint64_t t_change; /* physical time of last down/up */
+    uint64_t t_seen;   /* the controller notices this press (detection + monitor scan): INT, registers */
+    uint64_t t_press, t_lift;
 } phys_touch_t;
 
 static struct {
@@ -67,7 +70,7 @@ static struct {
     int exp_n;
     /* cover keys: touch points the controller reports outside the panel (upstream: Y ~ 1600), one
      * per key, sharing the controller's touch points with the fingers */
-    struct { bool down, reported; uint64_t t_change; } vkey[HAL_KEY_COUNT];
+    struct { bool down, reported; uint64_t t_change, t_seen, t_press, t_lift; } vkey[HAL_KEY_COUNT];
     osal_task_t *task;
     /* stats */
     uint64_t touches;
@@ -87,12 +90,30 @@ static struct {
 
 void sim_power_input_lost(void);
 
-/* Extra detection delay if the controller has dropped to its monitor scan. ISR context. */
+/* The touch controller's own random stream (like each I2C device's fault stream): a flash or network
+ * model drawing once more does not change whether a press is seen in time. */
+static double touch_rand01(void) {
+    static uint32_t x;
+    if (!x) { /* seed through a mixer: neighbouring seeds give unrelated streams */
+        uint32_t z = (g_sim.seed ? g_sim.seed : 1u) ^ 0x7F4A7C15u;
+        z = (z ^ (z >> 16)) * 0x85EBCA6Bu;
+        z = (z ^ (z >> 13)) * 0xC2B2AE35u;
+        x = (z ^ (z >> 16)) | 1u;
+    }
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    return (double)(x >> 8) / (double)(1u << 24);
+}
+
+/* Extra detection delay if the controller has dropped to its monitor scan (--touch-worst: always the
+ * full period). ISR context. */
 static uint64_t monitor_delay_ns(void) {
     uint64_t now = vtk_isr_now(), extra = 0;
     if (g_profile.touch_monitor_after_ms && g_profile.touch_monitor_period_ms &&
         now - IN.last_touch_activity >= SIM_MS(g_profile.touch_monitor_after_ms))
-        extra = (uint64_t)(sim_rand01() * (double)SIM_MS(g_profile.touch_monitor_period_ms));
+        extra = g_sim.touch_worst ? SIM_MS(g_profile.touch_monitor_period_ms)
+                                  : (uint64_t)(touch_rand01() * (double)SIM_MS(g_profile.touch_monitor_period_ms));
     IN.last_touch_activity = now;
     if (extra) sim_metric_sample("input.touch_monitor_extra_ms", extra / 1e6);
     return extra;
@@ -128,7 +149,7 @@ static void sample_wait_on_host(void *p) {
     sim_metric_sample(key, w->ms);
 }
 
-static void bus_run(const char *who, uint64_t ns) {
+static uint64_t bus_run(const char *who, uint64_t ns) {
     uint64_t t_req = vtk_now();
     osal_mutex_lock(I2C.bus, OSAL_WAIT_FOREVER);
     uint64_t t0 = vtk_now();
@@ -141,16 +162,37 @@ static void bus_run(const char *who, uint64_t ns) {
     I2C.busy_ns += ns;
     sim_trace_span("i2c", who, t0, vtk_now(), NULL);
     osal_mutex_unlock(I2C.bus);
+    return t0;
 }
 
-void sim_i2c_transfer(const char *who, int bytes) {
+#define I2C_SETUP_NS SIM_US(60) /* driver and controller set-up before the first bit */
+static uint64_t i2c_bits_ns(uint64_t bits) {
+    return bits * 1000000ull / (uint64_t)(g_profile.i2c_khz > 0 ? g_profile.i2c_khz : 100);
+}
+
+uint64_t sim_i2c_transfer_at(const char *who, int bytes) {
     /* address + register + repeated start + data, 9 bit times per byte */
-    uint64_t bits = (uint64_t)(bytes + 3) * 9u;
-    uint64_t ns = bits * 1000000ull / (uint64_t)(g_profile.i2c_khz > 0 ? g_profile.i2c_khz : 100) + SIM_US(60);
-    bus_run(who, ns);
+    return bus_run(who, i2c_bits_ns((uint64_t)(bytes + 3) * 9u) + I2C_SETUP_NS);
 }
 
-void sim_i2c_hold(const char *who, uint64_t ns) { bus_run(who, ns); }
+void sim_i2c_transfer(const char *who, int bytes) { (void)sim_i2c_transfer_at(who, bytes); }
+
+uint64_t sim_i2c_xfer_t0;
+uint64_t sim_i2c_byte_at(uint64_t t0, int before) { return t0 + I2C_SETUP_NS + i2c_bits_ns((uint64_t)before * 9u); }
+
+void sim_i2c_hold(const char *who, uint64_t ns) { (void)bus_run(who, ns); }
+
+/* The S31 port takes the I2C1 lock around every LittleFS read, program and erase (s31_flash_begin,
+ * ports/esp32s31/hal_i2c_s31.c, after upstream's OTA order, ota.cc:42-57): a flash operation first waits
+ * for the transfer on the bus, and no transfer starts while it runs. Task context; no-op before init. */
+bool sim_i2c_lock_for_flash(void) {
+    if (!I2C.bus || !vtk_self() || vtk_in_isr()) return false;
+    osal_mutex_lock(I2C.bus, OSAL_WAIT_FOREVER);
+    return true;
+}
+void sim_i2c_unlock_for_flash(bool taken) {
+    if (taken) osal_mutex_unlock(I2C.bus);
+}
 
 /* GPIO2 = the expander's INT and the accelerometer's INT1, wired together (low = asserted). A
  * falling edge wakes the driver task, which services both. ISR or locked task context. */
@@ -219,10 +261,15 @@ void sim_input_touch(int id, bool down, int lx, int ly) {
     p->lx = lx;
     p->ly = ly;
     p->down = down;
-    if (down != was) p->t_change = vtk_isr_now();
+    if (down != was) {
+        p->t_change = vtk_isr_now();
+        *(down ? &p->t_press : &p->t_lift) = p->t_change;
+    }
     if (down && !was) {
         IN.touches++;
-        vtk_event_after(SIM_US(g_profile.touch_detect_us) + monitor_delay_ns(), touch_irq_cb, NULL);
+        uint64_t seen = SIM_US(g_profile.touch_detect_us) + monitor_delay_ns();
+        p->t_seen = p->t_change + seen;
+        vtk_event_after(seen, touch_irq_cb, NULL);
         sim_trace_instant("input", "finger-down", vtk_isr_now(), NULL);
     } else if (!down && was) {
         sim_trace_instant("input", "finger-up", vtk_isr_now(), NULL);
@@ -309,7 +356,12 @@ void sim_input_key(hal_key_t key, bool pressed) {
         if (pressed != IN.vkey[key].down) {
             IN.vkey[key].down = pressed;
             IN.vkey[key].t_change = vtk_isr_now();
-            if (pressed) vtk_event_after(SIM_US(g_profile.touch_detect_us) + monitor_delay_ns(), touch_irq_cb, NULL);
+            *(pressed ? &IN.vkey[key].t_press : &IN.vkey[key].t_lift) = IN.vkey[key].t_change;
+            if (pressed) {
+                uint64_t seen = SIM_US(g_profile.touch_detect_us) + monitor_delay_ns();
+                IN.vkey[key].t_seen = IN.vkey[key].t_change + seen;
+                vtk_event_after(seen, touch_irq_cb, NULL);
+            }
         }
         return;
     }
@@ -351,14 +403,26 @@ static void deliver_key(hal_key_t key, bool pressed, uint64_t t_ns) {
  * returns the slots in use: event, X, ID, Y in portrait coordinates matching the UI (cover keys at
  * Y 1600, X 100/200/300, metalio_touch.h). Chip ID 0x64 (0xA3), firmware 0x03 (0xA6, the version
  * upstream updates to), INT mode (0xA4). INT stays low while touched; when the controller notices
- * a contact (detection delay, monitor scan) is modelled by the physical part above. */
+ * a contact (detection delay, monitor scan) is modelled by the physical part above.
+ * A frame read reports the contacts as they were when its TD_STATUS byte left the chip, three bytes
+ * (address, register, address) into the transfer, not when the transfer ends: a finger lifted during
+ * the remaining 1.5 ms of the read is still in this frame and its release is in the next one. A press
+ * is in the registers once the controller noticed it (t_seen), not before. Whether the chip keeps a
+ * contact for one more scan after the lift, or reports a lift-up frame (event 1, which the driver
+ * drops), is not known (upstream never configures the scan registers 0x86-0x89): not modelled. */
 static struct {
     struct { bool used, key; int idx; uint64_t t_down, t_up; } slot[FT6336U_MAX_POINTS];
     uint8_t ptr, int_mode;
 } FT;
 
-static bool ft_down(bool key, int idx) { return key ? IN.vkey[idx].down : IN.phys[idx].down; }
 static uint64_t ft_t_change(bool key, int idx) { return key ? IN.vkey[idx].t_change : IN.phys[idx].t_change; }
+/* The contact as the controller saw it at time ts (a frame's sample time, at most one transfer ago:
+ * a state changed after ts changed once). A press counts once noticed; a held contact stays. */
+static bool ft_down_at(bool key, int idx, uint64_t ts, bool held) {
+    bool down = key ? IN.vkey[idx].down : IN.phys[idx].down;
+    if (ft_t_change(key, idx) > ts) down = !down;
+    return down && (held || ts >= (key ? IN.vkey[idx].t_seen : IN.phys[idx].t_seen));
+}
 static int ft_slots(void) { return g_profile.touch_points < FT6336U_MAX_POINTS ? g_profile.touch_points : FT6336U_MAX_POINTS; }
 
 static bool ft_held(bool key, int idx) {
@@ -373,21 +437,21 @@ static void ft_take(bool key, int idx) {
             FT.slot[s].used = true;
             FT.slot[s].key = key;
             FT.slot[s].idx = idx;
-            FT.slot[s].t_down = ft_t_change(key, idx);
+            FT.slot[s].t_down = key ? IN.vkey[idx].t_press : IN.phys[idx].t_press;
             return;
         }
 }
 
-static void ft_assign(void) {
+static void ft_assign(uint64_t ts) {
     for (int s = 0; s < ft_slots(); s++)
-        if (FT.slot[s].used && !ft_down(FT.slot[s].key, FT.slot[s].idx)) {
+        if (FT.slot[s].used && !ft_down_at(FT.slot[s].key, FT.slot[s].idx, ts, true)) {
             FT.slot[s].used = false;
-            FT.slot[s].t_up = ft_t_change(FT.slot[s].key, FT.slot[s].idx);
+            FT.slot[s].t_up = FT.slot[s].key ? IN.vkey[FT.slot[s].idx].t_lift : IN.phys[FT.slot[s].idx].t_lift;
         }
     for (int k = 0; k < HAL_KEY_COUNT; k++)
-        if (IN.vkey[k].down && !ft_held(true, k)) ft_take(true, k);
+        if (!ft_held(true, k) && ft_down_at(true, k, ts, false)) ft_take(true, k);
     for (int i = 0; i < MAX_TOUCH; i++)
-        if (IN.phys[i].down && !ft_held(false, i)) ft_take(false, i);
+        if (!ft_held(false, i) && ft_down_at(false, i, ts, false)) ft_take(false, i);
 }
 
 static void ft_raw(int s, int *x, int *y) {
@@ -434,7 +498,7 @@ static int ft_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_
     if (wlen) FT.ptr = w[0];
     for (size_t i = 1; i < wlen; i++, FT.ptr++)
         if (FT.ptr == 0xA4) FT.int_mode = w[i];
-    if (rlen && FT.ptr == 0x02) ft_assign(); /* a frame read */
+    if (rlen && FT.ptr == 0x02) ft_assign(sim_i2c_byte_at(sim_i2c_xfer_t0, 2 + (int)wlen)); /* a frame read */
     for (size_t i = 0; i < rlen; i++, FT.ptr++) r[i] = ft_reg(FT.ptr);
     return HAL_I2C_OK;
 }
@@ -763,9 +827,16 @@ static void deliver_gpio_keys(bool sample) {
 static void input_task(void *arg) {
     (void)arg;
     for (;;) {
+        /* touch_idle_poll_ms: the S31 port also reads the controller every 20 ms without an INT */
+        uint64_t idle = g_ft && g_profile.touch_idle_poll_ms ? SIM_MS(g_profile.touch_idle_poll_ms) : VTK_TIME_INF;
+        bool idle_read = false;
         vtk_lock();
-        while (!IN.irq && IN.kn == 0 && !IN.exp_irq && !IN.exp_confirm && !IN.restore_due) vtk_block_locked(&IN.wq, VTK_TIME_INF);
-        bool irq = IN.irq, exp_irq = IN.exp_irq, exp_confirm = IN.exp_confirm, restore = IN.restore_due;
+        while (!IN.irq && IN.kn == 0 && !IN.exp_irq && !IN.exp_confirm && !IN.restore_due)
+            if (!vtk_block_locked(&IN.wq, idle) && !sim_power_sleeping()) {
+                idle_read = true;
+                break;
+            }
+        bool irq = IN.irq || idle_read, exp_irq = IN.exp_irq, exp_confirm = IN.exp_confirm, restore = IN.restore_due;
         IN.irq = IN.exp_irq = IN.exp_confirm = IN.restore_due = false;
         vtk_unlock();
         if (restore) restore_try();

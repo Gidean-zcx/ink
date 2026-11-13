@@ -43,7 +43,6 @@ void text_voice_clear_notice(void);
 void text_presenter_kick(void);
 
 /* UI task: asynchronous edits name this target and revision. */
-int ink_text_target_session(void);
 uint32_t ink_text_edit_revision(void);
 bool ink_text_session_current(void);
 int text_caps_init(void);

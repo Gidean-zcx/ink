@@ -122,6 +122,8 @@
     "_notes_detect": "touch_detect_us: finger contact -> INT, estimate (controller scan period in monitor mode)",
     "touch_monitor_after_ms": 10000,
     "touch_monitor_period_ms": 60,
+    "touch_idle_poll_ms": 0,
+    "_notes_sample": "Frame sample time = when the TD_STATUS byte leaves the chip (three bytes into the read, I2C timing), not the end of the 1.8 ms read; a press is in the registers once noticed (detect + monitor). touch_idle_poll_ms (0 here; tap-loss-1 report: turning it on changes seven tests, own task): the S31 port reads the controller every 20 ms without an INT (ports/esp32s31/hal_input_s31.c, wait = pdMS_TO_TICKS(20)), as upstream does (metalio_touch.c:224). touch_detect_us, the monitor values, and whether the chip keeps a contact one more scan after the lift are estimates: upstream never writes 0x86-0x89 (tap-loss-1 device checklist). The monitor delay draws from the touch model's own random stream; --touch-worst takes the full period.",
     "_notes_monitor": "FT6336U monitor mode (estimate, defaults not verified against the datasheet): after ~10 s without a touch the controller scans slowly (G_CTRL / TIME_ENTER_MONITOR / PERIODMONITOR registers); the first touch or cover key then waits up to one monitor period (<= 60 ms assumed) longer. i2c_background_idle_poll_ms: fuel gauge / charger polling while the system is idle.",
     "key_sources": {
       "ai": "gpio",
