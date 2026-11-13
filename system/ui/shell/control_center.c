@@ -1,5 +1,5 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
-/* ui-scale-runtime: dimension y,x,w,col,room,name_w,who_w,top,half,card,tiles,header,ink_activity_card_draw,ink_notification_list_draw Rows take theme positions; names and the date are measured text; the activity card and notification rows return theme-sized heights. */
+/* ui-scale-runtime: dimension y,x,w,h,col,room,name_w,who_w,top,half,card,tiles,header,ink_activity_card_draw,ink_notification_list_draw Rows take theme positions; names and the date are measured text; the activity card and notification rows return theme-sized heights. */
 #include <stdarg.h>
 #include "shell_internal.h"
 #include "notification_list.h"
@@ -23,9 +23,11 @@ static const struct { const char *id, *name; } SLIDER[SLIDERS] = {
     {"display.light", TR_NOOP("亮度")}, {"display.warmth", TR_NOOP("暖光")}, {"audio.volume", TR_NOOP("音量")}};
 typedef struct { char value[48], args[56]; const char *cap; int state; bool on, usable; } tile_t;
 
+/* tile[] and slider[] are fixed holders, each redrawn inside: a new object first lands at its parent's corner, and
+ * that corner must be its own, or a redraw would refresh whatever is at the panel's corner too. */
 static struct {
     lv_obj_t *tile[TILES], *slider[SLIDERS], *date, *card;
-    int x[TILES], y[TILES], w[TILES], slider_y[SLIDERS], level[SLIDERS], limit;
+    int w[TILES], level[SLIDERS], limit;
     char shown[TILES][64], date_text[48], activity[512], member[16];
     bool kid, expanded, airplane;
     lv_dir_t gesture;
@@ -116,14 +118,18 @@ static void tile_hold(lv_event_t *e) { /* AOSP: a long press opens the page with
     ink_shell_close();
     call(page, NULL);
 }
-static void tile_make(int i, const tile_t *t, int x, int y, int w) {
-    lv_obj_t *o = ink_ui_switch_tile(N.control, TILE[i].icon, TR(TILE[i].name), t->value, t->on, t->usable, x, y, w, NULL, NULL);
+static lv_obj_t *holder(int x, int y, int w, int h) {
+    lv_obj_t *o = ink_ui_box(N.control, x, y, w, h, 0, INK_SURFACE_WHITE, false);
+    lv_obj_set_style_bg_opa(o, LV_OPA_TRANSP, 0);
+    return o;
+}
+static void tile_make(int i, const tile_t *t, int w) {
+    lv_obj_t *o = ink_ui_switch_tile(C.tile[i], TILE[i].icon, TR(TILE[i].name), t->value, t->on, t->usable, 0, 0, w, NULL, NULL);
     if (t->usable && TILE[i].leave) {
         lv_obj_add_flag(o, LV_OBJ_FLAG_CLICKABLE);
         lv_obj_add_event_cb(o, tile_leave, LV_EVENT_CLICKED, (void *)(intptr_t)i);
     } else if (t->usable) ink_shell_bind(o, t->cap, t->args);
     if (t->usable && page_allowed(i)) lv_obj_add_event_cb(o, tile_hold, LV_EVENT_LONG_PRESSED, (void *)TILE[i].page);
-    C.tile[i] = o;
     snprintf(C.shown[i], sizeof C.shown[i], "%d%d%s", t->on, t->usable, t->value);
 }
 /* Two columns, 16 apart (design-lang-1, item 9); a name too long for half a row (English, a larger text size) takes the
@@ -134,10 +140,11 @@ static int tiles(int y) {
         if (C.kid ? !TILE[i].child : !C.expanded && i >= FIRST) continue;
         bool wide = ink_ui_text_width(TR(TILE[i].name), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) > room;
         if (wide && right) y += INK_CONTROL + INK_GAP_M, right = 0;
-        C.x[i] = INK_MARGIN + right * (col + INK_GAP_M), C.y[i] = y, C.w[i] = wide ? width() : col;
+        C.w[i] = wide ? width() : col;
+        C.tile[i] = holder(INK_MARGIN + right * (col + INK_GAP_M), y, C.w[i], INK_CONTROL);
         tile_t t;
         tile_read(i, &t);
-        tile_make(i, &t, C.x[i], C.y[i], C.w[i]);
+        tile_make(i, &t, C.w[i]);
         if (wide || right) y += INK_CONTROL + INK_GAP_M, right = 0;
         else right = 1;
     }
@@ -169,12 +176,10 @@ static int slider_level(int i) {
     int v = (int)ink_setting_get(SLIDER[i].id), top = (int)ink_setting_get("audio.child_max");
     return (i == 2 && v > top ? top : v) / 10; /* the volume slider is a child's, under its cap */
 }
-static void slider_make(int i, int y) {
-    C.slider_y[i] = y;
+static void slider_make(int i) {
     C.level[i] = slider_level(i);
-    C.slider[i] = ink_ui_slider(N.control, TR(SLIDER[i].name), C.level[i], INK_MARGIN, y, width(), slider_step,
-                                (void *)SLIDER[i].id);
-    if (i == 2) kid_volume_mark(C.slider[i], (int)ink_setting_get("audio.child_max"));
+    lv_obj_t *o = ink_ui_slider(C.slider[i], TR(SLIDER[i].name), C.level[i], 0, 0, width(), slider_step, (void *)SLIDER[i].id);
+    if (i == 2) kid_volume_mark(o, (int)ink_setting_get("audio.child_max"));
 }
 
 static void date_text(char *out, size_t cap) { /* the day without the lunar date: the time is in the bar above */
@@ -217,7 +222,8 @@ static void build(void) {
     int y = tiles(header(INK_STATUS_BAR) + INK_GAP_M);
     for (int i = 0; i < SLIDERS; i++)
         if (C.kid || (C.expanded && i < 2)) { /* a child's panel keeps its volume */
-            slider_make(i, y);
+            C.slider[i] = holder(INK_MARGIN, y, width(), INK_SLIDER);
+            slider_make(i);
             y += INK_SLIDER + INK_GAP_M;
         }
     if (!C.expanded && !C.kid) { /* what is going on, under the first tiles as AOSP's media; children never had it */
@@ -280,14 +286,14 @@ void draw_control(void) {
         tile_read(i, &t);
         snprintf(shown, sizeof shown, "%d%d%s", t.on, t.usable, t.value);
         if (!strcmp(shown, C.shown[i])) continue;
-        lv_obj_delete(C.tile[i]);
-        tile_make(i, &t, C.x[i], C.y[i], C.w[i]);
+        lv_obj_clean(C.tile[i]);
+        tile_make(i, &t, C.w[i]);
         ink_ui_hint_obj(C.tile[i], INK_REFRESH_FAST);
     }
     for (int i = 0; i < SLIDERS; i++)
         if (C.slider[i] && slider_level(i) != C.level[i]) {
-            lv_obj_delete(C.slider[i]);
-            slider_make(i, C.slider_y[i]);
+            lv_obj_clean(C.slider[i]);
+            slider_make(i);
             ink_ui_hint_obj(C.slider[i], INK_REFRESH_FAST);
         }
     date_text(date, sizeof date);

@@ -1,6 +1,6 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
 /* ui-scale-runtime: dimension bb_x,bb_y The battery icon's position, passed from the theme-sized status bar. */
-/* ui-scale-runtime: dimension x,w Right-to-left positions measured from theme-sized text and icons. */
+/* ui-scale-runtime: dimension x,w,left Right-to-left positions measured from theme-sized text and icons. */
 #include "shell_internal.h"
 
 /* The status bar after MuditaOS (module-gui/gui/widgets/StatusBar.cpp:30-105, 2cd0e472): the time on the left; on the
@@ -27,8 +27,10 @@ void ink_shell_time_strings(char *clock, size_t cc, char *date, size_t dc) {
 /* What the icons beside the time show (zeroed whole, so two can be compared bytewise). cell: bars while registered. */
 typedef struct { int battery; signed char cell; char mic; bool plane, wifi, bt, bell, call; } bar_state_t;
 enum { BARS_MAX = 6, CELL_NO_SERVICE = -1, CELL_NO_SIM = -2, CELL_OFF = -3 };
+/* A bar is the time and a box beside it (icons[]) holding the rest: either is redrawn without touching the other. */
 static struct {
-    lv_obj_t *bar[BARS_MAX], *time[BARS_MAX];
+    lv_obj_t *bar[BARS_MAX], *time[BARS_MAX], *icons[BARS_MAX];
+    int left[BARS_MAX]; /* where the box begins */
     bar_state_t shown[BARS_MAX];
     ink_exec_job_t job;
 } B;
@@ -94,8 +96,9 @@ static int put_text(lv_obj_t *bar, int x, const char *text) {
     return x - w - INK_GAP_S;
 }
 
-static void draw_icons(lv_obj_t *bar, const bar_state_t *s, bool show_time) {
-    int x = INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST, battery_y = (INK_STATUS_BAR - INK_ICON_LIST) / 2;
+/* Into the box that begins at `left` on the bar: unread notifications first, after the time. */
+static void draw_icons(lv_obj_t *bar, const bar_state_t *s, int left) {
+    int x = INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST - left, battery_y = (INK_STATUS_BAR - INK_ICON_LIST) / 2;
     ink_ui_icon(bar, "battery", INK_ICON_LIST, INK_ICON_LINE, x, battery_y, false);
     battery_bars(bar, x, battery_y, s->battery);
     char text[12];
@@ -108,42 +111,45 @@ static void draw_icons(lv_obj_t *bar, const bar_state_t *s, bool show_time) {
     } else x = put_text(bar, x, s->cell == CELL_NO_SIM ? TR("无卡") : TR("无服务"));
     if (s->wifi) x = put_icon(bar, x, "wifi");
     if (s->bt) put_icon(bar, x, "bluetooth"); /* only while headphones are connected */
-    static const char WIDEST[] = "00:00";
-    int y = (INK_STATUS_BAR - INK_ICON_SMALL) / 2, w = show_time ? ink_ui_text_width(WIDEST, INK_FONT_STATUS, INK_WEIGHT_MEDIUM) + INK_GAP_S : 0;
-    if (s->bell) ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, INK_MARGIN + w, y, false); /* unread, after the time */
+    int y = (INK_STATUS_BAR - INK_ICON_SMALL) / 2;
+    if (s->bell) ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, 0, y, false);
     const char *now = s->call ? TR("通话中") : s->mic == 'r' ? TR("录音") : s->mic == 's' ? TR("在听") : NULL;
     if (now) {
         int pill_w = ink_ui_text_width(now, INK_FONT_STATUS, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_S, h = ink_ui_line_height(INK_FONT_STATUS) + INK_GAP_S;
-        lv_obj_t *pill = ink_ui_box(bar, (INK_CANVAS_W - pill_w) / 2, (INK_STATUS_BAR - h) / 2, pill_w, h, INK_RADIUS_KEY, INK_SURFACE_BLACK, false);
+        lv_obj_t *pill = ink_ui_box(bar, (INK_CANVAS_W - pill_w) / 2 - left, (INK_STATUS_BAR - h) / 2, pill_w, h, INK_RADIUS_KEY, INK_SURFACE_BLACK, false);
         lv_obj_t *l = ink_ui_line(pill, now, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, 0, INK_GAP_S / 2, pill_w);
         lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     } else if (s->mic == 'l')
-        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, (INK_CANVAS_W - INK_ICON_SMALL) / 2, y, false);
+        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, (INK_CANVAS_W - INK_ICON_SMALL) / 2 - left, y, false);
 }
 
 static void bar_deleted(lv_event_t *e) {
     lv_obj_t *obj = lv_event_get_target_obj(e);
     for (int i = 0; i < BARS_MAX; i++)
-        if (B.bar[i] == obj) B.bar[i] = B.time[i] = NULL;
+        if (B.bar[i] == obj) B.bar[i] = B.time[i] = B.icons[i] = NULL;
 }
 
 lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     lv_obj_t *bar = ink_ui_box(parent, 0, 0, INK_CANVAS_W, INK_STATUS_BAR, 0, INK_SURFACE_WHITE, false);
     ink_shell_bind(bar, "shell.control", NULL);
     lv_obj_t *time = NULL;
+    static const char WIDEST[] = "00:00";
+    int left = show_time ? INK_MARGIN + ink_ui_text_width(WIDEST, INK_FONT_STATUS, INK_WEIGHT_MEDIUM) + INK_GAP_S : 0;
     if (show_time) {
         char clock[16], date[96];
         ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
         time = ink_ui_line(bar, clock, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_MARGIN,
                            (INK_STATUS_BAR - ink_ui_line_height(INK_FONT_STATUS)) / 2, 0);
     }
+    lv_obj_t *icons = ink_ui_box(bar, left, 0, INK_CANVAS_W - left, INK_STATUS_BAR, 0, INK_SURFACE_WHITE, false);
+    lv_obj_set_style_bg_opa(icons, LV_OPA_TRANSP, 0);
     bar_state_t s;
     read_state(&s);
-    draw_icons(bar, &s, show_time);
+    draw_icons(icons, &s, left);
     __atomic_store_n(&N.cell_bars_shown, s.cell > 0 ? s.cell : 0, __ATOMIC_RELEASE);
     for (int i = 0; i < BARS_MAX; i++)
         if (!B.bar[i]) {
-            B.bar[i] = bar, B.time[i] = time, B.shown[i] = s;
+            B.bar[i] = bar, B.time[i] = time, B.icons[i] = icons, B.left[i] = left, B.shown[i] = s;
             lv_obj_add_event_cb(bar, bar_deleted, LV_EVENT_DELETE, NULL);
             break;
         }
@@ -167,11 +173,10 @@ static void bar_refresh(void *arg) {
             ink_ui_hint_obj(B.time[i], INK_REFRESH_FAST);
         }
         if (!memcmp(&s, &B.shown[i], sizeof s)) continue;
-        for (int c = (int)lv_obj_get_child_count(B.bar[i]) - 1; c >= 0; c--)
-            if (lv_obj_get_child(B.bar[i], c) != B.time[i]) lv_obj_delete(lv_obj_get_child(B.bar[i], c));
-        draw_icons(B.bar[i], &s, B.time[i] != NULL);
+        lv_obj_clean(B.icons[i]);
+        draw_icons(B.icons[i], &s, B.left[i]);
         B.shown[i] = s;
-        ink_ui_hint_obj(B.bar[i], INK_REFRESH_FAST);
+        ink_ui_hint_obj(B.icons[i], INK_REFRESH_FAST);
     }
     if (N.control) draw_control(); /* its tiles read the same states */
 }

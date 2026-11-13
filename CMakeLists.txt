@@ -951,6 +951,12 @@ add_test(NAME home-one-page
   COMMAND sim-home-one-page --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_cards.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/home-one-page --quiet --no-random-outages)
+# control-1: the control centre after AOSP quick settings and the status bar after MuditaOS, by touch and by the AI;
+# a toggled tile and a new minute refresh only what changed (checked from the display trace).
+ink_sim_executable(sim-control-center tests/control_center.c)
+target_link_libraries(sim-control-center PRIVATE ink_apps ink_system)
+add_test(NAME control-center COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/control_center.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(control-center PROPERTIES TIMEOUT 900)
 ink_sim_executable(sim-text-long tests/text_long/editor.c)
 target_link_libraries(sim-text-long PRIVATE ink_apps ink_system)
 add_test(NAME text-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/text_long/run.py --build ${CMAKE_BINARY_DIR})
