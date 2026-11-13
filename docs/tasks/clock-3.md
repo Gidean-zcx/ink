@@ -1,6 +1,8 @@
 # clock-3：时钟照 Fossify Clock 重写——多个闹钟按周重复、多个计时器按秒、秒表计次、世界时钟；分秒输入和计次显示照 InfiniTime
 
-总规则先读 `docs/tasks/codex-rules.md`（第 9、10 节优先）和 `docs/tasks/vendor-common.md`（第 11 条）。
+总规则先读 `docs/tasks/codex-rules.md`（第 9、10、11 节优先）和 `docs/tasks/vendor-common.md`（第 11 条）。
+
+**D-140（总规则第 11 节）**：本任务是“照着重写”。第一步写对照表 `docs/tasks/clock-3/对照表.md`（参照产品每一页、每个操作和状态，应用看 `docs/tasks/replan-sysapps/APPS.md` 的参照路径出发）并单独提交；计划和 `replan-sysapps/SOURCES.md` 点名的 C/C++ 代码能直接用的照搬（这个任务：InfiniTime 的秒表控制器和计时器的分秒输入）。参照安卓的地方按第 11 节为这台设备改，做完逐行验收。
 
 ## 为什么
 

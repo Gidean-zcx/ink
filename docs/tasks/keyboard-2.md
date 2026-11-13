@@ -1,6 +1,8 @@
 # keyboard-2：键盘界面照 fcitx5-android 逐页翻成 LVGL（候选展开成分页网格、符号分类分页、数字键盘、长按出符号），九宫格交互和墨水屏刷新照 Mogo
 
-总规则先读 `docs/tasks/codex-rules.md`（第 9、10 节优先）和 `docs/tasks/vendor-common.md`（第 11、12 条）。
+总规则先读 `docs/tasks/codex-rules.md`（第 9、10、11 节优先）和 `docs/tasks/vendor-common.md`（第 11、12 条）。
+
+**D-140（总规则第 11 节）**：本任务是“照着重写”。第一步写对照表 `docs/tasks/keyboard-2/对照表.md`（参照产品每一页、每个操作和状态，外壳看 `docs/tasks/shell-research-1.md` 和交付计划这一行的来源出发）并单独提交；计划和 `replan-sysapps/SOURCES.md` 点名的 C/C++ 代码能直接用的照搬。参照安卓的地方按第 11 节为这台设备改，做完逐行验收。
 
 ## 为什么
 
