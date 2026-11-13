@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/osal.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/card_files.h"
@@ -20,7 +21,7 @@ static struct {
     bool from_ready; /* shown while the list said ready: that file is broken; one recheck, no reopening loop */
     char text[192], top[32];
     ink_exec_job_t barrier, again;
-} N;
+} N INK_PSRAM_BSS;
 
 static const char *app_title(const char *id) {
     for (int i = 0; id && i < ink_app_count(); i++)

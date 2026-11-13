@@ -62,7 +62,7 @@ static struct {
     char *line, rx[512], out[200];
     volatile bool swapped; /* the task's install is done (no semaphore: internal RAM) */
     ink_exec_job_t kick_job, step_job, ui_job, swap_job, end_job;
-} CF;
+} CF INK_PSRAM_BSS; /* internal RAM is short */
 
 static bool path_ok(const char *p) {
     size_t n = strlen(p);
