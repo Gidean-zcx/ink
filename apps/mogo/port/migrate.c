@@ -239,7 +239,8 @@ static bool ink_mogo_begin(const ink_member_identity_t *owner) {
     R.last_key[0] = 0;
     if (file) sscanf(file, "\nfile=%95[^\n]", R.last_key);
     R.last_offset = n > 0 ? (uint32_t)ink_mogo_old_number(R.text, "\noffset=") : 0;
-    R.marks = ink_db_open_member(&INK_MOGO_OLD_MARKS, R.member);
+    /* The old reader wrote reader.last before any bookmark could exist: without it the collection is not loaded at all. */
+    R.marks = n > 0 ? ink_db_open_member(&INK_MOGO_OLD_MARKS, R.member) : NULL;
     if (R.marks) { R.print.marks_ver = ink_db_last_ver(R.marks); R.print.marks_count = (uint32_t)ink_db_count(R.marks); }
     ink_mogo_layout_read();
     R.print.layout_crc = R.layout[0] ? ink_crc32(0, R.layout, strlen(R.layout)) : 0;

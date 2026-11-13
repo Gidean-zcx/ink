@@ -25,12 +25,13 @@ static void toggle_saving(void) {
 }
 static bool bookmark_heading;
 static lv_area_t heading_area, save_area;
+static char bookmark_text[96];
 static void inspect_heading(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *child = lv_obj_get_child(root, (int32_t)i);
         if (lv_obj_check_type(child, &lv_label_class) &&
             lv_obj_get_style_text_font(child, 0) == ink_ui_font_px(INK_FONT_HEADING, INK_WEIGHT_BOLD) &&
-            !strcmp(lv_label_get_text(child), !strcmp(scene, "PowerOffNoBookmark") ? "已关机" : "《星星邮差》第 1 页 · 0%")) {
+            !strcmp(lv_label_get_text(child), !strcmp(scene, "PowerOffNoBookmark") ? "已关机" : bookmark_text)) {
             bookmark_heading = true;
             lv_obj_get_coords(child, &heading_area);
         }
@@ -39,6 +40,11 @@ static void inspect_heading(lv_obj_t *root) {
     }
 }
 static void check_heading(void) {
+    /* The reader's card as it is now (reader-one-1: 《书名》章名 · 读到 N%), the off frame's heading. */
+    ink_card_t card = {0};
+    for (int i = 0; i < ink_app_count(); i++) if (!strcmp(ink_app_at(i)->id, "reader") && ink_app_at(i)->card) ink_app_at(i)->card(0, &card);
+    snprintf(bookmark_text, sizeof bookmark_text, "%s", card.text);
+    CHECK(!strcmp(scene, "PowerOffNoBookmark") || strstr(bookmark_text, "《星星邮差》第一章"), "the reader's card is the open book: %s", bookmark_text);
     inspect_heading(lv_layer_sys());
     CHECK(bookmark_heading, "the primary off-screen heading is the actual bookmark, or off when none exists");
     CHECK(bookmark_heading && heading_area.y2 < save_area.y1, "the wrapped bookmark heading stays above the save result");

@@ -24,11 +24,14 @@ static struct {
     uint8_t *pixels;
     int w, h, px, status, reason, turns; /* turns: presses that came while busy, turned in the next pass */
     ink_mogo_request_t req;
-    bool active, busy, loaded, root, back, drawn, card_new;
+    bool active, busy, loaded, root, back, drawn, card_new, closing, has_next, reattach; /* closing: a closed session's cleanup is due */
+    ink_mogo_request_t next; /* the page opened again before that cleanup ran: its first operation, after it */
+    ink_call_t *next_call;
     char card_member[16]; /* whose card M.card is (kept after the session closes) */
     uint64_t opened_us;
     ink_mogo_card_t card;
-    lv_obj_t *back_button, *note;
+    lv_obj_t *back_button, *note, *screen; /* screen: the page's, while the activity lives */
+    char screen_member[16], book[288];      /* whose page it is and the book on it, to come back after a member gate */
     char description[3072], explanation[400], json[4096];
 } M INK_PSRAM_BSS;
 /* list_books, continue and open by title run without the page: their own node, member and buffers. */
@@ -42,7 +45,7 @@ static struct {
 } S INK_PSRAM_BSS;
 /* The home card mirrors each member's last book, read ahead on BG: .card runs on UI and never reads flash, and the
  * lock screen shows the right book at once after a member switch. */
-typedef struct { char member[16]; bool have; ink_mogo_card_t card; } ink_mogo_slot_t;
+typedef struct { char member[16]; bool have, migrated; ink_mogo_card_t card; } ink_mogo_slot_t; /* migrated: looked at since boot */
 static struct {
     ink_exec_job_t work, done, migrate, migrated;
     ink_member_identity_t owner;
@@ -61,6 +64,7 @@ static ink_mogo_slot_t *ink_mogo_slot(const char *member, bool take) {
 
 static void ink_mogo_reply(ink_call_t *call, ink_rc_t status) { if (call) { call->rc.status = status; ink_cap_done(call); } }
 static bool ink_mogo_start(const ink_mogo_request_t *req, ink_call_t *call);
+static void ink_mogo_reattach(void);
 /* The place is written after a pause in reading (8 s, as the old reader did), not on every turn. */
 static lv_timer_t *ink_mogo_idle;
 static void ink_mogo_save(lv_timer_t *t) {
@@ -102,13 +106,15 @@ static void ink_mogo_finished(void *arg) {
     ink_call_t *call = M.call;
     M.call = NULL;
     if (M.active && ink_graft_current()) {
-        if (M.drawn) {
+        if (M.drawn) { /* a read or a save changes nothing on the page: the content version stays */
             lv_area_t a = {0, 0, M.w - 1, M.h - 1};
             if (ink_graft_present(M.pixels, M.w, &a, INK_GRAFT_PAGE)) M.status = -1;
+            ink_mogo_overlays();
+            ink_ui_content_changed();
         }
-        ink_mogo_overlays();
-        ink_ui_content_changed();
         int op = M.req.op;
+        if (!M.status && (op == INK_MOGO_OP_LOAD || op == INK_MOGO_OP_OPEN)) snprintf(M.book, sizeof M.book, "%s", M.req.text);
+        if (M.root && !M.reason) M.book[0] = 0; /* on the shelf */
         if (!M.status && ink_mogo_idle && (op == INK_MOGO_OP_TURN || op == INK_MOGO_OP_GOTO_PAGE || op == INK_MOGO_OP_ENTRY || op == INK_MOGO_OP_CHAPTER ||
             op == INK_MOGO_OP_GOTO_MARK || op == INK_MOGO_OP_LAYOUT || op == INK_MOGO_OP_OPEN || op == INK_MOGO_OP_LOAD)) {
             lv_timer_set_repeat_count(ink_mogo_idle, 1); lv_timer_reset(ink_mogo_idle); lv_timer_resume(ink_mogo_idle);
@@ -131,6 +137,11 @@ static void ink_mogo_finished(void *arg) {
         else if (M.req.say[0]) snprintf(call->rc.say, sizeof call->rc.say, "%s", M.req.say);
         ink_mogo_reply(call, M.status ? INK_RC_FAILED : INK_RC_DONE);
     }
+    if (M.reattach && !M.busy && M.screen && !M.active) { M.reattach = false; ink_mogo_reattach(); }
+    if (M.has_next && M.active && !M.busy) {
+        M.has_next = false;
+        if (!ink_mogo_start(&M.next, M.next_call)) ink_mogo_reply(M.next_call, INK_RC_FAILED);
+    }
     if (M.turns && M.active && !M.busy) {
         static ink_mogo_request_t queued;
         queued = (ink_mogo_request_t){.op = INK_MOGO_OP_TURN, .value = M.turns};
@@ -141,7 +152,7 @@ static void ink_mogo_finished(void *arg) {
 }
 static void ink_mogo_work(void *arg) {
     (void)arg;
-    if (M.active) {
+    if (M.active && !M.closing) {
         uint64_t t0 = ink_now_us();
         M.drawn = M.card_new = false;
         if (!M.loaded) {
@@ -161,14 +172,15 @@ static void ink_mogo_work(void *arg) {
         snprintf(M.explanation, sizeof M.explanation, "%s", ink_mogo_page_explanation());
         if (op == INK_MOGO_OP_TURN) ink_probe_value("reader.page_render_ms", (double)(ink_now_us() - t0) / 1000.0);
     }
-    if (!M.active) ink_mogo_page_close();
+    bool cleanup = !M.active || M.closing;
+    if (cleanup) ink_mogo_page_close();
     ink_mogo_card_t card;
     if (ink_mogo_page_card(&card) && memcmp(&card, &M.card, sizeof card)) {
         M.card = card; M.card_new = true; snprintf(M.card_member, sizeof M.card_member, "%s", M.owner.member);
     }
-    if (!M.active) {
-        ink_app_free(M.pixels); M.pixels = NULL; M.loaded = false;
-        memset(&M.owner, 0, sizeof M.owner); M.turns = 0;
+    if (cleanup) {
+        if (!M.active) { ink_app_free(M.pixels); M.pixels = NULL; memset(&M.owner, 0, sizeof M.owner); } /* reopened: the new page keeps them */
+        M.loaded = false; M.turns = 0; M.closing = false;
     }
     ink_exec_post(INK_EXEC_UI, &M.done, ink_mogo_finished, NULL);
 }
@@ -186,16 +198,17 @@ static bool ink_mogo_start(const ink_mogo_request_t *req, ink_call_t *call) {
 }
 static bool ink_mogo_opened(void *ctx, const ink_member_identity_t *owner, int w, int h) {
     (void)ctx;
-    if (M.busy) return false;
+    if (M.busy && (!M.closing || (M.pixels && (w != M.w || h != M.h)))) return false; /* only an old page's cleanup may still be due */
     M.owner = *owner; M.w = w; M.h = h;
     int level = ink_member_current()->role == INK_ROLE_CHILD ? 2 : (int)ink_setting_get("display.font_size");
     static const int percent[] = {90, 100, 110, 120};
     M.px = ink_ui_px(percent[level < 0 ? 0 : level > 3 ? 3 : level]); M.active = true; M.loaded = false;
-    M.pixels = ink_app_alloc((size_t)w * h, true);
+    if (!M.pixels) M.pixels = ink_app_alloc((size_t)w * h, true);
     return M.pixels != NULL;
 }
 static void ink_mogo_closed(void *ctx) {
-    (void)ctx; M.active = false; M.description[0] = 0; M.back_button = M.note = NULL;
+    (void)ctx; M.active = false; M.closing = true; M.description[0] = 0; M.back_button = M.note = NULL;
+    if (M.has_next) { M.has_next = false; ink_mogo_reply(M.next_call, INK_RC_FAILED); }
     if (ink_mogo_idle) lv_timer_delete(ink_mogo_idle);
     ink_mogo_idle = NULL;
     if (!M.busy) {
@@ -238,7 +251,7 @@ static const ink_graft_client_t INK_MOGO_CLIENT = {.app = "mogo", .open = ink_mo
     .input = ink_mogo_input, .snapshot = ink_mogo_snapshot};
 static void ink_mogo_create(lv_obj_t *screen, void *arg) {
     ink_call_t *call = M.opening;
-    M.opening = NULL;
+    M.opening = NULL; M.screen = screen; snprintf(M.screen_member, sizeof M.screen_member, "%s", ink_member_current()->id);
     if (ink_graft_attach(screen, &INK_MOGO_CLIENT)) { ink_mogo_reply(call, INK_RC_FAILED); return; }
     /* The shell's own back button: hidden on the bare body (Mogo and Kindle keep the page clean), a white box over the corner. */
     M.back_button = ink_ui_circle(screen, "back", INK_MARGIN, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL);
@@ -251,6 +264,7 @@ static void ink_mogo_create(lv_obj_t *screen, void *arg) {
     M.reason = 0; M.root = true; M.back = false; M.description[0] = 0; M.opened_us = ink_now_us();
     ink_mogo_request_t req = {.op = INK_MOGO_OP_LOAD};
     snprintf(req.text, sizeof req.text, "%s", arg ? (const char *)arg : "");
+    if (M.busy && M.closing) { M.next = req; M.next_call = call; M.has_next = true; if (call) ink_cap_defer(call); return; } /* after the old page's cleanup */
     if (!ink_mogo_start(&req, call)) ink_mogo_reply(call, INK_RC_FAILED);
 }
 /* Open a path in the page (opening the app first): the call is answered when the first page is on the screen. */
@@ -421,8 +435,15 @@ static const ink_cap_t INK_MOGO_CAPS[] = {
     INK_MOGO_CAP("menu", "阅读菜单", INK_FX_NAVIGATE, "book", "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"open\":{\"type\":\"boolean\"},\"view\":{\"type\":\"string\",\"enum\":[\"menu\",\"settings\",\"shelf\"]}}}"),
     INK_MOGO_CAP("back", "阅读里退一步", INK_FX_NAVIGATE, "book", NULL),
 };
+static void ink_mogo_destroy(void) { M.screen = NULL; ink_graft_detach(); }
+/* The member gate closed the space and the carrier let the page go; the same member back: the same book again. */
+static void ink_mogo_reattach(void) {
+    char book[288]; snprintf(book, sizeof book, "%s", M.book);
+    lv_obj_clean(M.screen);
+    ink_mogo_create(M.screen, book[0] ? book : NULL);
+}
 static const ink_activity_t INK_MOGO_ACTIVITY = {.name = "book", .app = "reader", .create = ink_mogo_create,
-    .destroy = ink_graft_detach, .on_key = ink_graft_key, .on_swipe = ink_graft_swipe, .settle = ink_graft_settle, .snapshot = ink_graft_snapshot};
+    .destroy = ink_mogo_destroy, .on_key = ink_graft_key, .on_swipe = ink_graft_swipe, .settle = ink_graft_settle, .snapshot = ink_graft_snapshot};
 
 /* What is being read: home's "继续读" and the lock screen, from the mirror only. */
 /* Drop a character that a byte limit cut in two. */
@@ -479,6 +500,7 @@ static void ink_mogo_migrated(void *arg) {
     if (more > 0 && !M.active && !strcmp(C.owner.member, ink_member_current()->id)) {
         if (!ink_exec_post(INK_EXEC_BG, &C.migrate, ink_mogo_migrate_work, NULL)) return;
     }
+    if (!more) ink_mogo_slot(C.owner.member, true)->migrated = true;
     C.migrating = false;
     ink_mogo_card_read();
 }
@@ -488,8 +510,15 @@ static void ink_mogo_migrate_work(void *arg) {
     ink_exec_post(INK_EXEC_UI, &C.migrated, ink_mogo_migrated, (void *)(intptr_t)more);
 }
 static void ink_mogo_kick(void *ctx, int h, const char *id) {
-    (void)ctx; (void)h; (void)id;
+    (void)ctx; (void)h;
     if (!ink_member_space_open()) return;
+    if (M.screen && !M.active && !strcmp(M.screen_member, ink_member_current()->id)) {
+        if (M.busy) M.reattach = true; /* after the old session's cleanup */
+        else ink_mogo_reattach();
+    }
+    /* A member already looked at since boot: their card is kept current by the page; only the card coming back is news. */
+    const ink_mogo_slot_t *slot = ink_mogo_slot(ink_member_current()->id, false);
+    if (slot && slot->migrated && (!id || strcmp(id, "storage.card"))) return;
     if (M.active || C.migrating) { ink_mogo_card_read(); return; }
     ink_member_identity(&C.owner);
     C.migrating = true;
@@ -509,6 +538,7 @@ const ink_app_def_t ink_appdef_mogo = {.id = "reader", .title = TR_NOOP("阅读"
 int ink_mogo_init(void) {
     if (ink_mogo_migrate_init() || ink_cap_register(INK_MOGO_CAPS, sizeof INK_MOGO_CAPS / sizeof *INK_MOGO_CAPS) ||
         ink_state_watch("storage.card", ink_mogo_kick, NULL, INK_EXEC_UI) || ink_state_watch("member.", ink_mogo_kick, NULL, INK_EXEC_UI) ||
+        ink_state_watch("power.state", ink_mogo_kick, NULL, INK_EXEC_UI) || /* a new incarnation after a lock: the page comes back */
         ink_cap_subscribe("file.changed", ink_mogo_file_changed, NULL, INK_EXEC_UI)) return -1;
     return ink_exec_post(INK_EXEC_UI, &ink_mogo_boot_job, ink_mogo_boot, NULL);
 }

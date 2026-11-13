@@ -168,19 +168,26 @@ static void ink_mogo_mark_excerpt(const reader_bookmark_entry_t *m,char *out,siz
     for (char *c=out;*c;++c) if (*c=='\n' || *c=='"' || *c=='\\') *c=' ';
     html_text_free(&loaded);
 }
+/* Where the open book is, for the card. */
+static bool ink_mogo_card_now(ink_mogo_card_t *c) {
+    memset(c,0,sizeof *c);
+    if (!s_text) return false;
+    copy_text(c->path,sizeof c->path,s_reader_session.book.path); copy_text(c->title,sizeof c->title,s_reader_session.book.title);
+    copy_text(c->chapter,sizeof c->chapter,s_reader_session.book.chapter_title);
+    c->chapter_no=(uint16_t)s_reader_session.position.chapter; c->pct=(uint8_t)percent(s_reader_session.position.page);
+    c->offset=(uint32_t)book_layout_page_start_offset(s_reader_session.position.page);
+    return true;
+}
 static void ink_mogo_card_save(void) {
-    if (!s_text || s_save_failed) return;
-    ink_mogo_card_t c={0};
-    copy_text(c.path,sizeof c.path,s_reader_session.book.path); copy_text(c.title,sizeof c.title,s_reader_session.book.title);
-    copy_text(c.chapter,sizeof c.chapter,s_reader_session.book.chapter_title);
-    c.chapter_no=(uint16_t)s_reader_session.position.chapter; c.pct=(uint8_t)percent(s_reader_session.position.page);
-    c.offset=(uint32_t)book_layout_page_start_offset(s_reader_session.position.page);
+    ink_mogo_card_t c;
+    if (!ink_mogo_card_now(&c) || s_save_failed) return;
     nvs_handle_t h;
     if (!memcmp(&c,&ink_mogo_card_written,sizeof c) || nvs_open("ink_card",NVS_READWRITE,&h)!=ESP_OK) return;
     if (!nvs_set_blob(h,"last",&c,sizeof c) && !nvs_commit(h)) { ink_mogo_card_written=c; ink_probe_count("reader.last_saved"); }
     nvs_close(h);
 }
-bool ink_mogo_page_card(ink_mogo_card_t *out) { *out=ink_mogo_card_written; return out->path[0]; }
+/* The open book's place (shown at once; written after a pause), else the one written last. */
+bool ink_mogo_page_card(ink_mogo_card_t *out) { if (!ink_mogo_card_now(out)) *out=ink_mogo_card_written; return out->path[0]; }
 static bool ink_mogo_layout(const int *values) {
     ink_mogo_settings_t old=ink_mogo_settings, *p=&ink_mogo_settings;
     size_t offset=book_layout_page_start_offset(s_reader_session.position.page), next=book_layout_page_start_offset(s_reader_session.position.page+1);
