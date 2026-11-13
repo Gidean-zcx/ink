@@ -475,7 +475,7 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c
   ${CMAKE_SOURCE_DIR}/system/apps/calculator/calculator.c ${CMAKE_SOURCE_DIR}/system/apps/contacts/contacts.c
   ${CMAKE_SOURCE_DIR}/system/apps/gallery/gallery.c
-  ${CMAKE_SOURCE_DIR}/system/apps/memo/memo.c ${CMAKE_SOURCE_DIR}/system/apps/phone/phone.c
+  ${CMAKE_SOURCE_DIR}/system/apps/memo/memo.c ${CMAKE_SOURCE_DIR}/system/apps/phone/phone.c ${CMAKE_SOURCE_DIR}/system/apps/phone/vendor/lilyphone/call_card.c
   ${CMAKE_SOURCE_DIR}/system/apps/remote/remote.c ${CMAKE_SOURCE_DIR}/system/apps/sms/sms.c
   ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
 file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
@@ -1713,7 +1713,7 @@ ink_sim_executable(sim-ai-speech-long tests/ai_speech_long/ai_speech_long.c)
 target_link_libraries(sim-ai-speech-long PRIVATE ink_apps ink_system)
 add_test(NAME ai-speech-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_speech_long/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(ai-speech-long PROPERTIES TIMEOUT 180)
-target_sources(ink_system PRIVATE system/apps/phone/phone.c)
+target_sources(ink_system PRIVATE system/apps/phone/phone.c system/apps/phone/vendor/lilyphone/phone_store.c system/apps/phone/vendor/lilyphone/call_card.c)
 ink_sim_executable(sim-emergency-call tests/emergency_call/emergency_call.c)
 target_link_libraries(sim-emergency-call PRIVATE ink_apps ink_system)
 add_test(NAME emergency-call COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/emergency_call/run.py --build ${CMAKE_BINARY_DIR})

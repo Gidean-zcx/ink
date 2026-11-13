@@ -52,8 +52,9 @@ static void recent(void) {
 }
 static void history(int count) {
     recent();
-    char total[32]; snprintf(total, sizeof total, "\"total\":%d", count);
+    char total[32]; snprintf(total, sizeof total, "\"total\":%d", count); /* groups: every call here has its own number */
     CHECK(strstr(snap, total), "member has exactly %d history records", count);
+    CHECK(P.db && ink_db_count(P.db) == count, "member history holds exactly %d records", count);
     CHECK(AI("data.list", "{\"collection\":\"phone.calls\",\"limit\":10}") && g_rc.status == INK_RC_DONE, "AI reads the same member history through data.list");
 }
 static void outgoing(void) {
@@ -63,7 +64,8 @@ static void outgoing(void) {
     inspect(); CHECK(strstr(snap, "call.hangup") && strstr(snap, "通话中"), "call snapshot exposes status and the same hangup capability");
 }
 static void hangup(void) {
-    click(NULL, "call.hangup");
+    click("挂断", NULL); /* LilyPhone's hang-up button (its own callback calls call.hangup) */
+
     CHECK(WAIT_FOR(!H.active, 10000), "hangup reaches the call history subscriber");
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "ended call history is durable"); quiet();
 }

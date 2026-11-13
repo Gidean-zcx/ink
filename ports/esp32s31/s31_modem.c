@@ -45,7 +45,8 @@ bool ink_s31_at_urc(const char *s) {
         ink_s31_cell_update(false, 0);
         s = "+CEREG: 0";
     }
-    bool urc = !strcmp(s, "RING") || !strcmp(s, "NO CARRIER") || !strcmp(s, "ECRDY") || !strcmp(s, "+ECRDY") ||
+    bool urc = !strcmp(s, "RING") || !strcmp(s, "NO CARRIER") || !strcmp(s, "BUSY") || !strcmp(s, "NO ANSWER") || !strcmp(s, "ECRDY") || !strcmp(s, "+ECRDY") ||
+
         !strncmp(s, "+CMTI:", 6) || !strncmp(s, "+CLIP:", 6) || !strncmp(s, "+CLCC:", 6) ||
         !strncmp(s, "+CEREG:", 7) || !strncmp(s, "+ECNETDEVCTL:", 13);
     if (urc && ink_urcs && strlen(s) < 160) {

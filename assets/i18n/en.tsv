@@ -1922,3 +1922,38 @@ language english 中文 英文	language english chinese
 未连接	No device
 没连上	Failed
 清残影	Clear ghosts
+%d 分 %02d 秒	%d:%02d
+%d 秒	%d s
+%d/%d 下一页	%d/%d Next
+%d月%d日	%d/%d
+今天 %02d:%02d	%02d:%02d
+候选	Suggestions
+再打一次	Call again
+删除这一组	Delete these
+加为联系人	Add contact
+卡 1	SIM 1
+卡和网络	SIM and network
+填上最近一次的号码	Fill in the last number
+填入这个号码	Use this number
+对方	Caller
+对方忙或拒接	Busy or declined
+已删除这一组通话记录	Calls deleted
+已拒接	Declined
+已清空通话记录	Call history cleared
+拨打	Call
+未知号码	Unknown number
+没人接	No answer
+没有信号	No signal
+没有卡	No SIM
+没有接通	Not connected
+清空	Clear
+清空全部通话记录？清空后找不回来	Clear all call history? It cannot be brought back
+清空通话记录	Clear call history
+用的卡	SIM used
+结束原因	How it ended
+联系人暂时读不到	Contacts cannot be read now
+详情	Details
+这一组通话记录已经不在了	These calls are no longer there
+通话结束	Call ended
+通话记录暂时读不到	Call history cannot be read now
+通话详情	Call details

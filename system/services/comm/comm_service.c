@@ -72,6 +72,7 @@ static struct {
     osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
                        * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
     bool ringing, emergency; /* emergency: protected by at, keeps RF on until the call ends */
+    bool connected, hung_up; /* this call: answered or connected; our hangup came first (why call.ended came) */
     bool radio_set; /* comm task: the first look set the radio as airplane mode says */
     char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
     uint32_t call_generation;
@@ -100,6 +101,7 @@ static struct {
 
 static void call_begin(const char *member, const char *peer) { /* at held */
     CM.call_generation++;
+    CM.connected = CM.hung_up = false;
     osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
     snprintf(CM.call_member, sizeof CM.call_member, "%s", member);
     snprintf(CM.call_peer, sizeof CM.call_peer, "%s", peer);
@@ -415,8 +417,11 @@ static void comm_task(void *arg) {
                 call_focus(true);
                 ink_args_str(a, "from", ev.number);
                 ink_cap_emit("call.incoming", a);
-            } else if (ev.type == HAL_CELL_EV_CALL_ACTIVE) ink_cap_emit("call.connected", a);
+            } else if (ev.type == HAL_CELL_EV_CALL_ACTIVE) { CM.connected = true; ink_cap_emit("call.connected", a); }
             else if (ev.type == HAL_CELL_EV_CALL_ENDED) { /* to everyone, like call.incoming: the screen follows the call */
+                /* Lineage CallCardPresenter: say why it ended. Only an accepted call that connected counts as answered. */
+                ink_args_str(a, "reason", CM.connected ? "answered" : ev.end == HAL_CELL_END_BUSY ? "busy"
+                    : ev.end == HAL_CELL_END_NO_ANSWER ? "no_answer" : CM.hung_up ? "cancelled" : "failed");
                 CM.ringing = false;
                 call_focus(false);
                 osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
@@ -614,7 +619,7 @@ static void cap_answer(ink_call_t *c) {
     int r = hal_cell_answer();
     osal_mutex_unlock(CM.at);
     call_result(c, r, TR("接通了"), "nothing to answer");
-    if (r == 0) ink_cap_emit("call.answered", NULL);
+    if (r == 0) { CM.connected = true; ink_cap_emit("call.answered", NULL); }
 }
 
 static void cap_hangup(ink_call_t *c) {
@@ -624,7 +629,9 @@ static void cap_hangup(ink_call_t *c) {
         osal_mutex_unlock(CM.at); c->rc.status = INK_RC_REJECTED; return;
     }
     int r = hal_cell_hangup();
+    if (r == 0) CM.hung_up = true;
     osal_mutex_unlock(CM.at);
+
     call_result(c, r, TR("挂断了"), "no call to end");
 }
 

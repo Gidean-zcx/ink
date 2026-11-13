@@ -1161,6 +1161,19 @@ void sim_net_remote_answer(void) {
 }
 
 void sim_net_remote_hangup(void) { call_end(); }
+/* phone-3: an outgoing call the far end refuses ends with BUSY or NO ANSWER instead of NO CARRIER (ITU V.250 results). */
+static void call_refused(const char *why) { /* ISR or locked */
+    if (MS.call != 3) return;
+    if (MS.call_ev) vtk_event_cancel(MS.call_ev);
+    MS.call_ev = 0;
+    MS.call = 0;
+    MS.muted = false;
+    MS.tones[0] = 0;
+    urc_push(why);
+}
+void sim_net_remote_busy(void) { call_refused("BUSY"); }
+void sim_net_remote_no_answer(void) { call_refused("NO ANSWER"); }
+
 void sim_net_auto_answer(bool on) { MS.auto_answer = on; }
 
 int sim_net_call(char *number, size_t cap) {

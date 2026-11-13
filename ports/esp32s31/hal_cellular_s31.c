@@ -137,6 +137,13 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
         ev->type = HAL_CELL_EV_CALL_ENDED;
         return 1;
     }
+    if (!strcmp(line, "BUSY") || !strcmp(line, "NO ANSWER")) { /* why an outgoing call did not connect (LilyPhone peri_modem.cpp:615-616) */
+        ink_s31_bh_call(false);
+        ev->type = HAL_CELL_EV_CALL_ENDED;
+        ev->end = line[0] == 'B' ? HAL_CELL_END_BUSY : HAL_CELL_END_NO_ANSWER;
+        return 1;
+    }
+
     int index, direction, status;
     if (sscanf(line, "+CLCC: %d,%d,%d", &index, &direction, &status) == 3 && direction == 0 && status == 0) {
         ev->type = HAL_CELL_EV_CALL_ACTIVE;

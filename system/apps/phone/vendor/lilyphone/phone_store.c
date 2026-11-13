@@ -15,7 +15,7 @@
 #include "lily_compat.h"
 
 // Numbers are considered the same contact when this many trailing digits agree.
-#define MATCH_DIGITS 7
+#define MATCH_DIGITS 11
 
 static contact_t  *contact_list = NULL;
 static int         contact_num  = 0;
@@ -46,9 +46,6 @@ bool phone_number_match(const char *a, const char *b)
     return (ia == 0 && ib == 0 && matched > 0);
 }
 
-//************************************[ contacts ]******************************
-static void contacts_read(void)
-
 int contacts_find_by_number(const char *number)
 {
     for(int i = 0; i < contact_num; i++) {
@@ -63,3 +60,5 @@ const char *contacts_display_name(const char *number)
     if(idx >= 0 && contact_list[idx].name[0]) return contact_list[idx].name;
     return number;
 }
+/* Glue (ours, not LilyPhone): the table is in PSRAM in phone.c, filled from the member's contacts in one place. */
+void lily_contacts_bind(contact_t *table, int count) { contact_list = table; contact_num = count; }

@@ -33,11 +33,20 @@ typedef enum {
     HAL_CELL_EV_REG,        /* registration changed: query status */
 } hal_cell_ev_type_t;
 
+/* Why HAL_CELL_EV_CALL_ENDED came: the modem's own words (LilyPhone peri_modem.cpp:508-510, 615-616). */
+typedef enum {
+    HAL_CELL_END_HANGUP = 0, /* NO CARRIER: either side hung up, or the call failed for a reason not given */
+    HAL_CELL_END_BUSY,       /* BUSY: the far end is busy or rejected the call */
+    HAL_CELL_END_NO_ANSWER,  /* NO ANSWER: nobody answered */
+} hal_cell_end_t;
+
 typedef struct {
     hal_cell_ev_type_t type;
     int sms_index;
     char number[24];
+    hal_cell_end_t end; /* HAL_CELL_EV_CALL_ENDED */
 } hal_cell_event_t;
+
 
 /** False when there is no modem, or it does not answer. Task context. */
 bool hal_cell_status(hal_cell_status_t *out);
