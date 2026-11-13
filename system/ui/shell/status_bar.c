@@ -28,7 +28,7 @@ void ink_shell_time_strings(char *clock, size_t cc, char *date, size_t dc) {
 typedef struct { int battery; signed char cell; char mic; bool plane, wifi, bt, bell, call; } bar_state_t;
 enum { BARS_MAX = 6, CELL_NO_SERVICE = -1, CELL_NO_SIM = -2, CELL_OFF = -3 };
 /* A bar is the time and a box beside it (icons[], beginning at left[]) with the rest: each redraws without the other. */
-static struct { lv_obj_t *bar[BARS_MAX], *time[BARS_MAX], *icons[BARS_MAX]; int left[BARS_MAX]; bar_state_t shown[BARS_MAX]; ink_exec_job_t job; } B;
+static struct { lv_obj_t *bar[BARS_MAX], *time[BARS_MAX], *icons[BARS_MAX]; int left[BARS_MAX]; bar_state_t shown[BARS_MAX]; ink_exec_job_t job; } B INK_PSRAM_BSS;
 
 static void read_state(bar_state_t *s) {
     memset(s, 0, sizeof *s);

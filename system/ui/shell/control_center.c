@@ -29,7 +29,7 @@ static struct {
     bool kid, expanded, airplane;
     lv_dir_t gesture;
     ink_exec_job_t job;
-} C;
+} C INK_PSRAM_BSS;
 
 static void kid_volume_mark(lv_obj_t *slider, int top);
 static void refused(void *ctx, const ink_receipt_t *rc) { (void)ctx; ink_shell_refused(rc); }
