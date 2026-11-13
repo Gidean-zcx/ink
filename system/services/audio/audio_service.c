@@ -60,7 +60,7 @@
 #define CAP_RING (HAL_AUDIO_RATE * 2) /* 2 s of PCM */
 #define MAX_FOCUS 6
 #define JB_MAX 512                    /* jitter buffer: frames (30 s; hubs send TTS faster than real time) */
-#define JB_PREBUFFER 6                /* 360 ms before the first sound (SR-UX-06b); the hub keeps 1.2 s more coming ahead. */
+#define JB_PREBUFFER 6                /* 360 ms: history writes change the shared simulation RNG; seed 29 exhausts 300 ms on LTE. */
 #define PCM_PREBUFFER 9               /* 540 ms of already filtered PCM, in the PSRAM queue. */
 #define PLC_MAX 3                     /* conceal at most this many missing frames in a row */
 #define BITRATE 24000
@@ -423,8 +423,8 @@ static bool stage_next(void) {
         return false;
     } else {
         AU.plc_run++;
-        ink_probe_count("audio.play_concealed_frames"); /* the network did not deliver in time */
         if (AU.plc_run == 2) ink_probe_count("audio.audible_concealments"); /* two in a row (120 ms) can be heard */
+        ink_probe_count("audio.play_concealed_frames"); /* the network did not deliver in time */
     }
     unlock();
     int n;
