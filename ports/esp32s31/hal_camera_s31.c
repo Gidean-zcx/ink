@@ -58,7 +58,11 @@ static bool ink_cam_cancelled(void *context) {
 }
 static int ink_cam_bus_write(uint8_t reg, uint8_t value) {
     uint8_t bytes[] = {reg, value};
-    return hal_i2c_write(ink_cam, bytes, sizeof bytes) == HAL_I2C_OK ? 0 : -3;
+    int r = hal_i2c_write(ink_cam, bytes, sizeof bytes) == HAL_I2C_OK ? 0 : -3;
+    /* A touch read waiting for the bus lends this task the input task's priority, kept while it holds the camera and
+     * display locks: yield so the 586-write table does not keep the cover keys off the bus (camera-touch-bus). */
+    osal_task_yield();
+    return r;
 }
 static int ink_cam_bus_read(uint8_t reg, uint8_t *value) {
     int r = ink_cam_cancelled(NULL) ? -5 : osal_now_us() >= S.deadline ? -4 : 0;

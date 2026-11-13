@@ -28,6 +28,7 @@ mutations = [
      'if (false && S.cancelled && S.cancelled(S.context))'),
     ('ignore-page-close', source, 'return ink_cam_preview && !__atomic_load_n(ink_cam_preview, __ATOMIC_ACQUIRE);',
      'return false;'),
+    ('no-bus-yield', source, '    osal_task_yield();\n    return r;', '    return r;'),
 ]
 with tempfile.TemporaryDirectory(prefix='camera-negative-', dir=build) as temp:
     work = Path(temp)

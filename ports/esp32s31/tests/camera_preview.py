@@ -19,6 +19,7 @@ base += ['-I', str(root / 'ports/esp32s31'), '-I', str(root / 'ports/esp32s31/te
 driver = root / 'ports/esp32s31/tests/camera_preview.c'
 service = work / 'service.c'
 service.write_text('#define hal_camera_info fixture_camera_info\n#define hal_camera_capture fixture_camera_capture\n'
+                   '#define hal_camera_session fixture_camera_session\n'
                    f'#include "{root / "system/services/camera/camera_service.c"}"\n')
 script = work / 'preview.script'
 script.write_text('@0 net wifi\n@60s end\n')

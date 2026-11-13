@@ -27,6 +27,10 @@ bool hal_camera_info(hal_camera_info_t *out);
  *  wrong buffer (-1), sensor not answering (-2, -3), timeout (-4), power or reset lost meanwhile
  *  (-5), sensor not set up for VGA RGB565 (-6). Task context; about a second. */
 int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms);
+/** Viewfinder session: while *active is non-zero, captures keep the sensor set up between pictures
+ *  (only the first loads the sequence); when it falls, the next call ends the session. Same task as
+ *  the captures. Optional: the camera service has a no-op fallback. */
+void hal_camera_session(const int *active);
 
 #ifdef __cplusplus
 }

@@ -1,0 +1,5 @@
+# camera-touch-bus
+
+（主会话在第一波编排里直接写给实现代理的任务说明，原文英文。）
+
+control-1 found a real defect (autotest-cap fails since): during camera preview the GC2145 registers are rewritten about every 1.62 s (588 writes, about 0.39 s) on the same I2C bus as the cover touch keys, so a short (80 ms) HOME press during that window is lost, about one press in four. Find why the whole table is written per grab in a retained session (camera-fps-1 kept the sensor table and rebuilt only the DVP controller; see docs/hardware/2026-11-10-trial.md "相机取景" and the camera HAL in ports/esp32s31 plus its simulator model) and fix it so no key press is lost during preview: avoid the rewrite, or write in short bursts that yield the bus to touch reads, or give touch reads priority; prefer removing the needless writes. Only change the camera HAL/service, the simulator's camera or I2C model if needed, and tests. Budget 150 product lines. Accept: a simulator scenario pressing HOME at many phases of the preview cycle delivers every press; autotest-cap passes; a reverse check (restore the per-grab rewrite) fails the new scenario; the preview frame rate does not get worse (report numbers).
