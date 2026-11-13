@@ -343,6 +343,10 @@ static void reschedule(void) {
 }
 
 void time_reschedule(void) { reschedule(); }
+/* events.c edits under the same lock, and its events go out the same way (the boundary tests hook both here). */
+void time_edits_lock(void) { osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER); }
+void time_edits_unlock(void) { osal_mutex_unlock(T.edits); }
+void time_emit_for(const char *event, const ink_args_t *args, const char *member) { ink_cap_emit_for(event, args, member); }
 uint32_t time_new_id(void) { return T.db ? ink_db_new_id(T.db) : 0; } /* one id space for alarms and events */
 
 static int find_alarm(uint32_t id);

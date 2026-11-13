@@ -14,6 +14,7 @@
 #include "ink/sys/time.h"
 #include "ink/sys/almanac.h"
 #include "ink/sys/svc.h"
+#include "ink/sys/file.h"
 #include "time_internal.h"
 
 #define UNDO_MS 10000
@@ -566,6 +567,37 @@ static void cap_snooze(ink_call_t *c) {
     if (ink_alarm_snooze((uint32_t)id, (int)minutes) != 0) fail(c, INK_RC_FAILED, "nothing is ringing");
 }
 
+/* calendar-3: the member's events to /me/日历导出-YYYYMMDD.ics ("-2" and on when taken), and a file of them in. */
+static void cap_export(ink_call_t *c) {
+    const char *member = ink_cap_call_member(c);
+    ink_tm_t t;
+    ink_time_to_local(ink_time_now_s(), &t);
+    char path[64];
+    int count = 0, r = INK_FS_ERR_EXISTS;
+    for (int k = 1; k < 10 && r == INK_FS_ERR_EXISTS; k++) {
+        if (k == 1) snprintf(path, sizeof path, "/me/日历导出-%04d%02d%02d.ics", t.year, t.month, t.day);
+        else snprintf(path, sizeof path, "/me/日历导出-%04d%02d%02d-%d.ics", t.year, t.month, t.day, k);
+        r = ink_time_ics_export(member, path, &count);
+    }
+    if (r == 1) { fail(c, INK_RC_REJECTED, "no events to export"); return; }
+    if (r) { fail(c, INK_RC_FAILED, ink_fs_err_name(r)); return; }
+    char out[160];
+    snprintf(out, sizeof out, "{\"path\":\"%s\",\"count\":%d}", path, count);
+    ink_cap_result(c, out);
+    snprintf(c->rc.object, sizeof c->rc.object, "file:%.40s", path);
+}
+
+static void cap_import(ink_call_t *c) {
+    char path[INK_FS_PATH_MAX] = "", out[160];
+    ink_args_get_str(&c->args, "path", path, sizeof path);
+    ink_ics_result_t r;
+    int err = ink_time_ics_import(ink_cap_call_member(c), path, &r);
+    snprintf(out, sizeof out, "{\"imported\":%d,\"skipped\":%d,\"existing\":%d,\"full\":%d,\"error\":\"%s\"}", r.imported, r.skipped, r.existing, r.full,
+             err == 1 ? "not a calendar file" : err ? ink_fs_err_name(err) : "");
+    ink_cap_result(c, out);
+    if (err) fail(c, err == 1 ? INK_RC_INVALID : INK_RC_FAILED, err == 1 ? "not a calendar file" : ink_fs_err_name(err));
+}
+
 #define ID_ARG "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}"
 #define SCOPE_FIELDS "\"occurrence\":{\"type\":\"string\",\"maxLength\":20},\"scope\":{\"type\":\"string\",\"enum\":[\"this\",\"following\",\"all\"]}"
 #define REMINDER_FIELDS "\"at\":{\"type\":\"string\",\"maxLength\":20},\"title\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":30},\"reminders\":{\"type\":\"array\"},\"rule\":{\"type\":\"object\"},\"repeat\":{\"type\":\"string\",\"enum\":[\"none\",\"daily\",\"weekly\",\"workdays\",\"monthly\",\"yearly\",\"lunar_yearly\"]},\"ring\":{\"type\":\"boolean\"},\"all_day\":{\"type\":\"boolean\"},\"end\":{\"type\":\"string\",\"maxLength\":20}"
@@ -638,6 +670,11 @@ static const ink_cap_t TIME_CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}," SCOPE_FIELDS "},\"required\":[\"id\"]}"},
     {.id = "reminder.restore", .app = "clock", .title = "恢复刚删掉的日程（撤销用）", .input = "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\"}},\"required\":[\"token\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_DIRECT, .run = cap_reminder_restore},
+    {.id = "calendar.export", .app = "upcoming", .title = "把我的日程导出成 .ics 文件（到我的空间，含过去的）", .output = "{\"type\":\"object\"}", .effect = INK_FX_LOCAL_WRITE,
+     .child_ok = true, .timeout_ms = 30000, .exec = INK_EXEC_BG, .run = cap_export},
+    {.id = "calendar.import", .app = "upcoming", .title = "从 .ics 文件导入日程（path 是 /me 或 /family 下的文件）", .output = "{\"type\":\"object\"}",
+     .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}},\"required\":[\"path\"]}",
+     .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .timeout_ms = 60000, .exec = INK_EXEC_BG, .run = cap_import},
     {.id = "alarm.fired", .app = "clock", .title = "闹钟响了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "alarm.ended", .app = "clock", .title = "闹钟停了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "alarm.missed", .app = "clock", .title = "错过了闹钟", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},

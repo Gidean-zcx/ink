@@ -3,6 +3,7 @@
 #define INK_TIME_INTERNAL_H
 
 #include <stdint.h>
+#include "ink/sys/args.h"
 #include "ink/sys/time.h"
 
 int ink_time_caps_init(void);
@@ -16,6 +17,9 @@ int ink_time_alarm_next_for(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out
 
 /* events.c: the calendar's events (calendar-3). */
 void time_reschedule(void);
+void time_edits_lock(void);
+void time_edits_unlock(void);
+void time_emit_for(const char *event, const ink_args_t *args, const char *member);
 uint32_t time_new_id(void);
 int time_events_open(void);
 bool time_events_adopt(const ink_alarm_t *legacy); /* a reminder from time.alarms is in time.events now */

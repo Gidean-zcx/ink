@@ -26,7 +26,6 @@
 static const ink_db_def_t EVENTS_DB = {.name = "time.events", .title = "日程", .scope = INK_DB_DEVICE, .schema = 1};
 
 static struct {
-    osal_mutex_t *edits;
     ink_db_t *db;
     ink_event_t e[INK_EVENT_MAX];
     uint32_t rev[INK_EVENT_MAX], next_rev;
@@ -253,18 +252,17 @@ static int normalize(ink_event_t *e) {
         e->lmonth = (uint8_t)l.month; e->lday = (uint8_t)l.day; e->lleap = l.leap;
     }
     if (e->freq == INK_FREQ_LUNAR_YEARLY && (e->lmonth < 1 || e->lmonth > 12 || e->lday < 1 || e->lday > 30)) return INK_EVENT_INVALID;
-    if (e->freq == INK_FREQ_NONE) { e->count = 0; e->until_year = 0; }
-    if (!e->uid[0]) snprintf(e->uid, sizeof e->uid, "ink-%08x-%u@calendar", (unsigned)(e->modified_s & 0xffffffff), (unsigned)e->id);
+    if (e->freq == INK_FREQ_NONE) { e->count = 0; e->until_year = 0; e->until_month = e->until_day = 0; e->interval = 1; }
     return 0;
 }
 
 static bool member_io(const char *member) {
-    osal_mutex_lock(E.edits, OSAL_WAIT_FOREVER);
+    time_edits_lock();
     if (ink_member_io_begin(member)) return true;
-    osal_mutex_unlock(E.edits);
+    time_edits_unlock();
     return false;
 }
-static void member_io_end(const char *member) { osal_mutex_unlock(E.edits); ink_member_io_end(member); time_reschedule(); }
+static void member_io_end(const char *member) { time_edits_unlock(); ink_member_io_end(member); time_reschedule(); }
 
 static int add_unlocked(ink_event_t *e, uint32_t *written, const char *member) {
     snprintf(e->owner, sizeof e->owner, "%s", member);
@@ -280,7 +278,7 @@ static int add_unlocked(ink_event_t *e, uint32_t *written, const char *member) {
     if (full) return INK_EVENT_FULL;
     e->id = time_new_id();
     if (!e->id) return INK_EVENT_STORAGE;
-    if (strstr(e->uid, "@calendar") && !strncmp(e->uid, "ink-", 4)) snprintf(e->uid, sizeof e->uid, "ink-%08x-%u@calendar", (unsigned)(now & 0xffffffff), (unsigned)e->id);
+    if (!e->uid[0]) snprintf(e->uid, sizeof e->uid, "ink-%08x-%u@calendar", (unsigned)(now & 0xffffffff), (unsigned)e->id);
     if ((r = store(e)) != 0) return r;
     ink_svc_lock();
     uint32_t rev = put(e);
@@ -352,12 +350,12 @@ static int add_exception(ink_event_t *e, int32_t day) {
 }
 
 /* Cut a series before the occurrence on `day` (Fossify EventsHelper.kt:391-416; Etar EditEventHelper.java:414-456):
- * an end date the day before, and the count split by the occurrences that came before. */
+ * the count split by the occurrences that came before, or else an end date the day before. */
 static void cut_before(ink_event_t *e, int32_t day, int index) {
     int y, m, d;
     time_civil_from_days(day - 1, &y, &m, &d);
-    e->until_year = (int16_t)y; e->until_month = (uint8_t)m; e->until_day = (uint8_t)d;
     if (e->count) e->count = (uint16_t)index;
+    else { e->until_year = (int16_t)y; e->until_month = (uint8_t)m; e->until_day = (uint8_t)d; }
     int k = 0;
     for (int i = 0; i < e->nex; i++) if (e->ex[i] < day) e->ex[k++] = e->ex[i];
     e->nex = (uint8_t)k;
@@ -551,6 +549,7 @@ bool time_events_adopt(const ink_alarm_t *legacy) {
     if (there) return true;
     if (time_events_from_alarm(legacy, &e) || normalize(&e)) { ink_probe_count("time.event_migrate_skipped"); return false; }
     e.done_s = legacy->next_s > 0 ? legacy->next_s - 1 : ink_time_now_s();
+    snprintf(e.uid, sizeof e.uid, "ink-00000000-%u@calendar", (unsigned)e.id);
     if (store(&e)) return false;
     ink_svc_lock();
     bool ok = put(&e) != 0;
@@ -562,9 +561,8 @@ bool time_events_adopt(const ink_alarm_t *legacy) {
 /* ------------------------------------------------------------ the service's side */
 
 int time_events_open(void) {
-    E.edits = osal_mutex_create();
     E.db = ink_db_open(&EVENTS_DB, NULL);
-    if (!E.edits || !E.db) { ink_probe_count("time.events_unavailable"); return -1; }
+    if (!E.db) { ink_probe_count("time.events_unavailable"); return -1; }
     ink_db_cursor_t cur = {0};
     ink_rec_t r;
     while (E.n < INK_EVENT_MAX) {
@@ -618,7 +616,7 @@ static void emit(const char *event, const ink_event_t *e, int64_t start, int32_t
     ink_args_str(args, "owner", e->owner);
     if (e->owner[0]) ink_args_str(args, "member", e->owner);
     if (why) ink_args_str(args, "why", why);
-    ink_cap_emit_for(event, args, e->owner);
+    time_emit_for(event, args, e->owner);
     osal_free(args);
 }
 

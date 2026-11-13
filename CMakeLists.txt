@@ -2407,3 +2407,8 @@ set_tests_properties(gallery-3-source PROPERTIES SKIP_RETURN_CODE 77)
 
 # calendar-3: the calendar's events, repeats and iCalendar files in the time service.
 target_sources(ink_system PRIVATE system/services/time/events.c system/services/time/ics.c)
+ink_sim_executable(sim-calendar-3-service tests/calendar_3/service.c)
+target_link_libraries(sim-calendar-3-service PRIVATE ink_apps ink_system)
+add_test(NAME calendar-3-service COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/calendar_3/run.py --build ${CMAKE_BINARY_DIR} --suite service)
+add_test(NAME calendar-3-migrate COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/calendar_3/run.py --build ${CMAKE_BINARY_DIR} --suite migrate)
+set_tests_properties(calendar-3-service calendar-3-migrate PROPERTIES TIMEOUT 600)
