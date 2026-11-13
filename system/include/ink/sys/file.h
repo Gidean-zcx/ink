@@ -59,7 +59,8 @@ typedef struct {
 } ink_fs_stat_t;
 
 typedef enum { INK_FS_ANY = -1, INK_FS_OTHER, INK_FS_IMAGE, INK_FS_AUDIO, INK_FS_TEXT } ink_fs_type_t;
-typedef struct { uint32_t id; ink_fs_type_t type; char path[INK_FS_PATH_MAX]; int64_t size; } ink_fs_entry_t;
+/* mtime: the file time from the last index scan, nanoseconds as the HAL reports it (hal_storage.h); -1 = not known. */
+typedef struct { uint32_t id; ink_fs_type_t type; char path[INK_FS_PATH_MAX]; int64_t size; int64_t mtime; } ink_fs_entry_t;
 #define INK_FS_INDEX_MAX 1024
 /** BG only. First page scans this tree (up to 8 directories deep); cursor is the last id, initially 0. */
 int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out);
