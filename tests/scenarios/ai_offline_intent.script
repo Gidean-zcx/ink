@@ -2,7 +2,7 @@
 # after the wake word turns the page; the device recognised the command word
 # itself and called reader.next_page. Hands-free profile (front end modelled).
 @3s      tap   80% 56%        # 阅读 (favourite)
-+2500ms  tap   50% 44%            # 星星邮差: the second shelf row (reader-one-1)
++2500ms  tap   50% 30%            # Field Notes on E-Ink, the first shelf row: the book 160dp opened on the old shelf (reader-one-1)
 +3s      net   none               # no Wi-Fi, no 4G
 +2s      mic   wake
 +700ms   mic   say 下一页
