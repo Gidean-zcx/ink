@@ -9,22 +9,29 @@
 #include "ink/sys/time.h"
 #include "vendor/mogo-calendar/main/time/calendar.h"
 
+_Static_assert(sizeof ((ink_almanac_t *)0)->yi == sizeof ((calendar_date_t *)0)->yi &&
+               sizeof ((ink_almanac_t *)0)->ji == sizeof ((calendar_date_t *)0)->ji &&
+               sizeof ((ink_almanac_t *)0)->auspicious == sizeof ((calendar_date_t *)0)->auspicious &&
+               sizeof ((ink_almanac_t *)0)->inauspicious == sizeof ((calendar_date_t *)0)->inauspicious,
+               "almanac lists must match Mogo's calendar_date_t");
+
 bool ink_almanac_date(int year, int month, int day, ink_almanac_t *out) {
     if (!out) return false;
     memset(out, 0, sizeof *out);
     calendar_date_t d;
     if (!calendar_date(year, month, day, &d)) return false;
-    *out = (ink_almanac_t){
-        .year = d.year, .month = d.month, .day = d.day, .weekday = d.weekday,
-        .days = d.days, .first_weekday = d.first_weekday,
-        .lunar_year = d.lunar_year, .lunar_month = d.lunar_month, .lunar_day = d.lunar_day,
-        .year_cycle = d.year_cycle, .month_cycle = d.month_cycle, .day_cycle = d.day_cycle,
-        .yi = d.yi, .ji = d.ji, .wealth = d.wealth, .clash = d.clash, .sha = d.sha,
-        .joy = d.joy, .fortune = d.fortune, .auspicious = d.auspicious,
-        .inauspicious = d.inauspicious, .officer = d.officer, .guardian = d.guardian,
-        .guardian_type = d.guardian_type, .year_ganzhi = calendar_cycle_name(d.year_cycle),
-        .month_ganzhi = calendar_cycle_name(d.month_cycle), .day_ganzhi = calendar_cycle_name(d.day_cycle),
-        .solar_term = ""};
+#define COPY(field) out->field = d.field
+#define LIST(field) memcpy(out->field, d.field, sizeof out->field)
+    COPY(year); COPY(month); COPY(day); COPY(weekday); COPY(days); COPY(first_weekday);
+    COPY(lunar_year); COPY(lunar_month); COPY(lunar_day); COPY(year_cycle); COPY(month_cycle); COPY(day_cycle);
+    LIST(yi); LIST(ji); COPY(wealth); COPY(clash); COPY(sha); COPY(joy); COPY(fortune);
+    LIST(auspicious); LIST(inauspicious); COPY(officer); COPY(guardian); COPY(guardian_type);
+#undef LIST
+#undef COPY
+    out->year_ganzhi = calendar_cycle_name(d.year_cycle);
+    out->month_ganzhi = calendar_cycle_name(d.month_cycle);
+    out->day_ganzhi = calendar_cycle_name(d.day_cycle);
+    out->solar_term = "";
     calendar_lunar_text(&d, false, out->lunar_text, sizeof out->lunar_text);
     for (int i = 0; i < 2; i++) {
         int term_day = 0;
@@ -66,21 +73,24 @@ void ink_almanac_cap_run(ink_call_t *c) {
         almanac_fail(c, INK_RC_INVALID, TR("不在范围（2000—2099 年）"));
         return;
     }
-    ink_almanac_t d;
-    if (!ink_almanac_date(y, m, day, &d)) {
-        almanac_fail(c, INK_RC_INVALID, TR("日期无效"));
-        return;
-    }
-    char *out = osal_malloc(4096, OSAL_MEM_EXTERNAL);
-    if (!out) {
+    /* One temporary PSRAM block holds the ~700 B result and the JSON; nothing large on the stack. */
+    struct almanac_work { ink_almanac_t d; char json[4096]; } *work = osal_malloc(sizeof *work, OSAL_MEM_EXTERNAL);
+    if (!work) {
         almanac_fail(c, INK_RC_FAILED, TR("内存不足"));
         return;
     }
+    const ink_almanac_t *d = &work->d;
+    char *out = work->json;
+    if (!ink_almanac_date(y, m, day, &work->d)) {
+        almanac_fail(c, INK_RC_INVALID, TR("日期无效"));
+        osal_free(work);
+        return;
+    }
     ink_jw_t w;
-    ink_jw_init(&w, out, 4096);
+    ink_jw_init(&w, out, sizeof work->json);
     ink_jw_raw(&w, "{");
-#define NUMBER(field) ink_jw_raw(&w, "\"" #field "\":"); ink_jw_int(&w, d.field); ink_jw_raw(&w, ",")
-#define TEXT(field) ink_jw_raw(&w, "\"" #field "\":"); ink_jw_str(&w, d.field); ink_jw_raw(&w, ",")
+#define NUMBER(field) ink_jw_raw(&w, "\"" #field "\":"); ink_jw_int(&w, d->field); ink_jw_raw(&w, ",")
+#define TEXT(field) ink_jw_raw(&w, "\"" #field "\":"); ink_jw_str(&w, d->field); ink_jw_raw(&w, ",")
     NUMBER(year); NUMBER(month); NUMBER(day); NUMBER(weekday); NUMBER(days); NUMBER(first_weekday);
     NUMBER(lunar_year); NUMBER(lunar_month); NUMBER(lunar_day);
     NUMBER(year_cycle); NUMBER(month_cycle); NUMBER(day_cycle);
@@ -93,9 +103,9 @@ void ink_almanac_cap_run(ink_call_t *c) {
     if (w.overflow) almanac_fail(c, INK_RC_FAILED, TR("历法结果过长"));
     else {
         ink_cap_result(c, out);
-        int yi = (int)strcspn(d.yi, " "), ji = (int)strcspn(d.ji, " ");
+        int yi = (int)strcspn(d->yi, " "), ji = (int)strcspn(d->ji, " ");
         snprintf(c->rc.say, sizeof c->rc.say, TR("%s%.36s，宜%.*s，忌%.*s。这些是民俗说法。"),
-                 today ? TR("今天") : TR("这天"), d.lunar_text, yi < 24 ? yi : 24, d.yi, ji < 24 ? ji : 24, d.ji);
+                 today ? TR("今天") : TR("这天"), d->lunar_text, yi < 24 ? yi : 24, d->yi, ji < 24 ? ji : 24, d->ji);
     }
-    osal_free(out);
+    osal_free(work);
 }

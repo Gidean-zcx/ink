@@ -8,10 +8,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-typedef struct { int32_t serial; int16_t year; int8_t month; uint8_t days; } calendar_lunar_month_t;
-typedef struct { uint16_t offset; uint8_t cycle; } calendar_month_cycle_t;
+typedef struct { uint16_t serial; uint8_t year; int8_t month; } calendar_lunar_month_t;
 #include "assets/calendar_data.h"
 #define COUNT(a) (sizeof(a)/sizeof((a)[0]))
+static void calendar_words(char *out,size_t capacity,const char *const *words,const uint8_t *codes) {
+    size_t n=0;
+    for(;*codes!=0xFF;++codes){size_t len=strlen(words[*codes]);if(n+(n>0)+len>=capacity)break;if(n)out[n++]=' ';memcpy(out+n,words[*codes],len);n+=len;}
+    out[n]=0;
+}
 static const char *const month_names[] = {"正月","二月","三月","四月","五月","六月","七月","八月","九月","十月","冬月","腊月"};
 static const char *const day_names[] = {"初一","初二","初三","初四","初五","初六","初七","初八","初九","初十","十一","十二","十三","十四","十五","十六","十七","十八","十九","二十","廿一","廿二","廿三","廿四","廿五","廿六","廿七","廿八","廿九","三十"};
 static int days_in_month(int y,int m) {
@@ -40,19 +44,20 @@ bool calendar_date(int year,int month,int day,calendar_date_t *out) {
     memset(out,0,sizeof(*out));
     if(year<2000||year>2099||month<1||month>12||day<1||day>days_in_month(year,month))return false;
     int32_t serial=civil_serial(year,month,day);
-    unsigned lo=0,hi=COUNT(calendar_lunar_months);
-    while(lo+1<hi){unsigned mid=(lo+hi)/2;if(calendar_lunar_months[mid].serial<=serial)lo=mid;else hi=mid;}
+    int32_t rel=serial-CALENDAR_LUNAR_FIRST;
+    unsigned lo=0,hi=COUNT(calendar_lunar_months)-1;
+    while(lo+1<hi){unsigned mid=(lo+hi)/2;if(calendar_lunar_months[mid].serial<=rel)lo=mid;else hi=mid;}
     const calendar_lunar_month_t *l=&calendar_lunar_months[lo];
-    if(serial<l->serial||serial>=l->serial+l->days)return false;
-    int offset=serial-10957;
-    unsigned a=0,b=COUNT(calendar_month_cycles);
-    while(a+1<b){unsigned mid=(a+b)/2;if(calendar_month_cycles[mid].offset<=offset)a=mid;else b=mid;}
+    if(rel<l->serial||rel>=l[1].serial)return false;
+    int offset=serial-10957,lunar_year=1998+l->year;
+    int jie=day>=calendar_term_days[year-2000][(month-1)*2];
     *out=(calendar_date_t){.year=year,.month=month,.day=day,.weekday=(serial+4)%7,.days=days_in_month(year,month),
-        .first_weekday=(civil_serial(year,month,1)+4)%7,.lunar_year=l->year,.lunar_month=l->month,
-        .lunar_day=serial-l->serial+1,.year_cycle=(l->year-4)%60,.month_cycle=calendar_month_cycles[a].cycle,
+        .first_weekday=(civil_serial(year,month,1)+4)%7,.lunar_year=lunar_year,.lunar_month=l->month,
+        .lunar_day=rel-l->serial+1,.year_cycle=(lunar_year-4)%60,.month_cycle=(12+(year-2000)*12+month-1+jie)%60,
         .day_cycle=(offset+54)%60};
-    unsigned pair=(unsigned)(out->month_cycle*60+out->day_cycle);
-    out->yi=calendar_yiji[calendar_yiji_pairs[pair][0]];out->ji=calendar_yiji[calendar_yiji_pairs[pair][1]];
+    unsigned pair=(unsigned)(out->month_cycle%12*60+out->day_cycle);
+    calendar_words(out->yi,sizeof out->yi,calendar_yiji_words,calendar_yiji_codes+calendar_yiji_pairs[pair][0]);
+    calendar_words(out->ji,sizeof out->ji,calendar_yiji_words,calendar_yiji_codes+calendar_yiji_pairs[pair][1]);
     static const char *const wealth[]={"东北","东北","西南","西南","正北","正北","正东","正东","正南","正南"};
     static const char *const animals[]={"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
     static const char *const sha[]={"南","东","北","西"};
@@ -60,11 +65,11 @@ bool calendar_date(int year,int month,int day,calendar_date_t *out) {
     unsigned spirit=(unsigned)(out->month_cycle%12*60+out->day_cycle);
     unsigned role=(unsigned)(out->month_cycle%12*12+out->day_cycle%12);
     out->joy=calendar_joy[out->day_cycle%10];out->fortune=calendar_fortune[out->day_cycle%10];
-    out->auspicious=calendar_folk[calendar_spirit_pairs[spirit][0]];
-    out->inauspicious=calendar_folk[calendar_spirit_pairs[spirit][1]];
-    out->officer=calendar_folk[calendar_day_roles[role][0]];
-    out->guardian=calendar_folk[calendar_day_roles[role][1]];
-    out->guardian_type=calendar_folk[calendar_day_roles[role][2]];
+    calendar_words(out->auspicious,sizeof out->auspicious,calendar_folk_words,calendar_folk_codes+calendar_spirit_pairs[spirit][0]);
+    calendar_words(out->inauspicious,sizeof out->inauspicious,calendar_folk_words,calendar_folk_codes+calendar_spirit_pairs[spirit][1]);
+    out->officer=calendar_folk_words[calendar_day_roles[role][0]];
+    out->guardian=calendar_folk_words[calendar_day_roles[role][1]];
+    out->guardian_type=calendar_folk_words[calendar_day_roles[role][2]];
     return true;
 }
 bool calendar_from_utc(int64_t ms,calendar_date_t *out) {

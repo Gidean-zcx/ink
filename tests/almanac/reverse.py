@@ -19,9 +19,9 @@ entry = next(e for e in database if e['file'] == str(source) and 'almanac-model.
 with tempfile.TemporaryDirectory(prefix='almanac-reverse-', dir=build) as folder:
     work = Path(folder)
     original = source.read_text()
-    needle = 'out->guardian_type=calendar_folk[calendar_day_roles[role][2]];'
+    needle = 'out->guardian_type=calendar_folk_words[calendar_day_roles[role][2]];'
     assert original.count(needle) == 1
-    changed = original.replace(needle, needle + '\n    if(year==2026&&month==2&&day==17)out->yi="故意改错";')
+    changed = original.replace(needle, needle + '\n    if(year==2026&&month==2&&day==17)strcpy(out->yi,"故意改错");')
     modified = work / 'calendar.c'
     modified.write_text(changed)
     obj = work / 'calendar.o'

@@ -13,13 +13,17 @@ typedef struct {
     int year, month, day, weekday, days, first_weekday;
     int lunar_year, lunar_month, lunar_day; /* Negative month means leap month. */
     int year_cycle, month_cycle, day_cycle; /* 0..59, starting at Jiazi. */
-    const char *yi, *ji, *wealth, *clash, *sha;
-    const char *joy, *fortune, *auspicious, *inauspicious, *officer, *guardian, *guardian_type;
+    char yi[232], ji[128]; /* Lists copied in, same sizes as Mogo's calendar_date_t. */
+    const char *wealth, *clash, *sha;
+    const char *joy, *fortune;
+    char auspicious[112], inauspicious[104];
+    const char *officer, *guardian, *guardian_type;
     const char *year_ganzhi, *month_ganzhi, *day_ganzhi, *solar_term;
     char lunar_text[48];
 } ink_almanac_t;
 
-/* Local Gregorian date, 2000..2099. False clears out; strings live in flash. */
+/* Local Gregorian date, 2000..2099. False clears out. The four lists are copied into out,
+ * other strings live in flash. About 700 B: reuse one, keep it off small stacks. */
 bool ink_almanac_date(int year, int month, int day, ink_almanac_t *out);
 /* Time service capability handler; clients use time.almanac on the soft bus. */
 void ink_almanac_cap_run(ink_call_t *call);

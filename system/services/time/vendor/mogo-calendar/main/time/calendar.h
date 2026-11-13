@@ -10,9 +10,9 @@ typedef struct {
     int year, month, day, weekday, days, first_weekday;
     int lunar_year, lunar_month, lunar_day;
     int year_cycle, month_cycle, day_cycle;
-    const char *yi, *ji, *wealth, *clash, *sha;
+    char yi[232], ji[128]; const char *wealth, *clash, *sha;
     /// 日粒度民俗方位、神煞与建除，沿用固定源的默认流派。/ Civil-day folk directions, spirits and officer using the pinned source's default school.
-    const char *joy, *fortune, *auspicious, *inauspicious, *officer, *guardian, *guardian_type;
+    const char *joy, *fortune; char auspicious[112], inauspicious[104]; const char *officer, *guardian, *guardian_type;
 } calendar_date_t;
 /// 输入北京时间的公历日期；非法日期返回false并清空输出。/ Accept a Beijing civil date; clear output and return false for invalid dates.
 bool calendar_date(int year, int month, int day, calendar_date_t *out);

@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
     const int bad[][3] = {{1999,12,31}, {2100,1,1}, {2026,2,29}, {2000,0,1}, {2026,13,1}, {2026,1,0}};
     for (size_t i = 0; i < sizeof bad / sizeof *bad; i++) {
         memset(&invalid, 0xA5, sizeof invalid);
-        if (ink_almanac_date(bad[i][0], bad[i][1], bad[i][2], &invalid) || invalid.year || invalid.yi) return 6;
+        if (ink_almanac_date(bad[i][0], bad[i][1], bad[i][2], &invalid) || invalid.year || invalid.yi[0]) return 6;
     }
     if (ink_almanac_date(2026, 2, 17, NULL)) return 7;
     char line[80];
