@@ -269,7 +269,8 @@ static void run(void *arg) {
 
     /* 7. A child: only a child's rows; the parents' rows are found but say 家长管理, never their value. */
     CHECK(ink_member_switch("kid") == 0, "the child takes the device"); quiet();
-    walk_home(true);
+    CHECK(ink_setting_get("display.font_size") == text_size, "the child reads at the same text size %d", text_size);
+    sim_metric_set("settings1.kid_pages", walk_home(true));
     CHECK(BY_HAND("settings.open", "{}") && on_page("Settings"), "the child's home"); quiet();
     shot("kid");
     CHECK(AI("settings.search", "{\"query\":\"密码\"}") && strstr(g_result, "\"id\":\"family\"") && strstr(g_result, "家长管理") &&
