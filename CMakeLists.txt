@@ -1155,6 +1155,12 @@ add_test(NAME selftest-board-wiring-pqbn
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.pqbn.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board-pqbn --quiet --end 90s --no-random-outages)
 set_tests_properties(selftest-board-wiring-pqbn PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
+# The touch controller model's timing (tap-loss-1): frame sample time, detection delay.
+add_test(NAME selftest-touch-timing
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/touch_timing.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-touch-timing --quiet --end 3s --no-random-outages)
+set_tests_properties(selftest-touch-timing PROPERTIES ENVIRONMENT "INK_SELFTEST_TOUCH=1")
 add_test(NAME selftest-expander-dead
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/expander_dead.budget.json

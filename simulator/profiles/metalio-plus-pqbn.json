@@ -54,7 +54,7 @@
     "touch_pause_during_power_us": 10000,
     "pmic": "tps65185",
     "panel_vcom_mv": 1200,
-    "_notes_pmic": "Panel power runs the board driver (boards/metalio_plus/metalio_epd_power.c) against the TCA9555/TPS65185 models (simulator/models/dev_epd_power.c): power_up_us and touch_pause_during_power_us are not used. panel_vcom_mv: E0470A14-AF VCOM 1200 mV (upstream config.h; factory boot log).",
+    "_notes_pmic": "Panel power runs the board driver (boards/metalio_plus/metalio_epd_power.c) against the TCA9555/TPS65185 models (simulator/models/dev_epd_power.c): power_up_us and touch_pause_during_power_us are not used (touch_pause_during_power_us is only for profiles without a PMIC model). Unlike upstream, which pauses touch sampling around epd_poweron/epd_poweroff (690a023 main/display/epd_refresh.cc:230-239, 303-308), our driver and this model keep reading touch during the power-up: every PMIC/expander transfer takes the bus lock on its own (upstream bus/tps65185.c:18-43, our boards/metalio_plus/metalio_epd_power.c). panel_vcom_mv: E0470A14-AF VCOM 1200 mV (upstream config.h; factory boot log).",
     "driver_external_kib": 1624,
     "driver_internal_kib": 50,
     "_notes": "phase >= 12 ms (EPD_MIN_PHASE_US), pessimistic 16 ms; line 17 us x 688 lines. Upstream 'balanced' default: GC16 36 / GL16 37 / DU 20 phases ('clear' = 48/48). TPS65185 power-up ~140 ms in upstream code (fixed 50+50 ms delays + PG polling), powered off after each refresh (keep_power false). During waveform playback two max-priority epd_prep feeder tasks occupy ~70% of each core. Driver internal 50 KiB is the design target (upstream ~120 KiB).",
@@ -137,6 +137,8 @@
     "_notes_detect": "touch_detect_us: finger contact -> INT, estimate (controller scan period in monitor mode)",
     "touch_monitor_after_ms": 10000,
     "touch_monitor_period_ms": 60,
+    "touch_idle_poll_ms": 0,
+    "_notes_sample": "Frame sample time = when the TD_STATUS byte leaves the chip (three bytes into the read, I2C timing), not the end of the 1.8 ms read; a press is in the registers once noticed (detect + monitor). touch_idle_poll_ms (0 here; tap-loss-1 report: turning it on changes seven tests, own task): the S31 port reads the controller every 20 ms without an INT (ports/esp32s31/hal_input_s31.c, wait = pdMS_TO_TICKS(20)), as upstream does (metalio_touch.c:224). touch_detect_us, the monitor values, and whether the chip keeps a contact one more scan after the lift are estimates: upstream never writes 0x86-0x89 (tap-loss-1 device checklist). The monitor delay draws from the touch model's own random stream; --touch-worst takes the full period.",
     "_notes_monitor": "FT6336U monitor mode (estimate, defaults not verified against the datasheet): after ~10 s without a touch the controller scans slowly (G_CTRL / TIME_ENTER_MONITOR / PERIODMONITOR registers); the first touch or cover key then waits up to one monitor period (<= 60 ms assumed) longer. i2c_background_idle_poll_ms: fuel gauge / charger polling while the system is idle.",
     "key_sources": {
       "ai": "gpio",

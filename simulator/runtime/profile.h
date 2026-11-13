@@ -135,6 +135,7 @@ typedef struct {
     uint32_t touch_detect_us;  /* finger down -> controller raises INT */
     uint32_t touch_monitor_after_ms;  /* the controller drops to its slow monitor scan after this long untouched */
     uint32_t touch_monitor_period_ms; /* monitor scan period: up to this much extra latency for the first touch */
+    uint32_t touch_idle_poll_ms;      /* idle frame reads without INT (the S31 port: 20 ms), 0 = only on INT */
     uint32_t i2c_background_idle_poll_ms; /* background bus polling while the system is idle */
 
     /* internal flash (user-state partition) */

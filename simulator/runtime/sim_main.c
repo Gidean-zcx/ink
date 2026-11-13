@@ -76,6 +76,7 @@ static void usage(void) {
             "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--hub F.json]\n"
             "               [--no-random-outages] [--seed N] [--flash-timing typ|max|tail] [--quiet]\n"
             "               [--i2c-faults RATE[:DEVICE]] [--panel-vcom-mv MV] [--installer \"COMMAND\"]\n"
+            "               [--touch-worst] [--pmic-hold-bus]\n"
             "               [--hub-url ws://127.0.0.1:PORT/v1/device] (1x realtime, fake media)\n");
 }
 
@@ -199,6 +200,8 @@ int sim_main(int argc, char **argv) {
             g_sim.i2c_faults = strtod(v, &end);
             if (*end == ':' && end[1]) g_sim.i2c_fault_dev = end + 1;
         }
+        else if (!strcmp(a, "--touch-worst")) g_sim.touch_worst = true;
+        else if (!strcmp(a, "--pmic-hold-bus")) g_sim.pmic_hold_bus = true;
         else if (!strcmp(a, "--panel-vcom-mv")) { NEEDV(); g_sim.panel_vcom_mv = (unsigned)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--reset-reason")) { NEEDV(); g_sim.reset_reason = v; }
         else if (!strcmp(a, "--installer")) { NEEDV(); g_sim.installer = v; } /* card files over the console */

@@ -242,6 +242,7 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->touch_detect_us = (uint32_t)num(in, "touch_detect_us", 20000);
     p->touch_monitor_after_ms = (uint32_t)num(in, "touch_monitor_after_ms", 0); /* 0 = no monitor mode modelled */
     p->touch_monitor_period_ms = (uint32_t)num(in, "touch_monitor_period_ms", 0);
+    p->touch_idle_poll_ms = (uint32_t)num(in, "touch_idle_poll_ms", 0);
     p->i2c_background_idle_poll_ms = (uint32_t)num(in, "i2c_background_idle_poll_ms", p->i2c_background_poll_ms);
     const cJSON *keys = cJSON_GetObjectItemCaseSensitive(in, "keys");
     if (cJSON_IsArray(keys)) {
