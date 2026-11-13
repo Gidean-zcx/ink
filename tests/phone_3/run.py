@@ -29,8 +29,8 @@ def run(binary, sets, where):
                    '--sd-dir', str(where / f'{name}-sd'), '--out', str(target), '--quiet', '--no-random-outages']
         for leftover in (where / f'{name}.img',):
             leftover.unlink(missing_ok=True)
-        result = subprocess.run(command, env=dict(os.environ, INK_PHONE3_SET=name), capture_output=True, text=True, timeout=900)
-        metrics = json.loads((target / 'metrics.json').read_text()) if (target / 'metrics.json').exists() else {}
+        result = subprocess.run(command, env=dict(os.environ, INK_PHONE3_SET=name), capture_output=True, text=True, errors="replace", timeout=900)
+        metrics = json.loads((target / 'metrics.json').read_bytes().decode('utf-8', 'replace')) if (target / 'metrics.json').exists() else {}
         results[name] = (result, metrics)
     return results
 

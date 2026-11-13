@@ -653,7 +653,10 @@ static void create_call(lv_obj_t *screen, void *arg) {
             P.actions[i + 2] = (ink_ui_action_spec_t){.id = keys[i], .label = keys[i], .capability = "call.dtmf", .args_json = P.tone_args[i]};
         }
         P.notice = ink_ui_notice(screen, "", y + 4 * INK_CONTROL + 3 * INK_GAP_S + INK_GAP_M);
-        ink_shell_bind(ink_ui_pill(screen, TR("收起键盘"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, INK_CONTROL, false, NULL, NULL), "phone.keypad", "{}");
+        int half = (w - INK_GAP_M) / 2; /* Fossify keeps 挂断 under the call keypad too */
+        ink_shell_bind(ink_ui_pill(screen, TR("收起键盘"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, half, INK_PRIMARY, false, NULL, NULL), "phone.keypad", "{}");
+        ink_ui_pill(screen, TR("挂断"), INK_MARGIN + half + INK_GAP_M, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, half, INK_PRIMARY, true, control, (void *)(intptr_t)0);
+
 
     } else {
         P.status_line = lily_call_card(screen);
