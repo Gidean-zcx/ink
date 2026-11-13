@@ -1922,3 +1922,10 @@ language english 中文 英文	language english chinese
 未连接	No device
 没连上	Failed
 清残影	Clear ghosts
+存储卡正给电脑用，在电脑上弹出后%s就能打开	The storage card is in use by the computer. Eject it there and %s can open
+正在从电脑放%s，%d%%	Copying the %s from the computer, %d%%
+%s没放成，下次连上电脑会再放	The %s did not copy; it will be tried again next time a computer is connected
+没有存储卡。%s要用的%s放在卡上，插上卡后连电脑会自动放进去	No storage card. %s keeps its %s on the card; insert one and connect a computer to copy it automatically
+%s要用的%s还没放到存储卡上，连上电脑后会自动放进去	%s needs its %s on the storage card; it is copied there automatically when a computer is connected
+%s要用的%s现在打不开，正在重新检查	%s cannot open its %s right now; checking again
+字体	font

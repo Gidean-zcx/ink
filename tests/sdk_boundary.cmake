@@ -1,7 +1,7 @@
 # Apps use the app framework only (architecture v1.0 §7.3, D-48): no HAL, no OSAL, no driver or board
 # header, no HAL or OSAL call. Run: cmake -DSRC=<source dir> -P tests/sdk_boundary.cmake
 set(ALLOWED app appreg ai cap clipboard crc data file font layout media members notify settings state storage text textfield textinput time ui ui_semantics ui_list)
-list(APPEND ALLOWED file_picker i18n)
+list(APPEND ALLOWED file_picker i18n card_files)
 # The JSON writer only builds strings (no HAL, no OSAL): apps return structured capability results with it.
 list(APPEND ALLOWED json)
 file(GLOB_RECURSE SOURCES "${SRC}/apps/*.c" "${SRC}/apps/*.h")

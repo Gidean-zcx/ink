@@ -18,6 +18,10 @@ static struct {
     void (*cb)(void *ctx);
     void *ctx;
     unsigned lends, copies;
+    bool console;            /* the console is open as a line link (card files) */
+    char rx[8192];           /* what the install tool answered, not read yet */
+    size_t rx_n;
+    vtk_waitq_t rx_wq;
 } U;
 
 static void tell(void *arg) { /* the platform's event task */
@@ -30,6 +34,7 @@ void sim_usb_plug(bool on) { /* ISR (script) */
     U.ejected = false;
     sim_power_set_cable(on);
     sim_sys_evt(tell, NULL);
+    vtk_isr_wake_one(&U.rx_wq); /* a console reader hears that the cable went */
 }
 
 void sim_usb_eject(void) { /* ISR (script) */
@@ -100,4 +105,46 @@ int hal_usb_disk_stop(void) {
 void sim_usb_report(void) {
     if (U.lends) sim_metric_set("usb.disk_lends", U.lends);
     if (U.copies) sim_metric_set("usb.copies_from_host", U.copies);
+}
+
+void sim_usb_console_rx(const char *data, size_t n) { /* ISR: the install tool's answer arrives */
+    if (!U.console || n > sizeof U.rx - U.rx_n) return;
+    memcpy(U.rx + U.rx_n, data, n);
+    U.rx_n += n;
+    vtk_isr_wake_one(&U.rx_wq);
+}
+
+int hal_usb_console_open(void) {
+    if (!U.connected || U.lent) return -1;
+    vtk_lock();
+    U.console = true;
+    U.rx_n = 0; /* nothing from before counts */
+    vtk_unlock();
+    return 0;
+}
+
+int hal_usb_console_read(void *buf, size_t cap, uint32_t timeout_ms) {
+    vtk_lock();
+    uint64_t end = vtk_now() + SIM_MS(timeout_ms);
+    while (U.console && U.connected && !U.rx_n && vtk_now() < end) vtk_block_locked(&U.rx_wq, end - vtk_now());
+    int n = !U.console || !U.connected ? -1 : (int)(U.rx_n < cap ? U.rx_n : cap);
+    if (n > 0) {
+        memcpy(buf, U.rx, (size_t)n);
+        U.rx_n -= (size_t)n;
+        memmove(U.rx, U.rx + n, U.rx_n);
+    }
+    vtk_unlock();
+    return n;
+}
+
+int hal_usb_console_write(const char *line, size_t n) {
+    if (U.connected && !U.lent) sim_installer_line(line, n); /* only a computer on the cable hears it */
+    return 0;
+}
+
+void hal_usb_console_close(void) {
+    vtk_lock();
+    U.console = false;
+    U.rx_n = 0;
+    vtk_unlock();
 }

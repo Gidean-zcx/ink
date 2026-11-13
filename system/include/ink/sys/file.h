@@ -151,6 +151,8 @@ bool ink_usb_disk_active(void);
  *  INK_FS_OK (and then ink_fs_card_release), or INK_FS_ERR_USB, INK_FS_ERR_NO_CARD. Hold it no longer than a file stays open. */
 int ink_fs_card_hold(void);
 void ink_fs_card_release(void);
+/** The system changed the card past the paths here (card files): the index and revision-bound operations hear of it. */
+void ink_fs_changed_outside(void);
 
 #ifdef __cplusplus
 }
