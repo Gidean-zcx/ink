@@ -8,4 +8,6 @@ CMake 用 `ink-icon-raster` 转为五档尺寸的 INKI：只存墨量（16 级�
 
 天气的 `cloudsun`（多云）、`rain`、`snow` 也是后来画的（D-125，2026-11-10），照 `cloud`、`sun` 的线宽和三种画法，没有设计稿：重新导出后要保留。
 
+相册的 `rotate`（顺时针转 90 度）也是后来画的（gallery-3，2026-11-13）：半径 13 的开口圆弧加箭头，照 `undo` 的线宽（line、duo 2.8，solid 4）和三种画法，没有设计稿：重新导出后要保留。
+
 构建时渲染器：[NanoSVG](https://github.com/memononen/nanosvg/tree/239e102ec2c691f2902e20ace2ed36ee4a35cfe6)，固定提交 `239e102ec2c691f2902e20ace2ed36ee4a35cfe6`，zlib 许可证在 `vendor/LICENSE.txt`。`nanosvg.h` SHA-256 `e34fd5d084be106cea972d19ce5d27fd96d17ba89f8d06bdceee058420c8b2b0`，`nanosvgrast.h` SHA-256 `79a9c5f4db19debf9f3a648a1589e96d92854f245a5cb4f3d823f263785234d8`。查阅和下载日期：2026-11-05。

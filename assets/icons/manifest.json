@@ -99,7 +99,8 @@
     "wave",
     "wifi",
     "wifioff",
-    "word"
+    "word",
+    "rotate"
   ],
   "files": {
     "ai-line.svg": "8ab798410fe7f071b72dbba1c8d748d78fb4432f0b06ae8a694f14830da319f1",
@@ -365,6 +366,9 @@
     "rain-solid.svg": "a544d5fc3b7d45d516bccb500830e76e5ad80872362d6d038c57e470b91e26f3",
     "snow-line.svg": "12b15e45e0bf101a55db10fb410e88672aabf31d2e4c1c9b3b7f03e8d0c7da4e",
     "snow-duo.svg": "3984868de55073601a1ccc1d6d6ba46b6b38da65c90eceddd63c69caa86abdca",
-    "snow-solid.svg": "94e5db9e5f62f58890bcce2965f0b577de487a770280a0cc2057c36c6c95fa6c"
+    "snow-solid.svg": "94e5db9e5f62f58890bcce2965f0b577de487a770280a0cc2057c36c6c95fa6c",
+    "rotate-line.svg": "8e931823bce3b96c1648e8d323a5683b99d89af50252e811b7a43e371da0b94c",
+    "rotate-duo.svg": "59c724dee56ff54cdca5a1e534c28bce98d61270c71433020d0a27eaeaf95b6d",
+    "rotate-solid.svg": "1ff09f6e67efdb7499218ec54f25254911c46136df75a25920f3a32563d88799"
   }
 }
