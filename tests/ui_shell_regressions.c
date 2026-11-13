@@ -712,9 +712,9 @@ static void snapshot_tests(void) {
         CHECK(ink_notify_post(&n, &ids[i]) == 0 && ids[i], "post a synthetic notification to the real service");
     }
     CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open the populated control center"); quiet(); on_ui(read_context);
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) { /* control-1: the first stage has room for two rows; the newest is always one of them */
         wanted = titles[i]; on_ui(read_view);
-        CHECK((label_x >= 0) == (i == 2) && (strstr(context, titles[i]) != NULL) == (i == 2), "control notification %d agrees between screen and snapshot", i);
+        CHECK((label_x >= 0) == (strstr(context, titles[i]) != NULL) && (i != 2 || label_x >= 0), "control notification %d agrees between screen and snapshot", i);
     }
     char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)ids[2]);
     CHECK(AI("notify.read", args) && g_rc.status == INK_RC_DONE, "AI marks the displayed notification read"); quiet(); on_ui(read_context);

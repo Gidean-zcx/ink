@@ -45,8 +45,19 @@ static void locate_app(void) {
     CHECK(lv_area_get_height(&a) >= ink_ui_px(INK_CONTROL), "app icon keeps the standard touch target");
     g_btn_x[0] = (a.x1 + a.x2) / 2; g_btn_y[0] = (a.y1 + a.y2) / 2;
 }
-static void capture(void *arg) { (void)arg; CHECK(settled(), "capture is settled"); sim_display_snapshot(shot); }
-static void scene(const char *name) { quiet(); inspect(); snprintf(shot, sizeof shot, "%s", name); vtk_host_call(export_page, NULL); vtk_event_at(vtk_now() + SIM_MS(1), capture, NULL); delay_ms(5); }
+static bool shot_settled;
+static void capture(void *arg) { (void)arg; shot_settled = settled(); if (shot_settled) sim_display_snapshot(shot); }
+/* Something in the background can start in the millisecond before the picture (the clock's new minute, posted once a
+ * long waveform lets its task run): then the page settles again and the picture is taken again. */
+static void scene(const char *name) {
+    snprintf(shot, sizeof shot, "%s", name);
+    for (int tries = 0; tries < 3; tries++) {
+        shot_settled = false;
+        quiet(); inspect(); vtk_host_call(export_page, NULL); vtk_event_at(vtk_now() + SIM_MS(1), capture, NULL); delay_ms(5);
+        if (shot_settled) break;
+    }
+    CHECK(shot_settled, "capture is settled");
+}
 static void replace_input(void) { ink_text_select(0, ink_text_char_offset(ink_text_value(), strlen(ink_text_value()))); }
 static void finish_draft(void) { ink_text_blur(0); }
 static void enter(const char *cap, const char *value) {

@@ -25,6 +25,7 @@ file(GLOB i18n_tables ${root}/assets/i18n/*.tsv)
 execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
     --sources ${i18n_services} ${root}/system/ui/shell/boot_flow.c ${root}/system/ui/shell/navigation.c ${root}/system/ui/shell/keyboard.c ${root}/system/ui/shell/settings_pages.c
     ${root}/system/ui/shell/status_bar.c ${root}/system/ui/shell/shell_home.c ${root}/system/ui/shell/control_center.c
+    ${root}/system/ui/shell/notification_list.c
     ${root}/system/ui/shell/settings_body.c ${root}/system/ui/shell/today_edit.c
     ${root}/system/ui/shell/time_settings.c ${root}/system/ui/shell/settings_family.c ${root}/system/services/time/time_service.c
     ${root}/system/apps/clock/clock.c

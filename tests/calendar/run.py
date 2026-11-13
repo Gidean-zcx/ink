@@ -55,8 +55,9 @@ for scene in (("Upcoming", "Calendar") if args.visual else ("",)):
     marks = {e["name"]: e["ts"] for e in trace if e.get("name") in ("calendar.minute.before", "calendar.minute.after")}
     updates = [e for e in trace if e.get("name") in ("DU", "GC16", "GL16", "A2") and
                marks.get("calendar.minute.before", float("inf")) <= e.get("ts", -1) < marks.get("calendar.minute.after", 0)]
-    partial = bool(updates) and all(e["name"] == "DU" and e["args"]["x"] == 0 and e["args"]["y"] == 0 and
-                                  e["args"]["w"] <= STATUS_BAR and e["args"]["h"] <= 684 for e in updates)
+    # control-1: a new minute refreshes the status bar's time alone, so the area lies inside the bar, not at its corner
+    partial = bool(updates) and all(e["name"] == "DU" and e["args"]["x"] >= 0 and e["args"]["y"] >= 0 and
+                                  e["args"]["x"] + e["args"]["w"] <= STATUS_BAR and e["args"]["y"] + e["args"]["h"] <= 684 for e in updates)
     print("Minute refresh stays in the status bar:", partial, flush=True)
     passed &= partial
     if scene == "Calendar":

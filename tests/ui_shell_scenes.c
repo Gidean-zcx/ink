@@ -362,6 +362,9 @@ static void assert_operation(void) {
         CHECK(press_label("音量"), "touch the volume row"); quiet();
         CHECK(!strcmp(ink_ui_page_name(), "SetSound"), "the row opens its promised page");
     } else if (!strcmp(scene, "Control") || !strcmp(scene, "SetSound")) {
+        if (!strcmp(scene, "Control") && ink_member_current()->role != INK_ROLE_CHILD) { /* control-1: the sliders are in the second stage */
+            CHECK(BY_HAND("shell.more", NULL) && g_rc.status == INK_RC_DONE, "show the second stage with the sliders"); quiet();
+        }
         wanted = !strcmp(scene, "Control") ? "亮度" : "音量"; on_ui(find_label); tap(528, label_y); quiet();
         if (!strcmp(scene, "SetSound")) {
             wanted = "闹钟"; on_ui(find_label); CHECK(label_x < 0, "what does not fit waits on the next page");

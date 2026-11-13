@@ -26,6 +26,7 @@ SNAPSHOTS = {
     'system/ui/shell/member_pages.c': {'semantic_snapshot'},
     'system/ui/shell/shell_home.c': {'ink_shell_home_snapshot', 'apps_snapshot'},
     'system/ui/shell/control_center.c': {'control_snapshot', 'kid_control_snapshot'},
+    'system/ui/shell/notification_list.c': {'ink_notification_list_snapshot'},
     'system/ui/shell/settings_body.c': {'page_snapshot'},
     'system/ui/shell/power_pages.c': {'semantic_snapshot'},
     'system/ui/shell/settings_family.c': {'snapshot'},

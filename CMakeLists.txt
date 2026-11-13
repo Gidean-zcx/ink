@@ -300,6 +300,7 @@ add_library(ink_system STATIC
   system/ui/icons.c
   system/ui/shell/navigation.c
   system/ui/shell/status_bar.c system/ui/shell/shell_home.c system/ui/shell/control_center.c system/ui/shell/settings_body.c system/ui/shell/today_edit.c
+  system/ui/shell/notification_list.c
   system/ui/shell/settings_pages.c system/ui/shell/settings_registry.c
   system/ui/shell/bluetooth_page.c
   system/ui/shell/ai_panel.c
@@ -461,6 +462,7 @@ add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
 set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/status_bar.c ${CMAKE_SOURCE_DIR}/system/ui/shell/shell_home.c ${CMAKE_SOURCE_DIR}/system/ui/shell/control_center.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/notification_list.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_body.c ${CMAKE_SOURCE_DIR}/system/ui/shell/today_edit.c
   ${CMAKE_SOURCE_DIR}/system/apps/memory/memory.c ${CMAKE_SOURCE_DIR}/system/apps/snake/snake.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/mobile_network.c
@@ -950,6 +952,12 @@ add_test(NAME home-one-page
   COMMAND sim-home-one-page --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_cards.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/home-one-page --quiet --no-random-outages)
+# control-1: the control centre after AOSP quick settings and the status bar after MuditaOS, by touch and by the AI;
+# a toggled tile and a new minute refresh only what changed (checked from the display trace).
+ink_sim_executable(sim-control-center tests/control_center.c)
+target_link_libraries(sim-control-center PRIVATE ink_apps ink_system)
+add_test(NAME control-center COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/control_center.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(control-center PROPERTIES TIMEOUT 900)
 ink_sim_executable(sim-text-long tests/text_long/editor.c)
 target_link_libraries(sim-text-long PRIVATE ink_apps ink_system)
 add_test(NAME text-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/text_long/run.py --build ${CMAKE_BINARY_DIR})

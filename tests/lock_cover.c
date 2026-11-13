@@ -262,7 +262,9 @@ static void run(void *arg) {
 #endif
     CHECK(WAIT_FOR(!ink_member_space_open(), 40000), "the grace runs out while locked"); quiet();
 #ifndef INK_LOCK_COVER_BASELINE
-    CHECK(!visible("15:00 合成接孩子") && !shows("合成接孩子"), "a closed space hides the next thing"); frame("closed");
+    /* The space closes by the clock; the member service publishes member.authed when its own timer runs, a moment
+     * later, so the cover may still be untouched right after the wait above: wait for it, not one look. */
+    CHECK(WAIT_FOR(!visible("15:00 合成接孩子") && !shows("合成接孩子"), 3000), "a closed space hides the next thing"); frame("closed");
     press_picture("我");
 #else
     wake(); on_ui(open_pin); quiet();

@@ -1915,3 +1915,10 @@ language english 中文 英文	language english chinese
 版本	version
 电池	battery
 抬起 唤醒 亮屏	lift raise wake screen
+# control-1: control centre tiles
+不可用	Unavailable
+亮屏时	Screen on
+受家人限制	Family limit
+未连接	No device
+没连上	Failed
+清残影	Clear ghosts
