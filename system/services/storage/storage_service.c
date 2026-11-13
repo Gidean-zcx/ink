@@ -34,6 +34,7 @@
 #include "ink/probe.h"
 #include "ink/sys/display.h"
 #include "ink/sys/audio.h"
+#include "ink/sys/input.h"
 #include "ink/sys/power.h"
 #include "ink/sys/res.h"
 #include "ink/sys/storage.h"
@@ -50,6 +51,15 @@
  * writes must always find a free slot (submit fails when all MAX_JOBS are taken). */
 #define BG_MAX_WAIT_US 10000000ull
 #define MAX_DEFER_US 30000000ull /* writes held off longer than this are forced (counted) */
+/* A 4 KiB erase stops both cores for 50-240 ms (Puya PY25Q128HA; IDF 6.1 enables erase suspend only for XMC and FM
+ * chips, spi_flash_chip_generic.c:675-718): a tap that falls whole into one is never read. So a write does not start
+ * while a finger or key is down or within TAP_GAP_US of the last release (taps in a row keep it waiting); a waiting
+ * writer for at most TAP_WAIT_FG_US of such a stretch, background work for TAP_WAIT_BG_US, and a finger held on
+ * longer than TAP_HELD_US no longer holds anything back (all estimates). */
+#define TAP_GAP_US 300000ull
+#define TAP_WAIT_FG_US 1000000ull
+#define TAP_WAIT_BG_US 10000000ull
+#define TAP_HELD_US 2000000ull
 /* direct-drive panels (async) can pause between drive phases for a flash operation: a write waits
  * this long for a quiet panel, then goes ahead and pauses the drive (a hiccup, no garbage) instead
  * of waiting behind continuous updates (AI text streaming keeps such a panel busy) */
@@ -106,6 +116,7 @@ static struct {
     int failed; /* writes that failed (e.g. /user full) since boot */
     int holds;
     uint64_t audio_until;
+    uint64_t tap_wait_from, held_from; /* writes started waiting for taps to pass, a finger was seen down (0: none) */
     uint32_t seq, order;
     centry_t *cache; /* CACHE_MAX, external RAM */
     uint32_t clock;
@@ -426,7 +437,14 @@ static int take_job(job_t *out, bool panel_ready, bool audio_busy, uint64_t acti
         *forced = ST.holds > 0 && now - ST.jobs[best].queued_us > MAX_DEFER_US;
         bool quiet = (now >= activity + BG_QUIET_US && now >= ST.audio_until) ||
                      now - ST.jobs[best].queued_us > BG_MAX_WAIT_US || ST.pending > MAX_JOBS / 2;
-        if ((!best_fg && !quiet) || (!*forced && (ST.holds > 0 || !panel_ready))) best = -2;
+        bool held = ink_input_touch_held(), near_tap = held || now - ink_input_last_release_us() < TAP_GAP_US;
+        if (!held) ST.held_from = 0;
+        else if (!ST.held_from) ST.held_from = now;
+        if (!near_tap) ST.tap_wait_from = 0;
+        else if (!ST.tap_wait_from) ST.tap_wait_from = now;
+        bool tap_wait = near_tap && !*forced && (!held || now - ST.held_from < TAP_HELD_US) &&
+                        now - ST.tap_wait_from < (best_fg ? TAP_WAIT_FG_US : TAP_WAIT_BG_US);
+        if (tap_wait || (!best_fg && !quiet) || (!*forced && (ST.holds > 0 || !panel_ready))) best = -2;
         else {
             ST.jobs[best].inflight = true;
             *out = ST.jobs[best];
@@ -511,6 +529,8 @@ static void storage_task(void *arg) {
             }
             if (slot < 0) break;
             if (forced) ink_probe_count("storage.forced_writes");
+            if (ink_input_touch_held() || osal_now_us() - ink_input_last_release_us() < 1000000)
+                ink_probe_count("storage.write_near_input"); /* each may erase: a tap then may fall into it */
             ink_display_flash_guard(true);
             uint64_t t0 = osal_now_us();
             int r = run_job(&job);

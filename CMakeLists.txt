@@ -873,6 +873,14 @@ add_test(NAME tap-held
           --script ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.script --budget ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.budget.json
           --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/tap-held --quiet --no-random-outages)
 set_tests_properties(tap-held PROPERTIES TIMEOUT 180)
+ink_sim_executable(sim-tap-erase tests/tap_loss/erase.c)
+target_link_libraries(sim-tap-erase PRIVATE ink_apps ink_system)
+add_test(NAME tap-erase
+  COMMAND sim-tap-erase --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --script ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.script --budget ${CMAKE_SOURCE_DIR}/tests/tap_loss/erase.budget.json
+          --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/tap-erase --quiet
+          --no-random-outages --flash-timing max)
+set_tests_properties(tap-erase PROPERTIES TIMEOUT 180)
 ink_sim_executable(sim-ime-keyboard1 tests/ime_keyboard1.c)
 target_link_libraries(sim-ime-keyboard1 PRIVATE ink_apps ink_system)
 add_test(NAME ime-keyboard1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ime_keyboard1.py

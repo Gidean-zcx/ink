@@ -182,6 +182,18 @@ uint64_t sim_i2c_byte_at(uint64_t t0, int before) { return t0 + I2C_SETUP_NS + i
 
 void sim_i2c_hold(const char *who, uint64_t ns) { (void)bus_run(who, ns); }
 
+/* The S31 port takes the I2C1 lock around every LittleFS read, program and erase (s31_flash_begin,
+ * ports/esp32s31/hal_i2c_s31.c, after upstream's OTA order, ota.cc:42-57): a flash operation first waits
+ * for the transfer on the bus, and no transfer starts while it runs. Task context; no-op before init. */
+bool sim_i2c_lock_for_flash(void) {
+    if (!I2C.bus || !vtk_self() || vtk_in_isr()) return false;
+    osal_mutex_lock(I2C.bus, OSAL_WAIT_FOREVER);
+    return true;
+}
+void sim_i2c_unlock_for_flash(bool taken) {
+    if (taken) osal_mutex_unlock(I2C.bus);
+}
+
 /* GPIO2 = the expander's INT and the accelerometer's INT1, wired together (low = asserted). A
  * falling edge wakes the driver task, which services both. ISR or locked task context. */
 static bool g_gpio2_low;
