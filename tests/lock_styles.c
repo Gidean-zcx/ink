@@ -49,7 +49,7 @@ static void choose(int style, ink_source_t src) {
     CHECK(call_as("settings.set", args, src) && g_rc.status == INK_RC_DONE, "select style %d (%s)", style, src == INK_SRC_AI ? "AI" : "touch");
     quiet();
 }
-static void show_style(int style) { choose(style, INK_SRC_AI); lock(); CHECK(WAIT_FOR(drawn(), 30000), "style %d is drawn: %.300s", style, snapshot); quiet(); }
+static void show_style(int style) { choose(style, INK_SRC_AI); lock(); CHECK(WAIT_FOR(drawn(), 30000), "style %d is drawn: %.60s", style, snapshot); quiet(); }
 static void read_some(void) {
     CHECK(AI("mogo.open", "{\"path\":\"/me/books/星星邮差.epub\"}") && (g_rc.status == INK_RC_DONE || g_rc.status == INK_RC_QUEUED), "reader opens a book");
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "MogoReader"), 30000), "reader page"); quiet();
@@ -105,7 +105,7 @@ static void same_day(int y, int m, int d) {
         char value[512], want[600];
         CHECK(ink_json_str(j, ink_json_find(j, 0, keys[i]), value, sizeof value) >= 0, "field %s", keys[i]);
         snprintf(want, sizeof want, "%s%s\\n", labels[i], value[0] ? value : "无");
-        CHECK(strstr(snapshot, want) != NULL, "lock and time.almanac agree on %s for %s: wanted %s in %.400s", keys[i], args, want, snapshot);
+        CHECK(strstr(snapshot, want) != NULL, "lock and time.almanac agree on %s for %s: wanted %.80s in %.60s", keys[i], args, want, snapshot);
     }
     osal_free(j);
     char name[48]; snprintf(name, sizeof name, "almanac-%04d-%02d-%02d", y, m, d); frame(name);
@@ -160,8 +160,8 @@ static void privacy(void) {
         show_style(style);
         CHECK(strstr(snapshot, "星星邮差"), "owner sees their own book on style %d", style);
         CHECK(ink_member_switch("kid") == 0, "switch to the child while locked"); quiet();
-        CHECK(WAIT_FOR(drawn() || has("还没有读过的书"), 30000), "child's lock drawn or says why: %.600s", snapshot);
-        CHECK(!strstr(snapshot, "星星邮差"), "the child never sees the adult's book on style %d: %.300s", style, snapshot);
+        CHECK(WAIT_FOR(drawn() || has("还没有读过的书"), 30000), "child's lock drawn or says why: %.60s", snapshot);
+        CHECK(!strstr(snapshot, "星星邮差"), "the child never sees the adult's book on style %d: %.60s", style, snapshot);
         char name[48]; snprintf(name, sizeof name, "child-style-%d", style); frame(name);
         CHECK(ink_member_switch("owner") == 0, "back to the adult"); quiet();
         wake();
@@ -207,7 +207,7 @@ static void same_entry(void) {
         show_style(style);
         says_of(snapshot, by_ai, sizeof by_ai);
         CHECK(by_touch[0] && (!strcmp(by_touch, by_ai) || style == INK_LOCK_DIGITAL || style == INK_LOCK_LIBRARY),
-              "AI and touch reach the same lock for style %d: %.200s | %.200s", style, by_touch, by_ai);
+              "AI and touch reach the same lock for style %d: %.60s | %.60s", style, by_touch, by_ai);
         wake();
     }
     for (int size = 1; size <= 3; size += 2) { /* the picker at both sizes, with each style's own row */
@@ -217,7 +217,7 @@ static void same_entry(void) {
             setting("display.lock_style", chosen[i]);
             char page[24]; snprintf(page, sizeof page, "{\"page\":%d}", i ? 2 : 1);
             CHECK(BY_HAND("shell.lock_faces", NULL) && BY_HAND("shell.lock_faces", page), "picker page"); quiet();
-            if (i) CHECK(has(i == 1 ? "票根背景" : "迷你书库显示"), "the chosen style's own row shows: %.300s", snapshot);
+            if (i) CHECK(has(i == 1 ? "票根背景" : "迷你书库显示"), "the chosen style's own row shows: %.60s", snapshot);
             char name[48]; snprintf(name, sizeof name, "picker-%d-size-%d", chosen[i], size); frame(name);
             CHECK(BY_HAND("system.home", NULL), "home"); quiet();
         }
@@ -244,14 +244,14 @@ static void upgrade(void) {
 static void empty(void) { /* no book on the card, no font for the child: each says why */
     date(2026, 11, 11, 8, 30);
     choose(INK_LOCK_TICKET, INK_SRC_AI); lock();
-    CHECK(WAIT_FOR(has("还没有读过的书"), 30000), "no reading yet is said on the lock: %.300s", snapshot); frame("ticket-empty"); wake();
+    CHECK(WAIT_FOR(has("还没有读过的书"), 30000), "no reading yet is said on the lock: %.60s", snapshot); frame("ticket-empty"); wake();
     show_style(INK_LOCK_LIBRARY); CHECK(strstr(snapshot, "还没有阅读记录") || strstr(snapshot, "书匣"), "empty library says so"); frame("library-empty"); wake();
     setting("display.lock_library", 1); show_style(INK_LOCK_LIBRARY); frame("library-random-empty"); wake(); setting("display.lock_library", 0);
 }
 static void nofont(void) {
     date(2026, 11, 11, 8, 30);
     choose(INK_LOCK_DIGITAL, INK_SRC_AI); lock();
-    CHECK(WAIT_FOR(has("字体还没放到卡上"), 30000), "a missing font is said on the default lock: %.300s", snapshot);
+    CHECK(WAIT_FOR(has("字体还没放到卡上"), 30000), "a missing font is said on the default lock: %.60s", snapshot);
     CHECK(g_next != NULL, "the default lock shows, not the page below"); frame("no-font"); wake();
 }
 static void run(void *arg) {
