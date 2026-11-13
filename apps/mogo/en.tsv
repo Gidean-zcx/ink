@@ -43,5 +43,5 @@
 书架上还没有书。用‘传书’从电脑或手机传进来，会放在‘传进来的’；全家的书放在存储卡的 books 文件夹。	No books on the shelf yet. Use Transfer books from a computer or phone; they go to Transferred. Family books go in the books folder on the memory card.
 阅读 《%s》 · %s · 章内页 %zu/%zu · %u%%\n	Reader 《%s》 · %s · page %zu/%zu in chapter · %u%%\n
 阅读 %s\n	Reader %s\n
-章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu\n	章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu\n
+章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 本页书签=%d\n	章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 本页书签=%d\n
 动作：%s	Actions: %s

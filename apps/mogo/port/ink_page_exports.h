@@ -445,7 +445,7 @@ int ink_mogo_page_snapshot(char *out,size_t cap) {
     int len=0; out[0]=0;
     if (s_text && !ink_mogo_reason) INK_MOGO_LINE(TR_NOOP("阅读 《%s》 · %s · 章内页 %zu/%zu · %u%%\n"),s_reader_session.book.title,s_reader_session.book.chapter_title,page+1,pages,percent(page));
     else INK_MOGO_LINE(TR_NOOP("阅读 %s\n"),TR(panel));
-    INK_MOGO_LINE(TR_NOOP("章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu\n"),s_text?s_reader_session.position.chapter+1:0,s_text?page+1:0,pages,start,end,s_px,panel,s_text?bookmark_count():0);
+    INK_MOGO_LINE(TR_NOOP("章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 本页书签=%d\n"),s_text?s_reader_session.position.chapter+1:0,s_text?page+1:0,pages,start,end,s_px,panel,s_text?bookmark_count():0,s_text && bookmark_is_current());
     if (ink_mogo_reason) INK_MOGO_LINE("%s\n",ink_mogo_page_explanation());
     else if (s_view==SHELF || !s_text) for (int i=0;i<ink_mogo_shelf_count;++i)
         INK_MOGO_LINE("%d %s %s %u%%\n",i,ink_mogo_shelf[i].name,TR(ink_mogo_place(ink_mogo_shelf[i].path)),ink_mogo_shelf[i].pct);

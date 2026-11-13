@@ -14,6 +14,7 @@
 #include <ink/ui_shell.h>
 #define INK_MOGO_PORT_IMPL
 #include <port/runtime.h>
+#include <settings.h>
 
 void ink_mogo_book_title(const char *path, char *out, size_t cap);
 static struct {
@@ -34,8 +35,8 @@ static struct {
     ink_exec_job_t work, done;
     ink_call_t *call;
     ink_member_identity_t owner;
-    bool busy, cont;
-    int index, found;
+    bool busy, cont, alone, layout_op;
+    int index, found, layout[INK_MOGO_LAYOUT_COUNT];
     char title[96], path[288], json[4096];
 } S INK_PSRAM_BSS;
 /* The home card mirrors the member's last book, read ahead on BG: .card runs on UI and never reads flash. */
@@ -238,7 +239,10 @@ static void ink_mogo_shelf_done(void *arg) {
     ink_call_t *call = S.call;
     S.call = NULL; S.busy = false;
     if (!call) return;
-    if (!strcmp(call->cap->id, "reader.list_books")) {
+    if (S.layout_op) { /* the layout without the page: the member's saved values */
+        ink_cap_result(call, S.json);
+        ink_mogo_reply(call, S.found < 0 ? INK_RC_FAILED : INK_RC_DONE);
+    } else if (!strcmp(call->cap->id, "reader.list_books")) {
         ink_cap_result(call, S.json);
         snprintf(call->rc.say, sizeof call->rc.say, "%s", S.title);
         snprintf(call->rc.object, sizeof call->rc.object, "shelf:books");
@@ -255,8 +259,19 @@ static void ink_mogo_shelf_done(void *arg) {
 static void ink_mogo_shelf_work(void *arg) {
     (void)arg;
     S.found = -1;
-    if (S.cont) {
-        (void)ink_mogo_migrate_step(&S.owner, "");
+    if (S.layout_op) {
+        ink_mogo_owner(&S.owner); ink_mogo_settings_load();
+        ink_mogo_settings_t *p = &ink_mogo_settings; bool set = false;
+        for (int i = 0; i < INK_MOGO_LAYOUT_COUNT; i++) set = set || S.layout[i] != INK_MOGO_UNSET;
+        int v[INK_MOGO_LAYOUT_COUNT] = {p->px, p->line, p->paragraph, p->margin[0], p->weight, p->indent, p->header, p->footer};
+        for (int i = 0; i < INK_MOGO_LAYOUT_COUNT; i++) if (S.layout[i] != INK_MOGO_UNSET) v[i] = S.layout[i];
+        p->px = (uint8_t)v[0]; p->line = (uint8_t)v[1]; p->paragraph = (uint8_t)v[2]; p->margin[0] = p->margin[1] = (uint8_t)v[3];
+        p->weight = (int8_t)v[4]; p->indent = (uint8_t)v[5]; p->header = (uint8_t)v[6]; p->footer = (uint8_t)v[7];
+        S.found = !set || ink_mogo_settings_save() ? 0 : -1;
+        snprintf(S.json, sizeof S.json, "{\"member\":\"%s\",\"font_size\":%d,\"line_spacing\":%d,\"paragraph_spacing\":%d,\"margins\":%d,\"weight\":%d,\"indent\":%d,\"header\":%d,\"footer\":%d}",
+                 S.owner.member, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
+    } else if (S.cont) {
+        if (S.alone) (void)ink_mogo_migrate_step(&S.owner, ""); /* the book source is the open page's otherwise */
         ink_mogo_owner(&S.owner);
         ink_fs_file_t *f = NULL;
         if (book_progress_last_path(S.path, sizeof S.path) && (!strncmp(S.path, "asset:", 6) || !ink_graft_file_open(&S.owner, S.path, INK_FS_READ, &f))) {
@@ -274,7 +289,7 @@ static void ink_mogo_shelf_work(void *arg) {
 }
 static void ink_mogo_shelf_start(ink_call_t *call, bool cont) {
     if (S.busy) { call->rc.status = INK_RC_STALE; return; }
-    S.busy = true; S.call = call; S.cont = cont; S.path[0] = S.json[0] = 0;
+    S.busy = true; S.call = call; S.cont = cont; S.alone = !M.active; S.path[0] = S.json[0] = 0;
     ink_member_identity(&S.owner);
     ink_cap_defer(call);
     if (ink_exec_post(INK_EXEC_BG, &S.work, ink_mogo_shelf_work, NULL)) { S.busy = false; S.call = NULL; ink_mogo_reply(call, INK_RC_FAILED); }
@@ -294,7 +309,7 @@ static void ink_mogo_action(ink_call_t *call) {
             if (strncmp(path, "/me/", 4) && strncmp(path, "/family/books/", 14) && strcmp(path, "asset:sample/welcome.txt")) { call->rc.status = INK_RC_INVALID; return; }
             ink_cap_defer(call); ink_mogo_open_path(call, path); return;
         }
-        S.index = ink_mogo_value(call, "index", -1); S.title[0] = 0;
+        S.index = ink_mogo_value(call, "index", -1); S.title[0] = 0; S.layout_op = false;
         ink_args_get_str(&call->args, "title", S.title, sizeof S.title);
         ink_mogo_shelf_start(call, !strcmp(id, "continue"));
         return;
@@ -332,6 +347,11 @@ static void ink_mogo_action(ink_call_t *call) {
             req.layout[i] = ink_mogo_value(call, ink_mogo_layout_keys[i], INK_MOGO_UNSET);
             if (ink_args_find(&call->args, ink_mogo_layout_keys[i]) && (req.layout[i] < range[i][0] || req.layout[i] > range[i][1])) { call->rc.status = INK_RC_INVALID; return; }
         }
+    }
+    if ((req.op == INK_MOGO_OP_LAYOUT || req.op == INK_MOGO_OP_GET_LAYOUT) && !M.active) {
+        memcpy(S.layout, req.layout, sizeof S.layout); S.layout_op = true;
+        ink_mogo_shelf_start(call, false);
+        return;
     }
     if (req.op == INK_MOGO_OP_TURN) {
         ink_probe_count("reader.page_turns");
