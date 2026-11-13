@@ -560,8 +560,10 @@ static void build_body(void) {
         const char *act = G.undo_args[0] ? TR("撤销") : G.forever_args[0] ? TR("永久删除") : NULL;
         int bw = act ? LV_MAX(INK_CONTROL, ink_ui_text_width(act, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP) : 0;
         G.status = ink_ui_label(G.body, G.message, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, 0, w - bw - INK_GAP_S);
-        lv_obj_set_style_text_color(G.status, ink_ui_secondary(), 0);
-        lv_obj_set_height(G.status, ink_ui_px(INK_CONTROL)); lv_label_set_long_mode(G.status, LV_LABEL_LONG_DOT);
+        lv_obj_set_style_text_color(G.status, ink_ui_secondary(), 0); lv_obj_update_layout(G.status);
+        int row = ink_ui_px(INK_CONTROL), th = lv_obj_get_height(G.status); /* centred beside its button, cut at the row */
+        if (th > row) { lv_obj_set_height(G.status, row); lv_label_set_long_mode(G.status, LV_LABEL_LONG_DOT); th = row; }
+        lv_obj_set_y(G.status, (row - th) / 2);
         if (act) {
             lv_obj_t *b = ink_ui_text_button(G.body, act, INK_CANVAS_W - INK_MARGIN - bw, 0, bw, NULL, NULL);
             ink_shell_bind(b, G.undo_args[0] ? "photo.restore" : "photo.delete_forever", G.undo_args[0] ? G.undo_args : G.forever_args);
