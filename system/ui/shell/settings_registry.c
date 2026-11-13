@@ -10,33 +10,31 @@ static const char *const GROUPS[] = {TR_NOOP("网络和连接"), TR_NOOP("声音
                                      "AI", TR_NOOP("存储和备份"), TR_NOOP("系统")};
 const ink_sr_item_t *ink_sr_target;
 
+/* What each item is now, in the words its row shows (AOSP's getSummary). */
+#define SAY(name, words) static void name(const ink_sr_item_t *it, char *out, size_t cap) { (void)it; snprintf(out, cap, "%s", words); }
+SAY(cell, integer("cell.registered") ? TR("4G 在线") : integer("cell.sim_missing") ? TR("没有 SIM 卡") : TR("4G 还没有连上"))
+SAY(bluetooth, integer("bt.connected") ? TR("已连接") : TR("没有连接"))
+SAY(prefer, !ink_setting_get(it->setting) ? TR("自动") : ink_setting_get(it->setting) == 1 ? "Wi-Fi" : "4G")
+SAY(slot, ink_setting_get(it->setting) ? TR("内置卡") : TR("外置卡"))
+SAY(language, ink_lang_name((int)ink_setting_get(it->id)) ? ink_lang_name((int)ink_setting_get(it->id)) : "")
 static void tenths(const ink_sr_item_t *it, char *out, size_t cap) { snprintf(out, cap, "%lld", (long long)ink_setting_get(it->setting) / 10); }
 static void minutes(const ink_sr_item_t *it, char *out, size_t cap) { snprintf(out, cap, TR("%lld 分钟"), (long long)ink_setting_get(it->setting) / 60); }
 static void wifi(const ink_sr_item_t *it, char *out, size_t cap) {
     (void)it; state_text("wifi.ssid", out, cap);
     if (!ink_setting_get("wifi.enabled") || !out[0]) snprintf(out, cap, "%s", ink_setting_get("wifi.enabled") ? TR("还没有连接") : TR("已关闭"));
 }
-static void cell(const ink_sr_item_t *it, char *out, size_t cap) {
-    (void)it; snprintf(out, cap, "%s", integer("cell.registered") ? TR("4G 在线") : integer("cell.sim_missing") ? TR("没有 SIM 卡") : TR("4G 还没有连上"));
-}
-static void bluetooth(const ink_sr_item_t *it, char *out, size_t cap) {
-    (void)it; snprintf(out, cap, "%s", integer("bt.connected") ? TR("已连接") : TR("没有连接"));
-}
 static void people(const ink_sr_item_t *it, char *out, size_t cap) {
-    int n = 0; (void)it;
-    while (ink_member_at(n)) n++;
+    int n = 0; (void)it; while (ink_member_at(n)) n++;
     snprintf(out, cap, TR("家里 %d 个人"), n);
 }
-static void handsfree(const ink_sr_item_t *it, char *out, size_t cap) { /* the home names it whole, its own page's choices are short */
-    int64_t v = ink_setting_get("voice.handsfree");
-    bool home = !strcmp(it->id, "ai");
-    snprintf(out, cap, "%s", v == 2 ? (home ? TR("叫名字已关闭") : TR("关")) : v == 1 ? (home ? TR("一直能叫名字") : TR("一直")) : home ? TR("使用时能叫名字") : TR("使用时"));
+static void handsfree(const ink_sr_item_t *it, char *out, size_t cap) { /* the home says it whole, its page's choices are short */
+    static const char *const WORDS[2][3] = {{TR_NOOP("使用时"), TR_NOOP("一直"), TR_NOOP("关")}, {TR_NOOP("使用时能叫名字"), TR_NOOP("一直能叫名字"), TR_NOOP("叫名字已关闭")}};
+    snprintf(out, cap, "%s", TR(WORDS[!strcmp(it->id, "ai")][ink_setting_get("voice.handsfree") % 3]));
 }
 static void voice_name(const ink_sr_item_t *it, char *out, size_t cap) {
-    const char *const *names = hal_afe_names(); int n = 0;
+    const char *const *names = hal_afe_names(); int64_t n = 0, v = ink_setting_get(it->id);
     while (names[n]) n++;
-    int64_t v = ink_setting_get(it->id);
-    snprintf(out, cap, "%s", names[v >= 0 && v < n ? v : 0]);
+    snprintf(out, cap, "%s", n ? names[v >= 0 && v < n ? v : 0] : "");
 }
 static void channels(const ink_sr_item_t *it, char *out, size_t cap) {
     int off = 0; const ink_notify_channel_t *ch; (void)it;
@@ -54,8 +52,7 @@ static void space(const ink_sr_item_t *it, char *out, size_t cap) { /* what is l
     } else snprintf(out, cap, "%s", TR("暂时读不出来"));
 }
 static void automatic(const ink_sr_item_t *it, char *out, size_t cap) {
-    int64_t mode = ink_setting_get("backup.auto"); (void)it;
-    snprintf(out, cap, TR("自动备份：%s"), mode == 1 ? TR("每天") : mode == 2 ? TR("每周") : TR("关"));
+    int64_t mode = ink_setting_get("backup.auto"); (void)it; snprintf(out, cap, TR("自动备份：%s"), mode == 1 ? TR("每天") : mode == 2 ? TR("每周") : TR("关"));
 }
 static void release(const ink_sr_item_t *it, char *out, size_t cap) {
     (void)it; if (ink_state_get_str(ink_state_find("update.version"), out, cap) < 0) snprintf(out, cap, "%s", TR("暂时读不出来"));
@@ -64,13 +61,6 @@ static void update(const ink_sr_item_t *it, char *out, size_t cap) {
     char s[32]; (void)it; state_text("update.state", s, sizeof s);
     snprintf(out, cap, "%s", !strcmp(s, "idle") ? TR("检查新版本") : !strcmp(s, "available") ? TR("有新版本") :
         !strcmp(s, "failed") ? TR("检查或更新失败，可以再试") : !strcmp(s, "ready") ? TR("已下载") : TR("正在更新"));
-}
-static void prefer(const ink_sr_item_t *it, char *out, size_t cap) {
-    int64_t v = ink_setting_get(it->setting); snprintf(out, cap, "%s", !v ? TR("自动") : v == 1 ? "Wi-Fi" : "4G");
-}
-static void slot(const ink_sr_item_t *it, char *out, size_t cap) { snprintf(out, cap, "%s", ink_setting_get(it->setting) ? TR("内置卡") : TR("外置卡")); }
-static void language(const ink_sr_item_t *it, char *out, size_t cap) {
-    const char *name = ink_lang_name((int)ink_setting_get(it->id)); snprintf(out, cap, "%s", name ? name : "");
 }
 static void owner(const ink_sr_item_t *it, char *out, size_t cap) { (void)it; snprintf(out, cap, TR("%s的设备"), ink_member_current()->name); }
 static void model(const ink_sr_item_t *it, char *out, size_t cap) {

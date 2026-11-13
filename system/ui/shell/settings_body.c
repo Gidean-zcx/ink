@@ -166,10 +166,6 @@ static bool for_me(const char *id) { /* a child does not meet what is for parent
     const ink_sr_item_t *it = ink_sr_find(id);
     return !(it && it->adult && child());
 }
-static const char *title(const char *id) { /* a row's name, as the registry declares it */
-    const ink_sr_item_t *it = ink_sr_find(id);
-    return it ? TR(it->title) : id;
-}
 static void gray_labels(lv_obj_t *row) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(row); i++)
         if (lv_obj_check_type(lv_obj_get_child(row, (int32_t)i), &lv_label_class))
@@ -186,7 +182,6 @@ static struct {
     const ink_sr_item_t *it[HOME_ROWS], *seen[HOME_ROWS];
     lv_obj_t *value[HOME_ROWS];
     bool gray[HOME_ROWS];
-    char text[HOME_ROWS][192]; /* what each row was given: a cut label keeps only its dots */
     int n, nseen, page;
 } H INK_PSRAM_BSS;
 /* What a row says: its value, or for a search its path and value, joined as AOSP's search_breadcrumb_connector does.
@@ -256,7 +251,7 @@ static void home_row(lv_obj_t *box, const ink_sr_item_t *it, const char *text, b
         ink_shell_bind(r, cap, args);
         ink_ui_icon(r, "next", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_READING_MARGIN, (h - INK_ICON_SMALL) / 2, false);
     }
-    if (F.draw && H.n < HOME_ROWS) { H.it[H.n] = it; H.value[H.n] = value; H.gray[H.n] = gray; snprintf(H.text[H.n++], sizeof H.text[0], "%s", text); }
+    if (F.draw && H.n < HOME_ROWS) { H.it[H.n] = it; H.value[H.n] = value; H.gray[H.n++] = gray; } /* its labels are never cut */
 }
 static void home_blocks(void) {
     const ink_sr_item_t *found[FOUND_MAX];
@@ -305,12 +300,9 @@ static bool home_update(void) {
     if (N.page_id != PAGE_SETTINGS || !H.n || H.n != H.nseen || memcmp(H.it, H.seen, (size_t)H.n * sizeof *H.it)) return false;
     for (int k = 0; k < H.n; k++) /* a row turning gray, or a value needing another line, is a new layout */
         if (!H.value[k] || !home_line(H.it[k], text, sizeof text, &gray) || gray != H.gray[k] ||
-            row_h(H.it[k], text) != row_h(H.it[k], H.text[k])) return false;
+            row_h(H.it[k], text) != row_h(H.it[k], lv_label_get_text(H.value[k]))) return false;
     for (int k = 0; k < H.n; k++)
-        if (home_line(H.it[k], text, sizeof text, &gray) && strcmp(H.text[k], text)) {
-            lv_label_set_text(H.value[k], text);
-            snprintf(H.text[k], sizeof H.text[k], "%s", text);
-        }
+        if (home_line(H.it[k], text, sizeof text, &gray) && strcmp(lv_label_get_text(H.value[k]), text)) lv_label_set_text(H.value[k], text);
     return true;
 }
 void ink_settings_home_sync(void) {
@@ -364,34 +356,32 @@ static void body_blocks(void) {
         }
     } else if (N.page_id == PAGE_DISPLAY) {
         if (at("display.light", INK_SLIDER))
-            ink_ui_slider(N.page_body, title("display.light"), (int) ink_setting_get("display.light") / 10, INK_MARGIN, F.y, width(),
+            ink_ui_slider(N.page_body, TR("亮度"), (int) ink_setting_get("display.light") / 10, INK_MARGIN, F.y, width(),
                           slider_changed, (void *) "display.light");
         F.y += INK_SLIDER + INK_GAP_M;
         if (at("display.warmth", INK_SLIDER))
-            ink_ui_slider(N.page_body, title("display.warmth"), (int) ink_setting_get("display.warmth") / 10, INK_MARGIN, F.y, width(),
+            ink_ui_slider(N.page_body, TR("暖光"), (int) ink_setting_get("display.warmth") / 10, INK_MARGIN, F.y, width(),
                           slider_changed, (void *) "display.warmth");
         F.y += INK_SLIDER + INK_GAP_L;
         const char *const sample_text = TR("天黑以后，阿木背起邮包。");
         int sample_h = 2 * INK_GAP_L +
                        ink_ui_text_height(sample_text, INK_FONT_BODY, INK_WEIGHT_REGULAR, width() - 2 * INK_MARGIN);
         int h = heading_h() + INK_SEGMENT + INK_GAP + sample_h;
-        if (for_me("display.font_size")) {
-            if (at("display.font_size", h)) {
-                heading(title("display.font_size"));
-                const char *const labels[] = {TR("小"), TR("中"), TR("大"), TR("特大")};
-                lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 4, (int) ink_setting_get("display.font_size"),
-                                                INK_MARGIN, F.y + heading_h(), width(), NULL, NULL);
-                bind_choices(seg, 4, "display.font_size");
-                lv_obj_t *sample = ink_ui_card(N.page_body, INK_MARGIN, F.y + heading_h() + INK_SEGMENT + INK_GAP, width(),
-                                               sample_h, INK_SURFACE_STATIC);
-                ink_ui_label(sample, sample_text, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L,
-                             width() - 2 * INK_MARGIN);
-            }
-            F.y += h + INK_GAP_L;
+        if (for_me("display.font_size") && at("display.font_size", h)) {
+            heading(TR("字号"));
+            const char *const labels[] = {TR("小"), TR("中"), TR("大"), TR("特大")};
+            lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 4, (int) ink_setting_get("display.font_size"),
+                                            INK_MARGIN, F.y + heading_h(), width(), NULL, NULL);
+            bind_choices(seg, 4, "display.font_size");
+            lv_obj_t *sample = ink_ui_card(N.page_body, INK_MARGIN, F.y + heading_h() + INK_SEGMENT + INK_GAP, width(),
+                                           sample_h, INK_SURFACE_STATIC);
+            ink_ui_label(sample, sample_text, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L,
+                         width() - 2 * INK_MARGIN);
         }
+        F.y += for_me("display.font_size") ? h + INK_GAP_L : 0;
         if (at("refresh", INK_CONTROL)) {
             lv_obj_t *refresh =
-                ink_ui_pill(N.page_body, title("refresh"), INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL);
+                ink_ui_pill(N.page_body, TR("刷新屏幕"), INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(refresh, "system.full_refresh", NULL);
         }
         F.y += INK_CONTROL + INK_GAP;
@@ -412,13 +402,13 @@ static void body_blocks(void) {
         }
         F.y += for_me("power.lock_after_s") ? INK_CONTROL + INK_GAP : 0;
         if (at("today", INK_CONTROL))
-            group_row(group(1), "grid", title("today"), "", 0, "shell.today_edit");
+            group_row(group(1), "grid", TR("今日屏放什么"), "", 0, "shell.today_edit");
         F.y += INK_CONTROL;
     } else if (N.page_id == PAGE_SOUND) {
         const char *const about = TR("听书、AI 和提示音用这个音量");
         int h = INK_SLIDER + INK_GAP_S + notice_h(about);
         if (at("audio.volume", h)) {
-            ink_ui_slider(N.page_body, title("audio.volume"), (int) ink_setting_get("audio.volume") / 10, INK_MARGIN, F.y, width(),
+            ink_ui_slider(N.page_body, TR("音量"), (int) ink_setting_get("audio.volume") / 10, INK_MARGIN, F.y, width(),
                           slider_changed, (void *) "audio.volume");
             ink_ui_notice(N.page_body, about, F.y + INK_SLIDER + INK_GAP_S);
         }
@@ -437,7 +427,7 @@ static void body_blocks(void) {
         F.y += h ? h + INK_GAP_L : 0;
         if (at("notify.dnd", INK_CONTROL)) {
             lv_obj_t *toggle =
-                ink_ui_toggle(N.page_body, title("notify.dnd"), ink_setting_get("notify.dnd"), INK_MARGIN, F.y, width(), NULL, NULL);
+                ink_ui_toggle(N.page_body, TR("勿扰"), ink_setting_get("notify.dnd"), INK_MARGIN, F.y, width(), NULL, NULL);
             bind_toggle(toggle, "notify.dnd");
         }
         F.y += INK_CONTROL + INK_GAP_L;
@@ -446,17 +436,17 @@ static void body_blocks(void) {
             heading(TR("提示"));
             F.y += heading_h();
             lv_obj_t *g = group(3);
-            const char *ids[] = {"audio.key_tone", "audio.vibration"};
+            const char *ids[] = {"audio.key_tone", "audio.vibration"}, *labels[] = {TR_NOOP("按键提示音"), TR_NOOP("振动")};
             for (int i = 0; i < 2; i++) {
                 ink_ui_icon(g, i ? "wave" : "bell", INK_ICON_LIST, INK_ICON_LINE, INK_GAP_L, i * INK_CONTROL + (INK_CONTROL - INK_ICON_LIST) / 2, false);
-                lv_obj_t *toggle = ink_ui_toggle(g, title(ids[i]), ink_setting_get(ids[i]), INK_ROW_DOUBLE, i * INK_CONTROL, width() - INK_ROW_DOUBLE - INK_GAP_L, NULL, NULL);
+                lv_obj_t *toggle = ink_ui_toggle(g, TR(labels[i]), ink_setting_get(ids[i]), INK_ROW_DOUBLE, i * INK_CONTROL, width() - INK_ROW_DOUBLE - INK_GAP_L, NULL, NULL);
                 lv_obj_set_style_bg_opa(toggle, LV_OPA_TRANSP, 0);
                 bind_toggle(toggle, ids[i]);
             }
             char args[80], level[64]; /* grayed with the reason while vibration is off (the registry's dependency) */
             bool off = ink_sr_value(ink_sr_find("audio.vibration_level"), level, sizeof level) == INK_SR_DEPENDENT;
             snprintf(args, sizeof args, "{\"id\":\"audio.vibration_level\",\"value\":%d}", (int)(ink_setting_get("audio.vibration_level") + 1) % 3);
-            lv_obj_t *row = ink_ui_list_row(g, "wave", title("audio.vibration_level"), level, 0, 2 * INK_CONTROL, width(), false, NULL, NULL);
+            lv_obj_t *row = ink_ui_list_row(g, "wave", TR("振动强度"), level, 0, 2 * INK_CONTROL, width(), false, NULL, NULL);
             if (off) gray_labels(row);
             else ink_shell_bind(row, "settings.set", args);
             F.y -= heading_h();
@@ -479,8 +469,7 @@ static void body_blocks(void) {
             F.y -= heading_h();
         }
         F.y += h + INK_GAP_L;
-        if (for_me("notify.channels") && at("notify.channels", INK_CONTROL))
-            group_row(group(1), "bell", title("notify.channels"), "", 0, "shell.notify_settings");
+        if (for_me("notify.channels") && at("notify.channels", INK_CONTROL)) group_row(group(1), "bell", TR("通知"), "", 0, "shell.notify_settings");
         F.y += for_me("notify.channels") ? INK_CONTROL : 0;
     } else if (N.page_id == PAGE_KNOWN) {
         char connected[33], state[24];
@@ -518,7 +507,7 @@ static void body_blocks(void) {
     } else if (N.page_id == PAGE_NETWORK) {
         if (at("net.airplane wifi", 2 * INK_CONTROL)) {
             lv_obj_t *g = group(2);
-            const char *labels[] = {title("net.airplane"), title("wifi")}, *icons[] = {"plane", "wifi"};
+            const char *labels[] = {TR("飞行模式"), "Wi-Fi"}, *icons[] = {"plane", "wifi"};
             bool plane = ink_setting_get("net.airplane");
             for (int i = 0; i < 2; i++) {
                 ink_ui_icon(g, icons[i], INK_ICON_LIST, INK_ICON_LINE, INK_GAP_L, i * INK_CONTROL + (INK_CONTROL - INK_ICON_LIST) / 2, false);
@@ -592,7 +581,7 @@ static void body_blocks(void) {
         const char *const about = TR("自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G");
         h = heading_h() + INK_SEGMENT + INK_GAP_M + notice_h(about);
         if (at("net.prefer", h)) {
-            heading(title("net.prefer"));
+            heading(TR("上网方式"));
             const char *const labels[] = {TR("自动"), "Wi-Fi", "4G"};
             lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 3, (int) ink_setting_get("net.prefer"), INK_MARGIN,
                                             F.y + heading_h(), width(), NULL, NULL);
@@ -610,14 +599,14 @@ static void body_blocks(void) {
             N.wifi_forget_page = F.page;
             F.y += INK_CONTROL + INK_GAP_M;
         }
-        if (block(INK_CONTROL)) group_row(group(1), "wifi", title("wifi.known"), "", 0, "shell.known_networks");
+        if (block(INK_CONTROL)) group_row(group(1), "wifi", TR("已存的网络"), "", 0, "shell.known_networks");
         F.y += INK_CONTROL + INK_GAP_M;
         if (block(INK_CONTROL)) ink_shell_bind(ink_ui_pill(N.page_body, TR("设置设备"), INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL), "shell.launch", "{\"id\":\"boot\"}");
         F.y += INK_CONTROL + INK_GAP_L;
         const char *const sim_state = integer("cell.config_readonly") ? TR("暂不能更改 SIM 卡") : integer("cell.registered") ? TR("4G 在线，切卡不用重启") : TR("4G 还没有连上");
         h = heading_h() + INK_SEGMENT + INK_GAP_L + notice_h(sim_state);
         if (at("cell.sim_slot", h)) {
-            heading(title("cell.sim_slot"));
+            heading(TR("SIM 卡"));
             const char *const slots[] = {TR("外置卡"), TR("内置卡")};
             lv_obj_t *sim = ink_ui_segments(N.page_body, slots, 2, (int) ink_setting_get("cell.sim_slot"), INK_MARGIN,
                                             F.y + heading_h(), width(), NULL, NULL);

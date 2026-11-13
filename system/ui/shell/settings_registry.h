@@ -1,7 +1,7 @@
-/* The settings registry (settings-1): every setting is declared once, the way PebbleOS declares its settings
- * modules (pebble/apps/system/settings/menu.c:23-50), and each row's summary, availability and search entry come
- * from that one declaration, as AOSP derives them from one controller (core/BasePreferenceController.java:75-121).
- * The home's rows, the list pages' rows, the search and settings.open read this table. UI task. */
+/* The settings registry (settings-1): every setting is declared once, the way PebbleOS declares its settings modules
+ * (pebble/apps/system/settings/menu.c:23-50); each row's summary, availability and search entry come from that one
+ * declaration, as AOSP derives them from one controller (core/BasePreferenceController.java:75-121). The home's rows,
+ * the list pages' rows, the search and settings.open read this table. UI task. */
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
@@ -33,13 +33,10 @@ struct ink_sr_item {
 const ink_sr_item_t *ink_sr_at(int index); /* NULL past the last */
 const ink_sr_item_t *ink_sr_find(const char *id);
 const char *ink_sr_group(int group);
-/** The item's state for whoever uses the device now, and in `out` what its row says: the value, or why not. */
+/* The item's state for whoever uses the device now; `out` is what its row says: the value, or why not. */
 ink_sr_state_t ink_sr_value(const ink_sr_item_t *it, char *out, size_t cap);
-/** settings.search: what the query names by title, alias or group, title matches first. Returns how many. */
+/* settings.search: what the query names by title, alias or group, title matches first. Returns how many. */
 int ink_sr_search(const char *query, const ink_sr_item_t **out, int max);
-/** The row settings.open asked for, until the page that has it shows it. */
-extern const ink_sr_item_t *ink_sr_target;
-/** settings.open and settings.search (settings_body.c), with every id in settings.open's description. */
-int ink_settings_home_init(void);
-/** The settings home shows what changed, in place (the list pages' watchers call it). */
-void ink_settings_home_sync(void);
+extern const ink_sr_item_t *ink_sr_target; /* the row settings.open asked for, while its page is built */
+int ink_settings_home_init(void);          /* settings.open (every id in its description) and settings.search */
+void ink_settings_home_sync(void);         /* the home writes what changed into its rows (list pages' watchers) */
