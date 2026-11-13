@@ -190,20 +190,35 @@ static void date_line(char *out, size_t cap) {
     if (dot && weather[0]) snprintf(out, cap, "%.*s · %s", (int)(dot - date), date, weather);
     else snprintf(out, cap, "%s", date);
 }
+static char shown_date[160]; /* what the date line says (its label may be cut with dots) */
 void home_refresh(void) {
-    if (!N.date) return;
     char text[160];
     date_line(text, sizeof text);
-    if (strcmp(lv_label_get_text(N.date), text)) {
+    if (N.date && strcmp(shown_date, text)) {
+        memcpy(shown_date, text, sizeof text);
         lv_label_set_text(N.date, text);
         ink_ui_hint_obj(N.date, INK_REFRESH_UI);
     }
 }
-/* The tip stays until the AI has answered this member a few times. */
+/* The tip stays until the AI has answered this member a few times; a history not read yet is asked for off the UI
+ * task, and the tip goes when the count comes back. */
+static void hint_reply(void *ctx, const ink_receipt_t *rc) {
+    long long turns = 0;
+    if (!current_session((uint32_t)(uintptr_t)ctx) || child() || rc->status != INK_RC_DONE || !rc->result ||
+        sscanf(rc->result, "{\"total\":%lld", &turns) != 1 || turns < AI_HINT_TURNS) return;
+    idle = "";
+    if (N.message && !N.result[0]) lv_label_set_text(N.message, idle);
+}
 static bool ai_new(void) {
     const ink_db_def_t *def = ink_db_find_def("ai.history");
-    ink_db_t *db = def ? ink_db_open_member(def, ink_member_current()->id) : NULL;
-    int turns = db ? ink_db_count(db) : 0;
+    ink_db_t *db = def ? ink_db_open_cached_member(def, ink_member_current()->id) : NULL;
+    if (!db) {
+        ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = hint_reply, .ctx = (void *)(uintptr_t)N.epoch,
+                             .member = ink_member_current()->id};
+        ink_cap_call("ai.history.list", NULL, &o);
+        return true;
+    }
+    int turns = ink_db_count(db);
     ink_db_close(db);
     return turns < AI_HINT_TURNS;
 }
@@ -251,9 +266,8 @@ void draw_home_content(void) {
     read_cards();
     int call = ink_activity_home_offset(), y = S(INK_GAP_M), line = ink_ui_line_height(INK_FONT_NOTE), h = ink_ui_row_double();
     if (call > 0) { ink_activity_home_draw(N.content, 0); y += INK_CONTROL; } /* a call in progress: its banner on top */
-    char text[160];
-    date_line(text, sizeof text);
-    N.date = ink_ui_line(N.content, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, y, width());
+    date_line(shown_date, sizeof shown_date);
+    N.date = ink_ui_line(N.content, shown_date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, y, width());
     y += ink_ui_line_height(INK_FONT_LIST) + S(INK_GAP_M);
     /* From the bottom up, so the favourites stay where the hand knows them, with or without cards. */
     int bottom = INK_CANVAS_H - INK_STATUS_BAR - S(INK_MARGIN) - (child() ? 2 : 1) * line;
@@ -412,7 +426,7 @@ static int apps_walk(bool draw, char *list, size_t cap) {
                 char args[192];
                 ink_jw_t w; ink_jw_init(&w, args, sizeof args);
                 ink_jw_raw(&w, "{\"query\":"); ink_jw_str(&w, N.search); ink_jw_raw(&w, "}");
-                lv_obj_t *r = ink_ui_list_row(apps_box, "search", TR("搜索全部内容"), N.search, INK_MARGIN,
+                lv_obj_t *r = ink_ui_list_row(apps_box, "search", TR("搜索全部内容"), NULL, INK_MARGIN, /* the words are in the field above */
                                               y + (count ? INK_GAP_M : INK_CONTROL), width(), false, NULL, NULL);
                 chevron(r, INK_CONTROL);
                 ink_shell_bind(r, "search.show", args);
@@ -493,14 +507,10 @@ static int apps_snapshot(char *buf, size_t cap) {
         {.id = "search", .role = "text", .label = "查找", .value = N.search},
         {.id = "tools_page", .role = "status", .label = "工具页", .value = at},
         {.id = "tools", .role = "text", .label = "应用", .value = list}};
-    ink_ui_action_spec_t actions[] = {
-        {.id = "launch", .label = "shell.launch", .capability = "shell.launch", .enabled = true},
-        {.id = "menu", .label = "shell.icon_menu", .capability = "shell.icon_menu", .enabled = true},
-        {.id = "search", .label = "shell.search", .capability = "shell.search", .enabled = true},
-        {.id = "prev", .label = "shell.apps_prev", .capability = "shell.apps_prev", .enabled = N.apps_page > 0},
-        {.id = "next", .label = "shell.apps_next", .capability = "shell.apps_next", .enabled = N.apps_page + 1 < N.apps_pages},
-        {.id = "all", .label = "search.show", .capability = "search.show", .enabled = N.search[0] != 0},
-        {.id = "back", .label = "shell.back", .capability = "shell.back", .enabled = true}};
+    static const char *const CAPS[] = {"shell.launch", "shell.icon_menu", "shell.search", "shell.apps_prev", "shell.apps_next", "search.show", "shell.back"};
+    bool on[] = {true, true, true, N.apps_page > 0, N.apps_page + 1 < N.apps_pages, N.search[0] != 0, true};
+    ink_ui_action_spec_t actions[sizeof CAPS / sizeof *CAPS];
+    for (size_t i = 0; i < sizeof CAPS / sizeof *CAPS; i++) actions[i] = (ink_ui_action_spec_t){.id = CAPS[i], .label = CAPS[i], .capability = CAPS[i], .enabled = on[i]};
     ink_ui_page_spec_t page = {.id = APPS.name, .title = ink_shell_board(), .object = {"apps", ink_ui_generation()},
         .fields = fields, .field_count = sizeof fields / sizeof *fields, .actions = actions, .action_count = sizeof actions / sizeof *actions};
     return ink_ui_semantics_summary(&page, buf, cap);
@@ -511,11 +521,9 @@ static const ink_activity_t APPS = {.name = "Apps", .app = "home", .create = app
 static void apps_call(ink_call_t *c) {
     if (!strcmp(c->cap->id, "shell.apps_next") || !strcmp(c->cap->id, "shell.apps_prev")) {
         int to = N.apps_page + (!strcmp(c->cap->id, "shell.apps_next") ? 1 : -1);
-        if (to < 0 || to >= N.apps_pages) {
-            c->rc.status = INK_RC_REJECTED;
-            snprintf(c->rc.say, sizeof c->rc.say, "%s", to < 0 ? TR("已经是第一页") : TR("已经是最后一页"));
-            return;
-        }
+        c->rc.status = to < 0 || to >= N.apps_pages ? INK_RC_REJECTED : INK_RC_DONE;
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", to < 0 ? TR("已经是第一页") : to >= N.apps_pages ? TR("已经是最后一页") : "");
+        if (c->rc.status != INK_RC_DONE) return;
         N.apps_page = to;
         ink_ui_content_changed();
         ink_ui_hint_frame(INK_REFRESH_FLASH_UI); /* D-108: all of it is new, no ghost of the last page */

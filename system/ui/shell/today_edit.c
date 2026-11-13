@@ -191,16 +191,10 @@ static void icon_show(const char *which, const char *title, const ink_card_t *ca
     T.actions[2] = (ink_ui_action_spec_t){"today", TR("卡片放在主屏"), "shell.today_card", T.args[0], {key, 0}, has_card};
     T.actions[3] = (ink_ui_action_spec_t){"close", TR("关闭"), "shell.back", NULL, {NULL, 0}, true};
     T.model = (ink_ui_page_spec_t){"IconMenu", title, {id, 0}, T.fields, has_card ? 3 : 2, T.actions, 4};
-    if (resume) {
-        ink_shell_bind(ink_ui_list_row(panel, "play", go, NULL, INK_MARGIN, y, width(), false, NULL, NULL), card->action, NULL);
-        y += INK_CONTROL;
-    }
+    if (resume) { ink_shell_bind(ink_ui_list_row(panel, "play", go, NULL, INK_MARGIN, y, width(), false, NULL, NULL), card->action, NULL); y += INK_CONTROL; }
     ink_shell_bind(ink_ui_toggle(panel, TR("放在主屏"), home, INK_MARGIN, y, width(), NULL, NULL), "shell.favorite", T.app_args);
     y += INK_CONTROL;
-    if (has_card) {
-        ink_shell_bind(ink_ui_toggle(panel, TR("卡片放在主屏"), picked, INK_MARGIN, y, width(), NULL, NULL), "shell.today_card", T.args[0]);
-        y += INK_CONTROL;
-    }
+    if (has_card) { ink_shell_bind(ink_ui_toggle(panel, TR("卡片放在主屏"), picked, INK_MARGIN, y, width(), NULL, NULL), "shell.today_card", T.args[0]); y += INK_CONTROL; }
     ink_shell_bind(ink_ui_pill(panel, TR("关闭"), INK_MARGIN, y + INK_GAP_L, width(), INK_CONTROL, false, NULL, NULL), "shell.back", NULL);
     ink_ui_overlay_add(&ICON_MENU, T.menu); ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
 }
