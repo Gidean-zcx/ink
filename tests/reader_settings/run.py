@@ -18,7 +18,7 @@ def exercise(build, binary=None, reverse=False):
     if area.exists():
         shutil.rmtree(area)
     content = area / 'content'
-    shutil.copytree(build / 'test-content', content)
+    shutil.copytree(build / 'test-content', content)  # with the reader's font
     for path in (ROOT / 'tests/reader_epub/fixtures').iterdir():
         shutil.copyfile(path, content / 'books' / path.name)
     # Extend the synthetic second chapter: every tested layout must have several pages.
@@ -54,16 +54,19 @@ def exercise(build, binary=None, reverse=False):
 
 
 def control(build):
-    source = ROOT / 'apps/reader/reader.c'
+    # The layout change that ignores its values: the page never reflows.
+    source = ROOT / 'third_party/mogo/main/apps/ink_book_page.c'
+    header = ROOT / 'apps/mogo/port/ink_page_exports.h'
     entry = next(x for x in json.loads((build / 'compile_commands.json').read_text()) if Path(x['file']) == source)
     with tempfile.TemporaryDirectory(prefix='reader-settings-control-', dir=build) as directory:
         temp = Path(directory)
         mutant = temp / source.name
         obj = temp / (source.name + '.o')
-        original = source.read_text()
-        changed = original.replace('if (geometry) {', 'if (false && geometry) { /* Reflow removed for the reverse control. */')
+        original = header.read_text()
+        changed = original.replace('v[i]=values[i]==INK_MOGO_UNSET?ink_mogo_setting_value(i):values[i];', 'v[i]=values[i]==INK_MOGO_UNSET || 1?ink_mogo_setting_value(i):values[i];')
         assert changed != original
-        mutant.write_text(changed)
+        (temp / header.name).write_text(changed)
+        mutant.write_text(source.read_text())
         args = shlex.split(entry['command'])
         compile_args, skip = [], False
         for arg in args:
@@ -73,8 +76,8 @@ def control(build):
                 skip = True
             elif arg != '-MD':
                 compile_args.append(str(mutant) if arg == str(source) else arg)
-        subprocess.run(compile_args + ['-I', str(source.parent), '-o', str(obj)], cwd=entry['directory'], check=True, capture_output=True)
-        library = temp / 'libink_apps.a'
+        subprocess.run(compile_args + ['-o', str(obj)], cwd=entry['directory'], check=True, capture_output=True)
+        library = temp / 'libink_mogo_native.a'
         shutil.copyfile(build / library.name, library)
         subprocess.run(['ar', 'r', str(library), str(obj)], check=True, capture_output=True)
         binary = temp / 'sim-reader-settings'

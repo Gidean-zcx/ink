@@ -175,7 +175,7 @@ static void ink_mogo_closed(void *ctx) {
 }
 static int ink_mogo_snapshot(void *ctx, char *out, size_t cap) {
     (void)ctx;
-    return snprintf(out, cap, "%s", M.busy && !M.description[0] ? TR("阅读 正在排版") : M.description);
+    return snprintf(out, cap, "%s", M.busy ? TR("阅读 正在排版") : M.description);
 }
 static bool ink_mogo_call(const char *id, const char *args, ink_source_t src) {
     ink_call_opts_t opts = {.src = src, .args_json = args && args[0] ? args : NULL};

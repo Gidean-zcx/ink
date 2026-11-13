@@ -6,7 +6,7 @@
 #include "ink/sys/appreg.h"
 #include "ink/sys/crc.h"
 static char view[1200], first[1200];
-static uint32_t raster;
+static uint32_t raster, raster_size;
 static bool captured;
 static volatile bool cleanup_done;
 static ink_exec_job_t cleanup_barrier;
@@ -14,12 +14,12 @@ static void after_cleanup(void *arg) { (void)arg; cleanup_done = true; }
 static void locate(lv_obj_t *o) {
     if (lv_obj_check_type(o,&lv_image_class)) {
         const lv_image_dsc_t *d = lv_image_get_src(o);
-        if (d && d->header.cf == LV_COLOR_FORMAT_L8) raster = ink_crc32(0,d->data,d->data_size);
+        if (d && d->header.cf==LV_COLOR_FORMAT_L8 && d->data_size>raster_size) { raster=ink_crc32(0,d->data,d->data_size); raster_size=d->data_size; }
     }
     for (uint32_t i=0;i<lv_obj_get_child_count(o);++i) locate(lv_obj_get_child(o,(int32_t)i));
 }
 static void inspect(void) { ink_graft_snapshot(view,sizeof view); }
-static void pixels(void) { raster = 0; locate(lv_screen_active()); }
+static void pixels(void) { raster=raster_size=0; locate(lv_screen_active()); } /* the borrowed surface: the largest L8 image */
 static bool page(int n) {
     char expected[32]; snprintf(expected,sizeof expected,"页=%d/",n);
     for (int i=0;i<2400;++i) {

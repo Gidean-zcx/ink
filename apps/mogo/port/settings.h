@@ -15,7 +15,7 @@ int app_settings_book_px(void);
 #define app_settings_book_indent() ink_mogo_settings.indent
 #define app_settings_book_indent_adjust() 0
 #define app_settings_book_weight_fine() ink_mogo_settings.weight
-#define app_settings_reader_hide_images() false
+#define app_settings_reader_hide_images() true /* pictures are not drawn yet: turns skip picture-only pages instead of showing them blank */
 #define app_settings_book_vertical() false
 #define app_settings_book_tracking() 0
 #define app_settings_reader_statusbar() false

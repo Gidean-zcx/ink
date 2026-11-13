@@ -5,6 +5,7 @@ static book_shelf_entry_t *ink_mogo_shelf;
 static int ink_mogo_shelf_count, ink_mogo_shelf_page, ink_mogo_reason;
 static char ink_mogo_error[160];
 static ink_mogo_card_t ink_mogo_card_written;
+static size_t ink_mogo_anchor=SIZE_MAX, ink_mogo_anchor_chapter=SIZE_MAX; /* the reading place a reflow keeps */
 enum { INK_MOGO_SHELF_ROWS=4, INK_MOGO_TOOL_COUNT=6 };
 enum { INK_MOGO_TOOLS=10, INK_MOGO_MARKS, INK_MOGO_SETTINGS };
 const char *const ink_mogo_layout_keys[INK_MOGO_LAYOUT_COUNT]={"font_size","line_spacing","paragraph_spacing","margins","weight","indent","header","footer"};
@@ -180,7 +181,10 @@ static void ink_mogo_card_save(void) {
 bool ink_mogo_page_card(ink_mogo_card_t *out) { *out=ink_mogo_card_written; return out->path[0]; }
 static bool ink_mogo_layout(const int *values) {
     ink_mogo_settings_t old=ink_mogo_settings, *p=&ink_mogo_settings;
-    size_t offset=book_layout_page_start_offset(s_reader_session.position.page);
+    size_t offset=book_layout_page_start_offset(s_reader_session.position.page), next=book_layout_page_start_offset(s_reader_session.position.page+1);
+    /* Reflow from where the reader is, not from the page start the last reflow left, so repeated changes do not drift back. */
+    if (ink_mogo_anchor_chapter==s_reader_session.position.chapter && ink_mogo_anchor>=offset && ink_mogo_anchor<next) offset=ink_mogo_anchor;
+    else { ink_mogo_anchor=offset; ink_mogo_anchor_chapter=s_reader_session.position.chapter; }
     int v[INK_MOGO_LAYOUT_COUNT];
     for (int i=0;i<INK_MOGO_LAYOUT_COUNT;++i) v[i]=values[i]==INK_MOGO_UNSET?ink_mogo_setting_value(i):values[i];
     p->px=(uint8_t)v[0]; p->line=(uint8_t)v[1]; p->paragraph=(uint8_t)v[2]; memset(p->margin,v[3],sizeof p->margin);
@@ -406,7 +410,7 @@ const char *ink_mogo_page_hit(int x,int y,char *args,size_t cap) {
 }
 void ink_mogo_page_close(void) {
     save_progress(); free_book(); ink_mogo_font_shutdown(); memset(&s_reader_session,0,sizeof s_reader_session);
-    free(ink_mogo_shelf); ink_mogo_shelf=NULL; ink_mogo_shelf_count=ink_mogo_shelf_page=0; ink_mogo_reason=0; ink_mogo_error[0]=0;
+    free(ink_mogo_shelf); ink_mogo_shelf=NULL; ink_mogo_shelf_count=ink_mogo_shelf_page=0; ink_mogo_reason=0; ink_mogo_error[0]=0; ink_mogo_anchor=SIZE_MAX;
     memset(&ink_mogo_settings,0,sizeof ink_mogo_settings); memset(&ink_mogo_card_written,0,sizeof ink_mogo_card_written);
     s_reader_panel=READER_PANEL_NONE; s_reader_slider=-1; s_view=SHELF;
     s_bookmark_page=0; s_bookmark_selected=0; s_bookmark_edit=s_bookmark_delete_confirm=s_bookmark_delete_error=false;
