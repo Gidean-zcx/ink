@@ -1031,6 +1031,7 @@ if(INK_HAVE_FONTS)
 endif()
 add_test(NAME hw-bench-report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_bench/report_test.py)
 add_test(NAME hw-selftest-run COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_selftest/run_test.py)
+add_test(NAME trial-run-fonts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_selftest/trial_run_test.py)
 add_test(NAME capability-table-doc COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tools/capabilities.py --check)
 add_test(NAME capability-table-regressions COMMAND ${Python3_EXECUTABLE}

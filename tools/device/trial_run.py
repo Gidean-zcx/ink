@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 """Run a trial build of the whole system on the device, then put the device back exactly as the backup has it.
 
-Writes ota_1 (the app), font_data (the font pack, optional) and an otadata that selects ota_1. While it runs the
-firmware itself writes model (/user), the log ring at the end of font_data and, after a crash, coredump. Afterwards
-otadata, ota_1, model, font_data and coredump are all written back from the verified backup and checked byte for
-byte, the factory firmware is booted and the chip is parked in download mode (it does not sleep there). Never an
-erase, never ota_0, nvs, phy_init, resources, the bootloader or the partition table (docs/hardware/flash-layout.md).
-The device runs the factory firmware only between runs; writing needs the user's consent (CLAUDE.md).
+Writes ota_1 (the app), font_data (the font pack built with that app) and an otadata that selects ota_1. While it
+runs the firmware itself writes model (/user), the log ring at the end of font_data and, after a crash, coredump.
+Afterwards otadata, ota_1, model, font_data and coredump are all written back from the verified backup and checked
+byte for byte, the factory firmware is booted and the chip is parked in download mode (it does not sleep there).
+Never an erase, never ota_0, nvs, phy_init, resources, the bootloader or the partition table
+(docs/hardware/flash-layout.md). The device runs the factory firmware only between runs; writing needs the user's
+consent (CLAUDE.md).
 
-  trial_run.py --port '/dev/cu.usbmodem*' --backup flash_full.bin --image ink-s31.bin [--fonts ink-fonts.bin] \\
+  trial_run.py --port '/dev/cu.usbmodem*' --backup flash_full.bin --image ink-s31.bin --fonts ink-fonts.bin \\
                --out DIR --seconds N [--until TEXT]
 
 --install writes and verifies the trial build and leaves it running (the delivery; the backup stays the way back).
 --restore-only writes the five regions back from the backup, checks them and boots the factory firmware.
+
+--image needs --fonts, the pack built with that image: otherwise whatever font_data the device holds stays, and an
+app reads only the pack of its own build (images before font-pack-1 cannot read the compressed INKF v2 fonts, so
+they draw no Chinese, and look for the icons in font_data, which a pack since then no longer holds).
 
 Exit codes: 0 ran, restored and verified; 1 restore NOT verified (stop and look); 2 stopped before writing anything;
 3 restored and verified, but the factory boot line was not seen or parking failed; 4 --install: written and verified
@@ -150,7 +155,7 @@ def main(argv=None):
     ap.add_argument("--port", required=True)
     ap.add_argument("--backup", required=True, help="verified full 16 MiB flash backup of this device")
     ap.add_argument("--image", help="the app image for ota_1 (not with --restore-only)")
-    ap.add_argument("--fonts", help="the font pack for font_data (0xae4000)")
+    ap.add_argument("--fonts", help="the font pack for font_data (0xae4000), built with --image (needed with it)")
     ap.add_argument("--out", required=True, help="output directory (outside the repository)")
     ap.add_argument("--seconds", type=float, default=120.0)
     ap.add_argument("--until", help="stop logging early once a console line holds this text")
@@ -162,6 +167,11 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if not a.restore_only and not a.image:
         ap.error("--image is needed unless --restore-only")
+    if a.image and not a.fonts:
+        beside = os.path.join(os.path.dirname(os.path.abspath(a.image)), "ink-fonts.bin")
+        ap.error("--fonts is needed with --image: the app reads only the font pack built with it (an image before "
+                 "font-pack-1 cannot read today's compressed fonts and would draw no Chinese)"
+                 + (f"; the pack beside the image is {beside}" if os.path.isfile(beside) else ""))
     a.esptool = [a.python, "-m", "esptool"]
     a.port_now = a.port
     os.makedirs(a.out, exist_ok=True)
