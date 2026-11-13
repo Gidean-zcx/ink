@@ -460,7 +460,7 @@ static void checked(void *ctx, const ink_receipt_t *rc) {
     ink_json_t *j = ink_app_alloc(sizeof *j, true); int64_t v = 0;
     F.conf_n = F.conf_at = 0; F.all = false; F.need = F.free_bytes = 0;
     if (!j || rc->status != INK_RC_DONE || !rc->result || ink_json_parse(j, rc->result, strlen(rc->result))) {
-        snprintf(F.result, sizeof F.result, "%s [%d %s %.200s]", rc->say[0] ? rc->say : TR("没能检查目标文件夹，请返回后重试"), rc->status, rc->detail, F.batch); F.bstate = B_DONE; ink_app_free(j); ink_ui_redraw(); return;
+        snprintf(F.result, sizeof F.result, "%s", rc->say[0] ? rc->say : TR("没能检查目标文件夹，请返回后重试")); F.bstate = B_DONE; ink_app_free(j); ink_ui_redraw(); return;
     }
     int list = ink_json_find(j, 0, "conflicts");
     for (int t = list + 1; list >= 0 && t < j->ntok && j->tok[t].start < j->tok[list].end && F.conf_n < CONFLICT_MAX; t++) {
