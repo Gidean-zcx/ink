@@ -2034,6 +2034,12 @@ add_test(NAME perf-latency COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tes
 ink_sim_executable(sim-lock-camera tests/lock_camera/lock_camera.c)
 target_link_libraries(sim-lock-camera PRIVATE ink_apps ink_system)
 add_test(NAME lock-camera COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/lock_camera/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-camera-touch-bus tests/camera_touch_bus/camera_touch_bus.c)
+target_link_libraries(sim-camera-touch-bus PRIVATE ink_apps ink_system)
+add_test(NAME camera-touch-bus COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME camera-touch-bus-rewrite COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR} --reverse rewrite)
+add_test(NAME camera-touch-bus-yield COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR} --reverse yield)
+add_test(NAME camera-touch-bus-both COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR} --reverse both)
 set_tests_properties(perf-latency PROPERTIES TIMEOUT 180)
 add_test(NAME perf-latency-2 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/perf_latency_2/run.py
   --build ${CMAKE_BINARY_DIR} --runs 1 --regression)
