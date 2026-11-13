@@ -3,7 +3,8 @@
  * past its quiet wait, and waiting writers), while a real finger taps an object that draws nothing (the panel stays
  * quiet, so writes may start whenever the storage service lets them):
  *   1. taps in a row, each gap shorter than the storage service's TAP_GAP (300 ms): every tap arrives once;
- *   2. the same for a short burst with waiting (foreground) writers queued;
+ *   2. a waiting (foreground) writer, mostly the tap's own result, is not held after the release, but no write starts
+ *      under a finger held down;
  *   3. a press that comes during an erase and lifts after it: arrives once, at its place;
  *   4. a tap that falls whole into an erase that already started: lost (counted, the report says why). */
 #include <stdlib.h>
@@ -139,7 +140,24 @@ static void run(void *arg) {
     osal_task_cfg_t w = {.name = "tap-writer", .fn = writer, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
     CHECK(osal_task_create(&w, NULL) == OSAL_OK, "start the writer");
     rhythm("background writes", 1, 16);
-    rhythm("waiting writers", 2, 4); /* a burst shorter than the 1 s a waiting writer gives way */
+    /* 2. waiting writers queued while a finger is held 600 ms: no erase starts under it, the tap arrives */
+    g_mode = 0;
+    CHECK(WAIT_FOR(!ink_storage_pending(), 20000), "no write under way before the hold");
+    {
+        int clicks = g_clicks;
+        uint64_t t_press = vtk_now() + SIM_MS(5), e0, e1;
+        vtk_lock();
+        g_rhythm_mode = 2;
+        vtk_event_after(SIM_MS(5), rhythm_press, NULL);
+        vtk_event_after(SIM_MS(605), finger_cb, NULL);
+        vtk_unlock();
+        delay_ms(400);
+        sim_flash_last_erase(&e0, &e1);
+        CHECK(e0 < t_press, "no erase starts while the finger is held, with waiting writers queued (last erase %.0f ms before the press)",
+              ((double)t_press - (double)e0) / 1e6);
+        delay_ms(800);
+        CHECK(g_clicks == clicks + 1, "and the held tap arrives once (%d)", g_clicks - clicks);
+    }
     g_mode = 1; delay_ms(500);
     int clicks = g_clicks;
     double d = delivered();

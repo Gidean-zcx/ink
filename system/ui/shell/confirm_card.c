@@ -230,8 +230,8 @@ static void read_ready(lv_timer_t *timer) {
     if (C.page + 1 == C.pages) lv_obj_remove_state(C.accept, LV_STATE_DISABLED);
 }
 static void read_pressed(lv_event_t *e) {
-    pressed(e);
     if (!C.read && C.drawn && !ink_display_busy()) { C.read = true; changed(); }
+    pressed(e); /* after: the press's own change is not a change under the finger */
 }
 static void page_action(ink_call_t *call) {
     int64_t token = 0, delta = 0;

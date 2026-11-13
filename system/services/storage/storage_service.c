@@ -52,10 +52,10 @@
 #define BG_MAX_WAIT_US 10000000ull
 #define MAX_DEFER_US 30000000ull /* writes held off longer than this are forced (counted) */
 /* A 4 KiB erase stops both cores for 50-240 ms (Puya PY25Q128HA; IDF 6.1 enables erase suspend only for XMC and FM
- * chips, spi_flash_chip_generic.c:675-718): a tap that falls whole into one is never read. So a write does not start
- * while a finger or key is down or within TAP_GAP_US of the last release (taps in a row keep it waiting); a waiting
- * writer for at most TAP_WAIT_FG_US of such a stretch, background work for TAP_WAIT_BG_US, and a finger held on
- * longer than TAP_HELD_US no longer holds anything back (all estimates). */
+ * chips, spi_flash_chip_generic.c:675-718): a tap that falls whole into one is never read. So background work does not
+ * start while a finger or key is down or within TAP_GAP_US of the last release (taps in a row keep it waiting, at most
+ * TAP_WAIT_BG_US). A waiting writer is mostly the tap's own result (a form saved): only a finger still down holds it,
+ * at most TAP_WAIT_FG_US. A finger held on longer than TAP_HELD_US holds nothing back (all estimates). */
 #define TAP_GAP_US 300000ull
 #define TAP_WAIT_FG_US 1000000ull
 #define TAP_WAIT_BG_US 10000000ull
@@ -437,7 +437,7 @@ static int take_job(job_t *out, bool panel_ready, bool audio_busy, uint64_t acti
         *forced = ST.holds > 0 && now - ST.jobs[best].queued_us > MAX_DEFER_US;
         bool quiet = (now >= activity + BG_QUIET_US && now >= ST.audio_until) ||
                      now - ST.jobs[best].queued_us > BG_MAX_WAIT_US || ST.pending > MAX_JOBS / 2;
-        bool held = ink_input_touch_held(), near_tap = held || now - ink_input_last_release_us() < TAP_GAP_US;
+        bool held = ink_input_touch_held(), near_tap = held || (!best_fg && now - ink_input_last_release_us() < TAP_GAP_US);
         if (!held) ST.held_from = 0;
         else if (!ST.held_from) ST.held_from = now;
         if (!near_tap) ST.tap_wait_from = 0;
