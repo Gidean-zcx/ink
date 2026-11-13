@@ -100,8 +100,8 @@ void ink_main(void) {
     extern const ink_app_def_t ink_appdef_mogo;
     extern int ink_mogo_init(void);
     MUST(ink_mogo_init(), "Mogo capabilities failed to start"); MUST(ink_app_register(&ink_appdef_mogo), "Mogo app failed to start");
-    MUST(ink_card_files_init(), "card files failed to start");
 #endif
+    MUST(ink_card_files_init(), "card files failed to start");
     if (ink_contacts_init() != 0) osal_panic("contacts failed to start");
     if (ink_phone_init() != 0) osal_panic("phone failed to start");
     MUST(ink_ui_start(&ink_app_home), "ui failed to start"); MUST(ink_ui_lock_mark_init(), "ui failed to start"); MUST(ink_shell_interrupt_card_init(), "ui failed to start"); MUST(ink_shell_confirm_card_init(), "ui failed to start"); MUST(ink_shell_keyboard_init(), "ui failed to start"); MUST(ink_shell_member_gate_init(), "ui failed to start"); MUST(ink_shell_update_card_init(), "ui failed to start"); MUST(ink_shell_power_menu_init(), "ui failed to start"); MUST(ink_shell_off_picture_init(), "ui failed to start");
