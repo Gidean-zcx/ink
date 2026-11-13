@@ -16,15 +16,15 @@
 #include <ui_lock_clock.h>
 #include <ui_mini_library.h>
 #include <nvs.h>
-#include "ink/osal.h"
-#include "ink/sys/almanac.h"
+#include <ink/sys/almanac.h>
 #include "ink/sys/i18n.h"
-#include "mogo_lock.h"
+#include <mogo_lock.h>
 
 /* The one place that names how a book opens after the unlock (D-139 renames it: change it here only). */
 #define MOGO_LOCK_OPEN_CAP "mogo.open"
 enum { LIBRARY_Y = 420, LIBRARY_H = 472 };
-static struct {
+/* In PSRAM from the first draw (apps get no PSRAM section on the device); only the background executor writes it. */
+static struct lock_glue {
     char font_owner[16], collage_owner[16];
     /* the background executor's stack is 8 KB and Mogo's drawing takes most of it: the glue's words live here */
     char path[288], title[256], author[128], meta[256], line[INK_LOCK_SAYS_MAX / 2];
@@ -33,7 +33,8 @@ static struct {
     home_library_cover_t own_covers[BOOK_MINI_LIBRARY_MAX];
     unsigned count, selected;
     bool recent;
-} L INK_PSRAM_BSS;
+} *G;
+#define L (*G)
 
 static void line(char *says, const char *label, const char *value) {
     size_t n = strlen(says);
@@ -221,6 +222,7 @@ static bool library_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_dra
     return true;
 }
 static bool draw(const ink_lock_request_t *r, uint8_t *canvas, ink_lock_drawn_t *out) {
+    if (!G && !(G = ink_mogo_calloc(1, sizeof *G))) { snprintf(out->why, sizeof out->why, "%s", TR("内存不足")); return false; }
     ink_member_identity_t page_owner = *ink_mogo_current_owner();
     int w, h, px; ink_mogo_dimensions_get(&w, &h, &px);
     ink_mogo_owner(&r->owner); ink_mogo_dimensions(INK_LOCK_CANVAS_W, INK_LOCK_CANVAS_H, r->px);
@@ -240,7 +242,7 @@ static bool draw(const ink_lock_request_t *r, uint8_t *canvas, ink_lock_drawn_t 
     return ok;
 }
 static ink_lock_tap_t tap(int style, int x, int y, int *index, char *cap, size_t cap_size, char *args, size_t args_size) {
-    if (style != INK_LOCK_LIBRARY || !L.count) return INK_LOCK_TAP_NONE;
+    if (style != INK_LOCK_LIBRARY || !G || !L.count) return INK_LOCK_TAP_NONE;
     home_library_view_t v = {.books = L.books, .count = L.count, .selected = L.selected, .recent = L.recent};
     ui_mini_hit_t hit = ui_mini_library_hit((EpdRect){0, LIBRARY_Y, INK_LOCK_CANVAS_W, LIBRARY_H}, &v, x, y);
     if (hit.index >= L.count) return INK_LOCK_TAP_NONE;

@@ -11,14 +11,13 @@
 #include <book_cover_jobs.h>
 #include <book_progress.h>
 #include <image_decode.h>
-#include "ink/osal.h"
-#include "ink/hal_device.h"
 #include <errno.h>
-#include "ink/sys/image.h"
+#include "ink/sys/app.h"
+#include <ink/sys/image.h>
 #include "ink/sys/members.h"
 #include "ink/sys/state.h"
 #include "ink/sys/time.h"
-#include "mogo_lock.h"
+#include <mogo_lock.h>
 
 const ink_lock_request_t *ink_mogo_lock_request;
 typedef struct { ink_fs_file_t *file; bool error; } lock_stream_t; /* runtime.c's stream: its fread/fseek/fclose take it */
@@ -115,7 +114,13 @@ time_t ink_mogo_lock_time(time_t *out) {
     if (out) *out = shifted;
     return shifted;
 }
-uint32_t esp_random(void) { uint32_t v = 0; hal_random_fill(&v, sizeof v); return v; }
+/* The mini library's random pick only needs to differ between draws: xorshift from the monotonic clock. */
+uint32_t esp_random(void) {
+    static uint32_t s;
+    if (!s) s = (uint32_t)ink_now_us() | 1u;
+    s ^= s << 13; s ^= s >> 17; s ^= s << 5;
+    return s;
+}
 
 /* Settings the styles read, answered by the lock style's own settings and the member drawn for. */
 app_ticket_background_t app_settings_ticket_background(void) {
@@ -136,10 +141,12 @@ bool book_store_flash_ready(void) { return false; }
 unsigned book_store_revision(void) { return 0; }
 
 /* Mogo's cover queue runs a decoder task; here one cover is made when asked, on the same executor. */
-static book_cover_job_t g_job;
+static book_cover_job_t *g_job; /* PSRAM: about 700 B, kept from the first cover */
 static bool g_job_set;
 bool book_cover_jobs_submit(unsigned generation, unsigned slot, const book_cover_job_t *request) {
-    (void)generation; (void)slot; g_job = *request; g_job_set = true; return true;
+    (void)generation; (void)slot;
+    if (!g_job && !(g_job = ink_mogo_malloc(sizeof *g_job))) return false;
+    *g_job = *request; g_job_set = true; return true;
 }
 int book_cover_jobs_take(unsigned generation, unsigned slot, book_cover_result_t *result) {
     (void)generation; (void)slot;
@@ -148,8 +155,8 @@ int book_cover_jobs_take(unsigned generation, unsigned slot, book_cover_result_t
     struct stat st;
     uint8_t *pixels = ink_mogo_malloc(BOOK_COVER_W * BOOK_COVER_H);
     unsigned w = BOOK_COVER_W, h = BOOK_COVER_H;
-    if (!pixels || ink_mogo_stat(g_job.path, &st) ||
-        !book_cover_load_list_gray(g_job.path, g_job.title, g_job.author, pixels, true, NULL, &w, &h)) { ink_app_free(pixels); return -1; }
+    if (!pixels || ink_mogo_stat(g_job->path, &st) ||
+        !book_cover_load_list_gray(g_job->path, g_job->title, g_job->author, pixels, true, NULL, &w, &h)) { ink_app_free(pixels); return -1; }
     *result = (book_cover_result_t){.pixels = pixels, .width = w, .height = h, .size = st.st_size};
     return 1;
 }
