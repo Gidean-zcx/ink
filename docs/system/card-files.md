@@ -18,7 +18,7 @@
 `system/services/card_files/card_files.c`，公开接口 `ink/sys/card_files.h`。
 
 - **什么时候核对**：开机（`ink_card_files_init()` 在界面启动前调用，最后把第一次核对投到后台执行器）；插卡（`storage.card` 变真）；U 盘模式结束（`storage.mode` 回到 `normal`）；连上电脑（`usb.connected` 变真）；能力 `card.files_check`。正在核对或传输时又来一次，只记一个“再来”，结束后补做一次。
-- **怎么核对**：在后台执行器上分步做，每步最多读 256 KiB 算 sha256，然后重新投递自己。大小不对算“缺”；大小对、哈希不对算“不对”。`<path>.part` 大小和清单相同、整份哈希也对时，在本机直接改名，不需要电脑（防止删旧文件和改名之间断电）。卡借给电脑时（`INK_FS_ERR_USB`）状态不变，等弹出后再核对。
+- **怎么核对**：在后台执行器上分步做，每步最多读 256 KiB 算 sha256，然后重新投递自己。每一步都先等屏幕没在刷新、0.5 秒内没有按键和触摸（和存储服务的后台活一样），不在开机画首页、开应用或有人在用的时候占着后台执行器和卡；装好的卡每次开机都要整份读一遍字体（约 3.9 MB），这样才不挡别的事。核对在等安静时连上的电脑，就由这次核对开的传输接待，它晚到的“已连接”通知不再算新情况。大小不对算“缺”；大小对、哈希不对算“不对”。`<path>.part` 大小和清单相同、整份哈希也对时，在本机直接改名，不需要电脑（防止删旧文件和改名之间断电）。卡借给电脑时（`INK_FS_ERR_USB`）状态不变，等弹出后再核对。
 - **状态**：`card.files`（`ready`、`checking`、`missing`、`copying`、`failed`、`no_card`）和 `card.files_progress`（0–100，最多每 2 秒通知一次）。日志一行 `card files: need=… ok=… failed=… check_ms=…`；传输结束一行 `card files: session usb ok=… failed=…`。探针：`card_files.check`、`.session`、`.chunk`、`.chunk_retry`、`.rejected`、`.written`、`.bad_hash`、`.restart`。
 - **传输**：有缺且连着电脑时，开一个临时任务 `cardfiles`（低优先级，6 KiB 栈放 PSRAM，做完就退出）。它只碰存储卡、状态表、日志、探针和执行器投递，不碰内部闪存。从发第一行 `HELLO` 起不让设备睡，到 `BYE` 或放弃为止。
   - 只在写文件时占着卡；卡要借给电脑时（`ink_fs_on_release`），读串口按 200 ms 一段，看到就关掉 `.part`、放手，`.part` 留着下次续传。
