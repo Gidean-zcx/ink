@@ -42,7 +42,7 @@ static uint32_t saved_id;
 static const char *wanted_cap;
 static lv_point_t point;
 static bool found;
-static uint8_t last_gray;
+static uint8_t last_gray; static bool last_synthetic;
 static int rgb_started, rgb_done;
 static ink_exec_job_t rgb_job;
 static void read_rgb(void *arg) {
@@ -149,9 +149,12 @@ static void inspect_last_thumb(void) {
     CHECK(G.position.page == 1, "last F4 page selected");
     lv_obj_t *obj = G.slots[0] ? lv_obj_get_child(G.slots[0], 0) : NULL;
     const lv_image_dsc_t *d = obj ? lv_image_get_src(obj) : NULL;
-    CHECK(d && d->header.w == 128 && d->header.h == 128, "file.thumb dimensions reach the actual grid");
+    /* gallery-3 sorts by file time, which the simulator takes from the host clock: the last cell is the oldest file,
+     * a synthetic square or (when the photos were saved a second earlier) a 640 x 480 camera photo */
+    CHECK(d && d->header.w == 128 && d->header.h == (last_synthetic ? 128 : 96), "file.thumb dimensions reach the actual grid");
     bool correct = d != NULL;
-    if (d) for (unsigned i = 0; i < d->data_size; i++) if (d->data[i] != last_gray) correct = false;
+    if (d && last_synthetic) for (unsigned i = 0; i < d->data_size; i++) if (d->data[i] != last_gray) correct = false;
+    if (d && !last_synthetic) { ink_image_t im = {d->header.w, d->header.h, (uint8_t *)d->data}; gray_pixels(&im); }
     CHECK(correct, "last fixture has every thumbnail pixel correct for its actual indexed file");
     read_snapshot(); CHECK(strstr(snapshot, "\"page\":2") && strstr(snapshot, "\"visible\":1") && !strstr(snapshot, "gallery.next"), "last snapshot has exact pagination and no next action");
 }
@@ -249,7 +252,7 @@ static void run(void *arg) {
         CHECK(WAIT_FOR(next_page_selected(), 5000), "physical next key selects the second page");
         on_ui(index_completed); grid_ready();
         ink_fs_entry_t last; CHECK(ink_fs_lookup(G.ids[9], &last) == 0, "resolve the actual final fixture id");
-        last_gray = strstr(last.path, "/7.png") ? 255 : 0; on_ui(inspect_last_thumb);
+        last_gray = strstr(last.path, "/7.png") ? 255 : 0; last_synthetic = strstr(last.path, "/SYNTH/") != NULL; on_ui(inspect_last_thumb);
         ok("gallery.prev", NULL); grid_ready(); on_ui(first_slot); expect_first(); tap(point.x, point.y); wait_photo(); on_ui(inspect_photo); capture("Photo");
         press_cap("shell.back"); grid_ready();
         char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)saved_id); snprintf(expect_path, sizeof expect_path, "%s", saved_path); ok("photo.open", args); wait_photo(); on_ui(inspect_photo);
