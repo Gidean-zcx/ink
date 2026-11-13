@@ -236,7 +236,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `member.time_get` | 查看孩子今天的用时和每天的时长 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.time_set` | 改孩子每天能用多久 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人、儿童（无需白名单） | [s21](#s21) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.unlock` | 输密码进入家人的空间（只能在设备上） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s21](#s21) | [system/policy/members.c](../../system/policy/members.c) |
-| `memo.add_item` | 清单加一项（多行就是多项，最多 32 项；id 是新的就建一篇清单） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.add_item` | 清单加一项（多行就是多项，最多 32 项；id 是新的就建一条清单） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.check` | 勾选或取消清单项 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.clear_done` | 删掉清单里已完成的项（可撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.convert` | 逐行转成清单（最多 32 项） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
@@ -244,13 +244,13 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `memo.delete_item` | 删除清单这一项 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.edit` | 写一条或编辑备忘（checklist：新清单） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.edit_item` | 改清单这一项的文字 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.find` | 在这篇备忘里查找（打开查找条，停在第 1 处） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.find_close` | 关闭篇内查找 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.find_next` | 篇内查找：下一处（到最后回到第 1 处） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.find_prev` | 篇内查找：上一处 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find` | 在这条备忘里查找（打开查找条，停在第 1 处） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find_close` | 关闭这条备忘里的查找 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find_next` | 这条备忘里查找：下一处（到最后回到第 1 处） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find_prev` | 这条备忘里查找：上一处 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.move_item` | 把清单这一项移到最上或最下 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.next` | 备忘下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.open` | 查看备忘（query：停在篇内第 1 处；index：清单的这一项；due：到期时间页） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.open` | 查看备忘（query：停在这条里的第 1 处；index：清单的这一项；due：到期时间页） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.play` | 播放语音备忘的录音 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.prev` | 备忘上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.record` | 说一句：录一条语音备忘（联网后整理成文字） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |

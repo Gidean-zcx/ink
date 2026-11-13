@@ -1,5 +1,5 @@
 /* Member memos after Fossify Notes (editor, checklist), Joplin (search, due dates) and ZSWatch (the recording screen, memo_voice.c). */
-/* ui-scale-runtime: dimension w,x,y,top,bottom,area.y2,fit,foot,due_w,list_w,voice_w,h,text_w,cell,meta_w Theme tokens measured against the current text size and the editor's own layout. */
+/* ui-scale-runtime: dimension w,x,y,top,bottom,area.y2,field.y2,fit,foot,due_w,list_w,voice_w,h,text_w,cell Theme tokens measured against the current text size and the editor's own layout. */
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/app.h"
@@ -34,7 +34,7 @@ static struct {
 static struct {
     ink_db_t *db;
     ink_ui_list_t *list;
-    ink_ui_list_position_t position;
+    ink_ui_list_position_t position, listed; /* listed: the memo list's own page, kept while a memo is open */
     lv_obj_t *field, *notice, *retry_button, *delete_button, *tools[4], *find, *adder, *done_row, *undo_row;
     memo_t note;
     char member[16], sent[4096], ids[4][32], args[4][96], labels[4][320], meta[4][96], object[32], target[64], save_args[160], args2[8][96];
@@ -566,12 +566,13 @@ static void bind_note(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     else M.meta[at][0] = 0;
     if (!count) snprintf(preview, sizeof preview, "%.*s", (int)strcspn(rest, "\n"), rest);
     for (char *p = preview; *p; p++) if (*p == '\n') *p = ' ';
-    int meta_w = LV_MIN(w / 2, ink_ui_text_width(M.meta[at], INK_FONT_NOTE, INK_WEIGHT_REGULAR)); /* the title line ends with the time or progress */
-    lv_obj_clean(slot);
-    ink_ui_line(slot, M.labels[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, w - meta_w - INK_GAP);
-    lv_obj_set_style_text_align(ink_ui_line(slot, M.meta[at], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP + w - meta_w, INK_GAP_S + ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE), meta_w), LV_TEXT_ALIGN_RIGHT, 0);
-    ink_ui_line(slot, preview, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, y, w);
-    if (count) { size_t len = strlen(M.meta[at]); snprintf(M.meta[at] + len, sizeof M.meta[at] - len, " · %.60s", preview); }
+    size_t len = strlen(M.meta[at]); /* the second line: when, how far or how many hits, then how it goes on */
+    if (preview[0]) snprintf(M.meta[at] + len, sizeof M.meta[at] - len, "%s%.60s", len ? " · " : "", preview);
+    if (!lv_obj_get_child_count(slot)) {
+        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, w);
+        ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, y, w);
+    }
+    lv_label_set_text(lv_obj_get_child(slot, 0), M.labels[at]); lv_label_set_text(lv_obj_get_child(slot, 1), M.meta[at]);
     ink_jw_t w2; ink_jw_init(&w2, M.args[at], sizeof M.args[at]); ink_jw_raw(&w2, "{\"id\":"); ink_jw_int(&w2, id);
     if (count) { ink_jw_raw(&w2, ",\"query\":"); ink_jw_str(&w2, S.query); }
     ink_jw_raw(&w2, "}");
@@ -588,8 +589,9 @@ static void bind_check(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field,
     lv_obj_clean(slot);
     snprintf(M.ids[at], sizeof M.ids[at], "memo:%u:%u", (unsigned)M.id, k);
     if (k == 32) { /* Fossify's collapsible header of the done items */
-        snprintf(M.labels[at], sizeof M.labels[at], TR("已完成 %u 项"), done);
-        snprintf(M.meta[at], sizeof M.meta[at], "%s · %s", M.labels[at], M.expanded || done == total ? TR("收起") : TR("展开"));
+        char count[64]; snprintf(count, sizeof count, TR("已完成 %u 项"), done); /* not from M into M: gcc -Wrestrict */
+        snprintf(M.labels[at], sizeof M.labels[at], "%s", count);
+        snprintf(M.meta[at], sizeof M.meta[at], "%s · %s", count, M.expanded || done == total ? TR("收起") : TR("展开"));
         ink_ui_line(slot, M.meta[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, (h - ink_ui_line_height(INK_FONT_LIST)) / 2, w - 2 * INK_GAP);
         snprintf(M.args[at], sizeof M.args[at], "{\"id\":%u}", (unsigned)M.id);
         *field = (ink_ui_field_spec_t){.id = M.ids[at], .role = "button", .label = M.labels[at], .value = M.expanded || done == total ? TR("收起") : TR("展开"), .object = {M.ids[at], ink_db_last_ver(M.db)}};
@@ -667,7 +669,7 @@ static ink_ui_list_t *rows(lv_obj_t *screen, int top, int bottom, int cell, ink_
     M.cap = (unsigned)count;
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = TR("备忘"), .object = {"memo.notes", ink_db_last_ver(M.db)}, .actions = PAGING, .action_count = 2};
     lv_obj_t *body = ink_ui_box(screen, 0, top, INK_CANVAS_W, bottom - top, 0, INK_SURFACE_WHITE, false);
-    return ink_ui_list_create(body, &model, &M.position, (unsigned)count, 1, cell, empty, bind, NULL);
+    return ink_ui_list_create(body, &model, M.mode == LIST || M.mode == UNDO ? &M.listed : &M.position, (unsigned)count, 1, cell, empty, bind, NULL);
 }
 static void resume_record(void *arg) { (void)arg; if (!strcmp(ink_ui_page_name(), "Memo") && ink_ui_page_current()) ink_ui_push(&PAGES[RECORD], NULL); }
 static void list_page(lv_obj_t *screen) { /* Joplin's list with its search box; Fossify's new note; our undo row */
@@ -768,8 +770,10 @@ static void check_page(lv_obj_t *screen) { /* Fossify's TasksFragment with writt
     }
     if (M.expanded && done) {
         bottom -= INK_CONTROL + INK_GAP_M;
+        bool stacked = fit(TR("全部取消勾选")) > half; /* the largest text: one per row rather than cut */
+        if (stacked) { bottom -= INK_CONTROL + INK_GAP_M; half = INK_CANVAS_W - 2 * INK_MARGIN; }
         M.done_row = button(screen, TR("删掉已完成"), INK_MARGIN, bottom, half, false, "memo.clear_done", M.args2[1]);
-        button(screen, TR("全部取消勾选"), INK_MARGIN + half + INK_GAP, bottom, half, false, "memo.uncheck_all", M.args2[1]);
+        button(screen, TR("全部取消勾选"), stacked ? INK_MARGIN : INK_MARGIN + half + INK_GAP, stacked ? bottom + INK_CONTROL + INK_GAP_M : bottom, half, false, "memo.uncheck_all", M.args2[1]);
         action(4, "clear_done", TR("删掉已完成"), "memo.clear_done", M.args2[1], true);
         action(5, "uncheck_all", TR("全部取消勾选"), "memo.uncheck_all", M.args2[1], true);
     }
@@ -855,7 +859,7 @@ static void create(lv_obj_t *screen, void *arg) {
     M.mode = mode; M.id = (uint32_t)(uintptr_t)arg; M.saving = M.retry = false; M.keyboard_top = -1;
     M.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = TR("备忘"), .actions = M.actions};
     memset(M.actions, 0, sizeof M.actions); memset(M.tools, 0, sizeof M.tools);
-    if (strcmp(M.member, ink_member_current()->id)) { memset(&M.position, 0, sizeof M.position); memset(&M.note, 0, sizeof M.note); snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id); }
+    if (strcmp(M.member, ink_member_current()->id)) { memset(&M.position, 0, sizeof M.position); memset(&M.listed, 0, sizeof M.listed); memset(&M.note, 0, sizeof M.note); snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id); }
     if (strcmp(S.member, M.member)) S.on = false;
     if (mode != EDIT && mode != FAIL && mode != DUE) F.open = false; /* Fossify clears the search when the note changes */
     ink_shell_statusbar(screen, true);

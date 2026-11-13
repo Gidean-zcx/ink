@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parents[2]
 MEMO = 'system/apps/memo/memo.c'
 VENDOR = 'system/apps/memo/vendor/zswatch/voice_memo_ui.c'
 MUTANTS = {  # what goes, and the run that must then fail
-    'leave': (MEMO, '    if (M.field) flush_note(); /* to the member who opened it', '    if (0) flush_note(); /* to the member who opened it', 'leave'),
-    'member': (MEMO, '    if (M.field) flush_note(); /* to the member who opened it', '    if (M.field && !strcmp(M.member, ink_member_current()->id)) flush_note(); /*', 'member'),
+    'leave': (MEMO, '    if (M.field) flush_note(false); /* to the member who opened it', '    if (0) flush_note(false); /* to the member who opened it', 'leave'),
+    'member': (MEMO, '    if (M.field) flush_note(false); /* to the member who opened it', '    if (M.field && !strcmp(M.member, ink_member_current()->id)) flush_note(false); /*', 'member'),
     'blink': (VENDOR, '    if (ui.remaining_label && remaining_s > 0) {\n        lv_label_set_text_fmt(ui.remaining_label, TR(',
               '    lv_obj_set_style_opa(ui.rec_indicator, (elapsed_ms / 400) % 2 ? LV_OPA_TRANSP : LV_OPA_COVER, 0);\n'
               '    if (ui.remaining_label && remaining_s > 0) {\n        lv_label_set_text_fmt(ui.remaining_label, TR(', 'vendor'),

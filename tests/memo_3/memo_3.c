@@ -260,7 +260,7 @@ static void isolation(void) {
     CHECK(reminders("家长的秘密清单"), "the adult's reminder");
     ok("memo.search", "{\"query\":\"秘密\"}", INK_SRC_AI); CHECK(strstr(g_result, "家长的秘密清单") != NULL, "the adult finds it");
     CHECK(ink_member_switch("kid") == 0, "the child"); quiet(); open_list();
-    ok("memo.search", "{\"query\":\"秘密\"}", INK_SRC_AI); CHECK(!strstr(g_result, "家长") && !S.count, "the child finds nothing of the adult's (%s)", g_result);
+    ok("memo.search", "{\"query\":\"秘密\"}", INK_SRC_AI); CHECK(!strstr(g_result, "家长") && !S.count, "the child finds nothing of the adult's (%.150s)", g_result);
     CHECK(!reminders("家长的秘密清单"), "and sees no adult reminder");
     snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)id); CHECK(AI("memo.open", args) && g_rc.status == INK_RC_INVALID, "nor opens it");
     ok("memo.edit", NULL, INK_SRC_TOUCH); type("孩子的秘密"); quiet(); ok("system.home", NULL, INK_SRC_TOUCH); open_list();
