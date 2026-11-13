@@ -87,7 +87,7 @@ static void row_bounds(void) { /* the marked row and the count line, for the tra
 }
 static uint32_t found_id;
 static void search_results(void) {
-    snap(); CHECK(F.rows == 2 && strstr(g_snap, "在 我的 › SYNTH_文档 › SYNTH_子") && strstr(g_snap, "在 我的 › SYNTH_文档\""), "two results, each with its place: %.300s", g_snap);
+    snap(); CHECK(F.rows == 2 && strstr(g_snap, "在 我的 > SYNTH_文档 > SYNTH_子") && strstr(g_snap, "在 我的 > SYNTH_文档\""), "two results, each with its place: %.300s", g_snap);
 }
 static void jumped(void) {
     snap(); CHECK(!strcmp(F.path, "/me/SYNTH_文档/SYNTH_子") && F.found == found_id && strstr(g_snap, "找到 · ") && strstr(F.position.selected, "file:"), "the result's folder, its page, marked as found");
@@ -169,14 +169,14 @@ static void sort_case(void) {
 static void delete_case(void) {
     roots(); browse("/me/SYNTH_文档"); CHECK(AI("files.all", NULL) && g_rc.status == INK_RC_INVALID, "select-all needs the multi mode");
     command("files.multi", NULL); wait_page("FileList"); command("files.all", NULL); quiet(); touch("删除"); quiet();
-    ink_confirm_view_t v[4]; int n = ink_confirm_list(v, 4);
+    ink_confirm_view_t v[4]; int n = 0; WAIT_FOR((n = ink_confirm_list(v, 4)) > 0, 3000);
     CHECK(n == 1 && !strcmp(v[0].cap, "file.delete_many") && strstr(v[0].detail, "删除这 3 个文件") && strstr(v[0].detail, "报告.txt") && strstr(v[0].detail, "……"), "the card counts and names the files: %s", n ? v[0].detail : "-");
     if (n) CHECK(!ink_confirm_decide(v[0].token, false, INK_SRC_TOUCH), "the person cancels");
     quiet(); CHECK(exists("/me/SYNTH_文档/报告.txt") && exists("/me/SYNTH_文档/草稿.txt") && exists("/me/SYNTH_文档/计划.txt"), "all three are still there");
     command("files.move", "{\"copy\":true}"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_目标\"}"); wait_page("FileMove"); command("files.place", NULL);
     wait_page("FileBatch"); CHECK(WAIT_FOR(F.bstate == B_ASK, 10000), "two names taken");
     command("files.conflict", "{\"choice\":\"replace\",\"all\":true}"); quiet();
-    n = ink_confirm_list(v, 4);
+    WAIT_FOR((n = ink_confirm_list(v, 4)) > 0, 3000);
     CHECK(n == 1 && !strcmp(v[0].cap, "file.batch_replace") && strstr(v[0].detail, "替换 2 个同名文件"), "one card for the replacement: %s", n ? v[0].detail : "-");
     if (n) { CHECK(ink_confirm_decide(v[0].token, true, INK_SRC_AI) != 0, "the AI cannot say yes"); CHECK(!ink_confirm_decide(v[0].token, false, INK_SRC_TOUCH), "the person cancels"); }
     quiet(); ink_fs_stat_t st; CHECK(!ink_fs_stat("/me/SYNTH_目标/报告.txt", &st) && st.size == 100 && !exists("/me/SYNTH_目标/计划.txt"), "nothing was replaced or copied");
@@ -193,7 +193,7 @@ static void fav_case(void) {
     command("files.select", args_json); wait_page("FileActions");
     command("files.name", NULL); quiet(); on_ui(all_text); command("text.insert", "{\"text\":\"新稿.txt\"}"); command("text.submit", NULL); quiet(); touch("改名"); wait_page("FileActions");
     CHECK(exists("/me/SYNTH_文档/新稿.txt") && fav_has("/me/SYNTH_文档/新稿.txt") && !fav_has("草稿.txt"), "the favourite follows the rename");
-    touch("删除"); quiet(); ink_confirm_view_t v[4]; int n = ink_confirm_list(v, 4);
+    touch("删除"); quiet(); ink_confirm_view_t v[4]; int n = 0; WAIT_FOR((n = ink_confirm_list(v, 4)) > 0, 3000);
     CHECK(n == 1 && strstr(v[0].detail, "新稿.txt"), "deleting asks first");
     if (n) CHECK(!ink_confirm_decide(v[0].token, true, INK_SRC_TOUCH), "the person confirms");
     CHECK(WAIT_FOR(!exists("/me/SYNTH_文档/新稿.txt"), 10000), "removed"); quiet();

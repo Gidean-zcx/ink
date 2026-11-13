@@ -86,7 +86,7 @@ static int crumbs(const char *path, char labels[][INK_FS_NAME_MAX], size_t *ends
 static void location(char *out, size_t cap, const char *path, size_t len) {
     char p[INK_FS_PATH_MAX], labels[10][INK_FS_NAME_MAX]; size_t ends[10]; snprintf(p, sizeof p, "%.*s", (int)len, path); out[0] = 0;
     int n = crumbs(p, labels, ends, 10);
-    for (int i = 0; i < n; i++) { size_t k = strlen(out); snprintf(out + k, cap - k, "%s%s", i ? " › " : "", labels[i]); }
+    for (int i = 0; i < n; i++) { size_t k = strlen(out); snprintf(out + k, cap - k, "%s%s", i ? " > " : "", labels[i]); }
 }
 static void when(char *out, size_t cap, int64_t t) {
     ink_tm_t a, b;
@@ -598,16 +598,16 @@ static void list_area(int top, int bottom, bool loading) {
 }
 static void crumb_row(int y) {
     char labels[10][INK_FS_NAME_MAX]; size_t ends[10]; int n = crumbs(F.path, labels, ends, 10), first = n, used = 0, w = INK_CANVAS_W - 2 * INK_MARGIN;
-    int sep = ink_ui_text_width(" › ", INK_FONT_LIST, INK_WEIGHT_MEDIUM), more = ink_ui_text_width("… › ", INK_FONT_LIST, INK_WEIGHT_MEDIUM), widths[10];
+    int sep = ink_ui_text_width(" > ", INK_FONT_LIST, INK_WEIGHT_MEDIUM), more = ink_ui_text_width("… > ", INK_FONT_LIST, INK_WEIGHT_MEDIUM), widths[10];
     for (int i = n - 1; i >= 0; i--) { widths[i] = ink_ui_text_width(labels[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_XS; if (widths[i] < INK_CONTROL) widths[i] = INK_CONTROL;
         if (used + widths[i] + (i ? more : 0) > w && i != n - 1) break; used += widths[i] + (i < n - 1 ? sep : 0); first = i; }
     int x = INK_MARGIN, ly = y + (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2;
-    if (first > 0) { ink_ui_line(F.screen, "… ›", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x, ly, more); x += more; }
+    if (first > 0) { ink_ui_line(F.screen, "… >", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x, ly, more); x += more; }
     for (int i = first; i < n; i++) {
         char path[INK_FS_PATH_MAX]; snprintf(path, sizeof path, "%.*s", (int)ends[i], F.path); pair_json(F.crumbs[i], sizeof F.crumbs[i], "path", path, NULL, NULL);
         int cw = widths[i] < INK_CANVAS_W - INK_MARGIN - x ? widths[i] : INK_CANVAS_W - INK_MARGIN - x;
         ink_shell_bind(ink_ui_text_button(F.screen, labels[i], x, y, cw, NULL, NULL), "files.browse", F.crumbs[i]); x += cw;
-        if (i < n - 1) { ink_ui_line(F.screen, "›", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x, ly, sep); x += sep; }
+        if (i < n - 1) { ink_ui_line(F.screen, ">", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x, ly, sep); x += sep; }
     }
 }
 static void create(lv_obj_t *screen, void *arg) {
@@ -779,6 +779,7 @@ static void operation_done(void *ctx, const ink_receipt_t *rc) {
     if (rc->status == INK_RC_DONE && F.mode == ACTIONS && moved_to(F.rename, to) && !strncmp(rc->object, "file:", 5) && !strncmp(rc->object + 5, to, 40)) {
         if (F.selected.dir) { if (!strcmp(F.selected.path, F.path)) memcpy(F.path, to, sizeof F.path); F.stale = true; ink_ui_pop(); return; }
     }
+    if (rc->status == INK_RC_DONE && F.mode == LIST && F.multi) { status(""); return; } /* the count says it */
     if (rc->status == INK_RC_PARTIAL) { status(F.result); return; }
     if (strstr(rc->detail, "exists")) { status(TR("这个名字已存在，请换一个")); return; }
     status(rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? TR("已完成") : rc->status == INK_RC_PENDING_CONFIRMATION ? TR("请在设备上确认") : TR("没能完成，请检查文件后重试"));
@@ -918,7 +919,7 @@ static int snapshot(char *out, size_t cap) {
     if (F.mode == LIST || F.mode == SORT) { ink_jw_raw(&w, ",\"sort\":{\"by\":"); ink_jw_str(&w, SORTS[F.sort]); ink_jw_raw(&w, F.desc ? ",\"desc\":true}" : ",\"desc\":false}"); }
     if (F.mode == SEARCH) { ink_jw_raw(&w, ",\"query\":"); ink_jw_str(&w, F.query); }
     ink_jw_raw(&w, ",\"selected_count\":"); ink_jw_int(&w, F.marked_count);
-    if (F.mode == LIST || F.mode == ACTIONS || F.mode == BATCH) { bool first = true; ink_jw_raw(&w, F.mode == ACTIONS ? ",\"menu\":[" : ",\"toolbar\":[");
+    if (F.mode == LIST || F.mode == ACTIONS || F.mode == BATCH || F.mode == MOVE || F.mode == SEARCH) { bool first = true; ink_jw_raw(&w, F.mode == ACTIONS ? ",\"menu\":[" : ",\"toolbar\":[");
         for (size_t i = F.mode == BATCH ? 0 : 2; i < F.model.action_count && i < ACTION_MAX; i++) { const ink_ui_action_spec_t *a = &F.actions[i]; if (!a->enabled || !a->capability) continue;
             if (!first) ink_jw_raw(&w, ",");
             first = false; ink_jw_raw(&w, "{\"capability\":"); ink_jw_str(&w, a->capability); ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, a->label); ink_jw_raw(&w, ",\"args_json\":"); ink_jw_str(&w, a->args_json ? a->args_json : "{}"); ink_jw_raw(&w, "}"); } ink_jw_raw(&w, "]"); }
