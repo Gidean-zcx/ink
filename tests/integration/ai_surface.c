@@ -62,7 +62,7 @@ static const struct {
     {"text.insert", "text"}, {"text.select", "start"}, {"text.undo", ""}, {"text.redo", ""}, {"text.submit", ""}, {"clipboard.read", NULL}, {"clipboard.write", "text"}, {"media.play", "path"},
     {"text.page", "direction"}, {"text.ask_ai", ""}, {"text.add_word", ""},
     {"music.open", NULL}, {"music.play", ""}, {"music.pause", NULL}, {"music.next", NULL}, {"music.prev", NULL},
-    {"music.seek", "ms"}, {"music.list", ""}, {"music.now", NULL}, {"music.favorite", NULL},
+    {"music.seek", "ms"}, {"music.list", ""}, {"music.now", NULL}, {"music.favorite", ""},
     {"media.pause", NULL}, {"media.resume", NULL}, {"media.seek", "ms"}, {"media.stop", NULL}, {"media.status", NULL}, {"audio.record", ""},
     {"audio.record_stop", NULL}, {"bt.scan", NULL}, {"bt.list", NULL}, {"bt.pair", "addr"}, {"bt.connect", "addr"}, {"bt.disconnect", NULL},
     {"bt.forget", "addr"}, {"shell.bluetooth", NULL}, {"shell.bluetooth_prev", NULL}, {"shell.bluetooth_next", NULL},
@@ -144,6 +144,7 @@ static const struct {
     {"notify.act", "id,index"}, {"notify.reply", "id"}, {"notify.dnd_get", NULL},
     {"notify.dnd_set", ""}, {"notify.replies_set", "index,text"},
     {"settings.search", "query"}, {"settings.open", ""}, /* settings-1 */
+    {"music.mode", "mode"}, {"music.favorites", NULL}, /* music-3 */
     {NULL, NULL},
 };
 

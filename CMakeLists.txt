@@ -2126,6 +2126,7 @@ add_executable(test-music-library tests/music/library.c third_party/kiikoread_mu
 target_include_directories(test-music-library PRIVATE platform/include system/include third_party/kiikoread_music system/services/audio/vendor/kiikoread)
 target_compile_options(test-music-library PRIVATE ${INK_WARN} -UNDEBUG -include ${CMAKE_SOURCE_DIR}/tests/music/library_port.h)
 add_test(NAME music-library COMMAND test-music-library)
+add_test(NAME music-kiikoread-provenance COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/verify_kiikoread.py)
 
 ink_sim_executable(sim-music tests/music/product.c)
 target_link_libraries(sim-music PRIVATE ink_apps ink_system)
