@@ -310,7 +310,7 @@ static void bar_case(void) {
 static void shots_case(void) {
     start(false);
     CHECK(BY_HAND("shell.control", NULL), "the panel without notifications"); look();
-    CHECK(first_stage() && !label("合成通知一"), "no notification section, no empty text");
+    CHECK(first_stage() && !label("合成通知一") && !label("还没有通知"), "no notification section, no empty text");
     shot("empty");
     CHECK(BY_HAND("shell.close", NULL), "close"); quiet();
     shot("statusbar");
