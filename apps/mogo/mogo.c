@@ -50,13 +50,14 @@ static struct {
 } S INK_PSRAM_BSS;
 /* The home card mirrors each member's last book, read ahead on BG: .card runs on UI and never reads flash, and the
  * lock screen shows the right book at once after a member switch. */
-typedef struct { char member[16]; bool have, migrated; ink_mogo_card_t card; } ink_mogo_slot_t; /* migrated: looked at since boot */
+typedef struct { char member[16]; bool have, migrated; uint32_t gen; ink_mogo_card_t card; } ink_mogo_slot_t; /* migrated: looked at since boot; gen: the page set it */
 static struct {
     ink_exec_job_t work, done, migrate, migrated;
     ink_member_identity_t owner;
     ink_mogo_card_t read;
     ink_mogo_slot_t slot[INK_MEMBERS_MAX];
     bool busy, found, migrating, again;
+    uint32_t gen; /* the slot's when the read began: a page that set it since is newer than what was read */
 } C INK_PSRAM_BSS;
 /* The member's slot (NULL: not read yet); `take` reuses the oldest one for a new member. */
 static ink_mogo_slot_t *ink_mogo_slot(const char *member, bool take) {
@@ -154,7 +155,7 @@ static void ink_mogo_finished(void *arg) {
     } else M.status = -1;
     if (M.card_new && M.card_member[0]) { /* also from the close: leaving the book writes its place */
         ink_mogo_slot_t *slot = ink_mogo_slot(M.card_member, true);
-        slot->card = M.card; slot->have = true; M.card_new = false;
+        slot->card = M.card; slot->have = true; slot->gen++; M.card_new = false;
         ink_app_card_changed("reader");
     }
     M.busy = false;
@@ -538,8 +539,8 @@ static void ink_mogo_card_done(void *arg) {
     (void)arg;
     C.busy = false;
     ink_mogo_slot_t *slot = ink_mogo_slot(C.owner.member, true);
-    bool same = slot->have == C.found && (!C.found || !memcmp(&slot->card, &C.read, sizeof C.read));
-    slot->have = C.found; slot->card = C.read;
+    bool same = slot->gen != C.gen || (slot->have == C.found && (!C.found || !memcmp(&slot->card, &C.read, sizeof C.read)));
+    if (slot->gen == C.gen) slot->have = C.found, slot->card = C.read;
     if (!same) ink_app_card_changed("reader"); /* home redraws only for news */
     if (C.again) { C.again = false; ink_mogo_card_read(); }
 }
@@ -553,7 +554,7 @@ static void ink_mogo_card_read(void) {
     if (C.busy) { C.again = true; return; }
     if (!ink_member_space_open()) return;
     ink_member_identity(&C.owner);
-    C.busy = true;
+    C.busy = true; C.gen = ink_mogo_slot(C.owner.member, true)->gen;
     if (ink_exec_post(INK_EXEC_BG, &C.work, ink_mogo_card_work, NULL)) C.busy = false;
 }
 /* Old reader data moves over once per member, one book per BG pass; the card is read again after it. */
