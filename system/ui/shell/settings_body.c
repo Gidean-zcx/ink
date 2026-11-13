@@ -178,7 +178,7 @@ static void gray_labels(lv_obj_t *row) {
 enum { HOME_ROWS = 8, FOUND_MAX = 10 };
 static const char *const STATES[] = {"available", "unsearchable", "not_now", "unsupported", "parent", "dependent"};
 static struct {
-    char query[48];
+    char query[48], member[16]; /* whose search it is */
     const ink_sr_item_t *it[HOME_ROWS], *seen[HOME_ROWS];
     lv_obj_t *value[HOME_ROWS];
     bool gray[HOME_ROWS];
@@ -725,6 +725,7 @@ static void search_entered(void *ctx, const char *value) {
 static void create_page(lv_obj_t *screen, void *arg) {
     N.page = screen;
     N.page_id = (page_t) (intptr_t) arg;
+    if (N.page_id == PAGE_SETTINGS && strcmp(H.member, ink_member_current()->id)) memset(&H, 0, sizeof H); /* not theirs */
     N.body_page = N.page_id == PAGE_SETTINGS ? H.page : 0;
     static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知"), TR_NOOP("通知"), TR_NOOP("已存的网络")};
     _Static_assert(sizeof titles / sizeof *titles == sizeof PAGES / sizeof *PAGES, "page titles");
@@ -870,6 +871,7 @@ static int page_snapshot(char *buf, size_t cap) {
 
 static void home_open(const char *query) {
     snprintf(H.query, sizeof H.query, "%s", query);
+    snprintf(H.member, sizeof H.member, "%s", ink_member_current()->id);
     H.page = N.body_page = 0;
     if (!strcmp(ink_ui_page_name(), PAGES[PAGE_SETTINGS].name)) { ink_ui_content_changed(); ink_ui_redraw(); return; }
     ink_shell_close();
