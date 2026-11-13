@@ -228,7 +228,7 @@ static const ink_cap_t CAPS[] = {
 static void panel_event(lv_event_t *e) {
     if (lv_event_get_code(e) == LV_EVENT_PRESSED) { A.pressed = true; A.pressed_revision = A.revision; A.pressed_version = ink_ui_content_version(); }
     if (lv_event_get_code(e) == LV_EVENT_CLICKED) {
-        if (A.pressed && (A.pressed_revision != A.revision || A.pressed_version != ink_ui_content_version())) lv_event_stop_processing(e);
+        if (A.pressed && (A.pressed_revision != A.revision || !ink_ui_touch_current(A.pressed_version))) lv_event_stop_processing(e);
         A.pressed = false;
     }
 }

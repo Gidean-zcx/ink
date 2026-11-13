@@ -865,6 +865,14 @@ ink_sim_executable(sim-semantics-shell2 tests/semantics_shell2/main.c tests/sema
   tests/semantics_shell2/ai.c tests/semantics_shell2/member.c tests/semantics_shell2/kid.c
   tests/semantics_shell2/battery.c tests/semantics_shell2/home.c)
 target_link_libraries(sim-semantics-shell2 PRIVATE ink_apps ink_system)
+# tap-loss-1: a held finger and changes it did not make (redraws, cards, banner, overlays, keyboard suggestions).
+ink_sim_executable(sim-tap-held tests/tap_loss/held.c)
+target_link_libraries(sim-tap-held PRIVATE ink_apps ink_system)
+add_test(NAME tap-held
+  COMMAND sim-tap-held --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --script ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.script --budget ${CMAKE_SOURCE_DIR}/tests/tap_loss/held.budget.json
+          --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/tap-held --quiet --no-random-outages)
+set_tests_properties(tap-held PROPERTIES TIMEOUT 180)
 ink_sim_executable(sim-ime-keyboard1 tests/ime_keyboard1.c)
 target_link_libraries(sim-ime-keyboard1 PRIVATE ink_apps ink_system)
 add_test(NAME ime-keyboard1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ime_keyboard1.py

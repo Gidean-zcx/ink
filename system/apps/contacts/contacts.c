@@ -28,6 +28,7 @@ static struct {
     ink_ui_page_spec_t form;
     ink_ui_action_spec_t actions[6];
     char save_args[2048], record_args[48], delete_args[384], dial_args[64];
+    char said[160]; /* a reply's words for the page built next (a redraw may wait for a finger to lift) */
     ink_exec_job_t refresh;
 } P INK_PSRAM_BSS;
 
@@ -129,9 +130,9 @@ static void record(ink_call_t *c) { /* BG: first load and durable writes may wai
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || !ink_ui_page_current()) return;
     if (rc->status == INK_RC_DONE) {
+        snprintf(P.said, sizeof P.said, "%s", rc->say);
         if (rc->revision && !strcmp(ink_ui_page_name(), EDIT.name)) ink_ui_pop();
         else ink_ui_redraw();
-        if (P.notice && rc->say[0]) lv_label_set_text(P.notice, rc->say);
     }
     else if (P.notice) lv_label_set_text(P.notice, rc->say[0] ? rc->say : TR("暂时打不开联系人，请返回重试"));
 }
@@ -207,7 +208,8 @@ static void create(lv_obj_t *screen, void *arg) {
     P.id = edit || detail ? (uint32_t)(uintptr_t)arg : 0;
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, edit ? P.id ? TR("编辑联系人") : TR("新建联系人") : detail ? TR("联系人详情") : P.phone ? "" : TR("联系人"));
     if (!edit && !detail && P.phone) ink_phone_tabs(screen, 2);
-    P.notice = ink_ui_notice(screen, "", INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
+    P.notice = ink_ui_notice(screen, P.said, INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
+    P.said[0] = 0;
     P.db = ink_db_open_cached_member(&CONTACTS, P.member);
     if (!P.db) {
         lv_label_set_text(P.notice, TR("正在读取联系人"));

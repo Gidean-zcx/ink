@@ -79,7 +79,10 @@ void ink_shell_keyboard_area_for(ink_text_type_t type, lv_area_t *area) {
 void ink_shell_keyboard_area(lv_area_t *area) { ink_shell_keyboard_area_for(ink_text_type(), area); }
 
 static bool may_edit(ink_call_t *c) {
-    if (c->page_gen && c->page_gen != ink_ui_content_version()) { c->rc.status = INK_RC_STALE; return false; }
+    if (c->page_gen && !(c->src == INK_SRC_TOUCH ? ink_ui_touch_current(c->page_gen) : c->page_gen == ink_ui_content_version())) {
+        c->rc.status = INK_RC_STALE;
+        return false;
+    }
     if (!ink_text_focused() || ((c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) &&
         (ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden()))) {
         c->rc.status = INK_RC_REJECTED;
@@ -537,6 +540,11 @@ static void sync_voice(ink_voice_state_t vs) {
     ink_ui_hint_obj(K.heard, INK_REFRESH_FAST);
 }
 
+/* The session changed without the person (a suggestion arrived, the dictionary loaded): with a finger on a key, the
+ * keys and candidates stay as pressed until it lifts (tap-loss-1). */
+static void sync_now(void *unused) { (void)unused; sync(); }
+static void sync_later(void) { ink_ui_after_press(sync_now, NULL); }
+
 /* What the session says now. */
 static void sync(void) { /* UI task */
     if (!ink_text_focused()) {
@@ -677,6 +685,6 @@ int ink_shell_keyboard_init(void) {
         {.id = "keyboard.edit", .title = "编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销", .input = "{\"type\":\"object\",\"properties\":{\"action\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":5}},\"required\":[\"action\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = edit}
     };
     if (ink_cap_register(caps, sizeof caps / sizeof *caps) != 0) return -1;
-    ink_text_set_presenter(sync);
+    ink_text_set_presenter(sync_later);
     return 0;
 }

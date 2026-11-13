@@ -43,6 +43,8 @@
 #define MAX_OVERLAYS 8
 #define PFIFO 16
 #define INTERACTIVE_IDLE_MS 2500
+#define AFTER_PRESS_MAX 8
+#define PASSIVE_HOLD_US 2000000 /* estimate: a finger down longer than this (long press: 600 ms) no longer holds changes back */
 
 typedef enum { UM_INPUT = 1, UM_CALL } um_type_t;
 
@@ -115,6 +117,18 @@ static struct {
     /* a posted call taken from the queue while collecting queued input: handled first next round */
     umsg_t held;
     bool has_held;
+    /* Changes the person did not just make wait while a finger is down on the page (tap-loss-1): a redraw
+     * would delete what it pressed and the tap is lost. They run once it lifts, in the frame of its result. */
+    bool in_input;           /* handling input: what it changes is the person's own doing */
+    uint64_t press_since;    /* when LVGL's current press began */
+    uint32_t page_serial;    /* each new screen (show_top) */
+    bool redraw_pending;     /* ink_ui_redraw held back ... */
+    uint32_t redraw_serial;  /* ... for this screen */
+    struct { void (*fn)(void *); void *arg; } after[AFTER_PRESS_MAX];
+    int nafter;
+    lv_obj_t *pressed_obj;   /* the object LVGL pressed (the ui.press_lost_to_redraw probe) */
+    bool press_live;         /* from LVGL's press until its release is handled */
+    uint32_t press_version, press_generation; /* what the finger came down on */
     /* styles */
     lv_style_t st_screen, st_btn, st_btn_pr;
 } UI INK_PSRAM_BSS;
@@ -125,6 +139,13 @@ int ink_dp(int dp) { return (dp * UI.dpi + 80) / 160; }
 uint32_t ink_ui_generation(void) { return UI.generation; }
 
 uint32_t ink_ui_content_version(void) { return __atomic_load_n(&UI.content_version, __ATOMIC_ACQUIRE) + 1; } /* never 0: "not page-bound" */
+
+/* A touch acts on what the finger came down on: content changed elsewhere meanwhile (a reply, a candidate row, a
+ * card) does not make it stale; a new screen or overlay does (the generation). UI task. */
+bool ink_ui_touch_current(uint32_t version) {
+    return version == ink_ui_content_version() ||
+           (UI.press_live && version == UI.press_version && UI.generation == UI.press_generation);
+}
 
 void ink_ui_content_changed(void) { __atomic_add_fetch(&UI.content_version, 1, __ATOMIC_ACQ_REL); }
 
@@ -306,6 +327,7 @@ static void indev_read(lv_indev_t *indev, lv_indev_data_t *data) {
     if (UI.pn) {
         UI.last_pt.x = UI.pfifo[UI.ph].x;
         UI.last_pt.y = UI.pfifo[UI.ph].y;
+        if (UI.pfifo[UI.ph].pressed && !UI.last_pressed) UI.press_since = osal_now_us();
         UI.last_pressed = UI.pfifo[UI.ph].pressed;
         UI.ph = (UI.ph + 1) % PFIFO;
         UI.pn--;
@@ -548,6 +570,7 @@ static void show_top(void) {
     lv_style_set_text_font(&UI.st_screen, ink_ui_font(0)); /* follows the text size and the member */
     ink_ui_style_screen(UI.screen);
     UI.generation++;
+    UI.page_serial++;
     ink_ui_content_changed();
     /* a new screen replaces everything: one flashing clean refresh. Area hints from the old
      * screen (e.g. FAST for the button that was tapped) must not split the frame: they would
@@ -590,10 +613,52 @@ void ink_ui_home(void) {
     show_top(); /* one rebuild, not one per level */
 }
 
+/* A finger is down and the UI is not handling its input: what changes now is not the person's doing. */
+static bool hold_passive(void) {
+    return UI.last_pressed && !UI.in_input && osal_now_us() - UI.press_since < PASSIVE_HOLD_US;
+}
+
 void ink_ui_redraw(void) {
     if (!UI.depth) return;
+    if (hold_passive()) { /* rebuilt once the finger lifts, unless another screen came meanwhile */
+        UI.redraw_pending = true;
+        UI.redraw_serial = UI.page_serial;
+        return;
+    }
     if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
     show_top();
+}
+
+void ink_ui_after_press(void (*fn)(void *), void *arg) {
+    if (!hold_passive()) {
+        fn(arg);
+        return;
+    }
+    for (int i = 0; i < UI.nafter; i++)
+        if (UI.after[i].fn == fn && UI.after[i].arg == arg) return;
+    if (UI.nafter == AFTER_PRESS_MAX) { /* never dropped: done now, as without the rule */
+        ink_probe_count("ui.after_press_full");
+        fn(arg);
+        return;
+    }
+    UI.after[UI.nafter].fn = fn;
+    UI.after[UI.nafter++].arg = arg;
+}
+
+/* Once the finger lifted (or held on past PASSIVE_HOLD_US): what waited, before the next frame is drawn. */
+static void run_after_press(void) {
+    if (!UI.nafter && !UI.redraw_pending) return;
+    if (hold_passive()) return;
+    if (UI.last_pressed) ink_probe_count("ui.passive_forced");
+    int n = UI.nafter;
+    struct { void (*fn)(void *); void *arg; } todo[AFTER_PRESS_MAX];
+    memcpy(todo, UI.after, sizeof todo[0] * (size_t)n);
+    UI.nafter = 0;
+    for (int i = 0; i < n; i++) todo[i].fn(todo[i].arg);
+    if (UI.redraw_pending) {
+        UI.redraw_pending = false;
+        if (UI.redraw_serial == UI.page_serial) ink_ui_redraw();
+    }
 }
 
 void ink_ui_pop(void) {
@@ -742,6 +807,28 @@ bool ink_ui_queue_pending(void) { return ink_exec_waiting(INK_EXEC_UI) || __atom
 
 bool ink_ui_pressing(void) { return UI.last_pressed; }
 
+/* ui.press_lost_to_redraw: the object a finger is on was deleted before it lifted (the tap is lost). */
+static void pressed_deleted(lv_event_t *e) {
+    if (lv_event_get_target(e) != UI.pressed_obj) return;
+    if (UI.last_pressed) ink_probe_count("ui.press_lost_to_redraw");
+    UI.pressed_obj = NULL;
+}
+
+static void press_probe(lv_event_t *e) {
+    if (UI.pressed_obj) lv_obj_remove_event_cb(UI.pressed_obj, pressed_deleted);
+    UI.pressed_obj = NULL;
+    lv_obj_t *obj = lv_event_get_param(e);
+    if (lv_event_get_code(e) == LV_EVENT_PRESSED) {
+        UI.press_live = true;
+        UI.press_version = ink_ui_content_version();
+        UI.press_generation = UI.generation;
+    }
+    if (lv_event_get_code(e) == LV_EVENT_PRESSED && obj) {
+        UI.pressed_obj = obj;
+        lv_obj_add_event_cb(obj, pressed_deleted, LV_EVENT_DELETE, NULL);
+    }
+}
+
 static void note_render_pending(void) { /* UI task */
     lv_timer_t *t = lv_display_get_refr_timer(UI.disp);
     __atomic_store_n(&UI.render_pending, t && !lv_timer_get_paused(t), __ATOMIC_SEQ_CST);
@@ -871,7 +958,12 @@ static const ink_activity_t *g_home;
  * as for a single tap, which counts from its release). */
 static void handle(const umsg_t *m, uint64_t *first_cause, const char **first_tag) {
     uint64_t before = UI.cause_us;
-    if (m->type == UM_INPUT) handle_input(m);
+    if (m->type == UM_INPUT) {
+        UI.in_input = true;
+        handle_input(m);
+        UI.in_input = false;
+        if (!UI.last_pressed) UI.press_live = false;
+    }
     else if (m->type == UM_CALL) ink_exec_run(INK_EXEC_UI);
     if (UI.click_tone) { UI.click_tone = false; ink_audio_key_tone(); }
     bool action = !(m->type == UM_INPUT && m->ev.kind == INK_EV_POINTER && m->ev.phase != INK_PTR_RELEASE);
@@ -948,6 +1040,8 @@ static void ui_task(void *arg) {
     lv_indev_set_read_cb(UI.indev, indev_read);
     lv_indev_set_mode(UI.indev, LV_INDEV_MODE_EVENT);
     lv_indev_add_event_cb(UI.indev, click_tone, LV_EVENT_CLICKED, NULL);
+    lv_indev_add_event_cb(UI.indev, press_probe, LV_EVENT_PRESSED, NULL);
+    lv_indev_add_event_cb(UI.indev, press_probe, LV_EVENT_RELEASED, NULL);
 
     styles_init();
     UI.frame_intent = INK_REFRESH_UI;
@@ -956,9 +1050,15 @@ static void ui_task(void *arg) {
     ink_input_init(input_handler, NULL);
 
     for (;;) {
+        run_after_press(); /* drawn in this frame, with the result of the tap that ended the press */
         uint32_t wait_ms = lv_timer_handler();
         note_render_pending(); /* a frame just rendered is already queued at the display service */
         int64_t timeout = wait_ms == LV_NO_TIMER_READY ? OSAL_WAIT_FOREVER : (int64_t)wait_ms * 1000;
+        if ((UI.nafter || UI.redraw_pending) && UI.last_pressed) { /* a finger left on the screen holds nothing for ever */
+            int64_t left = (int64_t)(UI.press_since + PASSIVE_HOLD_US) - (int64_t)osal_now_us();
+            if (left < 1) left = 1;
+            if (timeout == OSAL_WAIT_FOREVER || timeout > left) timeout = left;
+        }
         if (UI.interactive) {
             int64_t left = (int64_t)(UI.last_input_us + INTERACTIVE_IDLE_MS * 1000ull) - (int64_t)osal_now_us();
             if (left <= 0) {

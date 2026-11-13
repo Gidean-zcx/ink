@@ -226,14 +226,18 @@ static int list_snapshot(char *out, size_t cap) {
     return ink_ui_semantics_snapshot(&page, out, cap);
 }
 static bool list_key(ink_key_t k, bool lng) { return L.list && ink_ui_list_key(L.list, k, lng); }
+static void list_rows(void *unused) { /* new rows rebind the slots: not under a finger (tap-loss-1) */
+    (void)unused;
+    if (L.db && L.list && L.version != ink_db_last_ver(L.db)) {
+        L.version = ink_db_last_ver(L.db); ink_ui_list_refresh(L.list, list_count());
+    }
+}
 static void list_settle(void) {
     if (L.list && !L.db) {
         L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), L.member);
         if (L.db) ink_ui_redraw();
     }
-    if (L.db && L.list && L.version != ink_db_last_ver(L.db)) {
-        L.version = ink_db_last_ver(L.db); ink_ui_list_refresh(L.list, list_count());
-    }
+    if (L.db && L.list && L.version != ink_db_last_ver(L.db)) ink_ui_after_press(list_rows, NULL);
 }
 static const ink_activity_t LOG = {.name = "AiLog", .app = "ai-log", .create = list_create, .destroy = list_destroy,
     .on_key = list_key, .snapshot = list_snapshot, .settle = list_settle};

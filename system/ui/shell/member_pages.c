@@ -95,7 +95,7 @@ static void center(const char *text, int font, int y, bool bold) {
 static void pressed(lv_event_t *e) { (void)e; P.version = ink_ui_content_version(); }
 static void clicked(lv_event_t *e) {
     uint32_t version = P.version; P.version = 0;
-    if (version && version != ink_ui_content_version()) return;
+    if (version && !ink_ui_touch_current(version)) return;
     ink_receipt_t rc; ink_cap_invoke(lv_event_get_user_data(e), NULL, INK_SRC_TOUCH, ink_ui_content_version(), &rc);
 }
 static void button(const char *text, const char *cap, int x, int y, int w, bool primary) {

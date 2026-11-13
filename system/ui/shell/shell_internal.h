@@ -99,6 +99,9 @@ const char *wifi_line(char *ssid, size_t cap);
 bool bookmark(ink_card_t *out);
 void home_note(const char *text);
 void draw_home_content(void);
+/* Passive rebuilds (a state, a reply, a timer): after the finger lifts if one is down (ink_ui_after_press). */
+void home_redraw_later(void);
+void control_redraw_later(void);
 void slider_changed(lv_event_t *e);
 void bind_toggle(lv_obj_t *o, const char *id);
 void draw_control(void);

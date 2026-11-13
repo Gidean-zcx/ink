@@ -178,9 +178,16 @@ void ink_shell_home_settle(void) {
         }
         return;
     }
+    home_redraw_later();
+}
+
+static void home_redraw(void *unused) {
+    (void)unused;
+    if (!N.home || strcmp(ink_ui_top_name(), "home")) return;
     ink_ui_content_changed();
     draw_home_content();
 }
+void home_redraw_later(void) { ink_ui_after_press(home_redraw, NULL); }
 
 /* "11月12日 周四 · 12° 小雨": the weather when there is one, else the lunar date. */
 static void date_line(char *out, size_t cap) {

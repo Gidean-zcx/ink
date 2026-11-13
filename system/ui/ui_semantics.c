@@ -96,7 +96,8 @@ ink_rc_t ink_ui_semantics_action(const ink_ui_page_spec_t *page, const char *act
     memset(rc, 0, sizeof *rc);
     rc->page_gen = ink_ui_content_version();
     if (!action_id || !target) return refuse(rc, INK_RC_INVALID, "missing action target");
-    if (!current_page(page) || strcmp(page->id, ink_ui_action_page()) || target->page_version != rc->page_gen)
+    bool version_ok = target->page_version == rc->page_gen || (source == INK_SRC_TOUCH && ink_ui_touch_current(target->page_version));
+    if (!current_page(page) || strcmp(page->id, ink_ui_action_page()) || !version_ok)
         return refuse(rc, INK_RC_STALE, "the page changed since the request was made");
     for (size_t i = 0; i < page->action_count; i++) {
         const ink_ui_action_spec_t *a = &page->actions[i];

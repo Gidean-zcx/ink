@@ -235,10 +235,12 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     M.saving = false;
     if (rc->status != INK_RC_DONE && M.field && M.mode == EDIT) save_failed(true);
     else if (rc->status == INK_RC_DONE && M.field && M.mode == FAIL) save_failed(false);
+    char before[96];
+    snprintf(before, sizeof before, "%s", M.notice ? lv_label_get_text(M.notice) : "");
     if (M.notice && !M.field) lv_label_set_text(M.notice, rc->say);
     if (M.field) settle();
     if (rc->status == INK_RC_DONE && !M.field) ink_ui_redraw();
-    ink_ui_content_changed();
+    else if (M.notice && strcmp(before, lv_label_get_text(M.notice))) ink_ui_content_changed(); /* only when what it shows changed */
 }
 static void request(const char *cap, const ink_args_t *args) {
     ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .member = M.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};

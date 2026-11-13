@@ -150,7 +150,7 @@ static void bar_refresh(void *arg) {
         lv_obj_clean(B.icons[i]), draw_icons(B.icons[i], &s, B.left[i]), B.shown[i] = s;
         ink_ui_hint_obj(B.icons[i], INK_REFRESH_FAST);
     }
-    if (N.control) draw_control(); /* its tiles read the same states */
+    if (N.control) control_redraw_later(); /* its tiles read the same states */
 }
 static void bar_changed(void *ctx, int h, const char *id) { /* any task: a state or the airplane setting */
     (void)ctx; (void)h;

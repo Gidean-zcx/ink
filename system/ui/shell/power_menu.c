@@ -80,7 +80,7 @@ static void logged(void *ctx, const ink_receipt_t *rc) {
 static void on_button(lv_event_t *e) {
     lv_event_stop_processing(e);
     const char *cap = lv_event_get_user_data(e);
-    if (M.version != ink_ui_content_version()) return;
+    if (!ink_ui_touch_current(M.version)) return;
     if (cap && (!strcmp(cap, "system.report_problem") || !strcmp(cap, "system.export_logs"))) {
         ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .page_gen = M.version, .reply_exec = INK_EXEC_UI, .done = logged};
         if (ink_cap_call(cap, NULL, &opts)) { snprintf(M.say, sizeof M.say, TR("暂时无法记录，请稍后重试")); lv_label_set_text(M.result, M.say); }
