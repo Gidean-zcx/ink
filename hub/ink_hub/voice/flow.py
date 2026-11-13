@@ -64,9 +64,72 @@ async def run_turn(self, rid, method, params):
     loop = asyncio.get_running_loop()
     target, turn_timeout = loop.time() - LEAD, None  # target: when the next frame would be sent at 1x
     first, question, completed = True, "", False
+    sentences, speaker, END = asyncio.Queue(), None, object()
+
+    def fetch(sentence):
+        # Start a sentence's speech now; its packets wait in a queue until the one before it has been sent.
+        if sentence is None:
+            return END
+        packets = asyncio.Queue()
+        async def run():
+            try:
+                async with aclosing(speak(self.hub.tts, sentence)) as audio:
+                    async for packet in audio:
+                        packets.put_nowait(packet)
+                packets.put_nowait(None)
+            except Exception as error:  # raised where the packets are sent, in the turn
+                packets.put_nowait(error)
+        return sentence, packets, asyncio.create_task(run())
+
+    async def speak_all():
+        # One sentence after another, the next one's speech already being fetched while this one is sent.
+        nonlocal count, target
+        current = ahead = None
+        try:
+            while (current := ahead if ahead is not None else fetch(await sentences.get())) is not END:
+                ahead = None
+                sentence, packets, _ = current
+                marker = [sentence, count, None]
+                session.spoken.append(marker)
+                while (packet := await packets.get()) is not None:
+                    if isinstance(packet, Exception):
+                        raise packet
+                    if ahead is None and not sentences.empty():
+                        ahead = fetch(sentences.get_nowait())
+                    target = max(target, loop.time() - LEAD)
+                    delay = target - loop.time()
+                    if delay > 0:
+                        future = loop.create_future()
+                        timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
+                        try:
+                            await future
+                        finally:
+                            timer.cancel()
+                    await self.send(frame(2, sid, count, packet), guard=guard)
+                    count += 1
+                    session.sent_frames = count
+                    session.times.setdefault("first_audio", loop.time())
+                    if turn_timeout is not None and not turn_timeout.expired():
+                        turn_timeout.reschedule(min(total_deadline, loop.time() + 10))
+                    target += FRAME
+                    session.plays_until = target + LEAD
+                marker[2] = count
+        finally:
+            tasks = [item[2] for item in (current, ahead) if isinstance(item, tuple)]
+            for task in tasks:
+                task.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+    async def hush():
+        # Stop the speech and what was fetched ahead (abort, error, end of the turn).
+        nonlocal speaker, sentences
+        if speaker:
+            speaker.cancel()
+            await asyncio.gather(speaker, return_exceptions=True)
+        speaker, sentences = None, asyncio.Queue()
 
     async def emit(value="", final=False):
-        nonlocal count, seq, sent, text, speech, cut, target, first
+        nonlocal seq, sent, text, speech, cut, first, speaker
         if not cut:
             combined = text + value
             text = clip(combined)
@@ -87,28 +150,13 @@ async def run_turn(self, rid, method, params):
         for sentence in (part for value in ready for part in chunks(value)):
             first = False
             session.times.setdefault("first_sentence", loop.time())
-            marker = [sentence, count, None]
-            session.spoken.append(marker)
-            async with aclosing(speak(self.hub.tts, sentence)) as audio:
-                async for packet in audio:
-                    target = max(target, loop.time() - LEAD)
-                    delay = target - loop.time()
-                    if delay > 0:
-                        future = loop.create_future()
-                        timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
-                        try:
-                            await future
-                        finally:
-                            timer.cancel()
-                    await self.send(frame(2, sid, count, packet), guard=guard)
-                    count += 1
-                    session.sent_frames = count
-                    session.times.setdefault("first_audio", loop.time())
-                    if turn_timeout is not None and not turn_timeout.expired():
-                        turn_timeout.reschedule(min(total_deadline, loop.time() + 10))
-                    target += FRAME
-                    session.plays_until = target + LEAD
-            marker[2] = count
+            sentences.put_nowait(sentence)
+        if final:
+            sentences.put_nowait(None)
+        if speaker is None and not sentences.empty():
+            speaker = asyncio.create_task(speak_all())
+        if speaker and (final or speaker.done()):
+            await speaker  # all spoken; or the speech failed: its error ends the turn now
 
     try:
         if not guard():
@@ -190,12 +238,14 @@ async def run_turn(self, rid, method, params):
     except asyncio.CancelledError:
         return
     except (TimeoutError, ProtocolError, PermissionError, ConnectionError, RuntimeError, ClientError, ExceptionGroup, ValueError):
+        await hush()
         if guard():
             try:
                 await emit("这次没有完成，请重试。", final=True)
             except (ConnectionError, RuntimeError, TimeoutError, ClientError, ExceptionGroup, ValueError):
                 pass
     finally:
+        await hush()
         if session:
             logging.getLogger(__name__).info("语音阶段时间：%s", session.times)
         if session and question and self.valid_output(scope, epoch):
