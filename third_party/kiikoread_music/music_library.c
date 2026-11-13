@@ -68,6 +68,9 @@ static bool ext_wanted(const char *name) {
            strcasecmp(dot, ".ogg") == 0;  // Opus/Vorbis 走 OGG 容器解析 / Ogg container (Opus/Vorbis)
 }
 
+/* ink: the previous scan's entry for an unchanged file (the table is sorted by path), so a rescan opens new files only. */
+static const music_track_t *s_tracks_was(const char *path, int64_t size);
+
 static void scan_dir(const char *path, int depth, music_track_t *out, int *count) {
     // ink: the file index walks the tree (BG); depth 2 is kept by counting folders below the root.
     uint32_t cursor = 0;
@@ -80,10 +83,15 @@ static void scan_dir(const char *path, int depth, music_track_t *out, int *count
         if (ext_wanted(child)) {
             if (*count >= MUSIC_MAX_TRACKS) { s_truncated = true; break; }
             music_track_t *t = &out[*count];
+            const music_track_t *was = s_tracks_was(child, ent.size);
             memset(t, 0, sizeof(*t));
-            strlcpy(t->path, child, sizeof(t->path));
-            music_tags_read(child, t->title, sizeof(t->title), t->artist, sizeof(t->artist),
-                            &t->duration_ms);
+            if (was) *t = *was;
+            else {
+                strlcpy(t->path, child, sizeof(t->path));
+                music_tags_read(child, t->title, sizeof(t->title), t->artist, sizeof(t->artist),
+                                &t->duration_ms);
+                t->size = ent.size;
+            }
             ++(*count);
         }
     }
@@ -273,8 +281,8 @@ bool music_favorite(int index) {
 void music_favorite_toggle(int index) {
     if (index < 0 || index >= s_count || !s_tracks) return;
     const uint8_t value = s_fav[index] ? 0 : 1;
+    if (!music_port_favorite_store(s_tracks[index].path, value)) return;  // ink: refused (full): nothing changes
     s_fav[index] = value;
-    music_port_favorite_store(s_tracks[index].path, value);
     bump();
 }
 
@@ -351,3 +359,12 @@ int music_library_pick(void) {
     return atomic_load(&s_req);
 }
 bool music_library_truncated(void) { return s_truncated; }
+static const music_track_t *s_tracks_was(const char *path, int64_t size) {
+    for (int lo = 0, hi = s_tracks ? s_count - 1 : -1; lo <= hi;) {
+        const int mid = (lo + hi) / 2, c = strcmp(s_tracks[mid].path, path);
+        if (!c) return s_tracks[mid].size == size ? &s_tracks[mid] : NULL;
+        if (c < 0) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return NULL;
+}

@@ -26,7 +26,7 @@ void music_page_message(const char *text);
 app_redraw_t music_page_list(int view, int page, const char *dir);
 app_redraw_t music_page_changed(const char *what, const char *path);
 EpdRect music_page_draw(uint8_t *fb);
-void music_page_presented(void);
+void music_page_presented(EpdRect frame_area);
 bool music_page_all(void);
 const char *music_page_dir(void);
 const char *music_page_notice(void);

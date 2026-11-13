@@ -10,9 +10,9 @@
 
 | 原文 | 本目录 | 原文 SHA-256 | 现在的 SHA-256 |
 | --- | --- | --- | --- |
-| `main/apps/app_music.c`（1049 行） | `app_music.c` | `99d6d50b59250b00a12a84f032314a9160ea12ae7054782a1fa5f9d6c69f0889` | `3a88bc193ac5c7b9b33d930ae897bad84a135a8ed858697eeadb1b91466cc0b7` |
-| `main/music/music_player.h`（183 行） | `music_player.h` | `84271ec302c9d18624d20ac89047d02c6f339f62e282a2bc3762d7e0ebe19d85` | `4e29a14bf0e3b2c479f1efe2c568d74220c976a347da6361ee3d05e6c4b70063` |
-| `main/music/music_player.c`（1628 行，只拿整函数） | `music_library.c` | `a98e87294803647031c656d290e7a70241e9783e01c29c976ebcabf318d70e85` | `6ab1cbf554dc70972ad2fb17040cab7daded838a8c469fcc80eedf0342ab76d8` |
+| `main/apps/app_music.c`（1049 行） | `app_music.c` | `99d6d50b59250b00a12a84f032314a9160ea12ae7054782a1fa5f9d6c69f0889` | `5cbc4e71bf719976288ec33a929fd3a48a76d87fbe75e3c640e4a157670e4c4e` |
+| `main/music/music_player.h`（183 行） | `music_player.h` | `84271ec302c9d18624d20ac89047d02c6f339f62e282a2bc3762d7e0ebe19d85` | `0929126141de0269e45dd94917e9d90553b979b24a177ad1671415f8bf3ad33b` |
+| `main/music/music_player.c`（1628 行，只拿整函数） | `music_library.c` | `a98e87294803647031c656d290e7a70241e9783e01c29c976ebcabf318d70e85` | `ece702e500bff57e8777aa8bf1bca0c2040169e7166b5744cfd8614761c806fb` |
 | `LICENSE` | `kiikoread-xiugai-LICENSE` | `b1a477173eada381b15f2cd522bba1a9ab546759f6534e8c9943f0cb933aeb30` | 同左 |
 | `licenses/Apache-2.0.txt` | `Apache-2.0.txt` | `c2ede378097fb1fcdcd128c47880c918663f475eba53e1e2dc59d95b537c8809` | 同左 |
 
@@ -64,22 +64,22 @@
 
 ## 改了什么、为什么
 
-改动行数（相对第一版，`git diff --numstat`）：`app_music.c` 增 435 删 493，`music_library.c` 增 83 删 61，`music_player.h` 增 14 删 74。
+改动行数（相对第一版，`git diff --numstat 79b1b417`，复核修复后）：`app_music.c` 增 435 删 490，`music_library.c` 增 103 删 64，`music_player.h` 增 15 删 74。新写或改过的行合计 553 行（预算 600 行，按“现在文件里和原文不同的行”算）；删掉的 628 行是去掉的功能和换掉的写死坐标（底栏、返回箭头、重连胶囊、三层框、圆键、按下反色、NVS、开机续播、没实现的声明），另列。要是把删掉的也算进 600，就超了，见 music-3 报告。
 
 ### `app_music.c`（页面）
 
 - 布局：原文 48 处写死在 684×1216 上的坐标（`MUSIC_DIRTY`、`MODE_RECT`、行 `{44,748+i*64,596,56}`、圆键 `hit_circle(342,540,52)` 等）换成 `layout()` 一处按主题令牌算：边距 `INK_MARGIN`，点按区 `INK_CONTROL`（108 px，`touch()` 取 `sy(INK_CONTROL)` 和 108 的大者），间距 `INK_GAP_S`，行线 `INK_DIVIDER`，圆角 `INK_RADIUS_KEY`，字号 `INK_FONT_TITLE/BODY/NOTE`，进度条 `INK_SLIDER_FILL`。`MUSIC_ROWS`、`FULL_ROWS` 从常数 4、12 变成“放得下几行就几行”，只有一页时不画翻页行。为什么：108 px 点按区、随系统字号一起放大（`sy()` 原样留着，`app_settings_system_font_size` 由端口给出 90/100/110/120%，孩子 110%）。
 - 去掉 `draw_frame` 三层框、`circle_frame`、`epd_fill_circle` 圆键和按下反色（`s_pressed`、`ui_draw_selected_round_rect`）：设计语言不画重框和圆圈，D-31 按下不反色。按钮改成一道细边（`button()`），行间细线（`row_line()`），播放键是唯一的主按钮（黑底，`play_glyph` 原样画白色三角/双竖杠）；上一首、下一首写字代替原文的 chevron 图标。
-- 去掉 `ui_nav_status`、`ui_nav_back`、`ui_nav_draw`：状态栏和返回归外壳。全屏列表左上角加一个写字的“上一级 / 播放页”按钮（原文靠返回箭头），返回键同样有效。
+- 去掉 `ui_nav_status`、`ui_nav_back`、`ui_nav_draw`：状态栏和返回归外壳。全屏列表左上角加一个写字的“上一级 / 播放页”按钮（原文靠返回箭头）。这台设备没有实体返回键，状态栏的返回直接离开音乐页，所以退一层只靠这个按钮（复核时更正：原先写的“返回键同样有效”不对）。
 - “全部歌曲”按钮从列表卡标题行移到胶囊那一行；去掉“播放列表 · N 首”标题和列表卡外框（108 px 高放不进原来的标题行；数量在快照里）。
 - 去掉“重连”胶囊和它的读秒（`RESTART_RECT`、`restarting()`、`s_restart_tick`）：我们的蓝牙服务没有对应能力，不自己造（报告“要用户定”）。
 - 输出胶囊：文字“蓝牙”改为“耳机”，状态取 `audio.route`；点按调现有的 `shell.bluetooth`，没有单步切换通路的能力。
 - 曲名从两行改为一行（截短，快照里有全名）：屏幕要多留一行列表。当前曲目所在行原文画黑框，改成在时长位置写“正在放”；不能放的格式（m4a、aac）写“不能放”。
 - 点按：`on_gesture` 保留原文的命中顺序，但每个分支不再直接改状态，而是用 `music_request()` 调能力表里的同一个能力（触摸来源）：模式 `music.mode`，上一首/播放/暂停/下一首，进度条 `music.seek`，音量 `settings.set`，行 `music.play`/`music.favorite`（带 `path`），翻页、全部歌曲、进文件夹、上一级 `music.list`。原文里的状态改动（进出全部歌曲、翻页、进文件夹）搬进 `music_page_list()`，让能力也走同一段代码。
-- `on_key`：原文播放页的侧键切底栏，我们没有底栏，改成盖板的上一页/下一页键翻当前列表；返回键在全屏列表里退一层。
+- `on_key`：原文播放页的侧键切底栏，我们没有底栏，改成盖板的上一页/下一页键翻当前列表（播放页和全部歌曲都翻）。返回键那一支留着，这台设备上收不到返回键。
 - `on_tick`：照原文的变化计数和歌词快照；进度条另加门槛，长出至少 `INK_GAP_S`（8 px）才刷一窄条，长歌不会每秒刷一次；有提示时歌词行不刷。播放/暂停只刷播放键（`music_page_changed("state")`），跳转只刷进度那一条。
-- `present`/`area_hint`：原文直接调屏幕驱动，改成只记录“已推上屏的进度宽度”；推屏由接线层经 `ink_graft_present` 做。
-- `on_enter`：原文只在曲库为空时扫描，改成每次进页重扫（传书或文件里新放的歌）。`on_media_lost`：没有拔卡回调，改为播放读不了时在歌词行写“读不了这首歌”。
+- `present`/`area_hint`：原文直接调屏幕驱动，改成只记录“已推上屏的进度宽度”；推屏由接线层经 `ink_graft_present` 做。`music_page_presented(a)` 只在这一帧的脏区 `a` 盖住“屏上进度”到“画出的进度”之间那一段时才调 `present()`；嫁接接口只拷脏区里的像素，只推播放键、歌词行、模式、音量、收藏行的帧不带进度条。原文同样在每次局部刷新后都记成“已上屏”，播放中暂停或换句会在进度条上留下灰缝（复核发现，原文也有这个问题，见 `music-player` “the bar on the panel has no gap”）。
+- `on_enter`：照原文，只在曲库为空时扫描（复核时改回原文那一行）。原文靠插卡事件 `on_media_ready` 重扫；我们没有插卡回调，接线层订阅 `file.changed`，音乐文件夹（`/me/音乐`、`/family/audio`）或它们的上级有变化时记一笔，下次进页或 AI 列曲库时才重扫一次；重扫只读新文件和大小变了的文件的标签（见下面 `music_library.c`）。第一版改成“每次进页重扫并逐个读标签”，进页要等扫完才出第一帧，复核时撤掉。`on_media_lost`：没有拔卡回调，改为播放读不了时（媒体服务的 `read_failed`）在歌词行写“读不了这首歌”。
 - 大的静态数组（`s_order`、`s_dir`、`s_dir_first`、`s_lyric_seen`）放 PSRAM（`INK_PSRAM_BSS`）。`track_dir` 用 `music_root_of()` 认两个根（`/me/音乐` 和 `/family/audio`），一行。
 - 文末加“接线层入口”一节（`music_page_*`）：进页、清状态、点按、按键、计时、列表、改动后要刷哪块、画、快照用的行、测试用的点按区清单，代替原文的 `app_desc_t`。
 - 界面文字加 `TR()`，英文在 `apps/music/en.tsv`。
@@ -88,13 +88,14 @@
 
 - 扫描 `scan_dir`：原文 `opendir/readdir/stat` 递归换成文件索引 `ink_fs_index`（只在 BG 执行器），深度 2 用路径里的斜杠数保留；后缀表 `ext_wanted` 原样（含 m4a、aac）；超过 200 首记下 `s_truncated`，页面和快照写“只列出了前 200 首”。
 - `music_scan`：两个根各扫一遍再按路径排序（文件索引的顺序随卡变，原文是目录顺序）；收藏一次读全改成读 `music.favorites` 集合（`music_port_favorites_load`，格式和旧音乐一样：按路径 crc32+1 作记录号，内容是路径，所以不用迁移）；按路径找回正在放的曲目、恢复上次曲目两段原样；去掉开机自动续播一次（要用户定）和 ESP 日志。原文 `fav_key` 没拿：它是 NVS 键，我们沿用旧音乐的集合格式。
-- `music_favorite_toggle`、`music_set_mode`：NVS 读写换成 `music_port_favorite_store`、`music_port_mode_store`（`music.favorites`、`music.mode` 集合）。
+- `music_favorite_toggle`、`music_set_mode`：NVS 读写换成 `music_port_favorite_store`、`music_port_mode_store`（`music.favorites`、`music.mode` 集合）。`music_favorite_toggle` 先写集合、写成了才改内存里的收藏位：集合满了（上限和曲库一样 200 首）就什么都不变，接线层在歌词行和回执里说“收藏满了”（复核发现原先先改内存、写失败也不知道，收藏会悄悄丢）。
+- 扫描时的标签缓存：`scan_dir` 对每个文件先用 `s_tracks_was()` 在上一次的曲库表里按路径二分查找（表按路径排好序），路径和大小都没变就整条拷过来，不再打开文件读标签；新文件和大小变了的才调 `music_tags_read`。为此 `music_track_t` 多一个 `size`。
 - `finish_track` 原样；它要的 `close_track`、`time_freeze`、`bt_trace`、`set_state`、`esp_random` 由端口头文件给出（前三个是空操作；应用框架没有随机数接口，`esp_random` 换成用时钟搅动的 xorshift，见报告“缺口”）。我们在一首歌开始时就算好下一首（`music_library_pick()` 调原文的 `finish_track`），`media.finished` 到来时（BG 执行器上的订阅）只读这条路径并调 `media.play`。
 - 文末加“接线层入口”一节：清空、恢复上次曲目和模式、同步正在放的曲目、算下一首、是否超过上限。
 
 ### `music_player.h`（页面用的接口）
 
-- 去掉没实现的声明（启动/停止播放任务、改根目录、单曲直放入口、播放暂停切换、音量设置、输出切换、重连、跳转、蓝牙开关、拔卡、射频忙、挂起、PCM 环）；`MUSIC_ROOT` 改为 `/me/音乐`，加 `MUSIC_FAMILY_ROOT`；`music_volume()` 改为 0～100 的 `audio.volume`；文末加接线层的几个声明。
+- 去掉没实现的声明（启动/停止播放任务、改根目录、单曲直放入口、播放暂停切换、音量设置、输出切换、重连、跳转、蓝牙开关、拔卡、射频忙、挂起、PCM 环）；`MUSIC_ROOT` 改为 `/me/音乐`，加 `MUSIC_FAMILY_ROOT`；`music_volume()` 改为 0～100 的 `audio.volume`；`music_track_t` 加 `size`（标签缓存用）；文末加接线层的几个声明，`music_port_favorite_store` 回报集合是否收下。
 
 ## 没搬的
 

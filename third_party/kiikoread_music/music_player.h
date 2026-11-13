@@ -41,6 +41,7 @@ typedef struct {
     char title[96];
     char artist[64];
     uint32_t duration_ms;  // 0 = 未知（进度条只画时间）/ unknown (progress shows time only)
+    int64_t size;          // ink: the file's size when its tags were read (a rescan reuses unchanged tags)
 } music_track_t;
 
 // 曲库根目录（默认 MUSIC_ROOT，可在文件管理里改）。/ Library root (defaults to MUSIC_ROOT, editable from the file manager).
@@ -110,7 +111,7 @@ const char *music_mode_label(void);
 /* ink: the folder a track's path is under (/me/音乐 or /family/audio), and the glue's hooks. */
 const char *music_root_of(const char *path);
 void music_port_favorites_load(const music_track_t *tracks, int count, uint8_t *fav);
-void music_port_favorite_store(const char *path, bool favorite);
+bool music_port_favorite_store(const char *path, bool favorite); /* false: the collection refused (full) */
 void music_port_mode_store(music_mode_t mode);
 void music_library_reset(void);
 void music_library_restore(const char *last, int mode);

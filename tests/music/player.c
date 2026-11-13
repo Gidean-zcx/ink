@@ -194,11 +194,30 @@ static int callbacks(lv_obj_t *o) {
 static int counted;
 static void count_callbacks(void) { counted = callbacks(lv_screen_active()); }
 static uint32_t raster;
+static const uint8_t *raster_px; /* the page as the panel has it (the graft surface) */
+static int raster_w;
 static void find_raster(lv_obj_t *o) {
-    if (lv_obj_check_type(o, &lv_image_class)) { const lv_image_dsc_t *d = lv_image_get_src(o); if (d && d->header.cf == LV_COLOR_FORMAT_L8) raster = ink_crc32(0, d->data, d->data_size); }
+    if (lv_obj_check_type(o, &lv_image_class)) {
+        const lv_image_dsc_t *d = lv_image_get_src(o);
+        if (d && d->header.cf == LV_COLOR_FORMAT_L8) raster = ink_crc32(0, d->data, d->data_size), raster_px = d->data, raster_w = (int)d->header.w;
+    }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) find_raster(lv_obj_get_child(o, (int32_t)i));
 }
-static void pixels(void) { raster = 0; find_raster(lv_screen_active()); }
+static void pixels(void) { raster = 0; raster_px = NULL; find_raster(lv_screen_active()); }
+static int band[4], band_dark; /* x0, x1, y0, y1 in surface pixels; how many inked pixels the panel has there */
+static bool bar_whole;         /* the bar row on the panel: black then gray, never gray then black again */
+static void read_band(void) {
+    pixels(); band_dark = 0;
+    for (int y = band[2]; raster_px && y < band[3]; y++)
+        for (int x = band[0]; x < band[1]; x++) band_dark += raster_px[y * raster_w + x] < 224; /* any ink, gray text too */
+    bool gray = false; bar_whole = raster_px != NULL;
+    for (int x = band[0]; raster_px && x < band[1]; x++) {
+        const bool black = raster_px[band[2] * raster_w + x] < 96;
+        if (black && gray) bar_whole = false;
+        gray |= !black;
+    }
+}
+static int dark_in(int x0, int x1, int y0, int y1) { band[0] = x0; band[1] = x1; band[2] = y0; band[3] = y1; quiet(); on_ui(read_band); return band_dark; }
 static lv_obj_t *panel;
 static void ai_open(void) { lv_obj_t *a, *b, *c; ink_shell_ai_open(&panel, &a, &b, &c); }
 static void ai_close(void) { ink_shell_ai_closed(); lv_obj_delete(panel); panel = NULL; }
@@ -280,6 +299,12 @@ static void main_phase(void) {
     }
     CHECK(counter("music.present.part") - part >= 3, "the bar and lyric moved (%.0f)", counter("music.present.part") - part);
     CHECK(counter("music.present.page") == page && counter("music.present.whole") == whole, "no whole-page refresh while the song plays");
+    /* The bar on the panel stays one piece: a frame that leaves the bar out (the play key, a lyric line) does not count as
+     * having shown it, so the next sliver starts where the panel's bar ends. */
+    for (int i = 0; i < 5; i++) { delay_ms(1300); ok("music.pause", NULL); quiet(); ok("music.play", NULL); quiet(); }
+    delay_ms(2500); ok("music.pause", NULL);
+    dark_in(bar.x, bar.x + bar.width, bar.y + bar.height / 3 + 1, bar.y + bar.height / 3 + 2);
+    CHECK(bar_whole && band_dark > 0, "the bar on the panel has no gap (%d dark)", band_dark);
     ok("music.pause", NULL); quiet(); part = counter("music.present.part");
     ok("music.mode", "{\"mode\":\"cycle\"}"); quiet(); targets();
     CHECK(counter("music.present.part") == part + 1 && (int)sim_metric_last("music.present_y1") == T[MODE].y &&
@@ -303,10 +328,31 @@ static void main_phase(void) {
             ok(steps[i][1], steps[i][2]); settle();
             double n = counter("music.present.page") + counter("music.present.whole") + counter("music.present.part") - was_shown;
             char name[48]; snprintf(name, sizeof name, "music.refreshes.%s", steps[i][0]); ink_probe_value(name, n);
-            CHECK(n >= 1 && n <= 2, "%s costs one refresh (%.0f)", steps[i][0], n);
+            CHECK(n == 1, "%s costs one refresh (%.0f)", steps[i][0], n);
         }
         ok("music.mode", "{\"mode\":\"list\"}"); quiet();
     }
+    /* Table rows 12, 5 and 19: minus and plus step audio.volume through settings.set and redraw only the volume line;
+     * the output capsule opens the Bluetooth page; the cover keys page the list on the player and in all songs. */
+    ok("music.list", "{\"view\":\"list\",\"page\":0}"); quiet(); targets();
+    { const int vol = (int)ink_setting_get("audio.volume"), want[2] = {vol < 6 ? 0 : vol - 6, vol < 6 ? 6 : vol};
+      for (int i = 0; i < 2; i++) {
+          double was = counter("music.present.part"); press(i ? PLUS : MINUS);
+          CHECK(WAIT_FOR(ink_setting_get("audio.volume") == want[i], 2000), "volume key %d sets audio.volume to %d (%d)", i, want[i], (int)ink_setting_get("audio.volume"));
+          quiet(); CHECK(counter("music.present.part") == was + 1 && (int)sim_metric_last("music.present_y1") == T[MINUS].y &&
+                         (int)sim_metric_last("music.present_y2") == T[MINUS].y + T[MINUS].height - 1, "the volume key redraws only its line");
+      }
+      if (vol < 6) { char v[64]; snprintf(v, sizeof v, "{\"id\":\"audio.volume\",\"value\":%d}", vol); ok("settings.set", v); } }
+    press(OUTPUT); on_ui(read_screen); CHECK(!strcmp(g_top, "SetBluetooth"), "the output capsule opens the Bluetooth page (%s)", g_top);
+    open_music(); ok("music.list", "{\"view\":\"list\",\"page\":0}"); quiet();
+    { double keyed = counter("music.touch_call"), shown = counter("music.present.whole") + counter("music.present.part") + counter("music.present.page");
+      key(HAL_KEY_NEXT); quiet(); CHECK(shows("page", "第 2 页"), "the next key turns the page: %s", field("page"));
+      key(HAL_KEY_PREV); quiet(); CHECK(shows("page", "第 1 页"), "the previous key turns back: %s", field("page"));
+      CHECK(counter("music.touch_call") - keyed == 2 && counter("music.present.whole") + counter("music.present.part") + counter("music.present.page") - shown == 2,
+            "each key is one call and one refresh"); }
+    ok("music.list", "{\"view\":\"all\",\"page\":0}"); quiet();
+    key(HAL_KEY_NEXT); quiet(); CHECK(shows("page", "第 2 页") && !strcmp(label("page"), "全部歌曲"), "the next key turns all songs too: %s", field("page"));
+    ok("music.list", "{\"view\":\"player\"}"); quiet();
     /* 2. Playing on: leave the page, lock, open the reader; the song ends and the next follows the mode. */
     ok("music.play", "{\"path\":\"" MINE "乙.wav\"}"); ok("music.seek", "{\"ms\":17000}");
     test_start_home(); ink_power_release(INK_NEED_NO_LOCK); key(HAL_KEY_POWER); CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 3000), "locked");
@@ -345,6 +391,27 @@ static void main_phase(void) {
     ok("music.seek", "{\"ms\":45000}"); ok("music.pause", NULL);
     CHECK(WAIT_FOR(status().state == INK_MEDIA_PAUSED, 2000), "paused at 45 s for the restart");
 }
+static const ink_db_def_t FAVORITES = {.name = "music.favorites", .title = "收藏的歌曲", .scope = INK_DB_MEMBER, .schema = 1, .ai_read = true, .max_records = MUSIC_MAX_TRACKS};
+static int fill_favorites(bool fill) { /* records for songs that are not there, as many as the collection takes; or removes them */
+    ink_db_t *db = ink_db_open(&FAVORITES, NULL);
+    int n = 0;
+    for (int i = 0; db && i < 300; i++) {
+        char p[64]; snprintf(p, sizeof p, MINE "满/%03d.wav", i);
+        ink_db_write_t w = {.id = (ink_crc32(0, p, strlen(p)) & 0x7fffffff) + 1, .data = p, .len = strlen(p) + 1, .src = INK_SRC_SYSTEM};
+        int r = fill ? ink_db_put(db, &w, NULL) : ink_db_del(db, w.id, INK_SRC_SYSTEM);
+        if (r == INK_DB_OK) n++;
+        else if (fill) break;
+    }
+    ink_db_close(db);
+    return n;
+}
+static int favorite_records(void) {
+    ink_db_t *db = ink_db_open(&FAVORITES, NULL);
+    ink_db_cursor_t cur = {0}; ink_rec_t rec; int n = 0;
+    while (db && ink_db_next(db, &cur, &rec, NULL, 0) == 1) n++;
+    ink_db_close(db);
+    return n;
+}
 static void restart_phase(void) {
     open_music(); CHECK(shows("title", "长歌"), "after a restart the last song shows: %s", field("title"));
     ok("music.now", NULL); CHECK(strstr(g_result, "\"mode\":\"favorites\""), "the mode survives a restart");
@@ -352,6 +419,42 @@ static void restart_phase(void) {
     CHECK(WAIT_FOR(status().state == INK_MEDIA_PLAYING, 3000) && !strcmp(status().path, MINE "长歌.wav") && status().position_ms >= 44000 && status().position_ms <= 46500,
           "play goes on where it was (%s %u)", status().path, (unsigned)status().position_ms);
     ok("music.pause", NULL);
+    /* Favorites hold as many songs as the library (200). Full, a favorite more is refused and said on the page and to the
+     * AI; the row, the loop and the stored favorites stay in step, and nothing is lost silently. */
+    const int had = favorite_records(), added = fill_favorites(true);
+    CHECK(had + added == MUSIC_MAX_TRACKS, "the favorites take %d songs (%d + %d)", MUSIC_MAX_TRACKS, had, added);
+    ok("music.list", "{\"view\":\"list\",\"page\":4}"); quiet();
+    CHECK(AI("music.favorite", "{\"path\":\"" MINE "乙.wav\"}") && g_rc.status == INK_RC_FAILED && strstr(g_rc.say, "收藏满了"), "full: the AI is told (%s %s)", ink_rc_name(g_rc.status), g_rc.say);
+    quiet(); CHECK(!row_favorite(MINE "乙.wav") && shows("library", "收藏满了"), "full: the row stays and the page says why: %s", field("library"));
+    row_tap(true, MINE "乙.wav", 4, true);
+    CHECK(!row_favorite(MINE "乙.wav") && favorite_records() == MUSIC_MAX_TRACKS, "full: a tap on the row changes nothing either");
+    CHECK(AI("music.favorite", "{\"path\":\"" MINE "乙.wav\"}") && g_rc.status == INK_RC_FAILED, "full: asked again, still refused (not taken for a removal)");
+    CHECK(fill_favorites(false) == added, "the extra records removed");
+    ok("music.favorite", "{\"path\":\"" MINE "乙.wav\"}"); quiet();
+    CHECK(strstr(g_result, "\"favorite\":true") && row_favorite(MINE "乙.wav") && !shows("library", "收藏满了"), "with room again it is a favorite and the notice goes");
+    ok("music.favorite", "{\"path\":\"" MINE "乙.wav\"}"); quiet();
+    /* Entering does not scan the library again unless its folders changed: a song recorded into the member's music
+     * folder (file.changed) is there at the next entry, read once. */
+    test_start_home(); open_music(); test_start_home(); open_music();
+    const double scans = counter("music.rescan");
+    test_start_home(); open_music();
+    CHECK(counter("music.rescan") == scans, "an unchanged library is not scanned again on entry (%.0f)", counter("music.rescan") - scans);
+    test_start_home();
+    CHECK(BY_HAND("audio.record", "{\"path\":\"" MINE "录音.opus\"}") && g_rc.status == INK_RC_DONE, "recording into the music folder (%s)", g_rc.detail);
+    delay_ms(8000); CHECK(BY_HAND("audio.record_stop", NULL) && g_rc.status == INK_RC_DONE, "recording stops");
+    { ink_fs_stat_t fs; CHECK(WAIT_FOR(!ink_fs_stat(MINE "录音.opus", &fs) && fs.size > 1000, 3000), "the recording is on the card"); }
+    delay_ms(500); open_music();
+    CHECK(counter("music.rescan") == scans + 1, "the changed folder is scanned once (%.0f)", counter("music.rescan") - scans);
+    /* Table row 25: the card goes while a song plays (an Opus file says so; see the report): the lyric line says the
+     * song cannot be read, on the panel and in the snapshot. */
+    ok("music.list", "{\"view\":\"player\",\"page\":0}"); ok("music.play", "{\"path\":\"" MINE "录音.opus\"}"); targets();
+    const int lyric_top = T[BAR].y - ink_ui_px(INK_LINE_BODY) + 2, lyric_bottom = T[BAR].y - 2;
+    CHECK(dark_in(T[BAR].x, T[BAR].x + T[BAR].width, lyric_top, lyric_bottom) == 0, "no lyric for this song");
+    delay_ms(1500); sim_sd_set_present(false);
+    CHECK(WAIT_FOR(status().state != INK_MEDIA_PLAYING, 8000), "the card goes: the song stops");
+    quiet(); CHECK(shows("library", "读不了这首歌"), "the snapshot says it cannot be read: %s", field("library"));
+    CHECK(dark_in(T[BAR].x, T[BAR].x + T[BAR].width, lyric_top, lyric_bottom) > 0, "the panel says it on the lyric line");
+    sim_sd_set_present(true); delay_ms(1500);
 }
 static void test(void *arg) {
     (void)arg;

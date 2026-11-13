@@ -635,8 +635,10 @@ static void on_enter(app_ctx_t *ctx) {
     s_show_all = false;  // 每次进页从播放页开始 / always enter at the player, not the full list
     s_dir[0] = 0;        // 全屏列表下次从曲库根开始 / the full list starts at the library root next time
     s_entry_page = 0;
-    // ink：每次进页重扫曲库（传书或文件里新放的歌），在 BG 执行器上。/ Rescan on every entry, on the BG executor.
-    music_scan();
+    // 首次进入（曲库为空）才同步扫描；插卡事件已由 on_media_ready 扫过。
+    // Scan synchronously only when the library is empty; the card event already scanned otherwise.
+    // ink: the glue rescans before entry only when the music folders changed (file.changed), see music.c.
+    if (music_track_count() == 0) music_scan();
     layout();
     int current = music_track_index();
     s_seen_track = current;
@@ -937,10 +939,11 @@ EpdRect music_page_draw(uint8_t *fb) {
     if (fb) render(NULL, fb);
     return s_area;
 }
-void music_page_presented(void) {
-    if (s_tick_partial) s_bar_shown = s_bar_drawn > s_bar_shown ? s_bar_drawn : s_bar_shown;
-    else present();
-    s_tick_partial = false;
+/* ink: the panel gets only the frame's dirty area `a`; the bar is shown as drawn only when `a` covered the
+ * span between what the panel had and what was drawn (a play key or lyric frame leaves the bar as it was). */
+void music_page_presented(EpdRect a) {
+    const int lo = s_bar_drawn < s_bar_shown ? s_bar_drawn : s_bar_shown, hi = s_bar_drawn + s_bar_shown - lo;
+    if (a.x <= L.bar.x + lo && a.x + a.width >= L.bar.x + hi && a.y <= L.bar.y && a.y + a.height >= L.bar.y + L.bar.height) present();
 }
 bool music_page_all(void) { return s_show_all; }
 const char *music_page_dir(void) { return s_dir; }

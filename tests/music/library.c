@@ -10,7 +10,9 @@ static int failures, checks;
 #define CHECK(cond, ...) do { checks++; if (!(cond)) { failures++; printf("FAIL %s:%d: ", __FILE__, __LINE__); printf(__VA_ARGS__); printf("\n"); } } while (0)
 
 static char files[260][INK_FS_PATH_MAX];
-static int nfiles, played = -2;
+static int nfiles, played = -2, tag_reads;
+static int64_t sizes[260];
+static bool refuse; /* the favorites collection is full */
 static uint8_t saved_fav[260];
 static int saved_mode = -1;
 static uint32_t seed = 12345; /* fixed: the same picks every run */
@@ -21,12 +23,14 @@ int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_
     for (; *cursor < (uint32_t)nfiles; ++*cursor)
         if (!strncmp(files[*cursor], path, strlen(path))) {
             memset(out, 0, sizeof *out);
+            out->size = sizes[*cursor];
             snprintf(out->path, sizeof out->path, "%s", files[(*cursor)++]);
             return 1;
         }
     return 0;
 }
 void music_tags_read(const char *path, char *title, size_t tc, char *artist, size_t ac, uint32_t *ms) {
+    tag_reads++;
     snprintf(title, tc, "%s", strrchr(path, '/') + 1);
     snprintf(artist, ac, "%s", "");
     *ms = 3000;
@@ -39,7 +43,11 @@ static int file_index(const char *path) {
 void music_port_favorites_load(const music_track_t *tracks, int count, uint8_t *fav) {
     for (int i = 0; i < count; i++) fav[i] = saved_fav[file_index(tracks[i].path)];
 }
-void music_port_favorite_store(const char *path, bool favorite) { saved_fav[file_index(path)] = favorite; }
+bool music_port_favorite_store(const char *path, bool favorite) {
+    if (refuse) return false;
+    saved_fav[file_index(path)] = favorite;
+    return true;
+}
 void music_port_mode_store(music_mode_t mode) { saved_mode = (int)mode; }
 void music_play_index(int index) { played = index; }
 
@@ -137,6 +145,25 @@ int main(void) {
     music_scan();
     CHECK(music_track_index() == 3 && !strcmp(music_track(3)->path, was), "rescan remaps the playing song (%d)", music_track_index());
     CHECK(music_favorite(0) && saved_fav[0], "favorites survive the rescan by path");
+
+    /* A rescan opens only new or changed files; unchanged ones keep the tags read before. */
+    tag_reads = 0;
+    music_scan();
+    CHECK(tag_reads == 0 && music_track_count() == nfiles, "an unchanged library reads no tags again (%d)", tag_reads);
+    snprintf(files[nfiles++], sizeof files[0], MUSIC_ROOT "/000b.mp3");
+    sizes[0] = 4096; /* 000.mp3 was rewritten */
+    music_scan();
+    CHECK(tag_reads == 2, "only the new and the rewritten file are read (%d)", tag_reads);
+
+    /* The favorites collection refusing a write (full) changes nothing: the row, the loop and the store agree. */
+    const int fav_index = path_index(MUSIC_ROOT "/001.mp3");
+    const bool fav_was = music_favorite(fav_index);
+    const uint32_t serial = music_serial();
+    refuse = true;
+    music_favorite_toggle(fav_index);
+    refuse = false;
+    CHECK(music_favorite(fav_index) == fav_was && music_serial() == serial && saved_fav[file_index(MUSIC_ROOT "/001.mp3")] == fav_was,
+          "a refused favorite changes nothing");
 
     /* A file played on its own (not in the library) stops at its end; next starts the library over. */
     music_library_now(MUSIC_PLAYING, "/family/elsewhere/x.mp3", "x", "");
