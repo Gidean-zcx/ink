@@ -10,7 +10,7 @@
 
 | 原文 | 本目录 | 原文 SHA-256 | 现在的 SHA-256 |
 | --- | --- | --- | --- |
-| `main/apps/app_music.c`（1049 行） | `app_music.c` | `99d6d50b59250b00a12a84f032314a9160ea12ae7054782a1fa5f9d6c69f0889` | `53532ea5e8bbf7cb1677d4b02b54aa84c6900ed40237ad7a850fa2e2efaee6da` |
+| `main/apps/app_music.c`（1049 行） | `app_music.c` | `99d6d50b59250b00a12a84f032314a9160ea12ae7054782a1fa5f9d6c69f0889` | `3a88bc193ac5c7b9b33d930ae897bad84a135a8ed858697eeadb1b91466cc0b7` |
 | `main/music/music_player.h`（183 行） | `music_player.h` | `84271ec302c9d18624d20ac89047d02c6f339f62e282a2bc3762d7e0ebe19d85` | `4e29a14bf0e3b2c479f1efe2c568d74220c976a347da6361ee3d05e6c4b70063` |
 | `main/music/music_player.c`（1628 行，只拿整函数） | `music_library.c` | `a98e87294803647031c656d290e7a70241e9783e01c29c976ebcabf318d70e85` | `5502320d4c9219e2d68420d4239f5785d9ed600a2be4150dcfa7d0fa13567275` |
 | `LICENSE` | `kiikoread-xiugai-LICENSE` | `b1a477173eada381b15f2cd522bba1a9ab546759f6534e8c9943f0cb933aeb30` | 同左 |
@@ -64,7 +64,7 @@
 
 ## 改了什么、为什么
 
-改动行数（相对第一版，`git diff --numstat`）：`app_music.c` 增 426 删 492，`music_library.c` 增 83 删 61，`music_player.h` 增 14 删 74。
+改动行数（相对第一版，`git diff --numstat`）：`app_music.c` 增 435 删 493，`music_library.c` 增 83 删 61，`music_player.h` 增 14 删 74。
 
 ### `app_music.c`（页面）
 

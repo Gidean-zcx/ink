@@ -63,7 +63,7 @@ static const char *TAG = "app_music";
 
 static int s_page;                        // 播放列表页 / playlist page
 static int s_seen_track = -1;             // 已跟随的曲目索引 / last track index we paged to
-static char s_message[96];
+static char s_message[96] INK_PSRAM_BSS;
 static bool s_show_all;                   // 全屏「全部歌曲」视图 / the full-screen "all tracks" view
 static int s_full_page;                   // 全屏列表页 / full-list page
 static int s_order[MUSIC_MAX_TRACKS] INK_PSRAM_BSS;  // 展示顺序：收藏优先（曲库下标）/ display order, favorites first (library indices)
@@ -84,7 +84,7 @@ typedef struct {
         back, head, note, page_prev, page_next;
     int w, h, row0, full_row0, row_h, rows, full_rows, pager_y;
 } music_layout_t;
-static music_layout_t L;
+static music_layout_t L INK_PSRAM_BSS;
 
 static void fit(char *text, int px, int width) {
     while (*text && ui_text_fixed_width_px(px, text) > width) {
@@ -667,6 +667,12 @@ static app_redraw_t on_tick(app_ctx_t *ctx) {
         if (lyric_changed) memcpy(s_lyric_seen, snap, sizeof(snap));
     }
     bool state_changed = serial != s_serial;
+    if (state_changed && !in_view && music_track_index() == s_seen_track) {  // ink: same song, only play/pause: the key alone
+        s_serial = serial;
+        s_tick_partial = false;
+        s_area = L.play;
+        return APP_REDRAW_AREA;
+    }
     if (state_changed) {
         int current = music_track_index();
         if (current != s_seen_track) {  // 换曲时列表跟随到所在页 / follow the list to the playing track's page
@@ -913,7 +919,8 @@ app_redraw_t music_page_changed(const char *what, const char *path) {
         return APP_REDRAW_AREA;
     }
     const int current = music_track_index();
-    if (!s_show_all && current == s_seen_track && !strcmp(what, "play") && music_serial() == s_serial) return APP_REDRAW_NONE;  // on_tick drew it
+    if (!s_show_all && current == s_seen_track && (!strcmp(what, "play") || !strcmp(what, "state")) && music_serial() == s_serial)
+        return APP_REDRAW_NONE;  // on_tick drew it
     if (!s_show_all && current == s_seen_track && (!strcmp(what, "state") || !strcmp(what, "seek"))) {
         s_serial = music_serial();
         sync_lyric();
