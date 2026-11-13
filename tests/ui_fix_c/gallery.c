@@ -49,7 +49,7 @@ static void fx_no_card(void *ctx) { (void)ctx; sim_sd_set_present(false); }
 static void fx_card(void *ctx) { (void)ctx; sim_sd_set_present(true); }
 static void run(void *ctx) {
     (void)ctx; fx_start(); fx_ok("app.open", "{\"id\":\"gallery\"}");
-    CHECK(WAIT_FOR(G.message[0] == 0, 10000), "album loads"); fx_quiet();
+    CHECK(WAIT_FOR(G.message[0] == 0 && G.data && (G.list || G.data->err), 10000), "album loads"); fx_quiet(); /* gallery-3: read, not only asked */
     if (!G.count) { fx_capture("gallery-empty"); on_ui(fx_empty_check); ink_probe_count("test.finished"); return; }
     CHECK(WAIT_FOR(fx_pictures(), 10000), "thumbnail callbacks finish"); fx_capture("gallery"); on_ui(fx_grid_check);
     uint32_t cursor = 0, selected = 0; ink_fs_entry_t e;
@@ -62,9 +62,10 @@ static void run(void *ctx) {
     ink_confirm_view_t card; ink_fs_stat_t st;
     CHECK(AI("photo.trash", NULL) && g_rc.status == INK_RC_DONE && ink_confirm_list(&card, 1) == 0, "deletion moves the photo without a card");
     CHECK(ink_fs_stat(fx_path, &st) == INK_FS_ERR_NOT_FOUND, "the photo left its place");
+    CHECK(WAIT_FOR(G.status && G.image, 10000), "the next photo shows with its 撤销 line");
     fx_press("photo.restore"); CHECK(WAIT_FOR(ink_fs_stat(fx_path, &st) == 0, 10000), "touch 撤销 puts it back"); fx_quiet(); fx_press("shell.back");
     CHECK(WAIT_FOR(fx_pictures(), 10000), "album restored after photo");
-    if (!fx_before) { fx_quiet(); fx_read(); CHECK(!strstr(fx_snapshot, "gallery.reload"), "no reload button while the album reads"); fx_ok("gallery.reload", NULL); CHECK(WAIT_FOR(fx_pictures(), 10000), "AI reload reruns thumbnail reads"); }
+    if (!fx_before) { fx_quiet(); on_ui(fx_read); CHECK(!strstr(fx_snapshot, "gallery.reload"), "no reload button while the album reads"); fx_ok("gallery.reload", NULL); CHECK(WAIT_FOR(fx_pictures(), 10000), "AI reload reruns thumbnail reads"); }
     vtk_event_at(vtk_now() + SIM_MS(1), fx_no_card, NULL); delay_ms(5);
     if (fx_before) { fx_ok("system.home", NULL); fx_ok("app.open", "{\"id\":\"gallery\"}"); }
     else fx_ok("gallery.reload", NULL);

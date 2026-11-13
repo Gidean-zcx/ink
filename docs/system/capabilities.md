@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 549 项：可调用能力 507、事件 42；设置 44 项、状态 60 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 561 项：可调用能力 519、事件 42；设置 44 项、状态 60 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -193,9 +193,12 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `files.preview` | 预览当前文本文件开头 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.select` | 按编号查看文件操作 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.up` | 返回文件上一级 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
-| `gallery.next` | 相册下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
-| `gallery.prev` | 相册上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `gallery.empty_trash` | 清空最近删除（不能恢复） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `gallery.find` | 只看一个相簿（文件夹路径）或一个月（YYYY-MM 或 undated）的照片；都不给就清除筛选 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `gallery.next` | 相册下一页（照片、相簿、信息、最近删除的列表） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `gallery.prev` | 相册上一页（照片、相簿、信息、最近删除的列表） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `gallery.reload` | 手动重读当前家人的照片 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `gallery.show` | 相册切到全部、相簿、日期，或打开最近删除 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `games.memory.flip` | 翻开一张牌，编号从0到15，按行排列 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/memory/memory.c](../../system/apps/memory/memory.c) |
 | `games.memory.reset` | 重新洗牌开始记忆翻牌 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/memory/memory.c](../../system/apps/memory/memory.c) |
 | `games.memory.start` | 开始4×4记忆翻牌，隐藏牌面不暴露给AI | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/memory/memory.c](../../system/apps/memory/memory.c) |
@@ -323,7 +326,16 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `phone.recents` | 打开最近通话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.return` | 回到通话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `photo.ask` | 把当前有权查看的照片缩略图交给 AI | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.delete_forever` | 永久删除一张照片（不能恢复） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.info` | 看这张照片的信息（拍摄时间、尺寸、大小、格式） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.next` | 同一筛选里的下一张照片 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `photo.open` | 查看有权访问的图片文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.pan` | 放大后把照片挪半屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.prev` | 同一筛选里的上一张照片 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.restore` | 把最近删除里的照片放回原处（按路径） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.rotate` | 照片转 90 度看（不改文件） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.trash` | 把这张照片移到最近删除（30 天内能恢复） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.zoom` | 照片放大、缩小（适合屏幕、2 倍、4 倍） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `power.set_saving` | 开关省电（最多 1 分钟锁屏，不改原设置） | 人、AI | 高 / system | 无需 | 仅成人 | [s38](#s38) | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
 | `reader.add_bookmark` | 加书签 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 book | [s02](#s02) | [apps/reader/reader.c](../../apps/reader/reader.c) |
 | `reader.bookmarks` | 列出书签 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s02](#s02) | [apps/reader/reader.c](../../apps/reader/reader.c) |
@@ -619,7 +631,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：—。
+状态：`file.index_state`、`storage.card`、`storage.mode`。
 
 事件：`file.changed`。
 

@@ -869,7 +869,9 @@ static void trash_create(lv_obj_t *root, void *arg) {
 /* ------------------------------------------------------------------ what the AI reads */
 
 static int add_json(char *out, size_t cap, int n, const char *before, const char *extra) { /* extra goes in front of `before` */
-    char *end = n > 0 ? strstr(out, before) : NULL; size_t len = strlen(extra);
+    char *end = n > 0 ? strstr(out, before) : NULL;
+    if (end && end > out && end[-1] == '[' && extra[0] == ',') extra++; /* the first item of an empty array */
+    size_t len = strlen(extra);
     if (!end || (size_t)n + len >= cap) { out[0] = 0; return -1; }
     memmove(end + len, end, strlen(end) + 1); memcpy(end, extra, len); return n + (int)len;
 }
@@ -1280,8 +1282,10 @@ static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {
     else if (!strcmp(page, "Photo") && !strcmp(path, G.path) && !strcmp(kind, "removed") && strcmp(path, G.trashing)) ink_ui_pop();
 }
 static void card_state(void *ctx, int h, const char *id) { /* the card came back or the index is ready: read again by itself */
-    (void)ctx; (void)h; (void)id;
-    if (ink_ui_page_current() && (!strcmp(ink_ui_page_name(), "Gallery") || !strcmp(ink_ui_page_name(), "GalleryTrash"))) load(0, 0); /* unchanged lists draw nothing */
+    (void)ctx; (void)h;
+    if (!ink_ui_page_current() || (strcmp(ink_ui_page_name(), "Gallery") && strcmp(ink_ui_page_name(), "GalleryTrash"))) return;
+    /* the card or its lending: always; the index: only when the page waits for it (our own reading indexes too) */
+    if (strcmp(id, "file.index_state") || G.waiting || !G.data || G.data->err) load(0, 0);
 }
 int ink_gallery_init(void) {
     static const ink_app_def_t app = {.id = "gallery", .title = TR_NOOP("相册"), .icon = INK_UI_ICON(gallery), .entry = &GALLERY, .system_app = true, .child_ok = true};
