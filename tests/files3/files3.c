@@ -87,7 +87,7 @@ static void row_bounds(void) { /* the marked row and the count line, for the tra
 }
 static uint32_t found_id;
 static void search_results(void) {
-    snap(); CHECK(F.rows == 2 && strstr(g_snap, "在 我的 > SYNTH_文档 > SYNTH_子") && strstr(g_snap, "在 我的 > SYNTH_文档\""), "two results, each with its place: %.300s", g_snap);
+    snap(); CHECK(F.rows == 2 && strstr(g_snap, "在 我的 > SYNTH_文档 > SYNTH_子") && strstr(g_snap, "在 我的 > SYNTH_文档\""), "two results, each with its place: %.150s", g_snap);
 }
 static void jumped(void) {
     snap(); CHECK(!strcmp(F.path, "/me/SYNTH_文档/SYNTH_子") && F.found == found_id && strstr(g_snap, "找到 · ") && strstr(F.position.selected, "file:"), "the result's folder, its page, marked as found");

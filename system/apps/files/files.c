@@ -522,7 +522,8 @@ static void batch_page(void) {
     F.notice = ink_ui_notice(F.screen, "", y);
     if (F.bstate == B_CHECK) { status(TR("正在检查同名文件")); batch_args(true); size_t n = strlen(F.batch); if (n) { snprintf(F.batch + n - 1, sizeof F.batch - n + 1, ",\"check\":true}"); }
         ink_call_opts_t opts = {.src = INK_SRC_APP, .member = F.member, .args_json = F.batch, .reply_exec = INK_EXEC_UI, .done = checked, .ctx = (void *)((uintptr_t)F.serial << 3)};
-        if (!F.batch[0] || ink_cap_call("file.batch", NULL, &opts)) status(TR("选的文件太多，请分几次做")); return; }
+        if (!F.batch[0] || ink_cap_call("file.batch", NULL, &opts)) status(TR("选的文件太多，请分几次做"));
+        return; }
     if (F.bstate == B_SPACE) {
         size_text(a, sizeof a, F.need); size_text(b, sizeof b, F.free_bytes); snprintf(line, sizeof line, TR("需要 %s，还剩 %s，放得下的先做，放不下的会列出来"), a, b);
         ink_ui_label(F.screen, line, INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); snprintf(F.details, sizeof F.details, "%s", line);
@@ -553,7 +554,8 @@ static void batch_page(void) {
     if (F.result[0]) status(F.result);
     else if (F.total && F.skipped == F.total) status(TR("都跳过了，没有改动"));
     else { snprintf(line, sizeof line, TR("成功 %zu 个，跳过 %zu 个，失败 %zu 个"), F.succeeded, F.skipped, F.failed); size_t n = strlen(line);
-        if (F.not_done) snprintf(line + n, sizeof line - n, TR("，没做 %zu 个"), F.not_done); status(line); }
+        if (F.not_done) snprintf(line + n, sizeof line - n, TR("，没做 %zu 个"), F.not_done);
+        status(line); }
     int t = y + INK_LINE_NOTE + INK_GAP_S;
     if (F.renamed[0]) { snprintf(F.details, sizeof F.details, TR("保留两个的放成了：%s"), F.renamed); ink_ui_label(F.screen, F.details, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, t, w); t += 2 * ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S; }
     button(2, F.screen, TR("完成"), "files.up", NULL, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, true);
@@ -600,7 +602,8 @@ static void crumb_row(int y) {
     char labels[10][INK_FS_NAME_MAX]; size_t ends[10]; int n = crumbs(F.path, labels, ends, 10), first = n, used = 0, w = INK_CANVAS_W - 2 * INK_MARGIN;
     int sep = ink_ui_text_width(" > ", INK_FONT_LIST, INK_WEIGHT_MEDIUM), more = ink_ui_text_width("… > ", INK_FONT_LIST, INK_WEIGHT_MEDIUM), widths[10];
     for (int i = n - 1; i >= 0; i--) { widths[i] = ink_ui_text_width(labels[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_XS; if (widths[i] < INK_CONTROL) widths[i] = INK_CONTROL;
-        if (used + widths[i] + (i ? more : 0) > w && i != n - 1) break; used += widths[i] + (i < n - 1 ? sep : 0); first = i; }
+        if (used + widths[i] + (i ? more : 0) > w && i != n - 1) break;
+        used += widths[i] + (i < n - 1 ? sep : 0); first = i; }
     int x = INK_MARGIN, ly = y + (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2;
     if (first > 0) { ink_ui_line(F.screen, "… >", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x, ly, more); x += more; }
     for (int i = first; i < n; i++) {
@@ -840,7 +843,7 @@ static void navigate(ink_call_t *c) {
     }
     if (!strcmp(id, "files.folder")) {
         if (F.mode != LIST || root_dir(F.path) || !F.path[0]) { c->rc.status = INK_RC_REJECTED; return; }
-        memset(&F.selected, 0, sizeof F.selected); snprintf(F.selected.path, sizeof F.selected.path, "%s", F.path); snprintf(F.selected.name, sizeof F.selected.name, "%s", base(F.path));
+        memset(&F.selected, 0, sizeof F.selected); snprintf(F.selected.path, sizeof F.selected.path, "%s", F.path); snprintf(F.selected.name, sizeof F.selected.name, "%.63s", base(F.path)); /* a segment is < 64 bytes */
         F.selected.dir = true; F.selected_id = 0; F.from_fav = false; F.result[0] = 0; ink_ui_push(&PAGES[ACTIONS], NULL); return;
     }
     if (!strcmp(id, "files.fav")) {

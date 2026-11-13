@@ -8,9 +8,9 @@
 #include "ink/osal.h"
 #include "ink/sys/data.h"
 #include "ink/sys/members.h"
-_Static_assert(FILES_EV_RUN == ArchiveBrowserEventFileMenuRun && FILES_EV_ENTER == ArchiveBrowserEventEnterDir &&
-    FILES_EV_NEXT == ArchiveBrowserEventLoadNextItems && FILES_EV_EXIT == ArchiveBrowserEventExit &&
-    FILES_TYPE_ZIP == ArchiveFileTypeZip && FILES_TYPE_UNKNOWN == ArchiveFileTypeUnknown, "Flipper event and type numbers");
+_Static_assert((int)FILES_EV_RUN == (int)ArchiveBrowserEventFileMenuRun && (int)FILES_EV_ENTER == (int)ArchiveBrowserEventEnterDir &&
+    (int)FILES_EV_NEXT == (int)ArchiveBrowserEventLoadNextItems && (int)FILES_EV_EXIT == (int)ArchiveBrowserEventExit &&
+    (int)FILES_TYPE_ZIP == (int)ArchiveFileTypeZip && (int)FILES_TYPE_UNKNOWN == (int)ArchiveFileTypeUnknown, "Flipper event and type numbers");
 #define FAV_CAP sizeof(((files_prefs_t *)0)->fav)
 struct FuriString { char s[2 * INK_FS_PATH_MAX]; size_t n; };
 struct File { int which; size_t pos; FS_Error err; };

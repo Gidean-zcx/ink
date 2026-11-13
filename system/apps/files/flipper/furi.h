@@ -9,7 +9,9 @@
 #define furi_assert(x) ((void)(x))
 #define COUNT_OF(a) (sizeof(a) / sizeof((a)[0]))
 #define UNUSED(x) ((void)(x))
+#ifndef _ATTRIBUTE
 #define _ATTRIBUTE(attrs) __attribute__(attrs)
+#endif
 #define FURI_STRING_FAILURE ((size_t)-1)
 #define RECORD_STORAGE "storage"
 #define RECORD_LOADER "loader"
