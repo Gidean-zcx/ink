@@ -142,6 +142,9 @@ static void pages_password(void) {
 static void keyboard_pages(void) {
     for (int ai = 0; ai < 2; ai++) {
         CHECK(BY_HAND("memo.edit", NULL) && WAIT_FOR(ink_text_focused(), 10000), "open real memo"); on_ui(pages_setup);
+        /* The words learned in the first round wait up to a minute (INK_DB_LAZY, text.user_freq): write them now, so
+         * neither the wait below nor a flash write in the middle of the typing depends on that minute. */
+        ink_db_flush_all();
         CHECK(WAIT_FOR(pages_ready(), 15000), "memo setup and initial draft write settle before typing");
         for (const char *p = "nihao"; *p; p++) {
             if (ai) { char args[40]; snprintf(args, sizeof args, "{\"code\":%d}", *p); pages_call("keyboard.key", args); }

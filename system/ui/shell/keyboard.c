@@ -509,6 +509,7 @@ static void build(int kind) {
         lv_obj_set_style_pad_all(K.cand_btn[i], ink_ui_px(INK_GAP_XS), 0);
         lv_obj_set_height(K.cand_btn[i], ink_ui_px(candidates_height()));
         lv_obj_set_flex_grow(K.cand_btn[i], 1);
+        lv_obj_remove_flag(K.cand_btn[i], LV_OBJ_FLAG_SCROLLABLE);
         lv_obj_add_event_cb(K.cand_btn[i], on_cand, LV_EVENT_CLICKED, (void *)(intptr_t)i);
         lv_obj_add_event_cb(K.cand_btn[i], pressed, LV_EVENT_PRESSED, NULL);
         K.cand_icon[i] = NULL;
@@ -714,6 +715,7 @@ static void sync(void) { /* UI task */
                 lv_obj_set_flex_flow(K.cand_btn[i], LV_FLEX_FLOW_ROW);
                 lv_obj_set_flex_align(K.cand_btn[i], LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
                 lv_obj_set_style_pad_column(K.cand_btn[i], ink_ui_px(INK_GAP_XS), 0);
+                lv_obj_set_flex_grow(K.cand_label[i], 1); /* a full-width label beside the icon would never settle */
             }
             if (K.cand_icon[i]) {
                 if (c[i].ai) lv_obj_remove_flag(K.cand_icon[i], LV_OBJ_FLAG_HIDDEN);
