@@ -307,6 +307,9 @@ int ink_app_register(const ink_app_def_t *def) {
     int r = AP.n >= MAX_APPS || find(def->id) ? -1 : 0;
     if (!r) AP.a[AP.n++] = (app_t){.def = def};
     if (AP.ready) ink_svc_unlock();
+    /* A new app, its cards and its icon: a home drawn before it (the apps after ink_ui_start at boot: clock, SMS,
+     * camera, weather...) reads the cards and draws its favourites again, not only on its next card change. */
+    if (!r) ink_app_card_changed(def->id);
     return r;
 }
 

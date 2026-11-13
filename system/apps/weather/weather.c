@@ -314,5 +314,6 @@ int ink_weather_init(void) {
         if (ink_db_get(db, 2, &rec, W.last, sizeof W.last - 1) == INK_DB_OK && parse(W.last)) { W.have = W.offline = true; describe(); }
     }
     ink_db_close(db);
+    if (W.id) ink_app_card_changed("weather"); /* the restored city and forecast: a home that read the cards while they loaded reads them again */
     return 0;
 }
