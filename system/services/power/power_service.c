@@ -122,6 +122,16 @@ static void lock(void) { osal_mutex_lock(PS.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(PS.lock); }
 
 static void charger_due(void *ctx);
+/* The charger starts and stops charging by itself: a recharge kick turns it back on 200 ms after a cable arrived,
+ * after the power task read "not charging". What it now reports and battery.charging disagree: read again now. */
+static void charger_check(void) {
+    hal_battery_t b;
+    int64_t told = 0;
+    hal_power_battery(&b);
+    if (b.percent < 0 || !ink_state_get_int(PS.h_charging, &told) || (told != 0) == b.charging) return;
+    PS.next_battery_us = 0;
+    osal_sem_give(PS.kick);
+}
 static void charger_work(void *ctx) {
     (void)ctx;
     lock();
@@ -132,7 +142,10 @@ static void charger_work(void *ctx) {
     if (paused) return;
     uint32_t ms = run ? hal_power_charger_poll() : PS.charger_ms;
     ink_svc_at(&CH.at, osal_now_us() + (uint64_t)ms * 1000, charger_due, NULL);
-    if (run) ink_power_release(INK_NEED_AWAKE);
+    if (run) {
+        charger_check();
+        ink_power_release(INK_NEED_AWAKE);
+    }
 }
 static void charger_due(void *ctx) { ink_exec_post(INK_EXEC_BG, &CH.job, charger_work, ctx); }
 static void charger_resume(void) {
