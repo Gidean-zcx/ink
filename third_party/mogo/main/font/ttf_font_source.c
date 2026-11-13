@@ -39,7 +39,8 @@ bool ttf_font_source_read(ttf_font_source_t *source, uint32_t offset, void *dst,
         size_t done = 0;
         while (done < n) {
             size_t chunk = n - done;
-            if (chunk > 16384) chunk = 16384;
+            /* ink adaptation, 2026-11-13: 256 KiB per read (was 16 KiB), the card's per-request cost paid 16x less. */
+            if (chunk > 262144) chunk = 262144;
             ssize_t got = read(source->f_fd, out + done, chunk);
             if (got <= 0) {
                 source->f_file_pos = UINT32_MAX;

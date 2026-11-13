@@ -13,7 +13,8 @@
     },
     {
       "path": "main/font/ttf_font_source.c",
-      "sha256": "18e9995c12aba969634688d4992075c177e5e6e62c7e1e3c532fb7c42cce9a2d"
+      "sha256": "18e9995c12aba969634688d4992075c177e5e6e62c7e1e3c532fb7c42cce9a2d",
+      "adapted_sha256": "8554186dd8f66e405ae3dc72077f27bfa59fbab71f02e3be05a61dd6cd42d0f4"
     },
     {
       "path": "main/font/ttf_font_source.h",
