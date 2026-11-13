@@ -121,3 +121,178 @@ Flash 复核：使用 ESP-IDF 的 Python（含 pyelftools）运行 `python -B do
 【实测】10 个原文文件与上游固定提交的 Git 对象逐字节一致，cnlunar 包与其指定提交一致；旧 `lunar.c` / `time_service.c` 未变；报告的本地链接有效，待同步设计补丁可正常 `git apply --check`。无产品功能在固件预算失败后继续扩展。
 
 本地提交按里程碑保留；完整运行日志和固件测量产物在忽略目录 `work/almanac-2/`，未推送远端。
+
+---
+
+# 第二轮（收尾，2026-11-13）
+
+上面是第一轮（v1）的原文，没改。下面是第二轮：合到主线 `claude/system-layer`（`d7c508f8`），把表压小，结果一字不变。未推送，没碰设备。
+
+## 一句话结论
+
+- 表压好了：历法表和代码在 S31 固件里只占 **43,856 B**（v1 是 181,984 B），36,525 天全部字段和 lunar-javascript 1.7.7 逐日一致，AI 能力的 JSON 和回执和 v1 逐字一样。
+- **但整包固件预算没过**：本任务带进 8 个界面字库里原来没有的汉字（宜忌民俗老黄北南），界面字体多 5,922 B，而 font_data 只剩 1,483 B，于是整套界面粗体 `ui-2-53`（661,420 B）被挤进程序镜像，镜像实际多了 **706,912 B**，应用分区只剩 51,920 B（1%）。按任务书“超预算就停下”，这件事写进“要用户定”；我没有动字库工具、分区表，也没有改 v1 定好的回执文字。
+
+## 验收表（第二轮）
+
+| 编号 | 结论 | 证据 |
+| --- | --- | --- |
+| 1 结果一字不变 | 【实测】通过 | `almanac-oracle`：`--check` 通过、36,525 天全字段一致（本机有 node，真跑，没跳过）；`almanac-fixtures` 50 天通过（`fixtures.json` 没改）；`almanac-mogo-host`（Mogo 原文测试）通过；`almanac-reverse` 通过；手工反向见下；能力输出 7 行（含完整 JSON）和 v1 逐字节相同（`cmp` 无差异） |
+| 2 体积 ≤ 61,440 B | 【实测】**没过** | 镜像 4,484,048 → 5,190,960 B，+706,912 B。其中界面粗体挤进镜像 +663,056 B，表和代码 +43,856 B。见“体积” |
+| 3 合并 | 【实测】通过 | 冲突按任务书解（见“合并”）；`services-mid-capability-doc` 通过；`capabilities.md` 构建后用 `tools/capabilities.py` 重新生成（651 条） |
+| 4 全量 | 【实测】455 个里 454 过、1 个失败 | 失败的是 `autotest-cap`（相机脚本“回到主屏”），主线原本就失败，和本任务无关，见“顺手发现”；`backup-restore-recovery` 这次 38.46 s 通过 |
+| 5 ASan、S31 宿主、S31 构建、gcccheck | 【实测】通过 | ASan `almanac-*` 5/5；S31 宿主工程 78/78；`build.sh` 通过，日志有 `factory screen output layer @690a023…`、没有“没有屏幕输出层”，编译器警告前后都是 0（CMake 组件提示前后都是 6 条）；gcccheck 6 个文件 0 处问题 |
+| 6 耗时、栈、胶水、刷屏 | 【实测】见“其它数字” | 宿主查一天约 350 ns；S31 栈 `calendar_date` 64 B；胶水 160 行；没有页面，刷屏 0 次 |
+| 7 改过的已有测试 | 只有任务书列的三处 | 见“改过的已有测试” |
+
+## 合并怎么解的
+
+- `git fetch <v1 克隆> claude/codex-almanac-2:almanac-2-v1`，`git merge --no-ff`（`f8ff0b78`）。v1 拷原文的提交 `a5740efc` 留在历史里。
+- 冲突 3 处（`CMakeLists.txt`、`tests/integration/ai_surface.c`、`assets/i18n/en.tsv`）加 `docs/system/capabilities.md`：
+  - `CMakeLists.txt`：保留主线的链接行（带 `ink_resampler`），在它前面加 v1 的 `target_include_directories(ink_system PRIVATE system/services/time/vendor/mogo-calendar/main)`。
+  - `ai_surface.c`：主线 FOR_AI 表全留，settings-1 那行之后加 `{"time.almanac", ""},`。
+  - `en.tsv`：两边都留，本任务 9 行在末尾，没有重复键。
+  - `capabilities.md`：取主线版本，构建后重新生成（`6b82af20`）。
+  - `ports/.../ink_system/CMakeLists.txt` 自动合并。
+- 服务设计 §1.3“时间”行只改 AI 能力那一格，在 `time.lunar`、之后加 `time.almanac`（用 v1 补丁里的原话）。v1 的 `SERVICE-DESIGN.patch` 已经打不上，留在目录里只作记录。
+- 合完先编、先跑：`almanac-*` 4 个和 `services-mid-capability-doc` 全过，能力输出存下来当“改前”。
+
+## 压缩怎么做的（规则不动）
+
+文件和行号在 [SOURCE.md](../../../system/services/time/vendor/mogo-calendar/SOURCE.md)。要点：
+
+- 宜忌：114 个词一张词表，每组一串 1 字节词号（`0xFF` 结尾，同样的组只存一次），每组一个 `uint16` 起点；3,600 组折成 720 组，键 `(月干支%12)*60+日干支`。
+- 神煞：167 个词一张词表，存法同上，720 组的键不变；建除、值神、黄黑道存 1 字节编号。
+- 月干支：不存 1,201 条变化点，由当月“节”的日子算。
+- 农历月：每条 4 B（相对起点、年-1998、月），末尾一条哨兵，天数用下一条减。
+- 生成器每次生成都自检：折叠后 720 组等于 3,600 组原值；36,525 天月干支公式等于 `getMonthInGanZhi()`；农历月首尾相接、农历年只在正月进位；词数 < 255、词号串 < 65,536 B；最长的宜、忌、吉神、凶煞（223、118、101、94 B 含结尾）放得进 `calendar.h` 的 232、128、112、104（大小从 `calendar.h` 里读）。
+- `calendar.h` 四个列表字段改成 `char` 数组；`ink_almanac_t` 跟着改，`almanac.c` 用 `_Static_assert` 卡住两边一样大。`time.almanac` 把 Mogo 的结果、我们的结果和 JSON 放在一块临时 PSRAM 里，查完就还。
+- 数据只在 `main/assets/calendar_data.h`：“磑”不在 GB2312，放进 `.c` 会让界面字库构建失败。
+
+S31 链接后的表（`measure_flash.py`）：
+
+| 表 | 字节 |
+| --- | --- |
+| `calendar_yiji_codes`（宜忌词号） | 12,508 |
+| `calendar_folk_codes`（神煞词号） | 6,915 |
+| `calendar_lunar_months` | 5,060 |
+| `calendar_yiji_pairs`、`calendar_spirit_pairs` | 各 2,880 |
+| `calendar_term_days` | 2,400 |
+| `calendar_folk_words`、`calendar_yiji_words`（指针表） | 668、456 |
+| 其余（建除、干支名、节气名、方位等） | 1,132 |
+| 表结构合计 | 34,899 |
+| 表指向的中文串（地址并集） | 3,020 |
+| 表和串合计 | 37,919（v1 是 169,235） |
+| 代码（`calendar.c`、`almanac.c` 留在固件里的函数） | 4,250 |
+
+## 体积（前后各跑一次原来的 `ports/esp32s31/build.sh`）
+
+| 项 | 改前（主线加任务书和对照表，`85fcc4ed`） | 改后（`f676283e`） | 差 |
+| --- | --- | --- | --- |
+| app 镜像（预算口径） | 4,484,048 B | 5,190,960 B | **+706,912 B** |
+| 其中镜像里的 embedded 资源 | 778,158 B | 1,441,214 B | +663,056 B（`ui-2-53.inkf` 被挤进来） |
+| 去掉字体挤占后的增量 | — | — | **+43,856 B**（≤ 61,440） |
+| `idf.py size` Flash `.text` | 2,769,382 | 2,773,860 | +4,478 |
+| `idf.py size` Flash `.rodata` | 1,584,848 | 2,287,288 | +702,440（减去字体 663,056 = 表和串 +39,384） |
+| 内部 RAM（DIRAM `.bss` / `.data`） | 48,592 / 34,592 | 48,592 / 34,592 | 0 |
+| PSRAM `.bss` | 803,752 | 803,752 | 0 |
+| font_data | 4,717,109 / 4,718,592（余 1,483） | 4,061,507（`ui-2-53` 放不下被移走） | 界面字体需要 4,723,031，超 4,439 B |
+| 应用分区余量 | 758,832 B（14%） | 51,920 B（1%，构建提示“快满了”） | — |
+
+两种口径对得上：`idf.py size` 的 Flash 合计 +706,918 B，镜像 +706,912 B，差 6 B，没有对齐填充的问题。
+
+**为什么字体会超**：`tools/fontgen/ui_fonts.py` 把 `system/services` 等目录下所有 `.c`（连注释）和全部译文里的汉字收进界面中号、粗号字集。用它同样的规则比较改前改后的源码，本任务新带进 8 个原来没有的字：
+
+| 字 | 出自 |
+| --- | --- |
+| 宜、忌 | `almanac.c` 的回执格式、`en.tsv` 的键 |
+| 民、俗 | `almanac.c`（“这些是民俗说法”）、`time_caps.c` 的能力标题、`en.tsv`、`calendar.c` 第 4 行注释 |
+| 老、黄 | `time_caps.c` 的能力标题“老黄历（…）” |
+| 北、南 | `calendar.c` 原文的财神方位、煞方位两个小表 |
+
+8 个字在两套界面字体里共 +5,922 B（约 740 B 一个），font_data 只剩 1,483 B，最多再放 1 个多字。`asset_pack.py` 按文件名顺序装 font_data，装不下的那一套（`ui-2-53`）和它后面的全部进程序镜像。v1 当时只多 513 B，是因为那时主线上已有其中一部分字。
+
+我能改的范围里压不下来：就算改掉能力标题（省 老黄）、再动 `calendar.c` 原文那两个方位表（省 北南，而且超出任务书列的可改行），宜忌民俗 4 个字仍要约 2.96 KB，还是比 1,483 B 多；这 4 个字在 v1 定好的回执和 JSON 里（验收要求逐字一致）。所以按任务书停下，写进“要用户定”。表的压缩本身已经做完；第 6 条的再压（农历月 1 字节、7 位词号、查 v1 表外 12.7 KB）对字体没有帮助，没有做。
+
+## 手工反向对照
+
+在临时副本里改生成器（不在仓库里）：
+
+1. 折叠时所有月份都用子月的宜忌（第 39 行 `LunarUtil.JIA_ZI[month]` 改成 `JIA_ZI[0]`）：`node tools/generate_calendar_data.cjs --check` 退出 1，`Error: Calendar self-check: Yi/Ji pair 60 differs after folding`。
+2. 折叠键改成只按日干支（第 46 行改成 `pairs[i%60]`）：`--check` 退出 1，同样报 pair 60。
+3. 第 1 条再关掉自检一（第 47 行改成 `if (false) fail(...)`）硬生成：只剩 112 组宜忌；`--check` 退出 1，报 `Stale calendar data`；用这张表编出的模型跑 50 天固定样本退出 1，第一处报 2000-02-04 的宜、忌不同。
+
+`almanac-reverse` 照旧：只把 2026-02-17 的宜改成“故意改错”，50 天测试退出 1 并报出这一天。另外，Mogo 原文测试（只改了字段类型的那份）在上游原文 `calendar.c` 上同样全过，说明它本身能当基准。
+
+## 能力输出（改前改后，代替截图）
+
+模拟时钟 2026-02-16 20:00 UTC，`INK_SRC_AI` 经真实能力策略和执行器。7 行输出（含完整 JSON）改前改后逐字节相同：
+
+| 调用 | 回执 |
+| --- | --- |
+| 今天，UTC | 今天农历腊月廿九，宜祭祀，忌开市。这些是民俗说法。 |
+| 今天，上海时区 | 今天农历正月初一，宜祭祀，忌嫁娶。这些是民俗说法。 |
+| `2026-02-17` | 这天农历正月初一，宜祭祀，忌嫁娶。这些是民俗说法。 |
+| `2000-01-01` | 这天农历冬月廿五，宜破屋，忌诸事不宜。这些是民俗说法。 |
+| `2099-12-31` | 这天农历冬月二十，宜开市，忌嫁娶。这些是民俗说法。 |
+| `1999-12-31` | `INK_RC_INVALID`，不在范围（2000—2099 年） |
+| 孩子查 `2026-02-17` | 同成人，没有确认卡 |
+
+没有页面：刷屏 0 次；默认字号、最大字号、孩子三套截图不适用，用上表代替。
+
+## 对照表逐行（25 行）
+
+照做 13 行（1–7、9–11、13、16、19），按设备改 5 行（8、14、15、17、18），不做 6 行（12 加载态不需要；20–24 归 `lock-styles-1`、`calendar-3`、设置和字库规划），不适用 1 行（25）。做了的 18 行都有测试：1–7、9–11、16、19 由 `almanac-oracle`、`almanac-fixtures`、`almanac-mogo-host` 和生成器自检覆盖；8、13–15、17、18 由 `almanac-capability`、`model.c` 的无效日期用例和 `services-mid-capability-doc` 覆盖。第 19 行的“表只在 `.h`”做到了，但 font_data 的结果见上（超了）。
+
+## 其它数字
+
+- 宿主查一天：【实测】1,000,000 次平均约 350 ns（`build/almanac-model --benchmark` 三次 346–354 ns）。同一台机器同样编译选项下 v1 是 145–164 ns（v1 报告的 531 ns 是当时满载下测的）。拼词让一次查询慢了约 0.2 µs，可以忽略。
+- S31 `-fstack-usage`：`calendar_date` 64 B（加 `calendar_words` 32 B）；`ink_almanac_cap_run` 144 B，调 `almanac_fill` 64 B，Mogo 的结果放在 PSRAM，能力这条路最深约 300 B；对外的 `ink_almanac_date` 672 B（Mogo 的结果约 650 B 放在调用方栈上），固件里现在没人调它（链接时去掉了），给锁屏、日历用时注意。
+- 胶水 160 行（预算 250）：`almanac.c` 117、`almanac.h` 34、`time_caps.c` 登记 5、主 `CMakeLists.txt` 产品行 3、S31 `CMakeLists.txt` 1。
+- 不新增任务、线程、定时器、缓存、持久数据或配置项；内部 RAM 不变；查一次只用临时 PSRAM（约 5.4 KB，查完释放）。
+
+## 改过的已有测试
+
+只有任务书列的三处，都因为字段变成数组，严格程度不变：
+
+- `tests/almanac/model.c`：无效日期时 `invalid.yi` 改成 `invalid.yi[0]`（原来查指针为空，现在查数组第一个字节为 0）。
+- `tests/almanac/reverse.py`：定位行跟着新 `calendar.c` 改成 `out->guardian_type=calendar_folk_words[...]`，注入语句改成 `strcpy(out->yi,"故意改错")`；仍然只改 2026-02-17 的宜，仍然要求 50 天测试失败并报出这一天。
+- `system/services/time/vendor/mogo-calendar/tools/calendar_host_test.py` 第 17 行：`Date._fields_` 四个字段改成 `c_char * N`。
+
+新加：`tests/almanac/run_reader_baseline.py`（原文测试要的 `toolchain()` 垫片，没有 node 时退出 77）和 ctest `almanac-mogo-host`。`docs/tasks/almanac-2/measure_flash.py` 跟着新表名改，并加了代码字节数。其余测试一行没改。
+
+## 要用户定
+
+1. **界面字库放不下本任务的 8 个字（这次新出现，挡住了合并）。** 可选：
+   - A. 先给 font_data 腾地方（backlog“字体分区快满了”那条的规划，比如界面中号、粗号字集不收注释和只给 AI 看的文字，或者把大号正文字体按 D-138 放卡上）。要改 `tools/fontgen/`，不在本任务范围。腾出约 6 KB，本任务就能原样合。
+   - B. 把只给 AI 看的文字（回执、`folk_notice`、能力标题）和 `calendar.c` 里那两个方位小表挪进头文件，界面字库就不收这 8 个字。显示没问题：普通正文用的阅读字库（sans-44）有全部 GB2312；代价是改了原文里任务书没列的几行，而且这些文字离开了 `i18n-literals` 这类只看 `.c` 的检查。
+   - C. 接受字体进镜像（+663 KB，应用分区只剩约 51 KB）。不建议。
+   - D. 改短回执措辞，只用已有的字：和 v1 定好的回执不一样，“老黄历”也没法叫。
+   - 我倾向 A（问题出在大家共用的字库规则，后面锁屏、日历显示宜忌时也会撞上）；急着合的话 B 最省事。
+2. `calendar-3` 要不要换掉旧农历（2097-08-07～09-05 共 30 天不同）：v1 已列，本任务没改 `lunar.c`。
+
+## 顺手发现
+
+- `autotest-cap` 在主线上本来就失败：相机脚本 28 s 时检查“回到主屏”不过（`tests/device_autotest/sim.c:32`）。我把工作区切回改前的 `85fcc4ed` 只编 `sim-autotest` 单独跑两次，都是同样的失败；改后也一样。和本任务无关，可能和主线最近的相机取景改动（`01250c93`）有关，交给主会话进 backlog。
+- `backup-restore-recovery` 这次整轮全量里 38.46 s 通过，没再超时。
+- Mogo 的 `calendar_from_utc`、`calendar_month_name` 在固件里没人调，链接时被去掉了，不占地方。
+
+## 给 lock-styles-1、calendar-3 的接口说明
+
+- `#include "ink/sys/almanac.h"`，`ink_almanac_date(年, 月, 日, &out)`，范围 2000-01-01～2099-12-31，按调用方给的“当地公历日期”算；返回 `false` 时 `out` 清零。
+- Mogo 的 24 个原字段都在；另有年/月/日干支名、完整农历文字 `lunar_text`、当天节气 `solar_term`（不是节气日为空串）；农历月为负数表示闰月。
+- `yi`、`ji`、`auspicious`、`inauspicious` 是结构体里的字符串数组（232、128、112、104 B），其余字符串指向 flash 里的常量。结构体约 700 B，`ink_almanac_date` 自己还要约 670 B 栈：别在小栈上放很多个，万年历月格每格查一次时复用一个。
+- 从 `ink_almanac_t` 填 Mogo 的 `calendar_date_t` 时，这四个字段要拷字符串，不能赋指针；Mogo `ui_calendar.c` 里 `const char *const words[]={d->yi,d->ji}` 这种用法不用改。
+- “磑”（宜忌词“安碓磑”）不在 GB2312，系统界面字库和阅读字库都没有这个字；锁屏或日历要显示时自己处理（Mogo 是往它自己的字库补了这个字），本任务不改字库。
+- 宜忌、神煞、方位是民俗说法，显示时带一句“这些是民俗说法”；时钟没校准时不给日期的查询返回失败，画面上照 Mogo 写“请校准时间”。
+- 页面上显示宜忌这些字，同样会碰到“要用户定”第 1 条的字库问题。
+
+## 第二轮的构建和测试记录
+
+- 普通构建 `INK_WERROR=ON` 通过。`ctest -R '^almanac-|services-mid-capability-doc|i18n'` 16/16 通过。
+- 全量（清掉 `build/test-out`、重新 configure 后，`ctest -j2`）：`99% tests passed, 1 tests failed out of 455`，`Total Test time (real) = 1135.72 sec`；失败 `autotest-cap`（主线原有，见上），`memo-save-busy` 原本禁用。
+- ASan（`-DINK_SANITIZE=ON`，目标 `almanac-model sim-almanac`）：`ctest --test-dir build-asan -R '^almanac-'` 5/5 通过，没有 sanitizer 报错。`almanac-mogo-host` 用的是原文测试自己用本机 `cc` 编的库，不带 sanitizer。
+- S31 宿主工程 `ports/esp32s31/tests`：78/78 通过。
+- `ports/esp32s31/build.sh`（`INK_S31_BUILD=build-s31-own`）改前、改后各一次，都退出 0。
+- gcccheck：`almanac.c`、`time_caps.c`、`calendar.c`、`tests/almanac/model.c`、`tests/almanac/device.c`、`tests/integration/ai_surface.c`，`6 compiled, 0 with findings`。
+- 结束时删了 `build-asan`、`build-s31-own`、`build-s31-host`，留 `build`。
