@@ -48,7 +48,15 @@ def content(build):
         source_font = next(line.split('=', 1)[1] for line in (build/'CMakeCache.txt').read_text().splitlines() if line.startswith('INK_CJK_FONT:'))
         python = next((p for p in dict.fromkeys([sys.executable, shutil.which('python3')]) if p and subprocess.run([p,'-c','import fontTools'],capture_output=True).returncode == 0), None)
         assert python, 'fontTools is required for the real Mogo page test'
-        subprocess.run([python,str(ROOT/'tools/mogo_font.py'),source_font,str(font)],check=True,capture_output=True)
+        # mogo-page, mogo-flow and the reader tests share this folder and may run at once: each makes its own copy beside it
+        # and renames it into place, so none reads a font another is still writing.
+        scratch = build / f'mogo-content.{os.getpid()}'
+        shutil.rmtree(scratch, ignore_errors=True); scratch.mkdir()
+        made = scratch / font.name
+        subprocess.run([python,str(ROOT/'tools/mogo_font.py'),source_font,str(made)],check=True,capture_output=True)
+        os.replace(made.with_suffix('.OFL.txt'), font.with_suffix('.OFL.txt'))
+        os.replace(made, font)
+        shutil.rmtree(scratch)
     return root
 
 def exercise(build, binary=None, reverse=False):
