@@ -139,6 +139,42 @@ static void one_declaration(void) {
     }
 }
 
+
+/* 1c. The deepest walks (review of D-137: 系统 put one page more between the home and 关于和更新). */
+static int depth_now;
+static void read_depth(void) { depth_now = ink_ui_depth(); }
+static int depth(void) { on_ui(read_depth); return depth_now; }
+static void find_card(void) { seen = framed = false; lv_obj_update_layout(lv_layer_sys()); locate(lv_layer_sys()); } /* system cards */
+static bool on_card(const char *text) { wanted = text; on_ui(find_card); return seen; }
+static void fill_with_records(void) { while (!ink_ui_full()) ink_settings_family_open("Records"); }
+static const char *const RECORD_TITLES[] = {"AI 替你做过的事", "和 AI 说过的话", "AI 记得的事", "运行记录"};
+static const char *const RECORD_PAGES[] = {"AiLog", "AiHome", "AiMemory", "RuntimeRecords"};
+static const char *const RECORD_CAPS[] = {"shell.ai_log", "shell.ai_home", "shell.ai_memory", "shell.runtime_records"};
+/* 设置, 系统, 关于和更新, 隐私, 查看和删除记录 from wherever the gear is pressed, each by the capability its row binds;
+ * then every row of Records opens its page by touch and by the AI, one level up, and back. */
+static void records_walk(const char *where) {
+    int base = depth();
+    CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE && on_page("Settings"), "%s: the gear opens settings", where); quiet();
+    CHECK(home_page_with("system") && row_is("system", "capability", "settings.open"), "%s: the home's 系统 row", where);
+    touch(ink_tr("系统"));
+    CHECK(on_page("SetSystem"), "%s: 系统 (%s)", where, ink_ui_page_name());
+    touch(ink_tr("关于和更新"));
+    CHECK(on_page("SetAbout"), "%s: 关于和更新 (%s)", where, ink_ui_page_name());
+    CHECK(BY_HAND("shell.privacy", NULL) && g_rc.status == INK_RC_DONE && on_page("SetPrivacy"), "%s: 隐私 (%s)", where, ink_ui_page_name()); quiet();
+    CHECK(BY_HAND("shell.records", NULL) && g_rc.status == INK_RC_DONE && on_page("Records"), "%s: 查看和删除记录 (%s)", where, ink_ui_page_name()); quiet();
+    int records = depth();
+    CHECK(records == base + 5, "%s: Records is %d pages deep (from %d)", where, records, base);
+    for (int i = 0; i < 4; i++) {
+        touch(ink_tr(RECORD_TITLES[i]));
+        CHECK(on_page(RECORD_PAGES[i]) && depth() == records + 1, "%s: a tap on %s opens %s one level up (%s, depth %d)", where,
+              RECORD_TITLES[i], RECORD_PAGES[i], ink_ui_page_name(), depth());
+        CHECK(BY_HAND("shell.back", NULL) && on_page("Records") && depth() == records, "%s: back on Records from %s", where, RECORD_PAGES[i]); quiet();
+        CHECK(AI(RECORD_CAPS[i], NULL) && g_rc.status == INK_RC_DONE && on_page(RECORD_PAGES[i]) && depth() == records + 1,
+              "%s: the AI's %s opens %s too (%s, %s)", where, RECORD_CAPS[i], RECORD_PAGES[i], ink_rc_name(g_rc.status), ink_ui_page_name());
+        quiet();
+        CHECK(BY_HAND("shell.back", NULL) && on_page("Records"), "%s: back on Records", where); quiet();
+    }
+}
 static void run(void *arg) {
     (void)arg;
     const char *size = getenv("INK_SETTINGS1_TEXT");
@@ -190,6 +226,33 @@ static void run(void *arg) {
     CHECK(x && y && !strcmp(x, y), "the AI and the touch see the same 系统 rows: %.150s", x ? x : "");
     touch("存储");
     CHECK(on_page("SetStorage"), "存储 opens 存储和备份 as it did from the home (%s)", ink_ui_page_name());
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("settings.open", "{}") && on_page("Settings"), "the settings home again"); quiet();
+
+    /* 1c. With 系统 between the home and 关于和更新, Records' four rows still open: from the home (Records 6 deep), and from
+     * an app through the gear (7 deep). A full page stack is never silent: the page stays, the touch is told on screen,
+     * the AI is answered FAILED with the reason. */
+    CHECK(BY_HAND("system.home", NULL) && depth() == 1, "from the home"); quiet();
+    records_walk("home");
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("shell.launch", "{\"id\":\"clock\"}") && on_page("Clock") && depth() == 2, "from the clock (%s)", ink_ui_page_name()); quiet();
+    records_walk("clock");
+    on_ui(fill_with_records); quiet();
+    int full = depth();
+    CHECK(ink_ui_full() && on_page("Records"), "the page stack is full of Records pages (%d)", full);
+    touch(ink_tr(RECORD_TITLES[0]));
+    on_ui(inspect);
+    CHECK(on_page("Records") && depth() == full && !strcmp(ink_ui_top_name(), "Refused") && on_card(ink_tr("没有打开")) &&
+          on_card(ink_tr("打开的页面太多了，先回主屏再试")) && strstr(view, "打开的页面太多了"),
+          "a tap that cannot open says so on screen and in the snapshot (%s, %s): %.120s", ink_ui_page_name(), ink_ui_top_name(), view);
+    shot("stack-full");
+    CHECK(on_card(ink_tr("知道了")), "the card's 知道了"); if (seen) tap(lx, ly); quiet();
+    CHECK(!on_card(ink_tr("打开的页面太多了，先回主屏再试")) && !strcmp(ink_ui_top_name(), "Records"), "知道了 closes the card (%s)", ink_ui_top_name());
+    for (int i = 0; i < 4; i++) {
+        CHECK(AI(RECORD_CAPS[i], NULL) && (i == 1 ? g_rc.status == INK_RC_DONE && on_page("AiHome") && depth() == 2 :
+              g_rc.status == INK_RC_FAILED && strstr(say(), "打开的页面太多") && on_page("Records") && depth() == full),
+              "the AI's %s on a full stack: %s, %s (%s)", RECORD_CAPS[i], ink_rc_name(g_rc.status), say(), ink_ui_page_name());
+        quiet();
+        if (i == 1) { on_ui(fill_with_records); quiet(); full = depth(); } /* 和 AI 说过的话 is an app: it starts from the home (app_registry.c) */
+    }
     CHECK(BY_HAND("system.home", NULL) && BY_HAND("settings.open", "{}") && on_page("Settings"), "the settings home again"); quiet();
 
     /* 2. Search 暖光 by touch: the field, the words, the result with where it is and what it is now. */

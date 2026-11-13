@@ -603,8 +603,13 @@ static void start(void *arg) {
         else if (verdict == INK_RC_PENDING_CONFIRMATION) ink_confirm_hold(c, &p->call.args, p->call.src, p->call.page_gen, rc);
         else {
             rc->status = INK_RC_DONE;
+            uint32_t refused = ink_ui_push_refusals();
             c->run(&p->call);
             ran = true;
+            if (ink_ui_push_refusals() != refused && rc->status == INK_RC_DONE && !p->deferred) { /* its page did not open */
+                reject(rc, INK_RC_FAILED, "too many pages open");
+                snprintf(rc->say, sizeof rc->say, "%s", TR("打开的页面太多了，先回主屏再试"));
+            }
         }
     }
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
