@@ -36,4 +36,18 @@ void ink_thumb_cache_remove(ink_thumb_cache_t *cache, uint64_t object);
  * the old entry even if decoding fails. Caller must not free/modify the result. */
 int ink_image_thumbnail(ink_thumb_cache_t *cache, uint64_t object, uint64_t version,
                         const void *data, size_t size, ink_image_t *out);
+
+/* What a file's first bytes say, without decoding pixels (the first 128 KiB are enough).
+ * Width and height are upright (EXIF orientation applied); 0 when not known. ink_image_decode
+ * turns JPEG pixels the same way; a broken or missing EXIF block counts as orientation 1. */
+#define INK_IMAGE_PROBE_BYTES (128u * 1024u)
+typedef enum { INK_IMAGE_UNKNOWN = 0, INK_IMAGE_JPEG, INK_IMAGE_PNG, INK_IMAGE_GIF, INK_IMAGE_BMP, INK_IMAGE_WEBP } ink_image_format_t;
+typedef struct {
+    ink_image_format_t format;
+    unsigned width, height;
+    unsigned orientation; /* EXIF 1..8 */
+    char taken[20];       /* EXIF DateTimeOriginal "YYYY:MM:DD HH:MM:SS", or "" */
+} ink_image_info_t;
+/* 0, or INK_IMAGE_ERROR when the format is not recognised (out still says what is known). */
+int ink_image_probe(const void *data, size_t size, ink_image_info_t *out);
 #endif
