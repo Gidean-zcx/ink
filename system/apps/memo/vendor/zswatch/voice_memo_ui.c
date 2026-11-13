@@ -297,8 +297,8 @@ static void create_recording_screen(void)
     lv_obj_align(ui.remaining_label, LV_ALIGN_TOP_MID, 0, ink_ui_px(INK_BLOCK_L + 2 * ink_ui_line_height(INK_FONT_TITLE) + INK_GAP_XL + INK_GAP_M));
 
     /* Stop button: the shared primary pill that says what it does (no red circle) */
-    ui.stop_btn = ink_ui_pill(ui.rec_screen, TR("记好了"), 0, 0, (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) * 4 / 7, INK_PRIMARY, true, NULL, NULL);
-    lv_obj_align(ui.stop_btn, LV_ALIGN_BOTTOM_RIGHT, ink_ui_px(-INK_MARGIN), ink_ui_px(-INK_MARGIN));
+    ui.stop_btn = ink_ui_pill(ui.rec_screen, TR("记好了"), INK_MARGIN + (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) * 3 / 7 + INK_GAP,
+                              INK_CANVAS_H - INK_STATUS_BAR - INK_MARGIN - INK_PRIMARY, (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) * 4 / 7, INK_PRIMARY, true, NULL, NULL);
     lv_obj_add_flag(ui.stop_btn, LV_OBJ_FLAG_CLICKABLE); /* our pill is inert until something listens */
     lv_obj_add_event_cb(ui.stop_btn, stop_btn_cb, LV_EVENT_CLICKED, NULL);
 

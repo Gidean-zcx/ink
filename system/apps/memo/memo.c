@@ -1,4 +1,5 @@
 /* Member memos after Fossify Notes (editor, checklist), Joplin (search, due dates) and ZSWatch (the recording screen, memo_voice.c). */
+/* ui-scale-runtime: dimension w,x,y,top,bottom,area.y2,fit,foot,due_w,list_w,voice_w,h,text_w,cell Theme tokens measured against the current text size and the editor's own layout. */
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/app.h"
@@ -50,7 +51,7 @@ static struct {
     ink_exec_job_t refresh;
 } M INK_PSRAM_BSS;
 static struct { char query[64], member[16]; uint32_t ids[200]; size_t count; bool on; } S INK_PSRAM_BSS; /* memo.search */
-static struct { char query[64]; size_t at[FOUND_MAX]; int count, cur; bool open; } F INK_PSRAM_BSS; /* memo.find */
+static struct { char query[64], label[64]; size_t at[FOUND_MAX]; int count, cur; bool open; } F INK_PSRAM_BSS; /* memo.find */
 static struct { char member[16]; uint32_t id; memo_t before; } U INK_PSRAM_BSS; /* 删掉已完成, until undone */
 static void settle(void);
 static void check_refresh(void);
@@ -401,16 +402,16 @@ static void request(const char *cap, const ink_args_t *args) {
     if (ink_cap_call(cap, args, &opts) != 0) { M.saving = false; if (M.notice) lv_label_set_text(M.notice, TR("这条没存上，字还在这里。请重试")); }
 }
 static void find_now(void *arg) { /* UI: Fossify's search in the note: the hit selected in the body, on its page, and where it is */
-    (void)arg; if (!M.field || !F.open) return;
-    const char *text = ink_textfield_text(M.field); char label[64];
+    (void)arg; if (!M.field || !F.open || !F.query[0]) return;
+    const char *text = ink_textfield_text(M.field);
     F.count = LV_MIN(hits(text, F.query, F.at, FOUND_MAX), FOUND_MAX); if (F.cur >= F.count) F.cur = 0;
-    if (F.count) snprintf(label, sizeof label, TR("第 %d 处，共 %d 处"), F.cur + 1, F.count);
-    else snprintf(label, sizeof label, "%s", F.query[0] ? TR("没有找到") : TR("查找"));
-    if (M.find) ink_textfield_style(M.find, INK_FIELD_SEARCH, label);
-    if (!F.count) return;
+    if (F.count) snprintf(F.label, sizeof F.label, TR("第 %d 处，共 %d 处"), F.cur + 1, F.count);
+    else snprintf(F.label, sizeof F.label, "%s", TR("没有找到"));
+    if (M.find) { lv_obj_add_flag(M.find, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(M.field, LV_OBJ_FLAG_HIDDEN); }
+    lv_label_set_text(M.notice, F.label); ink_textfield_style(M.field, INK_FIELD_BODY, F.label); /* where the save status is */
     if (!ink_text_focused() || !ink_text_draft_id()) lv_obj_send_event(M.field, LV_EVENT_SHORT_CLICKED, NULL); /* the body again, not the find field */
-    size_t start = ink_text_char_offset(text, F.at[F.cur]);
-    ink_text_select(start, start + ink_text_char_offset(F.query, strlen(F.query)));
+    size_t start = F.count ? ink_text_char_offset(text, F.at[F.cur]) : 0;
+    if (F.count) ink_text_select(start, start + ink_text_char_offset(F.query, strlen(F.query)));
 }
 static void navigate(ink_call_t *c) {
     const char *cap = c->cap->id + 5; int64_t id = 0, index = -1; bool due = false, list = false; char query[64] = "";
@@ -419,7 +420,7 @@ static void navigate(ink_call_t *c) {
     if (!strcmp(cap, "next") || !strcmp(cap, "prev")) { if (M.list) ink_ui_list_turn(M.list, !strcmp(cap, "next") ? 1 : -1); }
     else if (!strcmp(cap, "retry")) M.retry = true;
     else if (!strcmp(cap, "show_done")) { M.expanded = !M.expanded; if (M.mode == CHECKLIST) check_refresh(); }
-    else if (!strcmp(cap, "find_close")) { F.open = false; F.query[0] = 0; if (M.field) ink_ui_redraw(); }
+    else if (!strcmp(cap, "find_close")) { F.open = false; F.query[0] = F.label[0] = 0; if (M.field) ink_ui_redraw(); }
     else if (!strncmp(cap, "find_", 5)) {
         if (!F.open || !F.count) c->rc.status = INK_RC_INVALID;
         else { F.cur = (F.cur + (!strcmp(cap, "find_next") ? 1 : F.count - 1)) % F.count; ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL); }
@@ -434,8 +435,9 @@ static void navigate(ink_call_t *c) {
             else if (!id && list) mode = CHECKLIST;
             M.index = index < 0 ? 0 : (int)index; M.jump = -1; M.adding = !id && list;
             if (asked && n->checklist) for (unsigned i = 0; i < lines(n->body) && M.jump < 0; i++) { const char *p = line_at(n->body, i); size_t h = 0; if (hits(p, query, &h, 1) && h < strcspn(p, "\n")) M.jump = (int)i; }
-            if (mode == EDIT && (find || asked)) { F.open = true; F.cur = 0; snprintf(F.query, sizeof F.query, "%s", query); }
-            if (mode == EDIT && M.field && M.id == (uint32_t)id && ink_ui_page_current()) { if (M.find) ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL); else ink_ui_redraw(); }
+            bool was = F.open;
+            if (mode == EDIT && (find || asked)) { F.open = true; F.cur = 0; F.label[0] = 0; snprintf(F.query, sizeof F.query, "%s", query); }
+            if (mode == EDIT && M.field && M.id == (uint32_t)id && ink_ui_page_current()) { if (was && F.query[0]) ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL); else ink_ui_redraw(); }
             else { if (mode != ITEM && mode != DUE) memset(&M.position, 0, sizeof M.position); ink_ui_push(&PAGES[mode], (void *)(uintptr_t)id); }
         }
         ink_app_free(n);
@@ -494,7 +496,7 @@ static void settle(void) {
     const char *status = M.mode == FAIL ? (saved > 0 ? TR("草稿已存，备忘没存上，请重试") :
         saved < 0 ? TR("草稿没存上，字还在，请重试") : TR("正在存草稿，备忘没存上")) :
         ink_crc32(0, text, strlen(text)) == M.opened_crc && !M.retry ? TR("备忘") :
-        M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
+        F.open && F.label[0] ? F.label : M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
     lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
     bool changed = strcmp(lv_label_get_text(M.notice), status) != 0, body = ink_text_draft_id() != 0;
     if (changed) lv_label_set_text(M.notice, status);
@@ -525,6 +527,7 @@ static void item_entered(void *ctx, const char *value) {
 }
 static void add_entered(void *ctx, const char *value) { (void)ctx; ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_str(&a, "text", value ? value : ""); request("memo.add_item", &a); }
 static void ui_toggle(lv_event_t *e) { (void)e; M.adding = !M.adding; ink_ui_redraw(); } /* 加一项 and 完成: the field only, no data */
+static int fit(const char *text) { return LV_MAX(INK_CONTROL, ink_ui_text_width(text, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP); }
 static lv_obj_t *button(lv_obj_t *parent, const char *text, int x, int y, int w, bool primary, const char *cap, const char *args) {
     lv_obj_t *b = ink_ui_pill(parent, text, x, y, w, INK_CONTROL, primary, NULL, NULL);
     if (cap) ink_shell_bind(b, cap, args);
@@ -534,7 +537,8 @@ static void bind_note(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     (void)ctx; unsigned at = index % 4; uint32_t id = M.rows[index]; memo_t *n = ink_app_alloc(sizeof *n, true);
     char preview[160] = ""; size_t hit = 0; int w = INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP, y = INK_GAP_S + ink_ui_line_height(INK_FONT_LIST);
     if (!n || !read_note(M.db, id, n)) { ink_app_free(n); return; }
-    const char *body = n->pending && !n->body[0] ? TR("随口记 · 录音已保存，联网后整理成文字") : n->body, *rest = line_at(body, 1);
+    bool waiting = n->pending && !n->body[0]; /* a recording waiting for its words: what it is and when they come */
+    const char *body = waiting ? TR("录音已保存") : n->body, *rest = waiting ? TR("连上网后整理成文字") : line_at(body, 1);
     int count = S.on ? hits(n->body, S.query, &hit, 1) : 0;
     unsigned all = lines(n->body), open = 0;
     for (unsigned i = 0; i < all && n->checklist; i++) open += !done_at(n, i);
@@ -656,7 +660,10 @@ static ink_ui_list_t *rows(lv_obj_t *screen, int top, int bottom, int cell, ink_
 static void resume_record(void *arg) { (void)arg; if (!strcmp(ink_ui_page_name(), "Memo") && ink_ui_page_current()) ink_ui_push(&PAGES[RECORD], NULL); }
 static void list_page(lv_obj_t *screen) { /* Joplin's list with its search box; Fossify's new note; our undo row */
     uint32_t undo = 0, undo_ver = 0; ink_db_cursor_t cur = {.desc = true}; ink_rec_t rec; memo_t *n = ink_app_alloc(sizeof *n, true);
-    int top = INK_STATUS_BAR + INK_PRIMARY, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_GAP_M, w = (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP) / 3;
+    int top = INK_STATUS_BAR + INK_PRIMARY, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_GAP_M;
+    int list_w = fit(TR("新清单")), voice_w = fit(TR("说一句")), w = INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP - list_w - voice_w;
+    bool stacked = w < fit(TR("写一条")); /* a longer language or text size: 写一条 gets its own row, nothing is cut */
+    if (stacked) { bottom -= INK_PRIMARY + INK_GAP_M; w = INK_CANVAS_W - 2 * INK_MARGIN; list_w = voice_w = (w - INK_GAP) / 2; }
     M.total = 0;
     while (n && !S.on && M.total < MEMOS.max_records && ink_db_next(M.db, &cur, &rec, NULL, 0) == 1) if (read_note(M.db, rec.id, n)) {
         if (!n->deleted) M.rows[M.total++] = rec.id;
@@ -679,9 +686,9 @@ static void list_page(lv_obj_t *screen) { /* Joplin's list with its search box; 
     if (M.list) ink_ui_list_refresh(M.list, M.total);
     if (S.on && !M.total) ink_ui_empty(screen, TR("没有找到"), TR("清除搜索"), clear_search, NULL);
     int y = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
-    button(screen, TR("写一条"), INK_MARGIN, y, w, true, "memo.edit", "{}");
-    button(screen, TR("新清单"), INK_MARGIN + w + INK_GAP, y, w, false, "memo.edit", "{\"checklist\":true}");
-    button(screen, TR("说一句"), INK_MARGIN + 2 * (w + INK_GAP), y, w, false, "memo.record", NULL);
+    button(screen, TR("写一条"), INK_MARGIN, stacked ? y - INK_PRIMARY - INK_GAP_M : y, w, true, "memo.edit", "{}");
+    button(screen, TR("新清单"), stacked ? INK_MARGIN : INK_MARGIN + w + INK_GAP, y, list_w, false, "memo.edit", "{\"checklist\":true}");
+    button(screen, TR("说一句"), INK_CANVAS_W - INK_MARGIN - voice_w, y, voice_w, false, "memo.record", NULL);
     action((int)M.model.action_count, "new", TR("写一条"), "memo.edit", NULL, true);
     action((int)M.model.action_count, "checklist", TR("新清单"), "memo.edit", "{\"checklist\":true}", true);
     action((int)M.model.action_count, "record", TR("说一句"), "memo.record", NULL, true);
@@ -689,47 +696,54 @@ static void list_page(lv_obj_t *screen) { /* Joplin's list with its search box; 
     ink_exec_post(INK_EXEC_BG, &T.sweep, sweep, NULL);
     if (M.mode == LIST && ink_memo_voice_resume()) ink_exec_post(INK_EXEC_UI, &M.found, resume_record, NULL);
 }
-static void edit_page(lv_obj_t *screen) { /* Fossify's TextFragment: no save button; find, undo and redo as written buttons */
-    int y = INK_STATUS_BAR + INK_PRIMARY, w = (INK_CANVAS_W - 2 * INK_MARGIN - 3 * INK_GAP_S) / 4, right = INK_CANVAS_W - INK_MARGIN;
-    int convert_w = ink_ui_text_width(TR("转成清单"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M;
-    snprintf(M.args2[0], sizeof M.args2[0], "{\"id\":%u,\"due\":true}", (unsigned)M.id);
-    if (!M.note.checklist) ink_shell_bind(ink_ui_text_button(screen, TR("转成清单"), right - convert_w, INK_STATUS_BAR, convert_w, NULL, NULL), "memo.convert", M.target);
-    ink_shell_bind(ink_ui_text_button(screen, TR("到期"), right - convert_w - INK_CONTROL, INK_STATUS_BAR, INK_CONTROL, NULL, NULL), "memo.open", M.args2[0]);
-    if (F.open) { /* the find bar takes the tool row's place */
-        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .initial = F.query, .hint = TR("查找"), .max = sizeof F.query - 1};
-        M.find = ink_textfield_create(screen, &cfg, searched, NULL, false);
-        lv_obj_set_y(M.find, ink_ui_px(y)); ink_textfield_style(M.find, INK_FIELD_SEARCH, TR("查找"));
-        y += ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP_S;
-        int third = (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP_S) / 3;
-        button(screen, TR("上一个"), INK_MARGIN, y, third, false, "memo.find_prev", NULL);
-        button(screen, TR("下一个"), INK_MARGIN + third + INK_GAP_S, y, third, false, "memo.find_next", NULL);
-        button(screen, TR("关闭"), INK_MARGIN + 2 * (third + INK_GAP_S), y, third, false, "memo.find_close", NULL);
-    } else {
-        const char *names[] = {TR("查找"), TR("撤销"), TR("重做"), TR("删除")}, *caps[] = {"memo.find", "text.undo", "text.redo", "memo.delete"};
-        for (int i = 0; i < 4; i++) {
-            M.tools[i] = ink_ui_text_button(screen, names[i], INK_MARGIN + i * (w + INK_GAP_S), y, w, NULL, NULL);
-            ink_shell_bind(M.tools[i], caps[i], i == 1 || i == 2 ? "{}" : M.target);
-            if (i == 1 || i == 2) lv_obj_add_flag(M.tools[i], LV_OBJ_FLAG_HIDDEN);
-        }
+static void edit_page(lv_obj_t *screen) { /* Fossify's TextFragment: no save button; find, undo, redo and delete written in the top bar */
+    const char *names[2][4] = {{TR("查找"), TR("撤销"), TR("重做"), TR("删除")}, {TR("上一个"), TR("下一个"), TR("关闭"), NULL}};
+    const char *caps[2][4] = {{"memo.find", "text.undo", "text.redo", "memo.delete"}, {"memo.find_prev", "memo.find_next", "memo.find_close", NULL}};
+    int x = INK_CANVAS_W - INK_MARGIN, set = F.open ? 1 : 0;
+    M.retry_button = NULL;
+    for (int i = set ? 2 : 3; i >= 0; i--) { /* right to left; 撤销 and 重做 keep their places while hidden */
+        int w = LV_MAX(INK_CONTROL, ink_ui_text_width(names[set][i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M);
+        if (i == 3) w = LV_MAX(w, ink_ui_text_width(TR("重试"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M);
+        x -= w; M.tools[i] = ink_ui_text_button(screen, names[set][i], x, INK_STATUS_BAR, w, NULL, NULL);
+        ink_shell_bind(M.tools[i], caps[set][i], !set && (i == 1 || i == 2) ? "{}" : M.target);
+        if (!set && (i == 1 || i == 2)) lv_obj_add_flag(M.tools[i], LV_OBJ_FLAG_HIDDEN);
+        if (i == 3) M.retry_button = ink_ui_text_button(screen, TR("重试"), x, INK_STATUS_BAR, w, retry, NULL);
     }
+    if (set) M.tools[1] = M.tools[2] = NULL;
     M.delete_button = M.tools[3] ? M.tools[3] : ink_ui_box(screen, 0, 0, 0, 0, 0, INK_SURFACE_WHITE, false);
-    M.retry_button = ink_ui_text_button(screen, TR("重试"), INK_MARGIN + 3 * (w + INK_GAP_S), INK_STATUS_BAR + INK_PRIMARY, w, retry, NULL);
+    if (!M.retry_button) M.retry_button = ink_ui_box(screen, 0, 0, 0, 0, 0, INK_SURFACE_WHITE, false);
     lv_obj_add_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN);
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .initial = M.note.body, .draft_page = ink_ui_page_name(), .draft_id = !strcmp(M.note.page, ink_ui_page_name()) ? M.note.draft : 0};
     M.field = ink_textfield_long_create(screen, &cfg);
-    if (M.field) { lv_obj_set_y(M.field, ink_ui_px(y + INK_CONTROL + INK_GAP_XS)); ink_textfield_style(M.field, INK_FIELD_BODY, TR("备忘")); }
+    if (M.field) ink_textfield_style(M.field, INK_FIELD_BODY, TR("备忘"));
     lv_obj_add_flag(M.notice, LV_OBJ_FLAG_HIDDEN);
-    /* The memo owns the save result; the shared footer only reports the draft. */
+    /* The memo owns the save result; the shared footer only reports the draft, and its left end holds 到期 and 转成清单. */
+    lv_area_t area = {0};
     for (uint32_t i = 0; M.field && i < lv_obj_get_child_count(M.field); i++) {
         lv_obj_t *label = lv_obj_get_child(M.field, (int32_t)i);
         if (lv_obj_check_type(label, &lv_label_class) && lv_obj_get_style_align(label, 0) == LV_ALIGN_BOTTOM_LEFT)
             lv_obj_add_flag(label, LV_OBJ_FLAG_HIDDEN);
     }
+    if (M.field) { lv_obj_update_layout(M.field); lv_obj_get_coords(M.field, &area); }
+    snprintf(M.args2[0], sizeof M.args2[0], "{\"id\":%u,\"due\":true}", (unsigned)M.id);
+    int due_w = LV_MAX(INK_CONTROL, ink_ui_text_width(TR("到期"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M), foot = area.y2 + 1 - ink_ui_px(INK_CONTROL);
+    lv_obj_t *due = ink_ui_text_button(screen, TR("到期"), INK_MARGIN, 0, due_w, NULL, NULL);
+    lv_obj_set_y(due, foot); ink_shell_bind(due, "memo.open", M.args2[0]);
+    if (!M.note.checklist) {
+        lv_obj_t *convert = ink_ui_text_button(screen, TR("转成清单"), INK_MARGIN + due_w, 0, ink_ui_text_width(TR("转成清单"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M, NULL, NULL);
+        lv_obj_set_y(convert, foot); ink_shell_bind(convert, "memo.convert", M.target);
+    }
     snprintf(M.sent, sizeof M.sent, "%s", M.mode == FAIL ? M.note.body : "\1");
     /* Opening saves at once (a new memo gets its record); that save is not the person's and changes no label. */
     M.opened_crc = M.mode == FAIL ? 0xffffffffu : ink_crc32(0, ink_textfield_text(M.field), strlen(ink_textfield_text(M.field)));
     M.note.draft = ink_text_draft_id(); snprintf(M.note.page, sizeof M.note.page, "%s", ink_ui_page_name());
-    if (F.open && F.query[0]) ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL);
+    if (F.open && !F.query[0]) { /* the query is typed where the body is; 搜索 brings the body back with the hit selected */
+        ink_text_cfg_t find = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .hint = TR("查找"), .max = sizeof F.query - 1};
+        M.find = ink_textfield_create(screen, &find, searched, NULL, false);
+        lv_obj_set_y(M.find, ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS)); ink_textfield_style(M.find, INK_FIELD_SEARCH, TR("查找"));
+        if (M.field) lv_obj_add_flag(M.field, LV_OBJ_FLAG_HIDDEN);
+        ink_textfield_short_focus(M.find);
+    } else if (F.open) ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL);
 }
 static void check_page(lv_obj_t *screen) { /* Fossify's TasksFragment with written buttons in place of long press and dragging */
     int top = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_GAP_M, half = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
@@ -794,14 +808,15 @@ static void item_page(lv_obj_t *screen) { /* Fossify's item menu as a page: one 
     action(4, "delete_item", TR("删除这一项"), "memo.delete_item", M.args2[0], true);
 }
 static void due_page(lv_obj_t *screen) { /* the shared date picker; a reminder follows the due date (memo.set_due) */
-    ink_tm_t t; int64_t at = M.note.due[M.index] ? M.note.due[M.index] : ink_time_now_s() + 86400, w = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
+    ink_tm_t t; int64_t at = M.note.due[M.index] ? M.note.due[M.index] : ink_time_now_s() + 86400;
+    int w = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
     ink_time_to_local(at, &t);
     if (!M.note.due[M.index]) { t.hour = 9; t.min = 0; } /* tomorrow 9:00 */
     int parts[5] = {t.year, t.month, t.day, t.hour, t.min};
     memcpy(M.parts, parts, sizeof parts); memset(M.part_labels, 0, sizeof M.part_labels);
     ink_ui_datetime_picker(screen, M.parts, bind_part);
-    ink_ui_pill(screen, TR("清除到期"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, (int)w, INK_PRIMARY, false, set_due, NULL);
-    ink_ui_pill(screen, TR("设好了"), INK_MARGIN + (int)w + INK_GAP, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, (int)w, INK_PRIMARY, true, set_due, (void *)1);
+    ink_ui_pill(screen, TR("清除到期"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, false, set_due, NULL);
+    ink_ui_pill(screen, TR("设好了"), INK_MARGIN + w + INK_GAP, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, true, set_due, (void *)1);
     snprintf(M.args2[0], sizeof M.args2[0], "{\"id\":%u,\"index\":%d}", (unsigned)M.id, M.index);
     action(0, "set_due", TR("设好了"), "memo.set_due", M.args2[0], true);
 }
@@ -811,7 +826,7 @@ static void voice_page(lv_obj_t *screen) { /* a memo with a recording: a written
     button(screen, text, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, false, "memo.play", M.target);
     action(3, "play", TR("播放录音"), "memo.play", M.target, true);
     if (M.mode != PENDING) return;
-    ink_shell_bind(ink_ui_text_button(screen, TR("删除"), INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR, INK_CONTROL, NULL, NULL), "memo.delete", M.target);
+    ink_shell_bind(ink_ui_text_button(screen, TR("删除"), INK_CANVAS_W - INK_MARGIN - fit(TR("删除")), INK_STATUS_BAR, fit(TR("删除")), NULL, NULL), "memo.delete", M.target);
     const char *name = strrchr(M.note.path, '/');
     if (name && sscanf(name, "/%4d%2d%2d-%2d%2d%2d", &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]) >= 5)
         snprintf(text, sizeof text, TR("录于 %d月%d日 %02d:%02d · 连上网后整理成文字"), d[1], d[2], d[3], d[4]);
@@ -830,7 +845,7 @@ static void create(lv_obj_t *screen, void *arg) {
     if (strcmp(S.member, M.member)) S.on = false;
     if (mode != EDIT && mode != FAIL && mode != DUE) F.open = false; /* Fossify clears the search when the note changes */
     ink_shell_statusbar(screen, true);
-    if (mode != RECORD) ink_shell_topbar(screen, mode == DUE ? TR("到期") : TR("备忘"));
+    if (mode != RECORD) ink_shell_topbar(screen, mode == DUE ? TR("到期") : mode == EDIT || mode == FAIL ? "" : TR("备忘")); /* the editor's top bar holds its actions */
     M.notice = ink_ui_notice(screen, mode == FAIL ? TR("这条没存上。字还在这里。请腾出空间后重试") : "", INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
     if (mode == RECORD) {
         ink_memo_voice_create(screen);
@@ -906,7 +921,7 @@ static int snapshot(char *out, size_t cap) {
 }
 static bool page_key(ink_key_t key, bool lng) {
     if (key == INK_KEY_BACK && !lng && M.mode == RECORD && ink_audio_recording()) { ink_memo_voice_stop(); return true; } /* ZSWatch: leaving saves */
-    if (key == INK_KEY_BACK && !lng && M.field && F.open) { F.open = false; F.query[0] = 0; ink_ui_redraw(); return true; } /* Fossify: back closes the find bar first */
+    if (key == INK_KEY_BACK && !lng && M.field && F.open) { F.open = false; F.query[0] = F.label[0] = 0; ink_ui_redraw(); return true; } /* Fossify: back closes the find bar first */
     return M.list && ink_ui_list_key(M.list, key, lng);
 }
 #define PAGE(name_) {.name = name_, .app = "memo", .create = create, .destroy = destroy, .snapshot = snapshot, .settle = settle, .on_key = page_key}
@@ -924,7 +939,7 @@ static const ink_cap_t CAPS[] = {
     WRITE("memo.undo", "撤销删除备忘，或撤销刚才删掉已完成的清单项", ID_ARGS),
     WRITE("memo.convert", "逐行转成清单（最多 32 项）", ID_ARGS),
     WRITE("memo.check", "勾选或取消清单项", ITEM_ARGS("", "")),
-    {.id = "memo.open", .app = "memo", .title = "查看备忘（query：停在篇内第 1 处；index：清单的这一项；due：到期时间页）",
+    {.id = "memo.open", .app = "memo", .title = "查看备忘（query：停在这条里的第 1 处；index：清单的这一项；due：到期时间页）",
      .input = "{\"type\":\"object\",\"properties\":{" ID ",\"query\":{\"type\":\"string\",\"maxLength\":20}," INDEX ",\"due\":{\"type\":\"boolean\"}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.edit", .app = "memo", .title = "写一条或编辑备忘（checklist：新清单）", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"checklist\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.next", .app = "memo", .title = "备忘下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
@@ -936,11 +951,11 @@ static const ink_cap_t CAPS[] = {
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_APP, .exec = INK_EXEC_BG, .run = mutate},
     {.id = "memo.search", .app = "memo", .title = "搜全部备忘（标题和正文，不分大小写；空串清除搜索）", .input = "{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"query\"]}",
      .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = search},
-    {.id = "memo.find", .app = "memo", .title = "在这篇备忘里查找（打开查找条，停在第 1 处）", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"query\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.find_next", .app = "memo", .title = "篇内查找：下一处（到最后回到第 1 处）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.find_prev", .app = "memo", .title = "篇内查找：上一处", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.find_close", .app = "memo", .title = "关闭篇内查找", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    WRITE("memo.add_item", "清单加一项（多行就是多项，最多 32 项；id 是新的就建一篇清单）", "{\"type\":\"object\",\"properties\":{" ID ",\"text\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":300}},\"required\":[\"id\",\"text\"]}"),
+    {.id = "memo.find", .app = "memo", .title = "在这条备忘里查找（打开查找条，停在第 1 处）", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"query\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.find_next", .app = "memo", .title = "这条备忘里查找：下一处（到最后回到第 1 处）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.find_prev", .app = "memo", .title = "这条备忘里查找：上一处", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.find_close", .app = "memo", .title = "关闭这条备忘里的查找", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    WRITE("memo.add_item", "清单加一项（多行就是多项，最多 32 项；id 是新的就建一条清单）", "{\"type\":\"object\",\"properties\":{" ID ",\"text\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":300}},\"required\":[\"id\",\"text\"]}"),
     WRITE("memo.edit_item", "改清单这一项的文字", ITEM_ARGS(",\"text\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":300}", ",\"text\"")),
     WRITE("memo.delete_item", "删除清单这一项", ITEM_ARGS("", "")),
     WRITE("memo.move_item", "把清单这一项移到最上或最下", ITEM_ARGS(",\"to\":{\"type\":\"string\",\"enum\":[\"top\",\"bottom\"]}", ",\"to\"")),
