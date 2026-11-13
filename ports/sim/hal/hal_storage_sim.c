@@ -260,8 +260,8 @@ void sim_storage_power_cut(void) { /* ISR context */
                 if (sim_rand01() < f) FL.img[FL.op_off + i] = 0xff;
                 else FL.img[FL.op_off + i] |= (uint8_t)(sim_rand() & sim_rand() & 0xff);
         }
-        sim_note("power cut tore an in-flight flash %s at 0x%x (%.0f%% done)", FL.op == OP_PROG ? "program" : "erase",
-                 FL.op_off, f * 100);
+        sim_note("power cut tore an in-flight flash %s at 0x%lx (%.0f%% done)", FL.op == OP_PROG ? "program" : "erase",
+                 (unsigned long)FL.op_off, f * 100);
         sim_metric_add("flash.torn_ops", 1);
     }
     save_image();
