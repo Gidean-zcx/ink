@@ -55,8 +55,7 @@ typedef struct ink_fs_dir ink_fs_dir_t;
 typedef struct {
     char name[INK_FS_NAME_MAX];
     bool is_dir;
-    int64_t size;
-    int64_t mtime; /* seconds from the card's directory entry (ink_fs_dir_next only; 0 elsewhere), -1 unknown */
+    int64_t size; int64_t mtime; /* mtime: seconds from the card's directory entry (ink_fs_dir_next only; 0 elsewhere), -1 unknown */
 } ink_fs_stat_t;
 
 typedef enum { INK_FS_ANY = -1, INK_FS_OTHER, INK_FS_IMAGE, INK_FS_AUDIO, INK_FS_TEXT } ink_fs_type_t;

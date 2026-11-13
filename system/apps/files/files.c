@@ -622,12 +622,12 @@ static void create(lv_obj_t *screen, void *arg) {
     if (F.mode == HOME) { F.path[0] = 0; F.multi = false; F.marked_count = 0; F.found = 0; F.from_fav = false; memset(&F.position, 0, sizeof F.position); }
     memset(F.actions, 0, sizeof F.actions); memset(F.fields, 0, sizeof F.fields);
     static const char *const titles[] = {TR_NOOP("文件"), "", TR_NOOP("文件"), TR_NOOP("放到哪里？"), "", TR_NOOP("编辑文本"), TR_NOOP("排序"), TR_NOOP("搜索"), TR_NOOP("同名文件")};
-    char title[INK_FS_NAME_MAX * 2]; snprintf(title, sizeof title, "%s", TR(titles[F.mode]));
+    char title[INK_FS_NAME_MAX * 2]; snprintf(title, sizeof title, "%s", titles[F.mode][0] ? TR(titles[F.mode]) : "");
     if (F.mode == LIST) { char labels[10][INK_FS_NAME_MAX]; size_t ends[10]; int n = crumbs(F.path, labels, ends, 10); snprintf(title, sizeof title, "%s", n ? labels[n - 1] : TR("文件")); }
     if (F.mode == NAME) snprintf(title, sizeof title, "%s", F.new_text ? TR("新建文本") : TR("新建文件夹"));
     if (F.mode == ACTIONS && F.selected.dir) snprintf(title, sizeof title, "%s", TR("这个文件夹"));
     if (F.mode == BATCH && F.bstate != B_ASK) snprintf(title, sizeof title, "%s", F.bstate == B_SPACE ? TR("空间不够") : F.bstate == B_DONE ? TR("结果") : F.copy ? TR("拷贝") : TR("移动"));
-    F.model = (ink_ui_page_spec_t){.id = PAGES[F.mode].name, .title = F.mode == LIST ? TR("文件") : TR(titles[F.mode]), .object = {"files", F.epoch}, .fields = F.fields, .actions = F.actions};
+    F.model = (ink_ui_page_spec_t){.id = PAGES[F.mode].name, .title = F.mode == LIST || !titles[F.mode][0] ? TR("文件") : TR(titles[F.mode]), .object = {"files", F.epoch}, .fields = F.fields, .actions = F.actions};
     ink_shell_statusbar(screen, true);
     ink_shell_bind(ink_ui_circle(screen, "back", INK_MARGIN, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL), "files.up", NULL);
     int folder = F.mode == LIST && !F.multi && !root_dir(F.path) ? ink_ui_text_width(TR("这个文件夹"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP : 0;
