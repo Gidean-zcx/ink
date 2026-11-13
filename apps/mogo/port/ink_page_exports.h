@@ -204,6 +204,7 @@ static int ink_mogo_json_layout(char *json,size_t cap) {
     return snprintf(json,cap,"{\"member\":\"%s\",\"font_size\":%d,\"line_spacing\":%d,\"paragraph_spacing\":%d,\"margins\":%d,\"weight\":%d,\"indent\":%d,\"header\":%d,\"footer\":%d}",
         o->member,ink_mogo_setting_value(0),ink_mogo_setting_value(1),ink_mogo_setting_value(2),ink_mogo_setting_value(3),ink_mogo_setting_value(4),ink_mogo_setting_value(5),ink_mogo_setting_value(6),ink_mogo_setting_value(7));
 }
+/* No NCX/NAV and no headings to build one from: Mogo names the spine "第 N 节", and the page says so like the old reader. */
 static bool ink_mogo_fallback_toc(void) {
     if (book_kind()!=BOOK_KIND_EPUB) return false;
     for (size_t i=0;i<book_navigation_count();++i) {
@@ -213,7 +214,9 @@ static bool ink_mogo_fallback_toc(void) {
     return true;
 }
 static int ink_mogo_json_chapters(char *json,size_t cap) {
-    int n=snprintf(json,cap,"{\"title\":\"%s\",\"chapter_count\":%u,\"fallback\":%s,\"entries\":[",s_reader_session.book.title,(unsigned)book_chapter_count(),ink_mogo_fallback_toc()?"true":"false");
+    char name[96]="", author[96]="";
+    if (book_kind()==BOOK_KIND_EPUB) (void)book_epub_metadata(s_reader_session.book.path,name,sizeof name,author,sizeof author);
+    int n=snprintf(json,cap,"{\"title\":\"%s\",\"author\":\"%s\",\"chapter_count\":%u,\"fallback\":%s,\"entries\":[",s_reader_session.book.title,author,(unsigned)book_chapter_count(),ink_mogo_fallback_toc()?"true":"false");
     for (size_t i=0;i<book_navigation_count() && n>0 && (size_t)n<cap;++i) {
         char title[96]=""; (void)book_navigation_title(i,title,sizeof title);
         n+=snprintf(json+n,cap-(size_t)n,"%s{\"title\":\"%s\",\"chapter\":%u,\"entry\":%u}",i?",":"",title,(unsigned)book_navigation_chapter(i)+1,(unsigned)i+1);

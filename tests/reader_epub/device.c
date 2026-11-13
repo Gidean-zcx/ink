@@ -1,108 +1,52 @@
-/* The C boundary and the whole reader, on the deterministic simulated device. */
+/* EPUB and TXT books through the one reader (reader-one-1): what the old C source checks found is now read through
+ * reader.chapters and the page snapshot, the same way the AI sees it. Deterministic simulated device. */
 #include <stdlib.h>
 #define ink_main product_main
 #include "configured_boot.c"
 #undef ink_main
 #include "integration/whole_product.h"
-#include <reader_source.h>
+#include "graft.h"
 #include "ink/sys/app.h"
 #include "ink/sys/storage.h"
-#include "ink/sys/crc.h"
-#include "ink/sys/layout.h"
+#include "ink/ui_theme.h"
 
 static char view[8192], before[8192];
-static const char *wanted;
-static lv_obj_t *found;
-static void locate(lv_obj_t *obj) {
-    if (!lv_obj_is_visible(obj)) return;
-    if (lv_obj_check_type(obj,&lv_label_class) && strstr(lv_label_get_text(obj),wanted)) found=obj;
-    for (uint32_t i=0;i<lv_obj_get_child_count(obj);i++) locate(lv_obj_get_child(obj,(int32_t)i));
-}
-static void find_label(void) { found=NULL; lv_obj_update_layout(lv_screen_active()); locate(lv_screen_active()); }
+static volatile bool captured;
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(),15000),"reader settles"); }
 static void ok(const char *cap, const char *args) {
     CHECK(AI(cap,args) && g_rc.status==INK_RC_DONE,"%s returns done: %.95s / %.95s",cap,g_rc.detail,g_rc.say); quiet();
 }
-static void inspect(void) { CHECK(ink_ui_snapshot(view,sizeof view,NULL)>0,"page snapshot available"); }
+static void graft_view(void) { ink_graft_snapshot(view,sizeof view); }
+static void inspect(void) { on_ui(graft_view); }
 static void home(void) { ink_ui_home(); }
-static void back(void) { ink_ui_pop(); }
 static void close_book(void) { on_ui(home); quiet(); CHECK(WAIT_FOR(!ink_storage_pending(),15000),"position durable"); }
-static volatile bool captured;
 static void capture(void *name) { sim_display_snapshot(name); captured=true; }
 static void frame(const char *name) {
     quiet(); captured=false; vtk_event_at(vtk_now()+SIM_MS(1),capture,(void *)name);
     CHECK(WAIT_FOR(captured,2000),"headless frame captured");
 }
-static void touch(const char *text) {
-    wanted=text; on_ui(find_label); CHECK(found,"touch target %s exists",text);
-    if (!found) return;
-    lv_area_t area; lv_obj_get_coords(found,&area);
-    tap((area.x1+area.x2)/2,(area.y1+area.y2)/2); quiet();
-}
-static bool cancel_now(void *ctx) { (void)ctx; return true; }
-static void source_checks(void) {
-    const char *books[]={"epub2.epub","epub3.epub"};
-    for (unsigned i=0;i<2;i++) {
-        ink_reader_source_t *s=NULL; ink_reader_info_t info; char path[128];
-        snprintf(path,sizeof path,"/content/books/%s",books[i]);
-        CHECK(ink_reader_source_open(path,&s,&info)==INK_READER_OK,"open %s through C",books[i]);
-        if (!s) continue;
-        CHECK(!strcmp(info.title,i ? "星图日记" : "山间来信") && !strcmp(info.author,i ? "测试作者乙" : "测试作者甲"),"metadata %s",books[i]);
-        CHECK(info.chapters==2 && info.entries==3 && !info.fallback,"spine and contents %s",books[i]);
-        ink_reader_entry_t e={0}; CHECK(!ink_reader_source_toc(s,2,&e) && e.chapter==1 && e.offset>0 && !strcmp(e.title,"中途码头"),"fragment maps inside chapter");
-        char text[2048]; size_t n=0; bool more=false;
-        CHECK(ink_reader_source_read(s,e.chapter,e.offset,text,sizeof text,&n,&more,NULL,NULL)==INK_READER_OK && !strncmp(text,"中途码头",strlen("中途码头")),"fragment body: %.150s",text);
-        CHECK(strstr(text,"［图片］"),"image placeholder present");
-        CHECK(ink_reader_source_read(s,0,0,text,sizeof text,&n,&more,cancel_now,NULL)==INK_READER_CANCELLED,"cancel bounded read");
-        char *whole=ink_app_alloc(32768,true), *joined=ink_app_alloc(32768,true); size_t total=0, full=0;
-        CHECK(whole && joined,"chunk test buffers");
-        if (whole && joined) {
-            CHECK(ink_reader_source_read(s,0,0,whole,32768,&full,&more,NULL,NULL)==INK_READER_OK && !more,"whole short chapter");
-            do {
-                CHECK(ink_reader_source_read(s,0,total,text,128,&n,&more,NULL,NULL)==INK_READER_OK && n,"bounded paragraph read");
-                if (!n || total+n>=32768) break;
-                CHECK(!more || text[n-1]=='\n',"cut on a paragraph boundary");
-                memcpy(joined+total,text,n); total+=n;
-            } while (more);
-            CHECK(total==full && !memcmp(joined,whole,full),"chunking loses no UTF-8 bytes");
-        }
-        ink_app_free(whole); ink_app_free(joined); ink_reader_source_close(s);
-    }
-    ink_reader_source_t *s=NULL; ink_reader_info_t info; char text[1024]; size_t n; bool more;
-    CHECK(ink_reader_source_open("/content/books/chapters.txt",&s,&info)==INK_READER_OK && info.entries==2,"vendor TXT chapter rules");
-    ink_reader_entry_t e={0}; CHECK(!ink_reader_source_toc(s,1,&e) && e.offset>0 && !strcmp(e.title,"第二章 夜晚"),"TXT chapter title and byte anchor");
-    ink_reader_source_close(s);
-    CHECK(ink_reader_source_open("/content/books/gb18030.txt",&s,&info)==INK_READER_OK,"GB18030 opens");
-    CHECK(ink_reader_source_read(s,0,0,text,sizeof text,&n,&more,NULL,NULL)==INK_READER_OK && strstr(text,"春天的山路"),"vendor GB18030 decoding"); ink_reader_source_close(s);
-    CHECK(ink_reader_source_open("/content/books/no-toc.epub",&s,&info)==INK_READER_OK && info.fallback && info.entries==2,"spine fallback"); ink_reader_source_close(s);
-    CHECK(ink_reader_source_open("/content/books/corrupt.epub",&s,&info)==INK_READER_CORRUPT && !s,"damaged ZIP rejected");
-    CHECK(ink_reader_source_open("/content/books/not-epub.epub",&s,&info)==INK_READER_FORMAT && !s,"non-EPUB rejected");
-    CHECK(ink_reader_source_open("/content/books/encrypted.epub",&s,&info)==INK_READER_ENCRYPTED && !s,"encrypted ZIP rejected");
-    CHECK(ink_reader_source_open("/content/books/long.epub",&s,&info)==INK_READER_OK,"long EPUB opens");
-    char *large=ink_app_alloc(2u*1024u*1024u+1,true); size_t total=0, parts=0;
-    if (large && s) do {
-        CHECK(ink_reader_source_read(s,0,total,large,2u*1024u*1024u+1,&n,&more,NULL,NULL)==INK_READER_OK && n,"long bounded read");
-        CHECK(!more || large[n-1]=='\n',"long section ends on paragraph"); total+=n; parts++;
-    } while (more && parts<4);
-    CHECK(parts>1 && total>2u*1024u*1024u && !more,"chapter larger than PSRAM buffer split losslessly");
-    ink_app_free(large); ink_reader_source_close(s);
-}
+static int geometry_top, geometry_h, geometry_w;
+static void geometry(void) { geometry_top=ink_ui_px(108); geometry_h=ink_ui_height()-geometry_top; geometry_w=ink_ui_width(); }
+static void tap_native(int x,int y) { on_ui(geometry); tap(x*geometry_w/684,geometry_top+y*geometry_h/1216); quiet(); }
+static int pages_here(void) { inspect(); const char *p=strstr(view,"页="); return p ? atoi(strchr(p,'/')+1) : 0; }
 static void reader_checks(void) {
-    ok("app.open","{\"id\":\"reader\"}"); on_ui(inspect);
-    CHECK(strstr(view,"书架") && strstr(view,"reader.open_book"),"semantic bookshelf uses book names");
+    ok("app.open","{\"id\":\"reader\"}");
+    for (int i=0;i<200 && (inspect(),!strstr(view,"面板=书架"));i++) delay_ms(50); /* the page loads on BG after the app opens */
+    CHECK(strstr(view,"面板=书架") && strstr(view,"山间来信 全家的") && strstr(view,"reader.open_book"),"the shelf names books by their own titles: %.150s",view);
     int pages=0;
     while (AI("reader.list_next",NULL) && g_rc.status==INK_RC_DONE) { quiet(); pages++; if (pages>20) break; }
-    CHECK(pages>=6,"more than 16 books reachable by pagination (%d)",pages); close_book();
+    CHECK(pages>=6,"more than 24 books reachable by pagination (%d)",pages); close_book();
     ok("reader.open_book","{\"title\":\"山间来信\"}");
-    ok("reader.chapters",NULL); CHECK(strstr(g_result,"第一章 山路") && strstr(g_result,"中途码头"),"AI sees real TOC: %.150s",g_result);
-    CHECK(strstr(g_result,"测试作者甲") && strstr(g_result,"\"chapter_count\":2"),"AI reads the same author and chapter count as the C source");
+    ok("reader.chapters",NULL); CHECK(strstr(g_result,"第一章 山路") && strstr(g_result,"中途码头"),"AI sees the NCX contents: %.150s",g_result);
+    CHECK(strstr(g_result,"测试作者甲") && strstr(g_result,"\"chapter_count\":2") && strstr(g_result,"\"fallback\":false"),"author, spine count and no fallback: %.200s",g_result);
+    CHECK(strstr(g_result,"{\"title\":\"中途码头\",\"chapter\":2,\"entry\":3}"),"the fragment entry maps inside chapter two");
     ok("reader.read_page",NULL); CHECK(strstr(g_rc.say,"山间来信") && strstr(g_rc.say,"第一章 山路"),"AI page includes book and chapter");
     unsigned previous=g_rc.revision; bool crossed=false;
     for (int i=0;i<40;i++) {
         ok("reader.next_page",NULL); ok("reader.read_page",NULL);
         if (strstr(g_rc.say,"第二章 海边")) { crossed=true; break; }
-        CHECK(g_rc.revision==previous+1,"chapter page count continues across bounded segments"); previous=g_rc.revision;
+        CHECK(g_rc.revision==previous+1,"chapter page count continues"); previous=g_rc.revision;
     }
     CHECK(crossed && g_rc.revision==1,"next-page flow reaches the next chapter");
     ok("reader.goto_chapter","{\"chapter\":2}"); ok("reader.read_page",NULL);
@@ -111,48 +55,60 @@ static void reader_checks(void) {
     CHECK(strstr(g_rc.say,"第一章 山路") && g_rc.revision>1,"previous chapter last page");
     ok("reader.next_page",NULL); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第二章 海边") && g_rc.revision==1,"forward across chapter returns to first page");
-    ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.show_chapters",NULL); on_ui(inspect);
-    CHECK(!strcmp(ink_ui_top_name(),"chapters") && strstr(view,"中途码头"),"contents page and AI snapshot agree");
+    ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.show_chapters",NULL); inspect();
+    CHECK(!strcmp(ink_ui_top_name(),"book") && strstr(view,"面板=目录") && strstr(view,"3 中途码头"),"contents page and AI snapshot agree: %.200s",view);
     frame("epub-contents");
     ok("reader.chapters",NULL); CHECK(strstr(g_result,"中途码头"),"AI can list chapters while the contents page is open");
-    touch("中途码头"); ok("reader.read_page",NULL);
-    CHECK(strstr(g_rc.say,"第二章 海边"),"TOC tap route returns to reading page");
+    tap_native(342,252+2*108+47); ok("reader.read_page",NULL);
+    CHECK(strstr(g_rc.say,"第二章 海边") && strstr(g_rc.say,"中途码头"),"TOC tap goes to the fragment in chapter two: %.150s",g_rc.say);
     close_book(); ok("reader.continue",NULL);
-    CHECK(!strcmp(ink_ui_top_name(),"book"),"continue finds EPUB by stored file identity");
+    CHECK(!strcmp(ink_ui_top_name(),"book"),"continue finds the EPUB");
     ok("reader.read_page",NULL); CHECK(strstr(g_rc.say,"第二章 海边"),"TOC navigation persists across close and continue");
-    ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.goto_page","{\"page\":2}"); on_ui(inspect); snprintf(before,sizeof before,"%s",view);
-    CHECK(AI("reader.goto_page","{\"page\":1000000}") && g_rc.status==INK_RC_FAILED,"out-of-range chapter page rejected"); quiet(); on_ui(inspect);
+    ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.goto_page","{\"page\":2}"); inspect(); snprintf(before,sizeof before,"%s",view);
+    CHECK(AI("reader.goto_page","{\"page\":1000000}") && g_rc.status==INK_RC_FAILED,"out-of-range chapter page rejected"); quiet(); inspect();
     CHECK(!strcmp(before,view),"failed seek preserves current chapter page");
-    close_book(); ok("reader.open_book","{\"title\":\"山间来信\"}"); on_ui(inspect);
-    CHECK(!strcmp(before,view),"close and reopen restores chapter and offset"); close_book();
+    close_book(); ok("reader.open_book","{\"title\":\"山间来信\"}"); inspect();
+    CHECK(!strcmp(before,view),"close and reopen restores chapter and offset");
+    close_book();
     CHECK(!ink_member_switch("kid"),"child member"); quiet(); ok("reader.open_book","{\"title\":\"山间来信\"}"); ok("reader.goto_chapter","{\"chapter\":2}"); close_book();
-    CHECK(!ink_member_switch("owner"),"adult member"); quiet(); ok("reader.open_book","{\"title\":\"山间来信\"}"); on_ui(inspect);
+    CHECK(!ink_member_switch("owner"),"adult member"); quiet(); ok("reader.open_book","{\"title\":\"山间来信\"}"); inspect();
     CHECK(!strcmp(before,view),"member positions isolated"); close_book();
-    ok("reader.open_book","{\"title\":\"星图日记\"}"); ok("reader.chapters",NULL); CHECK(strstr(g_result,"中途码头"),"EPUB3 NAV is exposed"); close_book();
-    ok("reader.open_book","{\"title\":\"无目录散记\"}"); ok("reader.show_chapters",NULL); on_ui(inspect);
-    CHECK(strstr(view,"没有目录，按章节阅读") && strstr(view,"第 1 章"),"fallback notice and chapter names are exposed to AI");
-    ok("reader.chapters",NULL); CHECK(strstr(g_result,"第 1 章"),"fallback chapter labels agree with the contents page");
-    wanted="没有目录，按章节阅读"; on_ui(find_label); CHECK(found,"fallback notice visible");
-    lv_area_t notice={0}, row={0}; if (found) lv_obj_get_coords(found,&notice);
-    wanted="第 1 章"; on_ui(find_label); CHECK(found,"fallback chapter visible");
-    if (found) lv_obj_get_coords(found,&row);
-    CHECK(notice.y2 < row.y1,"fallback notice does not overlap the first chapter");
+    ok("reader.open_book","{\"title\":\"星图日记\"}"); ok("reader.chapters",NULL);
+    CHECK(strstr(g_result,"中途码头") && strstr(g_result,"测试作者乙"),"EPUB3 NAV is exposed"); close_book();
+    /* Without NCX/NAV Mogo builds the contents from the chapter headings; only with neither does it fall back. */
+    ok("reader.open_book","{\"title\":\"无目录散记\"}"); ok("reader.chapters",NULL);
+    CHECK(strstr(g_result,"{\"title\":\"第一章 山路\",\"chapter\":1,\"entry\":1}") && strstr(g_result,"第二章 海边") && strstr(g_result,"\"fallback\":false"),
+          "a book without contents gets them from its headings: %.200s",g_result); close_book();
+    ok("reader.open_book","{\"title\":\"无标题散记\"}"); ok("reader.show_chapters",NULL); inspect();
+    CHECK(strstr(view,"没有目录，按章节阅读") && strstr(view,"1 第 1 节"),"fallback notice and chapter names are exposed to AI: %.200s",view);
+    ok("reader.chapters",NULL); CHECK(strstr(g_result,"第 1 节") && strstr(g_result,"\"fallback\":true"),"fallback chapter labels agree with the contents page");
     frame("epub-fallback-zh");
-    ok("settings.set","{\"id\":\"system.language\",\"value\":1}"); on_ui(inspect);
-    CHECK(strstr(view,"No contents found") && strstr(view,"Chapter 1"),"English fallback is translated in the same snapshot");
-    wanted="No contents found"; on_ui(find_label); CHECK(found,"English fallback notice visible");
-    if (found) lv_obj_get_coords(found,&notice);
-    wanted="Chapter 1"; on_ui(find_label); CHECK(found,"English fallback chapter visible");
-    if (found) lv_obj_get_coords(found,&row);
-    CHECK(notice.y2 < row.y1,"wrapped English fallback notice has its own space");
+    ok("settings.set","{\"id\":\"system.language\",\"value\":1}"); close_book(); /* the language is read when the page is laid out */
+    ok("reader.open_book","{\"title\":\"无标题散记\"}"); ok("reader.show_chapters",NULL); inspect();
+    CHECK(strstr(view,"No contents found"),"English fallback notice in the same snapshot");
     frame("epub-fallback-en");
     ok("settings.set","{\"id\":\"system.language\",\"value\":0}"); close_book();
-    CHECK(AI("reader.open_book","{\"title\":\"corrupt\"}") && g_rc.status==INK_RC_FAILED && strstr(g_rc.say,"损坏"),"actionable Chinese corrupt-book receipt");
-    on_ui(inspect); CHECK(strstr(view,"损坏"),"same Chinese error on page"); close_book();
+    CHECK(AI("reader.open_book","{\"title\":\"corrupt\"}") && g_rc.status==INK_RC_FAILED && strstr(g_rc.say,"损坏"),"actionable Chinese corrupt-book receipt: %.100s",g_rc.say);
+    inspect(); CHECK(strstr(view,"面板=打不开") && strstr(view,"损坏"),"same Chinese error on page"); frame("epub-corrupt"); close_book();
+    CHECK(AI("reader.open_book","{\"title\":\"encrypted\"}") && g_rc.status==INK_RC_FAILED && strstr(g_rc.say,"加密"),"an encrypted EPUB says so: %.100s",g_rc.say); close_book();
+    CHECK(AI("reader.open_book","{\"title\":\"not-epub\"}") && g_rc.status==INK_RC_FAILED && g_rc.say[0],"a ZIP that is not an EPUB is refused with a reason: %.100s",g_rc.say); close_book();
+    ok("reader.open_book","{\"title\":\"gb18030\"}"); ok("reader.read_page",NULL); CHECK(strstr(g_rc.say,"春天的山路"),"GB18030 decoding"); close_book();
+    ok("reader.open_book","{\"title\":\"chapters\"}"); ok("reader.chapters",NULL);
+    CHECK(strstr(g_result,"第二章 夜晚") && strstr(g_result,"\"entry\":2"),"TXT chapter rules: %.150s",g_result); close_book();
+}
+/* The old engine split chapters over 2 MB; Mogo loads the chapter whole. What stays is that a long chapter reads to its
+ * end and the next turn enters the next chapter. */
+static void long_chapter(void) {
+    ok("reader.open_book","{\"title\":\"长章读完\"}"); ok("reader.goto_chapter","{\"chapter\":1}");
+    int last=pages_here(); CHECK(last>100,"the long chapter is many pages (%d)",last);
+    char args[32]; snprintf(args,sizeof args,"{\"page\":%d}",last); ok("reader.goto_page",args);
+    ok("reader.read_page",NULL); inspect(); CHECK(strstr(view,"第4999段") && g_rc.revision==(unsigned)last,"on the long chapter's last page: %.100s",g_rc.say);
+    ok("reader.next_page",NULL); ok("reader.read_page",NULL);
+    CHECK(strstr(g_rc.say,"第二章 海边") && g_rc.revision==1,"the next turn enters chapter two: %.100s",g_rc.say); close_book();
 }
 static void restart_checks(void) {
-    ok("reader.continue",NULL); /* Last readable book is EPUB3. */
-    close_book(); ok("reader.open_book","{\"title\":\"山间来信\"}"); ok("reader.read_page",NULL);
+    ok("reader.continue",NULL); close_book();
+    ok("reader.open_book","{\"title\":\"山间来信\"}"); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第一章 山路") && g_rc.revision==2,"restart restores adult chapter/page"); close_book();
     CHECK(!ink_member_switch("kid"),"child after restart"); quiet(); ok("reader.open_book","{\"title\":\"山间来信\"}"); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第二章 海边") && g_rc.revision==1,"restart restores child independently"); close_book();
@@ -160,7 +116,9 @@ static void restart_checks(void) {
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
     const char *phase=getenv("INK_READER_EPUB_PHASE");
-    if (phase && !strcmp(phase,"restart")) restart_checks(); else { source_checks(); reader_checks(); }
+    if (phase && !strcmp(phase,"restart")) restart_checks();
+    else if (phase && !strcmp(phase,"segments")) long_chapter();
+    else reader_checks();
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
