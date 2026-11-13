@@ -7,6 +7,7 @@
 #include <ui_kit.h>
 #include <ui_font.h>
 #include <home_components.h>
+#include <esp_random.h>
 #include <book_store.h>
 #include <book_cover_jobs.h>
 #include <book_progress.h>
@@ -115,7 +116,7 @@ time_t ink_mogo_lock_time(time_t *out) {
     return shifted;
 }
 /* The mini library's random pick only needs to differ between draws: xorshift from the monotonic clock. */
-uint32_t esp_random(void) {
+uint32_t ink_mogo_lock_random(void) {
     static uint32_t s;
     if (!s) s = (uint32_t)ink_now_us() | 1u;
     s ^= s << 13; s ^= s >> 17; s ^= s << 5;

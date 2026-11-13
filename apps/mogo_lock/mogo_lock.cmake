@@ -14,7 +14,7 @@ add_library(ink_mogo_lock_native STATIC
 target_include_directories(ink_mogo_lock_native BEFORE PRIVATE ${lock_dir}/port ${lock_root}/apps/mogo/port
   ${lock_main} ${lock_main}/book ${lock_main}/ui ${lock_main}/services
   ${lock_book}/book ${lock_book}/font ${lock_book}/image ${lock_book}/diagnostics
-  ${lock_root}/system/services/time/vendor/mogo-calendar/main ${lock_dir} ${lock_root}/system/ui)
+  ${lock_root}/system/services/time/vendor/mogo-calendar/main ${lock_dir} ${lock_root}/system/ui ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(ink_mogo_lock_native PRIVATE ${system_target})
 target_compile_definitions(ink_mogo_lock_native PRIVATE BOOK_LOCK_CACHE_PARENT="/me/mogo")
 target_compile_options(ink_mogo_lock_native PRIVATE -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable

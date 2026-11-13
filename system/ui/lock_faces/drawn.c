@@ -27,7 +27,7 @@ static struct {
     bool front_ok, busy, again;
     char why[INK_LOCK_WHY_MAX], time[24], date[96], privacy[48];
     char pending_cap[32], pending_args[INK_LOCK_PATH_MAX + 16], pending_owner[16];
-    ink_exec_job_t job, done;
+    ink_exec_job_t job, done, after;
     void (*changed)(int how);
 } D INK_PSRAM_BSS;
 
@@ -146,7 +146,6 @@ static void shown_job(void *arg) { /* BG */
     const ink_lock_client_t *c = client((int)(intptr_t)arg);
     if (c && c->shown) c->shown((int)(intptr_t)arg, D.front);
 }
-static ink_exec_job_t g_shown;
 static void rendered(void *arg) { /* UI */
     bool ok = (uintptr_t)arg != 0;
     ink_probe_count("lock.drawn.renders");
@@ -182,7 +181,7 @@ static void rendered(void *arg) { /* UI */
         D.shown = D.want; D.shown_revision = D.want_revision; D.drawn = D.next; D.front_ok = true; D.why[0] = 0;
         if (style == D.want.style) { ink_probe_count("lock.drawn.whole"); tell(1); }
     }
-    if (ok && D.image) ink_exec_post(INK_EXEC_BG, &g_shown, shown_job, (void *)(intptr_t)D.shown.style);
+    if (ok && D.image) ink_exec_post(INK_EXEC_BG, &D.after, shown_job, (void *)(intptr_t)D.shown.style);
     if (style >= 0 && (!current || D.again)) start(style);
 }
 bool ink_lock_face_ready(int style) {
