@@ -1,6 +1,3 @@
-新阅读	New reader
-新阅读 正在排版	New reader: laying out
-新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 字号=%d\n%.*s	New reader %s Chapter=%zu Page=%zu/%zu Position=%zu Size=%d\n%.*s
 字重	Weight
 缩进	Indent
 页眉	Header
@@ -10,4 +7,41 @@
 书签列表	Bookmarks
 正文	Book
 ‹ 上一页                     下一页 ›	‹ Previous                     Next ›
-新阅读 %s 章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 章名=%s\n%.*s	New reader %s Chapter=%zu Page=%zu/%zu Position=%zu End=%zu Size=%d Panel=%s Bookmarks=%zu Chapter title=%s\n%.*s
+内存不足，请返回书架再试	Not enough memory. Go back to the library and try again.
+文件损坏或没有正文，请重新传入这本书	The book is damaged or empty. Transfer it again.
+没有目录，按章节阅读	No contents found. Read in chapter order.
+目录	Contents
+章内页	Page in chapter
+读不到这本书，请检查存储卡后重试	Cannot read this book. Check the memory card and try again.
+这不是 EPUB 或 TXT，请选择支持的书	This is not an EPUB or TXT book. Choose a supported book.
+这本书已加密或压缩方式不支持，请换一本未加密的 EPUB	This book is encrypted or uses unsupported compression. Choose an unencrypted EPUB.
+行距	Line spacing
+段距	Paragraph spacing
+边距	Margins
+阅读设置	Reading settings
+传书	Transfer books
+现在做不了，请稍后再试	Not possible right now. Try again later.
+阅读 正在排版	Reader: laying out
+接着读《%.60s》	Continuing 《%.60s》
+打开《%.60s》	Opening 《%.60s》
+书架上有这些书	These books are on the shelf
+第 %u 章	Chapter %u
+第 %u 节	Section %u
+《%s》%s · 读到 %u%%	《%s》%s · %u%% read
+全家的	Family
+我的书	Mine
+示例	Sample
+现在是第 %u 页	Now on page %u
+没有卡	No card
+缺字体	No font
+打不开	Cannot open
+书架空	Empty shelf
+没有插存储卡。书和阅读字体都放在存储卡上，插好后再打开阅读。	No memory card. Books and the reading font are on the memory card; insert it, then open the reader again.
+还缺阅读用的字体，暂时不能显示书。字体文件 InkSC.ttf 应放在存储卡的 fonts 文件夹里；连着电脑装机时会自动放进去。	The reading font is missing, so books cannot be shown yet. The font file InkSC.ttf belongs in the fonts folder on the memory card; setting up with a computer puts it there.
+阅读字体（存储卡 fonts/InkSC.ttf）读不出来，请连着电脑重新装机补上。	The reading font (memory card fonts/InkSC.ttf) cannot be read. Set up again with a computer to replace it.
+请家长用‘传书’把书传进来。	Ask a parent to add books with Transfer books.
+书架上还没有书。用‘传书’从电脑或手机传进来，会放在‘传进来的’；全家的书放在存储卡的 books 文件夹。	No books on the shelf yet. Use Transfer books from a computer or phone; they go to Transferred. Family books go in the books folder on the memory card.
+阅读 《%s》 · %s · 章内页 %zu/%zu · %u%%\n	Reader 《%s》 · %s · page %zu/%zu in chapter · %u%%\n
+阅读 %s\n	Reader %s\n
+章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu\n	章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu\n
+动作：%s	Actions: %s

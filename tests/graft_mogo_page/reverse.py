@@ -21,7 +21,7 @@ def reverse(build, carrier_close=False):
                 '    ink_shell_statusbar(screen, true);', '    G.status = ink_shell_statusbar(screen, true);').replace(
                 '    osal_free(G.pixels);', '    if (G.status) lv_obj_delete(G.status);\n    osal_free(G.pixels);')
         else:
-            changed = original.replace('if (!dir || M.busy) return false;', 'if (dir || M.busy) return false;')
+            changed = original.replace('if (!dir || (!reading && !lists)) return false;', 'if (dir || (!reading && !lists)) return false;').replace('return id && (!*id || ink_mogo_call(id, args, e->source));', 'return id && !*id;')
         assert changed != original
         mutant.write_text(changed)
         obj = area / (source.name + '.o')

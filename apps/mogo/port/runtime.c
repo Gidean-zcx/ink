@@ -7,7 +7,23 @@
 #include <settings.h>
 #include <nvs.h>
 #include "ink/sys/time.h"
-typedef struct { ink_fs_file_t *file; bool error; } ink_mogo_stream_t;
+#include <page.h>
+#ifndef ESP_PLATFORM
+#include <vtk.h>
+#endif
+/* An open book: a member file, or a bundled asset ("asset:sample/welcome.txt") read into PSRAM, read-only. */
+typedef struct { ink_fs_file_t *file; bool error; uint8_t *mem; size_t len, pos; } ink_mogo_stream_t;
+/* Host work (formatting, sorting) from a simulated task goes through the host; on the device it is a call. */
+static void ink_mogo_host_call(void (*fn)(void *), void *arg) {
+#ifdef ESP_PLATFORM
+    fn(arg);
+#else
+    vtk_host_call(fn, arg);
+#endif
+}
+/* The reader's font, in one place (auto-provision-1 puts the family's copy there). */
+static const char INK_MOGO_FONT_OWN[] = "/me/fonts/InkSC.ttf", INK_MOGO_FONT_FAMILY[] = "/family/fonts/InkSC.ttf";
+static const char *ink_mogo_font = INK_MOGO_FONT_FAMILY;
 static ink_member_identity_t ink_mogo_member;
 static ink_fs_file_t *ink_mogo_fds[4];
 static int ink_mogo_w, ink_mogo_h, ink_mogo_px;
@@ -49,17 +65,29 @@ bool ink_mogo_settings_save(void) {
     return !err;
 }
 const char *app_settings_fonts_dir(void) { return "/me/fonts"; }
-const char *app_settings_font_path(void) {
-    /* A member's own copy wins; otherwise the family's one copy (on the card: /content/fonts/InkSC.ttf). */
+/* A member's own copy wins; otherwise the family's one copy (on the card: fonts/InkSC.ttf). */
+int ink_mogo_font_check(void) {
     ink_fs_file_t *f = NULL;
-    if (!ink_graft_file_open(&ink_mogo_member, "/me/fonts/InkSC.ttf", INK_FS_READ, &f)) {
-        ink_fs_close(f);
-        return "/me/fonts/InkSC.ttf";
+    int own = ink_graft_file_open(&ink_mogo_member, INK_MOGO_FONT_OWN, INK_FS_READ, &f), family = 0;
+    if (!own) ink_mogo_font = INK_MOGO_FONT_OWN;
+    else if (!(family = ink_graft_file_open(&ink_mogo_member, INK_MOGO_FONT_FAMILY, INK_FS_READ, &f))) ink_mogo_font = INK_MOGO_FONT_FAMILY;
+    else return own == INK_FS_ERR_NO_CARD || family == INK_FS_ERR_NO_CARD ? INK_MOGO_R_NO_CARD : INK_MOGO_R_NO_FONT;
+    ink_fs_close(f);
+    return INK_MOGO_R_NONE;
+}
+const char *app_settings_font_path(void) { return ink_mogo_font; }
+static ink_mogo_stream_t *ink_mogo_asset(const char *path) {
+    int64_t size = ink_app_asset_read(path + 6, NULL, 0);
+    ink_mogo_stream_t *stream = size > 0 ? ink_mogo_calloc(1, sizeof *stream) : NULL;
+    if (stream && (!(stream->mem = ink_mogo_malloc((size_t)size)) || ink_app_asset_read(path + 6, stream->mem, (size_t)size) != size)) {
+        ink_app_free(stream->mem); ink_app_free(stream); return NULL;
     }
-    return "/family/fonts/InkSC.ttf";
+    if (stream) stream->len = (size_t)size;
+    return stream;
 }
 FILE *ink_mogo_fopen(const char *path, const char *mode) {
     ink_fs_file_t *f = NULL;
+    if (!strcmp(mode, "rb") && !strncmp(path, "asset:", 6)) return (FILE *)ink_mogo_asset(path);
     if (strcmp(mode, "rb") || ink_graft_file_open(&ink_mogo_member, path, INK_FS_READ, &f)) return NULL;
     ink_mogo_stream_t *stream = ink_mogo_malloc(sizeof *stream);
     if (!stream) { ink_fs_close(f); return NULL; }
@@ -69,19 +97,38 @@ FILE *ink_mogo_fopen(const char *path, const char *mode) {
 size_t ink_mogo_fread(void *p, size_t s, size_t n, FILE *f) {
     if (!s || n > SIZE_MAX / s) return 0;
     ink_mogo_stream_t *stream = (ink_mogo_stream_t *)f;
+    if (stream->mem) {
+        size_t got = s * n < stream->len - stream->pos ? s * n : stream->len - stream->pos;
+        memcpy(p, stream->mem + stream->pos, got); stream->pos += got; return got / s;
+    }
     int64_t got = ink_fs_read(stream->file, p, s * n);
     if (got < 0) stream->error = true;
     return got > 0 ? (size_t)got / s : 0;
 }
 size_t ink_mogo_fwrite(const void *p, size_t s, size_t n, FILE *f) { (void)p; (void)s; (void)n; (void)f; return 0; }
-int ink_mogo_fclose(FILE *f) { ink_mogo_stream_t *s = (ink_mogo_stream_t *)f; int r = ink_fs_close(s->file); ink_app_free(s); return r; }
+int ink_mogo_fclose(FILE *f) { ink_mogo_stream_t *s = (ink_mogo_stream_t *)f; int r = s->mem ? 0 : ink_fs_close(s->file); ink_app_free(s->mem); ink_app_free(s); return r; }
 int ink_mogo_ferror(FILE *f) { return ((ink_mogo_stream_t *)f)->error; }
 void ink_mogo_clearerr(FILE *f) { ((ink_mogo_stream_t *)f)->error = false; }
 int ink_mogo_fgetc(FILE *f) { unsigned char c; return ink_mogo_fread(&c,1,1,f) == 1 ? c : EOF; }
-int ink_mogo_fseek(FILE *f, long off, int whence) { ink_mogo_stream_t *s = (ink_mogo_stream_t *)f; int r = ink_fs_seek(s->file, off, whence); if (r) s->error = true; return r; }
-long ink_mogo_ftell(FILE *f) { return (long)ink_fs_tell(((ink_mogo_stream_t *)f)->file); }
+int ink_mogo_fseek(FILE *f, long off, int whence) {
+    ink_mogo_stream_t *s = (ink_mogo_stream_t *)f;
+    if (s->mem) {
+        long at = whence == SEEK_SET ? off : whence == SEEK_CUR ? (long)s->pos + off : (long)s->len + off;
+        if (at < 0 || (size_t)at > s->len) return -1;
+        s->pos = (size_t)at; return 0;
+    }
+    int r = ink_fs_seek(s->file, off, whence);
+    if (r) s->error = true;
+    return r;
+}
+long ink_mogo_ftell(FILE *f) { ink_mogo_stream_t *s = (ink_mogo_stream_t *)f; return s->mem ? (long)s->pos : (long)ink_fs_tell(s->file); }
 int ink_mogo_stat(const char *path, struct stat *st) {
     ink_fs_file_t *f;
+    if (!strncmp(path, "asset:", 6)) {
+        int64_t size = ink_app_asset_read(path + 6, NULL, 0);
+        memset(st, 0, sizeof *st); st->st_mode = S_IFREG; st->st_size = size;
+        return size > 0 ? 0 : -1;
+    }
     if (ink_graft_file_open(&ink_mogo_member, path, INK_FS_READ, &f)) return -1;
     int err = ink_fs_seek(f, 0, SEEK_END);
     int64_t size = ink_fs_tell(f);
@@ -110,11 +157,10 @@ void epd_fill_rect(EpdRect r, uint8_t gray, uint8_t *fb) {
         for (int x = r.x; x < r.x + r.width; ++x) epd_draw_pixel(x, y, gray, fb);
 }
 typedef struct { char *out; size_t cap; const char *fmt; va_list args; int result; } ink_mogo_format_t;
-extern void ink_reader_host_call(void (*fn)(void *), void *arg);
 static void ink_mogo_format(void *arg) { ink_mogo_format_t *f = arg; f->result = vsnprintf(f->out, f->cap, f->fmt, f->args); }
 int ink_mogo_snprintf(char *out, size_t cap, const char *fmt, ...) {
     ink_mogo_format_t f = {.out = out, .cap = cap, .fmt = fmt};
-    va_start(f.args, fmt); ink_reader_host_call(ink_mogo_format, &f); va_end(f.args); return f.result;
+    va_start(f.args, fmt); ink_mogo_host_call(ink_mogo_format, &f); va_end(f.args); return f.result;
 }
 bool book_index_cache_prepare(const char *p, const char *tag, uint32_t v, char *o, size_t n, book_index_cache_header_t *k) {
     (void)p; (void)tag; (void)v; (void)k; (void)o; (void)n; return false;
@@ -127,5 +173,5 @@ time_t ink_mogo_time(time_t *out) { time_t now=(time_t)ink_time_now_s(); if (out
 typedef struct { void *base; size_t count,size; int (*compare)(const void *,const void *); } ink_mogo_sort_t;
 static void ink_mogo_host_sort(void *arg) { ink_mogo_sort_t *s=arg; qsort(s->base,s->count,s->size,s->compare); }
 void ink_mogo_qsort(void *base,size_t count,size_t size,int (*compare)(const void *,const void *)) {
-    ink_mogo_sort_t sort={base,count,size,compare}; ink_reader_host_call(ink_mogo_host_sort,&sort);
+    ink_mogo_sort_t sort={base,count,size,compare}; ink_mogo_host_call(ink_mogo_host_sort,&sort);
 }

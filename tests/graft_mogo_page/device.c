@@ -34,11 +34,11 @@ static void frame(const char *name) {
     captured=false; vtk_event_at(vtk_now()+SIM_MS(1),capture,(void *)name);
     CHECK(WAIT_FOR(captured,2000),"capture native reader frame");
 }
-static void close_reader(void) { sim_note("Mogo: closing"); CHECK(!ink_app_close("mogo"),"close native reader"); sim_note("Mogo: closed"); }
+static void close_reader(void) { sim_note("Mogo: closing"); CHECK(!ink_app_close("reader"),"close native reader"); sim_note("Mogo: closed"); }
 static void run(void *arg) {
     (void)arg;
     ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK);
-    CHECK(AI("mogo.open","{\"path\":\"/me/books/星星邮差GBK.txt\"}"),"open GBK through new reader");
+    CHECK(AI("reader.open_book","{\"title\":\"\",\"path\":\"/me/books/星星邮差GBK.txt\"}"),"open GBK through new reader");
     CHECK(page(1),"native first page is ready: %.150s",view);
     CHECK(strstr(view,"邮筒") && strstr(view,"字号=48"),"GBK body and default size: %.150s",view);
     snprintf(first,sizeof first,"%s",view); uint32_t first_raster = raster;
@@ -54,7 +54,7 @@ static void run(void *arg) {
         CHECK(page(10-i),"previous input reaches native page %d: %.100s",10-i,view);
     }
     CHECK(!strcmp(view,first) && raster==first_raster,"round trip restores first page number, text and pixels"); frame("gbk-return");
-    CHECK(AI("mogo.open","{\"path\":\"/me/books/星星邮差.epub\"}") && g_rc.status==INK_RC_DONE,"open EPUB through native path");
+    CHECK(AI("reader.open_book","{\"title\":\"\",\"path\":\"/me/books/星星邮差.epub\"}") && g_rc.status==INK_RC_DONE,"open EPUB through native path");
     CHECK(page(1) && strstr(view,"邮筒"),"EPUB body is laid out: %.150s",view); frame("epub-page-1");
     sim_note("Mogo: GBK round trip and EPUB assertions completed");
     on_ui(close_reader); sim_note("Mogo: UI close returned");

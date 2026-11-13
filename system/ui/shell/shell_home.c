@@ -62,7 +62,7 @@ bool home_usable(const char *id) {
     return !strcmp(id, "settings") || (a && a->entry && ink_app_visible(a));
 }
 static const char *def_icon(const ink_app_def_t *a) { /* no app: settings, the shell's own page */
-    return !a ? INK_UI_ICON(gear) : a->icon ? a->icon : !strcmp(a->id, "reader") || !strcmp(a->id, "mogo") ? INK_UI_ICON(book) : INK_UI_ICON(grid);
+    return !a ? INK_UI_ICON(gear) : a->icon ? a->icon : INK_UI_ICON(grid);
 }
 const char *home_icon(const char *which) { return def_icon(app_def(which)); }
 /* A favourite's name on the home: the AI's is what it does there. */
@@ -376,7 +376,7 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
 enum { TOOLS_MAX = 48 };
 typedef struct { const char *id, *title, *icon; int group, rank; } tool_t;
 static const char *const GROUPS[] = {TR_NOOP("读和听"), TR_NOOP("记和联系"), TR_NOOP("工具")};
-static const char *const GROUP_IDS[] = {" reader mogo listen music news word ", " phone message contacts memo upcoming "};
+static const char *const GROUP_IDS[] = {" reader listen music news word ", " phone message contacts memo upcoming "};
 static const ink_activity_t APPS;
 static lv_obj_t *apps_box;
 static int apps_h; /* the list's height, below the search */
