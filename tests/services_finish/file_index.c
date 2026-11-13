@@ -119,7 +119,7 @@ static void reboot_and_swap(bool swap) {
         CHECK(ink_fs_move("/me/moved/note.txt", "/me/moved/reboot.txt") == 0, "move before loading index after reboot");
         CHECK(ink_fs_lookup(proof[0], &e) == 0 && e.type == INK_FS_IMAGE, "image id persists across reboot");
         CHECK(ink_fs_lookup(proof[2], &e) == 0 && !strcmp(e.path, "/me/moved/reboot.txt"), "pre-query move retained persisted id");
-        char args[80]; snprintf(args, sizeof args, "{\"id\":%u}", proof[0]);
+        char args[80]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)proof[0]);
         CHECK(BY_HAND("file.lookup", args) && g_rc.status == INK_RC_DONE && strstr(g_result, "renamed.PNG"), "button capability lookup");
         CHECK(confirmed("member.add", "{\"id\":\"synthetic-child\",\"role\":\"child\"}"), "add synthetic child");
         CHECK(WAIT_FOR(ink_member_exists("synthetic-child"), 5000) && ink_member_switch("synthetic-child") == 0, "enter child space");

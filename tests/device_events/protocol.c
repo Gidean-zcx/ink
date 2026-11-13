@@ -123,7 +123,7 @@ static void run(void *arg) {
     send_call("{\"member\":\"kid\",\"epoch\":1}");
     CHECK(WAIT_FOR(reply_is("-32023"), 2000) && runs == 0, "wrong member rejected");
     char meta[128];
-    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u}", ink_hub_member_epoch());
+    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u}", (unsigned)ink_hub_member_epoch());
     send_call(meta);
     CHECK(WAIT_FOR(reply_is("\"status\":\"done\""), 2000) && runs == 1, "matching metadata invokes the atomic capability");
     uint32_t handoff_connection = ink_hub_connection();
@@ -137,13 +137,13 @@ static void run(void *arg) {
         CHECK(sim_metric_value("hub.member_events_cancelled") > cancelled && !reply_is("\"id\":2000000000") &&
               WAIT_FOR(ink_cap_available("asr.stream") && ink_hub_member_matches("owner", ink_hub_member_epoch(), ink_hub_connection()), 2000),
               "unacknowledged private result closes the old connection without replying on the new one");
-    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u,\"asked\":true,\"undo_ms\":3000}", ink_hub_member_epoch());
+    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u,\"asked\":true,\"undo_ms\":3000}", (unsigned)ink_hub_member_epoch());
     send_named("message.send", meta);
     CHECK(WAIT_FOR(reply_is("-32021"), 2000) && sim_net_sms_sent() == 0, "unsupported automatic window never sends a message immediately");
-    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u,\"undo_ms\":0}", ink_hub_member_epoch());
+    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u,\"undo_ms\":0}", (unsigned)ink_hub_member_epoch());
     send_call(meta);
     CHECK(WAIT_FOR(reply_is("-32602"), 2000) && runs == 1, "shortened undo window rejected");
-    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u}", ink_hub_member_epoch());
+    snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u}", (unsigned)ink_hub_member_epoch());
     on_ui(test_ai_queue_speech);
     ui_release = osal_sem_create(0, 1);
     CHECK(ink_exec_post(INK_EXEC_UI, &ui_hold, hold_ui, NULL) == 0 && WAIT_FOR(ui_waiting, 1000), "UI executor held");
