@@ -2205,3 +2205,40 @@ language english 中文 英文	language english chinese
 （恢复）	(restored)
 大小未知	Size unknown
 不会自动删除	Not deleted automatically
+%s · %02d:%02d 到点	%s · done at %02d:%02d
++ 加计时器	+ Add timer
+、	, 
+下一个闹钟	Next alarm
+再计一次	Again
+删除这个城市	Remove this city
+删除这个计时器	Delete this timer
+加计时器	Add timer
+单圈	Lap time
+单圈 %s · 累计 %s	lap %s · total %s
+只响一次 · %s	Once · %s
+名称最多%d个字，请缩短后保存	Use a name of %d characters or less.
+和这里同一时间	Same time as here
+圈次	Lap
+城市	City
+已到点	Done
+已选	Added
+时长	Duration
+时－	Hr -
+最多 6 个城市	Up to 6 cities
+最多 6 个计时器	Up to 6 timers
+本地时间	Local time
+比这里早 %d 小时	%d hours ahead
+比这里晚 %d 小时	%d hours behind
+没有开启的闹钟	No alarm is on
+没能读取计时器，请返回重试	Couldn't read the timers. Go back and try again.
+秒	s
+第 %d 圈	Lap %d
+第 %d 圈（未完）	Lap %d (running)
+累计	Total
+计时器	Timer
+计时器名称	Timer name
+还没有计时器	No timers yet
+重置	Reset
+闹钟已满（全家最多 %d 个闹钟和提醒）	Alarms are full (%d alarms and reminders for the family)
+，还有 %lld 分钟	, in %lld min
+，还有 %lld 小时	, in %lld h

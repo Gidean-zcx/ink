@@ -33,6 +33,7 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     ${root}/system/ui/shell/settings_body.c ${root}/system/ui/shell/today_edit.c
     ${root}/system/ui/shell/time_settings.c ${root}/system/ui/shell/settings_family.c ${root}/system/services/time/time_service.c
     ${root}/system/apps/clock/clock.c
+    ${root}/system/apps/clock/clock_alarm.c ${root}/system/apps/clock/clock_world.c ${root}/system/apps/clock/clock_stopwatch.c ${root}/system/apps/clock/clock_timer.c
     ${root}/system/apps/calculator/calculator.c ${root}/system/apps/camera/camera.c
     ${root}/system/apps/contacts/contacts.c ${root}/system/apps/gallery/gallery.c
     ${root}/system/apps/memo/memo.c ${root}/system/apps/phone/phone.c ${root}/system/apps/phone/vendor/lilyphone/call_card.c

@@ -318,6 +318,7 @@ target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256
 # GNU ld needs for HAL functions only the system references (e.g. hal_cell_*).
 target_link_libraries(ink_system INTERFACE $<LINK_ONLY:ink_port_sim>)
 target_sources(ink_system PRIVATE system/apps/clock/clock.c)
+target_sources(ink_system PRIVATE system/apps/clock/clock_alarm.c system/apps/clock/clock_world.c system/apps/clock/clock_stopwatch.c system/apps/clock/clock_timer.c)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
 include(system/services/text/google_build.cmake)
 ink_google_pinyin(ink_system)
@@ -467,6 +468,7 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
   ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c
   ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock.c
+  ${CMAKE_SOURCE_DIR}/system/apps/clock/clock_alarm.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock_world.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock_stopwatch.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock_timer.c
   ${CMAKE_SOURCE_DIR}/system/apps/camera/camera.c ${CMAKE_SOURCE_DIR}/system/apps/camera/scan.c
   ${CMAKE_SOURCE_DIR}/system/policy/cap.c ${CMAKE_SOURCE_DIR}/system/policy/members.c
   ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c
@@ -2417,3 +2419,7 @@ target_compile_options(test-clock3-infinitime PRIVATE ${INK_WARN})
 add_test(NAME clock-3-infinitime COMMAND test-clock3-infinitime)
 add_test(NAME clock-3-source COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/clock_3/source_check.py)
 set_tests_properties(clock-3-source PROPERTIES SKIP_RETURN_CODE 77)
+ink_sim_executable(sim-clock-3 tests/clock_3/clock3.c)
+target_link_libraries(sim-clock-3 PRIVATE ink_apps ink_system)
+add_test(NAME clock-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/clock_3/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(clock-3 PROPERTIES TIMEOUT 600)

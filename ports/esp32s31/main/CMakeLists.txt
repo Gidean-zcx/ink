@@ -144,3 +144,10 @@ set_source_files_properties(${root}/system/apps/files/flipper/flipper_unit.c TAR
 endif()
 # gallery-3: the AgentUI gallery helpers behind a C interface, as the gomoku engine (IDF builds C++ without exceptions or RTTI).
 target_sources(${ink_system_lib} PRIVATE ${root}/system/apps/gallery/repository.cpp)
+# clock-3: the copied InfiniTime controllers build only through clock_infinitime.cpp, behind the shims in
+# vendor/infinitime/port, searched first (system/apps/clock/vendor/infinitime/SOURCE.md).
+target_sources(${ink_system_lib} PRIVATE ${root}/system/apps/clock/clock_infinitime.cpp)
+if(NOT CMAKE_BUILD_EARLY_EXPANSION)
+set_source_files_properties(${root}/system/apps/clock/clock_infinitime.cpp TARGET_DIRECTORY __idf_ink_system PROPERTIES INCLUDE_DIRECTORIES
+    "${root}/system/apps/clock/vendor/infinitime/port;${root}/system/apps/clock/vendor/infinitime/src")
+endif()
