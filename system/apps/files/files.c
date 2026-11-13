@@ -261,6 +261,7 @@ static bool is_marked(uint32_t id) { for (size_t i = 0; i < F.marked_count; i++)
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx; unsigned at = index % 4; item_t *item = &F.items[F.view[index]]; char text[96], time[32];
     int left = INK_ICON_LIST + 2 * INK_GAP, room = INK_CANVAS_W - 2 * INK_MARGIN - left - INK_GAP;
+    if (!strcmp(item->path, "/me/收件箱")) snprintf(item->name, sizeof item->name, "%s", TR("传进来的")); /* transfer's inbox */
     if (!lv_obj_get_child_count(slot)) {
         ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, left, INK_GAP_S, room);
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, INK_GAP_S + ink_ui_line_height(INK_FONT_LIST), room);

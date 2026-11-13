@@ -33,6 +33,9 @@ def compile_baseline(commit, name):
         current = (ROOT / 'system/services/file/file_service.c').read_text()
         wrapper = 'int fs_write_atomic_for(' + current.split('int fs_write_atomic_for(', 1)[1].split('\nint ink_fs_write_atomic(', 1)[0]
         old_source += '\n' + wrapper
+    if 'int fs_place_for(' not in old_source:  # files-3: today's file.batch places files through this one
+        current = (ROOT / 'system/services/file/file_service.c').read_text()
+        old_source += '\nint fs_place_for(' + current.split('int fs_place_for(', 1)[1].split('\nstatic int job_begin(', 1)[0]
     source.write_text(old_source)
     link = shlex.split((build / 'CMakeFiles/sim-index-durable.dir/link.txt').read_text())
     obj = area / (name + '.o')
