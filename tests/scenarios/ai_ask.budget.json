@@ -81,6 +81,11 @@
     "srs": "SR-PL-02",
     "why": "no audible gap in the spoken answer, page turns and refreshes included"
   },
+  "audio.audible_concealments": {
+    "max": 0,
+    "optional": true,
+    "why": "two or more frames in a row made up by packet-loss concealment can be heard even when the speaker never ran dry"
+  },
   "audio.jitter_overflow": {
     "max": 0,
     "optional": true,
