@@ -13,6 +13,11 @@
  * is an ESTIMATE (the vendor sequence's name says 15 fps at 20 MHz MCLK); a picture is kept after
  * the warm-up frames upstream drops. The picture comes from the source the desktop simulator sets
  * (the computer's camera); without one, a test pattern.
+ *
+ * Viewfinder session (hal_camera_session), as the device port keeps it (hal_camera_s31.c): the first
+ * capture loads the table; later captures only turn the output off and on again (0xF2), the sensor
+ * keeps its set-up, and the receiver waits for the next whole frame. Leaving the viewfinder stops
+ * the output. A single capture outside a session loads the table and stops, as before.
  */
 #include <stdlib.h>
 #include <string.h>
@@ -119,16 +124,34 @@ bool hal_camera_info(hal_camera_info_t *out) {
     return true;
 }
 
+static const int *g_preview; /* the service's viewfinder flag; exec.media like the captures */
+static bool g_kept;          /* sensor set up for the viewfinder and kept between captures */
+
+void hal_camera_session(const int *active) { /* exec.media, after the pending captures */
+    g_preview = __atomic_load_n(active, __ATOMIC_ACQUIRE) ? active : NULL;
+    if (!g_preview && g_kept) gc2145_stop(g_cam);
+    if (!g_preview) g_kept = false;
+}
+
 static int capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
     uint64_t deadline = osal_now_us() + (uint64_t)timeout_ms * 1000u; /* covers the whole call */
     if (!g_cam || !buf || cap < GC2145_FRAME_BYTES || !pools_is_external(buf)) return -1; /* DMA writes PSRAM */
-    uint16_t pid = 0;
-    if (gc2145_probe(g_cam, &pid) != HAL_I2C_OK || pid != GC2145_PID) return -2;
-    hal_i2c_status_t st = gc2145_start_until(g_cam, deadline); /* the ~0.4 s set-up counts against the timeout */
-    if (st == HAL_I2C_TIMEOUT) return -4;
-    if (st != HAL_I2C_OK) return -3;
+    int frames = GC2145_WARMUP_FRAMES + 1;
+    bool kept = g_kept;
+    g_kept = false; /* until this capture succeeds */
+    if (kept) { /* output off and on (hal_camera_s31.c); next VSYNC, then the frame: ESTIMATE */
+        uint8_t on[2] = {0xF2, 0x0F};
+        if (gc2145_stop(g_cam) != HAL_I2C_OK || hal_i2c_write(g_cam, on, sizeof on) != HAL_I2C_OK) return -3;
+        frames = 2;
+    } else {
+        uint16_t pid = 0;
+        if (gc2145_probe(g_cam, &pid) != HAL_I2C_OK || pid != GC2145_PID) return -2;
+        hal_i2c_status_t st = gc2145_start_until(g_cam, deadline); /* the ~0.4 s set-up counts against the timeout */
+        if (st == HAL_I2C_TIMEOUT) return -4;
+        if (st != HAL_I2C_OK) return -3;
+    }
     const uint64_t frame_us = 1000000u / CAM_FPS;
-    for (int f = 0; f <= GC2145_WARMUP_FRAMES; f++) { /* frames arrive one by one over DVP */
+    for (int f = 0; f < frames; f++) { /* frames arrive one by one over DVP */
         if (osal_now_us() + frame_us > deadline) {
             gc2145_stop(g_cam);
             return -4;
@@ -141,7 +164,8 @@ static int capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
         }
     }
     vtk_host_call(fill_on_host, buf);
-    gc2145_stop(g_cam);
+    g_kept = g_preview && __atomic_load_n(g_preview, __ATOMIC_ACQUIRE);
+    if (!g_kept) gc2145_stop(g_cam);
     CAM.captures++;
     sim_metric_add("camera.captures", 1);
     return GC2145_FRAME_BYTES;
@@ -156,7 +180,8 @@ int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) {
     return r;
 }
 
-bool sim_camera_busy(void) { return __atomic_load_n(&g_capturing, __ATOMIC_SEQ_CST) > 0; } /* the sleep must wait */
+/* the sleep must wait; a kept viewfinder session counts, as ink_s31_camera_busy does */
+bool sim_camera_busy(void) { return __atomic_load_n(&g_capturing, __ATOMIC_SEQ_CST) > 0 || __atomic_load_n(&g_kept, __ATOMIC_ACQUIRE); }
 
 void sim_camera_init(void) { /* task context (boot) */
     if (!sim_board_present()) return;
