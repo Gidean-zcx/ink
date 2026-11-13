@@ -303,6 +303,9 @@ static bool cell_says(void) { /* the cell holds the "看不了预览" label */
 static bool unviewable;
 static void inspect_cell(void) { cell_of(BIG_JPG); unviewable = found && cell_says(); }
 static void index_state(void *arg) { ink_state_set_str(ink_state_find("file.index_state"), arg); }
+static void index_now_ready(void) { /* as index_done() says it: the state, then file.changed "/" indexed */
+    index_state("ready"); ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", "/"); ink_args_str(&a, "kind", "indexed"); ink_cap_emit("file.changed", &a);
+}
 static void no_card(void *arg) { (void)arg; sim_sd_set_present(false); }
 static void card_back(void *arg) { (void)arg; sim_sd_set_present(true); }
 static const char *LONG_PNG = "/me/长路径/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.png";
@@ -366,7 +369,7 @@ static void empty(void) {
     ok("system.home", NULL); quiet();
     index_state("organizing"); delay_ms(50); /* as the file service says it while it builds the index */
     ok("app.open", "{\"id\":\"gallery\"}"); CHECK(WAIT_FOR(find_text("正在整理照片"), 8000), "index_not_ready: said, no spinner"); quiet(); shot("index_not_ready");
-    index_state("ready");
+    index_now_ready();
     CHECK(WAIT_FOR(find_text("还没有照片"), 8000), "ready: read again by itself");
 }
 

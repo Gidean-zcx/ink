@@ -1270,7 +1270,7 @@ static const ink_cap_t GALLERY_CAPS[] = {
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .timeout_ms = 300000, .run = cap_empty_trash},
 };
 static bool relevant(const char *path, const char *kind) { /* a change this page shows: an image here, or the whole card */
-    if (!path[0] || (!strcmp(path, "/") && strcmp(kind, "indexed")) || !strcmp(kind, "rescan") || !strcmp(kind, "cleaned")) return true; /* our own reading indexes */
+    if (!path[0] || !strcmp(path, "/") || !strcmp(kind, "rescan") || !strcmp(kind, "cleaned")) return true; /* the whole card: also the index getting ready */
     if (!is_image(path) && strchr(base_name(path), '.')) return false; /* another kind of file; a folder may hold photos */
     char me[32], family[40]; trash_root("/me", me, sizeof me); trash_root("/family", family, sizeof family);
     if (!strcmp(ink_ui_page_name(), "GalleryTrash")) return in_trash(path) || !strcmp(path, me) || !strcmp(path, family);
@@ -1284,15 +1284,15 @@ static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {
     if ((!strcmp(page, "Gallery") || !strcmp(page, "GalleryTrash")) && relevant(path, kind)) load(0, 0);
     else if (!strcmp(page, "Photo") && !strcmp(path, G.path) && !strcmp(kind, "removed") && strcmp(path, G.trashing)) ink_ui_pop();
 }
-static void card_state(void *ctx, int h, const char *id) { /* the card came back or the index is ready: read again by itself */
+static void card_state(void *ctx, int h, const char *id) { /* the card came, went or was lent: read again by itself */
     (void)ctx; (void)h;
     if (!ink_ui_page_current() || (strcmp(ink_ui_page_name(), "Gallery") && strcmp(ink_ui_page_name(), "GalleryTrash"))) return;
-    /* the card or its lending: always; the index: only when the page waits for it (our own reading indexes too) */
-    if (strcmp(id, "file.index_state") || G.waiting || !G.data || G.data->err) load(0, 0);
+    /* one watch for both (the shared watch table is nearly full); the index getting ready comes as file.changed "/" */
+    if (!strcmp(id, "storage.card") || !strcmp(id, "storage.mode")) load(0, 0); /* not storage.free */
 }
 int ink_gallery_init(void) {
     static const ink_app_def_t app = {.id = "gallery", .title = TR_NOOP("相册"), .icon = INK_UI_ICON(gallery), .entry = &GALLERY, .system_app = true, .child_ok = true};
     return ink_cap_register(GALLERY_CAPS, sizeof GALLERY_CAPS / sizeof *GALLERY_CAPS) || ink_app_register(&app) ||
            ink_cap_subscribe("file.changed", photos_changed, NULL, INK_EXEC_UI) ||
-           ink_state_watch("storage.card", card_state, NULL, INK_EXEC_UI) || ink_state_watch("storage.mode", card_state, NULL, INK_EXEC_UI) || ink_state_watch("file.index_state", card_state, NULL, INK_EXEC_UI) ? -1 : 0;
+           ink_state_watch("storage.", card_state, NULL, INK_EXEC_UI) ? -1 : 0;
 }
