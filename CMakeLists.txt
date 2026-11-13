@@ -784,6 +784,14 @@ foreach(lock_case styles almanac refresh privacy entry upgrade empty nofont)
     --build ${CMAKE_BINARY_DIR} --case ${lock_case})
   set_tests_properties(lock-styles-${lock_case} PROPERTIES TIMEOUT 600)
 endforeach()
+# Mogo's own lock-style host tests, unchanged, in a Mogo-shaped tree of links (tests/mogo_lock_host/run.py).
+foreach(mogo_test wallpaper_crop mini_library_host_test.py home_library_host_test.py clock-generator calendar-generator
+        lock_collage_host_test.py book_excerpt_host_test.py lock_clock_ui_host_test.py)
+  string(REPLACE "_host_test.py" "" mogo_name ${mogo_test})
+  add_test(NAME mogo-lock-host-${mogo_name} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/mogo_lock_host/run.py
+    --build ${CMAKE_BINARY_DIR} ${mogo_test})
+  set_tests_properties(mogo-lock-host-${mogo_name} PROPERTIES TIMEOUT 300)
+endforeach()
 ink_sim_executable(sim-lock-cover tests/lock_cover.c)
 target_link_libraries(sim-lock-cover PRIVATE ink_apps ink_system)
 add_test(NAME lock-cover COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_cover.py --build ${CMAKE_BINARY_DIR})

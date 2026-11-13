@@ -1970,3 +1970,25 @@ language english 中文 英文	language english chinese
 画面上写着	On the screen
 这个锁屏样式没画出来，先显示默认锁屏	This lock style could not be drawn; the default lock screen shows instead
 这个锁屏样式在这台设备上用不了	This lock style is not available on this device
+锁屏样式要用的字体还没放到卡上	The font the lock styles use is not on the card yet
+解锁一次后才能显示这个锁屏样式	Unlock once and this lock style can show
+公历	Gregorian
+干支	Stems and branches
+宜	Do
+忌	Avoid
+冲	Clash
+煞	Sha
+书名	Title
+作者	Author
+已读 %u%% · 第 %u 章	%u%% read · chapter %u
+书摘	Excerpt
+还没有读过的书，读过一本后这里显示票根	Nothing read yet; the ticket appears once you have read a book
+今日阅读	Read today
+书架拼贴没画出来，先显示默认锁屏	The shelf collage could not be drawn; the default lock screen shows instead
+书库暂不可用，请稍后重试	The library is not available; try again later
+还没有阅读记录	No reading yet
+书匣等你放入第一本书	Put your first book on the shelf
+%d月%d日 %s	%d/%d %s
+农历	Lunar
+无	None
+日历	Calendar

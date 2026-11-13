@@ -1,5 +1,6 @@
 /* Lock styles an app draws (lock-styles-1): the client table, the two canvases and what changed between them. */
 /* ui-scale-runtime: dimension x0,y0,num,den,x,y,x1,y1,x2,y2 Canvas pixels the client drew, mapped to the panel's own pixels. */
+/* ui-scale-runtime: dimension pct The system text size in percent (90..120), as the reader takes it. */
 #include <stdio.h>
 #include <string.h>
 #include "faces.h"
@@ -46,6 +47,7 @@ void ink_lock_face_hook(void (*changed)(int how)) { D.changed = changed; }
 static void tell(int how) { if (D.changed) D.changed(how); }
 /* Books and covers are a member's own: those styles depend on whose space is open; clocks and calendars do not. */
 static bool personal(int style) { return style == INK_LOCK_TICKET || style == INK_LOCK_COLLAGE || style == INK_LOCK_LIBRARY; }
+static int text_px(int pct) { return ink_ui_px(pct); }
 static void request(int style, ink_lock_request_t *r) {
     memset(r, 0, sizeof *r);
     r->style = style;
@@ -56,7 +58,7 @@ static void request(int style, ink_lock_request_t *r) {
     r->open = ink_member_space_open();
     static const int percent[] = {90, 100, 110, 120};
     int level = r->child ? 2 : (int)ink_setting_get("display.font_size");
-    r->px = ink_ui_px(percent[level < 0 ? 0 : level > 3 ? 3 : level]); /* as the reader sets it (apps/mogo/mogo.c) */
+    r->px = text_px(percent[level < 0 ? 0 : level > 3 ? 3 : level]); /* as the reader sets it (apps/mogo/mogo.c) */
     if (D.select_style != style) { D.select = 0; D.select_style = style; }
     r->select = D.select;
     r->clock = ink_time_valid();

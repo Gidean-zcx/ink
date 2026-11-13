@@ -58,8 +58,16 @@ static void read_some(void) {
 }
 
 /* Seven styles (six new, and the wallpaper) at the default and the largest text size, with something to show. */
+static void wallpaper(void) { /* a photo on the card, chosen the way the settings choose it */
+    uint32_t cursor = 0, id = 0; ink_fs_entry_t e;
+    while (ink_fs_index("/family", INK_FS_IMAGE, &cursor, &e) == 1) if (strstr(e.path, "SYNTH_WALL")) id = e.id;
+    CHECK(id != 0, "the wallpaper is in the card index");
+    setting("display.wallpaper_file", (int)id);
+    CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "the wallpaper is decoded");
+}
 static void styles(void) {
     read_some();
+    wallpaper();
     date(2026, 2, 17, 8, 30);
     for (int size = 1; size <= 3; size += 2) {
         setting("display.font_size", size);
@@ -73,6 +81,8 @@ static void styles(void) {
             char name[64]; snprintf(name, sizeof name, "style-%d-size-%d", style, size); frame(name);
             wake();
         }
+        choose(2, INK_SRC_AI); lock(); CHECK(has("壁纸"), "the wallpaper style");
+        { char name[64]; snprintf(name, sizeof name, "style-2-size-%d", size); frame(name); } wake();
         setting("display.lock_ticket_bg", 1); show_style(INK_LOCK_TICKET);
         char name[64]; snprintf(name, sizeof name, "ticket-wallpaper-size-%d", size); frame(name); wake();
         setting("display.lock_ticket_bg", 0);
@@ -200,6 +210,19 @@ static void same_entry(void) {
               "AI and touch reach the same lock for style %d: %.200s | %.200s", style, by_touch, by_ai);
         wake();
     }
+    for (int size = 1; size <= 3; size += 2) { /* the picker at both sizes, with each style's own row */
+        setting("display.font_size", size);
+        static const int chosen[] = {0, INK_LOCK_TICKET, INK_LOCK_LIBRARY};
+        for (int i = 0; i < 3; i++) {
+            setting("display.lock_style", chosen[i]);
+            char page[24]; snprintf(page, sizeof page, "{\"page\":%d}", i ? 2 : 1);
+            CHECK(BY_HAND("shell.lock_faces", NULL) && BY_HAND("shell.lock_faces", page), "picker page"); quiet();
+            if (i) CHECK(has(i == 1 ? "票根背景" : "迷你书库显示"), "the chosen style's own row shows: %.300s", snapshot);
+            char name[48]; snprintf(name, sizeof name, "picker-%d-size-%d", chosen[i], size); frame(name);
+            CHECK(BY_HAND("system.home", NULL), "home"); quiet();
+        }
+    }
+    setting("display.font_size", 1);
     setting("display.lock_library", 0);
     show_style(INK_LOCK_LIBRARY);
     on_ui(center_of); tap(tx, ty); quiet();

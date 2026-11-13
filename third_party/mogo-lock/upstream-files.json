@@ -1,0 +1,351 @@
+{
+  "commit": "864f2f9dc75980a67d2d6b67b17365020b7a50ce",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "8d32fbcfba1f738a1d10f9bf62636137f240e41ff01ede576fcce1dc36626e64",
+      "bytes": 3383
+    },
+    {
+      "path": "docs/development/guides/CALENDAR.md",
+      "sha256": "d22e7ec7858f328533a6f170aa210e01f69374bffba32b5e1845db6c00591d6b",
+      "bytes": 7710
+    },
+    {
+      "path": "docs/development/guides/LOCK_CLOCK.md",
+      "sha256": "512becb41b63476e4e70b728fe9b71f530e6db5ef03c542e30313a0d2cedbcca",
+      "bytes": 6595
+    },
+    {
+      "path": "docs/development/guides/MINI_LIBRARY.md",
+      "sha256": "e60599081f8186d908741f803942d1571592054714a0b61ba13dafd0d597861d",
+      "bytes": 8982
+    },
+    {
+      "path": "licenses/Apache-2.0.txt",
+      "sha256": "c2ede378097fb1fcdcd128c47880c918663f475eba53e1e2dc59d95b537c8809",
+      "bytes": 11340
+    },
+    {
+      "path": "licenses/kiikoread-Personal-Study-1.0.txt",
+      "sha256": "fd3c1789d4c0d4d4fd21d485666a2a7058bad0c74fd3ea875b346dcc444f8e52",
+      "bytes": 7413
+    },
+    {
+      "path": "main/assets/calendar_digits.h",
+      "sha256": "0a4ee16108cf4c7b7e1501979a96a2c35154202c075fe6e26b84c0e8e353e1ec",
+      "bytes": 196225
+    },
+    {
+      "path": "main/assets/clock-font/ChakraPetch-Bold.ttf",
+      "sha256": "65fbf76d95651697275e19db4d717c0e95a789ddd3476478b05292104db278a0",
+      "bytes": 78384
+    },
+    {
+      "path": "main/assets/clock-font/OFL.txt",
+      "sha256": "4a1d840eb0b2df8553804d844960a15773ca5af5d5c9803745307db8c617540b",
+      "bytes": 4395
+    },
+    {
+      "path": "main/assets/clock-font/README.md",
+      "sha256": "39148d5466b63f3b3af0bc9b63a3bfb96a695615a9049a823cf6d998ba77fc89",
+      "bytes": 979
+    },
+    {
+      "path": "main/assets/clock_digits.h",
+      "sha256": "67af70bc10e4beb2f97ed5e07ce2b01194e3ccdf207ebc9105af64f1f729f5f4",
+      "bytes": 75657
+    },
+    {
+      "path": "main/book/book_lock_collage.c",
+      "sha256": "7b3e3367e667ebacb4669b3664c98f2f3ef4e277df9907b48aaef8c8452f1be2",
+      "bytes": 35173
+    },
+    {
+      "path": "main/book/book_lock_collage.h",
+      "sha256": "88296f2acb0125fc913f7578eb99541644e4ecd9fdccc9a73bae304eeacba60e",
+      "bytes": 2210
+    },
+    {
+      "path": "main/book/book_mini_library.c",
+      "sha256": "2f922e6d273bce1164d64d74b897a88097a6190510f6f5aabbd96126ae245f14",
+      "bytes": 5534
+    },
+    {
+      "path": "main/book/book_mini_library.h",
+      "sha256": "c91ad50096fe2ee735a759fd38faa6186fd262693e5071500f983568727dfb6f",
+      "bytes": 1413
+    },
+    {
+      "path": "main/book/book_ticket.c",
+      "sha256": "471eeaf0148aceb83c12d05da56283e66d8621693388f2cf38fbc3e30054cf27",
+      "bytes": 14987
+    },
+    {
+      "path": "main/book/book_ticket.h",
+      "sha256": "947fd46922a30cc2b122991e7f1a3b8a53d37c30d198f594112df610dd2e2b2c",
+      "bytes": 1160
+    },
+    {
+      "path": "main/services/home_library.c",
+      "sha256": "6d7238941c326e9f51a2b773a745226c2c89ac292d046efe007991f83a404d7d",
+      "bytes": 11655
+    },
+    {
+      "path": "main/services/home_library.h",
+      "sha256": "fed56df986db3bd96c6e5c0a70975cca26b53c92ec5ec9b556319f6913194e0e",
+      "bytes": 1726
+    },
+    {
+      "path": "main/ui/ui_calendar.c",
+      "sha256": "4d74581d550e6d7f8a25aec023ce9541feffa984a5e058890525884c5283ed87",
+      "bytes": 18934
+    },
+    {
+      "path": "main/ui/ui_calendar.h",
+      "sha256": "ee2070a11eedd6246bdf02c05a5f7f4ab8c2b63129b77930938161063f1b09fd",
+      "bytes": 430
+    },
+    {
+      "path": "main/ui/ui_image_dither.c",
+      "sha256": "78ffcfb767e5c82d4c10abf486c53e3127f3a94c4cdd31a66cbbfc96eb9cdc6b",
+      "bytes": 2726
+    },
+    {
+      "path": "main/ui/ui_image_dither.h",
+      "sha256": "01f3c87dcb1cd3bd7374cd31a65991691de51fd1add420cd7b0c10751c882f45",
+      "bytes": 1288
+    },
+    {
+      "path": "main/ui/ui_lock_clock.c",
+      "sha256": "95f2beb795330e0aa621e50b74886668cc9c7c4c96f4c124265ab97e39b1bea0",
+      "bytes": 2716
+    },
+    {
+      "path": "main/ui/ui_lock_clock.h",
+      "sha256": "c7f30e02ca3a487bdefea9b2c02e8939804892bf35e1537544a8108f317b62da",
+      "bytes": 466
+    },
+    {
+      "path": "main/ui/ui_mini_library.c",
+      "sha256": "af3cde0122219072540a7f61a93994fac3be2c8ebb5d92d6b6ff264fe9827c15",
+      "bytes": 7345
+    },
+    {
+      "path": "main/ui/ui_mini_library.h",
+      "sha256": "b462e134c9c7f082e2b4f40a675ab82f10fece0fc1323d2031ece004c3184824",
+      "bytes": 1060
+    },
+    {
+      "path": "main/ui/ui_wallpaper.c",
+      "sha256": "554f31b7da5ad9bf1330e1a1a902f2715177f182019ab11ab7b3f9d3fa5c1e12",
+      "bytes": 13544
+    },
+    {
+      "path": "main/ui/ui_wallpaper.h",
+      "sha256": "843c2974130a9f913efacfe718c4eee2a1477e09aa17eb2b2584c892344d43a1",
+      "bytes": 1796
+    },
+    {
+      "path": "main/ui/ui_wallpaper_crop.h",
+      "sha256": "81b6ba4e14fdbef000ccc60372fcf1622946bd44ec0cd4b4760abfe8874e2d76",
+      "bytes": 1116
+    },
+    {
+      "path": "test-support/components/epdiy/src/epdiy.c",
+      "sha256": "adc990a6da836ccc9741be9105ac5095de94fb3660f3395572337845b1817142",
+      "bytes": 15767,
+      "upstream": "components/epdiy/src/epdiy.c",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/apps/app_dashboard.c",
+      "sha256": "f20a6e5b69e2d365b7f114e73959f6cd18c55bc6a644000701458ef623b5a29b",
+      "bytes": 40272,
+      "upstream": "main/apps/app_dashboard.c",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/assets/OFL-Noto.txt",
+      "sha256": "babcfe66c8a098b2fa279bc724a3a342f8124f77ce18941fbcc1bbb39823cded",
+      "bytes": 4387,
+      "upstream": "main/assets/OFL-Noto.txt",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/assets/builtin.ttf",
+      "sha256": "d73f4ff79c5827a6be5bad0dbf1676341160f39c2bfd54f50467302042f0c903",
+      "bytes": 404504,
+      "upstream": "main/assets/builtin.ttf",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/boot/boot_state.h",
+      "sha256": "c5d16ba8d2a3419f4a07634fa03cf6ea65553d0a222b726880da86059bf5d7a9",
+      "bytes": 2830,
+      "upstream": "main/boot/boot_state.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/ui/ui_kit.c",
+      "sha256": "3f5150f57c07a53d2807cebaeef7b6cfc5778ff5b523f864b2a5decfa6ac5fe6",
+      "bytes": 66159,
+      "upstream": "main/ui/ui_kit.c",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/ui/ui_nav.c",
+      "sha256": "0d6977cabff83b382b49fe3b511b099fe79c21f54e27bf672953da05bf30285e",
+      "bytes": 14411,
+      "upstream": "main/ui/ui_nav.c",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/ui/ui_nav.h",
+      "sha256": "15566f3e83c261fbf08f6ba6aedc3212b86cf9daa12e2b20808cbb8d83c17941",
+      "bytes": 2805,
+      "upstream": "main/ui/ui_nav.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/ui/ui_nav_layout.h",
+      "sha256": "e408d3aa67d60ffb176ac7009e13e709a6128a975186fbffb6d6779a91d05b1d",
+      "bytes": 1151,
+      "upstream": "main/ui/ui_nav_layout.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/ui/ui_reader_heading.c",
+      "sha256": "e9ab9ea435383afbb1ef1032b2f0bc55209db4d470693026a7a383b640c8940a",
+      "bytes": 23589,
+      "upstream": "main/ui/ui_reader_heading.c",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/ui/ui_reader_heading.h",
+      "sha256": "7dc2a827840f122a8cc7ce35071c5af741a84f15eebd6c1f01deb9283f4e2711",
+      "bytes": 2127,
+      "upstream": "main/ui/ui_reader_heading.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/tools/reader_title_style_preview.py",
+      "sha256": "51abd4e787c796acb710beed57c86e6fcc30c6c4533a3f06cb8006ba358c1075",
+      "bytes": 20957,
+      "upstream": "tools/reader_title_style_preview.py",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/tools/test_home_recent.py",
+      "sha256": "44d8cf57b4a87f2bc5bbe4b12e33197b13d4736e138ada77952ffe26985694b9",
+      "bytes": 5045,
+      "upstream": "tools/test_home_recent.py",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/tools/ui_gesture_stubs/app.h",
+      "sha256": "bc60c8cc13ce762e84d5b5bbb88f182edc9b92ce860be2b62072461771c390c1",
+      "bytes": 471,
+      "upstream": "tools/ui_gesture_stubs/app.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/tools/ui_gesture_stubs/app_touch.h",
+      "sha256": "4ea182e3f034ab357f7102148149556626cf3fd84918bb9b35b434aff4e36502",
+      "bytes": 172,
+      "upstream": "tools/ui_gesture_stubs/app_touch.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/tools/ui_gesture_stubs/epdiy.h",
+      "sha256": "735e56ce649f7b7d8c7720dffe772e2b7020954df0469f1a530e14c2e616fc05",
+      "bytes": 1283,
+      "upstream": "tools/ui_gesture_stubs/epdiy.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/tools/ui_gesture_stubs/fallback.h",
+      "sha256": "2149c78a4eb83af53455e95675142e21030e54df54700f7021543ac797d9a2aa",
+      "bytes": 399,
+      "upstream": "tools/ui_gesture_stubs/fallback.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/tools/ui_gesture_stubs/ttf_font.h",
+      "sha256": "ab425e58521b87178f8e92a0c08de1e17edddabb14274da2d3bbe14b994524dc",
+      "bytes": 931,
+      "upstream": "tools/ui_gesture_stubs/ttf_font.h",
+      "use": "host tests only"
+    },
+    {
+      "path": "tools/book_excerpt_host_test.py",
+      "sha256": "535eb4d2f1fd4e1a09315240971e7a00ded80c6f000f863a8945515fce6b5b1d",
+      "bytes": 24743
+    },
+    {
+      "path": "tools/calendar_ui_host_test.py",
+      "sha256": "50ebb7d3c46f55402b0b7dadc809f049babca6f8eacd06601c22b8a36cfa5de2",
+      "bytes": 7313
+    },
+    {
+      "path": "tools/generate_calendar_digits.py",
+      "sha256": "97391f52a1d889dc08058a4071a53c8b10b2f33a4492b129b77bf1a8dde62d01",
+      "bytes": 2298
+    },
+    {
+      "path": "tools/generate_clock_digits.py",
+      "sha256": "21638d52a9cd498ddadc11ae388394f3661271e2de58078d49585bf64ad250a0",
+      "bytes": 2794
+    },
+    {
+      "path": "tools/home_library_host_test.py",
+      "sha256": "dac6e1d26e93035b5a18b235ca4a9b3f7829ec4f6928304517cc0fc5193f2708",
+      "bytes": 12211
+    },
+    {
+      "path": "tools/home_library_test_support.py",
+      "sha256": "476038fa265fd208d2ba4d56e185430f196a26155eb1a201a44c49cb584e3e22",
+      "bytes": 1957
+    },
+    {
+      "path": "tools/lock_clock_ui_host_test.py",
+      "sha256": "d697ee405e53090c56411b98fcbd7e350e6ef63fecb66b89c3c7919510c27dc0",
+      "bytes": 6161
+    },
+    {
+      "path": "tools/lock_collage_host_test.py",
+      "sha256": "36ac3663cbd7810749c4a1d7995a9c1689cb051f589b8f5f6998d97965317818",
+      "bytes": 19424
+    },
+    {
+      "path": "tools/mini_library_host_test.py",
+      "sha256": "9a1c3518eefe1efc2fd54a96249c34ed6d8ca192459aa868bbec9afa7d51440f",
+      "bytes": 4029
+    },
+    {
+      "path": "tools/mini_library_ui_host_test.py",
+      "sha256": "37bac6859ec2e4a9e2c235f47cca18b0a1834ac2da572b6078e42f7e408cace9",
+      "bytes": 6164
+    },
+    {
+      "path": "tools/ticket_background_ui_host_test.py",
+      "sha256": "64db171f3ca3d00e9564a1c7fe7f13d948513620fe0bea68482e8f7cfd47693a",
+      "bytes": 6472
+    },
+    {
+      "path": "tools/vendor/libre-bodoni/OFL.txt",
+      "sha256": "12eb9fc9b38560e364501a7bc86d9de56ff0d50c6b8f359f8320bbb051aa18f7",
+      "bytes": 4398
+    },
+    {
+      "path": "tools/vendor/libre-bodoni/digits.ttf",
+      "sha256": "63c030ddb31c5e9c5dd32d5793a12d494f4ab5ddd456d7bf99a7130b06a57f94",
+      "bytes": 6336
+    },
+    {
+      "path": "tools/wallpaper_crop_host_test.c",
+      "sha256": "ee323c3d4a4601455681cc6440f01fc1ce94d5ee83aa856eb072be8875780313",
+      "bytes": 1184
+    }
+  ]
+}

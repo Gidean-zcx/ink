@@ -35,6 +35,7 @@ def content(kind, case):
         shutil.copyfile(full / '.m/owner/fonts/InkSC.ttf', root / 'fonts/InkSC.ttf')
     if kind == 'full':
         shutil.copytree(full / '.m/owner/books', member / 'books')
+        shutil.copyfile(ROOT / 'docs/tasks/replan-reader/reference-images/crossink-reading.jpg', root / 'SYNTH_WALL.jpg')
     return root
 
 

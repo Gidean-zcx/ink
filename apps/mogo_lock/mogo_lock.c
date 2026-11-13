@@ -45,10 +45,11 @@ static void text(uint8_t *fb, int x, int cy, int px, const char *s, enum EpdFont
     ttf_draw_text_px(fb, x, cy + (above - below) / 2, px, s, align, 0, 15);
 }
 static void when(const ink_lock_request_t *r, char *time_text, size_t tcap, char *date_text, size_t dcap) {
-    static const char *const weekdays[] = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+    static const char *const weekdays[] = {TR_NOOP("星期日"), TR_NOOP("星期一"), TR_NOOP("星期二"), TR_NOOP("星期三"),
+                                           TR_NOOP("星期四"), TR_NOOP("星期五"), TR_NOOP("星期六")};
     if (!r->clock) { snprintf(time_text, tcap, "--:--"); snprintf(date_text, dcap, "%s", TR("请先校准时间")); return; }
     snprintf(time_text, tcap, "%02d:%02d", r->now.hour, r->now.min);
-    snprintf(date_text, dcap, "%d月%d日 %s", r->now.month, r->now.day, weekdays[r->now.wday % 7]);
+    snprintf(date_text, dcap, TR("%d月%d日 %s"), r->now.month, r->now.day, TR(weekdays[r->now.wday % 7]));
 }
 /* A member's books while their space is closed: the time and date stay, the books say they come after the unlock. */
 static bool closed(uint8_t *fb, const ink_lock_request_t *r, ink_lock_drawn_t *out) {
@@ -101,7 +102,7 @@ static bool calendar_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_dr
         snprintf(s, sizeof s, "%d-%02d-%02d", a->year, a->month, a->day); line(out->says, TR("公历"), s);
         line(out->says, TR("农历"), a->lunar_text);
         snprintf(s, sizeof s, "%s %s %s", a->year_ganzhi, a->month_ganzhi, a->day_ganzhi); line(out->says, TR("干支"), s);
-        if (!monthly || a->yi[0]) { line(out->says, TR("宜"), a->yi[0] ? a->yi : "无"); line(out->says, TR("忌"), a->ji[0] ? a->ji : "无"); }
+        if (!monthly || a->yi[0]) { line(out->says, TR("宜"), a->yi[0] ? a->yi : TR("无")); line(out->says, TR("忌"), a->ji[0] ? a->ji : TR("无")); }
         line(out->says, TR("冲"), a->clash); line(out->says, TR("煞"), a->sha);
     } else line(out->says, TR("日历"), r->clock ? TR("不在范围（2000—2099 年）") : TR("请先校准时间"));
     ink_app_free(a); ink_app_free(d);
@@ -115,7 +116,7 @@ static void book_line(char *says, const char *path) {
     line(says, TR("书名"), L.title); line(says, TR("作者"), L.author);
     struct stat st; book_progress_t p;
     if (!ink_mogo_lock_stat(path, &st) && book_progress_load(path, (uint32_t)st.st_size, &p)) {
-        snprintf(s, sizeof s, "已读 %u%% · 第 %u 章", p.pct, (unsigned)p.chapter + 1); line(says, TR("进度"), s);
+        snprintf(s, sizeof s, TR("已读 %u%% · 第 %u 章"), p.pct, (unsigned)p.chapter + 1); line(says, TR("进度"), s);
     }
     if (book_excerpt_load(path, L.line)) line(says, TR("书摘"), L.line);
 }
@@ -151,7 +152,7 @@ static bool ticket_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_draw
     if (!nvs_open("rp_ticket", NVS_READONLY, &h)) { if (nvs_get_blob(h, "stats", &stats, &n) || n != sizeof stats) stats.day = 0; nvs_close(h); }
     time_t now = ink_mogo_lock_time(NULL);
     char s[64];
-    if (now >= 1704067200 && stats.day == (uint32_t)((now + 8 * 3600) / 86400)) snprintf(s, sizeof s, "%llu 分钟", (unsigned long long)(stats.today_seconds / 60));
+    if (now >= 1704067200 && stats.day == (uint32_t)((now + 8 * 3600) / 86400)) snprintf(s, sizeof s, TR("%llu 分钟"), (unsigned long long)(stats.today_seconds / 60));
     else snprintf(s, sizeof s, "%s", "—");
     line(out->says, TR("今日阅读"), s);
     return true;
@@ -215,7 +216,7 @@ static bool library_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_dra
     memcpy(L.books, v.books, v.count * sizeof *v.books);
     line(out->says, TR("迷你书库"), v.recent ? TR("最近") : TR("随机"));
     titles(out->says, v.books, v.count);
-    if (!v.count) line(out->says, TR("书"), v.recent ? "还没有阅读记录" : "书匣等你放入第一本书");
+    if (!v.count) line(out->says, TR("书"), v.recent ? TR("还没有阅读记录") : TR("书匣等你放入第一本书"));
     home_library_leave();
     return true;
 }

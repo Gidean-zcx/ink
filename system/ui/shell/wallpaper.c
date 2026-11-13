@@ -35,11 +35,15 @@ static const char *const *option_choices(int i) { return i == 0 ? TICKET_BG : LI
 static const char *option_id(int i) { return i == 0 ? "display.lock_ticket_bg" : "display.lock_library"; }
 static const char *option_title(int i) { return i == 0 ? TR("票根背景") : TR("迷你书库显示"); }
 static bool option_shown(int i) { return ink_setting_get("display.lock_style") == (i == 0 ? INK_LOCK_TICKET : INK_LOCK_LIBRARY); }
-/* What the list holds, in order: the styles, the chosen style's own setting, then the switches of the older faces. */
+/* What the list holds, in order: the styles, the chosen style's own setting right under it, then the switches of the
+ * older faces. */
 static int items(int *kind, int *index) {
     int n = 0;
-    for (int i = 0; i < INK_LOCK_FACE_COUNT; i++) { kind[n] = 0; index[n++] = i; }
-    for (int i = 0; i < OPTION_ROWS; i++) if (option_shown(i)) { kind[n] = 1; index[n++] = i; }
+    for (int i = 0; i < INK_LOCK_FACE_COUNT; i++) {
+        kind[n] = 0; index[n++] = i;
+        for (int o = 0; o < OPTION_ROWS; o++)
+            if (option_shown(o) && i == (o == 0 ? INK_LOCK_TICKET : INK_LOCK_LIBRARY)) { kind[n] = 1; index[n++] = o; }
+    }
     for (int i = 0; i < TOGGLES; i++) { kind[n] = 2; index[n++] = i; }
     return n;
 }
@@ -61,7 +65,7 @@ void ink_lock_face_settings(lv_obj_t *parent) {
     P.pages = pages;
     if (P.page >= pages) P.page = pages - 1;
     if (P.page < 0) P.page = 0;
-    size_t f = 0;
+    size_t f = 0, nf = 0, na = 0;
     int y = 0;
     for (int i = 0; i < n; i++, f++) {
         bool here = i >= first[P.page] && i < first[P.page + 1];
@@ -75,9 +79,9 @@ void ink_lock_face_settings(lv_obj_t *parent) {
                 if (selected) ink_ui_icon(row, "check", INK_ICON_SMALL, INK_ICON_LINE, w - INK_READING_MARGIN, (ink_ui_row_double() - INK_ICON_SMALL) / 2, false);
                 ink_shell_bind(row, "settings.set", P.args[f]);
             }
-            P.fields[f] = (ink_ui_field_spec_t){.id = ink_lock_face_choices[s], .role = "option", .label = title,
-                .value = selected ? TR("已选择") : TR(ink_lock_face_notes[s])};
-            P.actions[f] = (ink_ui_action_spec_t){.id = ink_lock_face_choices[s], .label = title, .capability = "settings.set", .args_json = P.args[f], .enabled = true};
+            if (selected) /* the AI's context is small: the chosen style is one field, the rows on this page its actions */
+                P.fields[nf++] = (ink_ui_field_spec_t){.id = "display.lock_style", .role = "setting", .label = TR("已选择"), .value = title};
+            if (here) P.actions[na++] = (ink_ui_action_spec_t){.id = ink_lock_face_choices[s], .label = title, .capability = "settings.set", .args_json = P.args[f], .enabled = true};
         } else if (kind[i] == 1) {
             int o = index[i], value = ink_setting_get(option_id(o)) ? 1 : 0;
             const char *labels[2] = {TR(option_choices(o)[0]), TR(option_choices(o)[1])};
@@ -90,26 +94,27 @@ void ink_lock_face_settings(lv_obj_t *parent) {
                     if (k != value) ink_shell_bind(lv_obj_get_child(seg, k), "settings.set", P.option_args[k]);
                 }
             }
-            P.fields[f] = (ink_ui_field_spec_t){.id = option_id(o), .role = "setting", .label = option_title(o), .value = labels[value]};
-            P.actions[f] = (ink_ui_action_spec_t){.id = option_id(o), .label = option_title(o), .capability = "settings.set", .args_json = P.args[f], .enabled = true};
+            P.fields[nf++] = (ink_ui_field_spec_t){.id = option_id(o), .role = "setting", .label = option_title(o), .value = labels[value]};
+            if (here) P.actions[na++] = (ink_ui_action_spec_t){.id = option_id(o), .label = option_title(o), .capability = "settings.set", .args_json = P.args[f], .enabled = true};
         } else {
             int t = index[i];
             bool on = ink_setting_get(TOGGLE_IDS[t]) != 0;
             snprintf(P.args[f], sizeof P.args[f], "{\"id\":\"%s\",\"value\":%d}", TOGGLE_IDS[t], !on);
             if (here) ink_shell_bind(ink_ui_toggle(parent, TR(TOGGLE_TITLES[t]), on, INK_MARGIN, y, w, NULL, NULL), "settings.set", P.args[f]);
-            P.fields[f] = (ink_ui_field_spec_t){.id = TOGGLE_IDS[t], .role = "setting", .label = TR(TOGGLE_TITLES[t]), .value = on ? TR("开") : TR("关")};
-            P.actions[f] = (ink_ui_action_spec_t){.id = TOGGLE_IDS[t], .label = TR(TOGGLE_TITLES[t]), .capability = "settings.set", .args_json = P.args[f], .enabled = true};
+            P.fields[nf++] = (ink_ui_field_spec_t){.id = TOGGLE_IDS[t], .role = "setting", .label = TR(TOGGLE_TITLES[t]), .value = on ? TR("开") : TR("关")};
+            if (here) P.actions[na++] = (ink_ui_action_spec_t){.id = TOGGLE_IDS[t], .label = TR(TOGGLE_TITLES[t]), .capability = "settings.set", .args_json = P.args[f], .enabled = true};
         }
         if (here) y += item_h(kind[i]);
     }
     snprintf(P.page_args[0], sizeof P.page_args[0], "{\"page\":%d}", P.page);
     snprintf(P.page_args[1], sizeof P.page_args[1], "{\"page\":%d}", P.page + 2);
     snprintf(P.page_text, sizeof P.page_text, TR("第 %d/%d 页"), P.page + 1, P.pages);
-    size_t actions = f;
-    P.fields[f++] = (ink_ui_field_spec_t){.id = "page", .role = "text", .label = TR("页"), .value = P.page_text};
+    P.fields[nf++] = (ink_ui_field_spec_t){.id = "page", .role = "text", .label = TR("页"), .value = P.page_text};
+    if (P.page > 0) P.actions[na++] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "shell.lock_faces", .args_json = P.page_args[0], .enabled = true};
+    if (P.page + 1 < P.pages) P.actions[na++] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "shell.lock_faces", .args_json = P.page_args[1], .enabled = true};
     if (P.pages > 1) ink_ui_pagebar(parent, P.page + 1, P.pages, room + INK_GAP, page_clicked);
     P.model = (ink_ui_page_spec_t){.id = "LockFaces", .title = TR("锁屏画面"), .object = {"display.lock_style", 0}, .fields = P.fields,
-        .field_count = f, .actions = P.actions, .action_count = actions};
+        .field_count = nf, .actions = P.actions, .action_count = na};
 }
 static void face_create(lv_obj_t *screen, void *arg) {
     (void)arg;
