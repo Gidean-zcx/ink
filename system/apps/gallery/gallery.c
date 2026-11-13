@@ -418,7 +418,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     *action = (ink_ui_action_spec_t){.id = G.objects[at], .label = G.labels[at], .capability = cap, .args_json = G.args[at], .object = field->object, .enabled = true};
 }
 static const ink_ui_action_spec_t *turns(void) { /* copied by the list */
-    static ink_ui_action_spec_t a[2];
+    static ink_ui_action_spec_t a[2] INK_PSRAM_BSS;
     a[0] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "gallery.prev"};
     a[1] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "gallery.next"};
     return a;
