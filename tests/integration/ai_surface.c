@@ -146,6 +146,7 @@ static const struct {
     {"settings.search", "query"}, {"settings.open", ""}, /* settings-1 */
     {"reader.back", NULL}, {"reader.toc_percent", "value"}, /* reader-one-1 */
     {"card.files_check", NULL}, /* auto-provision-1 */
+    {"time.almanac", ""},
     {NULL, NULL},
 };
 

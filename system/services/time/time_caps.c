@@ -12,6 +12,7 @@
 #include "ink/sys/members.h"
 #include "ink/sys/state.h"
 #include "ink/sys/time.h"
+#include "ink/sys/almanac.h"
 #include "time_internal.h"
 
 #define UNDO_MS 10000
@@ -347,6 +348,10 @@ static void cap_snooze(ink_call_t *c) {
 #define REMINDER_FIELDS "\"at\":{\"type\":\"string\",\"maxLength\":20},\"title\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":15},\"repeat\":{\"type\":\"string\",\"enum\":[\"none\",\"daily\",\"weekly\",\"workdays\",\"monthly\",\"yearly\",\"lunar_yearly\"]},\"ring\":{\"type\":\"boolean\"},\"all_day\":{\"type\":\"boolean\"},\"end\":{\"type\":\"string\",\"maxLength\":20}"
 
 static const ink_cap_t TIME_CAPS[] = {
+    {.id = "time.almanac", .title = "老黄历（日期不给就是系统时区的今天，民俗说法）",
+     .input = "{\"type\":\"object\",\"properties\":{\"date\":{\"type\":\"string\",\"minLength\":10,\"maxLength\":10}},\"additionalProperties\":false}",
+     .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true,
+     .exec = INK_EXEC_DIRECT, .run = ink_almanac_cap_run},
     {.id = "time.now", .title = "现在几点（含时区和农历）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_now},
     {.id = "time.set",
      .title = "改系统时间",
