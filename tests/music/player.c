@@ -15,8 +15,8 @@
 #include "graft.h"
 
 #define MINE "/me/音乐/"
-#define FIRST "/family/audio/tone-16000-1.flac"
-#define WRAP "/family/audio/0首.wav"
+#define FIRST "/family/audio/0首.mp3" /* tagged, about 21 s, with its own lyrics */
+#define WRAP FIRST
 static char phase[16], content[8], snap[12000], value[512], walk_log[2][16][1024];
 static EpdRect T[48];
 static int nt, top;
@@ -32,6 +32,9 @@ static volatile bool bg_seen;
 static ink_exec_job_t barrier_job;
 static void bg_mark(void *arg) { (void)arg; bg_seen = true; }
 static void ui_noop(void) {}
+static void settle(void) { /* what the page drew for the last action is on its way: no waiting for the panel */
+    for (int i = 0; i < 2; i++) { bg_seen = false; ink_exec_post(INK_EXEC_BG, &barrier_job, bg_mark, NULL); CHECK(WAIT_FOR(bg_seen, 8000), "page work done"); on_ui(ui_noop); }
+}
 static void quiet(void) { /* the page's executor, then the UI task that presents, three times over */
     for (int i = 0; i < 3; i++) { bg_seen = false; ink_exec_post(INK_EXEC_BG, &barrier_job, bg_mark, NULL); CHECK(WAIT_FOR(bg_seen, 8000), "page work done"); on_ui(ui_noop); }
     CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "display settles");
@@ -77,15 +80,16 @@ static void touch(int x, int y) {
     CHECK(reached, "tap reaches a capability at %d,%d", x, y); quiet();
 }
 static void press(int i) { targets(); touch(T[i].x + T[i].width / 2, T[i].y + T[i].height / 2); }
-static unsigned bar_ms(int rel) { targets(); return (unsigned)((uint64_t)status().duration_ms * (unsigned)rel / (unsigned)T[BAR].width); }
+static unsigned bar_ms(int rel) { return (unsigned)((uint64_t)status().duration_ms * (unsigned)rel / (unsigned)T[BAR].width); }
 static void seek_to(bool by_touch, int rel, bool check) { /* rel: pixels into the bar */
+    if (by_touch) targets();
     unsigned ms = bar_ms(rel);
     if (by_touch) touch(T[BAR].x + rel, T[BAR].y + T[BAR].height / 2);
     else { char a[32]; snprintf(a, sizeof a, "{\"ms\":%u}", ms); ok("music.seek", a); }
     if (check) CHECK(WAIT_FOR(status().position_ms >= ms && status().position_ms <= ms + 1500, 3000), "seek lands at %u (%u)", ms, status().position_ms);
 }
 static void seek(bool by_touch, int rel) { seek_to(by_touch, rel, true); }
-static void near_end(bool by_touch) { targets(); seek_to(by_touch, T[BAR].width - 2, false); }
+static void near_end(bool by_touch) { if (by_touch || !nt) targets(); seek_to(by_touch, T[BAR].width - 2, false); }
 static void page_to(bool by_touch, const char *path, int page) { /* the playlist page holding path */
     for (int i = 0; by_touch && i < 8 && row_of(path) < 0; i++) press(atoi(field("page") + strlen("第 ")) - 1 < page ? nt - 1 : nt - 2);
     if (by_touch) {}
@@ -241,7 +245,10 @@ static void main_phase(void) {
     targets(); EpdRect r = T[ROW0 + row_of(MINE "不能放.m4a")]; touch(r.x + r.width / 2, r.y + r.height / 2);
     CHECK(shows("library", "这种格式还不能放"), "tapping it says why: %s", field("library"));
     CHECK(AI("music.play", "{\"path\":\"" MINE "不能放.m4a\"}") && g_rc.status == INK_RC_INVALID && strstr(g_rc.say, "还不能放"), "AI is told the same");
-    ok("music.play", "{\"path\":\"" FIRST "\"}"); ok("music.pause", NULL); ok("music.list", "{\"view\":\"player\",\"page\":0}");
+    /* Tags are read in the member's own folder as in the family's. */
+    ok("music.list", "{\"view\":\"list\",\"page\":5}"); quiet();
+    { char id[12]; int tr = row_of(MINE "带标签.mp3"); snprintf(id, sizeof id, "track%d", tr); CHECK(tr >= 0 && strstr(label(id), "合成音调 · 测试歌手"), "tags in /me/音乐: %s", label(id)); }
+    ok("music.play", "{\"path\":\"/family/audio/tone-16000-1.flac\"}"); ok("music.pause", NULL); ok("music.list", "{\"view\":\"player\",\"page\":0}");
     picture("default-player"); targets();
     ok("music.list", "{\"view\":\"all\"}"); picture("default-all-folders"); targets();
     ok("music.list", "{\"path\":\"/family/audio/文件夹\"}"); picture("default-all-folder-open"); targets();
@@ -263,13 +270,13 @@ static void main_phase(void) {
     ok("music.play", "{\"path\":\"" MINE "长歌.wav\"}"); ok("music.seek", "{\"ms\":0}"); quiet(); targets();
     double page = counter("music.present.page"), whole = counter("music.present.whole"), part = counter("music.present.part");
     const EpdRect bar = T[BAR];
-    for (int i = 0; i < 100 && status().state == INK_MEDIA_PLAYING && !strcmp(status().path, MINE "长歌.wav"); i++) {
+    for (int i = 0; i < 160 && status().state == INK_MEDIA_PLAYING && !strcmp(status().path, MINE "长歌.wav"); i++) {
         double seen = counter("music.present.part"); delay_ms(50);
         if (counter("music.present.part") > seen) {
             int y1 = (int)sim_metric_last("music.present_y1"), y2 = (int)sim_metric_last("music.present_y2");
-            CHECK((y1 >= bar.y && y2 < bar.y + bar.height) || y2 < bar.y, "only the bar band or the lyric line above it (%d-%d)", y1, y2);
+            CHECK(y2 < bar.y + bar.height && y1 >= bar.y - 2 * ink_ui_px(INK_LINE_BODY), "only the bar band and the lyric line above it (%d-%d)", y1, y2);
         }
-        if (status().position_ms > 4500) break;
+        if (status().position_ms > 7000) break;
     }
     CHECK(counter("music.present.part") - part >= 3, "the bar and lyric moved (%.0f)", counter("music.present.part") - part);
     CHECK(counter("music.present.page") == page && counter("music.present.whole") == whole, "no whole-page refresh while the song plays");
@@ -277,7 +284,29 @@ static void main_phase(void) {
     ok("music.mode", "{\"mode\":\"cycle\"}"); quiet(); targets();
     CHECK(counter("music.present.part") == part + 1 && (int)sim_metric_last("music.present_y1") == T[MODE].y &&
           (int)sim_metric_last("music.present_y2") == T[MODE].y + T[MODE].height - 1, "mode refreshes only its control");
-    ok("music.mode", "{\"mode\":\"list\"}");
+    ok("music.mode", "{\"mode\":\"list\"}"); quiet();
+    ok("music.list", "{\"view\":\"list\",\"page\":4}"); quiet(); targets(); part = counter("music.present.part");
+    { const int fr = row_of(MINE "乙.wav"); ok("music.favorite", "{\"path\":\"" MINE "乙.wav\"}"); quiet();
+      CHECK(fr >= 0 && counter("music.present.part") == part + 1 && (int)sim_metric_last("music.present_y1") == T[ROW0 + fr].y &&
+            (int)sim_metric_last("music.present_y2") == T[ROW0 + fr].y + T[ROW0 + fr].height - 1, "a favorite refreshes only its row");
+      ok("music.favorite", "{\"path\":\"" MINE "乙.wav\"}"); quiet(); }
+    /* How many refreshes each main action costs (recorded for the report). */
+    {
+        static const char *const steps[][3] = {
+            {"play", "music.play", "{\"path\":\"" MINE "丙.wav\"}"}, {"pause", "music.pause", NULL}, {"seek", "music.seek", "{\"ms\":5000}"},
+            {"resume", "music.play", NULL}, {"next", "music.next", NULL}, {"mode", "music.mode", "{\"mode\":\"one\"}"},
+            {"favorite", "music.favorite", NULL}, {"unfavorite", "music.favorite", NULL}, {"page", "music.list", "{\"view\":\"list\",\"page\":0}"},
+            {"all", "music.list", "{\"view\":\"all\"}"}, {"folder", "music.list", "{\"path\":\"/family/audio/文件夹\"}"},
+            {"up", "music.list", "{\"path\":\"/\"}"}, {"player", "music.list", "{\"view\":\"player\"}"}, {"stop", "music.pause", NULL}};
+        for (size_t i = 0; i < sizeof steps / sizeof *steps; i++) {
+            double was_shown = counter("music.present.page") + counter("music.present.whole") + counter("music.present.part");
+            ok(steps[i][1], steps[i][2]); settle();
+            double n = counter("music.present.page") + counter("music.present.whole") + counter("music.present.part") - was_shown;
+            char name[48]; snprintf(name, sizeof name, "music.refreshes.%s", steps[i][0]); ink_probe_value(name, n);
+            CHECK(n >= 1 && n <= 2, "%s costs one refresh (%.0f)", steps[i][0], n);
+        }
+        ok("music.mode", "{\"mode\":\"list\"}"); quiet();
+    }
     /* 2. Playing on: leave the page, lock, open the reader; the song ends and the next follows the mode. */
     ok("music.play", "{\"path\":\"" MINE "乙.wav\"}"); ok("music.seek", "{\"ms\":17000}");
     test_start_home(); ink_power_release(INK_NEED_NO_LOCK); key(HAL_KEY_POWER); CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 3000), "locked");

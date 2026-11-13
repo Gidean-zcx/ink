@@ -62,10 +62,18 @@ if player and a.content != 'empty':
         tone(mine / name, seconds)
     shutil.copyfile(ROOT / 'tests/music/fixtures/tone-16000-1.lrc', mine / '甲.lrc')
     if a.content == 'full':
+        shutil.copyfile(ROOT / 'tests/music/fixtures/tone-16000-1.mp3', mine / '带标签.mp3')  # ID3 tags in the member's own folder
+    if a.content == 'full':
         (mine / '专辑').mkdir()
         tone(mine / '专辑' / '丁.wav', 4)
         tone(mine / '长歌.wav', 90)
-        tone(sd / '0首.wav', 20)  # the first song of the library, long enough to look at
+        # The first song of the library: the tagged MP3's frames seven times over (about 21 s), with its own lyrics.
+        mp3 = (ROOT / 'tests/music/fixtures/tone-16000-1.mp3').read_bytes()
+        tag = 10 + (((mp3[6] & 0x7f) << 21) | ((mp3[7] & 0x7f) << 14) | ((mp3[8] & 0x7f) << 7) | (mp3[9] & 0x7f))
+        info = mp3[tag:tag + 288]  # MPEG-2 layer III, 64 kbit/s, 16 kHz: its Xing frame is 288 bytes and is left out
+        assert mp3[tag:tag + 3] == b'\xff\xf3\x88' and b'Xing' in info
+        (sd / '0首.mp3').write_bytes(mp3[:tag] + mp3[tag + 288:] * 7)
+        (sd / '0首.lrc').write_text('[00:00.00]第一句\n[00:07.00]第二句\n[00:14.00]第三句\n', encoding='utf-8')
         shutil.copyfile(ROOT / 'tests/music/fixtures/tone-16000-1.lrc', mine / '长歌.lrc')
         (mine / '不能放.m4a').write_bytes(b'\0\0\0\x18ftypM4A synthetic')
         (area / 'sd/content/.m/kid/音乐').mkdir(parents=True)

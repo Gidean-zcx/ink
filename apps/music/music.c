@@ -132,6 +132,7 @@ static void recall(const ink_db_def_t *def, char *out, size_t cap) {
 void music_port_mode_store(music_mode_t mode) { record(&MODE, MODES[mode]); }
 
 /* ---- the BG side ---- */
+static void draw(app_redraw_t kind);
 static bool ensure(void) { /* this member's library, scanned once; the page rescans on every entry */
     const char *id = ink_member_current()->id;
     if (!strcmp(B.member, id)) return false;
@@ -168,8 +169,9 @@ static void refresh(void) { /* what the media service plays now, as the library 
 static void pick(void) { /* music_library_pick runs the original finish_track rule ahead of the song's end */
     const int now = music_track_index();
     int next = music_library_pick(), skipped = 0;
-    for (; next >= 0 && next != now && !music_playable(music_track(next)->path) && skipped < music_track_count(); skipped++) {
-        music_library_now(MUSIC_PLAYING, music_track(next)->path, "", ""); /* a format we cannot play is passed over */
+    /* A format we cannot play is passed over; shuffle never lands back on the song that is playing. */
+    for (; next >= 0 && skipped < music_track_count() && (next == now ? skipped && music_mode() == MUSIC_MODE_SHUFFLE : !music_playable(music_track(next)->path)); skipped++) {
+        music_library_now(MUSIC_PLAYING, music_track(next)->path, "", "");
         next = music_library_pick();
     }
     if (skipped && now >= 0) music_library_now(music_state(), music_track(now)->path, "", "");
@@ -184,7 +186,10 @@ static void started(const char *path) { /* music put this song on: it follows th
     snprintf(S.playing, sizeof S.playing, "%s", path);
     ink_svc_unlock();
     if (music_find_path(path) >= 0) record(&LAST, path);
-    music_page_message(NULL);
+    if (music_page_notice()[0]) {
+        music_page_message(NULL);
+        draw(music_page_changed("message", NULL));
+    }
     pick();
 }
 static void fill_view(void) {
@@ -228,7 +233,7 @@ static void fill_view(void) {
 static void presented_ui(void *arg);
 static void flush(void) { /* drawn once the UI task has copied the last frame */
     if (!B.pending || !B.open || __atomic_load_n(&presenting, __ATOMIC_ACQUIRE)) return;
-    if (B.font) music_page_draw(B.pixels);
+    if (B.font) { music_page_draw(B.pixels); music_page_presented(); } /* this frame now carries the bar */
     fill_view();
     B.shown = B.area;
     B.shown_refresh = B.refresh;
@@ -251,7 +256,7 @@ static void draw(app_redraw_t kind) { /* render the frame and hand only what cha
     B.pending = true;
     flush();
 }
-static void after_present(void *arg) { (void)arg; music_page_presented(); flush(); }
+static void after_present(void *arg) { (void)arg; flush(); }
 static ink_exec_job_t after_job;
 static void opened_bg(void *arg) {
     (void)arg;

@@ -913,6 +913,7 @@ app_redraw_t music_page_changed(const char *what, const char *path) {
         return APP_REDRAW_AREA;
     }
     const int current = music_track_index();
+    if (!s_show_all && current == s_seen_track && !strcmp(what, "play") && music_serial() == s_serial) return APP_REDRAW_NONE;  // on_tick drew it
     if (!s_show_all && current == s_seen_track && (!strcmp(what, "state") || !strcmp(what, "seek"))) {
         s_serial = music_serial();
         sync_lyric();
@@ -972,8 +973,8 @@ int music_page_rows(music_row_t *out, int max, int *page, int *pages) {
 /* Every tap target of the current view, for the size test. */
 int music_page_targets(EpdRect *out, int max) {
     int n = 0;
-    for (int y = 0; y < L.h && n < max; y += 4)
-        for (int x = 0; x < L.w && n < max; x += 4) {
+    for (int y = 0; y < L.h && n < max; y += 8)
+        for (int x = 0; x < L.w && n < max; x += 8) {
             const music_hit_t t = target_at(x, y);
             bool seen = !t.r.width;
             for (int k = 0; k < n && !seen; ++k) seen = !memcmp(&out[k], &t.r, sizeof t.r);
