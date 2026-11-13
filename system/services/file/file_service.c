@@ -12,6 +12,7 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 
 #include "ink/sys/i18n.h"
 #include "ink/hal_storage.h"
@@ -55,6 +56,7 @@ struct ink_fs_file {
     file_context_t context;
     char member[INK_MEMBER_ID_MAX];
     char path[INK_FS_PATH_MAX]; /* virtual, for the change event */
+    char phys[PHYS_MAX];        /* where it is on the card: a card file is not replaced under it */
     const char *owner;          /* the task that opened it, for "in use by" */
 };
 
@@ -382,6 +384,7 @@ static int fs_open_unlocked(const file_context_t *c, const char *path, int mode,
             snprintf(slot->member, sizeof slot->member, "%.*s", (int)(end ? end - (phys + 12) : (ptrdiff_t)strlen(phys + 12)), phys + 12);
         }
         snprintf(slot->path, sizeof slot->path, "%s", path);
+        snprintf(slot->phys, sizeof slot->phys, "%s", phys);
         slot->owner = osal_task_name(osal_task_self());
     }
     ink_svc_unlock();
@@ -728,6 +731,26 @@ static void on_card(void *ctx) {
     fs_refresh_cb(NULL);
 }
 void ink_fs_changed_outside(void) { on_card(NULL); }
+
+/* Whoever has the file open holds it, whichever app that is (the reader's font is open in whichever app draws with it;
+ * one that has left the screen has closed it). Under the edits lock, as every open is: none opens it in between. */
+int ink_fs_card_replace(const char *part, const char *phys) {
+    if (FS.ready) osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    bool open = false;
+    if (FS.ready) {
+        ink_svc_lock();
+        open = FS.job_active; /* a copy or delete reads the card past the table */
+        for (int i = 0; i < MAX_OPEN && !open; i++) open = FS.files[i].used && !strcasecmp(FS.files[i].phys, phys); /* FAT */
+        ink_svc_unlock();
+    }
+    int r = INK_FS_ERR_BUSY;
+    if (!open) {
+        r = hal_fs_size(phys) >= 0 && hal_fs_remove(phys) ? card_error() : 0;
+        if (!r && hal_fs_rename(part, phys)) r = card_error();
+    }
+    if (FS.ready) osal_mutex_unlock(FS.edits);
+    return r;
+}
 
 /* ------------------------------------------------------------ jobs */
 

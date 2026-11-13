@@ -11,7 +11,6 @@
 #include "ink/hal_usb.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
-#include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/card_files.h"
 #include "ink/sys/crc.h"
@@ -60,12 +59,12 @@ static struct {
     int64_t off;
     ink_sha256_t sha;
     uint64_t t0, done_bytes, total_bytes;
-    uint32_t swap, let_go; /* let_go: those files' apps hold none of them */
+    uint32_t swap;
     unsigned concluded; /* checks and sessions that reached a conclusion (ink_card_files_checks) */
     uint8_t *buf, *chunk; /* PSRAM, with line */
     char *line, rx[512], out[200];
     volatile bool swapped; /* the task's install is done (no semaphore: internal RAM) */
-    ink_exec_job_t kick_job, step_job, ui_job, swap_job, end_job;
+    ink_exec_job_t kick_job, step_job, swap_job, end_job;
     ink_svc_deadline_t quiet_at; /* the next read waits for a quiet screen */
 } CF INK_PSRAM_BSS; /* internal RAM is short */
 
@@ -127,9 +126,9 @@ static void swap_bg(void *arg) {
         if (!(CF.swap & 1u << i) || ink_fs_card_hold()) continue;
         const char *path = INK_CARD_FILES[i].path;
         part_path(part, sizeof part, i);
-        /* the card's file system cannot remove a file someone has open: the old one goes only while its app lets go */
-        bool gone = hal_fs_size(path) < 0 || ((CF.let_go & 1u << i) && !hal_fs_remove(path)); /* the old one */
-        if (gone && !hal_fs_rename(part, path)) CF.st[i] = E_OK, changed = true;
+        /* the card's file system cannot remove a file someone has open: the old one goes only while nobody has it open
+         * (whichever app that is: the reader's font is drawn with in music and on the lock screen too) */
+        if (!ink_fs_card_replace(part, path)) CF.st[i] = E_OK, changed = true;
         else ink_log(INK_LOG_WARN, "card", "card files: %s not replaced yet, its .part stays", path);
         ink_fs_card_release();
     }
@@ -139,8 +138,8 @@ static void swap_bg(void *arg) {
     else check_finish();
 }
 
-/* An entry's app is one id or several joined by commas ("reader,music": both draw with the reader's font).
- * The n-th of them into out; false past the last. */
+/* An entry's app is one id or several joined by commas ("reader,music": both draw with the reader's font), the apps
+ * whose pages explain it while it is not in place. The n-th of them into out; false past the last. */
 static bool app_at(const char *list, int n, char *out, size_t cap) {
     for (; n > 0 && list; n--) if ((list = strchr(list, ','))) list++;
     if (!list) return false;
@@ -154,22 +153,9 @@ static bool wants(const char *list, const char *app) {
     return false;
 }
 
-static void swap_ui(void *arg) { /* app states and notices are the UI task's */
-    (void)arg;
-    CF.let_go = 0;
-    for (int i = 0; i < INK_CARD_FILES_COUNT; i++) {
-        bool free = true; /* every app that wants it is stopped, or its page shows the notice */
-        char app[24];
-        for (int n = 0; free && app_at(INK_CARD_FILES[i].app, n, app, sizeof app); n++)
-            free = ink_app_state_of(app) == INK_APP_STOPPED || ink_card_files_notice_snapshot(app, NULL, 0);
-        if (free) CF.let_go |= 1u << i;
-    }
-    ink_exec_post(INK_EXEC_BG, &CF.swap_job, swap_bg, NULL);
-}
-
 static void swap_start(uint32_t mask, bool from_task) {
     CF.swap = mask, CF.swap_from_task = from_task;
-    ink_exec_post(INK_EXEC_UI, &CF.ui_job, swap_ui, NULL);
+    ink_exec_post(INK_EXEC_BG, &CF.swap_job, swap_bg, NULL);
 }
 
 static int usb_line(const char *fmt, ...) __attribute__((format(printf, 1, 2)));

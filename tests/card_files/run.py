@@ -66,7 +66,7 @@ def run(build, only=None, binary=None):
     digest = json.loads((build / "card-files/manifest.json").read_text())["digest"]
     shots = area / "shots"
     started = time.monotonic()
-    phases = only or ["A", "B", "C", "H", "D", "E", "E2", "E3", "F", "G", "I", "J"]
+    phases = only or ["A", "B", "C", "H", "D", "E", "E2", "E3", "F", "G", "I", "J", "K"]
 
     def want(p):
         return p in phases
@@ -158,6 +158,14 @@ def run(build, only=None, binary=None):
         assert not any(l.startswith("INKCF1 DONE 0 ok") for l in sent), sent[-6:]
         same(eight, build)
         assert not parts(eight) and counts.get("card_files.written") == 1, (parts(eight), counts.get("card_files.written"))
+    if want("K"):  # the same wrong font, with music opened and left before the reader explains it
+        nine = card(area, "nine")
+        (nine / "content/fonts").mkdir(parents=True)
+        (nine / FONT).write_bytes((build / "card-files/files/0").read_bytes()[:65536])
+        shutil.copy(build / "card-files/files/1", nine / OFL)
+        counts, sent, out = boot(build, area, "K", nine, [], binary=binary)
+        same(nine, build)
+        assert not parts(nine) and "INKCF1 DONE 0 ok" in sent and "INKCF1 BYE 1 0" in sent, (parts(nine), sent[-4:])
     took = time.monotonic() - started
     print(f"card files across boots: PASS in {took:.0f} s", flush=True)
     assert took <= 300, took

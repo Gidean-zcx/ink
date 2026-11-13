@@ -152,6 +152,11 @@ bool ink_usb_disk_active(void);
 int ink_fs_card_hold(void);
 void ink_fs_card_release(void);
 void ink_fs_changed_outside(void); /* the system changed the card past these paths (card files): index, revisions hear of it */
+/** Card files (D-138): the whole file at the physical path part takes the place of phys. A file there goes first, and
+ *  only while nobody has it open through this service and no copy or delete runs; no open slips in between. Hold the
+ *  card (ink_fs_card_hold) around it. 0; INK_FS_ERR_BUSY when phys is open or a job runs (nothing changed); else an
+ *  error from the card (the old file may be gone, part stays). */
+int ink_fs_card_replace(const char *part, const char *phys);
 
 #ifdef __cplusplus
 }
