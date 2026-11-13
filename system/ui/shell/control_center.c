@@ -1,8 +1,9 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
-/* ui-scale-runtime: dimension notifications Returns the bottom of theme-sized notification rows. */
+/* ui-scale-runtime: dimension ink_notification_list_draw Returns the bottom of theme-sized notification rows. */
 /* ui-scale-runtime: dimension y,ink_activity_card_draw Rows accept theme positions; activity cards return theme-sized heights. */
 /* ui-scale-runtime: dimension top Child volume marker uses the configured percentage. */
 #include "shell_internal.h"
+#include "notification_list.h"
 
 static void kid_volume_mark(lv_obj_t *slider, int top);
 static int kid_control_snapshot(char *buf, size_t cap);
@@ -20,9 +21,7 @@ static int control_snapshot(char *buf, size_t cap) {
     if (N.more && n >= 0 && (size_t) n < cap)
         n += snprintf(buf + n, cap - (size_t) n, "暖光=%lld；飞行模式=%lld（net.set_airplane）；", (long long) ink_setting_get("display.warmth"),
                       (long long) ink_setting_get("net.airplane"));
-    for (int i = 0; i < N.control_count && n >= 0 && (size_t) n < cap; i++)
-        n += snprintf(buf + n, cap - (size_t) n, "通知[%u]=%s，%s；已读=%d；", (unsigned) N.control_items[i].id,
-                      N.control_items[i].title, N.control_items[i].body, N.control_items[i].read);
+    if (n >= 0 && (size_t) n < cap) n += ink_notification_list_snapshot(buf + n, cap - (size_t) n, true);
     const char *actions = child() ? "动作：settings.set、system.set_volume、shell.notify_open、notify.read、shell.close。"
                                   : "动作：settings.set、system.set_volume、notify.read、shell.members、shell."
                                     "settings、shell.network、shell.more、shell.close。";
@@ -60,33 +59,6 @@ void bind_toggle(lv_obj_t *o, const char *id) {
     char json[128];
     snprintf(json, sizeof json, "{\"id\":\"%s\",\"value\":%lld}", id, (long long) !ink_setting_get(id));
     ink_shell_bind(o, "settings.set", json);
-}
-
-static int notifications(lv_obj_t *parent, int y, int limit) {
-    ink_db_cursor_t cursor = {0};
-    ink_notify_view_t n;
-    int count = 0;
-    ink_notify_view_t *visible = N.control_items;
-    while (count < limit && ink_notify_next(&cursor, &n) == 1) {
-        visible[count] = n;
-        int h = ink_ui_row_double(),
-            text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
-        lv_obj_t *card = ink_ui_card(parent, INK_MARGIN, y, width(), h, INK_SURFACE_WHITE);
-        ink_ui_circle(card, !strcmp(n.channel, "message") ? "message" : "bell", INK_GAP, (h - INK_CIRCLE) / 2,
-                      INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
-        ink_ui_line(card, n.title, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y,
-                    width() - INK_ROW_DOUBLE - INK_MARGIN);
-        ink_ui_line(card, n.body, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE,
-                    text_y + ink_ui_line_height(INK_FONT_LIST), width() - INK_ROW_DOUBLE - INK_MARGIN);
-        char args[64];
-        snprintf(args, sizeof args, "{\"id\":%u}", (unsigned) n.id);
-        ink_shell_bind(card, "shell.notify_open", args);
-        count++;
-        y += ink_ui_row_double() + INK_GAP_M;
-    }
-    if (!count) ink_ui_notice(parent, TR("还没有通知"), y + INK_GAP_L);
-    N.control_count = count;
-    return y;
 }
 
 void draw_control(void) {
@@ -156,7 +128,7 @@ void draw_control(void) {
         y += INK_CONTROL + INK_GAP_L;
     }
     int close_y = INK_CANVAS_H - INK_CONTROL - INK_MARGIN, fits = (close_y - y) / (ink_ui_row_double() + INK_GAP_M);
-    if (fits > 0) notifications(N.control, y, fits < 2 ? fits : 2);
+    if (fits > 0) ink_notification_list_draw(N.control, y, fits < 2 ? fits : 2);
     if (!child()) ink_shell_bind(ink_ui_pill(N.control, TR("正在做的事"), INK_MARGIN, close_y, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL), "shell.tasks", NULL);
     lv_obj_t *close = ink_ui_pill(N.control, TR("收起"), child() ? (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2 : INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE,
                                   close_y, INK_CIRCLE_LARGE, INK_CONTROL, false, NULL, NULL);
@@ -186,8 +158,7 @@ static int kid_control_snapshot(char *buf, size_t cap) {
     int n = snprintf(buf, cap, "KidControl；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；音量上限=%lld；通知=%d；动作：settings.set、system.set_volume、shell.notify_open、notify.read、shell.close。",
         ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("display.warmth"),
         (long long)(volume > max ? max : volume), (long long)max, ink_notify_unread());
-    for (int i = 0; i < N.control_count && n >= 0 && (size_t)n < cap; i++)
-        n += snprintf(buf + n, cap - (size_t)n, "通知[%u]=%s，%s；", (unsigned)N.control_items[i].id, N.control_items[i].title, N.control_items[i].body);
+    if (n >= 0 && (size_t)n < cap) n += ink_notification_list_snapshot(buf + n, cap - (size_t)n, false);
     return n;
 }
 

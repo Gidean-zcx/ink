@@ -299,6 +299,7 @@ add_library(ink_system STATIC
   system/ui/icons.c
   system/ui/shell/navigation.c
   system/ui/shell/status_bar.c system/ui/shell/shell_home.c system/ui/shell/control_center.c system/ui/shell/settings_body.c system/ui/shell/today_edit.c
+  system/ui/shell/notification_list.c
   system/ui/shell/settings_pages.c
   system/ui/shell/bluetooth_page.c
   system/ui/shell/ai_panel.c
@@ -460,6 +461,7 @@ add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
 set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/status_bar.c ${CMAKE_SOURCE_DIR}/system/ui/shell/shell_home.c ${CMAKE_SOURCE_DIR}/system/ui/shell/control_center.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/notification_list.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_body.c ${CMAKE_SOURCE_DIR}/system/ui/shell/today_edit.c
   ${CMAKE_SOURCE_DIR}/system/apps/memory/memory.c ${CMAKE_SOURCE_DIR}/system/apps/snake/snake.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/mobile_network.c
