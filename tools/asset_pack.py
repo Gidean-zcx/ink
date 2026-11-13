@@ -22,7 +22,7 @@ def pack(items, compress=False):
         if len(key) >= 96 or b'\0' in key:
             raise ValueError(f'asset name exceeds 95 bytes: {name}')
         stored = len(data)
-        if compress:
+        if compress and not name.startswith('fonts/'):  # a font stays mapped for good: inflated, it would hold PSRAM
             zipped = struct.pack('<I', len(data)) + zlib.compress(data, 9)
             if len(zipped) < len(data):
                 data, stored = zipped, len(zipped) | 0x80000000
