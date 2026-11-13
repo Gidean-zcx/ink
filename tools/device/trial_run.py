@@ -12,15 +12,22 @@ The device runs the factory firmware only between runs; writing needs the user's
                --out DIR --seconds N [--until TEXT]
 
 --install writes and verifies the trial build and leaves it running (the delivery; the backup stays the way back).
+  Then it serves the card files (D-138) on the console: the install bundle next to the image (build-s31/card-files,
+  or --card-files DIR) goes onto the storage card automatically, logged in DIR/card_files.txt. Without the bundle it
+  stops before writing anything, unless --no-card-files.
 --restore-only writes the five regions back from the backup, checks them and boots the factory firmware.
+--card-files-only [--reset] only serves the card files to the running build: no backup, no image, no esptool.
 
-Exit codes: 0 ran, restored and verified; 1 restore NOT verified (stop and look); 2 stopped before writing anything;
-3 restored and verified, but the factory boot line was not seen or parking failed; 4 --install: written and verified
-but the console showed no system start.
+Exit codes: 0 ran, restored and verified (--install: installed and the card files all there); 1 restore NOT verified
+(stop and look); 2 stopped before writing anything; 3 restored and verified, but the factory boot line was not seen or
+parking failed; 4 --install: written and verified but the console showed no system start; 5 installed (or served) and
+running, but the card files are not all on the card (see card_files.txt).
 """
 import argparse
 import hashlib
+import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -29,6 +36,8 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "hw-selftest"))
 import run as base  # noqa: E402  the self-test runner's serial, otadata and esptool helpers
+sys.path.insert(0, HERE)
+import card_files_serve  # noqa: E402  no pyserial or esptool at import
 
 MODEL = (0x10000, 0x64000)
 FONT_DATA = (0xAE4000, 0x500000)
@@ -39,9 +48,50 @@ EXPECT = {"model": (0x01, 0x82), "font_data": (0x01, 0x40), "coredump": (0x01, 0
 base.WRITABLE = tuple(REGIONS.values())  # base.esptool_cmd refuses anything outside these
 
 
+def check_bundle(a):
+    try:
+        with open(os.path.join(a.card_files or "", "manifest.json")) as f:
+            json.load(f)
+    except (OSError, ValueError) as e:
+        raise base.Stop(f"no install bundle (card files) at {a.card_files}: {e}; give --card-files DIR or --no-card-files")
+
+
+def open_console(a, reset):
+    """Opens the console without a reset (one RTS pulse first with reset): pyserial only from here."""
+    sys.path.insert(0, base.BRINGUP)
+    import serial_log  # noqa: E402  (pyserial)
+    pending = [reset]
+
+    def opener():
+        path = serial_log.find_port(a.port)
+        s = serial_log.open_port(path, 115200) if path else None
+        if s is not None and pending[0]:
+            serial_log.reset(s)
+            pending[0] = False
+        return s
+    return opener
+
+
+def serve_card_files(r, reset=False):
+    r.step(f"card files: serve the install bundle {r.a.card_files}")
+    if r.a.dry_run:
+        r.say("would serve the card files (dry run)")
+        return "all-present"
+    with open(os.path.join(r.a.out, "card_files.txt"), "a", buffering=1, encoding="utf-8") as log:
+        result = card_files_serve.Server(r.a.card_files).serve(open_console(r.a, reset), log)
+    r.say(f"card files: {result}")
+    return result
+
+
+def card_files_ok(result):
+    return re.fullmatch(r"all-present|done ok=\d+ failed=0", result) is not None
+
+
 def prepare(r):
     a = r.a
     r.step("1. check the backup, its partition table and the images")
+    if a.install and not a.no_card_files:
+        check_bundle(a)
     if os.path.getsize(a.backup) != base.FLASH_SIZE:
         raise base.Stop(f"backup is {os.path.getsize(a.backup)} bytes, expected {base.FLASH_SIZE}")
     with open(a.backup, "rb") as f:
@@ -148,7 +198,7 @@ def restore(r, p):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--port", required=True)
-    ap.add_argument("--backup", required=True, help="verified full 16 MiB flash backup of this device")
+    ap.add_argument("--backup", help="verified full 16 MiB flash backup of this device (not with --card-files-only)")
     ap.add_argument("--image", help="the app image for ota_1 (not with --restore-only)")
     ap.add_argument("--fonts", help="the font pack for font_data (0xae4000)")
     ap.add_argument("--out", required=True, help="output directory (outside the repository)")
@@ -159,15 +209,30 @@ def main(argv=None):
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--install", action="store_true", help="write, verify, log the boot and leave the trial running")
     ap.add_argument("--restore-only", action="store_true", help="only write the regions back and boot the factory firmware")
+    ap.add_argument("--card-files", help="the install bundle (default: card-files next to --image)")
+    ap.add_argument("--no-card-files", action="store_true", help="--install without the bundle: nothing goes onto the card")
+    ap.add_argument("--card-files-only", action="store_true", help="only serve the card files to the running build")
+    ap.add_argument("--reset", action="store_true", help="with --card-files-only: reset first, so the device checks again")
     a = ap.parse_args(argv)
-    if not a.restore_only and not a.image:
-        ap.error("--image is needed unless --restore-only")
+    if not a.card_files_only and not a.backup:
+        ap.error("--backup is needed unless --card-files-only")
+    if not a.restore_only and not a.card_files_only and not a.image:
+        ap.error("--image is needed unless --restore-only or --card-files-only")
+    if not a.card_files and a.image:
+        a.card_files = os.path.join(os.path.dirname(os.path.abspath(a.image)), "card-files")
     a.esptool = [a.python, "-m", "esptool"]
     a.port_now = a.port
     os.makedirs(a.out, exist_ok=True)
     r = base.Run(a)
     r.touched = False
     try:
+        if a.card_files_only:  # nothing is written to flash, esptool is not run
+            try:
+                check_bundle(a)
+            except base.Stop as e:
+                r.say(f"STOP: {e}")
+                return 2
+            return 0 if card_files_ok(serve_card_files(r, a.reset)) else 5
         try:
             p = prepare(r)
         except base.Stop as e:
@@ -185,7 +250,9 @@ def main(argv=None):
             if started is not None:
                 r.say("INSTALLED: the trial build is running; the way back is --restore-only" + ("" if started else
                       " (the console did not show the system start: look at trial_console.txt)"))
-                return 0 if started else 4
+                if not started:
+                    return 4
+                return 0 if a.no_card_files or card_files_ok(serve_card_files(r)) else 5
         else:
             try:
                 install_and_run(r, p)
