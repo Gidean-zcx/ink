@@ -31,7 +31,7 @@ if args.mutant:
                    "else if (false && rc->status == INK_RC_DONE && M.field && M.mode == FAIL)"),
         "checks": ("n->checked = remap_checks(raw, n->body, n->checked, n)", "(void)remap_checks(raw, n->body, n->checked, n)"),
         "long-item": ('snprintf(M.labels[0], sizeof M.labels[0], "%.*s", (int)len, text);', 'snprintf(M.labels[0], sizeof M.labels[0], "%.*s", (int)LV_MIN(len, 24), text);'),
-        "final-save": ("if (M.field) flush_note(false); /* to the member who opened it", "if (0) flush_note(false); /* to the member who opened it"),
+        "final-save": ("if (M.field && !flush_note(M.mode == FAIL)) {", "if (0 && !flush_note(M.mode == FAIL)) {"),
     }[args.mutant]
     assert source.count(old) == 1
     source = source.replace(old, new)
@@ -75,7 +75,7 @@ if not args.mutant:
 if args.phase:
     runs = [(args.phase, "")]
 if args.visual:
-    runs += [("write", name) for name in ("MemoEdit", "MemoChecklist", "MemoUndo")]
+    runs += [("write", name) for name in ("MemoDetail", "MemoEdit", "MemoChecklist", "MemoUndo")]
 for phase, capture_scene in runs:
     run_name = phase + ("-" + capture_scene if capture_scene else "")
     out = work / run_name
@@ -99,7 +99,7 @@ for phase, capture_scene in runs:
     for line in (out / "snapshots.ndjson").read_text().splitlines() if (out / "snapshots.ndjson").exists() else []:
         item = json.loads(line)
         scene = item["scene"]
-        if scene in {"Memo", "MemoEdit", "MemoChecklist", "MemoUndo", "MemoSaveFail"}: seen.add(scene)
+        if scene in {"Memo", "MemoDetail", "MemoEdit", "MemoChecklist", "MemoUndo", "MemoSaveFail"}: seen.add(scene)
         assert item["snapshot"]
         if scene != capture_scene: continue
         target = build / "memo-compare" / scene
@@ -107,7 +107,7 @@ for phase, capture_scene in runs:
         shutil.copyfile(out / "snap-scene.png", target / "snap-scene.png")
         shutil.copyfile(out / "metrics.json", target / "metrics.json")
 if ok and not args.mutant and not args.phase:
-    assert seen == {"Memo", "MemoEdit", "MemoChecklist", "MemoUndo", "MemoSaveFail"}, seen
+    assert seen == {"Memo", "MemoDetail", "MemoEdit", "MemoChecklist", "MemoUndo", "MemoSaveFail"}, seen
 if ok and not os.environ.get("INK_KEEP_EVIDENCE"):
     shutil.rmtree(work)
 else:

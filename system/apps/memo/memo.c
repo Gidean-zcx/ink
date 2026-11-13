@@ -1,5 +1,5 @@
 /* Member memos after Fossify Notes (editor, checklist), Joplin (search, due dates) and ZSWatch (the recording screen, memo_voice.c). */
-/* ui-scale-runtime: dimension w,x,y,top,bottom,area.y2,field.y2,fit,foot,due_w,list_w,voice_w,h,text_w,cell Theme tokens measured against the current text size and the editor's own layout. */
+/* ui-scale-runtime: dimension w,x,y,top,bottom,field.y2,fit,bx,ideograph,list_w,voice_w,h,text_w,cell Theme tokens measured against the current text size and the editor's own layout. */
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/app.h"
@@ -43,7 +43,7 @@ static struct {
     unsigned cap;
     uint32_t opened_crc; /* the text the editor opened with: no save status until the person changes it */
     ink_exec_job_t recorded, found;
-    bool saving, retry, expanded, adding;
+    bool saving, retry, expanded, adding, blank; /* blank: no record yet, the editor's first save makes it */
     uint8_t order[33]; /* the checklist as shown: open items, the 已完成 row (32), then the done ones when expanded */
     size_t total;
     lv_obj_t *part_labels[5];
@@ -53,9 +53,12 @@ static struct {
 } M INK_PSRAM_BSS;
 static struct { char query[64], member[16]; uint32_t ids[200]; size_t count; bool on; } S INK_PSRAM_BSS; /* memo.search */
 static struct { char query[64], label[64]; size_t at[FOUND_MAX]; int count, cur; bool open; } F INK_PSRAM_BSS; /* memo.find */
-static struct { char member[16]; uint32_t id; memo_t before; } U INK_PSRAM_BSS; /* 删掉已完成, until undone */
+static struct { char member[16]; uint32_t id; memo_t before; } U INK_PSRAM_BSS; /* 删掉已完成, until undone or the next change */
+static struct { char member[16], page[24], body[4096]; uint32_t id, draft; } K INK_PSRAM_BSS; /* the editor's words its page could not store */
+static struct { uint16_t at[4097]; char text[16][100], ids[16][24]; unsigned cpr; size_t lines; } R INK_PSRAM_BSS; /* the reading page's lines */
 static void settle(void);
 static void check_refresh(void);
+static void find_now(void *arg);
 static void adjust(lv_event_t *e);
 void ink_memo_voice_create(lv_obj_t *screen);
 void ink_memo_voice_destroy(void);
@@ -91,6 +94,7 @@ static bool read_note(ink_db_t *db, uint32_t id, memo_t *note) {
 }
 static unsigned lines(const char *s) { unsigned n = *s ? 1 : 0; for (; *s; s++) n += *s == '\n'; return n; }
 static const char *line_at(const char *s, unsigned i) { while (i-- && *s) { s += strcspn(s, "\n"); if (*s) s++; } return s; }
+static size_t line_len(const char *p) { /* a reading line: to its end or R.cpr characters */ size_t len = strcspn(p, "\n"), cut = ink_text_byte_offset(p, R.cpr); return len < cut ? len : cut; }
 /* After an edit of the text, each line keeps the check, due date and reminder of the same line before it. */
 static uint32_t remap_checks(const char *old, const char *text, uint32_t checked, memo_t *n) {
     uint32_t used = 0, result = 0, rid[32] = {0}; int64_t due[32] = {0};
@@ -141,14 +145,14 @@ static void when(char *out, size_t cap, int64_t s) { /* 今天 9:00, 明天 9:00
     else snprintf(out, cap, TR("%d月%d日 %d:%02d"), t.month, t.day, t.hour, t.min);
 }
 static bool done_at(const memo_t *n, unsigned i) { return n->checklist && (n->checked >> i & 1u); }
-static void due_text(char *out, size_t cap, const memo_t *n, unsigned i) { /* 明天 9:00 到期, 已过期, 提醒没设上 */
+static void due_text(char *out, size_t cap, const memo_t *n, unsigned i) { /* 明天 9:00 到期, 已过期, 提醒没设上 (the retry is a button) */
     char at[48]; out[0] = 0;
     if (!n->due[i] || done_at(n, i)) return;
     when(at, sizeof at, n->due[i]);
     if (n->due[i] <= ink_time_now_s()) snprintf(out, cap, "%s", TR("已过期"));
     else snprintf(out, cap, TR("%s 到期"), at);
     size_t len = strlen(out);
-    if (!n->rid[i] && n->due[i] > ink_time_now_s()) snprintf(out + len, cap - len, " · %s", TR("提醒没设上，点这里重试"));
+    if (!n->rid[i] && n->due[i] > ink_time_now_s()) snprintf(out + len, cap - len, " · %s", TR("提醒没设上"));
 }
 static void refresh(void *arg) {
     if (!M.db || !ink_ui_page_current() || strcmp(M.member, ink_member_current()->id)) return;
@@ -265,6 +269,7 @@ static int store(ink_db_t *db, uint32_t id, const memo_t *n, uint8_t src, uint32
         ink_jw_raw(&w, last ? "]}" : "}");
         ink_db_write_t wr = {.id = id, .sort = ink_time_now_s(), .data = raw, .len = w.len, .src = src, .written_ver = ver};
         result = w.overflow ? -1 : ink_db_put(db, &wr, NULL);
+        if (!result) U.id = 0; /* the next change ends 删掉已完成's undo: its snapshot would take that change away */
     }
     ink_app_free(raw); return result;
 }
@@ -322,17 +327,18 @@ static void mutate(ink_call_t *c) {
     ink_db_t *db = ink_db_open_member(&MEMOS, ink_cap_call_member(c));
     memo_t *n = ink_app_alloc(sizeof *n, true); char *raw = ink_app_alloc(INK_DB_RECORD_MAX + 1, true), at[32] = "";
     const char *op = c->cap->id + 5; /* after "memo." */
-    bool save = !strcmp(op, "save"), is_voice = !strcmp(op, "voice"), fresh = is_voice && !id, add = !strcmp(op, "add_item"), renew = false;
+    bool save = !strcmp(op, "save"), is_voice = !strcmp(op, "voice"), fresh = is_voice && !id, add = !strcmp(op, "add_item"), renew = false, known = false;
     if (!db || !n || !raw) c->rc.status = INK_RC_FAILED;
     else if (fresh) id = ink_db_new_id(db);
-    if (c->rc.status == INK_RC_DONE && !read_note(db, (uint32_t)id, n) && !save && !fresh && !add) c->rc.status = INK_RC_INVALID;
+    if (c->rc.status == INK_RC_DONE && !(known = read_note(db, (uint32_t)id, n)) && !save && !fresh && !add) c->rc.status = INK_RC_INVALID;
     if (c->rc.status == INK_RC_DONE) {
         if (save) {
-            memcpy(raw, n->body, sizeof n->body);
+            memcpy(raw, n->body, sizeof n->body); memcpy(at, n->page, sizeof n->page);
             ink_args_get_int(&c->args, "draft", &draft); ink_args_get_str(&c->args, "page", n->page, sizeof n->page);
             if (n->deleted || ink_text_draft_read(ink_cap_call_member(c), n->page, (uint32_t)draft, n->body, sizeof n->body) < 0) c->rc.status = INK_RC_INVALID;
             if (n->checklist) n->checked = remap_checks(raw, n->body, n->checked, n);
-            n->draft = (uint32_t)draft;
+            known = known && n->draft == (uint32_t)draft && !strcmp(at, n->page) && !strcmp(raw, n->body); /* nothing new: not written, not moved up */
+            n->draft = (uint32_t)draft; at[0] = 0;
         } else if (is_voice) voice(c, db, (uint32_t)id, n);
         else if (!strcmp(op, "undo") && !n->deleted && U.id == (uint32_t)id && !strcmp(U.member, ink_cap_call_member(c))) { *n = U.before; U.id = 0; }
         else if (!strcmp(op, "undo")) { if (n->deleted) n->deleted = false; else c->rc.status = INK_RC_INVALID; }
@@ -352,7 +358,7 @@ static void mutate(ink_call_t *c) {
             if (renew) remind(c, n, (unsigned)index, true);
             for (unsigned i = 0; i < 32; i++) remind(c, n, i, false);
         }
-        if (c->rc.status == INK_RC_DONE && (store(db, (uint32_t)id, n, c->src, &c->rc.revision) != 0 ||
+        if (c->rc.status == INK_RC_DONE && !(save && known) && (store(db, (uint32_t)id, n, c->src, &c->rc.revision) != 0 ||
             ink_db_wait(db, c->rc.revision, (int64_t)ink_cap_time_left_ms(c) * 1000) != 0)) c->rc.status = INK_RC_FAILED;
         else if (c->rc.status == INK_RC_DONE && !strcmp(op, "clear_done")) U.id = (uint32_t)id;
     }
@@ -403,43 +409,30 @@ static void request(const char *cap, const ink_args_t *args) {
     ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .member = M.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
     if (ink_cap_call(cap, args, &opts) != 0) { M.saving = false; if (M.notice) lv_label_set_text(M.notice, TR("这条没存上，字还在这里。请重试")); }
 }
-static void find_now(void *arg) { /* UI: Fossify's search in the note: the hit selected in the body, on its page, and where it is */
-    (void)arg; if (!M.field || !F.open || !F.query[0]) return;
-    const char *text = ink_textfield_text(M.field);
-    F.count = LV_MIN(hits(text, F.query, F.at, FOUND_MAX), FOUND_MAX); if (F.cur >= F.count) F.cur = 0;
-    if (F.count) snprintf(F.label, sizeof F.label, TR("第 %d 处，共 %d 处"), F.cur + 1, F.count);
-    else snprintf(F.label, sizeof F.label, "%s", TR("没有找到"));
-    if (M.find) { lv_obj_add_flag(M.find, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(M.field, LV_OBJ_FLAG_HIDDEN); }
-    lv_label_set_text(M.notice, F.label); ink_textfield_style(M.field, INK_FIELD_BODY, F.label); /* where the save status is */
-    if (!ink_text_focused() || !ink_text_draft_id()) lv_obj_send_event(M.field, LV_EVENT_SHORT_CLICKED, NULL); /* the body again, not the find field */
-    size_t start = F.count ? ink_text_char_offset(text, F.at[F.cur]) : 0;
-    if (F.count) ink_text_select(start, start + ink_text_char_offset(F.query, strlen(F.query)));
-}
 static void navigate(ink_call_t *c) {
     const char *cap = c->cap->id + 5; int64_t id = 0, index = -1; bool due = false, list = false; char query[64] = "";
     ink_args_get_int(&c->args, "id", &id); ink_args_get_int(&c->args, "index", &index); ink_args_get_bool(&c->args, "due", &due); ink_args_get_bool(&c->args, "checklist", &list);
     bool asked = ink_args_get_str(&c->args, "query", query, sizeof query) > 0, find = !strcmp(cap, "find");
     if (!strcmp(cap, "next") || !strcmp(cap, "prev")) { if (M.list) ink_ui_list_turn(M.list, !strcmp(cap, "next") ? 1 : -1); }
-    else if (!strcmp(cap, "retry")) M.retry = true;
+    else if (!strcmp(cap, "retry")) { M.retry = true; if (!M.field && ink_ui_page_current()) ink_ui_redraw(); } /* the list: kept words again */
     else if (!strcmp(cap, "show_done")) { M.expanded = !M.expanded; if (M.mode == CHECKLIST) check_refresh(); }
-    else if (!strcmp(cap, "find_close")) { F.open = false; F.query[0] = F.label[0] = 0; if (M.field) ink_ui_redraw(); }
+    else if (!strcmp(cap, "find_close")) { F.open = false; F.query[0] = F.label[0] = 0; if (M.mode == DETAIL) ink_ui_redraw(); }
     else if (!strncmp(cap, "find_", 5)) {
         if (!F.open || !F.count) c->rc.status = INK_RC_INVALID;
         else { F.cur = (F.cur + (!strcmp(cap, "find_next") ? 1 : F.count - 1)) % F.count; ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL); }
     } else {
-        int mode = !strcmp(cap, "edit") || find ? EDIT : DETAIL;
+        int mode = !strcmp(cap, "edit") ? EDIT : DETAIL;
         memo_t *n = ink_app_alloc(sizeof *n, true); ink_db_t *db = ink_db_open_cached_member(&MEMOS, ink_cap_call_member(c));
         if (id && (!db || !n || !read_note(db, (uint32_t)id, n) || n->deleted || (find && (n->checklist || n->pending)))) c->rc.status = INK_RC_INVALID;
         else if (n) {
             if (mode == DETAIL && n->checklist) mode = index >= 0 ? (due ? DUE : ITEM) : CHECKLIST;
             else if (id && n->pending) mode = PENDING; /* its words would cover what is typed */
-            else if (mode == DETAIL && !n->path[0]) mode = due ? DUE : EDIT; /* Fossify: a text note opens to write in */
+            else if (mode == DETAIL && due) mode = DUE; /* a text memo opens to read: the editor's keyboard leaves it a line */
             else if (!id && list) mode = CHECKLIST;
             M.index = index < 0 ? 0 : (int)index; M.jump = -1; M.adding = !id && list;
             if (asked && n->checklist) for (unsigned i = 0; i < lines(n->body) && M.jump < 0; i++) { const char *p = line_at(n->body, i); size_t h = 0; if (hits(p, query, &h, 1) && h < strcspn(p, "\n")) M.jump = (int)i; }
-            bool was = F.open;
-            if (mode == EDIT && (find || asked)) { F.open = true; F.cur = 0; F.label[0] = 0; snprintf(F.query, sizeof F.query, "%s", query); }
-            if (mode == EDIT && M.field && M.id == (uint32_t)id && ink_ui_page_current()) { if (was && F.query[0]) ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL); else ink_ui_redraw(); }
+            if (mode == DETAIL && (find || asked)) { F.open = true; F.cur = F.count = 0; F.label[0] = 0; snprintf(F.query, sizeof F.query, "%s", query); }
+            if ((mode == DETAIL || mode == EDIT) && M.mode == mode && M.id == (uint32_t)id && ink_ui_page_current()) ink_ui_redraw();
             else {
                 if (!id && db) M.fresh = (uint32_t)(id = ink_db_new_id(db));
                 if (mode != ITEM && mode != DUE) memset(&M.position, 0, sizeof M.position);
@@ -481,20 +474,25 @@ static void save_current(void) {
     ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_int(&a, "draft", M.note.draft); ink_args_str(&a, "page", M.note.page);
     snprintf(M.sent, sizeof M.sent, "%s", ink_textfield_text(M.field)); M.retry = false; M.saving = true; request("memo.save", &a);
 }
-/* UI: leaving, locking, another member, or a draft that fell behind: the editor's own text goes into the opener's memo now */
-static bool flush_note(bool force) {
-    const char *text = M.field ? ink_textfield_text(M.field) : ""; bool stored = false;
-    memo_t *n = M.field && M.db && (force || (M.mode != FAIL && strcmp(text, M.sent))) ? ink_app_alloc(sizeof *n, true) : NULL;
-    char *old = n ? ink_app_alloc(sizeof n->body, true) : NULL;
-    bool known = old && read_note(M.db, M.id, n);
-    if (old && !n->deleted && (known || text[0])) {
+/* UI: the editor's words into the opener's memo, not through the bus (another member may be here already). True: none lost. */
+static bool put_text(uint32_t id, const char *text, uint32_t draft, const char *page) {
+    memo_t *n = ink_app_alloc(sizeof *n, true); char *old = n ? ink_app_alloc(sizeof n->body, true) : NULL;
+    bool known = old && read_note(M.db, id, n), kept = old && (n->deleted || (!known && !text[0]));
+    if (old && !kept) {
         memcpy(old, n->body, sizeof n->body); snprintf(n->body, sizeof n->body, "%s", text);
         if (n->checklist) n->checked = remap_checks(old, n->body, n->checked, n);
-        n->draft = M.note.draft; snprintf(n->page, sizeof n->page, "%s", M.note.page);
-        stored = store(M.db, M.id, n, INK_SRC_TOUCH, NULL) == 0;
-        if (stored) snprintf(M.sent, sizeof M.sent, "%s", text);
+        n->draft = draft; snprintf(n->page, sizeof n->page, "%s", page);
+        kept = store(M.db, id, n, INK_SRC_TOUCH, NULL) == 0;
     }
-    ink_app_free(old); ink_app_free(n); return stored;
+    ink_app_free(old); ink_app_free(n); return kept;
+}
+/* UI: leaving, locking, another member, or a draft that fell behind. After a failed save (force) it is tried again all the same. */
+static bool flush_note(bool force) {
+    const char *text = M.field ? ink_textfield_text(M.field) : "";
+    if (!M.field || !M.db || (!force && !strcmp(text, M.sent))) return true;
+    bool kept = put_text(M.id, text, M.note.draft, M.note.page);
+    if (kept) snprintf(M.sent, sizeof M.sent, "%s", text);
+    return kept;
 }
 static void settle(void) {
     if (!M.field || !ink_ui_page_current()) return;
@@ -503,7 +501,7 @@ static void settle(void) {
     int saved = ink_text_draft_saved();
     const char *status = M.mode == FAIL ? (saved > 0 ? TR("草稿已存，备忘没存上，请重试") :
         saved < 0 ? TR("草稿没存上，字还在，请重试") : TR("正在存草稿，备忘没存上")) :
-        F.open && F.label[0] ? F.label : ink_crc32(0, text, strlen(text)) == M.opened_crc && !M.retry ? TR("备忘") :
+        ink_crc32(0, text, strlen(text)) == M.opened_crc && !M.retry ? TR("备忘") :
         M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
     lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
     bool changed = strcmp(lv_label_get_text(M.notice), status) != 0, body = ink_text_draft_id() != 0;
@@ -512,8 +510,8 @@ static void settle(void) {
         M.keyboard_top = keyboard.y1;
         ink_textfield_style(M.field, INK_FIELD_BODY, status);
     }
-    for (int i = 1; i < 3 && body && M.tools[i]; i++) { /* 撤销 and 重做 only while there is something to undo or redo */
-        bool can = i == 1 ? ink_text_can_undo() : ink_text_can_redo();
+    for (int i = 0; i < 2 && body && M.tools[i]; i++) { /* 撤销 and 重做 only while there is something to undo or redo */
+        bool can = i == 0 ? ink_text_can_undo() : ink_text_can_redo();
         if (lv_obj_has_flag(M.tools[i], LV_OBJ_FLAG_HIDDEN) == can) lv_obj_set_flag(M.tools[i], LV_OBJ_FLAG_HIDDEN, !can);
     }
     if (M.saving || ink_power_state() == INK_PWR_LOCKED) return; /* locked: the lock's own flush has it (background) */
@@ -523,7 +521,7 @@ static void settle(void) {
 }
 static void retry(lv_event_t *e) { (void)e; ink_args_t a; ink_args_init(&a); request("memo.retry", &a); }
 static void searched(void *ctx, const char *value) { /* the 搜索 key: the same memo.search the AI calls */
-    (void)ctx; bool find = F.open && M.field; ink_args_t a; ink_args_init(&a);
+    (void)ctx; bool find = F.open && M.mode == DETAIL; ink_args_t a; ink_args_init(&a);
     if (find) ink_args_int(&a, "id", M.id);
     ink_args_str(&a, "query", value ? value : "");
     ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = M.member, .reply_exec = INK_EXEC_UI};
@@ -613,14 +611,20 @@ static void bind_check(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field,
     *field = (ink_ui_field_spec_t){.id = M.ids[at], .role = "checkbox", .label = M.labels[at], .value = M.meta[at], .object = {M.ids[at], ink_db_last_ver(M.db)}};
     *action = (ink_ui_action_spec_t){.id = M.ids[at], .label = TR("勾选或取消"), .capability = "memo.check", .args_json = M.args2[at], .object = field->object, .enabled = true};
 }
-static void bind_text(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) { /* a voice memo's words, 24 at a time */
-    (void)ctx; unsigned at = index % 4; const char *text = M.note.body + ink_text_byte_offset(M.note.body, index * 24);
-    snprintf(M.labels[at], sizeof M.labels[at], "%.*s", (int)ink_text_byte_offset(text, 24), text);
-    snprintf(M.ids[at], sizeof M.ids[at], "memo:%u:%zu", (unsigned)M.id, index);
-    if (!lv_obj_get_child_count(slot)) ink_ui_label(slot, "", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
-    lv_label_set_text(lv_obj_get_child(slot, 0), M.labels[at]);
-    *field = (ink_ui_field_spec_t){.id = M.ids[at], .role = "listitem", .label = M.labels[at], .value = "", .object = {M.ids[at], ink_db_last_ver(M.db)}};
-    *action = (ink_ui_action_spec_t){.id = M.ids[at], .label = TR("查看备忘"), .capability = "memo.open", .args_json = M.target, .object = field->object};
+static void bind_text(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) { /* one line; the hit looked at inverted */
+    (void)ctx; unsigned at = index % 16; size_t from = R.at[index], len = line_len(M.note.body + from), hit = F.count ? F.at[F.cur] : 0, end = hit + strlen(F.query);
+    const char *text = M.note.body + from; bool on = F.open && F.count && hit < from + len && end > from;
+    snprintf(R.text[at], sizeof R.text[at], "%.*s", (int)len, text);
+    snprintf(R.ids[at], sizeof R.ids[at], "memo:%u:%zu", (unsigned)M.id, index);
+    if (!lv_obj_get_child_count(slot)) {
+        lv_obj_t *line = ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, 0, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
+        lv_obj_set_style_bg_color(line, ink_ui_ink(), LV_PART_SELECTED); lv_obj_set_style_text_color(line, ink_ui_paper(), LV_PART_SELECTED);
+    }
+    lv_obj_t *line = lv_obj_get_child(slot, 0); lv_label_set_text(line, R.text[at]);
+    lv_label_set_text_selection_start(line, on ? (uint32_t)ink_text_char_offset(text, hit > from ? hit - from : 0) : LV_LABEL_TEXT_SELECTION_OFF);
+    lv_label_set_text_selection_end(line, on ? (uint32_t)ink_text_char_offset(text, LV_MIN(end, from + len) - from) : LV_LABEL_TEXT_SELECTION_OFF);
+    *field = (ink_ui_field_spec_t){.id = R.ids[at], .role = "listitem", .label = R.text[at], .value = on ? F.label : "", .object = {R.ids[at], ink_db_last_ver(M.db)}};
+    *action = (ink_ui_action_spec_t){.id = R.ids[at], .label = TR("编辑备忘"), .capability = "memo.edit", .args_json = M.target, .object = field->object};
 }
 static size_t check_order(void) { /* open items first, then the 已完成 row; the done ones while expanded or when all are done */
     unsigned total = lines(M.note.body), n = 0, done = 0;
@@ -663,9 +667,9 @@ static void action(int i, const char *id, const char *label, const char *cap, co
     M.actions[i] = (ink_ui_action_spec_t){.id = id, .label = label, .capability = cap, .args_json = args, .enabled = enabled};
     if (M.model.action_count <= (size_t)i) M.model.action_count = (size_t)i + 1;
 }
-static ink_ui_list_t *rows(lv_obj_t *screen, int top, int bottom, int cell, ink_ui_list_bind_fn bind, const char *empty) {
+static ink_ui_list_t *rows(lv_obj_t *screen, int top, int bottom, int cell, ink_ui_list_bind_fn bind, const char *empty, int max) {
     const ink_ui_action_spec_t PAGING[] = {{.id = "prev", .label = TR("上一页"), .capability = "memo.prev"}, {.id = "next", .label = TR("下一页"), .capability = "memo.next"}};
-    int count = LV_MAX(1, LV_MIN(4, (bottom - top - INK_CONTROL - INK_GAP) / (cell + INK_GAP_M)));
+    int count = LV_MAX(1, LV_MIN(max, (bottom - top - INK_CONTROL - INK_GAP) / (cell + INK_GAP_M)));
     M.cap = (unsigned)count;
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = TR("备忘"), .object = {"memo.notes", ink_db_last_ver(M.db)}, .actions = PAGING, .action_count = 2};
     lv_obj_t *body = ink_ui_box(screen, 0, top, INK_CANVAS_W, bottom - top, 0, INK_SURFACE_WHITE, false);
@@ -689,14 +693,18 @@ static void list_page(lv_obj_t *screen) { /* Joplin's list with its search box; 
     lv_obj_t *box = ink_textfield_create(screen, &cfg, searched, NULL, false);
     lv_obj_set_y(box, ink_ui_px(top)); ink_textfield_style(box, INK_FIELD_SEARCH, TR("搜索"));
     top += ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP_M;
+    if (K.id && !strcmp(K.member, M.member)) { /* words an editor could not store are still here */
+        bottom -= INK_CONTROL + INK_GAP_M; action((int)M.model.action_count, "retry", TR("有一条备忘没存上 · 重试"), "memo.retry", NULL, true);
+        button(screen, TR("有一条备忘没存上 · 重试"), INK_MARGIN, bottom, INK_CANVAS_W - 2 * INK_MARGIN, false, "memo.retry", NULL);
+    }
     if (undo) {
         snprintf(M.target, sizeof M.target, "{\"id\":%u}", (unsigned)undo);
-        action(0, "undo", TR("撤销删除"), "memo.undo", M.target, true);
+        action((int)M.model.action_count, "undo", TR("撤销删除"), "memo.undo", M.target, true);
         bottom -= INK_CONTROL + INK_GAP_M;
         button(screen, TR("已删除一条备忘 · 撤销"), INK_MARGIN, bottom, INK_CANVAS_W - 2 * INK_MARGIN, false, "memo.undo", M.target);
     }
     int cell = ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_S;
-    M.list = rows(screen, top, bottom, cell, bind_note, S.on ? "" : TR("还没有备忘，写一条吧"));
+    M.list = rows(screen, top, bottom, cell, bind_note, S.on ? "" : TR("还没有备忘，写一条吧"), 4);
     if (M.list) ink_ui_list_refresh(M.list, M.total);
     if (S.on && !M.total) ink_ui_empty(screen, TR("没有找到"), TR("清除搜索"), clear_search, NULL);
     int y = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
@@ -710,54 +718,89 @@ static void list_page(lv_obj_t *screen) { /* Joplin's list with its search box; 
     ink_exec_post(INK_EXEC_BG, &T.sweep, sweep, NULL);
     if (M.mode == LIST && ink_memo_voice_resume()) ink_exec_post(INK_EXEC_UI, &M.found, resume_record, NULL);
 }
-static void edit_page(lv_obj_t *screen) { /* Fossify's TextFragment: no save button; find, undo, redo and delete written in the top bar */
-    const char *names[2][4] = {{TR("查找"), TR("撤销"), TR("重做"), TR("删除")}, {TR("上一个"), TR("下一个"), TR("关闭"), NULL}};
-    const char *caps[2][4] = {{"memo.find", "text.undo", "text.redo", "memo.delete"}, {"memo.find_prev", "memo.find_next", "memo.find_close", NULL}};
-    int x = INK_CANVAS_W - INK_MARGIN, set = F.open ? 1 : 0;
-    M.retry_button = NULL;
-    for (int i = set ? 2 : 3; i >= 0; i--) { /* right to left; 撤销 and 重做 keep their places while hidden */
-        int w = LV_MAX(INK_CONTROL, ink_ui_text_width(names[set][i], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M);
-        if (i == 3) w = LV_MAX(w, ink_ui_text_width(TR("重试"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M);
-        x -= w; M.tools[i] = ink_ui_text_button(screen, names[set][i], x, INK_STATUS_BAR, w, NULL, NULL);
-        ink_shell_bind(M.tools[i], caps[set][i], !set && (i == 1 || i == 2) ? "{}" : M.target);
-        if (!set && (i == 1 || i == 2)) lv_obj_add_flag(M.tools[i], LV_OBJ_FLAG_HIDDEN);
-        if (i == 3) M.retry_button = ink_ui_text_button(screen, TR("重试"), x, INK_STATUS_BAR, w, retry, NULL);
-    }
-    if (set) M.tools[1] = M.tools[2] = NULL;
-    M.delete_button = M.tools[3] ? M.tools[3] : ink_ui_box(screen, 0, 0, 0, 0, 0, INK_SURFACE_WHITE, false);
-    if (!M.retry_button) M.retry_button = ink_ui_box(screen, 0, 0, 0, 0, 0, INK_SURFACE_WHITE, false);
+static int top_button(lv_obj_t *screen, int x, const char *text, const char *also, const char *cap, const char *args, lv_obj_t **out) { /* right to left */
+    int w = LV_MAX(INK_CONTROL, ink_ui_text_width(text, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M);
+    if (also) w = LV_MAX(w, ink_ui_text_width(also, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M);
+    x -= w; lv_obj_t *b = ink_ui_text_button(screen, text, x, INK_STATUS_BAR, w, NULL, NULL);
+    ink_shell_bind(b, cap, args); if (out) *out = b;
+    return x;
+}
+static void edit_page(lv_obj_t *screen) { /* Fossify's TextFragment for writing only: no save button; undo, redo and delete written in the top bar */
+    int x = INK_CANVAS_W - INK_MARGIN;
+    x = top_button(screen, x, TR("删除"), TR("重试"), "memo.delete", M.target, &M.delete_button);
+    int w = LV_MAX(INK_CONTROL, LV_MAX(ink_ui_text_width(TR("删除"), INK_FONT_LIST, INK_WEIGHT_MEDIUM), ink_ui_text_width(TR("重试"), INK_FONT_LIST, INK_WEIGHT_MEDIUM)) + 2 * INK_GAP_M);
+    M.retry_button = ink_ui_text_button(screen, TR("重试"), INK_CANVAS_W - INK_MARGIN - w, INK_STATUS_BAR, w, retry, NULL); /* in 删除's place */
     lv_obj_add_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN);
-    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .initial = M.note.body, .draft_page = ink_ui_page_name(), .draft_id = !strcmp(M.note.page, ink_ui_page_name()) ? M.note.draft : 0};
+    x = top_button(screen, x, TR("重做"), NULL, "text.redo", "{}", &M.tools[1]); top_button(screen, x, TR("撤销"), NULL, "text.undo", "{}", &M.tools[0]);
+    lv_obj_add_flag(M.tools[0], LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(M.tools[1], LV_OBJ_FLAG_HIDDEN); /* until there is something to undo or redo */
+    bool kept = K.id == M.id && !strcmp(K.member, M.member); /* words its page could not store open again here, and are saved again */
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .initial = kept ? K.body : M.note.body, .draft_page = ink_ui_page_name(),
+        .draft_id = !kept && !strcmp(M.note.page, ink_ui_page_name()) ? M.note.draft : 0};
     M.field = ink_textfield_long_create(screen, &cfg);
     if (M.field) ink_textfield_style(M.field, INK_FIELD_BODY, TR("备忘"));
+    if (M.field && kept) K.id = 0;
     lv_obj_add_flag(M.notice, LV_OBJ_FLAG_HIDDEN);
-    /* The memo owns the save result; the shared footer only reports the draft, and its left end holds 到期 and 转成清单. */
-    lv_area_t area = {0};
-    for (uint32_t i = 0; M.field && i < lv_obj_get_child_count(M.field); i++) {
+    for (uint32_t i = 0; M.field && i < lv_obj_get_child_count(M.field); i++) { /* the memo owns the save result; the shared footer keeps its pages */
         lv_obj_t *label = lv_obj_get_child(M.field, (int32_t)i);
         if (lv_obj_check_type(label, &lv_label_class) && lv_obj_get_style_align(label, 0) == LV_ALIGN_BOTTOM_LEFT)
             lv_obj_add_flag(label, LV_OBJ_FLAG_HIDDEN);
     }
-    if (M.field) { lv_obj_update_layout(M.field); lv_obj_get_coords(M.field, &area); }
-    snprintf(M.args2[0], sizeof M.args2[0], "{\"id\":%u,\"due\":true}", (unsigned)M.id);
-    int due_w = LV_MAX(INK_CONTROL, ink_ui_text_width(TR("到期"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M), foot = area.y2 + 1 - ink_ui_px(INK_CONTROL);
-    lv_obj_t *due = ink_ui_text_button(screen, TR("到期"), INK_MARGIN, 0, due_w, NULL, NULL);
-    lv_obj_set_y(due, foot); ink_shell_bind(due, "memo.open", M.args2[0]);
-    if (!M.note.checklist) {
-        lv_obj_t *convert = ink_ui_text_button(screen, TR("转成清单"), INK_MARGIN + due_w, 0, ink_ui_text_width(TR("转成清单"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M, NULL, NULL);
-        lv_obj_set_y(convert, foot); ink_shell_bind(convert, "memo.convert", M.target);
-    }
-    snprintf(M.sent, sizeof M.sent, "%s", M.mode == FAIL ? M.note.body : "\1");
-    /* Opening saves at once (a new memo gets its record); that save is not the person's and changes no label. */
-    M.opened_crc = M.mode == FAIL ? 0xffffffffu : ink_crc32(0, ink_textfield_text(M.field), strlen(ink_textfield_text(M.field)));
+    /* A new memo saves at once to get its record; an opened one only when its words change. That first save changes no label. */
+    snprintf(M.sent, sizeof M.sent, "%s", M.mode == FAIL || (!M.blank && !kept) ? M.note.body : "\1");
+    M.opened_crc = M.mode == FAIL || kept ? 0xffffffffu : ink_crc32(0, ink_textfield_text(M.field), strlen(ink_textfield_text(M.field)));
     M.note.draft = ink_text_draft_id(); snprintf(M.note.page, sizeof M.note.page, "%s", ink_ui_page_name());
-    if (F.open && !F.query[0]) { /* the query is typed where the body is; 搜索 brings the body back with the hit selected */
+}
+static int reminder_retry(lv_obj_t *screen, int y, int index, int slot) { /* a reminder that did not take: a written button sets it again */
+    if (M.note.due[index] <= ink_time_now_s() || M.note.rid[index] || done_at(&M.note, (unsigned)index)) return y;
+    ink_tm_t t; ink_time_to_local(M.note.due[index], &t);
+    snprintf(M.args2[5], sizeof M.args2[5], "{\"id\":%u,\"index\":%d,\"at\":\"%04d-%02d-%02d %02d:%02d\"}", (unsigned)M.id, index, t.year % 10000, t.month % 100, t.day % 100, t.hour % 100, t.min % 100);
+    button(screen, TR("提醒没设上，点这里重试"), INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, false, "memo.set_due", M.args2[5]);
+    action(slot, "retry_reminder", TR("提醒没设上，点这里重试"), "memo.set_due", M.args2[5], true);
+    return y + INK_CONTROL + INK_GAP_M;
+}
+static void find_page(void) { /* the hit being looked at: where it is, and the page it is on */
+    if (F.count) snprintf(F.label, sizeof F.label, TR("第 %d 处，共 %d 处"), F.cur + 1, F.count);
+    else snprintf(F.label, sizeof F.label, "%s", TR("没有找到"));
+    size_t row = 0; while (F.count && row + 1 < R.lines && R.at[row + 1] <= F.at[F.cur]) row++;
+    M.position.page = row / LV_MAX(M.cap, 1u);
+}
+static void find_now(void *arg) { /* UI: 上一个 / 下一个: the count line and the lines, one refresh */
+    (void)arg; if (M.mode != DETAIL || !M.list || !F.open) return;
+    find_page(); lv_label_set_text(M.notice, F.label); ink_ui_list_refresh(M.list, R.lines);
+}
+static void read_page(lv_obj_t *screen) { /* a memo to read, a page of lines at a time; writing is the editor (编辑备忘), Fossify's find is here */
+    const char *names[2][3] = {{TR("到期"), TR("查找"), NULL}, {TR("关闭"), TR("下一个"), TR("上一个")}}, *ids[2][3] = {{"due", "find", NULL}, {"find_close", "find_next", "find_prev"}};
+    const char *caps[2][3] = {{"memo.open", "memo.find", NULL}, {"memo.find_close", "memo.find_next", "memo.find_prev"}};
+    int x = INK_CANVAS_W - INK_MARGIN, set = F.open, w = (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP) / 3, y = INK_CANVAS_H - INK_PRIMARY - INK_MARGIN;
+    int top = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S + (M.note.path[0] ? INK_CONTROL + INK_GAP_M : 0), text_w = INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP;
+    snprintf(M.args2[0], sizeof M.args2[0], "{\"id\":%u,\"due\":true}", (unsigned)M.id);
+    for (int i = 0; i < 3 && names[set][i]; i++) {
+        x = top_button(screen, x, names[set][i], NULL, caps[set][i], !set && !i ? M.args2[0] : set ? NULL : M.target, NULL);
+        action(4 + i, ids[set][i], names[set][i], caps[set][i], !set && !i ? M.args2[0] : set ? NULL : M.target, !set || F.count || i == 0);
+    }
+    if (F.open && !F.query[0]) { /* the word is typed first; 搜索 shows the lines with the first hit */
         ink_text_cfg_t find = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .hint = TR("查找"), .max = sizeof F.query - 1};
         M.find = ink_textfield_create(screen, &find, searched, NULL, false);
-        lv_obj_set_y(M.find, ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS)); ink_textfield_style(M.find, INK_FIELD_SEARCH, TR("查找"));
-        if (M.field) lv_obj_add_flag(M.field, LV_OBJ_FLAG_HIDDEN);
-        ink_textfield_short_focus(M.find);
-    } else if (F.open) find_now(NULL); /* the hit is selected in the page's first frame */
+        lv_obj_set_y(M.find, ink_ui_px(top)); ink_textfield_style(M.find, INK_FIELD_SEARCH, TR("查找")); ink_textfield_short_focus(M.find);
+        return;
+    }
+    char due[96]; due_text(due, sizeof due, &M.note, 0);
+    if (F.open || due[0]) { lv_obj_set_y(M.notice, ink_ui_px(top)); lv_label_set_text(M.notice, F.open ? "" : due); top += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M; }
+    if (!F.open && !M.note.checklist) top = reminder_retry(screen, top, 0, 6);
+    bool stacked = false; /* a larger text: 编辑备忘 gets its own row, nothing is cut */
+    for (int i = 0; i < 3; i++) stacked |= ink_ui_text_width(M.actions[i].label, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_M > w; /* pad and frame */
+    if (stacked) w = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
+    int ideograph = (int)lv_font_get_glyph_width(ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR), 0x4E00, 0) * INK_CANVAS_W / ink_ui_px(INK_CANVAS_W) + 1; /* the widest character */
+    R.cpr = (unsigned)LV_MAX(1, LV_MIN(24, text_w / ideograph)); R.lines = 0;
+    for (const char *p = M.note.body; *p && R.lines < 4096;) { R.at[R.lines++] = (uint16_t)(p - M.note.body); p += line_len(p); if (*p == '\n') p++; }
+    if (F.open) { F.count = LV_MIN(hits(M.note.body, F.query, F.at, FOUND_MAX), FOUND_MAX); if (F.cur >= F.count) F.cur = 0; }
+    M.list = rows(screen, top, y - INK_GAP_M - (stacked ? INK_PRIMARY + INK_GAP_M : 0), ink_ui_line_height(INK_FONT_LIST), bind_text, TR("还没有备忘，写一条吧"), 16);
+    if (F.open) { find_page(); lv_label_set_text(M.notice, F.label); }
+    if (M.list) ink_ui_list_refresh(M.list, R.lines);
+    for (int i = 0; i < 3; i++) {
+        int bx = stacked ? (i ? INK_MARGIN + (i - 1) * (w + INK_GAP) : INK_MARGIN) : INK_MARGIN + i * (w + INK_GAP);
+        button(screen, M.actions[i].label, bx, stacked && !i ? y - INK_PRIMARY - INK_GAP_M : y, stacked && !i ? INK_CANVAS_W - 2 * INK_MARGIN : w, i == 0, M.actions[i].capability, M.target);
+    }
 }
 static void check_page(lv_obj_t *screen) { /* Fossify's TasksFragment with written buttons in place of long press and dragging */
     int top = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_GAP_M, half = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
@@ -781,7 +824,7 @@ static void check_page(lv_obj_t *screen) { /* Fossify's TasksFragment with writt
     action(7, "add_item", TR("加一项"), "memo.add_item", M.args2[1], true);
     M.total = check_order();
     if (!total && !M.adding) ink_ui_empty(screen, TR("清单是空的"), TR("加一项"), ui_toggle, NULL);
-    else M.list = rows(screen, top, bottom, LV_MAX(2 * ink_ui_line_height(INK_FONT_LIST) + 2 * INK_GAP_S, INK_CONTROL), bind_check, "");
+    else M.list = rows(screen, top, bottom, LV_MAX(2 * ink_ui_line_height(INK_FONT_LIST) + 2 * INK_GAP_S, INK_CONTROL), bind_check, "", 4);
     for (size_t i = 0; M.jump >= 0 && M.list && i < M.total; i++) if (M.order[i] == M.jump) { M.position.page = i / M.cap; M.jump = -1; }
     if (M.list) ink_ui_list_refresh(M.list, M.total);
     int y = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
@@ -809,12 +852,7 @@ static void item_page(lv_obj_t *screen) { /* Fossify's item menu as a page: one 
     for (int i = 0; i < 6; i++) snprintf(M.args2[i], sizeof M.args2[i], "{\"id\":%u,\"index\":%d%s}", (unsigned)M.id, M.index,
         (const char *[]){"", ",\"to\":\"top\"", ",\"to\":\"bottom\"", ",\"due\":true", "", ""}[i]);
     y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M;
-    if (M.note.due[M.index] > ink_time_now_s() && !M.note.rid[M.index] && !done_at(&M.note, (unsigned)M.index)) {
-        ink_tm_t t; ink_time_to_local(M.note.due[M.index], &t);
-        snprintf(M.args2[5], sizeof M.args2[5], "{\"id\":%u,\"index\":%d,\"at\":\"%04d-%02d-%02d %02d:%02d\"}", (unsigned)M.id, M.index, t.year % 10000, t.month % 100, t.day % 100, t.hour % 100, t.min % 100);
-        button(screen, TR("提醒没设上，点这里重试"), INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, false, "memo.set_due", M.args2[5]);
-        action(5, "retry_reminder", TR("提醒没设上，点这里重试"), "memo.set_due", M.args2[5], true); y += INK_CONTROL + INK_GAP_M;
-    }
+    y = reminder_retry(screen, y, M.index, 5);
     button(screen, TR("移到最上"), INK_MARGIN, y, half, false, "memo.move_item", M.args2[1]);
     button(screen, TR("移到最下"), INK_MARGIN + half + INK_GAP, y, half, false, "memo.move_item", M.args2[2]);
     button(screen, TR("设到期时间"), INK_MARGIN, y + INK_CONTROL + INK_GAP_M, half, false, "memo.open", M.args2[3]);
@@ -856,14 +894,14 @@ static void voice_page(lv_obj_t *screen) { /* a memo with a recording: a written
 }
 static void create(lv_obj_t *screen, void *arg) {
     int mode = 0; while (mode < 10 && strcmp(PAGES[mode].name, ink_ui_page_name())) mode++;
-    M.mode = mode; M.id = (uint32_t)(uintptr_t)arg; M.saving = M.retry = false; M.keyboard_top = -1;
+    M.mode = mode; M.id = (uint32_t)(uintptr_t)arg; M.saving = M.retry = M.blank = false; M.keyboard_top = -1;
     M.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = TR("备忘"), .actions = M.actions};
     memset(M.actions, 0, sizeof M.actions); memset(M.tools, 0, sizeof M.tools);
     if (strcmp(M.member, ink_member_current()->id)) { memset(&M.position, 0, sizeof M.position); memset(&M.listed, 0, sizeof M.listed); memset(&M.note, 0, sizeof M.note); snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id); }
     if (strcmp(S.member, M.member)) S.on = false;
-    if (mode != EDIT && mode != FAIL && mode != DUE) F.open = false; /* Fossify clears the search when the note changes */
+    if (mode != DETAIL && mode != DUE) F.open = false; /* Fossify clears the search when the note changes */
     ink_shell_statusbar(screen, true);
-    if (mode != RECORD) ink_shell_topbar(screen, mode == DUE ? TR("到期") : mode == EDIT || mode == FAIL ? "" : TR("备忘")); /* the editor's top bar holds its actions */
+    if (mode != RECORD) ink_shell_topbar(screen, mode == DUE ? TR("到期") : mode == EDIT || mode == FAIL || (mode == DETAIL && F.open) ? "" : TR("备忘")); /* room for written actions */
     M.notice = ink_ui_notice(screen, mode == FAIL ? TR("这条没存上。字还在这里。请腾出空间后重试") : "", INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
     if (mode == RECORD) {
         ink_memo_voice_create(screen);
@@ -874,19 +912,17 @@ static void create(lv_obj_t *screen, void *arg) {
         lv_label_set_text(M.notice, TR("正在读取备忘")); ink_args_t a; ink_args_init(&a); ink_args_str(&a, "collection", MEMOS.name); request("data.list", &a); return;
     }
     bool list = mode == LIST || mode == UNDO;
+    if (K.id && !strcmp(K.member, M.member) && (list || K.id != M.id) && put_text(K.id, K.body, K.draft, K.page)) K.id = 0; /* kept words: again */
     if (!list && mode != FAIL) {
         if (!M.id || (M.id == M.fresh && !read_note(M.db, M.id, &M.note))) {
-            M.id = M.id ? M.id : ink_db_new_id(M.db); memset(&M.note, 0, sizeof M.note); M.note.checklist = mode == CHECKLIST;
+            M.id = M.id ? M.id : ink_db_new_id(M.db); memset(&M.note, 0, sizeof M.note); M.note.checklist = mode == CHECKLIST; M.blank = true;
         }
         else if (!read_note(M.db, M.id, &M.note) || M.note.deleted) { lv_label_set_text(M.notice, TR("找不到这条备忘")); return; }
     }
     snprintf(M.object, sizeof M.object, "memo:%u", (unsigned)M.id);
     snprintf(M.target, sizeof M.target, "{\"id\":%u}", (unsigned)M.id);
     M.model.object = (ink_ui_object_ref_t){M.object, ink_db_last_ver(M.db)};
-    if (mode == EDIT || mode == FAIL) {
-        action(0, "find", TR("查找"), "memo.find", M.target, true); action(1, "delete", TR("删除备忘"), "memo.delete", M.target, true);
-        action(2, "convert", TR("转成清单"), "memo.convert", M.target, !M.note.checklist);
-    }
+    if (mode == EDIT || mode == FAIL) action(0, "delete", TR("删除备忘"), "memo.delete", M.target, true);
     if (list) list_page(screen);
     else if (mode == EDIT || mode == FAIL) edit_page(screen);
     else if (mode == CHECKLIST) check_page(screen);
@@ -896,30 +932,28 @@ static void create(lv_obj_t *screen, void *arg) {
         action(0, "edit", TR("编辑备忘"), "memo.edit", M.target, true); action(1, "delete", TR("删除备忘"), "memo.delete", M.target, true);
         action(2, "convert", TR("转成清单"), "memo.convert", M.target, true);
         if (M.note.path[0]) voice_page(screen);
-        if (mode == PENDING) return;
-        int top = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S + (M.note.path[0] ? INK_CONTROL + INK_GAP_M : 0), w = (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP) / 3;
-        M.list = rows(screen, top, INK_CANVAS_H - INK_MARGIN - INK_CONTROL - INK_GAP_M, INK_ROW_DOUBLE, bind_text, TR("还没有备忘，写一条吧"));
-        if (M.list) ink_ui_list_refresh(M.list, (ink_text_char_offset(M.note.body, strlen(M.note.body)) + 23) / 24);
-        for (int i = 0; i < 3; i++) button(screen, M.actions[i].label, INK_MARGIN + i * (w + INK_GAP), INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, w, i == 0, M.actions[i].capability, M.target);
+        if (mode != PENDING) read_page(screen);
     }
 }
 static void destroy(void) {
-    if (M.field) flush_note(false); /* to the member who opened it, even when someone else is here now (they switch at once) */
+    if (M.field && !flush_note(M.mode == FAIL)) { /* to the member who opened it, even when someone else is here now (they switch at once) */
+        snprintf(K.member, sizeof K.member, "%s", M.member); snprintf(K.body, sizeof K.body, "%s", ink_textfield_text(M.field)); /* not stored: kept here, written when a memo page opens */
+        snprintf(K.page, sizeof K.page, "%s", M.note.page); K.draft = M.note.draft; K.id = M.id;
+    }
     if (M.mode == RECORD) ink_memo_voice_destroy();
     ink_db_close(M.db); M.db = NULL; M.list = NULL;
     M.field = M.notice = M.retry_button = M.delete_button = M.find = M.adder = M.done_row = M.undo_row = NULL;
 }
-static void background(void) { if (M.field) flush_note(false); } /* the device locks over the editor */
+static void background(void) { if (M.field) flush_note(M.mode == FAIL); } /* the device locks over the editor */
 static int snapshot(char *out, size_t cap) {
     char *body = ink_app_alloc(cap, true), *actions = ink_app_alloc(cap, true), status[160]; int result = -1;
     ink_ui_page_spec_t model = M.model;
     if (M.field) {
         snprintf(M.save_args, sizeof M.save_args, "{\"id\":%u,\"draft\":%u,\"page\":\"%s\"}", (unsigned)M.id, (unsigned)M.note.draft, M.note.page);
-        action(3, "save", TR("记下当前草稿"), "memo.save", M.save_args, M.mode != FAIL);
-        action(4, "retry", TR("重试"), "memo.retry", NULL, M.mode == FAIL);
-        action(5, "undo_text", TR("撤销"), "text.undo", "{}", ink_text_can_undo());
-        action(6, "redo_text", TR("重做"), "text.redo", "{}", ink_text_can_redo());
-        action(7, F.open ? "find_next" : "due", F.open ? TR("下一个") : TR("到期"), F.open ? "memo.find_next" : "memo.open", F.open ? NULL : M.args2[0], !F.open || F.count);
+        action(1, "save", TR("记下当前草稿"), "memo.save", M.save_args, M.mode != FAIL);
+        action(2, "retry", TR("重试"), "memo.retry", NULL, M.mode == FAIL);
+        action(3, "undo_text", TR("撤销"), "text.undo", "{}", ink_text_can_undo());
+        action(4, "redo_text", TR("重做"), "text.redo", "{}", ink_text_can_redo());
         model = M.model;
     }
     snprintf(status, sizeof status, "%s", M.notice ? lv_label_get_text(M.notice) : "");
@@ -932,7 +966,7 @@ static int snapshot(char *out, size_t cap) {
             ink_jw_t w; ink_jw_init(&w, out, cap);
             ink_jw_raw(&w, "{\"view\":"); ink_jw_str(&w, PAGES[M.mode].name);
             ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, status);
-            if (M.field && F.open) { ink_jw_raw(&w, ",\"find\":{\"query\":"); ink_jw_str(&w, F.query); ink_jw_raw(&w, ",\"at\":"); ink_jw_int(&w, F.count ? F.cur + 1 : 0); ink_jw_raw(&w, ",\"count\":"); ink_jw_int(&w, F.count); ink_jw_raw(&w, "}"); }
+            if (M.mode == DETAIL && F.open) { ink_jw_raw(&w, ",\"find\":{\"query\":"); ink_jw_str(&w, F.query); ink_jw_raw(&w, ",\"at\":"); ink_jw_int(&w, F.count ? F.cur + 1 : 0); ink_jw_raw(&w, ",\"count\":"); ink_jw_int(&w, F.count); ink_jw_raw(&w, "}"); }
             if ((M.mode == LIST || M.mode == UNDO) && S.on) { ink_jw_raw(&w, ",\"search\":"); ink_jw_str(&w, S.query); }
             ink_jw_raw(&w, ",\"content\":"); ink_jw_raw(&w, body); ink_jw_raw(&w, ",\"controls\":"); ink_jw_raw(&w, actions); ink_jw_raw(&w, "}");
             result = w.overflow ? -1 : (int)w.len;
@@ -942,7 +976,7 @@ static int snapshot(char *out, size_t cap) {
 }
 static bool page_key(ink_key_t key, bool lng) {
     if (key == INK_KEY_BACK && !lng && M.mode == RECORD && ink_audio_recording()) { ink_memo_voice_stop(); return true; } /* ZSWatch: leaving saves */
-    if (key == INK_KEY_BACK && !lng && M.field && F.open) { F.open = false; F.query[0] = F.label[0] = 0; ink_ui_redraw(); return true; } /* Fossify: back closes the find bar first */
+    if (key == INK_KEY_BACK && !lng && M.mode == DETAIL && F.open) { F.open = false; F.query[0] = F.label[0] = 0; ink_ui_redraw(); return true; } /* Fossify: back closes the find bar first */
     return M.list && ink_ui_list_key(M.list, key, lng);
 }
 #define PAGE(name_) {.name = name_, .app = "memo", .create = create, .destroy = destroy, .snapshot = snapshot, .settle = settle, .on_key = page_key}

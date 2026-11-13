@@ -13,8 +13,14 @@ ROOT = Path(__file__).resolve().parents[2]
 MEMO = 'system/apps/memo/memo.c'
 VENDOR = 'system/apps/memo/vendor/zswatch/voice_memo_ui.c'
 MUTANTS = {  # what goes, and the run that must then fail
-    'leave': (MEMO, '    if (M.field) flush_note(false); /* to the member who opened it', '    if (0) flush_note(false); /* to the member who opened it', 'leave'),
-    'member': (MEMO, '    if (M.field) flush_note(false); /* to the member who opened it', '    if (M.field && !strcmp(M.member, ink_member_current()->id)) flush_note(false); /*', 'member'),
+    'leave': (MEMO, '    if (M.field && !flush_note(M.mode == FAIL)) { /* to the member', '    if (0 && !flush_note(M.mode == FAIL)) { /* to the member', 'leave'),
+    'member': (MEMO, '    if (M.field && !flush_note(M.mode == FAIL)) { /* to the member', '    if (M.field && !strcmp(M.member, ink_member_current()->id) && !flush_note(M.mode == FAIL)) { /*', 'member'),
+    # what the review found: each fix taken back must fail the review run
+    'reading': (MEMO, '            else if (mode == DETAIL && due) mode = DUE;', '            else if (mode == DETAIL && !n->path[0]) mode = due ? DUE : EDIT;', 'walk'),
+    'undo-stays': (MEMO, '        if (!result) U.id = 0;', '        if (0) U.id = 0;', 'review'),
+    'open-writes': (MEMO, ['!(save && known) && (store(', 'M.mode == FAIL || (!M.blank && !kept) ? M.note.body : "\\1"'],
+                    ['(store(', 'M.mode == FAIL ? M.note.body : "\\1"'], 'review'),  # both guards: the editor's and memo.save's
+    'fail-leave': (MEMO, '    if (M.field && !flush_note(M.mode == FAIL)) { /* to the member', '    if (M.field && M.mode != FAIL && !flush_note(false)) { /* to the member', 'review'),
     'blink': (VENDOR, '    if (ui.remaining_label && remaining_s > 0) {\n        lv_label_set_text_fmt(ui.remaining_label, TR(',
               '    lv_obj_set_style_opa(ui.rec_indicator, (elapsed_ms / 400) % 2 ? LV_OPA_TRANSP : LV_OPA_COVER, 0);\n'
               '    if (ui.remaining_label && remaining_s > 0) {\n        lv_label_set_text_fmt(ui.remaining_label, TR(', 'vendor'),
@@ -34,9 +40,11 @@ binary = build / 'sim-memo-3'
 if a.mutant:
     path, old, new, run = MUTANTS[a.mutant]
     source = (ROOT / path).read_text()
-    assert source.count(old) == 1, a.mutant
+    for o, n in zip(*((old, new) if isinstance(old, list) else ([old], [new]))):
+        assert source.count(o) == 1, (a.mutant, o)
+        source = source.replace(o, n)
     target = area / Path(path).name
-    target.write_text(source.replace(old, new))
+    target.write_text(source)
     flags = {}
     for line in (build / 'CMakeFiles/sim-memo-3.dir/flags.make').read_text().splitlines():
         if ' = ' in line:
@@ -57,7 +65,7 @@ if a.mutant:
     runs = [(run, '1', '0')]
 else:
     runs = [('walk', '1', '0'), ('walk', '3', '0'), ('walk', '1', '1'), ('ai', '1', '0'), ('leave', '1', '0'), ('lock', '1', '0'),
-            ('member', '1', '0'), ('busy', '1', '0'), ('isolation', '1', '0'), ('old', '1', '0'), ('vendor', '1', '0')]
+            ('member', '1', '0'), ('busy', '1', '0'), ('isolation', '1', '0'), ('old', '1', '0'), ('vendor', '1', '0'), ('review', '1', '0'), ('review', '3', '0')]
     if a.phase:
         runs = [r for r in runs if r[0] == a.phase]
 ok = True

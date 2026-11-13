@@ -29,13 +29,14 @@ static void u_failure_check(void) {
     CHECK(!strcmp(ink_textfield_text(M.field), "合成备忘，失败后文字仍在。"), "N09 failure preserves exact text");
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "没存上") && strstr(g_snap, "memo.retry"), "N09 AI sees the same failure and retry action");
 }
-static void u_detail_check(void) { /* memo-3: a text memo opens in its editor; its actions are written buttons that do not touch */
-    lv_obj_t *find = u_cap(lv_screen_active(), "memo.find");
+static void u_detail_check(void) {
+    lv_obj_t *edit = u_cap(lv_screen_active(), "memo.edit");
     lv_obj_t *del = u_cap(lv_screen_active(), "memo.delete");
     lv_obj_t *convert = u_cap(lv_screen_active(), "memo.convert");
-    lv_area_t a = u_rect(find), b = u_rect(del);
-    U_CHECK(find && del && convert && b.x1 - a.x2 - 1 >= ink_ui_px(INK_GAP_S) - 1, "N03 the editor's actions are separate written buttons");
-    U_CHECK(!u_primary(u_label(lv_screen_active(), "删除")), "N03 delete is not the primary action");
+    lv_area_t a = u_rect(edit), b = u_rect(del), c = u_rect(convert);
+    U_CHECK(edit && del && convert && b.x1 - a.x2 - 1 >= ink_ui_px(INK_GAP) - 1 &&
+        c.x1 - b.x2 - 1 >= ink_ui_px(INK_GAP) - 1, "N03 detail footer separates its three actions");
+    U_CHECK(u_primary(u_label(lv_screen_active(), "编辑备忘")) && !u_primary(u_label(lv_screen_active(), "删除备忘")), "N03 edit is the primary detail action");
 }
 static void u_keyboard_height_change(void) {
     /* A prior phone/number field is a real taller keyboard geometry at editor creation. */
@@ -58,7 +59,7 @@ static void u_run(void *ctx) {
     u_quiet(); on_ui(u_editor_check); u_capture("MemoRetried");
     uint32_t id = M.id; char args[160]; u_command("text.submit", NULL);
     snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)id);
-    u_command("memo.open", args); on_ui(u_detail_check); u_capture("MemoOpen");
+    u_command("memo.open", args); on_ui(u_detail_check); u_capture("MemoDetail");
     /* Number -> full -> nine -> full must recover the editor's available height. */
     on_ui(u_keyboard_height_change); u_command("memo.edit", args);
     on_ui(u_editor_check); int full = u_editor_height; u_capture("MemoFromNumber");

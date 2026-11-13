@@ -91,9 +91,8 @@ static void write_phase(void) {
     command("text.insert", "{\"text\":\"成人私有测试正文\"}");
     first_id = M.id; CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "touch-created memo is durable"); snap("MemoEdit");
     command("text.submit", NULL); quiet();
-    record_args(first_id); command("memo.open", call_args); quiet();
-    CHECK(!strcmp(ink_ui_page_name(), "MemoEdit") && M.field && ink_text_focused(), "a text memo opens straight into its editor (Fossify)"); snap("MemoEdit");
-    on_ui(select_all); command("text.insert", "{\"text\":\"编辑后的测试正文\"}");
+    record_args(first_id); command("memo.open", call_args); snap("MemoDetail");
+    touch("编辑备忘"); on_ui(select_all); command("text.insert", "{\"text\":\"编辑后的测试正文\"}");
     CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "updated memo is durable");
     command("text.submit", NULL); quiet();
     command("system.home", NULL); open_list();
@@ -105,7 +104,7 @@ static void write_phase(void) {
     CHECK(WAIT_FOR(ink_db_idle(), 15000), "touch checkbox persists");
     command("memo.check", "{\"id\":3,\"index\":1}"); command("memo.check", "{\"id\":3,\"index\":1}"); quiet(); snap("MemoChecklist");
     command("system.home", NULL); open_list(); new_note("合成撤销记录");
-    record_args(4); command("memo.open", call_args); quiet(); touch("删除");
+    record_args(4); command("memo.open", call_args); quiet(); touch("删除备忘");
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "MemoUndo"), 15000), "deletion opens its undo page"); snap("MemoUndo");
     record_args(removed_id); command("memo.delete", call_args); quiet();
     CHECK(M.model.action_count == 5 && !strcmp(M.actions[0].capability, "memo.undo") && strstr(M.actions[0].args_json, "\"id\":2"), "undo targets the latest deletion, including a lower record id");

@@ -131,9 +131,8 @@ static void test_memos(void) {
     CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "memo saved");
     uint32_t id = M.id; char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)id);
     test_ok("text.submit", NULL); test_ok("memo.open", args);
-    test_capture("MemoEdit-open", "转成清单", "Checklist");
+    test_capture("MemoDetail", "编辑备忘", "Edit"); CHECK(strstr(page_json, "用户原文 晴"), "memo data remains Chinese");
     test_ok("memo.convert", args); test_ok("memo.open", args); test_capture("MemoChecklist", "未完成", "Not done");
-    CHECK(strstr(page_json, "用户原文 晴"), "memo data remains Chinese");
     test_ok("memo.delete", args); test_capture("MemoUndo", "撤销删除", "Undo delete");
     test_ok("memo.undo", args); test_open("memo"); test_capture("Memo", "说一句", "Voice note");
     test_ok("memo.edit", NULL); reject_note = true;

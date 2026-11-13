@@ -52,6 +52,26 @@ static void locate(void) {
     g_btn_x[0] = (r.x1 + r.x2) / 2; g_btn_y[0] = (r.y1 + r.y2) / 2;
 }
 static bool visible(const char *text) { wanted = text; on_ui(locate); return seen != NULL; }
+static char inverted[128];
+static void find_inverted(lv_obj_t *obj) { /* the label showing a selection: the hit being looked at */
+    if (lv_obj_has_flag(obj, LV_OBJ_FLAG_HIDDEN)) return;
+    if (lv_obj_check_type(obj, &lv_label_class) && lv_label_get_text_selection_start(obj) != LV_LABEL_TEXT_SELECTION_OFF) {
+        const char *t = lv_label_get_text(obj); uint32_t a = lv_label_get_text_selection_start(obj), b = lv_label_get_text_selection_end(obj);
+        size_t from = ink_text_byte_offset(t, a), to = ink_text_byte_offset(t, b);
+        snprintf(inverted, sizeof inverted, "%.*s|%s", (int)(to - from), t + from, t);
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) find_inverted(lv_obj_get_child(obj, i));
+}
+static void inverted_now(void) { inverted[0] = 0; find_inverted(lv_screen_active()); }
+static const char *hit_shown(void) { on_ui(inverted_now); return inverted; }
+static bool whole_now;
+static void whole_check(void) { /* the button's words fit inside it: not cut, not dotted */
+    whole_now = false; if (!seen) return;
+    lv_point_t size; lv_text_get_size(&size, wanted, lv_obj_get_style_text_font(seen, 0), 0, 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+    lv_obj_t *b = lv_obj_get_parent(seen); lv_obj_update_layout(b);
+    whole_now = size.x <= lv_obj_get_content_width(b) && !strstr(lv_label_get_text(seen), "…") && !strstr(lv_label_get_text(seen), "...");
+}
+static bool whole(const char *text) { if (!visible(text)) return false; on_ui(whole_check); return whole_now; }
 static bool touch(const char *text) { bool ok = visible(text); CHECK(ok, "%s is on screen (%s)", text, ink_ui_page_name()); if (ok) tap(g_btn_x[0], g_btn_y[0]); quiet(); return ok; }
 static void ok(const char *cap, const char *args, ink_source_t src) {
     CHECK(call_as(cap, args, src) && g_rc.status == INK_RC_DONE, "%s %.80s (%s %.80s)", cap, args ? args : "", ink_rc_name(g_rc.status), g_rc.say);
@@ -99,6 +119,15 @@ static void walk(ink_source_t src) {
     /* 2. another app and back: everything is there, no save was pressed */
     ok("app.open", "{\"id\":\"calculator\"}", src); open_list();
     CHECK(load(me, long_id) && strlen(note.body) == n, "after another app the memo holds every character");
+    /* reading it: a page of lines, not the editor's one line over the keyboard */
+    snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)long_id); ok("memo.open", args, src);
+    shot(ai ? "MemoDetail-long-ai" : "MemoDetail-long");
+    CHECK(on_page("MemoDetail") && !M.field && !ink_text_focused() && M.cap >= 6 && M.cap * R.cpr >= 60, "a text memo opens to read, no keyboard, %u lines of %u a page", M.cap, R.cpr);
+    CHECK(strstr(snap_json, "记记记记记记记记") && strstr(snap_json, "memo.edit"), "the AI sees the page's lines and 编辑备忘");
+    CHECK(whole("编辑备忘") && whole("删除备忘") && whole("转成清单"), "its three buttons say all their words");
+    if (ai) ok("memo.edit", args, src); else touch("编辑备忘");
+    CHECK(on_page("MemoEdit") && M.field && ink_text_focused() && !visible("到期") && !visible("转成清单"), "编辑备忘 writes; the editor holds only writing, nothing under the keyboard");
+    ok("system.home", NULL, src); open_list();
     /* a memo with three hits, then the search */
     ok("memo.edit", NULL, src); uint32_t hit_id = M.id;
     type("明天带作业本\n放学前看看作业本在不在\n别忘了作业本和水杯"); quiet(); ok("system.home", NULL, src); open_list();
@@ -110,21 +139,24 @@ static void walk(ink_source_t src) {
     mark("open_memo", false);
     if (ai) ok("memo.open", args, src); else touch("明天带作业本");
     mark("open_memo", true); CHECK(WAIT_FOR(F.count == 3, 5000), "the find bar counts 3");
-    shot(ai ? "MemoEdit-find-ai" : "MemoEdit-find");
-    CHECK(on_page("MemoEdit") && !strcmp(status(), "第 1 处，共 3 处"), "the first hit, 第 1 处，共 3 处 (%s)", label_text);
+    shot(ai ? "MemoDetail-find-ai" : "MemoDetail-find");
+    CHECK(on_page("MemoDetail") && !strcmp(status(), "第 1 处，共 3 处"), "the first hit, 第 1 处，共 3 处 (%s)", label_text);
     CHECK(strstr(snap_json, "\\\"at\\\":1,\\\"count\\\":3") || strstr(snap_json, "\"at\":1,\"count\":3"), "the AI is told where (%.200s)", strstr(snap_json, "\"find\"") ? strstr(snap_json, "\"find\"") : snap_json);
-    size_t start = 0, end = 0; ink_text_selection(&start, &end);
-    CHECK(end - start == 3 && start == 3, "the hit is selected in the body (%zu..%zu)", start, end);
+    CHECK(!strcmp(hit_shown(), "作业本|明天带作业本"), "the hit is inverted in its line, the line around it shown (%s)", inverted);
     mark("find_next", false);
     if (ai) ok("memo.find_next", NULL, src); else touch("下一个");
     mark("find_next", true);
-    CHECK(!strcmp(status(), "第 2 处，共 3 处"), "下一个: 第 2 处，共 3 处 (%s)", label_text);
+    CHECK(!strcmp(status(), "第 2 处，共 3 处") && !strcmp(hit_shown(), "作业本|放学前看看作业本在不在"), "下一个: 第 2 处，共 3 处, inverted in the next line (%.40s %.60s)", label_text, inverted);
     ok("memo.find_next", NULL, src); ok("memo.find_next", NULL, src); CHECK(!strcmp(status(), "第 1 处，共 3 处"), "after the last it wraps to the first");
-    snprintf(args, sizeof args, "{\"id\":%u,\"query\":\"没有这个词\"}", (unsigned)hit_id); ok("memo.find", args, src);
-    shot(ai ? "MemoEdit-find-none-ai" : "MemoEdit-find-none"); CHECK(!strcmp(status(), "没有找到"), "没有找到 (%s)", label_text);
+    if (ai) { snprintf(args, sizeof args, "{\"id\":%u,\"query\":\"没有这个词\"}", (unsigned)hit_id); ok("memo.find", args, src); }
+    else { /* 查找 on the reading page: the word is typed, 搜索 looks */
+        touch("关闭"); touch("查找"); CHECK(M.find && ink_text_focused() && !M.list, "查找 asks for the word with the keyboard");
+        type("没有这个词"); on_ui(enter_now); quiet();
+    }
+    shot(ai ? "MemoDetail-find-none-ai" : "MemoDetail-find-none"); CHECK(on_page("MemoDetail") && !strcmp(status(), "没有找到"), "没有找到 (%s)", label_text);
     /* This device has no back key (the profile's keys); 关闭 in the top bar closes the find bar and the page stays */
     if (!ai) touch("关闭"); else ok("memo.find_close", NULL, src);
-    CHECK(on_page("MemoEdit") && !F.open && visible("查找"), "关闭: the find bar goes, the editor's own buttons come back");
+    CHECK(on_page("MemoDetail") && !F.open && visible("查找") && !hit_shown()[0], "关闭: the find bar goes, the page's own buttons come back");
     ok("system.home", NULL, src); open_list();
     ok("memo.search", "{\"query\":\"不存在的字\"}", ai ? src : INK_SRC_TOUCH); shot(ai ? "Memo-search-none-ai" : "Memo-search-none");
     CHECK(visible("没有找到") && visible("清除搜索"), "no result: the shared empty state and 清除搜索");
@@ -295,6 +327,81 @@ static void old_records(void) {
     CHECK(load("owner", 8) && note.checked == 7, "an old checklist takes a new check and is written as schema 2");
 }
 
+/* ---------------------------------------------------------------- what the review found */
+static ink_exec_job_t bg_job;
+static volatile int bg_done, import_old, import_new;
+static void reimport(void *arg) { /* BG: a backup made before schema 2 (its header says 1) restores; one from a newer schema does not */
+    (void)arg; ink_db_t *db = ink_db_open_member(&MEMOS, "owner"); void *snap = NULL; size_t len = 0;
+    import_old = import_new = -9;
+    if (db && ink_db_export(db, &snap, &len) == 0) {
+        struct __attribute__((packed)) { uint32_t magic; uint16_t format, schema; uint32_t count, last_ver, next_id, log_gen, acked_ver, crc; } h; /* datastore.c's header */
+        memcpy(&h, snap, sizeof h);
+        for (int schema = 1; schema <= 3; schema += 2) {
+            h.schema = (uint16_t)schema; uint32_t crc = ink_crc32(0, &h, offsetof(__typeof__(h), crc)); h.crc = ink_crc32(crc, (uint8_t *)snap + sizeof h, len - sizeof h);
+            memcpy(snap, &h, sizeof h); int rc = ink_db_import(db, snap, len, ink_db_last_ver(db));
+            if (schema == 1) import_old = rc; else import_new = rc;
+        }
+    }
+    osal_free(snap); ink_db_close(db); __atomic_store_n(&bg_done, 1, __ATOMIC_RELEASE);
+}
+static bool put_v2(uint32_t id, const char *json) {
+    ink_db_t *db = ink_db_open_member(&MEMOS, "owner"); uint32_t ver = 0;
+    ink_db_write_t w = {.id = id, .data = json, .len = strlen(json), .src = INK_SRC_SYSTEM, .written_ver = &ver};
+    bool done = db && ink_db_put(db, &w, NULL) == 0 && ink_db_wait(db, ver, 5000000) == 0; ink_db_close(db); return done;
+}
+static void review(void) {
+    char args[256]; ink_rec_t rec = {0}; ink_db_t *db;
+    /* undo of 删掉已完成 lasts until the next change only */
+    open_list(); ok("memo.edit", "{\"checklist\":true}", INK_SRC_TOUCH); uint32_t list_id = M.id;
+    snprintf(args, sizeof args, "{\"id\":%u,\"text\":\"甲\\n乙\\n丙\"}", (unsigned)list_id); ok("memo.add_item", args, INK_SRC_AI);
+    snprintf(args, sizeof args, "{\"id\":%u,\"index\":0}", (unsigned)list_id); ok("memo.check", args, INK_SRC_AI);
+    snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)list_id); ok("system.home", NULL, INK_SRC_TOUCH); open_list(); ok("memo.open", args, INK_SRC_TOUCH); /* no keyboard */
+    ok("memo.show_done", args, INK_SRC_AI); touch("删掉已完成");
+    CHECK(load("owner", list_id) && !strcmp(note.body, "乙\n丙") && visible("已删掉已完成的项 · 撤销"), "删掉已完成 offers its undo");
+    snprintf(args, sizeof args, "{\"id\":%u,\"text\":\"丁\"}", (unsigned)list_id); ok("memo.add_item", args, INK_SRC_AI);
+    CHECK(!visible("已删掉已完成的项 · 撤销"), "the next change takes the undo away");
+    snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)list_id);
+    CHECK(call_as("memo.undo", args, INK_SRC_AI) && g_rc.status == INK_RC_INVALID && load("owner", list_id) && !strcmp(note.body, "乙\n丙\n丁"), "an old undo cannot take the new item away (%s %.60s)", ink_rc_name(g_rc.status), note.body);
+    /* opening a memo, to read or to write, without changing it: not written, not moved up the list */
+    ok("system.home", NULL, INK_SRC_TOUCH); open_list(); ok("memo.edit", NULL, INK_SRC_TOUCH); uint32_t older = M.id; type("先写的"); quiet();
+    ok("system.home", NULL, INK_SRC_TOUCH); open_list(); ok("memo.edit", NULL, INK_SRC_TOUCH); uint32_t newer = M.id; type("后写的"); quiet();
+    ok("system.home", NULL, INK_SRC_TOUCH); CHECK(WAIT_FOR(ink_db_idle(), 15000) && newest() == newer, "the newest change is first");
+    db = ink_db_open_member(&MEMOS, "owner"); ink_db_get(db, older, &rec, NULL, 0); uint32_t ver = rec.ver; ink_db_close(db);
+    open_list(); snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)older); ok("memo.open", args, INK_SRC_TOUCH); touch("编辑备忘");
+    CHECK(on_page("MemoEdit") && !strcmp(ink_textfield_text(M.field), "先写的"), "the older memo in its editor"); delay_ms(1500); quiet();
+    ok("system.home", NULL, INK_SRC_TOUCH); CHECK(WAIT_FOR(ink_db_idle(), 15000), "idle");
+    db = ink_db_open_member(&MEMOS, "owner"); ink_db_get(db, older, &rec, NULL, 0); ink_db_close(db);
+    CHECK(newest() == newer && rec.ver == ver, "only looked at: the older memo is not written (ver %u, was %u) and stays below", (unsigned)rec.ver, (unsigned)ver);
+    /* a failed save, then leaving: the words are written when the page goes */
+    open_list(); ok("memo.edit", NULL, INK_SRC_TOUCH); uint32_t fail_id = M.id; type("先"); CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "stored once");
+    refuse_write = true; type("存不上"); CHECK(WAIT_FOR(M.mode == FAIL, 15000), "the save fails");
+    refuse_write = false; ok("system.home", NULL, INK_SRC_TOUCH);
+    CHECK(WAIT_FOR(ink_db_idle(), 15000) && load("owner", fail_id) && !strcmp(note.body, "先存不上"), "leaving after a failed save still writes the words (%.60s)", note.body);
+    /* still refused when it goes: kept, said on the list, written by 重试 */
+    open_list(); ok("memo.edit", NULL, INK_SRC_TOUCH); fail_id = M.id; type("一"); CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "stored once");
+    refuse_write = true; type("二"); CHECK(WAIT_FOR(M.mode == FAIL, 15000), "the save fails"); ok("system.home", NULL, INK_SRC_TOUCH);
+    open_list(); shot("Memo-kept"); CHECK(visible("有一条备忘没存上 · 重试") && strstr(snap_json, "memo.retry"), "the list says words are waiting, and how to store them");
+    refuse_write = false; touch("有一条备忘没存上 · 重试");
+    CHECK(WAIT_FOR(ink_db_idle(), 15000) && load("owner", fail_id) && !strcmp(note.body, "一二") && !visible("有一条备忘没存上 · 重试"), "重试 stores them (%.60s)", note.body);
+    /* a reminder that did not take: the row says so and does not promise a retry it would not do; the buttons retry */
+    int64_t later = ink_time_now_s() + 2 * 86400;
+    snprintf(args, sizeof args, "{\"body\":\"买药\\n取快递\",\"checklist\":true,\"deleted\":false,\"checked\":0,\"draft\":0,\"page\":\"\",\"updated\":0,\"due\":[%lld],\"rid\":[0]}", (long long)later);
+    CHECK(put_v2(31, args), "a checklist item due later, its reminder not set");
+    ok("memo.open", "{\"id\":31}", INK_SRC_TOUCH); shot("MemoChecklist-reminder");
+    CHECK(strstr(snap_json, "提醒没设上") && !strstr(snap_json, "点这里重试"), "the row: 提醒没设上, no promise the row cannot keep");
+    ok("memo.open", "{\"id\":31,\"index\":0}", INK_SRC_TOUCH); touch("提醒没设上，点这里重试");
+    CHECK(load("owner", 31) && note.rid[0] && reminders("买药") && !note.checked, "the item page's button sets it, nothing is checked");
+    snprintf(args, sizeof args, "{\"body\":\"交水费\",\"checklist\":false,\"deleted\":false,\"checked\":0,\"draft\":0,\"page\":\"\",\"updated\":0,\"due\":[%lld],\"rid\":[0]}", (long long)later);
+    CHECK(put_v2(32, args), "a text memo due later, its reminder not set");
+    ok("system.home", NULL, INK_SRC_TOUCH); open_list(); ok("memo.open", "{\"id\":32}", INK_SRC_TOUCH); shot("MemoDetail-reminder");
+    CHECK(strstr(status(), "提醒没设上") && visible("提醒没设上，点这里重试"), "the reading page says it and offers the button (%s)", label_text);
+    touch("提醒没设上，点这里重试"); CHECK(load("owner", 32) && note.rid[0] && reminders("交水费"), "and it is set");
+    /* a backup from before schema 2 restores */
+    CHECK(WAIT_FOR(ink_db_idle(), 15000), "durable"); bg_done = 0; ink_exec_post(INK_EXEC_BG, &bg_job, reimport, NULL);
+    CHECK(WAIT_FOR(bg_done, 15000) && import_old == 0 && import_new != 0, "a schema-1 backup restores (%d), a newer one is refused (%d)", import_old, import_new);
+    CHECK(load("owner", 32) && !strcmp(note.body, "交水费"), "the restored memos read whole");
+}
+
 /* ---------------------------------------------------------------- the copied ZSWatch screen, alone */
 static lv_obj_t *vendor_root;
 static void vendor_states(void) {
@@ -327,6 +434,7 @@ static void run(void *arg) {
     else if (!strcmp(phase, "busy")) busy();
     else if (!strcmp(phase, "isolation")) isolation();
     else if (!strcmp(phase, "old")) old_records();
+    else if (!strcmp(phase, "review")) review();
     else if (!strcmp(phase, "vendor")) on_ui(vendor_states);
     CHECK(WAIT_FOR(ink_db_idle(), 15000), "writes finish"); ink_probe_count("test.finished");
 }
