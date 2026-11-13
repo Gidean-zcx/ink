@@ -98,7 +98,7 @@ static void walk_home(bool kid) {
         CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "turn the home"); quiet();
     }
     int home = 0;
-    for (int i = 0; ink_sr_at(i); i++) home += (ink_sr_at(i)->where & INK_SR_HOME) && (!kid || !ink_sr_at(i)->adult) && strcmp(ink_sr_at(i)->id, "bt");
+    for (int i = 0; ink_sr_at(i); i++) home += (ink_sr_at(i)->where & INK_SR_HOME) && (!kid || !ink_sr_at(i)->adult);
     CHECK(rows >= home, "all the home items are drawn across %d pages (%d of %d)", pages, rows, home);
 }
 

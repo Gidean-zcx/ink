@@ -189,12 +189,13 @@ static bool snapshot_has(const char *text) {
     osal_free(snapshot);
     return found;
 }
-static void assert_settings_decoration(void) {
-    const char *rows[] = {"网络和 SIM 卡", "蓝牙", "显示和亮度", "声音", "语音和 AI", "锁屏和壁纸", "存储和备份", "关于和更新"};
+static void assert_settings_decoration(void) { /* settings-1: the home's rows in their groups */
+    const char *rows[] = {"Wi-Fi", "移动网络", "蓝牙", "音量", "勿扰", "亮度", "暖光", "字号", "锁屏和壁纸", "家人", "语音和 AI", "存储", "备份", "关于和更新"};
     for (unsigned i = 0; i < sizeof rows / sizeof *rows; i++) {
+        char title[64]; snprintf(title, sizeof title, "\"title\":\"%s\"", rows[i]);
         wanted = rows[i]; find_label();
         if (!found_label) {
-            CHECK(!snapshot_has(wanted), "a row absent from this page is also absent from its snapshot: %s", wanted);
+            CHECK(!snapshot_has(title), "a row absent from this page is also absent from its snapshot: %s", wanted);
             continue;
         }
         lv_obj_t *row = lv_obj_get_parent(found_label);
@@ -207,7 +208,7 @@ static void assert_settings_decoration(void) {
             if (w > lv_obj_get_width(row) / 2 && h == ink_ui_px(INK_DIVIDER) && lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_separator())) divider = true;
         }
         CHECK(base, "settings group icon stays white without a button outline: %s", wanted);
-        if (i != 0 && i != 2 && i != 5) CHECK(divider, "settings rows are visually separated: %s", wanted);
+        if (lv_obj_get_y(row) > 0) CHECK(divider, "settings rows are visually separated: %s", wanted); /* a row under another */
     }
 }
 static void assert_identity(void) {
@@ -358,8 +359,8 @@ static void assert_operation(void) {
         CHECK(press_label("计算器"), "touch the match"); quiet();
         CHECK(!strcmp(ink_ui_page_name(), "Calculator"), "the match opens the calculator (%s)", ink_ui_page_name());
     } else if (!strcmp(scene, "Settings")) {
-        CHECK(press_label("显示和亮度"), "touch the display settings row"); quiet();
-        CHECK(!strcmp(ink_ui_page_name(), "SetDisplay"), "the row opens its promised page");
+        CHECK(press_label("音量"), "touch the volume row"); quiet();
+        CHECK(!strcmp(ink_ui_page_name(), "SetSound"), "the row opens its promised page");
     } else if (!strcmp(scene, "Control") || !strcmp(scene, "SetSound")) {
         wanted = !strcmp(scene, "Control") ? "亮度" : "音量"; on_ui(find_label); tap(528, label_y); quiet();
         if (!strcmp(scene, "SetSound")) {

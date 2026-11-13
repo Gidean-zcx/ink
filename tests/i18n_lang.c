@@ -130,23 +130,29 @@ static bool language(const char *code) {
     return WAIT_FOR(!strcmp(ink_lang_code(), code) && settled(), 3000);
 }
 
-static const char *const ZH_ROWS[] = {"设置", "网络和 SIM 卡", "蓝牙", "显示和亮度", "声音", "语音和 AI", "锁屏和壁纸", "存储和备份", "关于和更新"};
-static const char *const EN_ROWS[] = {"Settings", "Network & SIM", "Bluetooth", "Display", "Sound", "Voice & AI",
-    "Lock Screen", "Storage & Backup", "About & Updates"};
+/* settings-1: the home's rows in their groups, over as many pages as the language needs. */
+static const char *const ZH_ROWS[] = {"设置", "移动网络", "蓝牙", "勿扰", "暖光", "锁屏和壁纸", "语音和 AI", "备份", "关于和更新"};
+static const char *const EN_ROWS[] = {"Settings", "Mobile Network", "Bluetooth", "DND", "Warmth", "Lock Screen", "Voice & AI",
+    "Backup", "About & Updates"};
+static bool last_page(void) {
+    const char *at = strstr(g_snap, "\"page_number\":"), *of = strstr(g_snap, "\"pages\":");
+    return at && of && atoi(at + 14) == atoi(of + 8);
+}
 static void settings_home(const char *const rows[], const char *const absent[], const char *name) {
     CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open the settings home");
     unsigned seen = 0;
-    for (int page = 1; page <= 2; page++) {
-        char frame[64]; snprintf(frame, sizeof frame, page == 1 ? "%s" : "%s-2", name);
+    for (int page = 1; page <= 5; page++) {
+        char frame[64]; snprintf(frame, sizeof frame, page == 1 ? "%s" : "%s-%d", name, page);
         capture("Settings", frame);
         for (int i = 0; i < 9; i++) {
             if (shows(rows[i])) seen |= 1u << i;
             CHECK(!shows(absent[i]), "%s no longer shows %s", name, absent[i]);
         }
-        if (page == 1) CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "visit settings second page");
+        if (last_page()) break;
+        CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "visit the next settings page");
     }
-    CHECK(seen == (1u << 9) - 1, "%s shows every setting across exactly two pages", name);
-    CHECK(BY_HAND("shell.page_prev", NULL) && ready("Settings"), "return to settings first page");
+    CHECK(seen == (1u << 9) - 1, "%s shows every setting across its pages", name);
+    CHECK(BY_HAND("settings.open", "{}") && ready("Settings"), "return to settings first page");
 }
 
 static const char *missing_key = "这句测试用的话没有译文";
@@ -218,7 +224,12 @@ static void first_run(void) {
     CHECK(BY_HAND("ai.panel.hide", NULL) && g_rc.status == INK_RC_DONE, "close the answer");
 
     settings_home(EN_ROWS, ZH_ROWS, "Settings-en");
-    CHECK(strstr(g_snap, "语言=en"), "the settings snapshot tells the AI the language");
+    CHECK(strstr(g_snap, "\"language\":\"en\""), "the settings snapshot tells the AI the language");
+    for (int page = 1; page <= 5; page++) { /* the page with the voice row */
+        on_ui(read_labels);
+        if (shows("Voice & AI") || last_page()) break;
+        CHECK(BY_HAND("shell.page_next", NULL) && ready("Settings"), "turn to the voice row");
+    }
     for (int wake = 2; wake >= 0; wake--) { /* every value of the voice row fits beside its name */
         char args[64]; snprintf(args, sizeof args, "{\"id\":\"voice.handsfree\",\"value\":%d}", wake);
         CHECK(BY_HAND("settings.set", args) && g_rc.status == INK_RC_DONE && WAIT_FOR(settled(), 3000), "wake setting %d", wake);
@@ -241,12 +252,12 @@ static void first_run(void) {
           "about is drawn again in Chinese (%.150s)", g_snap);
 
     settings_home(ZH_ROWS, EN_ROWS, "Settings-zh");
-    CHECK(strstr(g_snap, "语言=zh"), "back to Chinese in the snapshot");
+    CHECK(strstr(g_snap, "\"language\":\"zh\""), "back to Chinese in the snapshot");
     CHECK(AI("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE && language("en"),
           "English again before the restart");
-    CHECK(WAIT_FOR(at("Settings") && strstr(g_snap, "语言=en"), 3000), "the settings home follows at once");
+    CHECK(WAIT_FOR(at("Settings") && strstr(g_snap, "\"language\":\"en\""), 3000), "the settings home follows at once");
     on_ui(read_labels);
-    CHECK(shows("Settings") && shows("Voice & AI") && !shows("语音和 AI"), "the open settings first page is redrawn in English");
+    CHECK(shows("Settings") && shows("Mobile Network") && !shows("移动网络"), "the open settings first page is redrawn in English");
     finish();
 }
 
@@ -256,15 +267,16 @@ static void after_restart(void) {
     settings_home(EN_ROWS, ZH_ROWS, "Settings-en-restart");
     CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":0}") && g_rc.status == INK_RC_DONE && language("zh"),
           "switch back to Chinese by hand");
-    CHECK(WAIT_FOR(at("Settings") && strstr(g_snap, "语言=zh"), 3000), "the settings home follows at once");
-    unsigned seen = 0; /* the settings home has two pages since the new design language */
-    for (int page = 1; page <= 2; page++) {
+    CHECK(WAIT_FOR(at("Settings") && strstr(g_snap, "\"language\":\"zh\""), 3000), "the settings home follows at once");
+    unsigned seen = 0; /* settings-1: the home's groups take as many pages as they need */
+    for (int page = 1; page <= 5; page++) {
         on_ui(read_labels);
         for (int i = 0; i < 9; i++) {
             if (shows(ZH_ROWS[i])) seen |= 1u << i;
             CHECK(!shows(EN_ROWS[i]), "no English left after switching back: %s", EN_ROWS[i]);
         }
-        if (page == 1) CHECK(BY_HAND("shell.page_next", NULL) && ready("Settings"), "visit settings second page");
+        if (last_page()) break;
+        CHECK(BY_HAND("shell.page_next", NULL) && ready("Settings"), "visit the next settings page");
     }
     for (int i = 0; i < 9; i++) CHECK(seen & (1u << i), "Chinese again: %s", ZH_ROWS[i]);
     finish();

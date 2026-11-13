@@ -20,8 +20,7 @@ static void cell(const ink_sr_item_t *it, char *out, size_t cap) {
     (void)it; snprintf(out, cap, "%s", integer("cell.registered") ? TR("4G 在线") : integer("cell.sim_missing") ? TR("没有 SIM 卡") : TR("4G 还没有连上"));
 }
 static void bluetooth(const ink_sr_item_t *it, char *out, size_t cap) {
-    (void)it; state_text("bt.device", out, cap);
-    if (!integer("bt.connected") || !out[0]) snprintf(out, cap, "%s", integer("bt.connected") ? TR("已连接") : TR("没有连接"));
+    (void)it; snprintf(out, cap, "%s", integer("bt.connected") ? TR("已连接") : TR("没有连接"));
 }
 static void people(const ink_sr_item_t *it, char *out, size_t cap) {
     int n = 0; (void)it;
@@ -85,7 +84,6 @@ static ink_sr_state_t airplane(char *out, size_t cap) { return ink_setting_get("
 static ink_sr_state_t wifi_on(char *out, size_t cap) { return ink_setting_get("wifi.enabled") ? INK_SR_AVAILABLE : why(INK_SR_DEPENDENT, out, cap, TR("Wi-Fi 已关闭")); }
 static ink_sr_state_t vibrating(char *out, size_t cap) { return ink_setting_get("audio.vibration") ? INK_SR_AVAILABLE : why(INK_SR_DEPENDENT, out, cap, TR("振动已关闭")); }
 static ink_sr_state_t sim_free(char *out, size_t cap) { return integer("cell.config_readonly") ? why(INK_SR_NOT_NOW, out, cap, TR("暂不能更改 SIM 卡")) : INK_SR_AVAILABLE; }
-static ink_sr_state_t has_bt(char *out, size_t cap) { return integer("bt.available") ? INK_SR_AVAILABLE : why(INK_SR_UNSUPPORTED, out, cap, TR("这台设备不能用蓝牙耳机")); }
 static ink_sr_state_t has_afe(char *out, size_t cap) { return hal_afe_available() ? INK_SR_AVAILABLE : why(INK_SR_UNSUPPORTED, out, cap, TR("这台设备暂不支持叫名字")); }
 
 #define H INK_SR_HOME
@@ -94,13 +92,13 @@ static ink_sr_state_t has_afe(char *out, size_t cap) { return hal_afe_available(
 static const ink_sr_item_t ITEMS[] = {
     {.id = "wifi", .title = "Wi-Fi", .aliases = TR_NOOP("wifi wlan 无线 上网 网络"), .icon = "wifi", .group = NET, .page = "SetNetwork", .setting = "wifi.enabled", .summary = wifi, .where = H, .adult = true},
     {.id = "cell", .title = TR_NOOP("移动网络"), .aliases = TR_NOOP("4g sim 流量 运营商 接入点 apn 漫游"), .icon = "sim", .group = NET, .page = "SetMobile", .open = "shell.mobile", .summary = cell, .state = airplane, .where = H, .adult = true},
-    {.id = "bt", .title = TR_NOOP("蓝牙"), .aliases = TR_NOOP("耳机 蓝牙耳机"), .icon = "bluetooth", .group = NET, .page = "SetBluetooth", .summary = bluetooth, .state = has_bt, .where = H, .adult = true},
+    {.id = "bt", .title = TR_NOOP("蓝牙"), .aliases = TR_NOOP("耳机 蓝牙耳机"), .icon = "bluetooth", .group = NET, .page = "SetBluetooth", .summary = bluetooth, .where = H, .adult = true},
     {.id = "audio.volume", .title = TR_NOOP("音量"), .aliases = TR_NOOP("声音 大声 小声"), .icon = "volume", .group = SOUND, .page = "SetSound", .setting = "audio.volume", .summary = tenths, .where = H},
     {.id = "notify.dnd", .title = TR_NOOP("勿扰"), .aliases = TR_NOOP("免打扰 安静 静音"), .icon = "moon", .group = SOUND, .page = "SetSound", .setting = "notify.dnd", .where = H},
     {.id = "display.light", .title = TR_NOOP("亮度"), .aliases = TR_NOOP("前光 屏幕亮度 灯"), .icon = "sun", .group = SHOW, .page = "SetDisplay", .setting = "display.light", .summary = tenths, .where = H},
     {.id = "display.warmth", .title = TR_NOOP("暖光"), .aliases = TR_NOOP("色温 夜间 护眼 暖色"), .icon = "warm", .group = SHOW, .page = "SetDisplay", .setting = "display.warmth", .summary = tenths, .where = H},
     {.id = "display.font_size", .title = TR_NOOP("字号"), .aliases = TR_NOOP("文字大小 字体 大字"), .icon = "word", .group = SHOW, .page = "SetDisplay", .setting = "display.font_size", .where = H, .adult = true},
-    {.id = "lock", .title = TR_NOOP("锁屏和壁纸"), .aliases = TR_NOOP("壁纸 表盘 锁屏画面"), .icon = "lock", .group = SHOW, .page = "Wallpaper", .setting = "display.lock_style", .where = H, .adult = true},
+    {.id = "lock", .title = TR_NOOP("锁屏和壁纸"), .aliases = TR_NOOP("壁纸 表盘 锁屏画面"), .icon = "lock", .group = SHOW, .page = "Wallpaper", .setting = "power.lock_after_s", .summary = minutes, .where = H, .adult = true}, /* SB-M2: the lock time */
     {.id = "family", .title = TR_NOOP("家人"), .aliases = TR_NOOP("成员 家长 孩子 密码"), .icon = "family", .group = FAMILY, .page = "SetMembers", .summary = people, .where = H, .adult = true},
     {.id = "ai", .title = TR_NOOP("语音和 AI"), .aliases = TR_NOOP("叫名字 语音 唤醒"), .icon = "wave", .group = AI, .page = "SetVoice", .summary = handsfree, .where = H, .adult = true},
     {.id = "storage", .title = TR_NOOP("存储"), .aliases = TR_NOOP("空间 存储卡 容量"), .icon = "storage", .group = STORE, .page = "SetStorage", .summary = space, .where = H, .adult = true},
@@ -120,6 +118,7 @@ static const ink_sr_item_t ITEMS[] = {
     {.id = "power.lock_after_s", .title = TR_NOOP("自动锁屏"), .aliases = TR_NOOP("锁屏 休眠 待机"), .icon = "lock", .group = SHOW, .page = "SetDisplay", .setting = "power.lock_after_s", .summary = minutes, .adult = true},
     {.id = "refresh", .title = TR_NOOP("刷新屏幕"), .aliases = TR_NOOP("残影 清屏"), .icon = "display", .group = SHOW, .page = "SetDisplay"},
     {.id = "today", .title = TR_NOOP("今日屏放什么"), .aliases = TR_NOOP("主屏 卡片"), .icon = "grid", .group = SHOW, .page = "SetDisplay"},
+    {.id = "power.lift_wake", .title = TR_NOOP("拿起亮屏"), .aliases = TR_NOOP("抬起 唤醒 亮屏"), .icon = "display", .group = SHOW, .page = "Wallpaper", .setting = "power.lift_wake", .adult = true},
     {.id = "kid", .title = TR_NOOP("孩子的设置"), .aliases = TR_NOOP("孩子 时长 应用名单 禁用时段"), .icon = "kid", .group = FAMILY, .page = "SetKid", .adult = true},
     /* The list pages' rows (settings_pages.c), in their order. */
     {.id = "voice.handsfree", .title = TR_NOOP("什么时候能叫名字"), .aliases = TR_NOOP("叫名字 唤醒"), .group = AI, .page = "SetVoice", .setting = "voice.handsfree", .note = TR_NOOP("没锁屏时才听，不影响待机。"), .summary = handsfree, .state = has_afe, .where = L, .adult = true},

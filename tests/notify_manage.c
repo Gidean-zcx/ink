@@ -123,7 +123,7 @@ static void sms(void) {
 }
 static void channels(void) {
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open settings directory"); quiet();
-    press("声音", "shell.sound");
+    press("音量", "settings.open"); /* settings-1: the home's volume row opens the sound page */
     for (int i = 0; i < 3 && !locate_label("通知", "shell.notify_settings"); i++) {
         CHECK(AI("shell.page_next", NULL), "visit next sound settings page"); quiet();
     }

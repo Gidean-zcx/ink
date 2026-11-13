@@ -1849,7 +1849,6 @@ Wi-Fi 已关闭	Wi-Fi is off
 都收	All on
 飞行模式开着	Airplane mode is on
 振动已关闭	Vibration is off
-这台设备不能用蓝牙耳机	This device cannot use Bluetooth headphones
 找一项设置，例如暖光	Find a setting, e.g. warm light
 找到 %d 项设置	Found %d settings
 没有找到这项设置	No such setting found
@@ -1900,3 +1899,4 @@ language english 中文 英文	language english chinese
 记录 删除记录	records delete history
 版本	version
 电池	battery
+抬起 唤醒 亮屏	lift raise wake screen
