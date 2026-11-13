@@ -39,14 +39,24 @@ static struct {
     int index, found, layout[INK_MOGO_LAYOUT_COUNT];
     char title[96], path[288], json[4096];
 } S INK_PSRAM_BSS;
-/* The home card mirrors the member's last book, read ahead on BG: .card runs on UI and never reads flash. */
+/* The home card mirrors each member's last book, read ahead on BG: .card runs on UI and never reads flash, and the
+ * lock screen shows the right book at once after a member switch. */
+typedef struct { char member[16]; bool have; ink_mogo_card_t card; } ink_mogo_slot_t;
 static struct {
     ink_exec_job_t work, done, migrate, migrated;
     ink_member_identity_t owner;
-    ink_mogo_card_t card, read;
-    char member[16];
-    bool ready, have, busy, found, migrating, again;
+    ink_mogo_card_t read;
+    ink_mogo_slot_t slot[INK_MEMBERS_MAX];
+    bool busy, found, migrating, again;
 } C INK_PSRAM_BSS;
+/* The member's slot (NULL: not read yet); `take` reuses the oldest one for a new member. */
+static ink_mogo_slot_t *ink_mogo_slot(const char *member, bool take) {
+    for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!strcmp(C.slot[i].member, member)) return &C.slot[i];
+    if (!take) return NULL;
+    memmove(&C.slot[1], &C.slot[0], sizeof C.slot - sizeof *C.slot);
+    memset(&C.slot[0], 0, sizeof *C.slot); snprintf(C.slot[0].member, sizeof C.slot[0].member, "%s", member);
+    return &C.slot[0];
+}
 
 static void ink_mogo_reply(ink_call_t *call, ink_rc_t status) { if (call) { call->rc.status = status; ink_cap_done(call); } }
 static void ink_mogo_card_read(void);
@@ -90,7 +100,8 @@ static void ink_mogo_finished(void *arg) {
         ink_mogo_overlays();
         ink_ui_content_changed();
         if (M.card_new && !strcmp(M.owner.member, ink_member_current()->id)) {
-            C.card = M.card; C.have = C.ready = true; snprintf(C.member, sizeof C.member, "%s", M.owner.member);
+            ink_mogo_slot_t *slot = ink_mogo_slot(M.owner.member, true);
+            slot->card = M.card; slot->have = true;
             ink_app_card_changed("reader");
         }
         if (M.drawn && (M.req.op == INK_MOGO_OP_LOAD || M.req.op == INK_MOGO_OP_OPEN) && !M.reason && M.req.text[0]) {
@@ -402,28 +413,29 @@ static void ink_mogo_whole(char *s) {
     if (n - (p - 1) < (lead >= 0xf0 ? 4u : lead >= 0xe0 ? 3u : 2u)) s[p - 1] = 0;
 }
 static int ink_mogo_card(int index, ink_card_t *out) {
-    if (index || !C.ready || !C.have || strcmp(C.member, ink_member_current()->id)) return 0;
+    const ink_mogo_slot_t *slot = ink_mogo_slot(ink_member_current()->id, false);
+    if (index || !slot || !slot->have) return 0;
+    const ink_mogo_card_t *c = &slot->card;
     char title[40], chapter[36];
-    snprintf(title, sizeof title, "%.36s", C.card.title); ink_mogo_whole(title);
-    if (C.card.chapter[0]) snprintf(chapter, sizeof chapter, "%.33s", C.card.chapter);
-    else snprintf(chapter, sizeof chapter, TR("第 %u 章"), (unsigned)C.card.chapter_no + 1);
+    snprintf(title, sizeof title, "%.36s", c->title); ink_mogo_whole(title);
+    if (c->chapter[0]) snprintf(chapter, sizeof chapter, "%.33s", c->chapter);
+    else snprintf(chapter, sizeof chapter, TR("第 %u 章"), (unsigned)c->chapter_no + 1);
     ink_mogo_whole(chapter);
     snprintf(out->id, sizeof out->id, "reading");
     snprintf(out->title, sizeof out->title, "%s", TR("继续读"));
-    snprintf(out->text, sizeof out->text, TR("《%s》%s · 读到 %u%%"), title, chapter, (unsigned)C.card.pct);
+    snprintf(out->text, sizeof out->text, TR("《%s》%s · 读到 %u%%"), title, chapter, (unsigned)c->pct);
     ink_mogo_whole(out->text);
     snprintf(out->action, sizeof out->action, "reader.continue");
-    snprintf(out->member, sizeof out->member, "%s", C.member);
-    out->value = C.card.pct; out->has_value = true; out->bookmark = true;
+    snprintf(out->member, sizeof out->member, "%s", slot->member);
+    out->value = c->pct; out->has_value = true; out->bookmark = true;
     return 1;
 }
 static void ink_mogo_card_done(void *arg) {
     (void)arg;
     C.busy = false;
-    if (!strcmp(C.owner.member, ink_member_current()->id)) {
-        C.have = C.found; C.card = C.read; C.ready = true; snprintf(C.member, sizeof C.member, "%s", C.owner.member);
-        ink_app_card_changed("reader");
-    }
+    ink_mogo_slot_t *slot = ink_mogo_slot(C.owner.member, true);
+    slot->have = C.found; slot->card = C.read;
+    ink_app_card_changed("reader");
     if (C.again) { C.again = false; ink_mogo_card_read(); }
 }
 static void ink_mogo_card_work(void *arg) {
@@ -462,6 +474,12 @@ static void ink_mogo_kick(void *ctx, int h, const char *id) {
     C.migrating = true;
     if (ink_exec_post(INK_EXEC_BG, &C.migrate, ink_mogo_migrate_work, NULL)) { C.migrating = false; ink_mogo_card_read(); }
 }
+/* A book deleted through the file service: the card checks its book again. */
+static void ink_mogo_file_changed(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    const ink_mogo_slot_t *slot = ink_mogo_slot(ink_member_current()->id, false);
+    if (slot && slot->have) ink_mogo_card_read();
+}
 static ink_exec_job_t ink_mogo_boot_job;
 static void ink_mogo_boot(void *arg) { (void)arg; ink_mogo_kick(NULL, 0, NULL); }
 
@@ -469,6 +487,7 @@ const ink_app_def_t ink_appdef_mogo = {.id = "reader", .title = TR_NOOP("阅读"
     .system_app = true, .child_ok = true, .card = ink_mogo_card};
 int ink_mogo_init(void) {
     if (ink_mogo_migrate_init() || ink_cap_register(INK_MOGO_CAPS, sizeof INK_MOGO_CAPS / sizeof *INK_MOGO_CAPS) ||
-        ink_state_watch("storage.card", ink_mogo_kick, NULL, INK_EXEC_UI) || ink_state_watch("member.", ink_mogo_kick, NULL, INK_EXEC_UI)) return -1;
+        ink_state_watch("storage.card", ink_mogo_kick, NULL, INK_EXEC_UI) || ink_state_watch("member.", ink_mogo_kick, NULL, INK_EXEC_UI) ||
+        ink_cap_subscribe("file.changed", ink_mogo_file_changed, NULL, INK_EXEC_UI)) return -1;
     return ink_exec_post(INK_EXEC_UI, &ink_mogo_boot_job, ink_mogo_boot, NULL);
 }

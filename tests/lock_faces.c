@@ -19,7 +19,8 @@ static void host_control(void *arg) {
 #endif
 #include INK_TEST_LOCK_SOURCE
 
-static char snapshot[8192], frame_name[64];
+static char snapshot[8192], frame_name[64], reading_card[96], reading_shown[96];
+static int64_t reading_value;
 static int snapshot_len, context_len;
 static const char *wanted;
 static bool captured;
@@ -42,13 +43,24 @@ static void inspect(void) {
     snapshot_len = ink_ui_snapshot(snapshot, sizeof snapshot, NULL);
     context_len = ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL);
 }
-static void check_page(void) {
+static ink_card_t reader_card(void) {
     ink_card_t card = {0};
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *app = ink_app_at(i);
         if (!strcmp(app->id, "reader") && app->card) app->card(0, &card);
     }
-    CHECK(card.value == 5 && card.has_value, "the real reader restores the saved fifth page");
+    return card;
+}
+/* The lock face's line is cut to its width: it shows the book and the chapter number; the rest may fall off the end. */
+static void remember_card(void) {
+    ink_card_t card = reader_card(); snprintf(reading_card, sizeof reading_card, "%s", card.text); reading_value = card.value;
+    const char *cut = strchr(reading_card, ' '); /* 《书名》第N章: the shortest line at the largest text size still shows it */
+    snprintf(reading_shown, sizeof reading_shown, "%.*s", cut ? (int)(cut - reading_card) : (int)strlen(reading_card), reading_card);
+}
+/* The reader's card (reader-one-1): 《书名》章名 · 读到 N%, its value the percentage. */
+static void check_page(void) {
+    ink_card_t card = reader_card();
+    CHECK(card.has_value && card.value == reading_value && !strcmp(card.text, reading_card), "the real reader restores the saved place: %.95s", card.text);
 }
 static bool has(const char *text) {
     uint64_t end = osal_now_us() + 5000000;
@@ -101,8 +113,9 @@ static void seed(void) {
     CHECK(db && !ink_db_put(db, &w, NULL), "seed a synthetic checklist through the memo collection");
     ink_db_close(db);
     CHECK(BY_HAND("reader.open_book", "{\"title\":\"测试长书\"}") && g_rc.status == INK_RC_DONE, "open synthetic long book"); quiet();
-    CHECK(BY_HAND("reader.goto_page", "{\"page\":5}") && g_rc.status == INK_RC_DONE, "remember page five"); quiet();
+    CHECK(BY_HAND("reader.goto_chapter", "{\"chapter\":5}") && g_rc.status == INK_RC_DONE, "remember the fifth chapter"); quiet();
     CHECK(BY_HAND("system.home", NULL), "leave the book"); quiet();
+    on_ui(remember_card); CHECK(strstr(reading_card, "《测试长书》第五章") && strstr(reading_card, "读到"), "the card names the book and chapter: %s", reading_card);
 }
 static void wallpaper(bool alpha) {
     CHECK(ink_fs_write_atomic(alpha ? "/family/SYNTH_LOCK_ALPHA.png" : "/family/SYNTH_LOCK.png", alpha ? SYNTH_ALPHA : SYNTH_PNG,
@@ -128,7 +141,7 @@ static void matrix(void) {
                 on_ui(unchanged);
                 char name[64]; snprintf(name, sizeof name, "face-%d-size-%d-bg-%d", face, size, background); frame(name);
                 if (face >= INK_LOCK_STANDBY) {
-                    CHECK(has("第 5 页") && !strstr(snapshot, "合成已完成"), "same reading card and unfinished checklist");
+                    CHECK(has(reading_shown) && !strstr(snapshot, "合成已完成"), "same reading card and unfinished checklist (%s)", reading_shown);
                     wanted = "合成成人私密待办"; on_ui(locate);
                 }
             }
@@ -220,11 +233,12 @@ static void privacy_and_reading(void) {
      * and numbers the page by the new pagination, so resume at the size it was read in. */
     setting("display.font_size", 1);
     setting("display.lock_style", INK_LOCK_STANDBY); on_ui(render); quiet();
-    CHECK(WAIT_FOR(has("第 5 页"), 5000), "adult reading widget is ready");
+    CHECK(WAIT_FOR(has(reading_shown), 5000), "adult reading widget is ready");
     CHECK(ink_member_switch("kid") == 0, "switch to child while locked"); quiet();
     wanted = "合成成人私密待办"; on_ui(locate); CHECK(tx < 0, "child pixels contain no adult memo label");
-    CHECK(!has("合成成人私密待办") && !strstr(snapshot, "测试长书") && !strstr(snapshot, "第 5 页"), "child lock and AI snapshot have no adult memo or reading data"); frame("child");
+    CHECK(!has("合成成人私密待办") && !strstr(snapshot, "测试长书") && !strstr(snapshot, reading_shown), "child lock and AI snapshot have no adult memo or reading data"); frame("child");
     CHECK(ink_member_switch("owner") == 0, "return to adult"); quiet();
+    CHECK(WAIT_FOR(has(reading_shown), 5000), "after the member switch the lock shows the adult's book again (read ahead, not from flash on the UI)");
     key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() != INK_PWR_LOCKED, 5000), "wake before setting the PIN"); quiet();
     CHECK(BY_HAND("member.set_pin", "{\"id\":\"owner\",\"new_pin\":\"2468\"}") && g_rc.status == INK_RC_DONE,
           "person sets synthetic PIN: %s %.90s", ink_rc_name(g_rc.status), g_rc.detail);
