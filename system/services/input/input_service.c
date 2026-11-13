@@ -220,7 +220,9 @@ static bool power_filter(const hal_input_event_t *h) {
         return true;
     }
     if (is_key && h->key.key == HAL_KEY_POWER) {
-        if (!h->key.pressed && !(IS.power_key_hook && IS.power_key_hook())) ink_power_lock();
+        /* a ringing alarm or call takes it (snooze, silence): someone is at the device, as with a tap, not a lock later */
+        if (!h->key.pressed && IS.power_key_hook && IS.power_key_hook()) ink_power_activity(h->t_us);
+        else if (!h->key.pressed) ink_power_lock();
         return true;
     }
     ink_power_activity(h->t_us);

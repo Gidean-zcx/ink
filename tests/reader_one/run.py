@@ -49,6 +49,14 @@ def review_content(build, area):
         z.writestr('nav.xhtml', '<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"><body><nav epub:type="toc"><ol>' + nav + '</ol></nav></body></html>')
         for i in range(300):
             z.writestr(f'c{i}.xhtml', f'<html><body><h1>第{i + 1}节</h1>' + f'<p>第{i + 1}节的原创正文。</p>' * 8 + '</body></html>')
+    # Neither contents nor headings: Mogo makes the chapter titles up ("第 1 节"), shown in the current language.
+    with zipfile.ZipFile(me / '无标题散记.epub', 'w') as z:
+        z.writestr('mimetype', 'application/epub+zip', compress_type=zipfile.ZIP_STORED)
+        z.writestr('META-INF/container.xml', '<container><rootfiles><rootfile full-path="book.opf"/></rootfiles></container>')
+        z.writestr('book.opf', '<package xmlns="http://www.idpf.org/2007/opf" version="2.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>无标题散记</dc:title></metadata>'
+                   '<manifest><item id="a" href="a.xhtml" media-type="application/xhtml+xml"/><item id="b" href="b.xhtml" media-type="application/xhtml+xml"/></manifest>'
+                   '<spine><itemref idref="a"/><itemref idref="b"/></spine></package>')
+        for name in ('a', 'b'): z.writestr(f'{name}.xhtml', '<html><body>' + '<p>没有标题的一段原创文字。</p>' * 40 + '</body></html>')
     return root
 
 
@@ -142,6 +150,10 @@ def main():
         ok &= reverse
         ok &= run(build, binary, area, content(build, area), 'nocard', 'nocard.img', 'tests/reader_one/nocard.script')[0]
         ok &= run(build, binary, area, content(build, area, books=False), 'empty', 'empty.img')[0]
+        own = content(build, area)  # a member's own font copy that does not load, the family's good copy beside it
+        (own / '.m/owner/fonts').mkdir(parents=True, exist_ok=True)
+        (own / '.m/owner/fonts/InkSC.ttf').write_bytes(b'not a font, an interrupted copy\n' * 64)
+        ok &= run(build, binary, area, own, 'badown', 'badown.img')[0]
         ok &= run(build, binary, area, content(build, area), 'places', 'places.img')[0]
     elif a.phase == 'bookmarks':
         ok &= run(build, binary, area, content(build, area), 'bookmarks', 'marks.img')[0]
@@ -161,6 +173,8 @@ def main():
     elif a.phase == 'late':
         ok &= run(build, binary, area, content(build, area), 'late-control', 'late-control.img')[0]
         ok &= run(build, binary, area, content(build, area), 'late', 'late.img')[0]
+        ok &= run(build, binary, area, content(build, area), 'late-other', 'late-other.img')[0]
+        ok &= run(build, binary, area, content(build, area), 'late-turn', 'late-turn.img')[0]
         # Reverse control: the carrier lets a session's late write through for a member who is not current, and the member
         # table lets writers in for a member being removed: the same checks must see the write.
         guard = ('    if (!owner_current(owner) || !app || !def || !def->name || def->scope != INK_DB_MEMBER) return NULL;\n'

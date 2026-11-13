@@ -110,6 +110,13 @@ static void no_card(void) {
     frame("no-card");
     CHECK(AI("reader.list_books", NULL) && g_rc.status == INK_RC_FAILED, "nothing to list without the card");
 }
+/* The member's own font does not load: the family's copy is used (the card files look after that one); no notice
+ * that would wait for a check that finds nothing wrong with the card. */
+static void broken_own_font(void) {
+    open_reader("面板=书架");
+    ok("reader.open_book", "{\"title\":\"测试长书\"}");
+    CHECK(ready("面板=正文") && strstr(view, "《测试长书》"), "a book opens with the family's font: %.150s", view);
+}
 static void empty_shelf(void) {
     open_reader("面板=书架空");
     CHECK(visible("书架上还没有书") && visible("<transfer.open>"), "the adult is told how books get here, with 传书");
@@ -346,6 +353,12 @@ static void review(void) {
     on_ui(redraw); quiet();
     on_ui(title_shown); CHECK(ready("面板=正文") && first[0] && !strcmp(first, shown), "a redraw keeps the touched book (%s / %s)", first, shown);
     go_home(); open_reader("面板=书架"); CHECK(!strstr(view, "面板=正文"), "opened from home again: the shelf, not the last book");
+    /* A chapter title Mogo made up is shown in the current language (the book's data keeps it as made) */
+    CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "English");
+    go_home(); ok("reader.open_book", "{\"title\":\"无标题散记\"}"); CHECK(ready("第 1 节"), "a book without contents: %.120s", view);
+    go_home(); CHECK(WAIT_FOR(card_has("Section 1"), 5000), "home's card names the made-up chapter in English: %s", card.text);
+    CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":0}") && g_rc.status == INK_RC_DONE, "Chinese again");
+    CHECK(WAIT_FOR(card_has("第 1 节"), 5000), "and in Chinese: %s", card.text);
 }
 /* A member removed while the reader's cleanup is still queued: its late save writes nothing for them (the old
  * reader_late suite); with no removal the reading place is kept when the reader closes first. */
@@ -405,12 +418,64 @@ static void late(bool control) {
         CHECK(ready("面板=正文") && strstr(view, "页=3/"), "the place is kept: %.120s", view);
     }
 }
+/* After a member switch, BG work for the member who came in can run before the old page is let go: the shelf job
+ * (ink_mogo_shelf_query, what reader.list_books runs) sets the engine's member to theirs. The page's late save still
+ * writes for the page's member only, never into theirs: their 继续读 and home card stay empty. */
+int ink_mogo_shelf_query(const ink_member_identity_t *owner, char **json, size_t *cap, const char *title, int index, char *path, size_t path_cap);
+static volatile bool bg_passed; static ink_exec_job_t bg_job;
+static void their_shelf(void *ctx) { (void)ctx; ink_member_identity_t id; ink_member_identity(&id); (void)ink_mogo_shelf_query(&id, NULL, NULL, "", -1, NULL, 0); bg_passed = true; }
+static void bg_mark(void *ctx) { (void)ctx; bg_passed = true; }
+/* A turn's pass on BG is over (it looked for a close and found none) and its answer waits behind this UI job, which
+ * leaves the reader: the close comes while the page is still busy. */
+static void leave_during_turn(void) {
+    ink_call_opts_t o = {.src = INK_SRC_AI};
+    bg_passed = false;
+    bool posted = ink_cap_call("reader.next_page", NULL, &o) == 0 && !ink_exec_post(INK_EXEC_BG, &bg_job, bg_mark, NULL);
+    for (int i = 0; posted && !bg_passed && i < 5000; i++) osal_task_delay_us(1000);
+    ink_ui_home();
+}
+static void nothing_for_owner(void) {
+    CHECK(WAIT_FOR(!ink_storage_pending(), 5000), "late writes settled");
+    CHECK(AI("reader.continue", NULL) && g_rc.status == INK_RC_FAILED, "the adult's book is not the owner's to continue (%d %s)", g_rc.status, g_rc.say);
+    /* the card is read again for the member who came in 3 s after the switch (mogo.c ink_mogo_kick) */
+    CHECK(!WAIT_FOR(card_has("测试长书"), 5000), "the owner's home card does not show the adult's book: %s", card.text);
+}
+static void late_other(bool turn) {
+    CHECK(AI("reader.continue", NULL) && g_rc.status == INK_RC_FAILED, "the owner has no book to continue yet (%d %s)", g_rc.status, g_rc.detail);
+    CHECK(ink_cap_subscribe("confirm.result", result, NULL, INK_EXEC_DIRECT) == 0, "listener");
+    CHECK(confirmed("member.add", "{\"id\":\"oldadult\",\"role\":\"adult\"}"), "add an adult");
+    CHECK(ink_member_switch("oldadult") == 0, "the adult takes the device"); quiet();
+    go_home(); ok("reader.open_book", "{\"title\":\"测试长书\"}"); CHECK(ready("面板=正文"), "the family book opens");
+    ok("reader.goto_page", "{\"page\":3}"); CHECK(ready("页=3/"), "page 3, not saved yet");
+    if (turn) {
+        double saved = sim_metric_value("reader.last_saved");
+        on_ui(leave_during_turn); quiet();
+        CHECK(bg_passed && !top_is("book"), "the reader was left while its turn was answered (%s)", ink_ui_top_name());
+        CHECK(WAIT_FOR(sim_metric_value("reader.last_saved") > saved, 5000), "leaving during a turn still saves the place");
+        CHECK(ink_member_switch("owner") == 0, "the owner takes the device"); quiet();
+        ok("reader.list_books", NULL);
+        open_reader("面板=书架"); go_home();
+        nothing_for_owner();
+        CHECK(ink_member_switch("oldadult") == 0, "the adult again"); quiet();
+        go_home(); ok("reader.open_book", "{\"title\":\"测试长书\"}");
+        /* the first chapter has 3 pages: the turn from its last page reached the second chapter's first */
+        CHECK(ready("面板=正文") && strstr(view, "章节=2 页=1/"), "the place the turn reached is kept: %.160s", view);
+        return;
+    }
+    CHECK(ink_exec_post(INK_EXEC_UI, &held_job, hold, NULL) == 0 && WAIT_FOR(ui_held, 1000), "the reader is not let go yet");
+    CHECK(ink_member_switch("owner") == 0, "the owner takes the device");
+    bg_passed = false;
+    CHECK(ink_exec_post(INK_EXEC_BG, &bg_job, their_shelf, NULL) == 0 && WAIT_FOR(bg_passed, 5000), "the owner's shelf job ran on BG");
+    release_ui = true; quiet();
+    nothing_for_owner();
+}
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
     snprintf(phase, sizeof phase, "%s", env("INK_READER_ONE_PHASE"));
     if (!strcmp(phase, "nofont")) missing_font();
     else if (!strcmp(phase, "nocard")) no_card();
     else if (!strcmp(phase, "empty")) empty_shelf();
+    else if (!strcmp(phase, "badown")) broken_own_font();
     else if (!strcmp(phase, "places")) places();
     else if (!strcmp(phase, "bookmarks")) bookmarks();
     else if (!strcmp(phase, "seed")) seed(false);
@@ -422,6 +487,8 @@ static void run(void *arg) {
     else if (!strcmp(phase, "review")) review();
     else if (!strcmp(phase, "late")) late(false);
     else if (!strcmp(phase, "late-control")) late(true);
+    else if (!strcmp(phase, "late-other")) late_other(false);
+    else if (!strcmp(phase, "late-turn")) late_other(true);
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

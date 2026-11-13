@@ -9,6 +9,7 @@ foreach(table ${INK_I18N_TABLES})
     set(base "${base}\n${extra}")
   endif()
   file(WRITE ${CMAKE_BINARY_DIR}/reader-i18n/${language} "${base}")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${table}) # a changed system table is copied again
   list(APPEND mogo_tables ${CMAKE_BINARY_DIR}/reader-i18n/${language})
 endforeach()
 set(INK_I18N_TABLES ${mogo_tables})

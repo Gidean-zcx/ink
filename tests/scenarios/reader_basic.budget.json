@@ -21,8 +21,8 @@
     "why": "first visible feedback with the panel idle"
   },
   "reader.page_render_ms.p95": {
-    "max": 600,
-    "why": "wall time of rendering the next page ahead; it runs while a waveform plays and the two EPD feeders hold ~93% of both cores, so it must still finish well before the next turn (1.5 s in this script)"
+    "max": 50,
+    "why": "the reader typesets a chapter once and draws each page on the turn (no page rendered ahead): that drawing is on the turn's path, so it must stay small next to the 592 ms waveform (replaces reader.turns_prerendered; about 7 ms here, the old reader's render ahead was about 30 ms)"
   },
   "reader.open_ms.max": {
     "max": 1500,

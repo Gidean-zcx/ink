@@ -8,6 +8,7 @@ static char ink_mogo_error[160];
 static ink_mogo_card_t ink_mogo_card_written;
 static size_t ink_mogo_anchor=SIZE_MAX, ink_mogo_anchor_chapter=SIZE_MAX; /* the reading place a reflow keeps */
 static char ink_mogo_last_set[BOOK_STORE_PATH_MAX]; /* the book to continue, as written last */
+static ink_member_identity_t ink_mogo_page_owner; /* whose session the engine holds (its save is theirs, nobody else's) */
 /* The bookmark rows as last drawn (BG): a tap (UI) finds its mark here, without reading the member's records. */
 static struct { int rows; EpdRect rect[BOOKMARK_MAX]; uint32_t id[BOOKMARK_MAX]; } ink_mogo_mark_hits;
 enum { INK_MOGO_SHELF_ROWS=4, INK_MOGO_TOOL_COUNT=6 };
@@ -104,12 +105,12 @@ int ink_mogo_shelf_query(const ink_member_identity_t *owner,char **json,size_t *
 /* The font lives on the card (runtime.c); a missing or broken one is explained, never a blank page. */
 int ink_mogo_page_start(const ink_member_identity_t *owner,int w,int h,int px) {
     memset(&ink_mogo_card_written,0,sizeof ink_mogo_card_written); memset(&s_progress_saved,0,sizeof s_progress_saved); ink_mogo_last_set[0]=0;
-    ink_mogo_owner(owner); ink_mogo_dimensions(w,h,px); ink_mogo_settings_load();
+    ink_mogo_page_owner=*owner; ink_mogo_owner(owner); ink_mogo_dimensions(w,h,px); ink_mogo_settings_load();
     ink_mogo_page_width=w; ink_mogo_page_height=h; s_reader_session=(reader_session_t){0};
     for (int i=0;i<4;++i) s_margin[i]=ink_mogo_scaled(ink_mogo_settings.margin[i]);
     s_margin[2]+=ink_mogo_settings.header?ink_mogo_scaled(64):0; s_margin[3]+=ink_mogo_settings.footer?ink_mogo_scaled(64):0;
     ink_mogo_reason=ink_mogo_font_check();
-    if (!ink_mogo_reason && ttf_font_open(app_settings_font_path()) != ESP_OK) {
+    if (!ink_mogo_reason && ttf_font_open(app_settings_font_path()) != ESP_OK && (!ink_mogo_font_family() || ttf_font_open(app_settings_font_path()) != ESP_OK)) {
         ttf_font_unload(); ink_mogo_reason=INK_MOGO_R_FILES; /* no font file stays open while the notice says why */
     }
     book_layout_set_spacing(ink_mogo_settings.line,ink_mogo_settings.paragraph);
@@ -474,8 +475,10 @@ const char *ink_mogo_page_hit(int x,int y,char *args,size_t cap) {
     }
     return "";
 }
+/* A shelf job or the migration for another member may have set the engine's member since: a page job is the page's. */
+void ink_mogo_page_resume(void) { ink_mogo_owner(&ink_mogo_page_owner); }
 void ink_mogo_page_close(void) {
-    ink_mogo_save_all(); free_book(); ink_mogo_font_shutdown(); memset(&s_reader_session,0,sizeof s_reader_session);
+    ink_mogo_save_all(); memset(&ink_mogo_page_owner,0,sizeof ink_mogo_page_owner); free_book(); ink_mogo_font_shutdown(); memset(&s_reader_session,0,sizeof s_reader_session);
     free(ink_mogo_shelf); ink_mogo_shelf=NULL; ink_mogo_shelf_count=ink_mogo_shelf_page=0; ink_mogo_reason=0; ink_mogo_error[0]=0; ink_mogo_anchor=SIZE_MAX;
     memset(&ink_mogo_settings,0,sizeof ink_mogo_settings); /* the card written stays readable until the next session starts */
     s_reader_panel=READER_PANEL_NONE; s_reader_slider=-1; s_view=SHELF;

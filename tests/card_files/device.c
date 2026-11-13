@@ -6,6 +6,7 @@
 #include "integration/whole_product.h"
 #include "graft.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/card_files.h"
 #include "ink/sys/file.h"
 #include <stdlib.h>
 
@@ -71,6 +72,31 @@ static void notice(const char *words, const char *shot) {
     CHECK(shows(words) && on_screen(words), "still explained: %.200s", view);
 }
 
+/* A page that cannot use a file the list has as ready (its own trouble, or the file changed since the last check): the
+ * notice checks once; when that check finds the file right it says so and what to do, never "checking" for ever, and it
+ * does not reopen the app in a loop. */
+static int reopened;
+static lv_obj_t *ready_box;
+static char said[256];
+static void count_reopen(void) { reopened++; }
+static void put_notice(void) { ready_box = ink_card_files_notice(lv_screen_active(), "reader", "字体", count_reopen); }
+static void take_notice(void) { if (ready_box) lv_obj_delete(ready_box); ready_box = NULL; }
+static void read_notice(void) { ink_card_files_notice_snapshot("reader", said, sizeof said); }
+static bool notice_says(const char *needle, int ms) {
+    for (int i = 0; i < ms / 50; i++) { on_ui(read_notice); if (strstr(said, needle)) return true; delay_ms(50); }
+    return false;
+}
+static void ready_notice(void) {
+    double checks = sim_metric_value("card_files.check");
+    on_ui(put_notice);
+    CHECK(notice_says("正在重新检查", 1000), "a ready file the app cannot use: it checks again: %.200s", said);
+    CHECK(WAIT_FOR(sim_metric_value("card_files.check") > checks, 10000), "the card is checked again");
+    CHECK(notice_says("检查过是好的", 60000) && on_screen("请返回后再打开试试"), "after the check: the file is right, go back and try again: %.200s", said);
+    CHECK(state_is("ready", 1000) && !reopened && sim_metric_value("card_files.check") == checks + 1,
+          "no reopening and no second check (reopened %d, checks %g)", reopened, sim_metric_value("card_files.check") - checks);
+    on_ui(take_notice);
+}
+
 static void run(void *arg) {
     (void)arg;
     ink_power_hold(INK_NEED_AWAKE);
@@ -95,6 +121,7 @@ static void run(void *arg) {
         }
     } else if (!strcmp(phase, "C")) { /* everything there: only HELLO ... 0 */
         CHECK(state_is("ready", 60000), "ready again: %s", files);
+        ready_notice();
         delay_ms(5000);
     } else if (phase[0] == 'D') { /* D, D2: the cable goes in the middle */
         CHECK(state_is("failed", 120000), "the session ends when the cable goes: %s", files);

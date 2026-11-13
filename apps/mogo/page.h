@@ -27,6 +27,8 @@ int ink_mogo_page_start(const ink_member_identity_t *owner, int w, int h, int px
 int ink_mogo_page_command(ink_mogo_request_t *r);
 void ink_mogo_page_draw(uint8_t *pixels);
 void ink_mogo_page_close(void);
+/* BG, first in every page job: the engine's member is the session's again (other BG jobs set their own). */
+void ink_mogo_page_resume(void);
 int ink_mogo_page_snapshot(char *out, size_t cap);
 int ink_mogo_page_reason(void);
 const char *ink_mogo_page_message(void);
@@ -50,6 +52,8 @@ extern bool ink_mogo_quiet_flush; /* BG: the save in progress is a pause in read
 bool ink_mogo_page_card(ink_mogo_card_t *out);
 /* BG: which font file the session can use; INK_MOGO_R_*. */
 int ink_mogo_font_check(void);
+/* BG: the member's own font did not load; true when the family's copy is there to try instead. */
+bool ink_mogo_font_family(void);
 /* BG: move the old reader's data for `owner` (migrate.c). only == NULL: the next book of the whole set, then the
  * marker; otherwise only the last book and `only` (may be ""). 1: more to do, 0: done, -1: not now (no card, a write failed). */
 int ink_mogo_migrate_step(const ink_member_identity_t *owner, const char *only);

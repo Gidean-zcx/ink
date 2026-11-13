@@ -74,6 +74,13 @@ int ink_mogo_font_check(void) {
     ink_fs_close(f);
     return INK_MOGO_R_NONE;
 }
+/* The member's own copy would not load: the family's copy, if it is there (that one the card files look after). */
+bool ink_mogo_font_family(void) {
+    ink_fs_file_t *f = NULL;
+    if (ink_mogo_font != INK_MOGO_FONT_OWN || ink_graft_file_open(&ink_mogo_member, INK_MOGO_FONT_FAMILY, INK_FS_READ, &f)) return false;
+    ink_fs_close(f); ink_mogo_font = INK_MOGO_FONT_FAMILY;
+    return true;
+}
 const char *app_settings_font_path(void) { return ink_mogo_font; }
 static ink_mogo_stream_t *ink_mogo_asset(const char *path) {
     int64_t size = ink_app_asset_read(path + 6, NULL, 0);

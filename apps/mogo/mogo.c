@@ -26,7 +26,7 @@ static struct {
     uint8_t *pixels;
     int w, h, px, status, reason, turns; /* turns: presses that came while busy, turned in the next pass */
     ink_mogo_request_t req;
-    bool active, busy, loaded, root, back, drawn, card_new, closing, has_next, reattach; /* closing: a closed session's cleanup is due */
+    bool active, busy, loaded, root, back, drawn, card_new, closing, has_next, reattach, renote; /* closing: a closed session's cleanup is due */
     ink_mogo_request_t next; /* the page opened again before that cleanup ran: its first operation, after it */
     ink_call_t *next_call;
     char card_member[16]; /* whose card M.card is (kept after the session closes) */
@@ -87,6 +87,7 @@ static void ink_mogo_unbound(lv_event_t *e) { (void)e; } /* replaced by the tran
 /* The card files are in place again: the same book (or the shelf) on this screen, its page started over. */
 static void ink_mogo_reopen(void) {
     ink_mogo_request_t req = {.op = INK_MOGO_OP_LOAD};
+    M.renote = true; /* still not usable after this: the notice is put up afresh and looks again, once */
     snprintf(req.text, sizeof req.text, "%s", M.book);
     if (M.busy && !M.has_next) { M.next = req; M.next_call = NULL; M.has_next = true; }
     else if (!M.busy) (void)ink_mogo_start(&req, NULL);
@@ -101,7 +102,8 @@ static void ink_mogo_overlays(void) {
     }
     static uint32_t shown;
     uint32_t now = M.reason ? ink_crc32((uint32_t)M.reason, M.explanation, strlen(M.explanation)) : 0;
-    if (M.note && now == shown) return;
+    if (M.note && now == shown && !M.renote) return;
+    M.renote = false;
     if (M.note) lv_obj_delete(M.note);
     M.note = NULL; shown = 0;
     if (!M.reason || !M.back_button) return;
@@ -159,6 +161,10 @@ static void ink_mogo_finished(void *arg) {
         ink_app_card_changed("reader");
     }
     M.busy = false;
+    if (M.closing) { /* the page closed after this pass looked: its cleanup now, before anything else of the reader */
+        M.busy = true;
+        if (ink_exec_post(INK_EXEC_BG, &M.work, ink_mogo_work, NULL)) M.busy = false;
+    }
     if (call) {
         call->rc.revision = M.req.revision;
         if (M.req.json && M.req.json[0] && !M.status) ink_cap_result(call, M.req.json);
@@ -188,9 +194,10 @@ static void ink_mogo_finished(void *arg) {
 }
 static void ink_mogo_work(void *arg) {
     (void)arg;
+    ink_mogo_page_resume();
+    M.drawn = M.card_new = false; /* a cleanup pass draws nothing either */
     if (M.active && !M.closing) {
         uint64_t t0 = ink_now_us();
-        M.drawn = M.card_new = false;
         if (!M.loaded || (M.req.op == INK_MOGO_OP_LOAD && M.reason == INK_MOGO_R_FILES)) { /* the font came: start over */
             ink_mogo_page_close();
             M.status = ink_mogo_page_start(&M.owner, M.w, M.h, M.px);
@@ -523,7 +530,8 @@ static int ink_mogo_card(int index, ink_card_t *out) {
     const ink_mogo_card_t *c = &slot->card;
     char title[40], chapter[36];
     snprintf(title, sizeof title, "%.36s", c->title); ink_mogo_whole(title);
-    if (c->chapter[0]) snprintf(chapter, sizeof chapter, "%.33s", c->chapter);
+    char words[48];
+    if (c->chapter[0]) snprintf(chapter, sizeof chapter, "%.33s", ink_mogo_words(c->chapter, words, sizeof words));
     else snprintf(chapter, sizeof chapter, TR("第 %u 章"), (unsigned)c->chapter_no + 1);
     ink_mogo_whole(chapter);
     snprintf(out->id, sizeof out->id, "reading");
