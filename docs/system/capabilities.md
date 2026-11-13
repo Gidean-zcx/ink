@@ -618,7 +618,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：`file.index_state`。
 
-事件：`file.batch_progress`、`file.changed`、`usb.changed`。
+事件：`confirm.result`、`file.batch_progress`、`file.changed`、`usb.changed`。
 
 <a id="s09"></a>
 

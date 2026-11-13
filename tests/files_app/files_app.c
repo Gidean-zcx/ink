@@ -195,7 +195,7 @@ static void long_rows(void) {
     CHECK(strstr(g_snap, count), "large text shows the exact long-name page capacity");
     for (size_t i = offset; i < offset + visible; i++) {
         char path[INK_FS_PATH_MAX];
-        CHECK(ink_json_parse(j, F.args[i % 4], strlen(F.args[i % 4])) == 0 &&
+        CHECK(ink_json_parse(j, F.args[i % F.capacity], strlen(F.args[i % F.capacity])) == 0 && /* a row is kept by its place on the page */
               ink_json_str(j, ink_json_find(j, 0, "path"), path, sizeof path) > 0 && !strcmp(path, F.items[F.view[i]].path),
               "shortened row retains its complete browse path");
     }

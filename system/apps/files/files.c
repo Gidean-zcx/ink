@@ -38,7 +38,7 @@ static struct {
     char cursor[16], preview_text[129], query[64], empty[160], where[224], details[224], stop_args[32];
     char ids[4][32], args[4][384], names[4][INK_FS_NAME_MAX + 8], values[4][240], marks[4][16], crumbs[10][192];
     char rename[576], target[576], source[288], object[32], from_dir[INK_FS_PATH_MAX], deleting[INK_FS_PATH_MAX], renaming[INK_FS_PATH_MAX], renamed_from[INK_FS_PATH_MAX];
-    uint32_t epoch, serial, selected_id, index_cursor, found, fav_hash;
+    uint32_t epoch, serial, selected_id, index_cursor, found, fav_hash, confirm_token;
     bool known, multi, new_text, all_marked, stale, truncated, from_fav, open_found, previewing, busy, indexing, copy, all, expect_receipt;
     uint32_t marked[INK_FS_INDEX_MAX], draft, ref; size_t marked_count;
     char edit_path[INK_FS_PATH_MAX], body[4096], chunk[2049], batch[1024], selection[INK_ARGS_TEXT], result[4096];
@@ -259,7 +259,7 @@ static void thumb_done(void *ctx, const ink_receipt_t *rc) {
 static void thumbnail(unsigned at, uint32_t id) { ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", id); request("file.thumb", &a, thumb_done, at); }
 static bool is_marked(uint32_t id) { for (size_t i = 0; i < F.marked_count; i++) if (F.marked[i] == id) return true; return false; }
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
-    (void)ctx; unsigned at = index % 4; item_t *item = &F.items[F.view[index]]; char text[96], time[32];
+    (void)ctx; unsigned at = (unsigned)(index % F.capacity); /* the row on its page, as files.mark finds it */ item_t *item = &F.items[F.view[index]]; char text[96], time[32];
     int left = INK_ICON_LIST + 2 * INK_GAP, room = INK_CANVAS_W - 2 * INK_MARGIN - left - INK_GAP;
     if (!strcmp(item->path, "/me/收件箱")) snprintf(item->name, sizeof item->name, "%s", TR("传进来的")); /* transfer's inbox */
     if (!lv_obj_get_child_count(slot)) {
@@ -305,12 +305,12 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     if (item->type == INK_FS_IMAGE && item->id) thumbnail(at, item->id);
 }
 /* The list area, once the folder is read (the frame came first: two refreshes for a new folder). */
+static const char *const ERRORS[] = {"", TR_NOOP("没有存储卡"), TR_NOOP("存储卡借给电脑了，拔线或在电脑上推出后自动回来"), TR_NOOP("正在整理文件编号，好了自动重读"), TR_NOOP("暂时读不了这个文件夹")};
 static void shown(void) {
-    static const char *const errors[] = {"", TR_NOOP("没有存储卡"), TR_NOOP("存储卡借给电脑了，拔线或在电脑上推出后自动回来"), TR_NOOP("正在整理文件编号，好了自动重读"), TR_NOOP("暂时读不了这个文件夹")};
     if (F.error) {
         F.actions[ACTION_MAX - 1] = (ink_ui_action_spec_t){.id = "reload", .label = TR("重新读取"), .capability = "files.browse", .args_json = F.target, .enabled = true};
         pair_json(F.target, sizeof F.target, "path", directory(), NULL, NULL); if (F.error == 4) F.model.action_count = ACTION_MAX;
-        lv_obj_t *e = ink_ui_empty(F.list_body, TR(errors[F.error]), F.error == 4 ? TR("重新读取") : NULL, clicked, (void *)(uintptr_t)(ACTION_MAX - 1));
+        lv_obj_t *e = ink_ui_empty(F.list_body, TR(ERRORS[F.error]), F.error == 4 ? TR("重新读取") : NULL, clicked, (void *)(uintptr_t)(ACTION_MAX - 1));
         lv_obj_set_y(e, 0); status(""); return;
     }
     build_view();
@@ -485,7 +485,7 @@ static const char *reason_text(const char *why) {
 }
 static void batch_done(void *ctx, const ink_receipt_t *rc) {
     if (!current(ctx) || F.mode != BATCH) return;
-    if (rc->status == INK_RC_PENDING_CONFIRMATION) { status(TR("请在设备上确认替换")); return; }
+    if (rc->status == INK_RC_PENDING_CONFIRMATION) { unsigned token = 0; sscanf(rc->object, "confirm:%u", &token); F.confirm_token = token; status(TR("请在设备上确认替换")); return; }
     ink_json_t *j = ink_app_alloc(sizeof *j, true);
     if (j && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result))) {
         int list = ink_json_find(j, 0, "renamed"); char name[INK_FS_NAME_MAX];
@@ -510,6 +510,20 @@ static void batch_progress(void *ctx, const char *id, const ink_args_t *args) {
     if (done >= total) { if (!F.expect_receipt) { F.bstate = B_DONE; ink_ui_redraw(); } return; }
     uint64_t now = osal_now_us();
     if (F.progress && now - F.shown_us >= 2000000) { F.shown_us = now; lv_label_set_text(F.progress, text); ink_ui_hint_obj(F.progress, INK_REFRESH_UI); ink_ui_content_changed(); }
+}
+/* file.batch_replace waits for the card. A "no" (or no answer) ends the page with nothing changed; a yes that ends
+ * without any progress (refused as a whole) says why. Otherwise the progress events end it. */
+static void replace_told(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id; int64_t token = 0; char decision[20] = "", say[96] = "";
+    ink_args_get_int(a, "token", &token);
+    if (!F.confirm_token || (uint32_t)token != F.confirm_token) return;
+    F.confirm_token = 0;
+    if (F.epoch != ink_member_epoch() || F.mode != BATCH || F.bstate != B_RUN) return;
+    ink_args_get_str(a, "decision", decision, sizeof decision); ink_args_get_str(a, "say", say, sizeof say);
+    if (strcmp(decision, "accepted")) snprintf(F.result, sizeof F.result, "%s", TR("没有替换，什么都没动"));
+    else if (!F.total) snprintf(F.result, sizeof F.result, "%s", say[0] ? say : TR("没能完成，请检查文件后重试"));
+    F.bstate = B_DONE;
+    if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), PAGES[BATCH].name)) ink_ui_redraw();
 }
 static void bind_fail(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx; (void)action;
@@ -812,11 +826,11 @@ static void navigate(ink_call_t *c) {
             for (size_t r = F.position.page * F.capacity; r < F.rows && r < (F.position.page + 1) * F.capacity; r++) if (F.items[F.view[r]].id == (uint32_t)value) at = (int)(r % F.capacity);
         }
         selection_args(); batch_args(false);
-        if (at < 0 || !F.slots[at % 4]) { ink_ui_list_refresh(F.list, F.rows); status(""); for (unsigned i = 4; i < 7; i++) if (F.buttons[i]) enable(i, F.marked_count > 0); return; }
+        if (at < 0 || !F.slots[at]) { ink_ui_list_refresh(F.list, F.rows); status(""); for (unsigned i = 4; i < 7; i++) if (F.buttons[i]) enable(i, F.marked_count > 0); return; }
         /* one row and the count: nothing else on the page changed (D-127) */
-        lv_obj_t *slot = F.slots[at % 4], *check = lv_obj_get_child(slot, 7); bool on = is_marked((uint32_t)value);
+        lv_obj_t *slot = F.slots[at], *check = lv_obj_get_child(slot, 7); bool on = is_marked((uint32_t)value);
         if (on) lv_obj_remove_flag(check, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(check, LV_OBJ_FLAG_HIDDEN);
-        snprintf(F.marks[at % 4], sizeof F.marks[0], "%s", on ? TR("已选择") : TR("未选择")); ink_ui_hint_obj(slot, INK_REFRESH_UI); status("");
+        snprintf(F.marks[at], sizeof F.marks[0], "%s", on ? TR("已选择") : TR("未选择")); ink_ui_hint_obj(slot, INK_REFRESH_UI); status("");
         if (was != (F.marked_count > 0)) for (unsigned i = 4; i < 7; i++) if (F.buttons[i]) enable(i, F.marked_count > 0);
         return;
     }
@@ -925,6 +939,8 @@ static int snapshot(char *out, size_t cap) {
     if (F.mode == SEARCH) { ink_jw_raw(&w, ",\"query\":"); ink_jw_str(&w, F.query); }
     if (F.mode == MOVE) { ink_jw_raw(&w, F.copy ? ",\"op\":\"copy\",\"source\":" : ",\"op\":\"move\",\"source\":"); ink_jw_str(&w, F.multi ? F.path : F.selected.path); if (F.multi) { ink_jw_raw(&w, ",\"files\":"); ink_jw_int(&w, F.marked_count); } }
     ink_jw_raw(&w, ",\"selected_count\":"); ink_jw_int(&w, F.marked_count);
+    if (F.error && !F.busy && (F.mode == LIST || F.mode == MOVE)) { ink_jw_raw(&w, ",\"error\":"); ink_jw_str(&w, TR(ERRORS[F.error])); } /* the sentence on the page */
+    else if (F.list && !F.rows && !F.busy && (F.mode == LIST || F.mode == MOVE || F.mode == SEARCH)) { ink_jw_raw(&w, ",\"empty\":"); ink_jw_str(&w, F.empty); }
     if (F.mode == LIST || F.mode == ACTIONS || F.mode == BATCH || F.mode == MOVE || F.mode == SEARCH) { bool first = true; ink_jw_raw(&w, F.mode == ACTIONS ? ",\"menu\":[" : ",\"toolbar\":[");
         for (size_t i = F.mode == BATCH ? 0 : 2; i < F.model.action_count && i < ACTION_MAX; i++) { const ink_ui_action_spec_t *a = &F.actions[i]; if (!a->enabled || !a->capability) continue;
             if (!first) ink_jw_raw(&w, ",");
@@ -992,6 +1008,6 @@ static const ink_cap_t CAPS[] = {
 int ink_transfer_pages_init(void);
 int ink_files_init(void) {
     return ink_db_register(&DRAFT_REFS) || files_fl_init() || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("file.changed", changed, NULL, INK_EXEC_UI) < 0 ||
-        ink_cap_subscribe("file.batch_progress", batch_progress, NULL, INK_EXEC_UI) < 0 || ink_cap_subscribe("usb.changed", card_back, NULL, INK_EXEC_UI) < 0 ||
+        ink_cap_subscribe("file.batch_progress", batch_progress, NULL, INK_EXEC_UI) < 0 || ink_cap_subscribe("usb.changed", card_back, NULL, INK_EXEC_UI) < 0 || ink_cap_subscribe("confirm.result", replace_told, NULL, INK_EXEC_UI) < 0 ||
         ink_state_watch("file.index_state", index_state, NULL, INK_EXEC_UI) || ink_transfer_pages_init() ? -1 : 0;
 }

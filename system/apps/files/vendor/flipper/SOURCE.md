@@ -56,7 +56,7 @@
 
 - `furi.h`：`FuriString` 定长缓冲和原文用到的函数（`set`、`alloc_set`、`search` 用 `_Generic` 同时收 `FuriString*` 和字符串，像 Flipper 那样）、`furi_assert`、`COUNT_OF`、`UNUSED`、`furi_record_open/close`（收藏存储的锁，同一任务可重入）。`furi_string_end_withi` 认 `a|b` 写法。
 - `m-array.h`：`ARRAY_DEF` 只生成 `files_array_get`，视图模型里的数组指向当前选中的那一项。
-- `storage/storage.h`：`ARCHIVE_FAV_PATH` 和 `ARCHIVE_FAV_TEMP_PATH` 两个“文件”在内存里，内容是按家人的 `files.prefs` 记录里的一段文字，一行一条路径，最多 32 行；最后一次 `furi_record_close` 时写回记录。真实路径：`storage_file_exists` 问文件服务（只有“找不到”才算不在，卡读不了时收藏都留着），`storage_common_remove` 和 `storage_simply_remove_recursive` 返回 `file.delete` 这次的结果，`storage_common_stat` 返回当前项是不是文件夹。
+- `storage/storage.h`：`ARCHIVE_FAV_PATH` 和 `ARCHIVE_FAV_TEMP_PATH` 两个“文件”在内存里，内容是按家人的 `files.prefs` 记录里的一段文字，一行一条路径，最多 32 行；最后一次 `furi_record_close` 时写回记录，只在内容和记录里的不一样时才写（原文的 rescan 每次都会删掉再换上同样的内容，复核修复）。真实路径：`files_fl_rescan` 先在不拿锁的情况下逐条问文件服务，再调原文的 `archive_favourites_rescan`；这时 `storage_file_exists` 按先前问到的结果回答（只有“找不到”才算不在，卡读不了时收藏都留着；问完以后才加的收藏留着），这样原文在锁里只做内存里的事，界面线程建页面时读排序不用等读卡（复核修复，原文的控制流程没改）；`storage_common_remove` 和 `storage_simply_remove_recursive` 返回 `file.delete` 这次的结果，`storage_common_stat` 返回当前项是不是文件夹。
 - `archive_apps.h`、`archive_browser.h`、`ink_flipper.h`：画布记录器（`canvas_draw_str` 把菜单项记下来，其余画图是空操作）、浏览帮手（进目录、上一级、翻页、去掉当前项、打开菜单）接到 `files.c`，场景管理器的下一场景（改名、删除）、`view_dispatcher_stop`（`ink_ui_pop`）、`loader_start_with_gui_error`（调用对应能力）。
 - `flipper_unit.c`：把四个原文 `.c` 合成一个编译单元（关掉告警，见根 `CMakeLists.txt` 和 `ports/esp32s31/main/CMakeLists.txt`），对外给出两个原文的静态函数：`render_item_menu`（`ink_flipper_menu`）和 `archive_favourites_rescan`（`ink_flipper_rescan`，在后台执行器上跑）。
 - 文件夹收藏：原文不能收藏文件夹，而且它按前缀匹配，文件夹会因为里面有收藏的文件而显得“已收藏”。所以文件夹按整行 `路径/` 记，判断和取消用整行匹配（`files_flipper.c` 的 `line_of`），添加仍走原文的 `archive_add_to_favorites`。

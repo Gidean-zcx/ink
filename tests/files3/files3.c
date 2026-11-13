@@ -62,6 +62,7 @@ static void fixture(void) {
     CHECK(id_of("/me/SYNTH_文档/计划.txt") && id_of("/me/SYNTH_文档/SYNTH_子/报告2.txt"), "the index has the synthetic files");
 }
 static void roots(void) { command("system.home", NULL); command("app.open", "{\"id\":\"files\"}"); wait_page("Files"); }
+static void browse_any(const char *path) { snprintf(args_json, sizeof args_json, "{\"path\":\"%s\"}", path); command("files.browse", args_json); }
 static void browse(const char *path) { snprintf(args_json, sizeof args_json, "{\"path\":\"%s\"}", path); command("files.browse", args_json); wait_page("FileList"); }
 static void snap(void) { CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0, "page snapshot"); CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0, "fits the AI buffer"); }
 static double dispatches(void) {
@@ -145,19 +146,47 @@ static void move_walk(bool by_touch) {
     if (by_touch) touch("完成"); else command("files.up", NULL);
     wait_page("FileList"); on_ui(move_listed);
 }
+static char page2_name[32];
+static void second_row(void) { size_t r = F.position.page * F.capacity + (F.capacity > 1); snprintf(page2_name, sizeof page2_name, "%s", r < F.rows ? F.items[F.view[r]].name : "-"); }
+static void page2_marked(void) { /* the tick and the AI's value land on the row that was tapped, whatever the page */
+    size_t visible = F.rows - F.position.page * F.capacity; if (visible > F.capacity) visible = F.capacity; int hits = 0;
+    for (size_t i = 0; i < visible; i++) {
+        bool named = F.slots[i] && !strcmp(lv_label_get_text(lv_obj_get_child(F.slots[i], 0)), page2_name);
+        bool ticked = F.slots[i] && !lv_obj_has_flag(lv_obj_get_child(F.slots[i], 7), LV_OBJ_FLAG_HIDDEN);
+        CHECK(named == ticked && named == !strcmp(F.marks[i], "已选择"), "page %zu row %zu: tick %d, value %s, %s tapped", F.position.page + 1, i + 1, ticked, F.marks[i], page2_name);
+        hits += named;
+    }
+    CHECK(hits == 1 && F.position.page == 1 && F.marked_count == 3, "a tick on the second page (%d, page %zu, %zu marked)", hits, F.position.page + 1, F.marked_count);
+}
 static void refresh_checks(void) {
     roots(); count_begin("enter"); touch("我的"); wait_page("FileList"); count_end("enter");
     browse("/me/SYNTH_翻页"); command("files.multi", NULL); wait_page("FileList");
     touch("SYNTH_1.txt"); count_begin("mark"); touch("SYNTH_2.txt"); count_end("mark"); on_ui(row_bounds);
-    count_begin("turn"); key(INK_KEY_NEXT); count_end("turn"); command("files.multi", NULL); wait_page("FileList");
+    count_begin("turn"); key(INK_KEY_NEXT); count_end("turn");
+    on_ui(second_row); touch(page2_name); on_ui(page2_marked);
+    command("files.multi", NULL); wait_page("FileList");
     count_begin("sort"); command("files.sort", "{\"by\":\"size\",\"desc\":true}"); count_end("sort");
     count_begin("menu"); snprintf(args_json, sizeof args_json, "{\"id\":%u}", (unsigned)id_of("/me/SYNTH_翻页/SYNTH_1.txt")); command("files.select", args_json); wait_page("FileActions"); count_end("menu");
     shot("menu"); command("files.up", NULL); wait_page("FileList"); command("files.sort", "{\"by\":\"name\",\"desc\":false}");
 }
 static const char *order[3];
 static void sorted(void) { for (int i = 0; i < 3; i++) CHECK(F.rows == 3 && !strcmp(F.items[F.view[i]].name, order[i]), "row %d is %s (%s)", i, order[i], F.rows > (size_t)i ? F.items[F.view[i]].name : "-"); }
+static void row_fields(void) {
+    size_t visible = F.rows < F.capacity ? F.rows : F.capacity;
+    for (size_t i = 0; i < visible; i++) CHECK(strstr(F.values[i], " · ") && (strstr(F.values[i], "今天 ") || strstr(F.values[i], "月") || strstr(F.values[i], "时间未知")), "row %zu has size and time: %s", i + 1, F.values[i]);
+}
+static void folder_row(void) { CHECK(F.rows && F.items[F.view[0]].dir && !strcmp(F.values[0], "文件夹"), "a folder row says 文件夹: %s", F.rows ? F.values[0] : "-"); }
+static void came_back(void) {
+    size_t r = 0; while (r < F.rows && strcmp(F.items[F.view[r]].path, "/me/SYNTH_翻页")) r++;
+    CHECK(r < F.rows && F.position.page == r / F.capacity && !strncmp(F.position.selected, "dir:", 4), "back on the page of the folder left, its row marked (row %zu, page %zu, %s)", r, F.position.page, F.position.selected);
+}
 static void sort_case(void) {
-    roots(); browse("/me/SYNTH_章");
+    roots(); browse("/me/SYNTH_文档/SYNTH_子");
+    if (text_size[0] == '3') { wanted = "… >"; on_ui(look); CHECK(shown_now, "largest text: the location is cut from the left"); browse_any("/me/SYNTH_文档"); wait_page("FileList"); }
+    else { touch("SYNTH_文档"); wait_page("FileList"); CHECK(!strcmp(F.path, "/me/SYNTH_文档"), "a level of the location is tapped (%s)", F.path); }
+    on_ui(folder_row);
+    roots(); browse("/me"); touch_paged("SYNTH_翻页"); wait_page("FileList"); command("files.up", NULL); wait_page("FileList"); on_ui(came_back);
+    roots(); browse("/me/SYNTH_章"); on_ui(row_fields);
     order[0] = "第1章.txt"; order[1] = "第2章.txt"; order[2] = "第10章.txt"; on_ui(sorted);
     touch("排序"); wait_page("FileSort"); shot("sort"); touch("大小"); wait_page("FileList");
     order[0] = "第10章.txt"; order[1] = "第1章.txt"; order[2] = "第2章.txt"; on_ui(sorted);
@@ -168,11 +197,16 @@ static void sort_case(void) {
 }
 static void delete_case(void) {
     roots(); browse("/me/SYNTH_文档"); CHECK(AI("files.all", NULL) && g_rc.status == INK_RC_INVALID, "select-all needs the multi mode");
-    command("files.multi", NULL); wait_page("FileList"); command("files.all", NULL); quiet(); touch("删除"); quiet();
+    command("files.multi", NULL); wait_page("FileList"); CHECK(strstr(lv_label_get_text(F.notice), "先选文件") != NULL, "nothing selected yet: 先选文件");
+    command("files.all", NULL); quiet(); touch("删除"); quiet();
     ink_confirm_view_t v[4]; int n = 0; WAIT_FOR((n = ink_confirm_list(v, 4)) > 0, 3000);
     CHECK(n == 1 && !strcmp(v[0].cap, "file.delete_many") && strstr(v[0].detail, "删除这 3 个文件") && strstr(v[0].detail, "报告.txt") && strstr(v[0].detail, "……"), "the card counts and names the files: %s", n ? v[0].detail : "-");
     if (n) CHECK(!ink_confirm_decide(v[0].token, false, INK_SRC_TOUCH), "the person cancels");
     quiet(); CHECK(exists("/me/SYNTH_文档/报告.txt") && exists("/me/SYNTH_文档/草稿.txt") && exists("/me/SYNTH_文档/计划.txt"), "all three are still there");
+    command("files.move", NULL); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_文档\"}"); wait_page("FileMove"); on_ui(snap);
+    CHECK(!strstr(g_snap, "\"capability\":\"files.place\"") && AI("files.place", NULL) && g_rc.status == INK_RC_REJECTED, "moving into the folder they are in: 放到这里 is off");
+    for (int i = 0; i < 4 && strcmp(ink_ui_page_name(), "FileList"); i++) { command("files.up", NULL); quiet(); } /* up the destination's folders, then back */
+    wait_page("FileList"); CHECK(F.marked_count == 3, "still selected");
     command("files.move", "{\"copy\":true}"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_目标\"}"); wait_page("FileMove"); command("files.place", NULL);
     wait_page("FileBatch"); CHECK(WAIT_FOR(F.bstate == B_ASK, 10000), "two names taken");
     command("files.conflict", "{\"choice\":\"replace\",\"all\":true}"); quiet();
@@ -180,6 +214,52 @@ static void delete_case(void) {
     CHECK(n == 1 && !strcmp(v[0].cap, "file.batch_replace") && strstr(v[0].detail, "替换 2 个同名文件"), "one card for the replacement: %s", n ? v[0].detail : "-");
     if (n) { CHECK(ink_confirm_decide(v[0].token, true, INK_SRC_AI) != 0, "the AI cannot say yes"); CHECK(!ink_confirm_decide(v[0].token, false, INK_SRC_TOUCH), "the person cancels"); }
     quiet(); ink_fs_stat_t st; CHECK(!ink_fs_stat("/me/SYNTH_目标/报告.txt", &st) && st.size == 100 && !exists("/me/SYNTH_目标/计划.txt"), "nothing was replaced or copied");
+    CHECK(WAIT_FOR(F.bstate == B_DONE, 5000) && strstr(lv_label_get_text(F.notice), "没有替换，什么都没动"), "the page says nothing changed (%d)", F.bstate);
+    touch("完成"); wait_page("FileList");
+    command("files.move", "{\"copy\":true}"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_文档\"}"); wait_page("FileMove"); command("files.place", NULL);
+    wait_page("FileBatch"); CHECK(WAIT_FOR(F.bstate == B_ASK, 10000), "copying into the same folder: every name is taken"); on_ui(snap);
+    CHECK(strstr(g_snap, "\"label\":\"保留两个\"") && strstr(g_snap, "\"label\":\"跳过\"") && !strstr(g_snap, "\"label\":\"替换\""), "the same folder: no 替换");
+    command("files.conflict", "{\"choice\":\"skip\",\"all\":true}"); CHECK(WAIT_FOR(F.bstate == B_DONE, 10000), "all skipped"); wait_page("FileBatch");
+    CHECK(strstr(lv_label_get_text(F.notice), "都跳过了，没有改动") != NULL, "all skipped: nothing changed (%s)", lv_label_get_text(F.notice));
+}
+/* file.batch_replace keeps the old file until the new one has its name: a copy that cannot start (another copy is
+ * running, no room) leaves it as it was; a yes replaces it, by copy and by move. */
+static volatile int told; static char told_status[16], told_say[96];
+static void told_ev(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id; char cap[48] = ""; ink_args_get_str(a, "cap", cap, sizeof cap); if (strcmp(cap, "file.batch_replace")) return;
+    ink_args_get_str(a, "status", told_status, sizeof told_status); ink_args_get_str(a, "say", told_say, sizeof told_say); __atomic_add_fetch(&told, 1, __ATOMIC_RELEASE);
+}
+static int64_t size_of(const char *path) { ink_fs_stat_t st; return ink_fs_stat(path, &st) ? -1 : st.size; }
+static void big_file(const char *path, size_t n) { char *b = malloc(n); if (b) memset(b, 'B', n); CHECK(b && !ink_fs_write_atomic(path, b, n), "synthetic %.80s", path); free(b); }
+static unsigned ask_replace(const char *op, const char *from) {
+    uint32_t id = id_of(from); unsigned token = 0;
+    snprintf(args_json, sizeof args_json, "{\"op\":\"%s\",\"to\":\"/me/SYNTH_目标\",\"ids\":[%u],\"replace_ids\":[%u]}", op, (unsigned)id, (unsigned)id);
+    CHECK(id && AI("file.batch_replace", args_json) && g_rc.status == INK_RC_PENDING_CONFIRMATION && sscanf(g_rc.object, "confirm:%u", &token) == 1, "the replacement waits for a person (%d)", g_rc.status);
+    return token;
+}
+static void say_yes(unsigned token) {
+    int before = told;
+    CHECK(token && !ink_confirm_decide(token, true, INK_SRC_TOUCH), "the person says yes");
+    CHECK(WAIT_FOR(told > before, 20000), "the replacement ends (%s %s)", told_status, told_say);
+}
+static void replace_by_hand(const char *op, const char *from) { say_yes(ask_replace(op, from)); }
+static void replace_case(void) {
+    CHECK(ink_cap_subscribe("confirm.result", told_ev, NULL, INK_EXEC_DIRECT) >= 0, "confirmation results");
+    big_file("/me/SYNTH_大.bin", 1024 * 1024);
+    unsigned token = ask_replace("copy", "/me/SYNTH_文档/草稿.txt"); /* the card first: a copy can start while it waits */
+    CHECK(ink_fs_copy_start("/me/SYNTH_大.bin", "/me/SYNTH_大副本.bin") > 0, "another copy is running");
+    say_yes(token);
+    CHECK(strcmp(told_status, "done") && size_of("/me/SYNTH_目标/草稿.txt") == 100, "busy: the old file is still there (%s, %lld bytes)", told_status, (long long)size_of("/me/SYNTH_目标/草稿.txt"));
+    CHECK(WAIT_FOR(exists("/me/SYNTH_大副本.bin"), 20000), "the other copy finishes"); quiet();
+    sim_sd_set_free(600); /* less than the new 1200 bytes, more than enough once the old 100 are gone */
+    replace_by_hand("copy", "/me/SYNTH_文档/草稿.txt");
+    CHECK(strcmp(told_status, "done") && size_of("/me/SYNTH_目标/草稿.txt") == 100, "no room: the old file is still there (%s, %lld bytes)", told_status, (long long)size_of("/me/SYNTH_目标/草稿.txt"));
+    sim_sd_set_free(-1);
+    replace_by_hand("copy", "/me/SYNTH_文档/草稿.txt");
+    CHECK(!strcmp(told_status, "done") && size_of("/me/SYNTH_目标/草稿.txt") == 1200 && exists("/me/SYNTH_文档/草稿.txt"), "copy: replaced (%s, %lld bytes)", told_status, (long long)size_of("/me/SYNTH_目标/草稿.txt"));
+    replace_by_hand("move", "/me/SYNTH_文档/报告.txt");
+    CHECK(!strcmp(told_status, "done") && size_of("/me/SYNTH_目标/报告.txt") == 1500 && !exists("/me/SYNTH_文档/报告.txt"), "move: replaced (%s, %lld bytes)", told_status, (long long)size_of("/me/SYNTH_目标/报告.txt"));
+    CHECK(WAIT_FOR(id_of("/me/SYNTH_目标/草稿.txt") != 0, 10000), "the replaced copy is indexed");
 }
 static void all_text(void) { ink_text_select(0, ink_text_char_offset(ink_text_value(), strlen(ink_text_value()))); }
 static bool fav_has(const char *path) { files_prefs_t *p = files_prefs_begin(); bool on = strstr(p->fav, path) != NULL; files_prefs_end(false); return on; }
@@ -201,8 +281,12 @@ static void fav_case(void) {
     command("files.fav", "{\"path\":\"/me/SYNTH_文档/计划.txt\"}"); CHECK(fav_has("/me/SYNTH_文档/计划.txt"), "the AI pins with the same capability");
     command("files.fav", "{\"path\":\"/me/SYNTH_文档/SYNTH_子\"}"); CHECK(fav_has("/me/SYNTH_文档/SYNTH_子/\n"), "a folder is pinned by its own line");
     command("file.move", "{\"from\":\"/me/SYNTH_文档/计划.txt\",\"to\":\"/me/SYNTH_目标/计划.txt\"}");
+    double written = sim_metric_value("files.prefs_written");
     roots(); CHECK(WAIT_FOR(!fav_has("计划.txt"), 10000), "the rescan drops what moved away"); quiet();
-    CHECK(fav_has("SYNTH_子/"), "the folder stays");
+    CHECK(fav_has("SYNTH_子/") && WAIT_FOR(sim_metric_value("files.prefs_written") > written, 5000), "the folder stays; the dropped line is saved");
+    CHECK(WAIT_FOR(ink_db_idle(), 10000), "saved"); delay_ms(500); written = sim_metric_value("files.prefs_written");
+    for (int i = 0; i < 2; i++) { roots(); delay_ms(500); quiet(); }
+    CHECK(sim_metric_value("files.prefs_written") == written && fav_has("SYNTH_子/"), "home again with nothing changed writes nothing (%.0f -> %.0f)", written, sim_metric_value("files.prefs_written"));
 }
 static void child_case(void) {
     write_file("/me/SYNTH_文档/SYNTH_只给大人.txt", 10); CHECK(!ink_fs_write_atomic("/family/SYNTH_家庭.txt", "SYNTH", 5), "family file");
@@ -220,10 +304,56 @@ static void child_case(void) {
     CHECK(ink_member_switch("owner") == 0, "back to the owner");
 }
 static void states_case(void) { /* empty folder and a card lent to a computer */
-    CHECK(!ink_fs_mkdir("/me/SYNTH_空"), "empty folder"); roots(); browse("/me/SYNTH_空"); on_ui(snap); CHECK(strstr(g_snap, "这里还没有文件") || F.rows == 0, "empty state"); shot("empty");
+    CHECK(!ink_fs_mkdir("/me/SYNTH_空"), "empty folder"); roots(); browse("/me/SYNTH_空"); on_ui(snap); CHECK(strstr(g_snap, "这里还没有文件") && F.rows == 0, "empty state"); shot("empty");
     command("files.folder", NULL); wait_page("FileActions"); shot("folder-menu"); command("files.up", NULL); wait_page("FileList");
     sim_sd_set_present(false); command("files.browse", "{\"path\":\"/me/SYNTH_空\"}"); quiet(); CHECK(WAIT_FOR(!F.busy, 10000) && F.error == 1, "no card: one sentence (%d)", F.error); shot("error");
-    sim_sd_set_present(true); quiet();
+    on_ui(snap); CHECK(strstr(g_snap, "\"error\":\"没有存储卡\"") != NULL, "no card: the snapshot names the sentence");
+    sim_sd_set_present(true); quiet(); CHECK(WAIT_FOR(F.error == 0 && !F.busy, 10000), "the card is back: read again by itself (%d)", F.error);
+    hw(HW_USB_ON, 0, 0); CHECK(WAIT_FOR(ink_usb_disk_start() == 0, 3000), "the card is lent to a computer");
+    roots(); browse_any("/me/SYNTH_空"); CHECK(WAIT_FOR(!F.busy, 10000) && F.error == 2, "lent: one sentence (%d)", F.error);
+    on_ui(snap); CHECK(strstr(g_snap, "拔线或在电脑上推出后自动回来") != NULL, "lent: says how it comes back");
+    CHECK(ink_usb_disk_stop() == 0, "the computer gives the card back"); hw(HW_USB_OFF, 0, 0);
+    CHECK(WAIT_FOR(F.error == 0 && !F.busy, 10000), "lent: read again by itself, nothing pressed (%d)", F.error); quiet();
+    big_file("/me/SYNTH_大.bin", 1024 * 1024); quiet();
+    CHECK(ink_fs_copy_start("/me/SYNTH_大.bin", "/me/SYNTH_大副本.bin") > 0, "a copy keeps the index busy");
+    command("files.browse", "{\"path\":\"/me/SYNTH_空\"}"); CHECK(WAIT_FOR(!F.busy, 10000) && F.error == 3, "index not ready: one sentence (%d)", F.error);
+    on_ui(snap); CHECK(strstr(g_snap, "正在整理文件编号，好了自动重读") != NULL, "index not ready: says it reads again");
+    CHECK(WAIT_FOR(F.error == 0 && !F.busy && exists("/me/SYNTH_大副本.bin"), 30000), "index ready: read again by itself (%d)", F.error); quiet();
+    /* the service's index state, as it is while it organizes (set here: the window is too short to catch) */
+    roots(); browse("/me"); command("files.search", NULL); wait_page("FileSearch");
+    ink_state_set_str(ink_state_find("file.index_state"), "organizing");
+    command("files.search", "{\"query\":\"SYNTH\"}"); wait_page("FileSearch"); on_ui(snap);
+    CHECK(strstr(g_snap, "刚放进来的文件可能要等几秒才搜得到") != NULL, "search while the index organizes says new files may take a moment");
+    ink_state_set_str(ink_state_find("file.index_state"), "ready");
+    command("files.search", "{\"query\":\"S\"}"); wait_page("FileSearch"); on_ui(snap);
+    CHECK(strstr(g_snap, "至少输入 2 个字母或数字，或 1 个汉字") != NULL, "one letter is too short to search");
+    command("files.search", "{\"query\":\"SYNTH_没有这个\"}"); wait_page("FileSearch"); on_ui(snap);
+    CHECK(F.rows == 0 && strstr(g_snap, "没找到") != NULL, "nothing found: the shared empty state says so (%zu rows)", F.rows);
+}
+/* The progress line refreshes at most once every 2 s; 停下 stops after the file in hand and says what was not done. */
+static void running(void) { CHECK(F.bstate == B_RUN && F.progress, "copying"); }
+static void copy_all_to(const char *dest) {
+    command("files.move", "{\"copy\":true}"); wait_page("FileMove"); snprintf(args_json, sizeof args_json, "{\"path\":\"%s\"}", dest);
+    command("files.browse", args_json); wait_page("FileMove"); command("files.place", NULL); CHECK(WAIT_FOR(F.bstate == B_RUN, 10000), "the copy starts");
+}
+static void progress_case(void) {
+    CHECK(!ink_fs_mkdir("/me/SYNTH_大") && !ink_fs_mkdir("/me/SYNTH_放") && !ink_fs_mkdir("/me/SYNTH_停"), "synthetic folders");
+    char path[64];
+    for (int i = 1; i <= 4; i++) { snprintf(path, sizeof path, "/me/SYNTH_大/SYNTH_%d.bin", i); big_file(path, 600 * 1024); }
+    CHECK(WAIT_FOR(id_of("/me/SYNTH_大/SYNTH_4.bin") != 0, 10000), "indexed");
+    roots(); browse("/me/SYNTH_大"); command("files.multi", NULL); wait_page("FileList"); command("files.all", NULL); quiet();
+    copy_all_to("/me/SYNTH_放"); quiet(); on_ui(running);
+    uint64_t seen[16]; int n = 0; seen[n++] = F.shown_us;
+    for (int i = 0; i < 2000 && F.bstate == B_RUN; i++) { uint64_t at = F.shown_us; if (at != seen[n - 1] && n < 16) seen[n++] = at; delay_ms(20); }
+    CHECK(F.bstate == B_DONE && F.succeeded == 4, "all four copied (%zu)", F.succeeded);
+    CHECK(n >= 2, "the line moved during a long copy (%d times)", n - 1);
+    for (int k = 1; k < n; k++) CHECK(seen[k] - seen[k - 1] >= 2000000, "refresh %d came %.2f s after the one before", k, (double)(seen[k] - seen[k - 1]) / 1e6);
+    touch("完成"); wait_page("FileList"); CHECK(F.marked_count == 4, "still selected after a copy");
+    copy_all_to("/me/SYNTH_停"); CHECK(WAIT_FOR(F.stop_args[0] != 0, 5000), "the task can be stopped");
+    touch("停下"); CHECK(WAIT_FOR(F.bstate == B_DONE, 20000), "stopped");
+    int there = 0; for (int i = 1; i <= 4; i++) { snprintf(path, sizeof path, "/me/SYNTH_停/SYNTH_%d.bin", i); there += exists(path); }
+    on_ui(snap);
+    CHECK(F.not_done >= 1 && F.succeeded + F.not_done == 4 && there == (int)F.succeeded && strstr(lv_label_get_text(F.notice), "没做"), "stop after the file in hand: %zu done, %zu not done, %d on the card (%s)", F.succeeded, F.not_done, there, lv_label_get_text(F.notice));
 }
 /* Flipper's copied code through the shims: the type table, what the menu holds, the favourites kept in step, and
  * every browse event reaching the page action or capability it stands for. */
@@ -284,6 +414,8 @@ static void run(void *unused) {
     else if (!strcmp(which, "child")) child_case();
     else if (!strcmp(which, "states")) states_case();
     else if (!strcmp(which, "flipper")) flipper_case();
+    else if (!strcmp(which, "replace")) replace_case();
+    else if (!strcmp(which, "progress")) progress_case();
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "data durable before stopping"); quiet(); ink_probe_count("test.finished");
 }
 void ink_main(void) {

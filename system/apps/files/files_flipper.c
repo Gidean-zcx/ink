@@ -6,6 +6,7 @@
 #include "ink_flipper.h"
 #include "files_flipper.h"
 #include "ink/osal.h"
+#include "ink/probe.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
@@ -17,8 +18,9 @@ struct FuriString { char s[2 * INK_FS_PATH_MAX]; size_t n; };
 struct File { int which; size_t pos; FS_Error err; };
 static struct {
     osal_mutex_t *lock; osal_task_t *owner; int depth; bool dirty, exists[2], has, dir, removed; uint32_t epoch, rec; char member[16];
-    files_prefs_t prefs; char tmp[FAV_CAP]; ArchiveApp app; ArchiveBrowserView view; ArchiveBrowserViewModel model; ArchiveFile_t file;
+    files_prefs_t prefs, saved; char tmp[FAV_CAP]; ArchiveApp app; ArchiveBrowserView view; ArchiveBrowserViewModel model; ArchiveFile_t file;
     int menu_n; const char *menu[FILES_MENU_MAX]; char json[INK_DB_RECORD_MAX];
+    osal_task_t *scan_task; uint32_t scan_epoch; char lines[FAV_CAP], gone[FAV_CAP]; /* files_fl_rescan's card reads, made unlocked */
 } G INK_PSRAM_BSS;
 
 FuriString *furi_string_alloc(void) { return osal_calloc(1, sizeof(FuriString), OSAL_MEM_EXTERNAL); }
@@ -59,7 +61,11 @@ static void load(void) {
         G.rec = rec.id; ink_json_int(j, ink_json_find(j, 0, "sort"), &sort); G.prefs.sort = (int32_t)sort; G.prefs.desc = ink_json_eq(j, ink_json_find(j, 0, "desc"), "true");
         ink_json_str(j, ink_json_find(j, 0, "last"), G.prefs.last, sizeof G.prefs.last); ink_json_str(j, ink_json_find(j, 0, "fav"), G.prefs.fav, FAV_CAP); break;
     }
-    osal_free(j); ink_db_close(db); G.exists[0] = G.prefs.fav[0]; G.exists[1] = false;
+    osal_free(j); ink_db_close(db); G.exists[0] = G.prefs.fav[0]; G.exists[1] = false; G.saved = G.prefs;
+}
+/* What is written: only what differs from the record (a rescan that kept every line rewrites the same text). */
+static bool changed(void) {
+    return G.prefs.sort != G.saved.sort || G.prefs.desc != G.saved.desc || strcmp(G.prefs.last, G.saved.last) || strcmp(G.prefs.fav, G.saved.fav);
 }
 void *furi_record_open(const char *name) {
     if (!G.lock) G.lock = osal_mutex_create(); /* first used on the UI task (a page reads the sort) before any rescan is posted */
@@ -70,11 +76,11 @@ void *furi_record_open(const char *name) {
 void furi_record_close(const char *name) {
     (void)name;
     if (--G.depth) return;
-    ink_db_t *db = G.dirty && G.epoch == ink_member_epoch() ? ink_db_open_member(ink_db_find_def("files.drafts"), G.member) : NULL;
+    ink_db_t *db = G.dirty && G.epoch == ink_member_epoch() && changed() ? ink_db_open_member(ink_db_find_def("files.drafts"), G.member) : NULL;
     ink_jw_t w; ink_jw_init(&w, G.json, sizeof G.json); ink_jw_raw(&w, "{\"files_prefs\":1,\"sort\":"); ink_jw_int(&w, G.prefs.sort);
     ink_jw_raw(&w, G.prefs.desc ? ",\"desc\":true,\"last\":" : ",\"desc\":false,\"last\":"); ink_jw_str(&w, G.prefs.last); ink_jw_raw(&w, ",\"fav\":"); ink_jw_str(&w, G.prefs.fav); ink_jw_raw(&w, "}");
     ink_db_write_t put = {.id = G.rec, .data = G.json, .len = w.len};
-    if (db && !w.overflow && !ink_db_put(db, &put, &G.rec)) ink_db_flush(db);
+    if (db && !w.overflow && !ink_db_put(db, &put, &G.rec)) { ink_db_flush(db); G.saved = G.prefs; ink_probe_count("files.prefs_written"); }
     ink_db_close(db); G.dirty = false; G.owner = NULL; osal_mutex_unlock(G.lock);
 }
 files_prefs_t *files_prefs_begin(void) { furi_record_open(RECORD_STORAGE); return &G.prefs; }
@@ -104,10 +110,21 @@ bool storage_file_seek(File *f, uint32_t offset, bool from_start) { (void)from_s
 FS_Error storage_file_get_error(File *f) { return f->err; }
 bool storage_common_exists(Storage *s, const char *path) { (void)s; int w = which(path); return w >= 0 && G.exists[w]; }
 /* Only "not found" drops a favourite: a card that cannot be read (lent, missing) keeps them all. */
-bool storage_file_exists(Storage *s, const char *path) { /* a folder's line ends with "/" */
-    (void)s; ink_fs_stat_t st; char p[INK_FS_PATH_MAX + 1]; snprintf(p, sizeof p, "%s", path); size_t n = strlen(p);
+static bool on_card(const char *path) { /* a folder's line ends with "/" */
+    ink_fs_stat_t st; char p[INK_FS_PATH_MAX + 1]; snprintf(p, sizeof p, "%s", path); size_t n = strlen(p);
     if (n > 1 && p[n - 1] == '/') p[n - 1] = 0;
     return ink_fs_stat(p, &st) != INK_FS_ERR_NOT_FOUND;
+}
+static bool listed(const char *lines, const char *path) {
+    size_t n = strlen(path);
+    for (const char *p = lines; (p = strstr(p, path)); p++) if ((p == lines || p[-1] == '\n') && p[n] == '\n') return true;
+    return false;
+}
+/* During files_fl_rescan the card was read before the lock was taken: a line found gone then is dropped, a line added
+ * since is kept. */
+bool storage_file_exists(Storage *s, const char *path) {
+    (void)s;
+    return G.scan_task == osal_task_self() && G.scan_epoch == G.epoch ? !listed(G.gone, path) : on_card(path);
 }
 FS_Error storage_common_remove(Storage *s, const char *path) {
     (void)s; int w = which(path);
@@ -191,4 +208,15 @@ int files_fl_type(const char *path, bool dir) {
 void files_fl_renamed(const char *from, const char *to) { if (archive_is_favorite("%s", from)) archive_favorites_rename(from, to); }
 /* After file.delete's receipt (the card and the confirmation are asynchronous here): remove, unpin, take off the list. */
 void files_fl_deleted(const char *path, bool removed) { G.removed = removed; files_fl_select(path, G.dir, false); archive_delete_file(&G.view, "%s", path); }
-bool files_fl_rescan(void) { return ink_flipper_rescan(); }
+/* The card is read with the lock free, so page creation (which reads the sort) never waits on it; Flipper's rescan
+ * then runs as it is, under the lock, in memory, and writes only when it dropped a line. */
+bool files_fl_rescan(void) {
+    files_prefs_begin(); memcpy(G.lines, G.prefs.fav, FAV_CAP); G.scan_epoch = G.epoch; files_prefs_end(false);
+    G.gone[0] = 0;
+    for (char *line = G.lines, *end; (end = strchr(line, '\n')); line = end + 1) {
+        *end = 0;
+        if (line[0] && !on_card(line) && strlen(G.gone) + strlen(line) + 2 < sizeof G.gone) { strcat(G.gone, line); strcat(G.gone, "\n"); }
+    }
+    G.scan_task = osal_task_self(); bool r = ink_flipper_rescan(); G.scan_task = NULL;
+    return r;
+}
