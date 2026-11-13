@@ -6,6 +6,7 @@
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/crc.h"
 #include "ink/sys/members.h"
 #include "ink/sys/state.h"
 #include "ink/sys/settings.h"
@@ -76,15 +77,20 @@ static void ink_mogo_card_read(void);
 static void ink_mogo_work(void *arg);
 static void ink_mogo_unbound(lv_event_t *e) { (void)e; } /* replaced by the transfer.open binding */
 static void ink_mogo_overlays(void) {
-    if (M.back_button) {
+    /* only what changed is redrawn: a hidden button or the same note left alone costs the panel no refresh */
+    if (M.back_button && M.back == lv_obj_has_flag(M.back_button, LV_OBJ_FLAG_HIDDEN)) {
         if (M.back) lv_obj_remove_flag(M.back_button, LV_OBJ_FLAG_HIDDEN);
         else lv_obj_add_flag(M.back_button, LV_OBJ_FLAG_HIDDEN);
         ink_ui_hint_obj(M.back_button, INK_REFRESH_UI);
         lv_obj_invalidate(M.back_button);
     }
+    static uint32_t shown;
+    uint32_t now = M.reason ? ink_crc32((uint32_t)M.reason, M.explanation, strlen(M.explanation)) : 0;
+    if (M.note && now == shown) return;
     if (M.note) lv_obj_delete(M.note);
-    M.note = NULL;
+    M.note = NULL; shown = 0;
     if (!M.reason || !M.back_button) return;
+    shown = now;
     bool child = ink_member_current()->role == INK_ROLE_CHILD;
     M.note = ink_ui_empty(lv_obj_get_parent(M.back_button), M.explanation, M.reason == INK_MOGO_R_EMPTY && !child ? TR("传书") : NULL,
                           M.reason == INK_MOGO_R_EMPTY && !child ? ink_mogo_unbound : NULL, NULL);
@@ -493,8 +499,9 @@ static void ink_mogo_card_done(void *arg) {
     (void)arg;
     C.busy = false;
     ink_mogo_slot_t *slot = ink_mogo_slot(C.owner.member, true);
+    bool same = slot->have == C.found && (!C.found || !memcmp(&slot->card, &C.read, sizeof C.read));
     slot->have = C.found; slot->card = C.read;
-    ink_app_card_changed("reader");
+    if (!same) ink_app_card_changed("reader"); /* home redraws only for news */
     if (C.again) { C.again = false; ink_mogo_card_read(); }
 }
 static void ink_mogo_card_work(void *arg) {
