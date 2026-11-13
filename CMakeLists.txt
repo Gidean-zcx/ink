@@ -2133,6 +2133,21 @@ add_test(NAME music-product COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}
 set_tests_properties(music-product PROPERTIES TIMEOUT 180)
 
 add_dependencies(sim-music ink_fonts ink_ui_fonts ink_icons ink_test_content)
+# music-3: the kiikoread walk by touch and by AI, playing on, members, old data, refreshes, what is missing.
+ink_sim_executable(sim-music-player tests/music/player.c)
+target_link_libraries(sim-music-player PRIVATE ink_apps ink_system)
+target_include_directories(sim-music-player PRIVATE system/graft)
+target_compile_definitions(sim-music-player PRIVATE INK_MOGO_SIM=1)
+add_dependencies(sim-music-player ink_fonts ink_ui_fonts ink_icons ink_test_content)
+add_test(NAME music-player COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases "main restart")
+add_test(NAME music-player-missing COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases nofont --no-font)
+add_test(NAME music-player-empty COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases empty --content empty)
+add_test(NAME music-player-flat COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases flat --content flat)
+set_tests_properties(music-player music-player-missing music-player-empty music-player-flat PROPERTIES TIMEOUT 300)
 
 ink_sim_executable(sim-audio-out tests/audio_out/device.c)
 target_link_libraries(sim-audio-out PRIVATE ink_apps ink_system)

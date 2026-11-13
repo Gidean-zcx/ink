@@ -59,8 +59,8 @@ static struct {
     int w, h, want, volume, route, percent, screen_w, tap_x, tap_y, key;
     bool open, font, pending, presenting_seen;
     ink_source_t src;
-    lv_area_t area;
-    ink_graft_refresh_t refresh;
+    lv_area_t area, shown;               /* what the next frame changes; what the frame on its way changed */
+    ink_graft_refresh_t refresh, shown_refresh;
     ink_exec_job_t open_job, close_job, tick_job, tap_job, key_job, advanced_job, present_job;
     music_view_t view;
 } B INK_PSRAM_BSS;
@@ -166,7 +166,13 @@ static void refresh(void) { /* what the media service plays now, as the library 
     music_library_now(music_state(), B.st.path, B.single_title, B.single_artist);
 }
 static void pick(void) { /* music_library_pick runs the original finish_track rule ahead of the song's end */
-    const int next = music_library_pick();
+    const int now = music_track_index();
+    int next = music_library_pick(), skipped = 0;
+    for (; next >= 0 && next != now && !music_playable(music_track(next)->path) && skipped < music_track_count(); skipped++) {
+        music_library_now(MUSIC_PLAYING, music_track(next)->path, "", ""); /* a format we cannot play is passed over */
+        next = music_library_pick();
+    }
+    if (skipped && now >= 0) music_library_now(music_state(), music_track(now)->path, "", "");
     const music_track_t *t = next >= 0 ? music_track(next) : NULL;
     ink_svc_lock();
     snprintf(S.next, sizeof S.next, "%s", t ? t->path : "");
@@ -211,8 +217,12 @@ static void fill_view(void) {
         snprintf(v->row[i].name, sizeof v->row[i].name, "%s", t ? t->title : rows[i].folder);
         snprintf(v->row[i].path, sizeof v->row[i].path, "%s", t ? t->path : rows[i].folder);
         if (!t) snprintf(v->row[i].detail, sizeof v->row[i].detail, TR("%d 首"), rows[i].count);
-        else snprintf(v->row[i].detail, sizeof v->row[i].detail, "%s%s%s%s", t->artist, music_favorite(rows[i].index) ? TR(" · 已收藏") : "",
-                      rows[i].index == index ? TR(" · 正在放") : "", music_playable(t->path) ? "" : TR(" · 这种格式还不能放"));
+        else {
+            char d[192];
+            snprintf(d, sizeof d, "%s%.64s%s%s%s", t->artist[0] ? " · " : "", t->artist, music_favorite(rows[i].index) ? TR(" · 已收藏") : "",
+                     rows[i].index == index ? TR(" · 正在放") : "", music_playable(t->path) ? "" : TR(" · 这种格式还不能放"));
+            snprintf(v->row[i].detail, sizeof v->row[i].detail, "%.90s", strncmp(d, " · ", 4) ? d : d + 4);
+        }
     }
 }
 static void presented_ui(void *arg);
@@ -220,6 +230,8 @@ static void flush(void) { /* drawn once the UI task has copied the last frame */
     if (!B.pending || !B.open || __atomic_load_n(&presenting, __ATOMIC_ACQUIRE)) return;
     if (B.font) music_page_draw(B.pixels);
     fill_view();
+    B.shown = B.area;
+    B.shown_refresh = B.refresh;
     B.pending = false;
     __atomic_store_n(&presenting, true, __ATOMIC_RELEASE);
     if (ink_exec_post(INK_EXEC_UI, &B.present_job, presented_ui, NULL)) __atomic_store_n(&presenting, false, __ATOMIC_RELEASE);
@@ -370,7 +382,7 @@ static void forwarded(void *ctx, const ink_receipt_t *rc) {
     refresh();
     if (rc->status == INK_RC_DONE && (!strcmp(id, "music.play") || !strcmp(id, "music.next") || !strcmp(id, "music.prev")) && B.st.path[0]) started(B.st.path);
     else if (rc->status != INK_RC_DONE && strcmp(id, "music.seek")) {
-        music_page_message("");
+        music_page_message(TR("这首歌放不了"));
         snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("这首歌放不了"));
     }
     ink_cap_done(c);
@@ -388,9 +400,17 @@ static void play(ink_call_t *c, const char *path, int64_t start) {
     ink_args_t a;
     ink_args_init(&a);
     if (!path[0]) return say(c, INK_RC_INVALID, TR_NOOP("曲库里还没有歌"));
-    if (!music_playable(path)) return say(c, INK_RC_INVALID, TR_NOOP("这种格式还不能放"));
+    if (!music_playable(path)) {
+        music_page_message(TR("这种格式还不能放"));
+        draw(music_page_changed("message", NULL));
+        return say(c, INK_RC_INVALID, TR_NOOP("这种格式还不能放"));
+    }
     ink_args_str(&a, "path", path);
     if (start >= 0) ink_args_int(&a, "start_ms", start);
+    ink_svc_lock(); /* a song ending right now must not start its successor over this choice */
+    snprintf(S.playing, sizeof S.playing, "%s", path);
+    S.next[0] = 0;
+    ink_svc_unlock();
     forward(c, "media.play", &a);
 }
 static const char *under(const char *path) { /* a library folder, relative to its root ("/" for the root), or NULL */
@@ -447,11 +467,13 @@ static void run(ink_call_t *c) {
         list_result(c);
     } else if (!strcmp(id, "play")) {
         ink_fs_stat_t st;
+        char last[INK_FS_PATH_MAX];
         const char *dir = path[0] ? under(path) : NULL;
+        const bool asked = path[0];
         if (!path[0] && B.st.state == INK_MEDIA_PAUSED) return forward(c, "media.resume", NULL);
         if (!path[0] && B.st.state == INK_MEDIA_PLAYING) return;
-        if (!path[0]) snprintf(path, sizeof path, "%s", B.st.path);
-        if (!path[0]) recall(&LAST, path, sizeof path);
+        recall(&LAST, last, sizeof last);
+        if (!path[0]) snprintf(path, sizeof path, "%s", B.st.path[0] ? B.st.path : last);
         if ((dir && !strcmp(dir, "/")) || !path[0] || (!ink_fs_stat(path, &st) && st.is_dir)) {
             const size_t n = strlen(path);
             const music_track_t *t = NULL;
@@ -459,7 +481,8 @@ static void run(ink_call_t *c) {
                 if (!n || (!strncmp(music_track(i)->path, path, n) && music_track(i)->path[n] == '/')) t = music_track(i);
             snprintf(path, sizeof path, "%s", t ? t->path : "");
         }
-        play(c, path, -1);
+        /* open_track's rule: the last song goes on where it was, another starts from the beginning */
+        play(c, path, !asked || !strcmp(path, last) || !strcmp(path, B.st.path) ? -1 : 0);
     } else if (!strcmp(id, "pause")) forward(c, "media.pause", NULL);
     else if (!strcmp(id, "seek")) forward(c, "media.seek", &c->args);
     else if (!strcmp(id, "next") || !strcmp(id, "prev")) {
@@ -556,10 +579,12 @@ static void presented_ui(void *arg) {
     (void)arg;
     if (U.active && ink_graft_current()) {
         V = B.view;
-        if (B.font && !ink_graft_present(B.pixels, B.w, &B.area, B.refresh)) {
+        if (B.font && !ink_graft_present(B.pixels, B.w, &B.shown, B.shown_refresh)) {
             static const char *const KIND[] = {"music.present.page", "music.present.whole", "music.present.part"};
-            ink_probe_count(KIND[B.refresh]);
-            ink_probe_value("music.present_px", (double)((B.area.x2 - B.area.x1 + 1) * (B.area.y2 - B.area.y1 + 1)));
+            ink_probe_count(KIND[B.shown_refresh]);
+            ink_probe_value("music.present_px", (double)((B.shown.x2 - B.shown.x1 + 1) * (B.shown.y2 - B.shown.y1 + 1)));
+            ink_probe_value("music.present_y1", B.shown.y1);
+            ink_probe_value("music.present_y2", B.shown.y2);
         }
         notices();
         ink_ui_content_changed();

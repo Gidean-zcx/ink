@@ -312,10 +312,10 @@ static void parse_vorbis(const uint8_t *buf, uint32_t len, char *title, size_t t
             const size_t key_len = (size_t)(eq - (buf + p));
             const uint8_t *val = eq + 1;
             const size_t val_len = l - key_len - 1;
-            if (key_len == 5 && strncasecmp((const char *)(buf + p), "TITLE", 5) == 0) {
+            if (title && key_len == 5 && strncasecmp((const char *)(buf + p), "TITLE", 5) == 0) {
                 utf8_copy(val, val_len, title, tcap);
                 trim_end(title);
-            } else if (key_len == 6 && strncasecmp((const char *)(buf + p), "ARTIST", 6) == 0) {
+            } else if (artist && key_len == 6 && strncasecmp((const char *)(buf + p), "ARTIST", 6) == 0) {
                 utf8_copy(val, val_len, artist, acap);
                 trim_end(artist);
             } else if (lyrics && !lyrics[0] &&
@@ -347,8 +347,8 @@ static void flac_parse(FILE *f, char *title, size_t tcap, char *artist, size_t a
             if (fread(si, 1, 34, f) != 34) return;
             const uint32_t sample_rate = ((uint32_t)si[10] << 12) | ((uint32_t)si[11] << 4) |
                                          (si[12] >> 4);
-            const uint64_t total = ((uint64_t)(si[12] & 0x0F) << 32) | ((uint64_t)si[13] << 24) |
-                                   ((uint64_t)si[14] << 16) | ((uint64_t)si[15] << 8) | si[16];
+            const uint64_t total = ((uint64_t)(si[13] & 0x0F) << 32) | ((uint64_t)si[14] << 24) |
+                                   ((uint64_t)si[15] << 16) | ((uint64_t)si[16] << 8) | si[17];
             if (sample_rate && total)
                 *duration_ms = (uint32_t)((total * 1000) / sample_rate);
         } else if (type == 4) {  // VORBIS_COMMENT / VORBIS_COMMENT

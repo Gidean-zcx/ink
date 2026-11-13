@@ -849,8 +849,9 @@ bool music_page_tap(int x, int y) {
 bool music_page_key(int key) { return on_key(NULL, key); }
 app_redraw_t music_page_tick(void) { return on_tick(NULL); }
 void music_page_message(const char *text) {
-    if (text) on_media_lost(NULL);
-    else s_message[0] = 0;
+    if (!text) s_message[0] = 0;
+    else if (!text[0]) on_media_lost(NULL);
+    else strlcpy(s_message, text, sizeof(s_message));
 }
 /* view: -1 keep, 0 player, 1 player list, 2 all tracks; page -1 keeps it; dir NULL keeps it, "/" is the root. */
 app_redraw_t music_page_list(int view, int page, const char *dir) {
@@ -907,8 +908,8 @@ app_redraw_t music_page_changed(const char *what, const char *path) {
             }
         return APP_REDRAW_NONE;
     }
-    if ((!strcmp(what, "volume") || !strcmp(what, "output")) && !s_show_all) {
-        s_area = what[0] == 'v' ? L.volume : OUTPUT_RECT;
+    if ((!strcmp(what, "volume") || !strcmp(what, "output") || !strcmp(what, "message")) && !s_show_all) {
+        s_area = what[0] == 'v' ? L.volume : what[0] == 'o' ? OUTPUT_RECT : LYRIC_DIRTY;
         return APP_REDRAW_AREA;
     }
     const int current = music_track_index();
