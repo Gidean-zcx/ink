@@ -69,10 +69,6 @@ static bool glyph_desc(const lv_font_t *font, lv_font_glyph_dsc_t *dsc, uint32_t
     dsc->resolved_font = font;
     return true;
 }
-static int coverage(const uint8_t *bits, int row_bytes, int bpp, int x, int y) {
-    int bit = x * bpp;
-    return (bits[y * row_bytes + (bit >> 3)] >> (8 - bpp - (bit & 7))) & ((1 << bpp) - 1);
-}
 static const void *glyph_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *out) {
     const font_face_t *face = dsc->resolved_font->dsc;
     bool fell_back = dsc->gid.index & 0x80000000u;
@@ -80,20 +76,18 @@ static const void *glyph_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *out) {
     ink_font_t *f = fell_back ? fallback : face->primary;
     ink_glyph_t g;
     if (!ink_font_glyph(f, dsc->gid.index & 0x7fffffffu, &g) || !g.w || !g.h) return NULL;
-    ink_font_touch_bitmap(f, &g);
-    int bpp = ink_font_bpp(f), levels = (1 << bpp) - 1, row_bytes = (g.w * bpp + 7) / 8;
+    int levels = (1 << ink_font_bpp(f)) - 1;
     int source_px = ink_font_px(f), px = face->px;
     unsigned stride = lv_draw_buf_width_to_stride(dsc->box_w, LV_COLOR_FORMAT_A8);
     if (px == source_px && !thicken) {
         osal_cost_units("glyph.blit", 1);
-        for (int y = 0; y < g.h; y++)
-            for (int x = 0; x < g.w; x++)
-                out->data[(size_t)y * stride + x] = ink_font_darken(coverage(g.bits, row_bytes, bpp, x, y) * 255 / levels);
+        ink_font_alpha(f, &g, out->data, stride);
         return out;
     }
     /* Every other size comes from the same face. Each new pixel averages the source pixels under it:
      * a window as wide as one new pixel, at least one source pixel. Positions in 1/256 source pixel. */
     osal_cost_units("glyph.blit", GLYPH_SCALE_COST);
+    const uint8_t *cover = ink_font_pixels(f, &g);
     int window = source_px * 256 / px;
     if (window < 256) window = 256;
     for (int y = 0; y < dsc->box_h; y++) {
@@ -106,7 +100,7 @@ static const void *glyph_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *out) {
                 for (int sx = x0 >> 8; sx <= (x0 + window - 1) >> 8; sx++) {
                     if (sx < 0 || sx >= g.w) continue;
                     int wx = LV_MIN(x0 + window, (sx + 1) * 256) - LV_MAX(x0, sx * 256);
-                    sum += coverage(g.bits, row_bytes, bpp, sx, sy) * (wx * wy >> 8);
+                    sum += cover[sy * g.w + sx] * (wx * wy >> 8);
                 }
             }
             out->data[(size_t)y * stride + x] = ink_font_darken(LV_MIN(255, sum * 255 / levels / (window * window >> 8)));

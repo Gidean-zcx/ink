@@ -108,21 +108,21 @@ size_t ink_layout_page(const ink_layout_t *L, const char *text, size_t len, size
 }
 
 static void blit(const ink_font_t *f, const ink_glyph_t *g, uint8_t *buf, int stride, int bw, int bh, int x0, int y0) {
-    int bpp = ink_font_bpp(f), levels = (1 << bpp) - 1;
-    int row_bytes = (g->w * bpp + 7) / 8;
+    int levels = (1 << ink_font_bpp(f)) - 1;
+    uint8_t ink[256]; /* ink[coverage]: black over white paper */
+    for (int a = 0; a <= levels; a++) ink[a] = (uint8_t)(255 - ink_font_darken(a * 255 / levels));
+    const uint8_t *px = ink_font_pixels(f, g);
     for (int y = 0; y < g->h; y++) {
         int by = y0 + y;
+        const uint8_t *row = px + (size_t)y * g->w;
         if (by < 0 || by >= bh) continue;
-        const uint8_t *row = g->bits + (size_t)y * row_bytes;
         uint8_t *dst = buf + (size_t)by * stride;
         for (int x = 0; x < g->w; x++) {
             int bx = x0 + x;
             if (bx < 0 || bx >= bw) continue;
-            int bit = x * bpp;
-            int a = (row[bit >> 3] >> (8 - bpp - (bit & 7))) & levels;
+            int a = row[x];
             if (!a) continue;
-            int v = 255 - ink_font_darken(a * 255 / levels); /* black ink over white paper */
-            if (v < dst[bx]) dst[bx] = (uint8_t)v;
+            if (ink[a] < dst[bx]) dst[bx] = ink[a];
         }
     }
 }
@@ -142,7 +142,6 @@ void ink_render_page(const ink_layout_t *L, const char *text, const ink_page_t *
             if (cp == '\r' || cp == '\n') continue;
             ink_glyph_t g;
             if (cp != ' ' && cp != 0x3000 && ink_font_glyph(f, cp, &g)) {
-                ink_font_touch_bitmap(f, &g);
                 blit(f, &g, buf, stride, buf_w, buf_h, x + g.x_ofs, oy + ln->y + g.y_ofs);
                 glyphs++;
             }
