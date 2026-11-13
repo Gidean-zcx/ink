@@ -37,7 +37,7 @@ static struct {
     char member[16], path[INK_FS_PATH_MAX], dest[INK_FS_PATH_MAX], loaded[INK_FS_PATH_MAX], back_from[INK_FS_PATH_MAX], name_dir[INK_FS_PATH_MAX];
     char cursor[16], preview_text[129], query[64], empty[160], where[224], details[224], stop_args[32];
     char ids[4][32], args[4][384], names[4][INK_FS_NAME_MAX + 8], values[4][240], marks[4][16], crumbs[10][192];
-    char rename[576], target[576], source[288], object[32], deleting[INK_FS_PATH_MAX], renaming[INK_FS_PATH_MAX], renamed_from[INK_FS_PATH_MAX];
+    char rename[576], target[576], source[288], object[32], from_dir[INK_FS_PATH_MAX], deleting[INK_FS_PATH_MAX], renaming[INK_FS_PATH_MAX], renamed_from[INK_FS_PATH_MAX];
     uint32_t epoch, serial, selected_id, index_cursor, found, fav_hash;
     bool known, multi, new_text, all_marked, stale, truncated, from_fav, open_found, previewing, busy, indexing, copy, all, expect_receipt;
     uint32_t marked[INK_FS_INDEX_MAX], draft, ref; size_t marked_count;
@@ -161,14 +161,14 @@ static lv_obj_t *button(unsigned i, lv_obj_t *screen, const char *label, const c
 }
 static void enable(unsigned i, bool on) { F.actions[i].enabled = on; if (F.buttons[i]) lv_obj_set_state(F.buttons[i], LV_STATE_DISABLED, !on); }
 /* Written buttons from the bottom edge, as many to a row as their text allows. The top of the first row. */
-static int toolbar(unsigned first, unsigned n, const char *const t[][3]) {
+static int toolbar(unsigned first, unsigned n, const char *const t[][4]) {
     int w = INK_CANVAS_W - 2 * INK_MARGIN, need = INK_CONTROL;
     for (unsigned i = 0; i < n; i++) { int tw = ink_ui_text_width(t[i][0], INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_S; if (tw > need) need = tw; }
     unsigned per = (unsigned)((w + INK_GAP_S) / (need + INK_GAP_S)); per = !per ? 1 : per > n ? n : per;
     unsigned rows = (n + per - 1) / per; int y = INK_CANVAS_H - INK_MARGIN - (int)rows * INK_CONTROL - (int)(rows - 1) * INK_GAP_S;
     for (unsigned i = 0; i < n; i++) {
         unsigned r = i / per, m = r + 1 < rows ? per : n - r * per; int cw = (w - (int)(m - 1) * INK_GAP_S) / (int)m;
-        button(first + i, F.screen, t[i][0], t[i][1], t[i][2], INK_MARGIN + (int)(i % per) * (cw + INK_GAP_S), y + (int)r * (INK_CONTROL + INK_GAP_S), cw, false);
+        button(first + i, F.screen, t[i][0], t[i][1], t[i][2], INK_MARGIN + (int)(i % per) * (cw + INK_GAP_S), y + (int)r * (INK_CONTROL + INK_GAP_S), cw, false); F.actions[first + i].id = t[i][3];
     }
     F.model.action_count = first + n; return y;
 }
@@ -222,7 +222,7 @@ static void selection_args(void) {
 /* The files this batch is about: the marked ones (all of the folder's: all_path) or the one in the menu. */
 static void batch_args(bool destination) {
     ink_jw_t w; ink_jw_init(&w, F.batch, sizeof F.batch); ink_jw_raw(&w, "{");
-    if (!F.multi) { ink_jw_raw(&w, "\"ids\":["); ink_jw_int(&w, F.selected.id); ink_jw_raw(&w, "]"); }
+    if (!F.multi) { ink_jw_raw(&w, "\"ids\":["); ink_jw_int(&w, F.selected_id); ink_jw_raw(&w, "]"); }
     else if (F.all_marked && !F.selection[0]) { ink_jw_raw(&w, "\"all_path\":"); ink_jw_str(&w, F.path); }
     else { ink_jw_raw(&w, "\"ids\":"); ink_jw_raw(&w, F.selection[0] ? F.selection : "[]"); }
     if (destination) { ink_jw_raw(&w, ",\"op\":"); ink_jw_str(&w, F.copy ? "copy" : "move"); ink_jw_raw(&w, ",\"to\":"); ink_jw_str(&w, F.dest); }
@@ -375,11 +375,11 @@ static void load(void) {
 }
 /* The file menu: what Flipper's render_item_menu composes for the selection, as written buttons. */
 static void menu_page(const char *type) {
-    static const struct { const char *item, *label, *cap; int event; bool write; } MENU[] = {
-        {"Run in app", TR_NOOP("打开"), NULL, FILES_EV_RUN, false}, {"Pin", TR_NOOP("收藏"), "files.fav", 0, false}, {"Unpin", TR_NOOP("取消收藏"), "files.fav", 0, false},
-        {"Copy", TR_NOOP("拷贝"), "files.move", 0, false}, {"Move to", TR_NOOP("移动"), "files.move", 0, true}, {"Delete", TR_NOOP("删除"), "file.delete", FILES_EV_DELETE, true},
-        {"Edit", TR_NOOP("编辑"), "files.edit", 0, true}, {"Read", TR_NOOP("用阅读打开"), "mogo.open", 0, false},
-        {"Pin folder", TR_NOOP("收藏"), "files.fav", 0, false}, {"Unpin folder", TR_NOOP("取消收藏"), "files.fav", 0, false}};
+    static const struct { const char *item, *label, *cap; int event; bool write; const char *id; } MENU[] = {
+        {"Run in app", TR_NOOP("打开"), NULL, FILES_EV_RUN, false, "open"}, {"Pin", TR_NOOP("收藏"), "files.fav", 0, false, "pin"}, {"Unpin", TR_NOOP("取消收藏"), "files.fav", 0, false, "unpin"},
+        {"Copy", TR_NOOP("拷贝"), "files.move", 0, false, "copy"}, {"Move to", TR_NOOP("移动"), "files.move", 0, true, "move"}, {"Delete", TR_NOOP("删除"), "file.delete", FILES_EV_DELETE, true, "delete"},
+        {"Edit", TR_NOOP("编辑"), "files.edit", 0, true, "edit"}, {"Read", TR_NOOP("用阅读打开"), "mogo.open", 0, false, "read"},
+        {"Pin folder", TR_NOOP("收藏"), "files.fav", 0, false, "pin"}, {"Unpin folder", TR_NOOP("取消收藏"), "files.fav", 0, false, "unpin"}};
     const char *items[FILES_MENU_MAX]; char size[32], time[32];
     files_fl_select(F.selected.path, F.selected.dir, F.from_fav); int n = files_fl_menu(items), kind = files_fl_type(F.selected.path, F.selected.dir);
     bool can = writable(F.selected.path) && !root_dir(F.selected.path), rename = false;
@@ -407,13 +407,13 @@ static void menu_page(const char *type) {
     ink_ui_line(F.screen, F.details, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
     F.preview = ink_ui_label(F.screen, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     if (type && !strcmp(type, "image")) { F.images[0] = lv_image_create(F.screen); lv_obj_set_pos(F.images[0], ink_ui_px(INK_MARGIN), ink_ui_px(y)); thumbnail(0, F.selected_id); }
-    const char *t[ACTION_MAX][3]; unsigned k = 0; int events[ACTION_MAX] = {0};
+    const char *t[ACTION_MAX][4]; unsigned k = 0; int events[ACTION_MAX] = {0};
     snprintf(F.args[0], sizeof F.args[0], "{\"id\":%u}", (unsigned)F.selected_id);
     for (int i = 0; i < n && k < ACTION_MAX - 3; i++) for (size_t m = 0; m < sizeof MENU / sizeof *MENU; m++) {
         if (strcmp(items[i], MENU[m].item) || (MENU[m].write && !can)) continue;
         const char *cap = MENU[m].cap, *args = !strcmp(MENU[m].item, "Copy") ? "{\"copy\":true}" : !strcmp(MENU[m].item, "Move to") || !strcmp(MENU[m].item, "Edit") ? NULL : F.source;
         if (MENU[m].event == FILES_EV_RUN) { cap = kind == FILES_TYPE_TEXT ? "files.preview" : kind == FILES_TYPE_AUDIO ? "media.play" : kind == FILES_TYPE_IMAGE ? "photo.open" : "mogo.open"; args = kind == FILES_TYPE_TEXT || kind == FILES_TYPE_IMAGE ? F.args[0] : F.source; }
-        events[k] = MENU[m].event; t[k][0] = TR(MENU[m].label); t[k][1] = cap; t[k++][2] = args;
+        events[k] = MENU[m].event; t[k][0] = TR(MENU[m].label); t[k][1] = cap; t[k][2] = args; t[k++][3] = MENU[m].id;
     }
     int top = toolbar(2, k, t); memcpy(F.events + 2, events, k * sizeof *events);
     F.notice = ink_ui_notice(F.screen, "", top - ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_S);
@@ -539,8 +539,8 @@ static void batch_page(void) {
         int t = y + INK_LINE_NOTE + INK_GAP + ink_ui_line_height(INK_FONT_LIST) + INK_GAP_S;
         ink_ui_line(F.screen, F.details, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, t, w); ink_ui_line(F.screen, F.where, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, t + ink_ui_line_height(INK_FONT_NOTE), w);
         F.fields[0] = (ink_ui_field_spec_t){.id = "existing", .role = "text", .label = c->name, .value = F.details}; F.fields[1] = (ink_ui_field_spec_t){.id = "new", .role = "text", .label = c->name, .value = F.where}; F.model.field_count = 2;
-        bool same = !strcmp(F.dest, F.multi ? F.path : F.loaded[0] ? F.loaded : F.path) && F.copy;
-        const char *t3[][3] = {{TR("保留两个"), "files.conflict", "{\"choice\":\"keep_both\"}"}, {TR("跳过"), "files.conflict", "{\"choice\":\"skip\"}"}, {TR("替换"), "files.conflict", "{\"choice\":\"replace\"}"}};
+        bool same = !strcmp(F.dest, F.from_dir) && F.copy;
+        const char *t3[][4] = {{TR("保留两个"), "files.conflict", "{\"choice\":\"keep_both\"}", "keep_both"}, {TR("跳过"), "files.conflict", "{\"choice\":\"skip\"}", "skip"}, {TR("替换"), "files.conflict", "{\"choice\":\"replace\"}", "replace"}};
         int top = toolbar(1, same ? 2 : 3, t3);
         F.actions[0] = (ink_ui_action_spec_t){.id = "all", .label = TR("后面的同名都这样"), .capability = "files.conflict", .args_json = F.all ? "{\"all\":false}" : "{\"all\":true}", .enabled = true};
         ink_ui_toggle(F.screen, TR("后面的同名都这样"), F.all, INK_MARGIN, top - INK_CONTROL - INK_GAP, w, clicked, (void *)0);
@@ -687,7 +687,7 @@ static void create(lv_obj_t *screen, void *arg) {
         if (F.multi) snprintf(subject, sizeof subject, F.copy ? TR("拷贝 %zu 个文件") : TR("移动 %zu 个文件"), F.marked_count);
         else snprintf(subject, sizeof subject, F.copy ? TR("拷贝：%s") : TR("移动：%s"), F.selected.name);
         ink_ui_line(screen, subject, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, top + INK_GAP_S, w);
-        char from[INK_FS_PATH_MAX]; snprintf(from, sizeof from, "%s", F.multi ? F.path : F.selected.path); if (!F.multi) *strrchr(from, '/') = 0;
+        char from[INK_FS_PATH_MAX]; snprintf(from, sizeof from, "%s", F.multi ? F.path : F.selected.path); if (!F.multi && strrchr(from, '/')) *strrchr(from, '/') = 0;
         bool same = F.dest[0] && !strcmp(F.dest, from) && !F.copy, inside = F.selected.dir && !F.multi && under(F.dest, F.selected.path);
         location(F.where, sizeof F.where, F.dest, strlen(F.dest)); snprintf(where, sizeof where, TR("放到：%s"), F.where);
         ink_ui_line(screen, same ? TR("已经在这个文件夹里") : F.dest[0] ? where : TR("先选一个文件夹"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, top + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE), w);
@@ -702,8 +702,8 @@ static void create(lv_obj_t *screen, void *arg) {
     if (F.multi) { F.notice = ink_ui_notice(screen, "", top + (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2); selection_args(); batch_args(false); }
     else crumb_row(top);
     bool can = writable(F.path);
-    const char *normal[][3] = {{TR("多选"), "files.multi", NULL}, {TR("搜索"), "files.search", NULL}, {TR("排序"), "files.sort", NULL}, {TR("新建"), "files.new", "{\"text\":false}"}};
-    const char *multi[][3] = {{TR("取消"), "files.multi", NULL}, {TR("全选"), "files.all", NULL}, {TR("拷贝"), "files.move", "{\"copy\":true}"}, {TR("移动"), "files.move", NULL}, {TR("删除"), "file.delete_many", F.batch}};
+    const char *normal[][4] = {{TR("多选"), "files.multi", NULL, "multi"}, {TR("搜索"), "files.search", NULL, "search"}, {TR("排序"), "files.sort", NULL, "sort"}, {TR("新建"), "files.new", "{\"text\":false}", "new"}};
+    const char *multi[][4] = {{TR("取消"), "files.multi", NULL, "multi"}, {TR("全选"), "files.all", NULL, "all"}, {TR("拷贝"), "files.move", "{\"copy\":true}", "copy"}, {TR("移动"), "files.move", NULL, "move"}, {TR("删除"), "file.delete_many", F.batch, "delete"}};
     int y = F.multi ? toolbar(2, can ? 5 : 3, multi) : toolbar(2, can ? 4 : 3, normal);
     if (folder) { button((unsigned)F.model.action_count, screen, TR("这个文件夹"), "files.folder", NULL, INK_CANVAS_W - INK_MARGIN - folder, INK_STATUS_BAR + INK_GAP_S, folder, false); F.model.action_count++; }
     if (F.multi) for (unsigned i = 4; i < (can ? 7u : 5u); i++) enable(i, F.marked_count > 0);
@@ -878,7 +878,7 @@ static void navigate(ink_call_t *c) {
         memset(&F.position, 0, sizeof F.position); ink_ui_push(&PAGES[MOVE], NULL); return;
     }
     if (!strcmp(id, "files.place")) {
-        char from[INK_FS_PATH_MAX]; snprintf(from, sizeof from, "%s", F.multi ? F.path : F.selected.path); if (!F.multi) *strrchr(from, '/') = 0;
+        char *from = F.from_dir; snprintf(from, sizeof F.from_dir, "%s", F.multi ? F.path : F.selected.path); if (!F.multi && strrchr(from, '/')) *strrchr(from, '/') = 0;
         if (F.mode != MOVE || !F.dest[0] || !writable(F.dest) || (!strcmp(F.dest, from) && !F.copy) || (F.selected.dir && !F.multi && under(F.dest, F.selected.path))) { c->rc.status = INK_RC_REJECTED; return; }
         if (F.selected.dir && !F.multi) { /* folders: no ids, a single copy or move */
             char to[INK_FS_PATH_MAX]; if (!join(to, sizeof to, F.dest, F.selected.name)) { c->rc.status = INK_RC_INVALID; return; }
@@ -886,7 +886,9 @@ static void navigate(ink_call_t *c) {
             ink_call_opts_t opts = {.src = c->src, .member = F.member, .args_json = F.target, .reply_exec = INK_EXEC_UI, .done = operation_done, .ctx = (void *)((uintptr_t)F.serial << 3)};
             status(TR("正在处理")); if (ink_cap_call(F.copy ? "file.copy" : "file.move", NULL, &opts)) c->rc.status = INK_RC_FAILED; return;
         }
-        F.bstate = B_CHECK; F.result[0] = 0; F.total = 0; ink_ui_push(&PAGES[BATCH], NULL); return;
+        F.bstate = B_CHECK; F.result[0] = 0; F.total = 0;
+        if (ink_ui_full()) ink_ui_pop(); /* six pages deep: the batch page takes the destination page's place */
+        ink_ui_push(&PAGES[BATCH], NULL); return;
     }
     if (!strcmp(id, "files.start")) { if (F.mode != BATCH || F.bstate != B_SPACE) { c->rc.status = INK_RC_INVALID; return; } F.bstate = F.conf_n ? B_ASK : B_RUN; if (F.bstate == B_RUN) batch_start(); else ink_ui_redraw(); return; }
     if (!strcmp(id, "files.conflict")) {
@@ -894,8 +896,7 @@ static void navigate(ink_call_t *c) {
         if (ink_args_get_bool(&c->args, "all", &flag)) F.all = flag;
         if (ink_args_get_str(&c->args, "choice", text, sizeof text) < 0) { ink_ui_redraw(); return; }
         int ch = 0; while (ch < 3 && strcmp(text, CHOICES[ch])) ch++;
-        char from[INK_FS_PATH_MAX]; snprintf(from, sizeof from, "%s", F.multi ? F.path : F.selected.path); if (!F.multi) *strrchr(from, '/') = 0;
-        if (ch == 3 || (ch == 2 && F.copy && !strcmp(F.dest, from))) { c->rc.status = INK_RC_INVALID; return; }
+        if (ch == 3 || (ch == 2 && F.copy && !strcmp(F.dest, F.from_dir))) { c->rc.status = INK_RC_INVALID; return; }
         for (size_t i = F.conf_at; i < (F.all ? F.conf_n : F.conf_at + 1); i++) F.conf[i].choice = (uint8_t)ch;
         F.conf_at = F.all ? F.conf_n : F.conf_at + 1;
         if (F.conf_at < F.conf_n) ink_ui_redraw(); else batch_start();
@@ -921,6 +922,7 @@ static int snapshot(char *out, size_t cap) {
     ink_jw_raw(&w, ",\"directory\":"); ink_jw_str(&w, directory()); ink_jw_raw(&w, ",\"location\":"); ink_jw_str(&w, F.where); ink_jw_raw(&w, ",\"back\":\"files.up\"");
     if (F.mode == LIST || F.mode == SORT) { ink_jw_raw(&w, ",\"sort\":{\"by\":"); ink_jw_str(&w, SORTS[F.sort]); ink_jw_raw(&w, F.desc ? ",\"desc\":true}" : ",\"desc\":false}"); }
     if (F.mode == SEARCH) { ink_jw_raw(&w, ",\"query\":"); ink_jw_str(&w, F.query); }
+    if (F.mode == MOVE) { ink_jw_raw(&w, F.copy ? ",\"op\":\"copy\",\"source\":" : ",\"op\":\"move\",\"source\":"); ink_jw_str(&w, F.multi ? F.path : F.selected.path); if (F.multi) { ink_jw_raw(&w, ",\"files\":"); ink_jw_int(&w, F.marked_count); } }
     ink_jw_raw(&w, ",\"selected_count\":"); ink_jw_int(&w, F.marked_count);
     if (F.mode == LIST || F.mode == ACTIONS || F.mode == BATCH || F.mode == MOVE || F.mode == SEARCH) { bool first = true; ink_jw_raw(&w, F.mode == ACTIONS ? ",\"menu\":[" : ",\"toolbar\":[");
         for (size_t i = F.mode == BATCH ? 0 : 2; i < F.model.action_count && i < ACTION_MAX; i++) { const ink_ui_action_spec_t *a = &F.actions[i]; if (!a->enabled || !a->capability) continue;

@@ -119,8 +119,8 @@ static void files(void) {
     evidence("file-actions"); press("拷贝");
     CHECK(!strcmp(ink_ui_page_name(), "FileMove"), "copy reuses the designed destination picker");
     CHECK(AI("files.browse", "{\"path\":\"/me/SYNTH_DEST\"}") && g_rc.status == INK_RC_DONE, "choose destination");
-    CHECK(WAIT_FOR(page_has("\"capability\":\"file.copy\""), 5000), "destination snapshot exposes the existing copy capability"); quiet();
-    CHECK(strstr(snapshot, "/me/SYNTH_SOURCE.txt") && strstr(snapshot, "/me/SYNTH_DEST/SYNTH_SOURCE.txt"), "copy snapshot identifies both paths");
+    CHECK(WAIT_FOR(page_has("\"capability\":\"files.place\""), 5000), "destination snapshot exposes the placing capability (files-3: names taken and space are checked first)"); quiet();
+    CHECK(strstr(snapshot, "\"source\":\"/me/SYNTH_SOURCE.txt\"") && strstr(snapshot, "\"directory\":\"/me/SYNTH_DEST\"") && strstr(snapshot, "\"op\":\"copy\""), "copy snapshot identifies both paths");
     evidence("file-copy"); press("拷贝到这里");
     CHECK(WAIT_FOR(file_exists("/me/SYNTH_DEST/SYNTH_SOURCE.txt"), 5000), "touch executes file.copy");
     CHECK(file_exists("/me/SYNTH_SOURCE.txt"), "copy preserves its source");
