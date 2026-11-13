@@ -5,6 +5,7 @@
 #include "ink/sys/file.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
+#include "ink/sys/svc.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
@@ -39,7 +40,7 @@ static struct {
     char objects[PHOTO_SLOTS][32], args[PHOTO_SLOTS][48], path[INK_FS_PATH_MAX], delete_args[2 * INK_FS_PATH_MAX + 32], message[96], caption[INK_FS_PATH_MAX + 64];
     ink_ui_action_spec_t photo_actions[3];
 } G INK_PSRAM_BSS;
-typedef struct { ink_exec_job_t job; uint32_t epoch, generation, id, revision, ids[INK_FS_INDEX_MAX]; size_t count; int err; ink_image_t im; char path[INK_FS_PATH_MAX]; } load_t;
+typedef struct { ink_exec_job_t job; ink_svc_deadline_t retry; uint32_t epoch, generation, id, revision, ids[INK_FS_INDEX_MAX]; size_t count; int err, waits; ink_image_t im; char path[INK_FS_PATH_MAX]; } load_t;
 typedef struct { uint32_t epoch, generation, id; unsigned slot; } thumb_t;
 static void thumb_ready(void *ctx, const ink_receipt_t *rc) {
     thumb_t *t = ctx;
@@ -108,6 +109,11 @@ static void loaded(void *arg) {
     }
     ink_image_free(&p->im); osal_free(p);
 }
+static void read_photos(void *arg);
+static void read_again(void *arg) { /* timer task: the read belongs to the media executor */
+    load_t *p = arg;
+    if (ink_exec_post(INK_EXEC_MEDIA, &p->job, read_photos, p)) { p->err = INK_FS_ERR_BUSY; ink_exec_post(INK_EXEC_UI, &p->job, loaded, p); }
+}
 static void read_photos(void *arg) {
     load_t *p = arg; ink_fs_entry_t e;
     if (p->epoch != ink_member_epoch()) p->err = INK_FS_ERR_DENIED;
@@ -119,6 +125,8 @@ static void read_photos(void *arg) {
         while (p->count < INK_FS_INDEX_MAX && p->epoch == ink_member_epoch() && ink_fs_index("/family/锁屏拍的照片", INK_FS_IMAGE, &cursor, &e) == 1) p->ids[p->count++] = e.id;
     } else {
         p->revision = ink_fs_revision();
+        /* 0 means the files are busy (an index batch, a write), not a version: the photo.ask check needs a real one */
+        if (!p->revision && p->waits++ < 50) { ink_svc_at(&p->retry, osal_now_us() + 100000ull, read_again, p); return; }
         p->err = ink_fs_lookup(p->id, &e);
         ink_fs_file_t *f = NULL;
         void *data = !p->err && e.size > 0 && e.size <= INK_IMAGE_MAX_INPUT ? osal_malloc((size_t)e.size, OSAL_MEM_EXTERNAL) : NULL;
