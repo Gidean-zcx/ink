@@ -8,7 +8,7 @@ from aiohttp import ClientError
 from ink_hub.bus.policy import authorize
 from ink_hub.bus.schema import validate
 from ink_hub.gateway.wire import ANSWER_BYTES, ANSWER_CUT, ProtocolError, answer as clip, chunks, frame, response
-from .stream import heard_text, recognize, speak, split_speech
+from .stream import FRAME, LEAD, heard_text, recognize, speak, split_speech
 
 
 # The model accepts at most 128 functions (DeepSeek). The device sends every capability usable right now
@@ -62,7 +62,7 @@ async def run_turn(self, rid, method, params):
     guard = lambda: self.valid_output(scope, epoch, sid, session)
     count, seq, sent, text, speech, cut = 0, 0, 0, "", "", False
     loop = asyncio.get_running_loop()
-    target, turn_timeout = loop.time() - 0.24, None
+    target, turn_timeout = loop.time() - LEAD, None  # target: when the next frame would be sent at 1x
     first, question, completed = True, "", False
 
     async def emit(value="", final=False):
@@ -91,7 +91,7 @@ async def run_turn(self, rid, method, params):
             session.spoken.append(marker)
             async with aclosing(speak(self.hub.tts, sentence)) as audio:
                 async for packet in audio:
-                    target = max(target, loop.time() - 0.24)
+                    target = max(target, loop.time() - LEAD)
                     delay = target - loop.time()
                     if delay > 0:
                         future = loop.create_future()
@@ -106,7 +106,8 @@ async def run_turn(self, rid, method, params):
                     session.times.setdefault("first_audio", loop.time())
                     if turn_timeout is not None and not turn_timeout.expired():
                         turn_timeout.reschedule(min(total_deadline, loop.time() + 10))
-                    target += 0.06
+                    target += FRAME
+                    session.plays_until = target + LEAD
             marker[2] = count
 
     try:

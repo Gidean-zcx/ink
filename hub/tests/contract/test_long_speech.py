@@ -4,6 +4,7 @@ import pytest
 
 from ink_hub.gateway.wire import ANSWER_BYTES, ANSWER_CUT, parse_frame
 from ink_hub.models.fake import FakeModel
+from ink_hub.voice.stream import FRAME, LEAD
 from tests.fake_device import FakeDevice
 
 
@@ -29,7 +30,7 @@ async def test_speech_exceeds_450_frames_and_initial_response_budget(make_hub):
     assert result["result"]["done"] and len(audio) == 751
     assert [m[2] for m in audio] == list(range(751))
     assert [m[3] for m in audio] == [n * 60 for n in range(751)]
-    assert elapsed >= (751 - 5) * 0.06 - 0.05
+    assert elapsed >= (751 - 1 - round(LEAD / FRAME)) * FRAME - 0.05
     end = next(m for m in device.messages if isinstance(m, dict) and m.get("method") == "ai.tts.end")
     assert end["params"] == {"id": rid, "stream": 7, "frames": 751}
 
@@ -110,4 +111,4 @@ async def test_slow_sentence_does_not_catch_up_in_a_burst(make_hub):
     connection.send, tts.synthesize = send, synthesize
     await device.voice()
     assert len(sent) == 40
-    assert sent[-1] - sent[20] >= (20 - 5) * 0.06 - 0.03
+    assert sent[-1] - sent[20] >= (20 - 1 - round(0.6 / FRAME)) * FRAME - 0.03

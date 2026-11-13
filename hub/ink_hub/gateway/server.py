@@ -44,6 +44,7 @@ class Session:
     spoken: list = field(default_factory=list)
     sent_frames: int = 0
     heard_frames: int | None = None
+    plays_until: float = 0.  # loop time the last frame sent finishes playing (hub pacing)
     history: tuple | None = None
 
 
