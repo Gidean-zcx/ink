@@ -4,6 +4,14 @@
 
 #include "ink/sys/interrupt.h"
 #include "ink/sys/notify.h"
+#include "ink/sys/json.h"
+#include "ink/sys/cap.h"
+
+int notify_model_init(void);
+bool notify_allowed(const char *number);
+void notify_call_ring(void *arg);
+void notify_actions_write(ink_jw_t *w, const ink_notify_action_t *actions, int count, const char *cap, const char *args);
+void notify_actions_read(const ink_json_t *j, ink_notify_view_t *v);
 
 int notify_interrupt_init(void);
 int notify_caps_init(void);

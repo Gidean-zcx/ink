@@ -723,6 +723,8 @@ bool ink_ui_busy(void) {
 
 bool ink_ui_queue_pending(void) { return ink_exec_waiting(INK_EXEC_UI) || __atomic_load_n(&UI.posts, __ATOMIC_SEQ_CST) > 0; }
 
+bool ink_ui_pressing(void) { return UI.last_pressed; }
+
 static void note_render_pending(void) { /* UI task */
     lv_timer_t *t = lv_display_get_refr_timer(UI.disp);
     __atomic_store_n(&UI.render_pending, t && !lv_timer_get_paused(t), __ATOMIC_SEQ_CST);
