@@ -27,11 +27,15 @@ extern void ink_contacts_open(void);
 void ink_phone_tabs(lv_obj_t *screen, int selected);
 const ink_activity_t ink_phone_page;
 static const ink_activity_t RECENTS, CALL, KEYPAD, DETAIL;
-/* Schema 1 still: a new schema would stop old backups from restoring (datastore.c ink_db_import). New records only add
- * seconds, result and sim. 500 records, the oldest going first, like Android's call log. */
+/* Schema 1 still, and no max_records: either would stop old backups from restoring (datastore.c ink_db_import refuses a
+ * new schema or more records than the limit; old backups can hold more than 500). New records only add seconds, result
+ * and sim. 500 records, the oldest going first like Android's call log: on_call trims after each new record. */
 static const ink_db_def_t HISTORY = {.name = "phone.calls", .title = "通话记录", .scope = INK_DB_MEMBER,
-    .schema = 1, .json = true, .ai_read = true, .max_records = 500, .drop_oldest = true};
+    .schema = 1, .json = true, .ai_read = true};
+/* TRASH: a group holds at most this many calls, so phone.delete can always keep the whole group for undo. */
 enum { LOG_MAX = 500, CAND_MAX = CONTACTS_MAX + 32, SLOTS = 3, ROWS = 6, TRASH = 64, PAGER_W = 2 * INK_CONTROL + INK_GAP };
+#define TRASH_TEXT "64" /* phone.delete's count limit in its schema */
+_Static_assert(TRASH == 64, "TRASH_TEXT");
 typedef struct { uint32_t id; int64_t at; int32_t seconds; char number[24], kind[12], result[12], sim[12]; } call_t;
 typedef struct { uint16_t first, count; } group_t;
 static struct { /* UI executor: this member's history and contacts, read once per page */
@@ -189,7 +193,19 @@ static int load_contacts(void) {
     ink_app_free(j); ink_db_close(db); lily_contacts_bind(X.book, X.nbook);
     return db ? 1 : 0;
 }
-/* Records newest first, then Fossify's groups (RecentsHelper.kt:90-125): consecutive, same card, same day, same number. */
+/* Fossify's groups (RecentsHelper.kt:90-125): consecutive, same card, same day, same number. */
+static bool same_group(const call_t *head, const call_t *c) {
+    return !strcmp(head->sim, c->sim) && local_day(head->at) == local_day(c->at) && phone_number_match(head->number, c->number);
+}
+/* The fields a group is made of, from one record's JSON. */
+static bool parse_call(ink_json_t *j, const char *raw, size_t len, call_t *c) {
+    if (ink_json_parse(j, raw, len)) return false;
+    ink_json_str(j, ink_json_find(j, 0, "number"), c->number, sizeof c->number);
+    ink_json_str(j, ink_json_find(j, 0, "sim"), c->sim, sizeof c->sim);
+    ink_json_int(j, ink_json_find(j, 0, "at"), &c->at);
+    return true;
+}
+/* Records newest first, then the groups. */
 static void load_log(void) {
     ink_json_t *j = P.db ? ink_app_alloc(sizeof *j, true) : NULL;
     ink_db_cursor_t cur = {.desc = true}; ink_rec_t rec; char raw[256];
@@ -197,16 +213,12 @@ static void load_log(void) {
     while (j && X.ncalls < LOG_MAX && ink_db_next(P.db, &cur, &rec, raw, sizeof raw - 1) == 1) {
         call_t *c = &X.calls[X.ncalls]; int64_t v = 0;
         memset(c, 0, sizeof *c); c->id = rec.id;
-        if (ink_json_parse(j, raw, rec.len < sizeof raw - 1 ? rec.len : sizeof raw - 1)) continue;
-        ink_json_str(j, ink_json_find(j, 0, "number"), c->number, sizeof c->number);
+        if (!parse_call(j, raw, rec.len < sizeof raw - 1 ? rec.len : sizeof raw - 1, c)) continue;
         ink_json_str(j, ink_json_find(j, 0, "kind"), c->kind, sizeof c->kind);
         ink_json_str(j, ink_json_find(j, 0, "result"), c->result, sizeof c->result);
-        ink_json_str(j, ink_json_find(j, 0, "sim"), c->sim, sizeof c->sim);
-        ink_json_int(j, ink_json_find(j, 0, "at"), &c->at);
         if (ink_json_int(j, ink_json_find(j, 0, "seconds"), &v) || (ink_json_int(j, ink_json_find(j, 0, "minutes"), &v) && (v *= 60, true))) c->seconds = (int32_t)v;
         const call_t *head = X.ngroups ? &X.calls[X.groups[X.ngroups - 1].first] : NULL;
-        if (head && !strcmp(head->sim, c->sim) && local_day(head->at) == local_day(c->at) && phone_number_match(head->number, c->number))
-            X.groups[X.ngroups - 1].count++;
+        if (head && X.groups[X.ngroups - 1].count < TRASH && same_group(head, c)) X.groups[X.ngroups - 1].count++;
         else X.groups[X.ngroups++] = (group_t){(uint16_t)X.ncalls, 1};
         X.ncalls++;
     }
@@ -636,7 +648,7 @@ static void create_call(lv_obj_t *screen, void *arg) {
     (void)arg; own(); ink_shell_statusbar(screen, true);
     bool keypad = on_page(&KEYPAD), owned = mine();
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
-    if (!X.nbook) load_contacts();
+    load_contacts(); /* this member's contacts as they are now: the table may hold another member's, or older ones */
     if (keypad) {
         static const char *const keys[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"};
         int y = INK_STATUS_BAR + INK_GAP, line = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_XS, cell = w / 3;
@@ -832,6 +844,15 @@ static const ink_activity_t CALL = {.name = "PhoneCall", .app = "phone", .create
 static const ink_activity_t KEYPAD = {.name = "PhoneKeypad", .app = "phone", .create = create_call, .destroy = destroy, .snapshot = call_snapshot};
 
 /* ---- events and capabilities ---- */
+/* BG: a burst of writes can fill what waits to be written (INK_DB_ERR_FULL): wait for it once, then try again. */
+static int put_waiting(ink_db_t *db, const ink_db_write_t *w) {
+    int r = ink_db_put(db, w, NULL);
+    return r == INK_DB_ERR_FULL && !ink_db_wait(db, ink_db_last_ver(db), 5000000) ? ink_db_put(db, w, NULL) : r;
+}
+static int del_waiting(ink_db_t *db, uint32_t id, uint8_t src) {
+    int r = ink_db_del(db, id, src);
+    return r == INK_DB_ERR_FULL && !ink_db_wait(db, ink_db_last_ver(db), 5000000) ? ink_db_del(db, id, src) : r;
+}
 static void on_call(void *ctx, const char *id, const ink_args_t *a) { /* BG: every call ends as one history record */
     (void)ctx;
     if (!strcmp(id, "call.incoming") || !strcmp(id, "call.dialed")) {
@@ -858,6 +879,10 @@ static void on_call(void *ctx, const char *id, const ink_args_t *a) { /* BG: eve
         ink_jw_raw(&w, ",\"at\":"); ink_jw_int(&w, H.at); ink_jw_raw(&w, "}");
         ink_db_write_t wr = {.sort = H.at, .data = raw, .len = w.len, .src = INK_SRC_SYSTEM};
         if (ink_db_put(db, &wr, NULL) == INK_DB_OK) {
+            for (int n = ink_db_count(db); n > LOG_MAX; n--) { /* the oldest go (a restored backup may have had more) */
+                ink_db_cursor_t cur = {0}; ink_rec_t rec;
+                if (ink_db_next(db, &cur, &rec, NULL, 0) != 1 || del_waiting(db, rec.id, INK_SRC_SYSTEM) != INK_DB_OK) break;
+            }
             ink_db_flush(db); ink_exec_post(INK_EXEC_UI, &P.refresh, refresh_history, db);
         }
         ink_db_close(db);
@@ -869,16 +894,25 @@ static void erase(ink_call_t *c) { /* BG: phone.delete takes a group out (system
     bool all = !strcmp(c->cap->id, "phone.clear"), found = all;
     int64_t id = 0, count = 0; ink_args_get_int(&c->args, "id", &id); ink_args_get_int(&c->args, "count", &count);
     ink_db_cursor_t cur = {.desc = true}; ink_rec_t rec; char raw[256]; int taken = 0;
+    ink_json_t *j = all ? NULL : ink_app_alloc(sizeof *j, true);
+    call_t head = {0}, one;
     T.count = 0; T.token++; snprintf(T.member, sizeof T.member, "%s", ink_cap_call_member(c));
-    while ((all || taken < count) && ink_db_next(db, &cur, &rec, raw, sizeof raw - 1) == 1) {
+    if (!all && !j) { ink_db_close(db); c->rc.status = INK_RC_FAILED; return; }
+    /* A group only: from its first record, the consecutive ones of the same group, never more than undo keeps. */
+    while ((all || (taken < count && T.count < TRASH)) && ink_db_next(db, &cur, &rec, raw, sizeof raw - 1) == 1) {
         if (!found && rec.id != (uint32_t)id) continue;
-        found = true;
-        if (!all && T.count < TRASH) {
-            size_t n = rec.len < sizeof raw - 1 ? rec.len : sizeof raw - 1;
-            memcpy(T.raw[T.count], raw, n); T.raw[T.count][n] = 0; T.sort[T.count++] = rec.sort;
+        size_t n = rec.len < sizeof raw - 1 ? rec.len : sizeof raw - 1;
+        if (!all) {
+            memset(&one, 0, sizeof one);
+            if (!parse_call(j, raw, n, &one) || (found && !same_group(&head, &one))) break;
+            if (!found) head = one;
+            memcpy(T.raw[T.count], raw, n); T.raw[T.count][n] = 0; T.sort[T.count] = rec.sort;
         }
-        if (ink_db_del(db, rec.id, (uint8_t)c->src) == INK_DB_OK) taken++;
+        found = true;
+        if (del_waiting(db, rec.id, (uint8_t)c->src) == INK_DB_OK) { taken++; if (!all) T.count++; }
+        else if (!all) break; /* a group is taken whole from its start, or as far as it went: no gaps */
     }
+    ink_app_free(j);
     if (!taken && !all) c->rc.status = INK_RC_STALE;
     snprintf(c->rc.object, sizeof c->rc.object, "calls:%u", (unsigned)id);
     c->rc.revision = ink_db_last_ver(db);
@@ -895,8 +929,9 @@ static void restore(ink_call_t *c) { /* BG: system.undo of phone.delete */
     ink_db_t *db = token == T.token && T.count && !strcmp(T.member, ink_cap_call_member(c)) ? ink_db_open_member(&HISTORY, T.member) : NULL;
     if (!db) { c->rc.status = INK_RC_STALE; return; }
     for (int i = 0; i < T.count; i++) {
-        ink_db_write_t wr = {.sort = T.sort[i], .data = T.raw[i], .len = strlen(T.raw[i]), .src = (uint8_t)c->src};
-        if (ink_db_put(db, &wr, NULL) != INK_DB_OK) c->rc.status = INK_RC_FAILED;
+        /* one batch, written by the flush below: a write each would take seconds for a big group */
+        ink_db_write_t wr = {.sort = T.sort[i], .data = T.raw[i], .len = strlen(T.raw[i]), .src = (uint8_t)c->src, .flags = INK_DB_LAZY};
+        if (put_waiting(db, &wr) != INK_DB_OK) c->rc.status = INK_RC_FAILED;
     }
     T.count = 0; ink_db_flush(db); ink_db_close(db);
     ink_exec_post(INK_EXEC_UI, &P.refresh, refresh_history, NULL);
@@ -988,7 +1023,7 @@ static const ink_cap_t CAPS[] = {
     {.id = "phone.next", .app = "phone", .locked_owner_only = true, .title = "候选、通话记录或详情的下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "contacts.selected", .app = "phone", .title = "联系人号码已选好", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "phone.detail", .app = "phone", .locked_owner_only = true, .title = "打开一组通话记录的详情", .input = ID_ARG(""), .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.delete", .app = "phone", .locked_owner_only = true, .title = "删除一组通话记录（可撤销）", .input = ID_ARG(",\"count\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":500}"), .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = erase},
+    {.id = "phone.delete", .app = "phone", .locked_owner_only = true, .title = "删除一组通话记录（可撤销）", .input = ID_ARG(",\"count\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":" TRASH_TEXT "}"), .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = erase},
     {.id = "phone.restore", .app = "phone", .locked_owner_only = true, .title = "恢复刚删除的通话记录", .input = "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\"}},\"required\":[\"token\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_OWNER, .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = restore},
     {.id = "phone.clear", .app = "phone", .locked_owner_only = true, .title = "清空全部通话记录", .ask = TR_NOOP("清空全部通话记录？清空后找不回来"), .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .timeout_ms = 30000, .exec = INK_EXEC_BG, .run = erase},
 };

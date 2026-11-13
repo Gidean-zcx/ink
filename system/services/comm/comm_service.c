@@ -47,6 +47,7 @@
 #define COMM_STACK 8192 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
 #define COMM_PRIO 3
 #define STATUS_DELAY_US 5000000ull /* first look at the modem, after it had time to register */
+#define CALL_POLL_US 1000000ull /* AT+CLCC about once a second until our call is answered (call-research-1 C2) */
 #define SIM_RETRY_FIRST_US 10000000ull /* a card that could not be selected, or a modem that does not answer: tried again */
 #define SIM_RETRY_MAX_US 300000000ull
 #define SIM_RETRIES 6
@@ -72,7 +73,8 @@ static struct {
     osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
                        * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
     bool ringing, emergency; /* emergency: protected by at, keeps RF on until the call ends */
-    bool connected, hung_up; /* this call: answered or connected; our hangup came first (why call.ended came) */
+    bool connected, hung_up; /* protected by at. This call: answered or connected; our hangup came first (why call.ended came) */
+    bool dialing; /* protected by at: placed by us, not answered yet, so polled (poll_at, poll_job) */
     bool radio_set; /* comm task: the first look set the radio as airplane mode says */
     char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
     uint32_t call_generation;
@@ -81,8 +83,8 @@ static struct {
     hal_cell_apn_t apn;
     struct { uint64_t current, previous; int month, day; } usage;
     uint64_t sampled_bytes;
-    ink_exec_job_t sim_job, reg_job;
-    ink_svc_deadline_t reg_at;
+    ink_exec_job_t sim_job, reg_job, poll_job;
+    ink_svc_deadline_t reg_at, poll_at;
     uint64_t sim_retry_at, sim_retry_us; /* comm task's next look at the card, 0 = none due */
     int sim_tries;
     ink_exec_job_t radio_job, apn_job;
@@ -101,7 +103,7 @@ static struct {
 
 static void call_begin(const char *member, const char *peer) { /* at held */
     CM.call_generation++;
-    CM.connected = CM.hung_up = false;
+    CM.connected = CM.hung_up = CM.dialing = false;
     osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
     snprintf(CM.call_member, sizeof CM.call_member, "%s", member);
     snprintf(CM.call_peer, sizeof CM.call_peer, "%s", peer);
@@ -393,6 +395,29 @@ static void sim_check(void) {
     else if (ink_exec_post(INK_EXEC_BG, &CM.sim_job, sim_switch, NULL) != 0) sim_retry(true);
 }
 
+/* Our outgoing call was answered: by the modem's +CLCC, or found by polling AT+CLCC (call-research-1 C2); once. */
+static void call_answered(ink_args_t *a) {
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    bool first = CM.call_member[0] && !CM.connected;
+    if (first) CM.connected = true;
+    CM.dialing = false;
+    osal_mutex_unlock(CM.at);
+    if (first) ink_cap_emit("call.connected", a);
+}
+/* The modem may not say an outgoing call was answered (LilyPhone peri_modem.cpp:1352: "URCs alone are not enough"):
+ * AT+CLCC about once a second while it rings, and only then. */
+static void poll_due(void *arg);
+static void poll_call(void *arg) { /* exec.bg */
+    (void)arg;
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    int answered = CM.dialing ? hal_cell_call_active() : 0;
+    bool again = CM.dialing && answered != 1;
+    osal_mutex_unlock(CM.at);
+    if (answered == 1) { ink_args_init(&CM.bg_args); call_answered(&CM.bg_args); }
+    if (again) ink_svc_at(&CM.poll_at, osal_now_us() + CALL_POLL_US, poll_due, NULL);
+}
+static void poll_due(void *arg) { ink_exec_post(INK_EXEC_BG, &CM.poll_job, poll_call, arg); } /* timer task */
+
 static void comm_task(void *arg) {
     (void)arg;
     uint64_t status_at = osal_now_us() + (ink_setting_get("net.airplane") ? 0 : STATUS_DELAY_US); /* the radio goes off at once */
@@ -417,22 +442,26 @@ static void comm_task(void *arg) {
                 call_focus(true);
                 ink_args_str(a, "from", ev.number);
                 ink_cap_emit("call.incoming", a);
-            } else if (ev.type == HAL_CELL_EV_CALL_ACTIVE) { CM.connected = true; ink_cap_emit("call.connected", a); }
+            } else if (ev.type == HAL_CELL_EV_CALL_ACTIVE) call_answered(a);
             else if (ev.type == HAL_CELL_EV_CALL_ENDED) { /* to everyone, like call.incoming: the screen follows the call */
+                CM.ringing = false;
+                /* After the request that placed or hung up the call: what it decided is final once at is ours. */
+                osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+                bool call = CM.call_member[0] != 0; /* none: a dial the modem refused, or the same end twice */
                 /* Lineage CallCardPresenter: say why it ended. Only an accepted call that connected counts as answered. */
                 ink_args_str(a, "reason", CM.connected ? "answered" : ev.end == HAL_CELL_END_BUSY ? "busy"
                     : ev.end == HAL_CELL_END_NO_ANSWER ? "no_answer" : CM.hung_up ? "cancelled" : "failed");
-                CM.ringing = false;
-                call_focus(false);
-                osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
                 osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
                 CM.call_member[0] = CM.call_peer[0] = CM.tones[0] = 0;
                 osal_mutex_unlock(CM.lock);
                 if (CM.emergency && ink_setting_get("net.airplane") && hal_cell_radio(false, 0)) ink_probe_count("comm.radio_failed");
-                CM.emergency = false;
+                CM.emergency = CM.connected = CM.hung_up = CM.dialing = false;
+                call_focus(false);
                 osal_mutex_unlock(CM.at);
-                ink_confirm_expire("call.dtmf");
-                ink_cap_emit("call.ended", a);
+                if (call) {
+                    ink_confirm_expire("call.dtmf");
+                    ink_cap_emit("call.ended", a);
+                } else ink_probe_count("comm.end_without_call");
             }
         }
         uint64_t now = osal_now_us();
@@ -604,22 +633,28 @@ static void cap_dial(ink_call_t *c) {
     bool temporary = !r && emergency && ink_setting_get("net.airplane");
     if (temporary) r = hal_cell_radio(true, 0) < 0 ? -1 : 0; /* 1 means RF on, not registered */
     if (!r) r = hal_cell_dial(number); /* no SIM or registration precondition for emergencies */
-    if (!r) { call_begin(ink_cap_call_member(c), number); CM.emergency = emergency; }
-    else if (temporary && hal_cell_radio(false, 0)) ink_probe_count("comm.radio_failed");
+    if (!r) {
+        call_begin(ink_cap_call_member(c), number);
+        CM.emergency = emergency;
+        CM.dialing = true;
+        ink_svc_at(&CM.poll_at, osal_now_us() + CALL_POLL_US, poll_due, NULL);
+        /* Still holding at: a call the modem ended at once has its call.ended waiting for at, and it must come after. */
+        call_focus(true);
+        ink_args_bool(&c->args, "emergency", emergency);
+        ink_cap_emit_for("call.dialed", &c->args, ink_cap_call_member(c));
+    } else if (temporary && hal_cell_radio(false, 0)) ink_probe_count("comm.radio_failed");
     osal_mutex_unlock(CM.at);
-    if (r == 0) call_focus(true);
     call_result(c, r, TR("正在拨号"), "the call could not be placed");
-    if (r == 0) ink_args_bool(&c->args, "emergency", emergency);
-    if (r == 0) ink_cap_emit_for("call.dialed", &c->args, ink_cap_call_member(c));
 }
 
 static void cap_answer(ink_call_t *c) {
     CM.ringing = false;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_answer();
+    if (r == 0) CM.connected = true;
     osal_mutex_unlock(CM.at);
     call_result(c, r, TR("接通了"), "nothing to answer");
-    if (r == 0) { CM.connected = true; ink_cap_emit("call.answered", NULL); }
+    if (r == 0) ink_cap_emit("call.answered", NULL);
 }
 
 static void cap_hangup(ink_call_t *c) {
@@ -628,12 +663,10 @@ static void cap_hangup(ink_call_t *c) {
     if (!strcmp(c->cap->id, "phone.emergency_hangup") && (!CM.emergency || strcmp(CM.call_member, ink_cap_call_member(c)))) {
         osal_mutex_unlock(CM.at); c->rc.status = INK_RC_REJECTED; return;
     }
-    CM.hung_up = true; /* before the modem: its NO CARRIER can reach the comm task before ATH returns */
+    CM.hung_up = true; /* the comm task reads it once at is free again, after the modem's answer */
     int r = hal_cell_hangup();
     if (r != 0) CM.hung_up = false;
     osal_mutex_unlock(CM.at);
-
-
     call_result(c, r, TR("挂断了"), "no call to end");
 }
 

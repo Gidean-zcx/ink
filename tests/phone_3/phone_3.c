@@ -65,7 +65,7 @@ static void count(const char *action, double expected) {
     for (int i = 0; i < 12; i++) if (intent_count(i) > marks[i]) {
         snprintf(key, sizeof key, "test.refresh.%s.%s", action, INTENTS[i]); ink_probe_value(key, intent_count(i) - marks[i]);
     }
-    if (expected > 0) CHECK(n == expected, "%s costs %g frame(s), expected %g", action, n, expected);
+    CHECK(n == expected, "%s costs %g frame(s), expected %g", action, n, expected);
 }
 /* every touch target at least 108 px and on the screen; no drawn circle (rings or black discs larger than a page dot) */
 static void walk(lv_obj_t *o, lv_area_t screen) {
@@ -152,7 +152,7 @@ static void fossify_path(void) {
     CHECK(strstr(snap, "妈妈") && strstr(snap, "王老师") && !strstr(snap, "爸爸") && !strstr(snap, "翻页"), "13812: fewer candidates");
     begin(); click("妈妈", NULL); count("pick", 1);
     CHECK(!strcmp(P.number, "138 1234 5678") && sim_net_call(NULL, 0) == 0, "a candidate fills the number and does not dial");
-    begin(); click("拨打", NULL); dialled(); count("dial", 0);
+    begin(); click("拨打", NULL); dialled(); count("dial", 1);
     CHECK(!P.number[0], "Fossify clears the dial pad after dialling: here with the page change, no timer");
     inspect();
     CHECK(!strcmp(lv_label_get_text(P.status_line), "正在拨号") && strstr(snap, "正在拨号") && !strstr(snap, "通话中"), "accepted by the modem, not connected: %.200s", snap);
@@ -178,11 +178,12 @@ static void fossify_path(void) {
     begin(); on_ui(tick); count("minute", 1);
     CHECK(!strcmp(lv_label_get_text(P.duration), "1 分钟"), "the minute changes only the duration");
     CHECK(WAIT_FOR(ink_now_us() >= P.started + 65000000ull, 10000) && ink_now_us() < P.started + 65900000ull, "1 min 05 s");
-    begin(); click("挂断", NULL); call_over(); count("hangup", 0);
+    begin(); click("挂断", NULL); call_over(); count("hangup", 2); /* like connect: the call page once, the status bar drops its 通话中 mark in its own fast frame */
+    CHECK(intent_count(2) - marks[2] == 1 && intent_count(1) - marks[1] == 1, "hangup: one normal refresh of the page, one fast one of the status bar");
     CHECK(page("PhoneCall") && !strcmp(P.end_text, "通话结束 · 1 分 05 秒"), "the result stays: %s", P.end_text);
     CHECK(last_result("answered"), "the record says answered");
     shot("call-ended-answered");
-    begin(); click("完成", NULL); CHECK(WAIT_FOR(P.list != NULL, 10000), "完成 opens recent calls"); count("recents", 0); inspect();
+    begin(); click("完成", NULL); CHECK(WAIT_FOR(P.list != NULL, 10000), "完成 opens recent calls"); count("recents", 1); inspect();
     CHECK(page("PhoneRecents") && strstr(snap, "妈妈") && strstr(snap, "1 分 05 秒"), "the top group is this call, in seconds");
 }
 static void fail_path(void (*how)(void *), bool self, const char *text, const char *result, const char *name) {
@@ -266,7 +267,7 @@ static void recents(void) {
     CHECK(WAIT_FOR(P.list != NULL, 10000), "history loaded"); quiet(); inspect();
     CHECK(strstr(snap, "13700000001 (4)"), "four calls in a row, same day, same number: one group (4): %.150s", strstr(snap, "13700000001") ? strstr(snap, "13700000001") : snap);
     CHECK(X.ngroups == 6 && X.groups[2].count == 4 && X.groups[4].count == 1, "groups: 136, 妈妈, 137 (4), 妈妈, 137 yesterday, 10086");
-    begin(); key(INK_KEY_NEXT); count("recents_page", 0); inspect();
+    begin(); key(INK_KEY_NEXT); count("recents_page", 1); inspect();
     CHECK(intent_count(2) - marks[2] == 1, "a cover-key page turn redraws the list once");
     CHECK(strstr(snap, "昨天"), "yesterday's call is a group of its own: %.150s", strstr(snap, "\"fields\"") ? strstr(snap, "\"fields\"") : snap);
     CHECK(strstr(snap, "10086") && strstr(snap, "2 分 00 秒"), "the old record (minutes only) reads 2 min 00 s");
@@ -290,29 +291,131 @@ static void recents(void) {
     int before = records();
     label = "13700000001 (4)"; on_ui(find_detail); if (detail_button) tap(g_btn_x[0], g_btn_y[0]);
     quiet(); CHECK(page("PhoneDetail"), "details of the group of four");
-    begin(); click("删除这一组", NULL); CHECK(WAIT_FOR(page("PhoneRecents") && ink_db_idle(), 5000), "deleted, back to recent calls"); count("delete", 0); quiet();
+    begin(); click("删除这一组", NULL); CHECK(WAIT_FOR(page("PhoneRecents") && ink_db_idle(), 5000), "deleted, back to recent calls"); count("delete", 1); quiet();
     CHECK(records() == before - 4 && strstr(lv_label_get_text(P.notice), "已删除"), "four records gone, 已删除 with 撤销, no question asked");
     shot("recents-undo");
-    begin(); click("撤销", NULL); CHECK(WAIT_FOR(records() == before, 5000), "撤销 brings them back"); count("undo", 0); quiet();
+    begin(); click("撤销", NULL); CHECK(WAIT_FOR(records() == before, 5000), "撤销 brings them back"); count("undo", 1); quiet();
     click("清空", NULL);
     ink_confirm_view_t pending[1];
     CHECK(WAIT_FOR(ink_confirm_list(pending, 1) == 1, 3000) && records() == before, "清空 asks first (it cannot be undone)");
     CHECK(ink_confirm_decide(pending[0].token, true, INK_SRC_TOUCH) == 0 && WAIT_FOR(records() == 0, 5000), "clear after yes"); quiet();
     CHECK(page("PhoneRecents") && WAIT_FOR(P.list != NULL, 5000), "the cleared history"); inspect();
     CHECK(strstr(snap, "\"total\":0"), "nothing left: the shared empty page"); shot("recents-empty");
-
+}
+/* phone-3 review: phone.delete takes a group and nothing else, never more than undo keeps (64 calls). */
+static uint32_t put_call(const char *number, int64_t at) {
+    char raw[200]; uint32_t id = 0;
+    snprintf(raw, sizeof raw, "{\"number\":\"%s\",\"kind\":\"打出\",\"seconds\":1,\"result\":\"answered\",\"sim\":\"external\",\"at\":%lld}", number, (long long)at);
+    ink_db_t *db = ink_db_open_member(&HISTORY, ink_member_current()->id);
+    ink_db_write_t w = {.sort = at, .data = raw, .len = strlen(raw), .src = INK_SRC_SYSTEM};
+    CHECK(db && ink_db_put(db, &w, &id) == INK_DB_OK, "synthetic record %s", number);
+    ink_db_flush(db); ink_db_close(db);
+    return id;
+}
+static void delete_bounds(void) {
+    int64_t now = ink_time_now_s();
+    put_call("10010", now - 600); put_call("10010", now - 500);
+    put_call("13700000009", now - 400); put_call("13700000009", now - 300); uint32_t head = put_call("13700000009", now - 200);
+    CHECK(WAIT_FOR(ink_db_idle(), 5000) && records() == 5, "two calls to 10010, then three to 13700000009");
+    char args[96]; snprintf(args, sizeof args, "{\"id\":%u,\"count\":500}", (unsigned)head);
+    CHECK(AI("phone.delete", args) && g_rc.status == INK_RC_INVALID && records() == 5, "a count above what undo keeps is refused: nothing deleted");
+    snprintf(args, sizeof args, "{\"id\":%u,\"count\":5}", (unsigned)head);
+    CHECK(AI("phone.delete", args) && g_rc.status == INK_RC_DONE && g_rc.undo_ms > 0, "AI deletes the group, undoable");
+    CHECK(WAIT_FOR(ink_db_idle(), 5000) && records() == 2, "only the group's three calls went, not the two older calls to 10010: %d left", records());
+    char undo[96]; snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, (unsigned)g_rc.revision);
+    CHECK(BY_HAND("system.undo", undo) && g_rc.status == INK_RC_UNDONE && WAIT_FOR(records() == 5, 5000), "撤销 brings the three back (%d, %s)", g_rc.status, g_rc.say);
+    for (int i = 0; i < 70; i++) put_call("13900000007", now - 100 + i); /* 70 in a row, same day, same number */
+    CHECK(BY_HAND("phone.recents", NULL) && g_rc.status == INK_RC_DONE, "recent calls"); quiet();
+    CHECK(WAIT_FOR(P.list != NULL, 10000) && X.groups[0].count == 64 && X.groups[1].count == 6, "a group holds at most 64 calls: %d, %d", X.groups[0].count, X.groups[1].count);
+    snprintf(args, sizeof args, "{\"id\":%u,\"count\":64}", (unsigned)X.calls[0].id);
+    CHECK(AI("phone.delete", args) && g_rc.status == INK_RC_DONE && WAIT_FOR(records() == 11, 5000), "the group of 64 goes");
+    snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, (unsigned)g_rc.revision);
+    CHECK(BY_HAND("system.undo", undo) && g_rc.status == INK_RC_UNDONE && WAIT_FOR(records() == 75, 5000), "and all 64 come back (%d, %d %s)", records(), g_rc.status, g_rc.detail);
+    quiet();
+}
+/* phone-3 review: no max_records (an old backup with more than 500 calls must restore); each new call trims to 500. */
+static volatile int bg_done, bg_import;
+static ink_exec_job_t bg_job;
+static void reimport(void *arg) { /* BG: the backup service's export and import of this member's history */
+    (void)arg;
+    ink_db_t *db = ink_db_open_member(&HISTORY, ink_member_current()->id);
+    void *data = NULL; size_t len = 0;
+    int exported = -1; /* refused while the collection folds its log: again a little later, as the backup service does */
+    for (int i = 0; db && exported && i < 100; i++) if ((exported = ink_db_export(db, &data, &len))) osal_task_delay_us(100000);
+    bg_import = !db ? -7 : exported ? -9 : ink_db_import(db, data, len, ink_db_last_ver(db));
+    osal_free(data); ink_db_close(db);
+    __atomic_store_n(&bg_done, 1, __ATOMIC_RELEASE);
+}
+static void history_cap(void) {
     ink_db_t *db = ink_db_open_member(&HISTORY, ink_member_current()->id); ink_db_cursor_t cur = {0}; ink_rec_t rec;
-    for (int i = 0; db && i < 501; i++) {
+    while (db && ink_db_next(db, &(ink_db_cursor_t){0}, &rec, NULL, 0) == 1) ink_db_del(db, rec.id, INK_SRC_SYSTEM); /* start empty */
+    for (int i = 0; db && i < 600; i++) {
         char bulk[160]; snprintf(bulk, sizeof bulk, "{\"number\":\"1380000%04d\",\"kind\":\"打出\",\"seconds\":1,\"at\":%d}", i, i);
         ink_db_write_t w = {.sort = 1000 + i, .data = bulk, .len = strlen(bulk), .src = INK_SRC_SYSTEM};
-        CHECK(ink_db_put(db, &w, NULL) == INK_DB_OK, "record %d of 501 accepted", i);
+        CHECK(ink_db_put(db, &w, NULL) == INK_DB_OK, "record %d of 600 accepted", i);
     }
-    ink_db_flush(db);
-    CHECK(WAIT_FOR(ink_db_idle(), 20000) && records() == 500, "500 records kept: %d", records());
-
-    CHECK(db && ink_db_next(db, &cur, &rec, NULL, 0) == 1 && rec.sort == 1001, "the oldest record went first");
+    ink_db_flush(db); ink_db_close(db);
+    CHECK(WAIT_FOR(ink_db_idle(), 20000) && records() == 600, "an old backup's 600 records fit the collection: %d", records());
+    bg_done = 0; ink_exec_post(INK_EXEC_BG, &bg_job, reimport, NULL);
+    CHECK(WAIT_FOR(bg_done, 20000) && bg_import == 0 && records() == 600, "a snapshot of 600 records restores (import: %d)", bg_import);
+    open_dial("13700000001"); click("拨打", NULL); dialled(); click("挂断", NULL); call_over();
+    CHECK(records() == 500, "a new call keeps the newest 500: %d", records());
+    db = ink_db_open_member(&HISTORY, ink_member_current()->id);
+    CHECK(db && ink_db_next(db, &cur, &rec, NULL, 0) == 1 && rec.sort == 1101, "the 101 oldest went first: %lld", (long long)rec.sort);
     ink_db_close(db);
-    CHECK(ink_db_find_def("phone.calls")->schema == 1, "the collection keeps schema 1: old backups still restore");
+    CHECK(ink_db_find_def("phone.calls")->schema == 1 && !ink_db_find_def("phone.calls")->max_records, "schema 1 and no record limit: old backups still restore");
+}
+/* phone-3 review: the NT26's call reports, unverified on the device, each one the simulated modem can do instead. */
+static unsigned quirks_now;
+static void w_quirks(void *a) { (void)a; sim_net_call_quirks(quirks_now); }
+static void quirk(unsigned q) { quirks_now = q; world(w_quirks); }
+static void quirks(void) {
+    quirk(SIM_CALL_NO_CLCC_URC); /* no unsolicited +CLCC: answered is found by AT+CLCC once a second */
+    double connected = sim_metric_value("event.call.connected");
+    open_dial("13700000001"); click("拨打", NULL); dialled();
+    world(w_answer); CHECK(WAIT_FOR(P.started != 0, 5000), "answered without +CLCC from the modem: polling finds it"); quiet(); inspect();
+    CHECK(strstr(snap, "通话中") && sim_metric_value("event.call.connected") - connected == 1, "通话中, call.connected once");
+    click("挂断", NULL); call_over();
+    CHECK(!strncmp(P.end_text, "通话结束", strlen("通话结束")) && last_result("answered"), "a talked call ends as answered: %s", P.end_text);
+    quirk(SIM_CALL_ATD_BUSY); /* BUSY as ATD's own result: placed, then over at once, in that order */
+    open_dial("13700000001"); click("拨打", NULL);
+    CHECK(WAIT_FOR(!H.active && !P.active && page("PhoneCall") && ink_db_idle(), 10000) && !strcmp(P.end_text, "对方忙或拒接"), "ATD answers BUSY: 对方忙或拒接 (%s)", P.end_text);
+    CHECK(last_result("busy") && !P.say[0], "the record says busy, and the dial did not fail");
+    quirk(SIM_CALL_ATD_NO_ANSWER);
+    open_dial("13700000001"); click("拨打", NULL);
+    CHECK(WAIT_FOR(!H.active && !P.active && page("PhoneCall") && ink_db_idle(), 10000) && !strcmp(P.end_text, "没人接"), "ATD answers NO ANSWER: 没人接 (%s)", P.end_text);
+    CHECK(last_result("no_answer"), "the record says no_answer");
+    quirk(SIM_CALL_CHUP_NO_CARRIER); /* NO CARRIER ends AT+CHUP before its OK: still our hangup */
+    open_dial("13700000001"); click("拨打", NULL); dialled(); click("挂断", NULL); call_over();
+    CHECK(!strcmp(P.end_text, "已取消") && last_result("cancelled") && !P.say[0], "已取消, cancelled, no 没有完成 (%s / %s)", P.end_text, P.say);
+    quirk(0);
+}
+/* phone-3 review: the call page names the caller from the current member's contacts, not the last member's. */
+static void w_ring_mum(void *a) { (void)a; sim_net_incoming_call("13812345678"); }
+static void w_ring_new(void *a) { (void)a; sim_net_incoming_call("13900000002"); }
+static bool shown_mum, shown_number, shown_new;
+static char name_field[64];
+static void look_names(void) {
+    shown_mum = on_screen("妈妈"); shown_number = on_screen("13812345678"); shown_new = on_screen("新同事"); name_field[0] = 0;
+    for (size_t i = 0; i < P.model.field_count; i++)
+        if (!strcmp(P.model.fields[i].id, "name")) snprintf(name_field, sizeof name_field, "%s", P.model.fields[i].value);
+}
+static void members(void) {
+    open_dial("138"); quiet(); /* the owner's contacts are in the table now */
+    CHECK(ink_member_switch("kid") == 0, "the child"); quiet();
+    world(w_ring_mum); CHECK(WAIT_FOR(P.active && P.incoming, 10000), "a call rings for the child"); quiet();
+    CHECK(BY_HAND("phone.return", NULL) && g_rc.status == INK_RC_DONE, "the child opens the call page"); quiet(); inspect();
+    on_ui(look_names);
+    CHECK(page("PhoneCall") && !shown_mum && shown_number && strcmp(name_field, "妈妈"), "the child's call page and its snapshot do not name the owner's contact (%s)", name_field);
+    CHECK(BY_HAND("call.hangup", NULL) && g_rc.status == INK_RC_DONE, "the child rejects it"); call_over();
+    CHECK(ink_member_switch("owner") == 0, "back to the owner"); quiet();
+    put_contact("新同事", "13900000002");
+    world(w_ring_new); /* the owner's contacts changed since the table was read */
+    CHECK(WAIT_FOR(P.active && P.incoming, 10000), "a call from the new contact"); quiet();
+    CHECK(BY_HAND("phone.return", NULL) && g_rc.status == INK_RC_DONE, "the call page"); quiet(); inspect();
+    on_ui(look_names);
+    CHECK(shown_new && !strcmp(name_field, "新同事"), "a contact added since names the caller (%s)", name_field);
+    CHECK(BY_HAND("call.hangup", NULL) && g_rc.status == INK_RC_DONE, "reject"); call_over();
 }
 /* the notice has its own row: off the keys, on the screen, not over a contact's name */
 static lv_area_t keys_area[12];
@@ -375,7 +478,7 @@ static void run(void *arg) {
     fail_path(NULL, true, "已取消", "cancelled", "call-ended-cancelled");
     if (full) { names(); ai_path(); unsaved_and_ringing(); }
     CHECK(BY_HAND("phone.recents", NULL), "recent calls"); quiet(); CHECK(WAIT_FOR(P.list != NULL, 10000), "history"); shot("recents");
-    if (full) recents();
+    if (full) { recents(); delete_bounds(); quirks(); members(); history_cap(); }
     else {
         label = "13700000001 (4)"; bound = NULL; on_ui(find_detail);
         if (detail_button) tap(g_btn_x[0], g_btn_y[0]);

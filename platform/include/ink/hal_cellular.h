@@ -47,7 +47,6 @@ typedef struct {
     hal_cell_end_t end; /* HAL_CELL_EV_CALL_ENDED */
 } hal_cell_event_t;
 
-
 /** False when there is no modem, or it does not answer. Task context. */
 bool hal_cell_status(hal_cell_status_t *out);
 typedef struct { char name[101], user[65], password[65]; } hal_cell_apn_t; /* empty name: subscription default */
@@ -73,9 +72,13 @@ int hal_cell_sms_parts(const char *utf8);
 int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent);
 /** Read a waiting message or part and remove it from the modem's store. Text length, or < 0. */
 int hal_cell_sms_take(int index, hal_cell_sms_t *out);
+/** 0: placed. A call the modem ends at once (BUSY, NO ANSWER, NO CARRIER as ATD's result) also counts as placed: its
+ *  HAL_CELL_EV_CALL_ENDED follows with the reason. */
 int hal_cell_dial(const char *number);
 int hal_cell_answer(void);
-int hal_cell_hangup(void);
+int hal_cell_hangup(void); /* 0 also when the modem answers with the call's NO CARRIER */
+/** 1: the outgoing call has been answered (AT+CLCC), 0: not yet, < 0 unknown. The modem may not say so by itself. */
+int hal_cell_call_active(void);
 int hal_cell_mute(bool on, bool *muted); /* Read back the modem's actual mute state. */
 int hal_cell_dtmf(char key);
 /** The next modem event (one reader). 1 got one, 0 none within the timeout. Task context. */

@@ -567,6 +567,7 @@ static struct {
     char tones[65];
     char call_number[24];
     bool auto_answer;
+    unsigned quirks; /* SIM_CALL_*: how the modem may report a call instead (sim.h) */
     vtk_event_id_t call_ev;
     uint64_t ring_started;
     unsigned sms_in, sms_out, calls;
@@ -829,6 +830,7 @@ static void call_report(void) { /* ISR or locked */
         urc_push("NO CARRIER");
         return;
     }
+    if (MS.quirks & SIM_CALL_NO_CLCC_URC) return; /* AT+CLCC still answers */
     snprintf(l, sizeof l, "+CLCC: 1,%d,%d,0,0,\"%s\",129", MS.call_out ? 0 : 1, MS.call == 1 ? 0 : MS.call, MS.call_number);
     urc_push(l);
 }
@@ -1040,6 +1042,11 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         if (MS.call || !(emergency ? CELL.radio : can_call())) {
             r = HAL_AT_ERROR;
             snprintf(info, sizeof info, "+CME ERROR: %d", !cell_ok() ? 30 : 4);
+        } else if (MS.quirks & (SIM_CALL_ATD_BUSY | SIM_CALL_ATD_NO_ANSWER)) { /* refused at once: ATD's final result */
+            MS.calls++;
+            sim_copy_name(info, sizeof info, MS.quirks & SIM_CALL_ATD_BUSY ? "BUSY" : "NO ANSWER");
+            urc_push(info); /* the AT channel also queues it (s31_modem.c ink_s31_at_urc) */
+            r = HAL_AT_ERROR;
         } else {
             MS.call = 3; /* dialled, ringing at the far end */
             MS.call_out = true;
@@ -1060,7 +1067,10 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
             call_report();
         }
         break;
-    case K_CHUP: call_end(); break;
+    case K_CHUP:
+        if (MS.call && (MS.quirks & SIM_CALL_CHUP_NO_CARRIER)) { r = HAL_AT_ERROR; sim_copy_name(info, sizeof info, "NO CARRIER"); }
+        call_end(); /* NO CARRIER first; with the quirk it also ended the command, so its OK came too late */
+        break;
     case K_CMUT_Q: sim_copy_name(info, sizeof info, MS.muted ? "+CMUT: 1" : "+CMUT: 0"); break;
     case K_CMUT:
         if (MS.call != 1) r = HAL_AT_ERROR;
@@ -1175,6 +1185,7 @@ void sim_net_remote_busy(void) { call_refused("BUSY"); }
 void sim_net_remote_no_answer(void) { call_refused("NO ANSWER"); }
 
 void sim_net_auto_answer(bool on) { MS.auto_answer = on; }
+void sim_net_call_quirks(unsigned quirks) { MS.quirks = quirks; }
 
 int sim_net_call(char *number, size_t cap) {
     if (number && cap) snprintf(number, cap, "%s", MS.call_number);

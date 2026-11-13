@@ -52,7 +52,8 @@ int hal_cell_sms_take(int index, hal_cell_sms_t *m) {
     return (int)strlen(m->text);
 }
 
-int hal_cell_dial(const char *number) { return nt26_dial(number) == NT26_OK ? 0 : -1; }
+int hal_cell_dial(const char *number) { nt26_result_t r = nt26_dial(number); return r == NT26_OK || r == NT26_CALL_ENDED ? 0 : -1; }
+int hal_cell_call_active(void) { bool on; return nt26_outgoing_active(&on) == NT26_OK ? on : -1; }
 int hal_cell_answer(void) { return nt26_answer() == NT26_OK ? 0 : -1; }
 int hal_cell_hangup(void) { return nt26_hangup() == NT26_OK ? 0 : -1; }
 int hal_cell_mute(bool on, bool *muted) { return nt26_mute(on, muted) == NT26_OK ? 0 : -1; }

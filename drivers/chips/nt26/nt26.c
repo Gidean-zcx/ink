@@ -103,6 +103,7 @@ const char *nt26_result_name(nt26_result_t r) {
     case NT26_AT_FAILED: return "AT failed";
     case NT26_NO_MODEM: return "no modem";
     case NT26_NOT_SENT: return "not sent";
+    case NT26_CALL_ENDED: return "call ended";
     }
     return "?";
 }
@@ -414,10 +415,14 @@ nt26_result_t nt26_sms_delete(int index) {
     return at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
 }
 
+/* The call's own result codes (V.250 §6.3.1): the AT channel ends a pending command on them as well. */
+static bool call_over(const char *resp) { return strstr(resp, "BUSY") || strstr(resp, "NO ANSWER") || strstr(resp, "NO CARRIER"); }
+
 nt26_result_t nt26_dial(const char *number) {
     char cmd[48], resp[32];
     snprintf(cmd, sizeof cmd, "ATD%s;", number);
-    return at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    nt26_result_t r = at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    return r == NT26_AT_FAILED && call_over(resp) ? NT26_CALL_ENDED : r;
 }
 
 nt26_result_t nt26_answer(void) {
@@ -425,9 +430,22 @@ nt26_result_t nt26_answer(void) {
     return at("ATA", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
 }
 
-nt26_result_t nt26_hangup(void) {
+nt26_result_t nt26_hangup(void) { /* the call's NO CARRIER can come before CHUP's OK and end the command: it did end */
     char resp[32];
-    return at("AT+CHUP", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    nt26_result_t r = at("AT+CHUP", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    return r == NT26_AT_FAILED && strstr(resp, "NO CARRIER") ? NT26_OK : r;
+}
+
+nt26_result_t nt26_outgoing_active(bool *answered) {
+    char resp[256];
+    nt26_result_t r = at("AT+CLCC", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    *answered = false;
+    if (r != NT26_OK) return r;
+    for (const char *p = strstr(resp, "+CLCC:"); p; p = strstr(p + 6, "+CLCC:")) {
+        int index, direction, status;
+        if (sscanf(p, "+CLCC: %d,%d,%d", &index, &direction, &status) == 3 && direction == 0 && status == 0) *answered = true;
+    }
+    return NT26_OK;
 }
 
 /* TS 27.007; target firmware support still needs its NT26 AT manual. */

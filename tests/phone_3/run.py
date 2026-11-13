@@ -53,7 +53,8 @@ work = Path(tempfile.mkdtemp(prefix='phone-3-reverse-', dir=build))
 
 
 def compile_copy(path, source, name, unit=None):
-    entry = next(e for e in db if e['file'] == str(ROOT / (unit or path)))
+    found = [e for e in db if e['file'] == str(ROOT / (unit or path))]  # a product library's flags first (nt26.c has host tests too)
+    entry = next((e for e in found if e.get('output', '').startswith('CMakeFiles/ink_')), found[0])
     copy, obj = work / (name + Path(path).suffix), work / (name + '.o')
     copy.write_text(source)
     command = shlex.split(entry['command'])
@@ -77,6 +78,31 @@ cases = [
      "ev->end = line[0] == 'B' ? HAL_CELL_END_BUSY : HAL_CELL_END_NO_ANSWER;",
      "ev->end = line[0] == 'B' ? HAL_CELL_END_HANGUP : HAL_CELL_END_NO_ANSWER;",
      'call-ended-busy: 对方忙或拒接'),
+    # phone-3 review fixes, each taken out alone
+    ('no-answered-poll', 'system/services/comm/comm_service.c',
+     '        ink_svc_at(&CM.poll_at, osal_now_us() + CALL_POLL_US, poll_due, NULL);\n',
+     '',
+     'answered without +CLCC from the modem'),
+    ('busy-not-placed', 'drivers/chips/nt26/nt26.c',
+     'return r == NT26_AT_FAILED && call_over(resp) ? NT26_CALL_ENDED : r;',
+     'return r == NT26_AT_FAILED && call_over(resp) ? r : r;',
+     'ATD answers BUSY'),
+    ('hangup-no-carrier-fails', 'drivers/chips/nt26/nt26.c',
+     'return r == NT26_AT_FAILED && strstr(resp, "NO CARRIER") ? NT26_OK : r;',
+     'return r;',
+     '已取消, cancelled'),
+    ('stale-contacts', 'system/apps/phone/phone.c',
+     '    load_contacts(); /* this member',
+     '    if (!X.nbook) load_contacts(); /* this member',
+     "the child's call page"),
+    ('delete-past-group', 'system/apps/phone/phone.c',
+     '(found && !same_group(&head, &one))',
+     '(false && !same_group(&head, &one))',
+     "only the group's three calls went"),
+    ('record-limit', 'system/apps/phone/phone.c',
+     '.schema = 1, .json = true, .ai_read = true};',
+     '.schema = 1, .json = true, .ai_read = true, .max_records = 500, .drop_oldest = true};',
+     "an old backup's 600 records fit"),
 ]
 for name, path, old, new, expected in cases:
     source = (ROOT / path).read_text()

@@ -1507,8 +1507,8 @@ void UartEthModem::HandleAtResponse(const char* data, size_t length) {
         at_line_.clear();
         if (line.empty() || line == " ") continue;
         ParseAtResponse(line);
-        bool query = at_command_.size() > 3 && at_command_.back() == '?' &&
-            line.compare(0, at_command_.size() - 3, at_command_, 2, at_command_.size() - 3) == 0;
+        bool query = (at_command_.size() > 3 && at_command_.back() == '?' && line.compare(0, at_command_.size() - 3, at_command_, 2,
+            at_command_.size() - 3) == 0) || (waiting_for_at_response_ && at_command_ == "AT+CLCC" && line.compare(0, 6, "+CLCC:") == 0);
         bool urc = !query && ink_s31_at_urc(line.c_str());
         bool final = line == "OK" || line == "ERROR" || line.find("+CME ERROR") == 0 || line.find("+CMS ERROR") == 0;
         if (at_desynced_ && final) { at_desynced_ = false; continue; }
