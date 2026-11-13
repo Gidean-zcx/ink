@@ -42,6 +42,10 @@ typedef void (*s31_irq_fn)(void *ctx);
 /** Call fn on the port's interrupt task after each falling edge of gpio, and again while the line
  *  stays low after a service. Boot, task context, before the line can fire. 0 ok. */
 int s31_irq_watch(int gpio, s31_irq_fn fn, void *ctx);
+/** The ISR of each falling edge of gpio notifies `task` (a FreeRTOS TaskHandle_t) with `bits` itself, and notes the
+ *  time (s31_irq_edge_us); a line left low is the task's to look at again. Boot, task context. 0 ok. */
+int s31_irq_watch_task(int gpio, void *task, uint32_t bits);
+uint64_t s31_irq_edge_us(int gpio);
 
 /** v2.0.77 flash drain (main/display/epd_nvs_guard.cc, main/boards/common/storage/sd_log_writer.cc): around each
  *  flash read, write or erase, wait for the I2C1 transfer in flight and quiet the bus interrupts

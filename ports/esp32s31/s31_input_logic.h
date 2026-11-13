@@ -67,8 +67,9 @@ static inline void s31_touch_emit(int id, const s31_contact_t *p, hal_touch_phas
     emit(&e, ctx);
 }
 
-static inline void s31_touch_frame(s31_contact_t *rp, const ft6336u_point_t *pts, int n, uint64_t t,
-                                   hal_input_sink_fn emit, void *ctx) {
+/* t_down: when a new contact went down (the interrupt's edge when it is newer than the last read), t: the rest. */
+static inline void s31_touch_frame_at(s31_contact_t *rp, const ft6336u_point_t *pts, int n, uint64_t t, uint64_t t_down,
+                                      hal_input_sink_fn emit, void *ctx) {
     bool seen[FT6336U_MAX_POINTS] = {false};
     for (int i = 0; i < n; i++)
         if (pts[i].id >= 0 && pts[i].id < FT6336U_MAX_POINTS) seen[pts[i].id] = true;
@@ -85,13 +86,18 @@ static inline void s31_touch_frame(s31_contact_t *rp, const ft6336u_point_t *pts
         bool panel = metalio_touch_on_panel(pts[i].x, pts[i].y);
         if (!p->down && (key || panel)) {
             *p = (s31_contact_t){.down = true, .key = key, .x = pts[i].x, .y = pts[i].y};
-            s31_touch_emit(id, p, HAL_TOUCH_DOWN, t, emit, ctx);
+            s31_touch_emit(id, p, HAL_TOUCH_DOWN, t_down, emit, ctx);
         } else if (p->down && !p->key && panel && (p->x != pts[i].x || p->y != pts[i].y)) {
             p->x = pts[i].x;
             p->y = pts[i].y;
             s31_touch_emit(id, p, HAL_TOUCH_MOVE, t, emit, ctx);
         }
     }
+}
+
+static inline void s31_touch_frame(s31_contact_t *rp, const ft6336u_point_t *pts, int n, uint64_t t,
+                                   hal_input_sink_fn emit, void *ctx) {
+    s31_touch_frame_at(rp, pts, n, t, t, emit, ctx);
 }
 
 static inline uint32_t s31_wake_gpio2(uint32_t armed, bool read_ok, uint8_t p1, bool moved) {

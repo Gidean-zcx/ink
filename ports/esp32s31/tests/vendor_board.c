@@ -80,7 +80,9 @@ BaseType_t xTaskNotifyWait(uint32_t a, uint32_t b, uint32_t *bits, TickType_t wa
     if (iterations++) longjmp(task_exit, 1);
     *bits = notification; notification = 0; return pdTRUE;
 }
-int s31_irq_watch(int pin, s31_irq_fn fn, void *ctx) { (void)ctx; assert(fn && (pin == 2 || pin == 5 || pin == 61)); return 0; }
+int s31_irq_watch(int pin, s31_irq_fn fn, void *ctx) { (void)ctx; assert(fn && (pin == 2 || pin == 61)); return 0; }
+int s31_irq_watch_task(int pin, void *task, uint32_t bits) { assert(task && pin == 5 && bits); return 0; }
+uint64_t s31_irq_edge_us(int pin) { (void)pin; return 0; }
 esp_err_t gpio_reset_pin(int pin) { assert(pin == 61); return ESP_OK; }
 esp_err_t gpio_config(const gpio_config_t *c) { assert(c->pin_bit_mask == (1ULL << 61) && c->intr_type == GPIO_INTR_ANYEDGE); return ESP_OK; }
 int gpio_get_level(int pin) { return gpio_level[pin]; }
