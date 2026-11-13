@@ -232,49 +232,59 @@ static void step(ink_call_t *c) {
     ck_edit_step(p, (int)delta); /* copied UpBtnPressed / DownBtnPressed: wraps, only that number redraws */
 }
 
+/* One line each; tools/capabilities.py reads these macros (literal strings only). */
 #define CAP(n, t, page, fx, in, fn) {.id = "clock." n, .app = "clock", .title = t, .activity = page, .effect = fx, .child_ok = true, .input = in, .run = fn}
-#define OBJ(props, req) "{\"type\":\"object\",\"properties\":{" props "}" req "}"
-#define ID47 "\"id\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":47}"
-#define ZONE "\"zone\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":8}"
+#define ANY(n, t, fx, in, fn) {.id = "clock." n, .app = "clock", .title = t, .effect = fx, .child_ok = true, .input = in, .run = fn}
 #define NAV INK_FX_NAVIGATE
 #define WRITE INK_FX_LOCAL_WRITE
+#define NONE "{\"type\":\"object\",\"properties\":{}}"
+#define ID_OPT "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":47}}}"
+#define ID_REQ "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":47}},\"required\":[\"id\"]}"
+#define ZONE_REQ "{\"type\":\"object\",\"properties\":{\"zone\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":8}},\"required\":[\"zone\"]}"
+#define TAB_IN "{\"type\":\"object\",\"properties\":{\"tab\":{\"type\":\"string\",\"enum\":[\"world\",\"alarm\",\"stopwatch\",\"timer\"]}},\"required\":[\"tab\"]}"
+#define STEP_IN "{\"type\":\"object\",\"properties\":{\"part\":{\"type\":\"string\",\"enum\":[\"hour\",\"minute\",\"second\"]},\"delta\":{\"type\":\"integer\",\"enum\":[-1,1]}},\"required\":[\"part\",\"delta\"]}"
+#define OPEN_IN "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}"
+#define DRAFT_IN "{\"type\":\"object\",\"properties\":{\"hour\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":23},\"minute\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":59},\"weekdays\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127},\"day\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":6},\"enabled\":{\"type\":\"boolean\"}}}"
+#define TITLE_IN "{\"type\":\"object\",\"properties\":{\"zone\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":8},\"title\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"zone\",\"title\"]}"
+#define SORT_IN "{\"type\":\"object\",\"properties\":{\"by\":{\"type\":\"string\",\"enum\":[\"lap\",\"lap_time\",\"total\"]}},\"required\":[\"by\"]}"
+#define SET_IN "{\"type\":\"object\",\"properties\":{\"seconds\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":86399},\"id\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":47}},\"required\":[\"seconds\"]}"
 static const ink_cap_t CAPS[] = {
-    CAP("tab", "打开时钟的页签", NULL, NAV, OBJ("\"tab\":{\"type\":\"string\",\"enum\":[\"world\",\"alarm\",\"stopwatch\",\"timer\"]}", ",\"required\":[\"tab\"]"), nav),
-    CAP("world", TR_NOOP("世界时钟"), NULL, NAV, NULL, nav),
-    CAP("stopwatch", TR_NOOP("秒表"), NULL, NAV, NULL, nav),
-    CAP("timer", "计时", NULL, NAV, NULL, nav),
-    CAP("prev", "上一页（当前页签或加城市页）", NULL, NAV, NULL, nav),
-    CAP("next", "下一页（当前页签或加城市页）", NULL, NAV, NULL, nav),
-    CAP("extra_prev", TR_NOOP("上一页"), NULL, NAV, NULL, nav),
-    CAP("extra_next", TR_NOOP("下一页"), NULL, NAV, NULL, nav),
-    CAP("step", "时、分、秒加一或减一（到头回卷）", NULL, NAV, OBJ("\"part\":{\"type\":\"string\",\"enum\":[\"hour\",\"minute\",\"second\"]},\"delta\":{\"type\":\"integer\",\"enum\":[-1,1]}", ",\"required\":[\"part\",\"delta\"]"), step),
-    CAP("new", "加闹钟", "Clock", NAV, NULL, ck_alarm_cap),
-    CAP("open", "查看闹钟", "Clock", NAV, OBJ("\"id\":{\"type\":\"integer\",\"minimum\":1}", ",\"required\":[\"id\"]"), ck_alarm_cap),
-    CAP("draft", "选择闹钟的时间、重复日期和开关", "ClockAlarm", NAV, OBJ("\"hour\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":23},\"minute\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":59},\"weekdays\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127},\"day\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":6},\"enabled\":{\"type\":\"boolean\"}", ""), ck_alarm_cap),
-    CAP("focus", "输入闹钟名称", "ClockAlarm", NAV, NULL, ck_alarm_cap),
-    CAP("save", "保存闹钟", "ClockAlarm", WRITE, NULL, ck_alarm_cap),
-    CAP("world_pick", TR_NOOP("加城市"), NULL, NAV, NULL, ck_world_cap),
-    CAP("world_add", TR_NOOP("加城市"), NULL, WRITE, OBJ(ZONE, ",\"required\":[\"zone\"]"), ck_world_cap),
-    CAP("world_remove", TR_NOOP("删除"), NULL, WRITE, OBJ(ZONE, ",\"required\":[\"zone\"]"), ck_world_cap),
-    CAP("world_edit", "改城市的名字或删除城市", "Clock", NAV, OBJ(ZONE, ",\"required\":[\"zone\"]"), ck_world_cap),
-    CAP("world_name", "输入城市名字", "ClockCity", NAV, NULL, ck_world_cap),
-    CAP("world_title", "给城市改名（空的恢复默认）", NULL, WRITE, OBJ(ZONE ",\"title\":{\"type\":\"string\",\"maxLength\":15}", ",\"required\":[\"zone\",\"title\"]"), ck_world_cap),
-    CAP("stopwatch_start", TR_NOOP("开始"), "Clock", WRITE, NULL, ck_watch_cap),
-    CAP("stopwatch_pause", TR_NOOP("暂停"), "Clock", WRITE, NULL, ck_watch_cap),
-    CAP("stopwatch_lap", TR_NOOP("计次"), "Clock", WRITE, NULL, ck_watch_cap),
-    CAP("stopwatch_reset", TR_NOOP("清零"), "Clock", WRITE, NULL, ck_watch_cap),
-    CAP("lap_sort", "计次按圈次、单圈或累计排序（再点同一列升降切换）", "Clock", NAV, OBJ("\"by\":{\"type\":\"string\",\"enum\":[\"lap\",\"lap_time\",\"total\"]}", ",\"required\":[\"by\"]"), ck_watch_cap),
-    CAP("timer_set", "设定计时时长", NULL, WRITE, OBJ("\"seconds\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":86399}," ID47, ",\"required\":[\"seconds\"]"), ck_timer_cap),
-    CAP("timer_start", "开始或继续计时", "Clock", WRITE, OBJ(ID47, ""), ck_timer_cap),
-    CAP("timer_pause", "暂停计时", "Clock", WRITE, OBJ(ID47, ""), ck_timer_cap),
-    CAP("timer_cancel", "重置计时", "Clock", WRITE, OBJ(ID47, ""), ck_timer_cap),
-    CAP("timer_new", "加计时器", "Clock", NAV, NULL, ck_timer_cap),
-    CAP("timer_edit", "编辑计时器", "Clock", NAV, OBJ(ID47, ",\"required\":[\"id\"]"), ck_timer_cap),
-    CAP("timer_name", "输入计时器名字", "ClockTimerEdit", NAV, NULL, ck_timer_cap),
-    CAP("timer_save", "保存计时器", "ClockTimerEdit", WRITE, NULL, ck_timer_cap),
-    CAP("timer_delete", "删除计时器", NULL, WRITE, OBJ(ID47, ",\"required\":[\"id\"]"), ck_timer_cap),
-    {.id = "clock.timer_dismiss", .app = "clock", .title = "关闭计时响铃", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .while_locked = true, .input = OBJ(ID47, ",\"required\":[\"id\"]"), .run = ck_timer_cap},
-    {.id = "clock.timer_restart", .app = "clock", .title = "到点的计时器再计一次", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .while_locked = true, .input = OBJ(ID47, ",\"required\":[\"id\"]"), .run = ck_timer_cap},
+    ANY("tab", "打开时钟的页签", NAV, TAB_IN, nav),
+    ANY("world", TR_NOOP("世界时钟"), NAV, NONE, nav),
+    ANY("stopwatch", TR_NOOP("秒表"), NAV, NONE, nav),
+    ANY("timer", "计时", NAV, NONE, nav),
+    ANY("prev", "上一页（当前页签或加城市页）", NAV, NONE, nav),
+    ANY("next", "下一页（当前页签或加城市页）", NAV, NONE, nav),
+    ANY("extra_prev", TR_NOOP("上一页"), NAV, NONE, nav),
+    ANY("extra_next", TR_NOOP("下一页"), NAV, NONE, nav),
+    ANY("step", "时、分、秒加一或减一（到头回卷）", NAV, STEP_IN, step),
+    CAP("new", "加闹钟", "Clock", NAV, NONE, ck_alarm_cap),
+    CAP("open", "查看闹钟", "Clock", NAV, OPEN_IN, ck_alarm_cap),
+    CAP("draft", "选择闹钟的时间、重复日期和开关", "ClockAlarm", NAV, DRAFT_IN, ck_alarm_cap),
+    CAP("focus", "输入闹钟名称", "ClockAlarm", NAV, NONE, ck_alarm_cap),
+    CAP("save", "保存闹钟", "ClockAlarm", WRITE, NONE, ck_alarm_cap),
+    ANY("world_pick", TR_NOOP("加城市"), NAV, NONE, ck_world_cap),
+    ANY("world_add", TR_NOOP("加城市"), WRITE, ZONE_REQ, ck_world_cap),
+    ANY("world_remove", TR_NOOP("删除"), WRITE, ZONE_REQ, ck_world_cap),
+    CAP("world_edit", "改城市的名字或删除城市", "Clock", NAV, ZONE_REQ, ck_world_cap),
+    CAP("world_name", "输入城市名字", "ClockCity", NAV, NONE, ck_world_cap),
+    ANY("world_title", "给城市改名（空的恢复默认）", WRITE, TITLE_IN, ck_world_cap),
+    CAP("stopwatch_start", TR_NOOP("开始"), "Clock", WRITE, NONE, ck_watch_cap),
+    CAP("stopwatch_pause", TR_NOOP("暂停"), "Clock", WRITE, NONE, ck_watch_cap),
+    CAP("stopwatch_lap", TR_NOOP("计次"), "Clock", WRITE, NONE, ck_watch_cap),
+    CAP("stopwatch_reset", TR_NOOP("清零"), "Clock", WRITE, NONE, ck_watch_cap),
+    CAP("lap_sort", "计次按圈次、单圈或累计排序（再点同一列升降切换）", "Clock", NAV, SORT_IN, ck_watch_cap),
+    ANY("timer_set", "设定计时时长", WRITE, SET_IN, ck_timer_cap),
+    CAP("timer_start", "开始或继续计时", "Clock", WRITE, ID_OPT, ck_timer_cap),
+    CAP("timer_pause", "暂停计时", "Clock", WRITE, ID_OPT, ck_timer_cap),
+    CAP("timer_cancel", "重置计时", "Clock", WRITE, ID_OPT, ck_timer_cap),
+    CAP("timer_new", "加计时器", "Clock", NAV, NONE, ck_timer_cap),
+    CAP("timer_edit", "编辑计时器", "Clock", NAV, ID_REQ, ck_timer_cap),
+    CAP("timer_name", "输入计时器名字", "ClockTimerEdit", NAV, NONE, ck_timer_cap),
+    CAP("timer_save", "保存计时器", "ClockTimerEdit", WRITE, NONE, ck_timer_cap),
+    ANY("timer_delete", "删除计时器", WRITE, ID_REQ, ck_timer_cap),
+    {.id = "clock.timer_dismiss", .app = "clock", .title = "关闭计时响铃", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .while_locked = true, .input = ID_REQ, .run = ck_timer_cap},
+    {.id = "clock.timer_restart", .app = "clock", .title = "到点的计时器再计一次", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .while_locked = true, .input = ID_REQ, .run = ck_timer_cap},
 };
 static void time_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;

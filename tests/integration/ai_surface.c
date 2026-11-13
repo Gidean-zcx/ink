@@ -103,8 +103,8 @@ static const struct {
     {"calc.eval", "expr"}, {"calc.key", "key"},
     {"clock.prev", NULL}, {"clock.next", NULL}, {"clock.new", NULL}, {"clock.open", "id"},
     {"clock.draft", ""}, {"clock.focus", NULL}, {"clock.save", NULL},
-    {"clock.timer", NULL}, {"clock.timer_set", "seconds"}, {"clock.timer_start", NULL},
-    {"clock.timer_pause", NULL}, {"clock.timer_cancel", NULL}, {"clock.timer_dismiss", "id"},
+    {"clock.timer", NULL}, {"clock.timer_set", "seconds"}, {"clock.timer_start", ""},
+    {"clock.timer_pause", ""}, {"clock.timer_cancel", ""}, {"clock.timer_dismiss", "id"}, /* clock-3: an optional timer id */
     {"clock.stopwatch", NULL}, {"clock.stopwatch_start", NULL}, {"clock.stopwatch_pause", NULL},
     {"clock.stopwatch_lap", NULL}, {"clock.stopwatch_reset", NULL}, {"clock.extra_prev", NULL}, {"clock.extra_next", NULL},
     {"clock.world", NULL}, {"clock.world_pick", NULL}, {"clock.world_add", "zone"}, {"clock.world_remove", "zone"},
@@ -157,6 +157,9 @@ static const struct {
     {"gallery.show", "view"}, {"gallery.find", ""}, {"photo.next", NULL}, {"photo.prev", NULL}, {"photo.info", NULL}, /* gallery-3 */
     {"photo.zoom", "step"}, {"photo.pan", "dir"}, {"photo.rotate", "dir"}, {"photo.trash", NULL}, {"photo.restore", "path"},
     {"photo.delete_forever", "path"}, {"gallery.empty_trash", NULL},
+    {"clock.tab", "tab"}, {"clock.step", "part,delta"}, {"clock.lap_sort", "by"}, {"clock.world_edit", "zone"}, {"clock.world_name", NULL},
+    {"clock.world_title", "zone,title"}, {"clock.timer_new", NULL}, {"clock.timer_edit", "id"}, {"clock.timer_name", NULL},
+    {"clock.timer_save", NULL}, {"clock.timer_delete", "id"}, {"clock.timer_restart", "id"}, /* clock-3 */
     {NULL, NULL},
 };
 
