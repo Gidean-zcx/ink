@@ -826,7 +826,7 @@ static void trash_line(const ink_gallery_item_t *it, char *when, size_t when_cap
 static void bind_trash(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx; unsigned at = index % LIST_SLOTS; int w = INK_CANVAS_W - 2 * INK_MARGIN; lv_obj_clean(slot);
     const ink_gallery_item_t *it = &G.data->trash[trash_order[index]];
-    char when[48], left[48]; trash_line(it, when, sizeof when, left, sizeof left);
+    char when[40], left[40]; trash_line(it, when, sizeof when, left, sizeof left);
     snprintf(G.labels[at], sizeof G.labels[at], "%s", it->name); snprintf(G.values[at], sizeof G.values[at], "%s%s%s", when, left[0] ? " · " : "", left);
     ink_jw_t j; ink_jw_init(&j, G.args[at], sizeof G.args[at]); ink_jw_raw(&j, "{\"path\":"); ink_jw_str(&j, it->path); ink_jw_raw(&j, "}");
     snprintf(G.objects[at], sizeof G.objects[at], "trash:%u", (unsigned)it->id);
@@ -1210,7 +1210,7 @@ static void browse_action(ink_call_t *c) { /* gallery.show, gallery.find */
         int y = 0, m = 0;
         if (month[0] && strcmp(month, "undated") && (sscanf(month, "%4d-%2d", &y, &m) != 2 || strlen(month) != 7)) { c->rc.status = INK_RC_INVALID; return; }
         G.filter = s[0] ? FILTER_ALBUM : month[0] ? FILTER_MONTH : FILTER_NONE; G.album = (uint16_t)a;
-        snprintf(G.month, sizeof G.month, "%s", month); G.view = VIEW_ALL;
+        snprintf(G.month, sizeof G.month, "%.7s", month); G.view = VIEW_ALL;
         memset(&G.position, 0, sizeof G.position);
     }
     filtered(); view_changed();
