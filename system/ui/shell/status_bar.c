@@ -90,7 +90,7 @@ static void draw_icons(lv_obj_t *bar, const bar_state_t *s, int left) {
     char text[12];
     snprintf(text, sizeof text, "%d", s->battery), x = put_text(bar, x - INK_GAP_S, text) - INK_GAP_S;
     if (s->plane) x = put_icon(bar, x, "plane"); /* airplane mode in place of the network, as the phone mode there */
-    else if (s->cell >= 0) signal_bars(bar, x - INK_ICON_SMALL, s->cell), x = put_text(bar, x - INK_ICON_SMALL - INK_GAP_S, "4G");
+    else if (s->cell >= 0) { int at = put_text(bar, x - INK_ICON_SMALL - INK_GAP_S, "4G"); signal_bars(bar, x - INK_ICON_SMALL, s->cell); x = at; } /* label, then bars */
     else x = put_text(bar, x, s->cell == CELL_NO_SIM ? TR("无卡") : TR("无服务"));
     if (s->wifi) x = put_icon(bar, x, "wifi");
     if (s->bt) put_icon(bar, x, "bluetooth"); /* only while headphones are connected */
@@ -114,7 +114,7 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     ink_shell_bind(bar, "shell.control", NULL);
     lv_obj_t *time = NULL;
     static const char WIDEST[] = "00:00";
-    int left = show_time ? INK_MARGIN + ink_ui_text_width(WIDEST, INK_FONT_STATUS, INK_WEIGHT_MEDIUM) + INK_GAP_S : 0;
+    int left = INK_MARGIN + (show_time ? ink_ui_text_width(WIDEST, INK_FONT_STATUS, INK_WEIGHT_MEDIUM) + INK_GAP_S : 0); /* the bell begins the box */
     if (show_time) {
         char clock[16], date[96];
         ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
@@ -154,7 +154,7 @@ static void bar_refresh(void *arg) {
 }
 static void bar_changed(void *ctx, int h, const char *id) { /* any task: a state or the airplane setting */
     (void)ctx; (void)h;
-    static const char *const SHOWN[] = {"time.", "battery.level", "net.", "wifi.", "cell.", "bt.", "audio.mic", "notify.unread", "power.state", "member.", "call."};
+    static const char *const SHOWN[] = {"time.", "battery.level", "net.", "wifi.", "cell.", "bt.", "audio.mic", "notify.unread", "call."};
     for (unsigned i = 0; i < sizeof SHOWN / sizeof *SHOWN; i++)
         if (!strncmp(id, SHOWN[i], strlen(SHOWN[i]))) {
             ink_exec_post(INK_EXEC_UI, &B.job, bar_refresh, NULL);

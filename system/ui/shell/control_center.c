@@ -280,12 +280,15 @@ static void build(void) {
     ink_ui_hint_obj(N.control, INK_REFRESH_FLASH_UI);
     ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
 }
-static bool notes_moved(void) { /* the rows it would draw now are not the ones drawn */
+static bool notes_moved(void) { /* the rows it would draw now are not the ones drawn; a row read since only says so */
     ink_db_cursor_t cursor = {0};
     ink_notify_view_t n;
     int count = 0;
     bool moved = false;
-    for (; count < C.limit && ink_notify_next(&cursor, &n) == 1; count++) moved |= count >= N.control_count || N.control_items[count].id != n.id;
+    for (; count < C.limit && ink_notify_next(&cursor, &n) == 1; count++) {
+        moved |= count >= N.control_count || N.control_items[count].id != n.id;
+        if (!moved) N.control_items[count].read = n.read;
+    }
     return moved || count != N.control_count;
 }
 

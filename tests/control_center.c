@@ -118,11 +118,11 @@ static void publish(const char *what) {
 static void touch_case(void) {
     start(true);
     swipe(342, 30, 342, 600); look(); /* a pull from the status bar */
-    CHECK(top("Control") && first_stage(), "the first pull: four tiles: %.200s", view);
+    CHECK(top("Control") && first_stage(), "the first pull: four tiles: %.150s", view);
     CHECK(label("合成通知一") && label("合成通知二"), "the first stage has the notifications");
     shot("stage1");
     swipe(342, 420, 342, 1000); look(); /* a second pull */
-    CHECK(second_stage(), "the second pull: every tile and the sliders: %.200s", view);
+    CHECK(second_stage(), "the second pull: every tile and the sliders: %.150s", view);
     shot("stage2");
     /* a tile redraws alone (D-127): the trace between the marks stays inside it */
     CHECK(tile("勿扰"), "the do-not-disturb tile"); publish("tile");
@@ -132,12 +132,16 @@ static void touch_case(void) {
     /* Wi-Fi: connecting first, then the network's name; a failed join says so */
     touch("Wi-Fi");
     CHECK(WAIT_FOR(!strcmp(tile_value("Wi-Fi"), "连接中"), 5000), "the tile says connecting first (%s)", value);
+    shot("walk-wifi-connecting");
     CHECK(WAIT_FOR(!strcmp(tile_value("Wi-Fi"), "FAKE_AP"), 10000), "then the network's name (%s)", value);
+    shot("walk-wifi-joined");
     world(ap_del);
     CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"FAKE_AP\",\"password\":\"FAKE_PASSWORD_1\"}") && g_rc.status == INK_RC_FAILED, "a join that fails");
     CHECK(WAIT_FOR(!strcmp(tile_value("Wi-Fi"), "没连上"), 5000), "the tile says it did not connect (%s)", value);
+    shot("walk-wifi-failed");
     hold("Wi-Fi");
     CHECK(!strcmp(ink_ui_page_name(), "SetNetwork") && !top("Control"), "a long press opens the Wi-Fi page (%s)", ink_ui_top_name());
+    shot("walk-wifi-page");
     on_ui(find_back); CHECK(seen, "the page's back button"); if (seen) tap_area(); /* the device has no back key */
     CHECK(strcmp(ink_ui_page_name(), "SetNetwork"), "back leaves it (%s over %s)", ink_ui_top_name(), ink_ui_page_name());
     tap(342, INK_STATUS_BAR / 2); look();
@@ -147,12 +151,15 @@ static void touch_case(void) {
     CHECK(tile("亮度"), "the brightness slider");
     for (int i = 0; i < 3; i++) { tap(area.x2 - ink_ui_px(INK_CONTROL / 2), (area.y1 + area.y2) / 2); quiet(); CHECK(tile("亮度"), "the slider is back"); }
     CHECK(ink_setting_get("display.light") == 70, "three taps on + are three steps (%lld)", (long long)ink_setting_get("display.light"));
+    shot("walk-brightness");
     touch("飞行模式");
     CHECK(WAIT_FOR(ink_setting_get("net.airplane") == 1, 4000) && top("Control"), "airplane mode on, the panel stays");
     CHECK(WAIT_FOR(!strcmp(tile_value("飞行模式"), "开"), 3000), "the tile says so");
+    shot("walk-airplane-on");
     touch("飞行模式");
     CHECK(WAIT_FOR(ink_setting_get("net.airplane") == 0, 4000), "airplane mode off");
     CHECK(WAIT_FOR(!top("Control"), 3000), "the panel closes by itself");
+    shot("walk-closed");
     /* a drag up goes back a stage, then away; a tap under the panel only puts it away */
     tap(342, INK_STATUS_BAR / 2); touch("展开"); look();
     CHECK(second_stage(), "the second stage again");
@@ -172,18 +179,18 @@ static void touch_case(void) {
 static void ai_case(void) {
     start(true);
     CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_DONE, "the AI opens the panel"); look();
-    CHECK(first_stage() && has("Wi-Fi=关（关；点按=wifi.set_enabled {\"enabled\":true}；长按=shell.network）"), "its snapshot names the tiles: %.300s", view);
+    CHECK(first_stage() && has("Wi-Fi=关（关；点按=wifi.set_enabled {\"enabled\":true}；长按=shell.network）"), "its snapshot names the tiles: %.150s", view);
     CHECK(AI("shell.more", NULL) && g_rc.status == INK_RC_DONE, "the AI opens the second stage"); look();
     CHECK(second_stage(), "the same second stage");
     CHECK(AI("settings.set", "{\"id\":\"notify.dnd\",\"value\":1}") && g_rc.status == INK_RC_DONE, "do not disturb by the AI"); look();
     CHECK(has("勿扰=开（开") && !strcmp(tile_value("勿扰"), "开"), "the tile and the snapshot agree");
     CHECK(AI("settings.set", "{\"id\":\"notify.dnd\",\"value\":0}") && g_rc.status == INK_RC_DONE, "and off");
     CHECK(AI("wifi.set_enabled", "{\"enabled\":true}") && g_rc.status == INK_RC_DONE, "Wi-Fi on by the AI");
-    CHECK(WAIT_FOR((on_ui(inspect), has("Wi-Fi=连接中（连接中")), 5000), "connecting first: %.200s", view);
-    CHECK(WAIT_FOR((on_ui(inspect), has("Wi-Fi=FAKE_AP（开")), 10000), "then the network's name: %.200s", view);
+    CHECK(WAIT_FOR((on_ui(inspect), has("Wi-Fi=连接中（连接中")), 5000), "connecting first: %.150s", view);
+    CHECK(WAIT_FOR((on_ui(inspect), has("Wi-Fi=FAKE_AP（开")), 10000), "then the network's name: %.150s", view);
     world(ap_del);
     CHECK(AI("wifi.connect", "{\"ssid\":\"FAKE_AP\"}") && g_rc.status == INK_RC_FAILED, "a join that fails");
-    CHECK(WAIT_FOR((on_ui(inspect), has("Wi-Fi=没连上（没连上")), 5000), "it did not connect: %.200s", view);
+    CHECK(WAIT_FOR((on_ui(inspect), has("Wi-Fi=没连上（没连上")), 5000), "it did not connect: %.150s", view);
     CHECK(AI("shell.network", NULL) && g_rc.status == INK_RC_DONE, "the long press's page"); quiet();
     CHECK(!strcmp(ink_ui_page_name(), "SetNetwork") && !top("Control"), "the Wi-Fi page, the panel put away");
     CHECK(AI("shell.back", NULL) && g_rc.status == INK_RC_DONE, "back"); quiet();
