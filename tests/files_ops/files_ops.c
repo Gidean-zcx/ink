@@ -81,7 +81,7 @@ static void failed_write(void) {
     lv_area_t keyboard, notice; ink_shell_keyboard_area(&keyboard); lv_obj_update_layout(F.notice); lv_obj_get_coords(F.notice, &notice);
     CHECK(notice.y2 < keyboard.y1 && lv_obj_get_style_bg_opa(F.notice, 0) == LV_OPA_COVER, "file failure is visible above the keyboard and replaces the draft-save hint");
 }
-static void check_partial(void) { CHECK(F.notice && strstr(lv_label_get_text(F.notice), "SYNTH_1.txt"), "partial result names the failed file in the UI"); }
+static void check_partial(void) { CHECK(F.notice && strstr(lv_label_get_text(F.notice), "成功 2 个，跳过 1 个，失败 0 个"), "partial result counts what was done and skipped in the UI"); }
 static bool row_marked;
 static void check_row(void) {
     target();
@@ -95,17 +95,17 @@ static void read_file(const char *path) {
 }
 static void folder_and_editor(void) {
     CHECK(!ink_fs_mkdir("/me/SYNTH_OPS"), "create fixture root"); roots(); browse("/me/SYNTH_OPS");
-    touch("新建文件夹"); wait_page("FileName"); on_ui(check_name); name_text("bad/name"); on_ui(check_name);
+    touch("新建"); wait_page("FileName"); on_ui(check_name); name_text("bad/name"); on_ui(check_name);
     name_text("SYNTH_FOLDER"); capture("NewFolder"); touch("新建文件夹"); wait_page("FileList"); CHECK(exists("/me/SYNTH_OPS/SYNTH_FOLDER"), "folder created by touch through file.mkdir");
-    touch("新建文件夹"); wait_page("FileName"); name_text("SYNTH_FOLDER"); touch("新建文件夹"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "FileName"), "duplicate stays on name page");
+    touch("新建"); wait_page("FileName"); name_text("SYNTH_FOLDER"); touch("新建文件夹"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "FileName"), "duplicate stays on name page");
     CHECK(strstr(lv_label_get_text(F.notice), "已存在"), "duplicate notice"); command("files.up", NULL); wait_page("FileList");
     CHECK(AI("file.mkdir", "{\"path\":\"/me/SYNTH_OPS/SYNTH_AI\"}") && g_rc.status == INK_RC_DONE, "AI same mkdir"); wait_page("FileList");
     CHECK(AI("file.mkdir", "{\"path\":\"/me/../bad\"}") && g_rc.status != INK_RC_DONE, "AI invalid path rejected");
-    touch("新建文本"); wait_page("FileName"); name_text("SYNTH_NOTE.txt"); touch("新建文本"); wait_page("FileList"); select_file("/me/SYNTH_OPS/SYNTH_NOTE.txt");
-    touch("编辑文本"); wait_page("FileEdit"); command("text.insert", "{\"text\":\"SYNTH_SAVED\"}");
+    touch("新建"); wait_page("FileName"); touch("文本"); wait_page("FileName"); name_text("SYNTH_NOTE.txt"); touch("新建文本"); wait_page("FileList"); select_file("/me/SYNTH_OPS/SYNTH_NOTE.txt");
+    touch("编辑"); wait_page("FileEdit"); command("text.insert", "{\"text\":\"SYNTH_SAVED\"}");
     CHECK(WAIT_FOR(ink_text_draft_saved() == 1 && ink_db_idle(), 10000), "draft durable before save"); on_ui(failed_write); capture("FileWriteFailed"); touch("更新文件"); wait_page("FileActions");
     read_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); CHECK(!strcmp(saved, "SYNTH_SAVED"), "saved text on card");
-    touch("编辑文本"); wait_page("FileEdit"); CHECK(!strcmp(ink_text_value(), "SYNTH_SAVED"), "reopened text matches");
+    touch("编辑"); wait_page("FileEdit"); CHECK(!strcmp(ink_text_value(), "SYNTH_SAVED"), "reopened text matches");
     command("text.insert", "{\"text\":\"_AND_UNSAVED草稿\"}"); CHECK(WAIT_FOR(ink_text_draft_saved() == 1 && ink_db_idle() && !ink_storage_pending(), 15000), "reference and unfinished edit durable before power cut");
 }
 static void batch_fixture(const char *directory_path) {
@@ -148,16 +148,17 @@ static void batch_ops(void) {
     row_marked = false; touch("SYNTH_1.txt"); wait_page("FileList"); on_ui(check_row);
     touch("全选"); wait_page("FileList"); on_ui(check_snapshot); capture("MultiSelect");
     touch("拷贝"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_COPY\"}"); wait_page("FileMove"); touch("拷贝到这里");
-    CHECK(WAIT_FOR(exists("/me/SYNTH_COPY/SYNTH_2.txt"), 15000), "touch copies all three"); wait_page("FileMove");
+    CHECK(WAIT_FOR(exists("/me/SYNTH_COPY/SYNTH_2.txt"), 15000), "touch copies all three"); wait_page("FileBatch");
     for (int i = 0; i < 3; i++) { char path[128]; snprintf(path, sizeof path, "/me/SYNTH_COPY/SYNTH_%d.txt", i); CHECK(exists(path), "copy %.90s", path); }
     roots(); browse("/me/SYNTH_BATCH"); touch("多选"); wait_page("FileList");
     for (int i = 0; i < 3; i++) { snprintf(args_json, sizeof args_json, "{\"id\":%u}", (unsigned)ids[i]); command("files.mark", args_json); wait_page("FileList"); }
-    touch("移动"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_MOVE\"}"); wait_page("FileMove"); touch("放到这里"); CHECK(WAIT_FOR(!exists("/me/SYNTH_BATCH/SYNTH_2.txt") && exists("/me/SYNTH_MOVE/SYNTH_2.txt"), 15000), "touch moves three"); wait_page("FileMove");
+    touch("移动"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_MOVE\"}"); wait_page("FileMove"); touch("放到这里"); CHECK(WAIT_FOR(!exists("/me/SYNTH_BATCH/SYNTH_2.txt") && exists("/me/SYNTH_MOVE/SYNTH_2.txt"), 15000), "touch moves three"); wait_page("FileBatch");
     batch_args_test("copy", "/me/SYNTH_COPY"); CHECK(AI("file.batch", args_json) && g_rc.status == INK_RC_PARTIAL && strstr(g_result, "SYNTH_0.txt") && strstr(g_result, "\"failed\":3") && strstr(g_result, "\"succeeded\":0") && !strstr(g_result, "\"error\""), "AI partial collision summarizes failed files: %.150s", g_result);
     CHECK(!ink_fs_mkdir("/me/SYNTH_PARTIAL") && !ink_fs_write_atomic("/me/SYNTH_PARTIAL/SYNTH_1.txt", "OLD", 3), "partial fixture");
     roots(); browse("/me/SYNTH_MOVE"); touch("多选"); wait_page("FileList"); touch("全选"); wait_page("FileList"); touch("拷贝"); wait_page("FileMove");
     command("files.browse", "{\"path\":\"/me/SYNTH_PARTIAL\"}"); wait_page("FileMove"); touch("拷贝到这里");
-    CHECK(WAIT_FOR(!F.busy && F.notice && strstr(lv_label_get_text(F.notice), "SYNTH_1.txt"), 15000), "partial touch operation finishes with a named failure");
+    CHECK(WAIT_FOR(F.bstate == B_ASK, 15000) && !strcmp(F.conf[0].name, "SYNTH_1.txt"), "the taken name is asked about"); wait_page("FileBatch"); touch("跳过");
+    CHECK(WAIT_FOR(F.bstate == B_DONE && F.notice && strstr(lv_label_get_text(F.notice), "跳过 1 个"), 15000), "partial touch operation finishes naming the skip");
     CHECK(exists("/me/SYNTH_PARTIAL/SYNTH_0.txt") && exists("/me/SYNTH_PARTIAL/SYNTH_2.txt"), "partial successes are real");
     quiet(); on_ui(check_partial); capture("PartialFailure");
     batch_receipts();
@@ -167,7 +168,7 @@ static void batch_ops(void) {
     ink_confirm_view_t ai_views[4]; int ai_n = ink_confirm_list(ai_views, 4); CHECK(ai_n == 1, "AI delete confirmation exists");
     if (ai_n) CHECK(!ink_confirm_decide(ai_views[0].token, true, INK_SRC_TOUCH), "human approves AI batch");
     CHECK(WAIT_FOR(!exists("/me/SYNTH_COPY/SYNTH_0.txt") && !exists("/me/SYNTH_COPY/SYNTH_1.txt") && !exists("/me/SYNTH_COPY/SYNTH_2.txt"), 15000), "AI batch deletes three files");
-    roots(); browse("/me/SYNTH_MOVE"); touch("多选"); wait_page("FileList"); touch("全选"); wait_page("FileList"); touch("删除"); quiet(); ink_confirm_view_t views[4]; int n = ink_confirm_list(views, 4);
+    roots(); browse("/me/SYNTH_MOVE"); touch("多选"); wait_page("FileList"); touch("全选"); wait_page("FileList"); touch("删除"); quiet(); ink_confirm_view_t views[4]; int n = 0; WAIT_FOR((n = ink_confirm_list(views, 4)) > 0, 3000); /* the card comes from the background executor */
     CHECK(n == 1 && !strcmp(views[0].cap, "file.delete_many") && exists("/me/SYNTH_MOVE/SYNTH_0.txt"), "batch deletion waits for existing human confirmation");
     if (n) { CHECK(ink_confirm_decide(views[0].token, true, INK_SRC_AI) != 0, "AI cannot accept deletion"); CHECK(!ink_confirm_decide(views[0].token, true, INK_SRC_TOUCH), "person confirms"); }
     CHECK(WAIT_FOR(!exists("/me/SYNTH_MOVE/SYNTH_0.txt") && !exists("/me/SYNTH_MOVE/SYNTH_1.txt") && !exists("/me/SYNTH_MOVE/SYNTH_2.txt"), 15000), "three deletes finish");
@@ -181,7 +182,7 @@ static void run(void *unused) {
     (void)unused; vtk_host_call(options, NULL); CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
     if (large) { command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"); quiet(); }
     if (!strcmp(phase, "write")) { folder_and_editor(); ink_probe_count("test.finished"); hal_power_reboot(); return; }
-    roots(); browse("/me/SYNTH_OPS"); select_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); touch("编辑文本"); wait_page("FileEdit"); on_ui(check_recovered); capture("RecoveredDraft"); touch("更新文件"); wait_page("FileActions");
+    roots(); browse("/me/SYNTH_OPS"); select_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); touch("编辑"); wait_page("FileEdit"); on_ui(check_recovered); capture("RecoveredDraft"); touch("更新文件"); wait_page("FileActions");
     read_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); CHECK(!strcmp(saved, "SYNTH_SAVED_AND_UNSAVED草稿"), "recovered draft saved");
     batch_ops(); ink_probe_count("test.finished");
 }

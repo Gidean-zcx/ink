@@ -81,6 +81,7 @@ typedef struct {
     uint8_t *buf;
     bool cancel;
     int task;
+    bool replace; /* file.batch_replace: the old file stays until the new one is whole */
     char who[INK_MEMBER_ID_MAX];
     ink_fs_job_status_t st;
     void (*on_end)(void *ctx, const ink_fs_job_status_t *st);
@@ -532,6 +533,7 @@ int ink_fs_dir_next(ink_fs_dir_t *d, ink_fs_stat_t *out) {
         snprintf(out->name, sizeof out->name, "%s", d->e.name);
         out->is_dir = d->e.is_dir;
         out->size = d->e.is_dir ? 0 : d->e.size;
+        out->mtime = d->e.mtime < 0 ? -1 : d->e.mtime / 1000000000;
         return 1;
     }
 }
@@ -544,6 +546,22 @@ void ink_fs_dir_close(ink_fs_dir_t *d) {
     }
     osal_free(d);
 }
+
+/* "Replace" (file.batch_replace): the old file steps aside to a hidden ".name" beside it, the new one takes the name,
+ * and only then is the old one removed. When the new one cannot take the name, the old one comes back: 0, or nothing
+ * changed. */
+static int replace_into(const char *from, const char *to) {
+    char aside[PHYS_MAX];
+    const char *s = strrchr(to, '/');
+    if (!s || snprintf(aside, sizeof aside, "%.*s/.%s", (int)(s - to), to, s + 1) >= (int)sizeof aside) return INK_FS_ERR_PATH;
+    hal_fs_remove(aside); /* left by a power cut between two renames */
+    if (hal_fs_rename(to, aside) != 0) return card_error();
+    if (hal_fs_rename(from, to) != 0) { int e = card_error(); hal_fs_rename(aside, to); return e; }
+    hal_fs_remove(aside);
+    return 0;
+}
+/* Replacing puts a file over a file, never over or from a folder. */
+static bool is_dir(const char *phys) { hal_dir_t *d = hal_fs_opendir(phys); if (d) hal_fs_closedir(d); return d != NULL; }
 
 static int fs_mkdir_unlocked(const file_context_t *c, const char *path) {
     char phys[PHYS_MAX];
@@ -567,7 +585,7 @@ static int fs_remove_unlocked(const file_context_t *c, const char *path) {
     return card_done(INK_FS_OK);
 }
 
-static int fs_move_unlocked(const file_context_t *c, const char *from, const char *to) {
+static int fs_move_unlocked(const file_context_t *c, const char *from, const char *to, bool replace) {
     char a[PHYS_MAX], b[PHYS_MAX];
     if (virtual_root(from)) return INK_FS_ERR_DENIED;
     int r = resolve_held(c, from, true, a, sizeof a);
@@ -575,13 +593,15 @@ static int fs_move_unlocked(const file_context_t *c, const char *from, const cha
     r = resolve_for(c, to, true, b, sizeof b);
     if (r) return card_done(r);
     if (hal_fs_size(a) < 0) return card_done(hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error());
-    if (hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
+    bool over = replace && hal_fs_size(b) >= 0;
+    if (over ? is_dir(a) || is_dir(b) : hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
     size_t an = strlen(a);
     if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
     r = index_prepare(b);
     if (r) return card_done(r);
     make_parents(b);
-    if (hal_fs_rename(a, b) != 0) return card_done(card_error());
+    if (over ? (r = replace_into(a, b)) != 0 : hal_fs_rename(a, b) != 0) return card_done(over ? r : card_error());
+    if (over && (r = index_edit(b, NULL)) != 0) return card_done(r); /* the old file's entry, before the moved one takes its name */
     r = index_edit(a, b);
     if (r) return card_done(r);
     changed(c, from, "moved");
@@ -794,11 +814,13 @@ static bool copy_piece(fjob_t *j) {
             j->out = NULL;
             char final_name[PHYS_MAX];
             snprintf(final_name, sizeof final_name, "%.*s", (int)(strlen(j->part) - strlen(PART_SUFFIX)), j->part);
-            if (c != 0 || hal_fs_rename(j->part, final_name) != 0) {
+            int e = c ? card_error() : j->replace ? replace_into(j->part, final_name) : hal_fs_rename(j->part, final_name) ? card_error() : 0;
+            if (e) {
                 hal_fs_remove(j->part);
-                job_failed(j, card_error());
+                job_failed(j, e);
                 return true;
             }
+            if (j->replace) (void)index_edit(final_name, NULL); /* the old file's entry; the new one is indexed as copied */
             j->st.files_done++;
             return true;
         }
@@ -995,7 +1017,7 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
 
 static void job_cancel_cb(void *ctx) { ink_fs_job_cancel((int)(intptr_t)ctx); }
 
-static int job_begin_unlocked(const file_context_t *c, int op, const char *from, const char *to) {
+static int job_begin_unlocked(const file_context_t *c, int op, const char *from, const char *to, bool replace) {
     char a[PHYS_MAX], b[PHYS_MAX] = "";
     if (op == 1 && virtual_root(from)) return INK_FS_ERR_DENIED;
     int r = resolve_held(c, from, op == 1, a, sizeof a);
@@ -1003,8 +1025,9 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
     if (op == 0) r = resolve_for(c, to, true, b, sizeof b);
     if (r) return card_done(r);
     if (hal_fs_size(a) < 0) return card_done(hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error());
+    bool over = op == 0 && replace && hal_fs_size(b) >= 0; /* a single file over a file, swapped in when it is whole */
     if (op == 0) {
-        if (hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
+        if (over ? is_dir(a) || is_dir(b) : hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
         size_t an = strlen(a);
         if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
         r = index_prepare(b);
@@ -1023,6 +1046,7 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
     
     j->id = id;
     j->op = op;
+    j->replace = over;
     j->st.state = INK_FS_JOB_RUNNING;
     ink_svc_unlock();
     ink_fs_card_release(); /* job_active now holds the card. */
@@ -1073,7 +1097,26 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
 int fs_job_begin_for(const file_context_t *c, int op, const char *from, const char *to) {
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
-    int r = job_begin_unlocked(c, op, from, to);
+    int r = job_begin_unlocked(c, op, from, to, false);
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+
+/* file.batch: under one edit lock "keep both" (how 1) takes the first free "name (n).ext", so no other write can take the
+ * name in between; to becomes the name used. "Replace" (how 2) keeps the old file until the new one has taken its name:
+ * a copy that cannot start (busy, no room) or stops half way leaves it as it was. */
+int fs_place_for(const file_context_t *c, int op, const char *from, char *to, size_t cap, int how) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    char phys[PHYS_MAX], base[INK_FS_PATH_MAX]; snprintf(base, sizeof base, "%s", to);
+    char *dot = strrchr(base, '.'); if (!dot || dot < strrchr(base, '/') + 2) dot = base + strlen(base);
+    int r = how == 2 && !strcmp(from, to) ? INK_FS_ERR_EXISTS : 0;
+    if (how == 1 && !(r = resolve_held(c, to, true, phys, sizeof phys))) {
+        for (int n = 1; !r && hal_fs_size(phys) >= 0; n++)
+            r = n > 999 || snprintf(to, cap, "%.*s (%d)%s", (int)(dot - base), base, n, dot) >= (int)cap ? INK_FS_ERR_EXISTS : resolve_for(c, to, true, phys, sizeof phys);
+        ink_fs_card_release();
+    }
+    if (!r) r = op == 2 ? fs_move_unlocked(c, from, to, how == 2) : job_begin_unlocked(c, op, from, to, how == 2);
     osal_mutex_unlock(FS.edits);
     return r;
 }
@@ -1376,7 +1419,7 @@ int fs_move_for(const file_context_t *c, const char *from, const char *to, uint3
     int r = INK_FS_ERR_BUSY;
     if (!revision || inverse_ready(revision)) {
         __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
-        r = fs_move_unlocked(c, from, to);
+        r = fs_move_unlocked(c, from, to, false);
         if (!r && written) *written = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
     }
     osal_mutex_unlock(FS.edits);
@@ -1893,7 +1936,7 @@ static int index_query(const file_context_t *c, const char *root, ink_fs_type_t 
         if (access) { if (!root) { r = access; break; } continue; }
         out->type = index_type(e.path);
         if (root && type != INK_FS_ANY && type != out->type) continue;
-        out->id = rec.id; out->size = st.size; *cursor = rec.id;
+        out->id = rec.id; out->size = st.size; out->mtime = e.mtime < 0 ? -1 : e.mtime / 1000000000; *cursor = rec.id;
         break;
     }
     ink_db_close(db); ink_fs_card_release();
