@@ -27,7 +27,6 @@ int ink_notification_list_draw(lv_obj_t *parent, int y, int limit) {
         count++;
         y += ink_ui_row_double() + INK_GAP_M;
     }
-    if (!count) ink_ui_notice(parent, TR("还没有通知"), y + INK_GAP_L);
     N.control_count = count;
     return y;
 }

@@ -86,6 +86,7 @@ static bool label_at(lv_obj_t *root, const char *text) {
 static const char *wanted_label;
 static bool wanted_seen;
 static void find_wanted(void) { lv_obj_update_layout(lv_screen_active()); wanted_seen = label_at(lv_screen_active(), wanted_label); }
+static void find_in_panel(void) { lv_obj_update_layout(lv_layer_sys()); wanted_seen = label_at(lv_layer_sys(), wanted_label); }
 static bool tap_label(const char *text) { wanted_label = text; on_ui(find_wanted); if (wanted_seen) tap(at.x, at.y); return wanted_seen; }
 static bool field_at(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
@@ -109,8 +110,10 @@ static void test_task(void *arg) {
     CHECK(BY_HAND("shell.control", NULL) && g_rc.status == INK_RC_DONE, "control through the bus"); quiet();
     CHECK(!strcmp(ink_ui_top_name(), "Control"), "control is an overlay");
     int64_t before_light = ink_setting_get("display.light");
-    swipe(40, INK_STATUS_BAR + INK_GAP_S + INK_CIRCLE + INK_GAP_L + INK_SLIDER / 2, 500,
-          INK_STATUS_BAR + INK_GAP_S + INK_CIRCLE + INK_GAP_L + INK_SLIDER / 2);
+    /* control-1: the brightness slider is in the second stage; find it instead of assuming its row */
+    CHECK(BY_HAND("shell.more", NULL) && g_rc.status == INK_RC_DONE, "the second stage shows the sliders"); quiet();
+    wanted_label = "亮度"; on_ui(find_in_panel); CHECK(wanted_seen, "the brightness slider is on the panel");
+    swipe(40, at.y, 500, at.y);
     CHECK(!strcmp(ink_ui_top_name(), "Control") && ink_setting_get("display.light") != before_light, "slider owns a swipe starting in the left edge");
     ink_probe_count("test.slider_priority");
     key(HAL_KEY_HOME); quiet(); CHECK(!strcmp(ink_ui_top_name(), "home"), "HOME closes the overlay first");

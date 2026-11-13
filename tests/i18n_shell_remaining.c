@@ -221,7 +221,7 @@ static void run(void *arg) {
     open_page("shell.runtime_records", "RuntimeRecords"); capture("RuntimeRecords-en", "Runtime Records");
     CHECK(BY_HAND("system.home", NULL), "return home before control preview");
     CHECK(BY_HAND("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open control centre");
-    capture("Control-en", "Volume");
+    capture("Control-en", "Bluetooth"); /* control-1: the first stage is four tiles; Volume is gone from the adult panel */
     CHECK(BY_HAND("shell.more", NULL) && g_rc.status == INK_RC_DONE, "expand control centre");
     capture("Control-more-en", "Airplane");
     CHECK(BY_HAND("shell.close", NULL), "close control centre");
