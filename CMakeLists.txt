@@ -2404,3 +2404,6 @@ add_test(NAME gallery-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tes
 set_tests_properties(gallery-3 PROPERTIES TIMEOUT 1500)
 add_test(NAME gallery-3-source COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/source_check.py)
 set_tests_properties(gallery-3-source PROPERTIES SKIP_RETURN_CODE 77)
+
+# calendar-3: the calendar's events, repeats and iCalendar files in the time service.
+target_sources(ink_system PRIVATE system/services/time/events.c system/services/time/ics.c)

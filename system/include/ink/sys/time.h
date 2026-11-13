@@ -63,6 +63,8 @@ int ink_lunar_ganzhi(int year, char *out, size_t cap);
 /** The leap month of a lunar year (0 none), the length of a month. */
 int ink_lunar_leap_month(int year);
 int ink_lunar_month_days(int year, int month, bool leap);
+/** The solar term that starts on that day ("立春"), or NULL (lunar.c, 1901-2100). */
+const char *ink_lunar_solar_term(int year, int month, int day);
 
 /* ---- alarms and reminders ---- */
 typedef enum { INK_ALARM = 0, INK_REMINDER } ink_alarm_kind_t;
@@ -111,6 +113,60 @@ int ink_alarm_snooze(uint32_t id, int minutes);
 
 /** First enabled occurrence overlapping or following from_s; ends are exclusive. */
 int64_t ink_alarm_occurrence(const ink_alarm_t *alarm, int64_t from_s);
+
+/*
+ * Calendar events (calendar-3): what a reminder is since then, in their own collection "time.events" so the
+ * alarm record keeps every byte. INK_REMINDER through the ink_alarm_* calls above reads and writes these
+ * (ink_alarm_next gives a projection: next_s is the next start, the title cut to 47 bytes on a character).
+ * Repeats follow Fossify Calendar and Etar (docs/tasks/calendar-3/SOURCE.md).
+ */
+enum { INK_EVENT_TITLE = 96, INK_EVENT_UID = 64, INK_EVENT_LEADS = 3, INK_EVENT_EXCEPTIONS = 16, INK_EVENT_MAX = 128 };
+typedef enum { INK_FREQ_NONE = 0, INK_FREQ_DAILY, INK_FREQ_WEEKLY, INK_FREQ_MONTHLY, INK_FREQ_YEARLY, INK_FREQ_LUNAR_YEARLY } ink_freq_t;
+/* Which day of a month (monthly) or of rmonth (yearly). */
+typedef enum { INK_BY_DAY = 0, INK_BY_NTH_WEEKDAY, INK_BY_LAST_WEEKDAY, INK_BY_LAST_DAY } ink_by_t;
+typedef enum { INK_SCOPE_ALL = 0, INK_SCOPE_THIS, INK_SCOPE_FOLLOWING } ink_scope_t;
+enum {
+    INK_EVENT_INVALID = -1, INK_EVENT_PAST = -2, INK_EVENT_FULL = -3, INK_EVENT_STORAGE = -4, INK_EVENT_GONE = -5,
+    INK_EVENT_EXCEPTIONS_FULL = -6, INK_EVENT_NOT_FOUND = -7, INK_EVENT_STALE = -8, INK_EVENT_UNTIL_BEFORE = -9,
+    INK_EVENT_END_BEFORE = -10, INK_EVENT_NO_TITLE = -11
+};
+
+typedef struct {
+    uint32_t id, parent;     /* parent: the series an edited occurrence came out of (0 none) */
+    char owner[16];
+    char title[INK_EVENT_TITLE];
+    char uid[INK_EVENT_UID]; /* iCalendar UID: kept from an import, made up for our own */
+    uint8_t src, freq, by, interval;  /* interval 1..99 */
+    uint8_t weekdays;        /* weekly: bit 0 = Sunday */
+    uint8_t rmonth, rday, wday;       /* the rule's month, day of the month, weekday (0 Sunday) */
+    int8_t nth;              /* INK_BY_NTH_WEEKDAY: 1..5 */
+    uint8_t lmonth, lday;    /* lunar yearly */
+    bool lleap, all_day;
+    uint8_t nleads, nex, reserved;
+    int16_t year;            /* local start of the first occurrence */
+    uint8_t month, day, hour, min;
+    int16_t until_year;      /* last day it may happen, local, inclusive; 0 = no end date */
+    uint8_t until_month, until_day;
+    uint16_t count;          /* how many times in all; 0 = no count */
+    int32_t leads[INK_EVENT_LEADS]; /* minutes before the start; on an all-day event a negative one is that many minutes after its midnight */
+    int32_t ex[INK_EVENT_EXCEPTIONS]; /* local days (since 1970) of occurrences taken out (deleted or edited apart) */
+    int32_t orig_day, orig_min; /* an edited occurrence: where it was, local day and minute */
+    int64_t at_utc;          /* a single event at a moment, whatever the zone becomes; 0 = local time above */
+    int64_t duration_s;      /* exclusive end after each start; 0 = a point */
+    int64_t modified_s;
+    int64_t done_s;          /* reminders up to this moment went off or were reported missed */
+} ink_event_t;
+
+/** The current member's events after *cursor (start from 0): 1, 0 at the end. */
+int ink_event_next(int *cursor, ink_event_t *out);
+/** One of the current member's: 0, or INK_EVENT_NOT_FOUND. */
+int ink_event_get(uint32_t id, ink_event_t *out);
+/** Start of the first occurrence overlapping or following from_s (ends exclusive, exceptions out); 0 none. */
+int64_t ink_event_occurrence(const ink_event_t *e, int64_t from_s);
+/** How many occurrences come before the one starting on local day `day` (that one's index), or -1. */
+int ink_event_index(const ink_event_t *e, int32_t day);
+/** Local days since 1970 of a UTC moment, in the device's zone. */
+int32_t ink_event_day(int64_t utc_s);
 
 #ifdef __cplusplus
 }

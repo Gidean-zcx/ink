@@ -122,6 +122,8 @@ static void civil_from_days(int64_t z, int *y, int *m, int *d) {
     *y = yy + (*m <= 2);
 }
 
+void time_civil_from_days(int64_t days, int *y, int *m, int *d) { civil_from_days(days, y, m, d); }
+
 static int weekday(int64_t days) { return (int)(((days % 7) + 11) % 7); } /* 1970-01-01 was a Thursday */
 
 /* The n-th Sunday of a month (n > 0), or the last (n = 0): days since 1970. */
@@ -321,6 +323,10 @@ static void reschedule(void) {
     ink_svc_lock();
     for (int i = 0; i < T.n; i++)
         if (T.a[i].enabled && !T.a[i].silent && T.a[i].next_s && (!next || T.a[i].next_s < next)) next = T.a[i].next_s;
+    ink_svc_unlock();
+    int64_t event_next = time_events_earliest(); /* calendar-3: the events share this one deadline */
+    ink_svc_lock();
+    if (event_next && (!next || event_next < next)) next = event_next;
     bool rtc_changed = T.rtc_next_s != next;
     T.rtc_next_s = next;
     ink_svc_unlock();
@@ -335,6 +341,9 @@ static void reschedule(void) {
     }
     if (rtc_changed) ink_exec_post(INK_EXEC_BG, &T.rtc_job, rtc_job, NULL); /* the first alarm starts this executor, not the boot */
 }
+
+void time_reschedule(void) { reschedule(); }
+uint32_t time_new_id(void) { return T.db ? ink_db_new_id(T.db) : 0; } /* one id space for alarms and events */
 
 static int find_alarm(uint32_t id);
 
@@ -468,6 +477,7 @@ static void due_cb(void *arg) { /* timer task */
     }
     osal_free(fired);
     if (n) rings_changed();
+    time_events_due(now);
     reschedule();
 }
 
@@ -493,6 +503,7 @@ static void clock_moved(void) {
         if (changed && a) save_alarm(a); /* the next boot starts from what holds now */
     }
     osal_free(a);
+    time_events_replan(now, false);
     publish_minute();
     reschedule();
 }
@@ -635,6 +646,13 @@ static int alarm_cancel_unlocked(uint32_t id, uint32_t revision, const char *mem
 int ink_time_alarm_add_for(ink_alarm_t *a, uint32_t *written, const char *member) {
     if (written) *written = 0;
     if (!a || !member) return -1;
+    if (a->kind == INK_REMINDER) { /* calendar-3: reminders are events now */
+        ink_event_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
+        int r = !e ? -4 : time_events_from_alarm(a, e) ? -2 : ink_time_event_add_for(e, written, member);
+        if (r > 0) { a->id = (uint32_t)r; int64_t now = ink_time_now_s(); a->next_s = now ? ink_event_occurrence(e, now + 1) : 0; snprintf(a->owner, sizeof a->owner, "%s", member); }
+        osal_free(e);
+        return r == INK_EVENT_FULL ? -3 : r == INK_EVENT_GONE ? -5 : r == INK_EVENT_PAST ? -2 : r < 0 ? -1 : r;
+    }
     snprintf(a->owner, sizeof a->owner, "%s", member);
     osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
     bool live = ink_member_io_begin(member);
@@ -656,6 +674,14 @@ int ink_alarm_add_versioned(ink_alarm_t *a, uint32_t *written) {
 int ink_alarm_add(ink_alarm_t *a) { return ink_alarm_add_versioned(a, NULL); }
 
 int ink_time_alarm_update_for(ink_alarm_t *a, const char *member) {
+    if (a->kind == INK_REMINDER) {
+        ink_event_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL), *old = osal_malloc(sizeof *old, OSAL_MEM_EXTERNAL);
+        int r = !e || !old || ink_time_event_get_for(a->id, old, member) || time_events_from_alarm(a, e) ? -1 : 0;
+        if (!r) { memcpy(e->leads, old->leads, sizeof e->leads); if (e->nleads) e->nleads = old->nleads ? old->nleads : 1; memcpy(e->uid, old->uid, sizeof e->uid); }
+        if (!r) r = ink_time_event_update_for(e, 0, INK_SCOPE_ALL, member, NULL) ? -1 : 0;
+        osal_free(e); osal_free(old);
+        return r;
+    }
     osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
     bool live = ink_member_io_begin(member);
     ink_svc_lock();
@@ -683,7 +709,14 @@ int ink_time_alarm_cancel_for(uint32_t id, uint32_t revision, const char *member
     const ink_member_t *m;
     for (int i = 0; live && (m = ink_member_at(i)) != NULL; i++)
         if (!strcmp(m->id, member)) { adult = m->role == INK_ROLE_ADULT; break; }
+    bool alarm = find_alarm(id) >= 0;
     ink_svc_unlock();
+    if (live && !alarm) { /* not an alarm: an event (calendar-3) */
+        osal_mutex_unlock(T.edits);
+        ink_member_io_end(member);
+        int r = ink_time_event_delete_for(id, revision, 0, INK_SCOPE_ALL, member, adult, NULL);
+        return r == INK_EVENT_STALE || r == INK_EVENT_GONE ? (r == INK_EVENT_GONE ? -5 : -2) : r ? -1 : 0;
+    }
     int r = live ? alarm_cancel_unlocked(id, revision, member, adult) : -5;
     osal_mutex_unlock(T.edits);
     if (live) ink_member_io_end(member);
@@ -722,6 +755,7 @@ int ink_time_forget_member(const char *member, int64_t timeout_us) {
     uint32_t version = ink_db_last_ver(T.db);
     osal_mutex_unlock(T.edits);
     if (ok) ok = ink_db_wait(T.db, version, timeout_us) == 0;
+    if (time_events_forget(member) != 0) ok = false;
     rings_changed();
     reschedule();
     return ok ? 0 : -1;
@@ -730,6 +764,7 @@ int ink_time_forget_member(const char *member, int64_t timeout_us) {
 int ink_time_alarm_next_for(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out, const char *member) {
     ink_svc_lock();
     if (!member || !ink_member_exists(member)) { ink_svc_unlock(); return -1; }
+    if (kind == INK_REMINDER) { ink_svc_unlock(); return time_events_project(cursor, out, member); }
     int hit = 0;
     for (int i = *cursor; i < T.n && !hit; i++)
         if (T.a[i].kind == kind && !strcmp(T.a[i].owner, member)) {
@@ -840,6 +875,10 @@ static void load_alarms(void) {
             ink_probe_count("time.alarm_record_skipped");
             continue;
         }
+        if (a->kind == INK_REMINDER) { /* calendar-3, D-138: reminders move to time.events with their ids, then leave here */
+            if (time_events_adopt(a) && ink_db_del(T.db, a->id, INK_SRC_SYSTEM) != INK_DB_OK) ink_probe_count("time.event_migrate_left");
+            continue;
+        }
         alarm_changed(T.n++);
     }
 }
@@ -870,11 +909,14 @@ int ink_time_init(void) {
         ink_hub_demand(); /* the hub knows */
     }
     hal_rtc_clear_alarm(); /* what fired while it was off must not hold the interrupt line down */
+    time_events_open();
     load_alarms();
+    for (uint32_t max = time_events_max_id(); T.db && max && ink_db_new_id(T.db) <= max;) {} /* new alarms never take an event's id */
     if (T.valid) { /* what was due while it was off comes up as late: reported, not rung */
         int64_t now = ink_time_now_s();
         for (int i = 0; i < T.n; i++) /* what is ahead by today's rules and zone: a power cut may have come before it was saved */
             if (T.a[i].enabled && (!T.a[i].next_s || T.a[i].next_s > now)) T.a[i].next_s = next_of(&T.a[i], now);
+        time_events_replan(now, true); /* from where each left off: what was due while off comes up missed */
         publish_minute();
         minute_cb(NULL);
         reschedule();
@@ -886,6 +928,8 @@ int ink_time_init(void) {
 
 int64_t ink_alarm_occurrence(const ink_alarm_t *alarm, int64_t from_s) {
     if (!alarm->enabled) return 0;
+    int64_t event_at;
+    if (alarm->kind == INK_REMINDER && time_events_occurrence(alarm->id, from_s, &event_at)) return event_at; /* exceptions in */
     int64_t earliest = from_s - (alarm->duration_s > 0 ? alarm->duration_s - 1 : 0);
     if (alarm->repeat == INK_REPEAT_NONE) {
         int64_t at = alarm->next_s;

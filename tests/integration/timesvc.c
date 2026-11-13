@@ -377,6 +377,8 @@ static void capabilities(void) {
     CHECK(AI("reminder.list", NULL) && strstr(g_result, "生日"), "listed (%s)", g_result);
     uint32_t rid = (uint32_t)atoi(strchr(g_result, ':') + 1);
     snprintf(args, sizeof args, "{\"id\":%u}", rid);
+    CHECK(AI("reminder.cancel", args) && g_rc.status == INK_RC_REJECTED && strstr(g_rc.detail, "scope"), "calendar-3: a repeating one is not deleted without a scope");
+    snprintf(args, sizeof args, "{\"id\":%u,\"scope\":\"all\"}", rid);
     CHECK(AI("reminder.cancel", args) && g_rc.status == INK_RC_DONE, "cancelled");
     CHECK(AI("reminder.add", "{\"at\":\"tomorrow\",\"title\":\"x\"}") && g_rc.status == INK_RC_INVALID && strstr(g_rc.detail, "YYYY"), "a time it cannot read is said so");
     CHECK(AI("time.set", "{\"utc_s\":1800000000}") && g_rc.status == INK_RC_DONE && ink_time_now_s() >= 1800000000 && g_rc.undo_ms, "D-105: time setting executes and offers undo");
