@@ -395,3 +395,104 @@ mogo.c、runtime.c、ink_book_page.c（含 ink_page_exports.h）、card_files.c�
 - 屏幕上电期间来的短按会丢，要不要单开一项查（驱动层，需要真机证据）。
 - 卡上文件每次开机都整份读一遍字体：这一轮让它等安静再读，不挡别的事；要不要再加“上次核对过、大小和修改时间都没变就不再读”（新机制，属于 auto-provision-1 的模块，这一轮没做）。
 - card-files-serve 在主干上就坏（trial_run.py 的 `--fonts` 要求），该由合并两边的人修。
+
+---
+
+## 第二轮复核修复（两路审查第二轮的 5 条意见）
+
+工作分支 worktree-wf_7b1bb08e-589-34，没有推送，没有碰设备。修复提交 18d214d3。
+
+### 结论
+
+- 第 1 条（换人后保存写进别人名下）：成立，已修。顺带查出并修了一个更根本的问题：页面在“一步刚做完、回复还没送到”时被关，收尾会整个丢掉。
+- 第 2 条（字体在卡上但打不开时一直“正在重新检查”）：成立，已修。
+- 第 3 条（删掉 turns_prerendered）：删除本身是本任务有意改的行为（新阅读不提前排页），但审查说得对，原来那条保证没有东西替代。现在补了一条更严的门槛代替它。
+- 第 4 条（“第 N 节”没有翻译）：成立，已修。
+- 第 5 条（三个测试本任务引起、没有修）：成立，这一轮仍没修好，原因和可选的修法写在下面。修第 1 条的时候另外查出 integration-notify 的一个真实竞态并修了。
+
+### 1. 换人后，旧页面的保存写进了新家人名下（成立，已修）
+
+- 核实：引擎读写家人数据时用的是一个全局的“当前家人”。书架任务（reader.list_books 等）和迁移会把它改成自己那位家人，页面后面的操作没有改回来。嫁接层只检查“给的家人是不是现在的家人”，全局已经是新家人时就放行了。
+- 复现（修之前的代码跑新测试）：
+  - late-other：家人 A 读到第 3 页（还没存），换成 B，B 的书架任务先在后台跑，A 的页面再收尾。结果 B 的“接着读”打开了 A 的书（`接着读《测试长书》`）。
+  - late-turn：A 翻页的那一步刚做完、回复还在排队时离开阅读。修之前：收尾整个丢了，A 的位置没存；之后 B 打开阅读，页面是空的（快照什么都没有）；那次打开顺带跑了 A 的旧收尾，B 的“接着读”又变成 A 的书；A 回来时回到了第一章第 1 页。
+- 修法，每个原因只改一处：
+  - 引擎记住“这一页是谁的”（ink_mogo_page_start 记下，ink_mogo_page_close 清掉）。页面的每一步后台任务一开始先换回这位家人（ink_mogo_page_resume，在 ink_mogo_work 开头调一次）。换人以后，旧页面的保存只会以旧家人的名义去写；旧家人已经不是当前家人，嫁接层就拒绝，什么都不会写进新家人名下。
+  - 页面关闭时如果正忙，原来什么都不排，指望正在跑的那一步顺带收尾。可如果那一步已经过了检查点，收尾就丢了。现在那一步的结果送回界面时（ink_mogo_finished），还欠着的收尾马上排上，排在阅读的任何别的事前面。收尾那一遍也不再把上一页的旧画面贴到屏幕上。
+- 测试：reader-one-late 新加两个阶段 late-other 和 late-turn。修之前的代码分别失败 1 项、4 项，修之后都通过。late-turn 还检查离开时位置照样存下（A 回来是第二章第 1 页，也就是翻页到的那一页）。
+
+### 2. 字体在卡上却打不开时，说明会卡死（成立，已修）
+
+- 核实：卡上文件说“齐了”而应用打不开时，说明会核对一次。核对完还是“齐了”，说明就一直停在“现在打不开，正在重新检查”，不重开，也不告诉人该怎么办。会走到这一步的情况：
+  - 家人自己的 /me/fonts/InkSC.ttf 坏了（不在清单里，卡上文件管不到，可它挡住了全家那份好的）；
+  - 文件是对的，但打开时内存不够。
+- 修法：
+  - 家人自己的字体打不开时，改用全家那份（runtime.c 的 ink_mogo_font_family，在 ink_mogo_page_start 里试第二次）。
+  - 说明发出的那次核对有了结论、文件确实是对的，文字改成“阅读要用的字体检查过是好的，但现在打不开。请返回后再打开试试”，不再重开，也不再核对。为了知道“我要的那次核对已经完了”，卡上文件服务加了一个计数 ink_card_files_checks()，在 publish() 里数有结论的核对次数，一行。
+  - 阅读重开后还是打不开时，重新放一份说明（再核对一次，不会循环；每次重开之前状态都得先变成不是“齐了”）。
+  - 英文翻译已加。docs/system/card-files.md 同步更新。
+- 测试：
+  - reader-one-states 新加 badown 阶段：自己的字体是坏的、全家那份是好的，书照常打开。修之前停在“现在打不开，正在重新检查（card.files=ready）”。
+  - card-files-sim 的 C 阶段新加检查：在“齐了”的状态下放出说明，要求只核对一次，核对完显示“检查过是好的……请返回后再打开试试”，期间没有重开。修之前这项失败。
+
+### 3. 删掉了 reader.turns_prerendered（删除是有意的，已补上替代门槛）
+
+- 那个计数只有旧阅读的“提前排好下一页”会写，Mogo 不提前排页，这项检查本身没法留。不过审查说得对，“翻页不等排版”这条保证需要有东西接着管。
+- Mogo 是一章排一次，翻页时只画这一页，所以画页的时间就在翻页的路上。现在把 reader_basic 两个预算文件里的 `reader.page_render_ms.p95` 从 600 ms 收紧到 50 ms，说明里写明它代替 turns_prerendered。
+- 实测（本分支）：画页 p95 是 7.2 ms，六个配置都一样；旧阅读的提前排页是 29.6 ms（主库构建的结果）。翻页到画面稳定的 p95：Plus 745.8 ms（主干 723.6 ms），pqbn 593.9 ms（主干 582.3 ms），都在原来 1000 ms 和 650 ms 的门槛里，门槛没动。
+- reader_late 和 reader_boundary 两个套件：上一轮已经由 reader-one-late 补回来。“删掉以后用同一个 id 再加回来”这个场景现在不会发生：members.c 里有 member.retired，删掉的 id 不再发放。所以测试改成检查“加回会被拒绝”。这一轮又加了 late-other 和 late-turn 两个阶段，覆盖审查说的“别的后台任务先改了全局家人”的情况。
+
+### 4. Mogo 自己编的章名“第 N 节”没有翻译（成立，已修）
+
+- 这个名字留在书的数据里不改，因为那边会拿它比较和解析：book_epub.c 判断“第…章/节”是不是带编号的章名，book_toc.c 拿它和书脊默认名比较。如果在生成的时候就翻译，英文界面下的分页判断会跟着变。
+- 改在显示的地方：Mogo 画字的入口 ui_text_box 和 ui_text_title_fit（目录行、书签列表都经过这里），加上首页卡片，遇到正好是“第 N 节”的文字就按当前语言显示（ink_mogo_words，在 drawing.c）。英文用 apps/mogo/en.tsv 里原有的 `Section %u`。
+- 测试：reader-one-review 最后加了一段：切到英文，打开一本没有目录的 EPUB，首页卡片要显示“Section 1”；切回中文要显示“第 1 节”。修之前卡片是“《无标题散记》第 1 节 · 0% read”，这项失败。
+- 没有改的：Mogo 目录页上的其他固定字（“上页”“下页”“按百分比跳转”等）也是中文。它们直接写在原样复用的 book_toc.c 里，不在这条意见的范围内，记作已知问题。
+
+### 5. 本任务引起的三个测试失败（成立，这一轮没修好）
+
+- scenario-ai_page_version 和 sound-clock-input 是同一个场景。人按的“下一页”只有 80 ms，正好落在屏幕电源芯片上电的那段时间里。模拟器按原厂资料，这段时间里封面触摸键读不到，所以这一下丢了。主干上不会撞，是因为旧阅读正文页没有状态栏，听写开始和结束时少了两次状态栏刷新，AI 面板的刷新早约 200 ms。要修只有三条路，都超出了这个任务：
+  1. 阅读正文页像旧阅读那样不带状态栏。这要改嫁接页面的画布和外壳的状态栏，是界面上的决定，而且状态栏在任务书的“不碰”里。
+  2. 屏幕连续刷新时电源不断开。这是屏幕时序，按规矩要你们在真机上看过才改。
+  3. 上电期间按键不丢，比如记住触摸芯片发过中断。这是驱动层，需要真机证据。
+- perf-latency-2：和上一轮查的一样，换随机种子后，本分支 16 个种子里有 2 个出现扬声器断音，主干 13 个里一个都没有；断音那段时间 CPU 是空闲的。证据不够说明是阅读的问题，也不能靠换种子让它通过，所以没改。
+- 这一轮另外修了一个同类问题：integration-notify。我在 en.tsv 里加了一行翻译，它就稳定失败；把那一行拿掉就通过。原因是一个真实的竞态：闹钟响时按电源键贪睡，电源键不算“有人在用”，闹钟一停，设备如果早已过了自动锁屏时间，就会立刻锁上。点屏幕贪睡就没有这个问题，因为点按算有人在用。修法是在 input_service.c 里改一处：被闹钟或来电接走的电源键也算有人在用。上一轮报告里 integration-notify“负载高时偶尔失败”，多半就是这个竞态。
+
+### 6. 测试结果
+
+清掉 build/test-out、重新 cmake 配置后，在最终代码上分两段跑（-j2）：
+
+- 第 1–234 项：`99% tests passed, 1 tests failed out of 234`
+  - 失败的是 unit-s31-cell-started。这组测试的假模组要在真实时间 100 ms 内应答，机器上同时有四个构建在跑。单独重跑这一组：`100% tests passed out of 10`。和阅读无关。
+- 第 235–468 项：`98% tests passed, 4 tests failed out of 233`（memo-save-busy 本来就禁用）
+  - scenario-ai_page_version-metalio-plus、sound-clock-input、perf-latency-2：见第 5 条；
+  - card-files-serve：主干 5d642535 上同样失败（trial_run.py 要 `--fonts`）。
+- 阅读这一组全部通过：reader-one 的七个阶段（late 现在包括 late-control、late、late-other、late-turn 和反向检查）、mogo-page、mogo-flow、reader-epub、reader-settings、reader-more、reader-continue。scenario-reader_basic 的六个配置在新的 50 ms 门槛下也全部通过。card-files-sim、-tool、-unit、i18n-literals、i18n-tables、capability-table-*、integration-notify 也都通过。
+
+### 7. 这一轮改过的已有测试（都没有放宽）
+
+- tests/scenarios/reader_basic.budget.json、reader_basic.pqbn.budget.json：`reader.page_render_ms.p95` 从 600 ms 改为 50 ms（更严），说明文字改为代替 turns_prerendered。
+- tests/reader_one/device.c、run.py：
+  - late 阶段多跑 late-other、late-turn；
+  - states 阶段多跑 badown；
+  - review 阶段末尾加英文章名的检查；
+  - review_content 多放一本没有目录的 EPUB。
+  - 原来的检查一项没动。
+- tests/card_files/device.c：C 阶段在原来的检查之间插入“齐了时放出说明”的检查。原来的检查和 run.py 里对 C 阶段的断言都没动。
+
+### 8. 其他
+
+- apps/mogo/translations.cmake：系统语言表 assets/i18n/en.tsv 改了以后，原来不会重新配置，构建目录里合并好的那份表就是旧的。这个问题是上一轮引入的，这一轮补上了：系统语言表也列进 CMAKE_CONFIGURE_DEPENDS。
+- 产品 .c/.h 这一轮新增 55 行、删除 10 行，总量比 800 行的预算超得更多了一点（上一轮是新增 1520 行）。
+- gcc 检查：mogo.c、drawing.c、runtime.c、ink_book_page.c（含 ink_page_exports.h、page.h、runtime.h）、card_files.c、card_files_notice.c、input_service.c、tests/card_files/device.c、tests/reader_one/device.c 都检查过。最后一次：`gcccheck: 2 compiled, 0 with findings`（两个测试文件，改过消息长度之后）。前面几次：`gcccheck: 1 compiled, 0 with findings`（drawing.c 改成不用 sscanf 之后）、input_service.c `gcccheck: 1 compiled, 0 with findings`，其余文件在第一次全量检查里没有问题。
+- S31 固件：`bash ports/esp32s31/build.sh` 通过。日志里有两处 `factory screen output layer @690a023`，没有“没有屏幕输出层”。
+  - ink-s31.bin 4,333,680 字节（0x422070），应用分区 0x500000，剩 0xddf90 = 909,200 字节（17%）。比上一轮多 720 字节。
+  - DIRAM 160,856 / 503,744。
+- build-s31-own 已删，build-asan 本来没有，build 保留。
+- 隐私检查：差异里没有 MAC、IMEI、ICCID、Wi-Fi 信息或令牌。
+
+### 9. 要你们定的（和上一轮相同，加了一条）
+
+- 阅读正文页要不要去掉状态栏（第 5 条修法 1）。
+- 屏幕连续刷新时电源要不要一直开着，或者上电期间按键怎么不丢（修法 2、3，都要真机）。
+- Mogo 目录页上原样复用的固定字（“上页”“按百分比跳转”等）要不要做英文。
