@@ -91,8 +91,9 @@ static void write_phase(void) {
     command("text.insert", "{\"text\":\"成人私有测试正文\"}");
     first_id = M.id; CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "touch-created memo is durable"); snap("MemoEdit");
     command("text.submit", NULL); quiet();
-    record_args(first_id); command("memo.open", call_args); snap("MemoDetail");
-    touch("编辑备忘"); on_ui(select_all); command("text.insert", "{\"text\":\"编辑后的测试正文\"}");
+    record_args(first_id); command("memo.open", call_args); quiet();
+    CHECK(!strcmp(ink_ui_page_name(), "MemoEdit") && M.field && ink_text_focused(), "a text memo opens straight into its editor (Fossify)"); snap("MemoEdit");
+    on_ui(select_all); command("text.insert", "{\"text\":\"编辑后的测试正文\"}");
     CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "updated memo is durable");
     command("text.submit", NULL); quiet();
     command("system.home", NULL); open_list();
@@ -104,10 +105,10 @@ static void write_phase(void) {
     CHECK(WAIT_FOR(ink_db_idle(), 15000), "touch checkbox persists");
     command("memo.check", "{\"id\":3,\"index\":1}"); command("memo.check", "{\"id\":3,\"index\":1}"); quiet(); snap("MemoChecklist");
     command("system.home", NULL); open_list(); new_note("合成撤销记录");
-    record_args(4); command("memo.open", call_args); quiet(); touch("删除备忘");
+    record_args(4); command("memo.open", call_args); quiet(); touch("删除");
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "MemoUndo"), 15000), "deletion opens its undo page"); snap("MemoUndo");
     record_args(removed_id); command("memo.delete", call_args); quiet();
-    CHECK(M.model.action_count == 1 && !strcmp(M.actions[0].capability, "memo.undo") && strstr(M.actions[0].args_json, "\"id\":2"), "undo targets the latest deletion, including a lower record id");
+    CHECK(M.model.action_count == 5 && !strcmp(M.actions[0].capability, "memo.undo") && strstr(M.actions[0].args_json, "\"id\":2"), "undo targets the latest deletion, including a lower record id");
     touch("已删除一条备忘 · 撤销");
     command("memo.undo", "{\"id\":4}"); quiet();
     record_args(removed_id); command("memo.delete", call_args); quiet();
@@ -208,12 +209,15 @@ static void review_full_snapshot(void) {
     snprintf(scene, sizeof scene, "MemoChecklist-full"); on_ui(snapshot_page);
 }
 static void review_long_line(void) {
-    open_list(); new_note("123456789012345678901234TAIL_MUST_READ"); command("memo.convert", "{\"id\":1}"); command("memo.open", "{\"id\":1}"); quiet();
+    static const char LONG_ITEM[] = "123456789012345678901234567890123456789012345678901234567890TAIL_MUST_READ";
+    open_list(); new_note(LONG_ITEM); command("memo.convert", "{\"id\":1}"); command("memo.open", "{\"id\":1}"); quiet();
     snprintf(scene, sizeof scene, "MemoChecklist-long"); on_ui(snapshot_page);
-    CHECK(strstr(snapshot_json, "…") && strstr(snapshot_json, "content_truncated\":true") && strstr(snapshot_json, "memo.edit"),
-          "long checklist item declares its omitted tail and complete reading action");
-    touch("编辑备忘");
-    CHECK(M.field && !strcmp(ink_textfield_text(M.field), "123456789012345678901234TAIL_MUST_READ"), "editing exposes the entire checklist item");
+    CHECK(strstr(snapshot_json, "TAIL_MUST_READ") && strstr(snapshot_json, "{\\\"id\\\":1,\\\"index\\\":0}"),
+          "a long checklist item reaches the AI whole, with the MemoItem page that shows it all");
+    touch("改");
+    CHECK(!strcmp(ink_ui_page_name(), "MemoItem"), "改 opens the item page (%s)", ink_ui_page_name());
+    wanted = LONG_ITEM; on_ui(locate);
+    CHECK(found != NULL, "the item page shows the entire checklist item");
 }
 static void review_burst_ui(void) { ink_text_commit_utf8("BURST_FINAL"); ink_text_enter(); }
 static void review_burst(void) {

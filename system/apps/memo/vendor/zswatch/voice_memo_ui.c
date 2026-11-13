@@ -61,12 +61,9 @@ static struct {
 
     /* Entry filenames for delete callback */
     char entry_filenames[ZSW_RECORDING_MAX_FILES][VOICE_MEMO_MAX_FILENAME];
-
-    /* Blink state for recording indicator */
-    bool dot_visible;
-    uint8_t blink_counter;
 } ui;
 
+#if VOICE_MEMO_UI_LIST
 static void format_relative_time(uint32_t timestamp, char *buf, size_t buf_size)
 {
     if (timestamp == 0) {
@@ -110,6 +107,7 @@ static void record_btn_cb(lv_event_t *e)
         ui.callbacks->on_start_recording();
     }
 }
+#endif /* VOICE_MEMO_UI_LIST */
 
 static void stop_btn_cb(lv_event_t *e)
 {
@@ -119,6 +117,7 @@ static void stop_btn_cb(lv_event_t *e)
     }
 }
 
+#if VOICE_MEMO_UI_LIST && LV_USE_MSGBOX
 static void delete_yes_cb(lv_event_t *e)
 {
     LV_UNUSED(e);
@@ -139,7 +138,9 @@ static void delete_cancel_cb(lv_event_t *e)
         ui.delete_msgbox = NULL;
     }
 }
+#endif /* VOICE_MEMO_UI_LIST && LV_USE_MSGBOX */
 
+#if LV_USE_MSGBOX
 static void back_save_cb(lv_event_t *e)
 {
     LV_UNUSED(e);
@@ -163,7 +164,9 @@ static void back_discard_cb(lv_event_t *e)
         ui.callbacks->on_back_during_recording(false);
     }
 }
+#endif /* LV_USE_MSGBOX */
 
+#if VOICE_MEMO_UI_LIST
 static void entry_delete_btn_cb(lv_event_t *e)
 {
     lv_obj_t *btn = lv_event_get_target(e);
@@ -251,35 +254,31 @@ static void create_list_screen(void)
     lv_obj_set_style_text_color(btn_label, lv_color_white(), 0);
     lv_obj_center(btn_label);
 }
+#endif /* VOICE_MEMO_UI_LIST */
 
 static void create_recording_screen(void)
 {
     ui.rec_screen = lv_obj_create(ui.root_obj);
-    lv_obj_set_size(ui.rec_screen, lv_disp_get_hor_res(NULL), lv_disp_get_ver_res(NULL));
+    lv_obj_set_size(ui.rec_screen, lv_pct(100), lv_pct(100));
     lv_obj_set_style_bg_opa(ui.rec_screen, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(ui.rec_screen, 0, 0);
     lv_obj_set_style_pad_all(ui.rec_screen, 0, 0);
     lv_obj_center(ui.rec_screen);
 
-    /* Recording indicator (red circle with pulsing animation) */
-    ui.rec_indicator = lv_obj_create(ui.rec_screen);
-    lv_obj_set_size(ui.rec_indicator, 20, 20);
-    lv_obj_set_style_radius(ui.rec_indicator, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_color(ui.rec_indicator, zsw_color_red(), 0);
-    lv_obj_set_style_bg_opa(ui.rec_indicator, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_width(ui.rec_indicator, 0, 0);
-    lv_obj_align(ui.rec_indicator, LV_ALIGN_TOP_MID, 0, 40);
-
-    ui.dot_visible = true;
-    ui.blink_counter = 0;
+    /* Recording indicator: a still label, no colour, no blinking (e-ink) */
+    ui.rec_indicator = lv_label_create(ui.rec_screen);
+    lv_label_set_text(ui.rec_indicator, TR("正在记"));
+    lv_obj_set_style_text_font(ui.rec_indicator, &lv_font_montserrat_28, 0);
+    lv_obj_align(ui.rec_indicator, LV_ALIGN_TOP_MID, 0, ink_ui_px(INK_BLOCK_L));
 
     /* Timer label */
     ui.time_label = lv_label_create(ui.rec_screen);
-    lv_label_set_text(ui.time_label, "00:00");
+    lv_label_set_text(ui.time_label, TR("不到 1 分钟"));
     lv_obj_set_style_text_font(ui.time_label, &lv_font_montserrat_28, 0);
     lv_obj_set_style_text_color(ui.time_label, lv_color_white(), 0);
-    lv_obj_align(ui.time_label, LV_ALIGN_TOP_MID, 0, 65);
+    lv_obj_align(ui.time_label, LV_ALIGN_TOP_MID, 0, ink_ui_px(INK_BLOCK_L + ink_ui_line_height(INK_FONT_TITLE) + INK_GAP_XL));
 
+#if LV_USE_BAR
     /* Audio level bar */
     ui.level_bar = lv_bar_create(ui.rec_screen);
     lv_obj_set_size(ui.level_bar, 140, 8);
@@ -288,28 +287,20 @@ static void create_recording_screen(void)
     lv_obj_set_style_bg_color(ui.level_bar, zsw_color_dark_gray(), 0);
     lv_obj_set_style_bg_color(ui.level_bar, zsw_color_blue(), LV_PART_INDICATOR);
     lv_obj_align(ui.level_bar, LV_ALIGN_CENTER, 0, -10);
+#endif
 
     /* Remaining time label */
     ui.remaining_label = lv_label_create(ui.rec_screen);
     lv_label_set_text(ui.remaining_label, "");
     lv_obj_set_style_text_font(ui.remaining_label, &lv_font_montserrat_12, 0);
     lv_obj_set_style_text_color(ui.remaining_label, zsw_color_gray(), 0);
-    lv_obj_align(ui.remaining_label, LV_ALIGN_CENTER, 0, 15);
+    lv_obj_align(ui.remaining_label, LV_ALIGN_TOP_MID, 0, ink_ui_px(INK_BLOCK_L + 2 * ink_ui_line_height(INK_FONT_TITLE) + INK_GAP_XL + INK_GAP_M));
 
-    /* Stop button */
-    ui.stop_btn = lv_btn_create(ui.rec_screen);
-    lv_obj_set_size(ui.stop_btn, 60, 60);
-    lv_obj_set_style_radius(ui.stop_btn, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_color(ui.stop_btn, zsw_color_red(), 0);
-    lv_obj_set_style_bg_opa(ui.stop_btn, LV_OPA_COVER, 0);
-    lv_obj_align(ui.stop_btn, LV_ALIGN_BOTTOM_MID, 0, -20);
+    /* Stop button: the shared primary pill that says what it does (no red circle) */
+    ui.stop_btn = ink_ui_pill(ui.rec_screen, TR("记好了"), 0, 0, (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) * 4 / 7, INK_PRIMARY, true, NULL, NULL);
+    lv_obj_align(ui.stop_btn, LV_ALIGN_BOTTOM_RIGHT, ink_ui_px(-INK_MARGIN), ink_ui_px(-INK_MARGIN));
+    lv_obj_add_flag(ui.stop_btn, LV_OBJ_FLAG_CLICKABLE); /* our pill is inert until something listens */
     lv_obj_add_event_cb(ui.stop_btn, stop_btn_cb, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *stop_icon = lv_label_create(ui.stop_btn);
-    lv_label_set_text(stop_icon, LV_SYMBOL_STOP);
-    lv_obj_set_style_text_color(stop_icon, lv_color_white(), 0);
-    lv_obj_set_style_text_font(stop_icon, &lv_font_montserrat_20, 0);
-    lv_obj_center(stop_icon);
 
     /* Start hidden */
     lv_obj_add_flag(ui.rec_screen, LV_OBJ_FLAG_HIDDEN);
@@ -321,12 +312,15 @@ void voice_memo_ui_show(lv_obj_t *root, const voice_memo_ui_callbacks_t *cbs)
     ui.callbacks = cbs;
     ui.recording_screen_active = false;
 
+#if VOICE_MEMO_UI_LIST
     create_list_screen();
+#endif
     create_recording_screen();
 }
 
 void voice_memo_ui_remove(void)
 {
+#if LV_USE_MSGBOX
     if (ui.back_confirm_msgbox) {
         lv_msgbox_close(ui.back_confirm_msgbox);
         ui.back_confirm_msgbox = NULL;
@@ -335,6 +329,7 @@ void voice_memo_ui_remove(void)
         lv_msgbox_close(ui.delete_msgbox);
         ui.delete_msgbox = NULL;
     }
+#endif
     if (ui.list_screen) {
         lv_obj_del(ui.list_screen);
         ui.list_screen = NULL;
@@ -358,20 +353,29 @@ void voice_memo_ui_remove(void)
 
 void voice_memo_ui_show_recording(void)
 {
-    if (!ui.rec_screen || !ui.list_screen) {
+    if (!ui.rec_screen) {
+        return;
+    }
+#if VOICE_MEMO_UI_LIST
+    if (!ui.list_screen) {
         return;
     }
     lv_obj_add_flag(ui.list_screen, LV_OBJ_FLAG_HIDDEN);
+#endif
     lv_obj_remove_flag(ui.rec_screen, LV_OBJ_FLAG_HIDDEN);
     ui.recording_screen_active = true;
 
     /* Reset display, including what show_saving changed */
     lv_obj_remove_flag(ui.stop_btn, LV_OBJ_FLAG_HIDDEN);
+#if LV_USE_BAR
     lv_obj_remove_flag(ui.level_bar, LV_OBJ_FLAG_HIDDEN);
+#endif
     lv_obj_set_style_bg_color(ui.rec_indicator, zsw_color_red(), 0);
     lv_obj_set_style_opa(ui.rec_indicator, LV_OPA_COVER, 0);
-    lv_label_set_text(ui.time_label, "00:00");
+    lv_label_set_text(ui.time_label, TR("不到 1 分钟"));
+#if LV_USE_BAR
     lv_bar_set_value(ui.level_bar, 0, LV_ANIM_OFF);
+#endif
     if (ui.remaining_label) {
         lv_label_set_text(ui.remaining_label, "");
     }
@@ -384,19 +388,26 @@ void voice_memo_ui_show_saving(void)
     }
     // Hide the stop button so repeated taps can't land on anything while saving.
     lv_obj_add_flag(ui.stop_btn, LV_OBJ_FLAG_HIDDEN);
+#if LV_USE_BAR
     lv_obj_add_flag(ui.level_bar, LV_OBJ_FLAG_HIDDEN);
+#endif
     lv_obj_set_style_bg_color(ui.rec_indicator, zsw_color_gray(), 0);
     lv_obj_set_style_opa(ui.rec_indicator, LV_OPA_COVER, 0);
-    lv_label_set_text(ui.remaining_label, "Saving...");
+    lv_label_set_text(ui.remaining_label, TR("正在保存录音"));
 }
 
 void voice_memo_ui_show_list(void)
 {
-    if (!ui.rec_screen || !ui.list_screen) {
+    if (!ui.rec_screen) {
         return;
     }
-    lv_obj_add_flag(ui.rec_screen, LV_OBJ_FLAG_HIDDEN);
+#if VOICE_MEMO_UI_LIST
+    if (!ui.list_screen) {
+        return;
+    }
     lv_obj_remove_flag(ui.list_screen, LV_OBJ_FLAG_HIDDEN);
+#endif
+    lv_obj_add_flag(ui.rec_screen, LV_OBJ_FLAG_HIDDEN);
     ui.recording_screen_active = false;
 }
 
@@ -405,25 +416,21 @@ void voice_memo_ui_update_time(uint32_t elapsed_ms, uint32_t remaining_s)
     if (!ui.time_label) {
         return;
     }
-    uint32_t secs = elapsed_ms / 1000;
-    uint32_t mins = secs / 60;
-    secs %= 60;
+    /* Whole minutes only: the panel is not redrawn every second */
+    unsigned mins = (unsigned)(elapsed_ms / 60000);
 
-    lv_label_set_text_fmt(ui.time_label, "%02u:%02u", mins, secs);
-
-    ui.blink_counter++;
-    if (ui.blink_counter >= 2) {
-        ui.blink_counter = 0;
-        ui.dot_visible = !ui.dot_visible;
-        lv_obj_set_style_opa(ui.rec_indicator, ui.dot_visible ? LV_OPA_COVER : LV_OPA_TRANSP, 0);
+    if (mins) {
+        lv_label_set_text_fmt(ui.time_label, TR("%u 分钟"), mins);
+    } else {
+        lv_label_set_text(ui.time_label, TR("不到 1 分钟"));
     }
 
     if (ui.remaining_label && remaining_s > 0) {
-        lv_label_set_text_fmt(ui.remaining_label, "%u:%02u left",
-                              remaining_s / 60, remaining_s % 60);
+        lv_label_set_text_fmt(ui.remaining_label, TR("还能录约 %u 分钟"), (unsigned)(remaining_s / 60));
     }
 }
 
+#if LV_USE_BAR
 void voice_memo_ui_update_level(uint8_t level)
 {
     if (!ui.level_bar) {
@@ -431,7 +438,9 @@ void voice_memo_ui_update_level(uint8_t level)
     }
     lv_bar_set_value(ui.level_bar, level, LV_ANIM_ON);
 }
+#endif
 
+#if VOICE_MEMO_UI_LIST
 void voice_memo_ui_update_list(const zsw_recording_entry_t *entries, int count,
                                uint32_t free_space_kb, uint32_t kb_per_sec)
 {
@@ -517,7 +526,9 @@ void voice_memo_ui_update_list(const zsw_recording_entry_t *entries, int count,
         lv_obj_align(info, LV_ALIGN_BOTTOM_LEFT, 0, 0);
     }
 }
+#endif /* VOICE_MEMO_UI_LIST */
 
+#if LV_USE_MSGBOX
 void voice_memo_ui_show_back_confirm(void)
 {
     if (!ui.root_obj || ui.back_confirm_msgbox) {
@@ -541,5 +552,6 @@ void voice_memo_ui_show_back_confirm(void)
     lv_obj_set_scrollbar_mode(ui.back_confirm_msgbox, LV_SCROLLBAR_MODE_OFF);
     lv_obj_center(ui.back_confirm_msgbox);
 }
+#endif /* LV_USE_MSGBOX */
 
 
