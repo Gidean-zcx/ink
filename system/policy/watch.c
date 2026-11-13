@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "ink/probe.h"
+#include "ink/sys/log.h"
 #include "watch.h"
 
 int watch_list_init(watch_list_t *l, osal_mutex_t *lock, const char *(*id_of)(int idx), const char *probe_dropped) {
@@ -26,6 +27,14 @@ int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_e
         if (i == l->n) l->n++;
     }
     osal_mutex_unlock(l->lock);
+    if (r < 0) { /* a full table must not fail quietly: count it, and say so once */
+        static bool told;
+        ink_probe_count("watch.table_full");
+        if (!told) {
+            told = true;
+            ink_log(INK_LOG_WARN, "watch", "table full (%d): a watch on '%s' was refused", WATCH_MAX, prefix ? prefix : "");
+        }
+    }
     return r;
 }
 

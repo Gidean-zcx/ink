@@ -13,7 +13,7 @@
 #include "ink/osal.h"
 #include "ink/sys/exec.h"
 
-#define WATCH_MAX 80 /* system services, shell and system apps share the table (in PSRAM); 32 filled up on 2026-11-09, 64 left one slot on 2026-11-11 (app-framework-gaps needs two) */
+#define WATCH_MAX 96 /* system services, shell and system apps share the table (in PSRAM); 32 filled up on 2026-11-09, 64 left one slot on 2026-11-11 (app-framework-gaps needs two), 80 filled up on 2026-11-13 (notify-svc-1 +3, settings-1 +1: every later watch failed quietly) */
 
 typedef void (*watch_fn)(void *ctx, int idx, const char *id);
 
