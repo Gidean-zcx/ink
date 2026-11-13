@@ -1,0 +1,10 @@
+# Extend the existing generated language tables with this app's own keys.
+foreach(table ${INK_I18N_TABLES})
+  get_filename_component(language ${table} NAME)
+  if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/${language})
+    file(READ ${CMAKE_CURRENT_LIST_DIR}/${language} extra)
+    file(APPEND ${table} "\n${extra}")
+    configure_file(${table} ${CMAKE_BINARY_DIR}/reader-i18n-check/assets/i18n/${language} COPYONLY)
+  endif()
+endforeach()
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_LIST_DIR}/en.tsv)

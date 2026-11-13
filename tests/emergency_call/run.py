@@ -39,7 +39,7 @@ def compile_copy(path, source, name):
     original_object = command[command.index('-o') + 1]
     command[command.index('-o') + 1] = str(obj)
     command[command.index(str(ROOT / path))] = str(source_path)
-    command += ['-iquote', str((ROOT / path).parent)]
+    command += ['-iquote', str((ROOT / path).parent), '-iquote', str(ROOT / 'system/apps/phone')]  # phone.c's vendor/lilyphone
     result = subprocess.run(command, cwd=build, capture_output=True, text=True)
     (work / (name + '-compile.log')).write_text(result.stdout + result.stderr)
     assert result.returncode == 0, result.stderr

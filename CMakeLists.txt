@@ -239,6 +239,8 @@ add_library(ink_system STATIC
   system/services/file/file_caps.c
   system/services/file/transfer.c
   system/services/time/lunar.c
+  system/services/time/almanac.c
+  system/services/time/vendor/mogo-calendar/main/time/calendar.c
   system/services/time/time_service.c
   system/ui/shell/time_settings.c
   system/ui/shell/mobile_network.c
@@ -262,7 +264,6 @@ add_library(ink_system STATIC
   system/services/audio/codec_formats.c
   system/services/audio/vendor/kiikoread/metadata.c
   system/services/audio/vendor/kiikoread/music_lyrics.c
-  system/apps/music/music.c
   system/services/bt/bt_service.c
   system/services/text/text_service.c
   system/services/text/google_port.cpp
@@ -294,7 +295,7 @@ add_library(ink_system STATIC
   system/text/linebreak.c
   system/text/layout.c
   system/ui/lock_mark.c
-  system/ui/lock_faces/faces.c
+  system/ui/lock_faces/faces.c system/ui/lock_faces/drawn.c
   system/ui/ui_task.c
   system/ui/ui_semantics.c
   system/ui/ui_list.c
@@ -310,6 +311,7 @@ add_library(ink_system STATIC
   system/ui/app.c
   system/apps/remote/remote.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn third_party/stb)
+target_include_directories(ink_system PRIVATE system/services/time/vendor/mogo-calendar/main)
 target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256 PRIVATE ink_image_codec ink_resampler)
 # The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
 # leak into the system or the apps), and it puts the port after the system on every link line, which
@@ -357,6 +359,7 @@ add_custom_target(ink_sample ALL
 find_package(Python3 COMPONENTS Interpreter)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
 include(apps/mogo/translations.cmake)
+include(apps/music/translations.cmake)
 set(INK_HAVE_FONTS OFF)
 set(INK_RAW_FONTS_DIR ${CMAKE_BINARY_DIR}/assets-raw/fonts) # the same faces uncompressed (INKF v1), for tests/font_pack
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
@@ -469,7 +472,8 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c
   ${CMAKE_SOURCE_DIR}/system/apps/calculator/calculator.c ${CMAKE_SOURCE_DIR}/system/apps/contacts/contacts.c
   ${CMAKE_SOURCE_DIR}/system/apps/gallery/gallery.c
-  ${CMAKE_SOURCE_DIR}/system/apps/memo/memo.c ${CMAKE_SOURCE_DIR}/system/apps/phone/phone.c
+  ${CMAKE_SOURCE_DIR}/system/apps/memo/memo.c ${CMAKE_SOURCE_DIR}/system/apps/phone/phone.c ${CMAKE_SOURCE_DIR}/system/apps/phone/vendor/lilyphone/call_card.c
+  ${CMAKE_SOURCE_DIR}/system/apps/memo/memo_voice.c ${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch/voice_memo_ui.c
   ${CMAKE_SOURCE_DIR}/system/apps/remote/remote.c ${CMAKE_SOURCE_DIR}/system/apps/sms/sms.c
   ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
 file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
@@ -503,6 +507,7 @@ list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_menu.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_pages.c
   ${CMAKE_SOURCE_DIR}/system/ui/card_files_notice.c
+  ${CMAKE_SOURCE_DIR}/system/apps/gallery/vendor/agentui/camera_gallery_repository_part.h
 )
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
@@ -676,6 +681,8 @@ add_subdirectory(third_party/mogo)
 include(system/graft/graft_build.cmake)
 ink_graft_build(ink_system)
 include(apps/mogo/mogo.cmake)
+include(apps/mogo_lock/mogo_lock.cmake)
+include(apps/music/music.cmake)
 add_executable(sim-graft-carrier simulator/runtime/sim_main.c tests/graft_mogo/device.c)
 target_link_libraries(sim-graft-carrier PRIVATE ink_apps ink_system ink_port_sim)
 target_include_directories(sim-graft-carrier PRIVATE tests)
@@ -759,6 +766,28 @@ ink_sim_executable(sim-lock-faces tests/lock_faces.c)
 target_link_libraries(sim-lock-faces PRIVATE ink_apps ink_system)
 add_test(NAME lock-faces COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_faces.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(lock-faces PROPERTIES TIMEOUT 240)
+# lock-styles-1: Mogo's lock styles on the real lock screen (tests/lock_styles.c), case by case.
+ink_sim_executable(sim-lock-styles tests/lock_styles.c)
+target_include_directories(sim-lock-styles PRIVATE tests)
+target_link_libraries(sim-lock-styles PRIVATE ink_apps ink_system)
+add_dependencies(sim-lock-styles ink_fonts ink_ui_fonts ink_icons)
+foreach(lock_case styles almanac refresh privacy entry upgrade empty nofont sleep latest)
+  add_test(NAME lock-styles-${lock_case} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_styles.py
+    --build ${CMAKE_BINARY_DIR} --case ${lock_case})
+  set_tests_properties(lock-styles-${lock_case} PROPERTIES TIMEOUT 600)
+endforeach()
+add_test(NAME mogo-lock-provenance COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/mogo_lock_host/provenance.py)
+add_test(NAME lock-styles-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_styles_reverse.py
+  --build ${CMAKE_BINARY_DIR})
+set_tests_properties(lock-styles-reverse PROPERTIES TIMEOUT 2400)
+# Mogo's own lock-style host tests, unchanged, in a Mogo-shaped tree of links (tests/mogo_lock_host/run.py).
+foreach(mogo_test wallpaper_crop mini_library_host_test.py home_library_host_test.py clock-generator calendar-generator
+        lock_collage_host_test.py book_excerpt_host_test.py lock_clock_ui_host_test.py)
+  string(REPLACE "_host_test.py" "" mogo_name ${mogo_test})
+  add_test(NAME mogo-lock-host-${mogo_name} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/mogo_lock_host/run.py
+    --build ${CMAKE_BINARY_DIR} ${mogo_test})
+  set_tests_properties(mogo-lock-host-${mogo_name} PROPERTIES TIMEOUT 300)
+endforeach()
 ink_sim_executable(sim-lock-cover tests/lock_cover.c)
 target_link_libraries(sim-lock-cover PRIVATE ink_apps ink_system)
 add_test(NAME lock-cover COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_cover.py --build ${CMAKE_BINARY_DIR})
@@ -1778,7 +1807,7 @@ ink_sim_executable(sim-ai-speech-long tests/ai_speech_long/ai_speech_long.c)
 target_link_libraries(sim-ai-speech-long PRIVATE ink_apps ink_system)
 add_test(NAME ai-speech-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_speech_long/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(ai-speech-long PROPERTIES TIMEOUT 180)
-target_sources(ink_system PRIVATE system/apps/phone/phone.c)
+target_sources(ink_system PRIVATE system/apps/phone/phone.c system/apps/phone/vendor/lilyphone/phone_store.c system/apps/phone/vendor/lilyphone/call_card.c)
 ink_sim_executable(sim-emergency-call tests/emergency_call/emergency_call.c)
 target_link_libraries(sim-emergency-call PRIVATE ink_apps ink_system)
 add_test(NAME emergency-call COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/emergency_call/run.py --build ${CMAKE_BINARY_DIR})
@@ -1787,6 +1816,29 @@ ink_sim_executable(sim-phone-calls tests/phone_calls/phone_calls.c)
 target_link_libraries(sim-phone-calls PRIVATE ink_apps ink_system)
 add_test(NAME phone-calls COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/phone_calls/run.py
   $<TARGET_FILE:sim-phone-calls> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/phone-calls)
+# phone-3: LilyPhone's number match on the host, and the reverse control with its original MATCH_DIGITS 7.
+set(INK_LILY_STORE_SRC ${CMAKE_SOURCE_DIR}/system/apps/phone/vendor/lilyphone/phone_store.c)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${INK_LILY_STORE_SRC})
+file(READ ${INK_LILY_STORE_SRC} INK_LILY_STORE)
+string(REPLACE "#define MATCH_DIGITS 11" "#define MATCH_DIGITS 7" INK_LILY_STORE "${INK_LILY_STORE}")
+file(WRITE ${CMAKE_BINARY_DIR}/phone-3/phone_store_7.c "${INK_LILY_STORE}")
+foreach(variant match match-7)
+  add_executable(phone-3-${variant} tests/phone_3/match.c
+    $<IF:$<STREQUAL:${variant},match>,${INK_LILY_STORE_SRC},${CMAKE_BINARY_DIR}/phone-3/phone_store_7.c>)
+  target_include_directories(phone-3-${variant} PRIVATE system/apps/phone/vendor/lilyphone $<TARGET_PROPERTY:ink_system,INCLUDE_DIRECTORIES>)
+  target_compile_definitions(phone-3-${variant} PRIVATE $<TARGET_PROPERTY:ink_system,COMPILE_DEFINITIONS>)
+  add_dependencies(phone-3-${variant} ink_system)
+endforeach()
+add_test(NAME phone-3-match COMMAND phone-3-match)
+add_test(NAME phone-3-match-reverse COMMAND phone-3-match-7)
+set_tests_properties(phone-3-match-reverse PROPERTIES PASS_REGULAR_EXPRESSION "FAIL 138/139")
+ink_sim_executable(sim-phone-3 tests/phone_3/phone_3.c)
+target_link_libraries(sim-phone-3 PRIVATE ink_apps ink_system)
+add_test(NAME phone-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/phone_3/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME phone-3-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/phone_3/run.py --build ${CMAKE_BINARY_DIR} --reverse)
+set_tests_properties(phone-3 phone-3-reverse PROPERTIES TIMEOUT 900)
+
+
 
 target_sources(ink_system PRIVATE system/ui/shell/power_pages.c)
 ink_sim_executable(sim-power-pages tests/power_pages.c)
@@ -1810,7 +1862,10 @@ ink_sim_executable(sim-mobile-network tests/mobile_network/mobile_network.c)
 target_link_libraries(sim-mobile-network PRIVATE ink_apps ink_system)
 add_test(NAME mobile-network COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/mobile_network/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(mobile-network PROPERTIES TIMEOUT 600)
-target_sources(ink_system PRIVATE system/apps/memo/memo.c)
+target_sources(ink_system PRIVATE system/apps/memo/memo.c system/apps/memo/memo_voice.c system/apps/memo/vendor/zswatch/voice_memo_ui.c)
+# The copied ZSWatch recording screen and its glue only: Zephyr-shaped shim headers (system/apps/memo/vendor/zswatch/SOURCE.md).
+set_source_files_properties(system/apps/memo/memo_voice.c system/apps/memo/vendor/zswatch/voice_memo_ui.c PROPERTIES INCLUDE_DIRECTORIES
+  "${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch/port;${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch")
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
 ink_sim_executable(sim-memo-save-busy tests/memo_save_busy.c)
@@ -1824,6 +1879,13 @@ add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/
 ink_sim_executable(sim-memo-record tests/memo_record/memo_record.c)
 target_link_libraries(sim-memo-record PRIVATE ink_apps ink_system)
 add_test(NAME memo-record COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo_record/run.py --build ${CMAKE_BINARY_DIR})
+# memo-3: the reference walk, autosave moments, members, old records, the copied ZSWatch screen and refreshes (tests/memo_3).
+ink_sim_executable(sim-memo-3 tests/memo_3/memo_3.c)
+target_link_libraries(sim-memo-3 PRIVATE ink_apps ink_system)
+set_source_files_properties(tests/memo_3/memo_3.c PROPERTIES INCLUDE_DIRECTORIES
+  "${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch/port;${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch")
+add_test(NAME memo-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/memo_3/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(memo-3 PROPERTIES TIMEOUT 2400)
 
 target_sources(ink_system PRIVATE system/ui/shell/settings_family.c system/ui/shell/wallpaper.c)
 ink_sim_executable(sim-settings-b tests/settings_b.c)
@@ -1935,6 +1997,11 @@ add_test(NAME confirm-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/te
 set_tests_properties(confirm-pages PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 
 target_sources(ink_system PRIVATE system/apps/files/files.c)
+# files-3: Flipper's archive code (GPL-3.0, vendor/flipper) is one C unit behind its shims, with its own warnings off.
+target_sources(ink_system PRIVATE system/apps/files/files_flipper.c system/apps/files/flipper/flipper_unit.c)
+set_source_files_properties(system/apps/files/files_flipper.c system/apps/files/flipper/flipper_unit.c PROPERTIES INCLUDE_DIRECTORIES
+  "${CMAKE_SOURCE_DIR}/system/apps/files/flipper;${CMAKE_SOURCE_DIR}/system/apps/files/vendor/flipper;${CMAKE_SOURCE_DIR}/system/apps/files/vendor/flipper/helpers")
+set_source_files_properties(system/apps/files/flipper/flipper_unit.c PROPERTIES COMPILE_OPTIONS -w)
 ink_sim_executable(sim-files-app tests/files_app/files_app.c)
 target_link_libraries(sim-files-app PRIVATE ink_apps ink_system)
 add_dependencies(sim-files-app sim-image)
@@ -1943,6 +2010,11 @@ add_test(NAME files-app COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/
 ink_sim_executable(sim-files-ops tests/files_ops/files_ops.c)
 target_link_libraries(sim-files-ops PRIVATE ink_apps ink_system)
 add_test(NAME files-ops COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_ops/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-files3 tests/files3/files3.c)
+target_link_libraries(sim-files3 PRIVATE ink_apps ink_system)
+add_test(NAME files3 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files3/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME files3-keep-both-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files3/run.py --build ${CMAKE_BINARY_DIR} --mutant keep-both)
+set_tests_properties(files3 files3-keep-both-negative PROPERTIES TIMEOUT 1500)
 
 target_sources(ink_system PRIVATE system/apps/camera/camera.c system/apps/gallery/gallery.c)
 add_library(ink_camera_png STATIC system/apps/camera/png.c)
@@ -2190,13 +2262,34 @@ target_include_directories(test-music-formats PRIVATE platform/include system/in
 target_compile_options(test-music-formats PRIVATE ${INK_WARN} -UNDEBUG)
 target_link_libraries(test-music-formats PRIVATE m)
 add_test(NAME music-formats COMMAND test-music-formats ${CMAKE_SOURCE_DIR}/tests/music/fixtures)
+# music-3: the kiikoread library rules as copied, on a fake file index.
+add_executable(test-music-library tests/music/library.c third_party/kiikoread_music/music_library.c)
+target_include_directories(test-music-library PRIVATE platform/include system/include third_party/kiikoread_music system/services/audio/vendor/kiikoread)
+target_compile_options(test-music-library PRIVATE ${INK_WARN} -UNDEBUG -include ${CMAKE_SOURCE_DIR}/tests/music/library_port.h)
+add_test(NAME music-library COMMAND test-music-library)
+add_test(NAME music-kiikoread-provenance COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/verify_kiikoread.py)
 
 ink_sim_executable(sim-music tests/music/product.c)
 target_link_libraries(sim-music PRIVATE ink_apps ink_system)
+target_include_directories(sim-music PRIVATE apps/music/port third_party/kiikoread_music)
 add_test(NAME music-product COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(music-product PROPERTIES TIMEOUT 180)
 
 add_dependencies(sim-music ink_fonts ink_ui_fonts ink_icons ink_test_content)
+# music-3: the kiikoread walk by touch and by AI, playing on, members, old data, refreshes, what is missing.
+ink_sim_executable(sim-music-player tests/music/player.c)
+target_link_libraries(sim-music-player PRIVATE ink_apps ink_system)
+target_include_directories(sim-music-player PRIVATE system/graft apps/music/port third_party/kiikoread_music)
+add_dependencies(sim-music-player ink_fonts ink_ui_fonts ink_icons ink_test_content)
+add_test(NAME music-player COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases "main restart")
+add_test(NAME music-player-missing COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases nofont --no-font)
+add_test(NAME music-player-empty COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases empty --content empty)
+add_test(NAME music-player-flat COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}
+  --binary ${CMAKE_BINARY_DIR}/sim-music-player --phases flat --content flat)
+set_tests_properties(music-player music-player-missing music-player-empty music-player-flat PROPERTIES TIMEOUT 300)
 
 ink_sim_executable(sim-audio-out tests/audio_out/device.c)
 target_link_libraries(sim-audio-out PRIVATE ink_apps ink_system)
@@ -2259,3 +2352,55 @@ target_link_libraries(sim-card-files PRIVATE ink_apps ink_system)
 add_dependencies(sim-card-files ink_card_files ink_fonts ink_ui_fonts ink_icons)
 add_test(NAME card-files-sim COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(card-files-sim PROPERTIES TIMEOUT 600)
+
+# Offline almanac: fixed fixtures need neither node nor an upstream checkout.
+add_executable(almanac-model tests/almanac/model.c system/services/time/almanac.c
+  system/services/time/vendor/mogo-calendar/main/time/calendar.c system/services/time/lunar.c
+  system/util/ink_args.c system/util/ink_json.c)
+target_include_directories(almanac-model PRIVATE system/include platform/include third_party/jsmn
+  system/services/time/vendor/mogo-calendar/main)
+target_compile_options(almanac-model PRIVATE ${INK_WARN})
+add_test(NAME almanac-fixtures COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/run.py
+  --binary $<TARGET_FILE:almanac-model>)
+add_test(NAME almanac-oracle COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/run.py
+  --binary $<TARGET_FILE:almanac-model> --mode oracle)
+set_tests_properties(almanac-oracle PROPERTIES SKIP_RETURN_CODE 77)
+# Mogo's own host test, unchanged but for its Date fields; tests/almanac/run_reader_baseline.py is its shim.
+add_test(NAME almanac-mogo-host COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/tests/almanac
+  ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/system/services/time/vendor/mogo-calendar/tools/calendar_host_test.py)
+set_tests_properties(almanac-mogo-host PROPERTIES SKIP_RETURN_CODE 77)
+add_test(NAME almanac-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/reverse.py
+  --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-almanac tests/almanac/device.c)
+target_link_libraries(sim-almanac PRIVATE ink_apps ink_system)
+add_test(NAME almanac-capability COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/device.py
+  --build ${CMAKE_BINARY_DIR})
+# gallery-3: AgentUI's gallery helpers (verbatim in system/apps/gallery/vendor/agentui) behind a C shim. They use
+# std::string, so whatever links the system also links the C++ library (the executables link with the C driver).
+target_sources(ink_system PRIVATE system/apps/gallery/repository.cpp)
+set_source_files_properties(system/apps/gallery/repository.cpp PROPERTIES COMPILE_OPTIONS "-fno-exceptions;-fno-rtti")
+if(APPLE)
+  target_link_libraries(ink_system INTERFACE c++)
+else()
+  target_link_libraries(ink_system INTERFACE stdc++)
+endif()
+# gallery-3: the AgentUI helpers through the shim, EXIF orientation and probe, the walks on the whole product.
+add_executable(test-gallery-agentui tests/gallery_3/agentui.c system/apps/gallery/repository.cpp)
+target_include_directories(test-gallery-agentui PRIVATE system/include platform/include system/apps/gallery)
+target_compile_options(test-gallery-agentui PRIVATE ${INK_WARN})
+add_test(NAME gallery-3-agentui COMMAND test-gallery-agentui)
+set(INK_GALLERY3_FIXTURES ${CMAKE_BINARY_DIR}/generated/gallery3_fixtures.h)
+add_custom_command(OUTPUT ${INK_GALLERY3_FIXTURES}
+  COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/fixtures.py ${INK_GALLERY3_FIXTURES}
+  DEPENDS tests/gallery_3/fixtures.py)
+ink_sim_executable(sim-gallery-3-exif tests/gallery_3/exif.c ${INK_GALLERY3_FIXTURES})
+target_include_directories(sim-gallery-3-exif PRIVATE ${CMAKE_BINARY_DIR}/generated system/include)
+target_link_libraries(sim-gallery-3-exif PRIVATE ink_system)
+add_test(NAME gallery-3-exif COMMAND sim-gallery-3-exif --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/media/image.budget.json --out ${CMAKE_BINARY_DIR}/test-out/gallery-3-exif --end 10s --quiet --no-random-outages)
+ink_sim_executable(sim-gallery-3 tests/gallery_3/gallery.c)
+target_link_libraries(sim-gallery-3 PRIVATE ink_apps ink_system)
+add_test(NAME gallery-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(gallery-3 PROPERTIES TIMEOUT 1500)
+add_test(NAME gallery-3-source COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/source_check.py)
+set_tests_properties(gallery-3-source PROPERTIES SKIP_RETURN_CODE 77)

@@ -65,6 +65,15 @@ def main():
         out.unlink()
         check(tool("header", "--manifest", good, "--out", out).returncode == 0 and out.read_bytes() == first, "the same header twice")
         check(tool("verify", "--manifest", good, "--header", out).returncode == 0, "verify: they agree")
+        spec = tmp / "spec.json"
+        spec.write_text(json.dumps({"version": 1, "entries": [{"path": "/content/fonts/a.ttf", "app": "mogo", "make": "x"},
+                                                              {"path": "/content/.system/b", "app": "mogo", "make": "x"}]}))
+        check(tool("header", "--manifest", good, "--out", out, "--spec", spec).returncode == 0, "header --spec: made from it")
+        spec.write_text(json.dumps({"version": 1, "entries": [{"path": "/content/fonts/a.ttf", "app": "mogo,music", "make": "x"},
+                                                              {"path": "/content/.system/b", "app": "mogo", "make": "x"}]}))
+        out.unlink()
+        r = tool("header", "--manifest", good, "--out", out, "--spec", spec)
+        check(r.returncode != 0 and not out.exists() and "not made from" in r.stderr, f"header --spec refuses a stale bundle: {r.stderr}")
         text = first.decode()
         digest = json.loads(good.read_text())["digest"]
         for why, changed in (("digest", text.replace(digest, "0" * 16)), ("an entry", text.replace(" 4u,", " 5u,"))):
@@ -83,6 +92,9 @@ def main():
         r = tool("verify", "--manifest", a.build / "card-files/manifest.json", "--header", a.build / "generated/ink/card_files_manifest.h")
         check(r.returncode == 0, f"the build's list and header: {r.stdout}{r.stderr}")
         print(r.stdout.strip())
+        with tempfile.TemporaryDirectory() as tmp:
+            r = tool("header", "--manifest", a.build / "card-files/manifest.json", "--out", Path(tmp) / "h.h", "--spec", ROOT / "tools/card_files.json")
+        check(r.returncode == 0, f"the build's bundle is made from tools/card_files.json (the S31 build checks the same): {r.stderr}")
     print("card files tool: refusals, stable header, verify, Python choice: PASS")
 
 

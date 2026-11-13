@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path.cwd()
 BUILD = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "build"
 CF, MOGO, SERVE = ROOT / "system/services/card_files/card_files.c", ROOT / "apps/mogo/mogo.c", ROOT / "tools/device/card_files_serve.py"
+FILES = ROOT / "system/services/file/file_service.c"
 MUTATIONS = [
     ("no-hash-before-install", CF, "bool same = got == 1 && hash_is(i);\n        if (!same && got)", "bool same = got == 1;\n        if (!same && got)", ["F"]),
     ("no-chunk-crc", CF, " && ink_crc32(0, buf, len) == crc ? 0 : -1;", " ? 0 : -1;", ["B"]),
@@ -21,7 +22,7 @@ MUTATIONS = [
      "if (n > 0) return 0;", ["G"]),
     ("no-reader-notice", MOGO, "if (M.reason == INK_MOGO_R_FILES) { /* the font", "if (0) { /* the font", ["A"]),
     ("done-ok-without-install", CF, "return CF.st[i] == E_OK ? D_OK : CF.stop ? D_IO : D_KEPT;", "return D_OK;", ["J"]),
-    ("notice-holds-the-file", CF, " || ink_card_files_notice_snapshot(app, NULL, 0) > 0", "", ["I"]),
+    ("replace-under-an-open-file", FILES, "open = FS.files[i].used && !strcasecmp(FS.files[i].phys, phys);", "open = false;", ["J"]),
     ("reopen-by-redraw", MOGO, "static void ink_mogo_reopen(void) {\n", "static void ink_mogo_reopen(void) { ink_ui_redraw(); return;\n", ["H"]),
     ("tool-ignores-get-hash", SERVE, '        if sha != e["sha256"]:\n            return f"{PREFIX}NO {idx} sha"\n', "", ["serve"]),
 ]

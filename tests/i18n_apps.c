@@ -41,6 +41,10 @@ static void test_home(void) { test_ok("system.home", NULL); }
 static void test_open(const char *app) {
     char args[64]; test_home(); snprintf(args, sizeof args, "{\"id\":\"%s\"}", app); test_ok("app.open", args);
 }
+static void test_open_gallery(void) { /* gallery-3 draws a page's thumbnails together: wait for that, not for a quiet moment */
+    double before = sim_metric_value("gallery.page_ready"); test_open("gallery");
+    CHECK(WAIT_FOR(sim_metric_value("gallery.page_ready") > before, 10000), "the gallery has read the card and drawn its page"); test_quiet();
+}
 static void test_walk(lv_obj_t *o) {
     if (!lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
     if (page_layer && ink_text_focused()) {
@@ -202,13 +206,13 @@ static void test_apps(void) {
     test_ok("sms.compose", NULL); test_capture("SmsCompose", "写短信", "New message");
     test_ok("sms.long", NULL); test_capture("ImeLong", "写短信", "New message");
     test_open("message"); test_ok("sms.compose", NULL); test_capture("SmsNewRecipient", "收件人", "To"); test_ok("sms.pick", NULL); test_capture("SmsRecipients", "用户原文 晴", "用户原文 晴");
-    test_open("gallery"); test_capture("Gallery-empty", "相册", "Photos");
+    test_open_gallery(); test_capture("Gallery-empty", "相册", "Photos");
     test_open("camera"); test_ok("camera.preview", NULL); test_capture("Camera", "低频取景", "Still preview");
     CHECK(BY_HAND("camera.scan", NULL) && g_rc.status == INK_RC_FAILED, "synthetic image has no QR code"); test_quiet(); test_capture("Scan", "扫码", "Scan");
     test_open("camera"); test_ok("camera.photo", NULL);
     ink_fs_entry_t photo; uint32_t cursor = 0;
     CHECK(ink_fs_index("/me", INK_FS_IMAGE, &cursor, &photo) == 1, "synthetic photo saved");
-    test_open("gallery"); test_capture("Gallery", "相册", "Photos"); char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)photo.id);
+    test_open_gallery(); test_capture("Gallery", "相册", "Photos"); char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)photo.id);
     test_ok("photo.open", args); test_capture("Photo", "问 AI 这张图", "Ask AI about this photo");
     test_open("weather"); test_capture("Weather-empty", "还没有设天气城市", "No weather city set");
     test_ok("weather.city", NULL); test_capture("WeatherCity", "输入城市名", "Enter city name");
@@ -250,7 +254,7 @@ static void run_test(void *arg) {
     test_open("phone"); test_capture("Phone-back-zh", "拨号", "Dial");
     test_open("message"); test_capture("Sms-back-zh", "短信", "Messages");
     test_open("camera"); test_ok("camera.preview", NULL); test_capture("Camera-back-zh", "低频取景", "Still preview");
-    test_open("gallery"); test_capture("Gallery-back-zh", "相册", "Photos");
+    test_open_gallery(); test_capture("Gallery-back-zh", "相册", "Photos");
     test_open("weather"); test_capture("Weather-back-zh", "最高", "H 15");
     test_ok("remote.open", NULL); test_capture("RemoteAddress-back-zh", "输入网址", "Enter address"); test_ok("remote.close", NULL);
 #endif

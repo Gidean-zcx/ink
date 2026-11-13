@@ -139,5 +139,14 @@
     "file": "third_party/licenses/ImGui.txt",
     "source": "https://github.com/ocornut/imgui/tree/v1.91.9b",
     "sha256": "c80c5789748d955c4a650562baa0d750494e2c7128c2ca66aaebe2e3c4e198bf"
+  },
+  {
+    "id": "flipper-archive",
+    "name": "Flipper Zero Archive (file menu and favourites)",
+    "version": "3060cee",
+    "license": "GPL-3.0",
+    "file": "system/apps/files/vendor/flipper/LICENSE",
+    "source": "https://github.com/flipperdevices/flipperzero-firmware/tree/3060cee9bac71d332dc7629191ae1aeb1edaac33/applications/main/archive",
+    "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
   }
 ]

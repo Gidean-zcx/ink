@@ -112,6 +112,33 @@ int main(int argc,char **argv) {
     drain_urcs(); hal_cell_event_t event; hal_cell_wait_event(&event,0);
     ink_test_reply("\r\nNO CARRIER\r\n"); ink_test_drain();
     assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && !ink_test_bh());
+    assert(event.end==HAL_CELL_END_HANGUP);
+    /* phone-3: BUSY and NO ANSWER end a call too, and say why (the call screen shows 对方忙或拒接 / 没人接) */
+    assert(hal_cell_dial("00000000000")==0 && ink_test_bh());
+    ink_test_reply("\r\nBUSY\r\n"); ink_test_drain();
+    assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && event.end==HAL_CELL_END_BUSY && !ink_test_bh());
+    assert(hal_cell_dial("00000000000")==0 && ink_test_bh());
+    ink_test_reply("\r\nNO ANSWER\r\n"); ink_test_drain();
+    assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && event.end==HAL_CELL_END_NO_ANSWER && !ink_test_bh());
+    /* phone-3 review: BUSY or NO ANSWER as ATD's own final result ends the dial at once (not at its 5 s timeout) and the
+     * call counts as placed; the URC says why, the call audio stays off. */
+    drain_urcs();
+    ink_test_set(F_CALL,1); uint64_t dialled=osal_now_us();
+    assert(hal_cell_dial("00000000000")==0 && !ink_test_bh() && osal_now_us()-dialled<3000000);
+    assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && event.end==HAL_CELL_END_BUSY);
+    ink_test_set(F_CALL,2); dialled=osal_now_us();
+    assert(hal_cell_dial("00000000000")==0 && !ink_test_bh() && osal_now_us()-dialled<3000000);
+    assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && event.end==HAL_CELL_END_NO_ANSWER);
+    /* NO CARRIER ending AT+CHUP before its OK: the hangup worked */
+    ink_test_set(F_CALL,3);
+    assert(hal_cell_dial("00000000000")==0 && ink_test_bh());
+    assert(hal_cell_hangup()==0 && !ink_test_bh());
+    assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && event.end==HAL_CELL_END_HANGUP);
+    /* AT+CLCC: answered only when an outgoing call is active; its +CLCC lines are its reply, not URCs */
+    ink_test_set(F_CALL,4); assert(hal_cell_call_active()==0);
+    ink_test_set(F_CALL,5); assert(hal_cell_call_active()==1);
+    ink_test_set(F_CALL,0); assert(hal_cell_call_active()==0);
+    assert(hal_modem_urc(s,sizeof s,0)<0);
     assert(hal_modem_at("AT+ECNETCFG?",s,sizeof s,1000)==HAL_AT_OK && strlen(s)>96 && strstr(s,"lease"));
     assert(hal_modem_at("AT+ECNETCFG?",s,32,1000)==HAL_AT_ERROR);
     ink_test_set(F_NO_ACK,1); before=ink_test_count(N_WRITES); at_ok("AT"); assert(ink_test_count(N_WRITES)==before+1); ink_test_set(F_NO_ACK,0);

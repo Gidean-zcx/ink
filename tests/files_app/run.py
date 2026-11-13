@@ -22,20 +22,20 @@ if a.mutant:
     source = (ROOT / "system/apps/files/files.c").read_text()
     changes = {
         "child": [("if (ink_member_current()->role == INK_ROLE_ADULT) for", "if (true) for")],
-        "browse": [("if (!allowed || (F.mode == MOVE && !writable(path)))", "if (false && (!allowed || (F.mode == MOVE && !writable(path))))")],
+        "browse": [("bool allowed = under(path, \"/me\")", "bool allowed = true || under(path, \"/me\")"), ("(F.mode == MOVE && !writable(path))", "false")],
         "thumb": [("lv_image_set_src(F.images[at], &F.thumbs[at]);", "(void)F.thumbs[at];")],
         "rename": [('if (ink_cap_call(a->capability, NULL, &opts))', 'if (strcmp(a->id, "rename") && ink_cap_call(a->capability, NULL, &opts))')],
-        "paging": [("ink_ui_list_turn(F.list, !strcmp(id, \"files.next\") ? 1 : -1)", "(false)")],
+        "paging": [("if (F.list) ink_ui_list_turn(F.list, dir);", "(void)dir;")],
         "preview": [("lv_label_set_text(F.preview, F.preview_text)", "lv_label_set_text(F.preview, \"\")")],
         "ai-panel": [("strcmp(ink_ui_action_page(), PAGES[F.mode].name)", "strcmp(ink_ui_top_name(), PAGES[F.mode].name)")],
-        "up": [("end != path && !member_root", "end != path && end != path + 8 && (member_root || true)")],
+        "up": [("!end || root_dir(F.path)) { ink_ui_pop(); return; }", "!end || !strcmp(F.path, \"/me\")) { ink_ui_pop(); return; }")],
         "long-snapshot": [
             ('char ids[4][32]', 'char ids[4][INK_FS_PATH_MAX + 8]'),
             ('"dir:%zu", index', '"dir:%s", item->path'),
             ('.label = item->dir ? F.names[at] : item->name', '.label = item->name'),
-            ('strcmp(F.names[at], item->name) ? "文件夹（名称已截断）" : "文件夹"', '"文件夹"'),
+            ('strcmp(F.names[at], item->name) ? TR("文件夹（名称已截断）") : directory()[0] ? TR("文件夹") : ""', 'TR("文件夹")'),
         ],
-        "notice": [("notice_y = INK_CANVAS_H - INK_MARGIN - 2 * INK_PRIMARY - INK_GAP - 2 * ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_L;", "(void)notice_y;")],
+        "notice": [("F.notice = ink_ui_notice(F.screen, \"\", top - ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_S);", "F.notice = ink_ui_notice(F.screen, \"\", top);")],
         "index-redraw": [('    if (F.mode == HOME && !strcmp(kind, "indexed")) return; /* Roots do not depend on the index; keep queued taps valid. */\n', '')],
         "memo-cache": [],
     }[a.mutant]
@@ -111,8 +111,9 @@ for phase, scene in runs:
         if snap["scene"] in ("FileListLong", "FileMoveLong", "FileListLong-2", "FileMoveLong-2"):
             page = snap["snapshot"]
             fields = page["fields"]
-            visible = 1 if snap["scene"].endswith("-2") else 3
-            assert len(fields) == visible and len({f["id"] for f in fields}) == visible, fields
+            visible = page["pagination"]["visible"]  # files-3: the rows that fit, after the path line
+            assert not snap["scene"].endswith("-2") or page["pagination"]["offset"] + visible == 4, page["pagination"]
+            assert visible >= 1 and len(fields) == visible and len({f["id"] for f in fields}) == visible, fields
             for field in fields:
                 assert field["label"].endswith("…") and "名称已截断" in field["value"], field
                 assert len(field["id"]) < 24 and field["object"]["id"] == field["id"], field

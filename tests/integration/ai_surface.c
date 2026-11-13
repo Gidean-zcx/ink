@@ -62,7 +62,7 @@ static const struct {
     {"text.insert", "text"}, {"text.select", "start"}, {"text.undo", ""}, {"text.redo", ""}, {"text.submit", ""}, {"clipboard.read", NULL}, {"clipboard.write", "text"}, {"media.play", "path"},
     {"text.page", "direction"}, {"text.ask_ai", ""}, {"text.add_word", ""},
     {"music.open", NULL}, {"music.play", ""}, {"music.pause", NULL}, {"music.next", NULL}, {"music.prev", NULL},
-    {"music.seek", "ms"}, {"music.list", ""}, {"music.now", NULL}, {"music.favorite", NULL},
+    {"music.seek", "ms"}, {"music.list", ""}, {"music.now", NULL}, {"music.favorite", ""},
     {"media.pause", NULL}, {"media.resume", NULL}, {"media.seek", "ms"}, {"media.stop", NULL}, {"media.status", NULL}, {"audio.record", ""},
     {"audio.record_stop", NULL}, {"bt.scan", NULL}, {"bt.list", NULL}, {"bt.pair", "addr"}, {"bt.connect", "addr"}, {"bt.disconnect", NULL},
     {"bt.forget", "addr"}, {"shell.bluetooth", NULL}, {"shell.bluetooth_prev", NULL}, {"shell.bluetooth_next", NULL},
@@ -127,7 +127,7 @@ static const struct {
     {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
     {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
     {"shell.update", NULL}, {"shell.update_close", NULL},
-    {"files.browse", "path"}, {"files.select", "id"}, {"files.move", ""}, {"files.name", NULL},
+    {"files.browse", "path"}, {"files.select", ""}, /* files-3: id or a favourite's path */ {"files.move", ""}, {"files.name", NULL},
     {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
     {"camera.preview", NULL}, {"camera.scan_next", NULL}, {"camera.scan_prev", NULL}, {"camera.photo", NULL}, {"camera.review", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"gallery.reload", NULL}, {"photo.open", "id"},
     {"camera.scan", NULL}, {"camera.scan_apply", NULL},
@@ -146,6 +146,17 @@ static const struct {
     {"settings.search", "query"}, {"settings.open", ""}, /* settings-1 */
     {"reader.back", NULL}, {"reader.toc_percent", "value"}, /* reader-one-1 */
     {"card.files_check", NULL}, /* auto-provision-1 */
+    {"time.almanac", ""},
+    {"music.mode", "mode"}, {"music.favorites", NULL}, /* music-3 */
+    {"phone.detail", "id"}, {"phone.delete", "id"}, {"phone.clear", NULL}, /* phone-3 */
+    {"memo.search", "query"}, {"memo.find", "id"}, {"memo.find_next", NULL}, {"memo.find_prev", NULL}, {"memo.find_close", NULL},
+    {"memo.add_item", "id,text"}, {"memo.edit_item", "id,index,text"}, {"memo.delete_item", "id,index"}, {"memo.move_item", "id,index,to"},
+    {"memo.clear_done", "id"}, {"memo.uncheck_all", "id"}, {"memo.set_due", "id"}, {"memo.show_done", "id"},
+    {"file.batch_replace", "op,to,replace_ids"}, {"files.search", ""}, {"files.sort", ""}, {"files.fav", "path"}, {"files.folder", NULL},
+    {"files.place", NULL}, {"files.start", NULL}, {"files.conflict", ""}, /* files-3 */
+    {"gallery.show", "view"}, {"gallery.find", ""}, {"photo.next", NULL}, {"photo.prev", NULL}, {"photo.info", NULL}, /* gallery-3 */
+    {"photo.zoom", "step"}, {"photo.pan", "dir"}, {"photo.rotate", "dir"}, {"photo.trash", NULL}, {"photo.restore", "path"},
+    {"photo.delete_forever", "path"}, {"gallery.empty_trash", NULL},
     {NULL, NULL},
 };
 
@@ -174,7 +185,9 @@ static const struct {
     {"system.upgrade_from_card", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", ""},
     {"shell.pin_submit", "only the person submits the local PIN buffer", NULL},
     {"memo.voice", "the memo app's own step: a finished recording or the hub's words, never typed in by the model", ""},
+    {"phone.restore", "the inverse of phone.delete: reached only through system.undo (phone-3)", "token"},
     {NULL, NULL, NULL},
+
 };
 
 static const char *const STATES[] = {

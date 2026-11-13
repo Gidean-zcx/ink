@@ -52,8 +52,9 @@ static void recent(void) {
 }
 static void history(int count) {
     recent();
-    char total[32]; snprintf(total, sizeof total, "\"total\":%d", count);
+    char total[32]; snprintf(total, sizeof total, "\"total\":%d", count); /* groups: every call here has its own number */
     CHECK(strstr(snap, total), "member has exactly %d history records", count);
+    CHECK(P.db && ink_db_count(P.db) == count, "member history holds exactly %d records", count);
     CHECK(AI("data.list", "{\"collection\":\"phone.calls\",\"limit\":10}") && g_rc.status == INK_RC_DONE, "AI reads the same member history through data.list");
 }
 static void outgoing(void) {
@@ -63,7 +64,8 @@ static void outgoing(void) {
     inspect(); CHECK(strstr(snap, "call.hangup") && strstr(snap, "通话中"), "call snapshot exposes status and the same hangup capability");
 }
 static void hangup(void) {
-    click(NULL, "call.hangup");
+    click("挂断", NULL); /* LilyPhone's hang-up button (its own callback calls call.hangup) */
+
     CHECK(WAIT_FOR(!H.active, 10000), "hangup reaches the call history subscriber");
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "ended call history is durable"); quiet();
 }
@@ -219,7 +221,7 @@ static void audit7_rebind(void) {
     ink_db_t *results = ink_db_open(ink_db_find_def("confirm.results"), NULL);
     CHECK(results && ink_db_wait(results, ink_db_last_ver(results), 10000000) == 0, "confirmation result reaches durable storage");
     ink_db_close(results);
-    char args[64]; snprintf(args, sizeof args, "{\"token\":%u}", pending.token);
+    char args[64]; snprintf(args, sizeof args, "{\"token\":%u}", (unsigned)pending.token);
     CHECK(AI("confirm.status", args) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"state\":\"expired\""),
         "B7-01: old confirmation receipt is expired: %.150s", g_result);
     CHECK(!sim_net_call_tones()[0], "B7-01: second modem call receives no old tone");

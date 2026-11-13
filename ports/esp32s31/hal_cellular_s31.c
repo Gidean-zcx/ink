@@ -100,7 +100,11 @@ static int ink_call_result(nt26_result_t rc, bool on) {
     ink_s31_bh_call(on);
     return 0;
 }
-int hal_cell_dial(const char *number) { return ink_call_result(nt26_dial(number), true); }
+int hal_cell_dial(const char *number) { /* over at once: its URC already turned the call audio off, leave it off */
+    nt26_result_t r = nt26_dial(number);
+    return r == NT26_CALL_ENDED ? 0 : ink_call_result(r, true);
+}
+int hal_cell_call_active(void) { bool on; return nt26_outgoing_active(&on) == NT26_OK ? on : -1; }
 int hal_cell_answer(void) { return ink_call_result(nt26_answer(), true); }
 int hal_cell_hangup(void) { return ink_call_result(nt26_hangup(), false); }
 int hal_cell_mute(bool on, bool *muted) { return nt26_mute(on, muted) == NT26_OK ? 0 : -1; }
@@ -137,6 +141,13 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
         ev->type = HAL_CELL_EV_CALL_ENDED;
         return 1;
     }
+    if (!strcmp(line, "BUSY") || !strcmp(line, "NO ANSWER")) { /* why an outgoing call did not connect (LilyPhone peri_modem.cpp:615-616) */
+        ink_s31_bh_call(false);
+        ev->type = HAL_CELL_EV_CALL_ENDED;
+        ev->end = line[0] == 'B' ? HAL_CELL_END_BUSY : HAL_CELL_END_NO_ANSWER;
+        return 1;
+    }
+
     int index, direction, status;
     if (sscanf(line, "+CLCC: %d,%d,%d", &index, &direction, &status) == 3 && direction == 0 && status == 0) {
         ev->type = HAL_CELL_EV_CALL_ACTIVE;
