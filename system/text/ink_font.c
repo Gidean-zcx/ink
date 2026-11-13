@@ -45,7 +45,9 @@ static const uint8_t *find(const ink_font_t *f, uint32_t cp) {
 ink_font_t *ink_font_open(const char *asset) {
     size_t size = 0;
     const uint8_t *d = hal_asset_map(asset, &size);
-    if (!d || size < INKF_HDR || memcmp(d, "INKF", 4) || rd16(d + 4) < 1 || rd16(d + 4) > 2 || (rd16(d + 4) == 2 && d[6] != 2))
+    /* v1 holds 1, 2, 4 or 8 bpp (the coverage tables are 256 entries), v2 only 2 */
+    if (!d || size < INKF_HDR || memcmp(d, "INKF", 4) || rd16(d + 4) < 1 || rd16(d + 4) > 2 ||
+        (d[6] != 2 && (rd16(d + 4) == 2 || (d[6] != 1 && d[6] != 4 && d[6] != 8))))
         return NULL;
     const char *prev = osal_mem_tag("fonts");
     ink_font_t *f = osal_calloc(1, sizeof *f, OSAL_MEM_DEFAULT);

@@ -10,7 +10,13 @@
 #include "ink/sys/font.h"
 
 static size_t accessed;
+static const uint8_t *memory; /* the asset "<memory>": a face with a damaged header (headers()) */
+static size_t memory_size;
 const void *hal_asset_map(const char *name, size_t *size) {
+    if (!strcmp(name, "<memory>")) {
+        *size = memory_size;
+        return memory;
+    }
     FILE *f = fopen(name, "rb");
     if (!f) return NULL;
     fseek(f, 0, SEEK_END);
@@ -106,11 +112,48 @@ static void compare(const char *packed_path, const char *raw_path) {
            failures == failed_before ? "identical to" : "NOT all identical to", raw_path, stored, (unsigned)rd32(raw + 28));
 }
 
+/* A header with a bpp the format does not hold must not open: v1 holds 1, 2, 4 or 8 (the coverage tables in
+ * ink_font_alpha() and the reader's blit have 256 entries), v2 only 2. A face that does open draws every glyph
+ * inside its buffers (build-asan checks that). */
+static void headers(const char *packed_path, const char *raw_path) {
+    const char *paths[2] = {raw_path, packed_path};
+    for (int version = 1; version <= 2; version++) {
+        size_t size = 0;
+        const uint8_t *face = hal_asset_map(paths[version - 1], &size);
+        uint8_t *copy = face && size >= 40 ? malloc(size) : NULL;
+        if (!copy || face[4] != version) {
+            FAIL("%s: cannot read an INKF v%d face", paths[version - 1], version);
+            free(copy);
+            continue;
+        }
+        memcpy(copy, face, size);
+        memory = copy;
+        memory_size = size;
+        uint32_t n = rd32(copy + 16), index = rd32(copy + 20);
+        for (int bpp = 0; bpp < 256; bpp++) {
+            copy[6] = (uint8_t)bpp;
+            ink_font_t *f = ink_font_open("<memory>");
+            bool valid = bpp == 2 || (version == 1 && (bpp == 1 || bpp == 4 || bpp == 8));
+            if (!f != !valid) FAIL("INKF v%d at %d bpp: %s", version, bpp, f ? "opened" : "refused");
+            if (!f) continue;
+            for (uint32_t i = 0; i < n && index + 16ull * (i + 1) <= size; i++) {
+                static uint8_t alpha[255 * 255];
+                ink_glyph_t g;
+                if (ink_font_glyph(f, rd32(copy + index + 16u * i), &g) && g.w && g.h) ink_font_alpha(f, &g, alpha, g.w);
+            }
+            free(f); /* fonts are never freed by the product; this test's osal_calloc() is calloc() */
+        }
+        free(copy);
+    }
+    memory = NULL;
+}
+
 int main(int argc, char **argv) {
     if (argc < 3 || argc % 2 == 0) {
         fprintf(stderr, "usage: %s <v2.inkf> <v1.inkf> [...]\n", argv[0]);
         return 2;
     }
+    headers(argv[1], argv[2]);
     for (int i = 1; i + 1 < argc; i += 2) compare(argv[i], argv[i + 1]);
     if (failures) fprintf(stderr, "%d differences\n", failures);
     return failures ? 1 : 0;
