@@ -225,6 +225,53 @@ static void states_case(void) { /* empty folder and a card lent to a computer */
     sim_sd_set_present(false); command("files.browse", "{\"path\":\"/me/SYNTH_空\"}"); quiet(); CHECK(WAIT_FOR(!F.busy, 10000) && F.error == 1, "no card: one sentence (%d)", F.error); shot("error");
     sim_sd_set_present(true); quiet();
 }
+/* Flipper's copied code through the shims: the type table, what the menu holds, the favourites kept in step, and
+ * every browse event reaching the page action or capability it stands for. */
+static const char *menu_items[FILES_MENU_MAX]; static int menu_n;
+static bool menu_has(const char *item) { for (int i = 0; i < menu_n; i++) if (!strcmp(menu_items[i], item)) return true; return false; }
+static void menu_of(const char *path, bool dir, bool favorites) { files_fl_select(path, dir, favorites); menu_n = files_fl_menu(menu_items); }
+static void flipper_tables(void) {
+    static const struct { const char *path; int type; } types[] = {{"/me/a.txt", FILES_TYPE_TEXT}, {"/me/a.MD", FILES_TYPE_TEXT}, {"/me/b.epub", FILES_TYPE_BOOK},
+        {"/me/c.opus", FILES_TYPE_AUDIO}, {"/me/d.JPG", FILES_TYPE_IMAGE}, {"/me/e.zip", FILES_TYPE_UNKNOWN}, {"/me/f.bin", FILES_TYPE_UNKNOWN}, {"/me/f.pdf", FILES_TYPE_UNKNOWN}};
+    for (size_t i = 0; i < sizeof types / sizeof *types; i++) CHECK(files_fl_type(types[i].path, false) == types[i].type, "flipper-types: %s", types[i].path);
+    CHECK(files_fl_type("/me/a.txt", true) == FILES_TYPE_TEXT && files_fl_type("/me/dir", true) == FILES_TYPE_FOLDER, "flipper-types: folders, unless named like a known file (original rule)");
+    menu_of("/me/SYNTH_文档/报告.txt", false, false);
+    CHECK(menu_n == 9 && !strcmp(menu_items[0], "Run in app") && menu_has("Pin") && menu_has("Rename") && menu_has("Delete") && menu_has("Copy") && menu_has("Edit") && menu_has("Read"), "flipper-menu: a text file (%d)", menu_n);
+    menu_of("/family/SYNTH_家庭.txt", false, false); CHECK(!menu_has("Read") && menu_has("Edit"), "flipper-menu: reading only from the member's own space");
+    menu_of("/me/SYNTH_文档/SYNTH_子", true, false);
+    CHECK(!menu_has("Run in app") && !menu_has("Pin") && menu_has("Rename") && menu_has("Delete") && menu_has("Pin folder") && !menu_has("Edit"), "flipper-menu: a folder (Run and Pin are --- in the original; our appended Pin folder)");
+    menu_of("/me/SYNTH_文档/f.bin", false, false); CHECK(!menu_has("Run in app") && !menu_has("Pin") && menu_has("Rename") && menu_has("Delete"), "flipper-menu: an unknown type keeps rename and delete");
+    menu_of("/me/SYNTH_文档/报告.txt", false, true); CHECK(menu_has("Unpin") && !menu_has("Delete") && !menu_has("Rename"), "flipper-menu: the favourites tab (Move is the unwired reorder, Delete ---)");
+}
+static const char *ev_path; static bool ev_dir; static int ev; static bool ev_removed;
+static void ev_ui(void) { if (ev_path) files_fl_select(ev_path, ev_dir, false); files_fl_event(ev); }
+static void send_event(const char *path, bool dir, int event) { ev_path = path; ev_dir = dir; ev = event; on_ui(ev_ui); quiet(); }
+static void pick_ui(void) { for (size_t i = 0; i < F.count; i++) if (!strcmp(F.items[i].name, "报告.txt")) { F.selected = F.items[i]; F.selected_id = F.items[i].id; F.known = true; } }
+static void renamed_ui(void) { files_fl_renamed("/me/SYNTH_文档/报告.txt", "/me/SYNTH_文档/改名.txt"); }
+static void deleted_ui(void) { files_fl_deleted("/me/SYNTH_文档/改名.txt", ev_removed); }
+static char sel_path[INK_FS_PATH_MAX];
+static void sel_ui(void) { snprintf(sel_path, sizeof sel_path, "%s", F.selected.path); }
+static void flipper_events(void) {
+    roots(); browse("/me/SYNTH_文档");
+    send_event("/me/SYNTH_文档/SYNTH_子", true, FILES_EV_ENTER); wait_page("FileList"); CHECK(!strcmp(F.path, "/me/SYNTH_文档/SYNTH_子"), "flipper-events: EnterDir is files.browse");
+    send_event(NULL, false, FILES_EV_EXIT); wait_page("FileList"); CHECK(!strcmp(F.path, "/me/SYNTH_文档"), "flipper-events: Exit is files.up");
+    send_event(NULL, false, FILES_EV_NEXT); CHECK(F.position.page == 1, "flipper-events: LoadNextItems is files.next");
+    send_event(NULL, false, FILES_EV_PREV); CHECK(F.position.page == 0, "flipper-events: LoadPrevItems is files.prev");
+    on_ui(pick_ui); on_ui(sel_ui);
+    send_event(sel_path, false, FILES_EV_MENU); wait_page("FileActions"); CHECK(!strcmp(ink_ui_page_name(), "FileActions"), "flipper-events: FileMenuOpen is files.select");
+    send_event(sel_path, false, FILES_EV_RUN); CHECK(WAIT_FOR(F.preview_text[0] == 'S', 5000), "flipper-events: FileMenuRun of text is files.preview");
+    send_event(sel_path, false, FILES_EV_PIN); wait_page("FileList"); CHECK(fav_has("/me/SYNTH_文档/报告.txt"), "flipper-events: FileMenuPin is files.fav and closes the menu");
+    on_ui(renamed_ui); CHECK(fav_has("/me/SYNTH_文档/改名.txt") && !fav_has("/me/SYNTH_文档/报告.txt"), "flipper-fav: rename keeps the favourite");
+    ev_removed = false; on_ui(deleted_ui); CHECK(fav_has("改名.txt"), "flipper-fav: a refused removal keeps the favourite (our change)");
+    ev_removed = true; on_ui(deleted_ui); quiet(); CHECK(!fav_has("改名.txt"), "flipper-fav: a removal unpins it");
+    wait_page("FileList"); snprintf(args_json, sizeof args_json, "{\"id\":%u}", (unsigned)id_of("/me/SYNTH_文档/计划.txt")); command("files.select", args_json); wait_page("FileActions");
+    on_ui(sel_ui); send_event(sel_path, false, FILES_EV_DELETE);
+    ink_confirm_view_t v[4]; int n = 0; WAIT_FOR((n = ink_confirm_list(v, 4)) > 0, 3000);
+    CHECK(n == 1 && !strcmp(v[0].cap, "file.delete") && strstr(v[0].detail, "计划.txt"), "flipper-events: FileMenuDelete is file.delete with its card");
+    if (n) CHECK(!ink_confirm_decide(v[0].token, false, INK_SRC_TOUCH), "cancel");
+    quiet(); send_event(NULL, false, FILES_EV_REFRESH); wait_page("FileList"); CHECK(exists("/me/SYNTH_文档/计划.txt"), "flipper-events: ListRefresh reads the folder again");
+}
+static void flipper_case(void) { on_ui(flipper_tables); flipper_events(); }
 static void run(void *unused) {
     (void)unused; vtk_host_call(options, NULL); CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
     if (text_size[0]) { snprintf(args_json, sizeof args_json, "{\"id\":\"display.font_size\",\"value\":%s}", text_size); command("settings.set", args_json); quiet(); }
@@ -236,6 +283,7 @@ static void run(void *unused) {
     else if (!strcmp(which, "fav")) fav_case();
     else if (!strcmp(which, "child")) child_case();
     else if (!strcmp(which, "states")) states_case();
+    else if (!strcmp(which, "flipper")) flipper_case();
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "data durable before stopping"); quiet(); ink_probe_count("test.finished");
 }
 void ink_main(void) {

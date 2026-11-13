@@ -127,7 +127,7 @@ static const struct {
     {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
     {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
     {"shell.update", NULL}, {"shell.update_close", NULL},
-    {"files.browse", "path"}, {"files.select", "id"}, {"files.move", ""}, {"files.name", NULL},
+    {"files.browse", "path"}, {"files.select", ""}, /* files-3: id or a favourite's path */ {"files.move", ""}, {"files.name", NULL},
     {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
     {"camera.preview", NULL}, {"camera.scan_next", NULL}, {"camera.scan_prev", NULL}, {"camera.photo", NULL}, {"camera.review", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"gallery.reload", NULL}, {"photo.open", "id"},
     {"camera.scan", NULL}, {"camera.scan_apply", NULL},
@@ -144,6 +144,8 @@ static const struct {
     {"notify.act", "id,index"}, {"notify.reply", "id"}, {"notify.dnd_get", NULL},
     {"notify.dnd_set", ""}, {"notify.replies_set", "index,text"},
     {"settings.search", "query"}, {"settings.open", ""}, /* settings-1 */
+    {"file.batch_replace", "op,to,replace_ids"}, {"files.search", ""}, {"files.sort", ""}, {"files.fav", "path"}, {"files.folder", NULL},
+    {"files.place", NULL}, {"files.start", NULL}, {"files.conflict", ""}, /* files-3 */
     {NULL, NULL},
 };
 

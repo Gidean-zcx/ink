@@ -23,7 +23,7 @@ a = ap.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='files3-', dir=build))
 binary = build / 'sim-files3'
-CASES = a.case or ['walk', 'ai', 'sort', 'delete', 'fav', 'child', 'states']
+CASES = a.case or ['walk', 'ai', 'sort', 'delete', 'fav', 'child', 'states', 'flipper']
 WAVES = ('GC16', 'GL16', 'DU', 'A2')
 if a.mutant:
     caps = (ROOT / 'system/services/file/file_caps.c').read_text()

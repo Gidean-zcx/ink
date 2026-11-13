@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 548 项：可调用能力 506、事件 42；设置 44 项、状态 58 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 556 项：可调用能力 514、事件 42；设置 44 项、状态 58 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -157,7 +157,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `family.prev` | 家人设置上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s63](#s63) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.role` | 选择添加大人或孩子 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s63](#s63) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.save` | 保存家人的称呼 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单；页面 SetMembers | [s63](#s63) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
-| `file.batch` | 按文件编号列表移动或拷贝，可选 all_path 的直属文件 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s32](#s32) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.batch` | 按文件编号列表移动或拷贝，可选 all_path 的直属文件；check 只查同名和空间；同名按 conflict 或逐个编号跳过、保留两个 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s32](#s32) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.batch_replace` | 同 file.batch，replace_ids 里的先删掉目标里的同名文件再放进去（原来的找不回来） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s32](#s32) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.cache_clear` | 清理可重新生成的缓存 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s32](#s32) | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
 | `file.cleanup` | 清理临时文件 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s32](#s32) | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
 | `file.cleanup_preview` | 列出临时文件、缓存和未传完文件可清理的字节数 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s32](#s32) | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
@@ -180,18 +181,25 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `file_picker.prev` | 上一页文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 FilePicker | [s45](#s45) | [system/ui/file_picker.c](../../system/ui/file_picker.c) |
 | `file_picker.select` | 选择文件编号 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 FilePicker | [s45](#s45) | [system/ui/file_picker.c](../../system/ui/file_picker.c) |
 | `files.all` | 选择当前文件夹的全部文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
-| `files.browse` | 浏览文件夹 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.browse` | 浏览文件夹；find 给文件编号时翻到它所在的页并标出来 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.conflict` | 同名文件怎么办：保留两个、跳过或替换；all 表示后面的同名都这样 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.edit` | 编辑当前 txt 文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
-| `files.mark` | 选择或取消选择文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
-| `files.move` | 选移动目标文件夹 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.fav` | 收藏或取消收藏一个文件或文件夹 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.folder` | 打开“这个文件夹”的菜单：改名、移动、拷贝、删除、收藏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.mark` | 选择或取消选择文件（只刷这一行） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.move` | 选拷贝或移动的目标文件夹（从上次放的地方开始） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.multi` | 进入或退出文件多选 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
-| `files.name` | 编辑文件名 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.name` | 编辑文件名或搜索词 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.new` | 新建文件夹或文本 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.next` | 文件下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.place` | 放到这里：先查同名和空间，再拷贝或移动 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.prev` | 文件上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `files.preview` | 预览当前文本文件开头 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
-| `files.select` | 按编号查看文件操作 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
-| `files.up` | 返回文件上一级 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.search` | 在当前文件夹和子文件夹里按名字找（不给 query 打开搜索页） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.select` | 打开文件菜单（按编号；收藏的文件给 path） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.sort` | 排序：名字、时间、大小、类型，正序或倒序（不给 by 打开排序页） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.start` | 空间不够时仍开始，放得下的先做 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
+| `files.up` | 返回文件上一级（结果页：完成） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `gallery.next` | 相册下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `gallery.prev` | 相册上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `gallery.reload` | 手动重读当前家人的照片 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
@@ -608,9 +616,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：—。
+状态：`file.index_state`。
 
-事件：`file.batch_progress`、`file.changed`。
+事件：`file.batch_progress`、`file.changed`、`usb.changed`。
 
 <a id="s09"></a>
 
