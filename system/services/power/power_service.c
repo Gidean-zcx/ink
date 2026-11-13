@@ -100,6 +100,7 @@ static struct {
     uint64_t off_at;
     int h_state, h_level, h_charging, h_low, h_saving, h_lifted;
     bool lift;              /* the setting power.lift_wake */
+    bool waking;            /* ink_power_waking: from the sleep until its wake is handled */
     int lift_misses;        /* motion wakes in a row that were not a lift */
     uint64_t still_since;   /* idle from then on, with this many movements seen */
     uint32_t still_moves;
@@ -161,7 +162,9 @@ static void set_state(ink_power_state_t s) { __atomic_store_n(&PS.state, s, __AT
 
 static bool cancel_sleep(void *ctx) { /* called by the HAL right before the chip sleeps: no blocking */
     (void)ctx;
-    return __atomic_load_n(&PS.state, __ATOMIC_SEQ_CST) != INK_PWR_LOCKED;
+    bool cancel = __atomic_load_n(&PS.state, __ATOMIC_SEQ_CST) != INK_PWR_LOCKED;
+    if (!cancel) __atomic_store_n(&PS.waking, true, __ATOMIC_SEQ_CST); /* set now: the tasks wake before the HAL returns */
+    return cancel;
 }
 
 static hal_power_state_t hal_state(ink_power_state_t s) {
@@ -343,6 +346,7 @@ static void locked_step(void) {
     if (first) ink_probe_value("power.lock_to_sleep_ms", (double)(osal_now_us() - locked_at) / 1000.0);
     uint32_t why = hal_power_sleep(&cfg);
     if (!why) {
+        __atomic_store_n(&PS.waking, false, __ATOMIC_SEQ_CST);
         charger_resume();
         ink_probe_count("power.sleep_refused");
         osal_sem_take(PS.kick, QUIET_POLL_US);
@@ -354,6 +358,7 @@ static void locked_step(void) {
     if (why & HAL_WAKE_MOTION) lifted();
     publish_battery();
     if (why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY)) osal_sem_take(PS.kick, WAKE_CONFIRM_US); /* the unlock follows */
+    __atomic_store_n(&PS.waking, false, __ATOMIC_SEQ_CST);
     charger_resume();
 }
 
@@ -603,6 +608,8 @@ bool ink_power_unlock(uint64_t t_us) {
     }
     return was;
 }
+
+bool ink_power_waking(void) { return __atomic_load_n(&PS.waking, __ATOMIC_SEQ_CST); }
 
 void ink_power_wake_at(uint64_t t_us) {
     lock();
