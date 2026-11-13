@@ -30,6 +30,26 @@ class AssetPackTest(unittest.TestCase):
             first, _ = pack.split(root)
             self.assertEqual(first, pack.pack([('icons/mic-line-106.inki', data)]))
 
+    def test_overflowing_font_is_stored_uncompressed(self):
+        # A font stays mapped for as long as the device runs: inflated, it would hold PSRAM for good.
+        font, icon = b'INKF' + b'glyph rows' * 1000, b'INKI' + b'icon pixels' * 1000
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'fonts').mkdir()
+            (root / 'icons').mkdir()
+            (root / 'fonts/ui-2-53.inkf').write_bytes(font)
+            (root / 'icons/mic-line-106.inki').write_bytes(icon)
+            first, embedded = pack.split(root, 12)
+            self.assertEqual(first, pack.pack([]))
+            key, off, stored = pack.ENTRY.unpack_from(embedded, 12)
+            self.assertEqual(key.rstrip(b'\0'), b'fonts/ui-2-53.inkf')
+            self.assertEqual(stored, len(font))
+            self.assertEqual(embedded[off:off + stored], font)
+            key, off, stored = pack.ENTRY.unpack_from(embedded, 12 + pack.ENTRY.size)
+            self.assertEqual(key.rstrip(b'\0'), b'icons/mic-line-106.inki')
+            self.assertTrue(stored & 0x80000000)
+            self.assertEqual(zlib.decompress(embedded[off + 4:off + (stored & 0x7fffffff)]), icon)
+
     def test_state_icon_filter_is_the_shipping_filter(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

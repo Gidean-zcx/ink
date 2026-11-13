@@ -1,6 +1,7 @@
 #include "ink/osal.h"
 #include "ink/sys/data.h"
 #include "ink/hal_storage.h"
+#include "ink/sys/exec.h"
 static unsigned directory_reads, comparisons, batches;
 static unsigned marker_writes;
 static unsigned size_queries;
@@ -13,12 +14,14 @@ static int counted_readdir(hal_dir_t *d, hal_dirent_t *e);
 static hal_file_t *checked_open(const char *path, int flags);
 static int64_t counted_size(const char *path);
 static bool fail_identity_open;
+static int counted_post(ink_exec_t e, ink_exec_job_t *job, void (*fn)(void *), void *arg);
 #define ink_db_next counted_next
 #define osal_mutex_lock counted_lock
 #define osal_mutex_unlock counted_unlock
 #define hal_fs_readdir counted_readdir
 #define hal_fs_open checked_open
 #define hal_fs_size counted_size
+#define ink_exec_post counted_post
 #ifndef INK_INDEX_SOURCE
 #define INK_INDEX_SOURCE "../../system/services/file/file_service.c"
 #endif
@@ -29,6 +32,7 @@ static bool fail_identity_open;
 #undef hal_fs_readdir
 #undef hal_fs_open
 #undef hal_fs_size
+#undef ink_exec_post
 static int64_t counted_size(const char *path) { size_queries++; return hal_fs_size(path); }
 static hal_file_t *checked_open(const char *path, int flags) {
     if (fail_identity_open && flags == HAL_O_READ && !strcmp(path, INDEX_CARD)) {
@@ -40,7 +44,22 @@ static hal_file_t *checked_open(const char *path, int flags) {
     return f;
 }
 unsigned ink_test_index_marker_writes(void) { return marker_writes; }
-bool ink_test_index_idle(void) { return !FS.index_at.armed && !FS.index_job.queued; }
+/* The executor clears `queued` as the index job starts: idle must also wait for a run in progress, or a test
+ * starts measuring halfway through it (and its own index reads then stretch that run's edits hold). */
+static void (*index_fn)(void *);
+static int index_running;
+static void counted_index(void *arg) {
+    __atomic_add_fetch(&index_running, 1, __ATOMIC_ACQ_REL);
+    index_fn(arg);
+    __atomic_sub_fetch(&index_running, 1, __ATOMIC_ACQ_REL);
+}
+static int counted_post(ink_exec_t e, ink_exec_job_t *job, void (*fn)(void *), void *arg) {
+    if (job == &FS.index_job) { index_fn = fn; fn = counted_index; }
+    return ink_exec_post(e, job, fn, arg);
+}
+bool ink_test_index_idle(void) {
+    return !FS.index_at.armed && !FS.index_job.queued && !__atomic_load_n(&index_running, __ATOMIC_ACQUIRE);
+}
 unsigned ink_test_index_load_size_queries(void) {
     index_walk_t *w = osal_calloc(1, sizeof *w, OSAL_MEM_EXTERNAL);
     ink_db_t *db = ink_db_open(&INDEX_DEF, NULL);

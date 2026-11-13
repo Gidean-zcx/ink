@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 static bool restarting;
+static bool card_nearly_full; /* the card itself reports 4321 KB free */
 static const char *wanted, *opening;
 static int x, y;
 static lv_obj_t *found;
@@ -247,7 +248,7 @@ static void inspect_backend(void) {
     if (!strcmp(ink_ui_page_name(), "SetStorage")) {
         int64_t bytes = -1;
         CHECK(ink_state_get_int(ink_state_find("storage.free"), &bytes), "storage backend has a real value");
-        const char *expected = bytes == 4321 * 1024 ? "还能放 4.2 MB" : "还能放 4.0 GB";
+        const char *expected = card_nearly_full ? "还能放 4.2 MB" : "还能放 4.0 GB";
         CHECK(strstr(snapshot, expected), "storage page reads the real service rather than design example sizes");
     }
     if (!strcmp(ink_ui_page_name(), "SetAbout")) {
@@ -275,7 +276,6 @@ static void extract_action(void) {
     CHECK(bound[0], "the setting action is present");
 }
 static void backend_changes(void) {
-    ink_state_set_int(ink_state_find("storage.free"), 4321 * 1024);
     ink_state_set_str(ink_state_find("update.version"), "0.0.7-test");
 }
 static void unavailable_card(void) {
@@ -329,9 +329,16 @@ static void run(void *arg) {
             ink_setting_get("ai.read_clipboard") == 0, "privacy permission waits for the existing human confirmation");
         CHECK(ink_confirm_decide(confirmation.token, true, INK_SRC_TOUCH) == 0, "a person confirms the permission");
         CHECK(WAIT_FOR(ink_setting_get("ai.read_clipboard") == 1, 5000), "confirmed privacy toggle reaches its backend"); quiet();
+        sim_sd_set_free(4321 * 1024); /* the card reports 4.2 MB, so the file service's own later re-reads agree */
+        int64_t card_free = -1;
+        CHECK(BY_HAND("file.free", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"free\":4424704,") &&
+            ink_state_get_int(ink_state_find("storage.free"), &card_free) && card_free == 4321 * 1024,
+            "the file service reads the card's free space into storage.free");
+        card_nearly_full = true;
         on_ui(backend_changes);
         CHECK(BY_HAND("system.home", NULL), "close privacy");
         CHECK(AI("shell.storage", NULL), "open updated storage"); quiet(); on_ui(inspect_backend);
+        card_nearly_full = false; sim_sd_set_free(-1);
         vtk_event_at(vtk_now() + SIM_MS(1), outage_event, NULL);
         CHECK(WAIT_FOR(!ink_hub_online(), 10000), "ordinary network outage before backup");
         press("备份");
