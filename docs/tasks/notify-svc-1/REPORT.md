@@ -135,3 +135,96 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build system/services/noti
 【实现】通知服务管理自己的通知箱和偏好，来源事件负责构造记录；动作经过同一能力总线，按钮与 AI 共用。联系人使用任务指定的公开匹配函数，未读其集合格式；这是目前对同库应用接口的依赖，未擅自新建联系人服务。新增能力及状态对 AI 开放，没有页面改动。
 
 本任务没有烧录、接串口或发送真实短信电话。主会话上机时需核对跨午夜结束、联系人/陌生/重复来电卡和铃声、成员切换和重启保留、短信回复确认以及旧通知读取。
+
+## 重新合入（2026-11-13）
+
+本地分支 `worktree-agent-af4a879693a52d638`，未推送、未碰设备。下面的时刻都是模拟器的虚拟时间（秒）。
+
+### 合入
+
+- 工作区起点 `b1fd492c` 比 `reland/notify-svc-1`（`66f6175d`，基于 `d8808638`）还旧，`git merge reland/notify-svc-1` 是快进，没有冲突。
+- 为了落在主会话现在的 `claude/system-layer`（`8ff500c1`，含 home-1、lock-1）上，又合入了它，冲突就是预计的两处：`assets/i18n/en.tsv` 两边都留（查过没有重复键）；`docs/system/capabilities.md` 用 `tools/capabilities.py` 重新生成，`--check` 通过，648 项。合并提交 `7578aaac`。
+
+### 原因
+
+【实测】第三次点按（“自动备份：每周”改成关）在 `66f6175d` 上 3 次都失败；在 `d8808638`（没有勿扰）上通过；在 `7578aaac`（再合 home-1、lock-1，别的不改）上 6 次都通过。加临时打印追到的经过（打印已删）：
+
+| 时刻 | 发生的事 |
+| --- | --- |
+| 565.840 | 测试看到服务报 saved，按下“自动备份：每周” |
+| 565.910 | 备份页自己每秒一次的状态查询看到 saved，整页重画（第一次） |
+| 565.914 | 按下事件进 UI 队列（设备空闲，晚 73 ms 送到） |
+| 565.952 | 抬起事件进队列 |
+| 565.917–566.103 | UI 任务渲染第一次重画；按下、备份摘要的回复、抬起都在排队 |
+| 566.103 | 处理按下，压在新画出来的按钮上 |
+| 566.105 | 处理摘要回复，第二次整页重画，删掉了被按住的按钮 |
+| 566.109 | 处理抬起，落在屏幕本身，LVGL 不发点击，没有 `settings.set` |
+
+所以点按送到了：6 个触摸事件都到了 UI 任务，`ui.stale_input_dropped`、`ui.touch_under_overlay_dropped` 都没出现；没有调能力，是因为页面在按下和抬起之间重画了两次。
+
+勿扰代码没有参与：时钟跳了 6 次（`event.time.changed 6`），状态没变就不发事件，`event.notify.dnd_changed 1` 是启动时那一次；`notify.posted 1` 是更新提示（`event.update.available 1`），没有勿扰时一样有；没有浮层，设置只被两次点按改过（`settings.changed 2`）。它只是让时间相位挪了一点：
+
+| 版本 | 按下 | 抬起 | 页面看到 saved 的那次查询 | 结果 |
+| --- | --- | --- | --- | --- |
+| `d8808638`，没有勿扰 | 565.901 | 566.011 | 566.031，抬起后 20 ms | 生效 |
+| `66f6175d`，有勿扰 | 565.841 | 565.951 | 565.910，按下后 69 ms | 丢了 |
+| `7578aaac`，再合 home-1、lock-1 | 566.081 | 566.191 | 566.610，抬起后 419 ms | 生效 |
+
+没有勿扰时也只差 20 ms 就撞上。测试前两次点按都先等页面显示出状态再按，第三次只看服务报 saved、不等页面；页面重画会丢掉正在进行的点按，`fdecc245`（small-gaps-3 合并门禁）已把它记为框架的后续问题。
+
+### 修正
+
+【实现】产品代码。改了外壳文件 `system/ui/shell/backup_pages.c`（丢点按的重画就出在这里），4 行代码、2 行注释：
+
+- 新增 `ink_ui_pressing()`（`system/ui/ui_task.c`，声明在 `ink/sys/ui.h`，UI 任务调用）：LVGL 现在是否按着。
+- 备份页收到状态或摘要回复、要在同一页重画时，手指按着就只记下“待重画”，等下一次每秒查询、手指已抬起时再画。换页（失败页、恢复页）和自动备份设置被改（按钮意思变了）仍然立即重画。
+- `docs/system/app-framework.md` 里“运行时快照”的行号链接跟着头文件改到 `ui.h:129`（原来已经指到 `ink_ui_cause`，加了 3 行后变成空行，`app-framework-snippets` 不认）。
+
+【实测】只把这处产品改动放到 `66f6175d` 上：`small-gaps-3-backup` 3 次都通过（原来 3 次都失败）。同一时刻的追踪：566.105 摘要回复到时手指按着，页面等着；566.105 抬起，点击生效、`settings.set` 执行，566.106 重画。`small-gaps-3` 测试本身没改。
+
+### 回归检查和反向对照
+
+- `tests/ui_fix_a/backup.c` 末尾加 `fx_held`：打开备份页，喂 saved，按住“自动备份：关”，按着时喂一个 collecting 状态回复，检查页面没被换掉；抬起后检查调用了 `settings.set`（`backup.auto`）；恢复每秒查询后检查页面显示“正在备份”。
+- 【实测】反向：`tests/ui_fix_a/reverse.py --baseline 7578aaac --case backup` 用改动前的备份页编译同一个夹具，两种字号都是 `EXPECTED FAILURE; checks=34; failures=2`，失败的正是新加的两条（第 34 行“按着时页面不被换掉”，第 36 行“点按仍然改了设置”，`called` 为空）。改动后两种字号都是 `PASS; checks=36; failures=0`。
+- 【实测】仓库外的 gcccheck（ESP-IDF 的 RISC-V gcc）编译 `backup_pages.c`、`ui_task.c`、`tests/ui_fix_a/backup.c`：`3 compiled, 0 with findings`。
+
+### 命令
+
+配置按 `docs/tasks/codex-rules.md` 第 5 节，另加 `-DFETCHCONTENT_SOURCE_DIR_SDL2`、`-DFETCHCONTENT_SOURCE_DIR_IMGUI`（都指向 `$INK_DEPS/build/_deps`）和 `-DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`。
+
+```sh
+taskpolicy -c utility cmake --build build -j3
+# 单跑备份场景（复现、修后对照）
+taskpolicy -c utility env INK_KEEP_EVIDENCE=1 "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/small_gaps_3/run.py --build build --case backup
+# 夹具和反向对照
+"$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ui_fix_a/run.py --build build --case backup
+"$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ui_fix_a/reverse.py --build build --baseline 7578aaac --case backup
+# 日志环解码到仓库外
+"$INK_DEPS/build-deps/pyenv/bin/python" -B tools/device/pull_logs.py --logs build/test-out/small-gaps-3-backup/device/logs.bin --output <仓库外目录>
+# 全量（先清掉 build/test-out）
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+```
+
+### 全量
+
+【实测】最终代码（修正提交；跑的时候 `app-framework.md` 还是旧行号）的全量，原话：
+
+```
+97% tests passed, 14 tests failed out of 448
+Total Test time (real) = 975.46 sec
+```
+
+`memo-save-busy` 在 CMake 里是禁用的，没跑。`small-gaps-3-backup`、`ui-fix-a-backup`、`backup-pages`、`notify-model`、`services-mid-capability-doc`、`backup-restore-recovery`、`unit-s31-cell-*` 都通过。失败的 14 项：
+
+- `app-framework-snippets`：本修正在 `ui.h` 加了 3 行，指南里的行号链接落到空行。已改链接（在修正提交里），单跑通过。
+- 其余 13 项单跑（`-j1`）照样失败，和本任务无关：`ime-keyboard1`、`file-index-regressions`、`device-events`、`integration-update`、`scenario-standby-metalio-plus`、`scenario-powercut-during-save`、`gui-smoke`、`power-pages`、`weather`、`ai-history-photo`、`perf-latency-2`、`cell-status`、`games2`。在仓库外另建的 `8ff500c1`（主会话分支，没有勿扰、没有本修正）上这 13 项同样失败，失败的检查和虚拟时刻都一样，例如 `cell_status.c:103` 13.670 s、`ime_keyboard1.c:236` 36.680 s、`weather.c:93` 12.560 s、`file_index.c:160` 34.690 s、`games2/device.c:29` 37.950 s、`ai_history_photo/test.c:157` 6.650 s、待机解锁 1534.387 ms；主会话自己 `build/test-out` 里今天 10:13–10:43 的记录中，`cell-status`、`games2`、`ime-keyboard1`、`device-events`、`weather` 也是同样的失败。同一副本覆盖成 `d8808638`（合 home-1、lock-1 之前）重编，13 项也都失败。`power-pages` 的编码错误是读 `metrics.json` 时碰到被截断的中文检查信息，失败本身是充电那一幕的 `power_pages.c:126`（插电后锁屏上显示充电）。
+- `device-events` 两边失败的都是 `protocol.c:89`“replay retains the exact event identity”：两次合成事件之间夹进了文件索引的 `file.changed`（kind=indexed）和一个没送到中枢的序号，而测试假设这两次相邻。`8ff500c1` 上是第 2 次启动失败（第 1 次碰巧最后重放的那条序号对得上）；这里是第 1 次启动失败，因为勿扰启动时多发一条 `notify.dnd_changed`（序号 2），后面的序号都往后挪了一位。
+
+### 改过的测试
+
+只在 `tests/ui_fix_a/backup.c` 末尾追加 `fx_held` 和 4 个小函数；原有断言、超时、跳过规则都没动。`small-gaps-3` 没改。
+
+### 还开着的
+
+- 页面重画丢掉正在进行的点按是框架层面的问题，这次只修了备份页的状态重画。别的按状态整页重画的页面也会这样；待办里“新键盘：切换中英文后约 2 秒内按下的第一个键会丢”看起来是同一类。框架怎么改（原地改文字，或 UI 任务在按着时压住异步重画）要单独设计。
+- 备份完成时页面仍在约 0.2 秒内重画两次（状态一次、摘要一次），墨水屏会刷两次；这次没改。
