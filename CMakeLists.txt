@@ -1763,6 +1763,13 @@ add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/
 ink_sim_executable(sim-memo-record tests/memo_record/memo_record.c)
 target_link_libraries(sim-memo-record PRIVATE ink_apps ink_system)
 add_test(NAME memo-record COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo_record/run.py --build ${CMAKE_BINARY_DIR})
+# memo-3: the reference walk, autosave moments, members, old records, the copied ZSWatch screen and refreshes (tests/memo_3).
+ink_sim_executable(sim-memo-3 tests/memo_3/memo_3.c)
+target_link_libraries(sim-memo-3 PRIVATE ink_apps ink_system)
+set_source_files_properties(tests/memo_3/memo_3.c PROPERTIES INCLUDE_DIRECTORIES
+  "${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch/port;${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch")
+add_test(NAME memo-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/memo_3/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(memo-3 PROPERTIES TIMEOUT 2400)
 
 target_sources(ink_system PRIVATE system/ui/shell/settings_family.c system/ui/shell/wallpaper.c)
 ink_sim_executable(sim-settings-b tests/settings_b.c)

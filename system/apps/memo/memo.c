@@ -1,5 +1,5 @@
 /* Member memos after Fossify Notes (editor, checklist), Joplin (search, due dates) and ZSWatch (the recording screen, memo_voice.c). */
-/* ui-scale-runtime: dimension w,x,y,top,bottom,area.y2,fit,foot,due_w,list_w,voice_w,h,text_w,cell Theme tokens measured against the current text size and the editor's own layout. */
+/* ui-scale-runtime: dimension w,x,y,top,bottom,area.y2,fit,foot,due_w,list_w,voice_w,h,text_w,cell,meta_w Theme tokens measured against the current text size and the editor's own layout. */
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/app.h"
@@ -11,6 +11,7 @@
 #include "ink/sys/json.h"
 #include "ink/sys/media.h"
 #include "ink/sys/members.h"
+#include "ink/sys/power.h"
 #include "ink/sys/state.h"
 #include "ink/sys/time.h"
 #include "ink/sys/textfield.h"
@@ -37,7 +38,7 @@ static struct {
     lv_obj_t *field, *notice, *retry_button, *delete_button, *tools[4], *find, *adder, *done_row, *undo_row;
     memo_t note;
     char member[16], sent[4096], ids[4][32], args[4][96], labels[4][320], meta[4][96], object[32], target[64], save_args[160], args2[8][96];
-    uint32_t id, rows[200];
+    uint32_t id, fresh, rows[200]; /* fresh: the id a new memo was opened with, kept when its page is drawn again */
     int mode, keyboard_top, index, jump, parts[5];
     unsigned cap;
     uint32_t opened_crc; /* the text the editor opened with: no save status until the person changes it */
@@ -393,7 +394,8 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     else if (rc->status == INK_RC_DONE && M.field && M.mode == FAIL) save_failed(false);
     if (M.notice && !M.field) lv_label_set_text(M.notice, rc->status == INK_RC_DONE && M.adder ? "" : rc->say);
     if (M.field) settle();
-    if (rc->status == INK_RC_DONE && M.adder) { ink_text_select(0, 1u << 20); ink_text_commit_utf8(""); } /* the field stays for the next item */
+    if (rc->status != INK_RC_DONE && M.adder && M.sent[0]) ink_text_commit_utf8(M.sent); /* not added (32 items): the words come back */
+    if (M.adder) M.sent[0] = 0;
     else if (rc->status == INK_RC_DONE && !M.field && M.mode != CHECKLIST && M.mode != ITEM && M.mode != DUE) ink_ui_redraw();
     ink_ui_content_changed();
 }
@@ -426,8 +428,8 @@ static void navigate(ink_call_t *c) {
         else { F.cur = (F.cur + (!strcmp(cap, "find_next") ? 1 : F.count - 1)) % F.count; ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL); }
     } else {
         int mode = !strcmp(cap, "edit") || find ? EDIT : DETAIL;
-        memo_t *n = ink_app_alloc(sizeof *n, true);
-        if (id && (!M.db || !n || !read_note(M.db, (uint32_t)id, n) || n->deleted || (find && (n->checklist || n->pending)))) c->rc.status = INK_RC_INVALID;
+        memo_t *n = ink_app_alloc(sizeof *n, true); ink_db_t *db = ink_db_open_cached_member(&MEMOS, ink_cap_call_member(c));
+        if (id && (!db || !n || !read_note(db, (uint32_t)id, n) || n->deleted || (find && (n->checklist || n->pending)))) c->rc.status = INK_RC_INVALID;
         else if (n) {
             if (mode == DETAIL && n->checklist) mode = index >= 0 ? (due ? DUE : ITEM) : CHECKLIST;
             else if (id && n->pending) mode = PENDING; /* its words would cover what is typed */
@@ -438,9 +440,13 @@ static void navigate(ink_call_t *c) {
             bool was = F.open;
             if (mode == EDIT && (find || asked)) { F.open = true; F.cur = 0; F.label[0] = 0; snprintf(F.query, sizeof F.query, "%s", query); }
             if (mode == EDIT && M.field && M.id == (uint32_t)id && ink_ui_page_current()) { if (was && F.query[0]) ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL); else ink_ui_redraw(); }
-            else { if (mode != ITEM && mode != DUE) memset(&M.position, 0, sizeof M.position); ink_ui_push(&PAGES[mode], (void *)(uintptr_t)id); }
+            else {
+                if (!id && db) M.fresh = (uint32_t)(id = ink_db_new_id(db));
+                if (mode != ITEM && mode != DUE) memset(&M.position, 0, sizeof M.position);
+                ink_ui_push(&PAGES[mode], (void *)(uintptr_t)id);
+            }
         }
-        ink_app_free(n);
+        ink_app_free(n); ink_db_close(db);
     }
 }
 static void record_reply(void *ctx, const ink_receipt_t *rc) { /* UI: the microphone is on, or why not */
@@ -475,18 +481,20 @@ static void save_current(void) {
     ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_int(&a, "draft", M.note.draft); ink_args_str(&a, "page", M.note.page);
     snprintf(M.sent, sizeof M.sent, "%s", ink_textfield_text(M.field)); M.retry = false; M.saving = true; request("memo.save", &a);
 }
-static void flush_note(void) { /* UI: leaving, locking, another member: the editor's text goes into the opener's memo now */
-    const char *text = M.field ? ink_textfield_text(M.field) : "";
-    memo_t *n = M.field && M.db && M.mode != FAIL && strcmp(text, M.sent) ? ink_app_alloc(sizeof *n, true) : NULL;
+/* UI: leaving, locking, another member, or a draft that fell behind: the editor's own text goes into the opener's memo now */
+static bool flush_note(bool force) {
+    const char *text = M.field ? ink_textfield_text(M.field) : ""; bool stored = false;
+    memo_t *n = M.field && M.db && (force || (M.mode != FAIL && strcmp(text, M.sent))) ? ink_app_alloc(sizeof *n, true) : NULL;
     char *old = n ? ink_app_alloc(sizeof n->body, true) : NULL;
     bool known = old && read_note(M.db, M.id, n);
     if (old && !n->deleted && (known || text[0])) {
         memcpy(old, n->body, sizeof n->body); snprintf(n->body, sizeof n->body, "%s", text);
         if (n->checklist) n->checked = remap_checks(old, n->body, n->checked, n);
         n->draft = M.note.draft; snprintf(n->page, sizeof n->page, "%s", M.note.page);
-        if (store(M.db, M.id, n, INK_SRC_TOUCH, NULL) == 0) snprintf(M.sent, sizeof M.sent, "%s", text);
+        stored = store(M.db, M.id, n, INK_SRC_TOUCH, NULL) == 0;
+        if (stored) snprintf(M.sent, sizeof M.sent, "%s", text);
     }
-    ink_app_free(old); ink_app_free(n);
+    ink_app_free(old); ink_app_free(n); return stored;
 }
 static void settle(void) {
     if (!M.field || !ink_ui_page_current()) return;
@@ -495,8 +503,8 @@ static void settle(void) {
     int saved = ink_text_draft_saved();
     const char *status = M.mode == FAIL ? (saved > 0 ? TR("草稿已存，备忘没存上，请重试") :
         saved < 0 ? TR("草稿没存上，字还在，请重试") : TR("正在存草稿，备忘没存上")) :
-        ink_crc32(0, text, strlen(text)) == M.opened_crc && !M.retry ? TR("备忘") :
-        F.open && F.label[0] ? F.label : M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
+        F.open && F.label[0] ? F.label : ink_crc32(0, text, strlen(text)) == M.opened_crc && !M.retry ? TR("备忘") :
+        M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
     lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
     bool changed = strcmp(lv_label_get_text(M.notice), status) != 0, body = ink_text_draft_id() != 0;
     if (changed) lv_label_set_text(M.notice, status);
@@ -508,8 +516,9 @@ static void settle(void) {
         bool can = i == 1 ? ink_text_can_undo() : ink_text_can_redo();
         if (lv_obj_has_flag(M.tools[i], LV_OBJ_FLAG_HIDDEN) == can) lv_obj_set_flag(M.tools[i], LV_OBJ_FLAG_HIDDEN, !can);
     }
-    if (M.saving) return;
+    if (M.saving || ink_power_state() == INK_PWR_LOCKED) return; /* locked: the lock's own flush has it (background) */
     if (!M.retry && (!strcmp(text, M.sent) || M.mode == FAIL)) return;
+    if (saved < 0) { M.retry = false; save_failed(!flush_note(true)); return; } /* memo.save reads the draft, which did not take the last keys */
     save_current();
 }
 static void retry(lv_event_t *e) { (void)e; ink_args_t a; ink_args_init(&a); request("memo.retry", &a); }
@@ -525,7 +534,11 @@ static void item_entered(void *ctx, const char *value) {
     (void)ctx; ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_int(&a, "index", M.index);
     ink_args_str(&a, "text", value ? value : ""); request("memo.edit_item", &a);
 }
-static void add_entered(void *ctx, const char *value) { (void)ctx; ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_str(&a, "text", value ? value : ""); request("memo.add_item", &a); }
+static void cleared(void *arg) { (void)arg; if (M.adder) { ink_text_select(0, 1u << 20); ink_text_commit_utf8(""); } }
+static void add_entered(void *ctx, const char *value) { /* the field empties at once for the next item, as Fossify's dialog does */
+    (void)ctx; ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_str(&a, "text", value ? value : "");
+    snprintf(M.sent, sizeof M.sent, "%s", value ? value : ""); request("memo.add_item", &a); ink_exec_post(INK_EXEC_UI, &M.found, cleared, NULL);
+}
 static void ui_toggle(lv_event_t *e) { (void)e; M.adding = !M.adding; ink_ui_redraw(); } /* 加一项 and 完成: the field only, no data */
 static int fit(const char *text) { return LV_MAX(INK_CONTROL, ink_ui_text_width(text, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP); }
 static lv_obj_t *button(lv_obj_t *parent, const char *text, int x, int y, int w, bool primary, const char *cap, const char *args) {
@@ -553,12 +566,11 @@ static void bind_note(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     else M.meta[at][0] = 0;
     if (!count) snprintf(preview, sizeof preview, "%.*s", (int)strcspn(rest, "\n"), rest);
     for (char *p = preview; *p; p++) if (*p == '\n') *p = ' ';
-    if (!lv_obj_get_child_count(slot)) {
-        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, w);
-        ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, y, w);
-        ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, y + ink_ui_line_height(INK_FONT_NOTE), w);
-    }
-    lv_label_set_text(lv_obj_get_child(slot, 0), M.labels[at]); lv_label_set_text(lv_obj_get_child(slot, 1), preview); lv_label_set_text(lv_obj_get_child(slot, 2), M.meta[at]);
+    int meta_w = LV_MIN(w / 2, ink_ui_text_width(M.meta[at], INK_FONT_NOTE, INK_WEIGHT_REGULAR)); /* the title line ends with the time or progress */
+    lv_obj_clean(slot);
+    ink_ui_line(slot, M.labels[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, w - meta_w - INK_GAP);
+    lv_obj_set_style_text_align(ink_ui_line(slot, M.meta[at], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP + w - meta_w, INK_GAP_S + ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE), meta_w), LV_TEXT_ALIGN_RIGHT, 0);
+    ink_ui_line(slot, preview, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, y, w);
     if (count) { size_t len = strlen(M.meta[at]); snprintf(M.meta[at] + len, sizeof M.meta[at] - len, " · %.60s", preview); }
     ink_jw_t w2; ink_jw_init(&w2, M.args[at], sizeof M.args[at]); ink_jw_raw(&w2, "{\"id\":"); ink_jw_int(&w2, id);
     if (count) { ink_jw_raw(&w2, ",\"query\":"); ink_jw_str(&w2, S.query); }
@@ -587,7 +599,7 @@ static void bind_check(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field,
     const char *text = line_at(M.note.body, k); bool checked = done_at(&M.note, k);
     char due[96]; due_text(due, sizeof due, &M.note, k);
     snprintf(M.labels[at], sizeof M.labels[at], "%.*s", (int)strcspn(text, "\n"), text);
-    lv_obj_t *box = ink_ui_box(slot, INK_GAP, (h - INK_ICON_LIST) / 2, INK_ICON_LIST, INK_ICON_LIST, -1, checked ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, true);
+    lv_obj_t *box = ink_ui_box(slot, INK_GAP, (h - INK_ICON_LIST) / 2, INK_ICON_LIST, INK_ICON_LIST, INK_RADIUS_KEY, checked ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, true);
     if (checked) ink_ui_icon(box, "check", INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_XS, INK_GAP_XS, true);
     lv_obj_t *label = ink_ui_label(slot, M.labels[at], INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_CONTROL, INK_GAP_S, text_w);
     lv_label_set_long_mode(label, LV_LABEL_LONG_DOT); /* two lines at most; MemoItem shows it all */
@@ -620,7 +632,7 @@ static void check_refresh(void) { /* UI: a check or a new item redraws the list 
     unsigned total = lines(M.note.body), done = 0;
     for (unsigned i = 0; i < total; i++) done += done_at(&M.note, i);
     bool row = M.expanded && done, undo = U.id == M.id && !strcmp(U.member, M.member);
-    if (!M.list || !M.total != !total || !M.done_row != !row || !M.undo_row != !undo) { ink_ui_redraw(); return; }
+    if (!M.list || !M.done_row != !row || !M.undo_row != !undo) { ink_ui_redraw(); return; }
     M.total = check_order(); ink_ui_list_refresh(M.list, M.total);
 }
 static void bind_part(lv_obj_t *b, int part, int delta) { /* the shared date picker: the line before the − button is its value */
@@ -681,7 +693,7 @@ static void list_page(lv_obj_t *screen) { /* Joplin's list with its search box; 
         bottom -= INK_CONTROL + INK_GAP_M;
         button(screen, TR("已删除一条备忘 · 撤销"), INK_MARGIN, bottom, INK_CANVAS_W - 2 * INK_MARGIN, false, "memo.undo", M.target);
     }
-    int cell = ink_ui_line_height(INK_FONT_LIST) + 2 * ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_S;
+    int cell = ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_S;
     M.list = rows(screen, top, bottom, cell, bind_note, S.on ? "" : TR("还没有备忘，写一条吧"));
     if (M.list) ink_ui_list_refresh(M.list, M.total);
     if (S.on && !M.total) ink_ui_empty(screen, TR("没有找到"), TR("清除搜索"), clear_search, NULL);
@@ -743,7 +755,7 @@ static void edit_page(lv_obj_t *screen) { /* Fossify's TextFragment: no save but
         lv_obj_set_y(M.find, ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS)); ink_textfield_style(M.find, INK_FIELD_SEARCH, TR("查找"));
         if (M.field) lv_obj_add_flag(M.field, LV_OBJ_FLAG_HIDDEN);
         ink_textfield_short_focus(M.find);
-    } else if (F.open) ink_exec_post(INK_EXEC_UI, &M.found, find_now, NULL);
+    } else if (F.open) find_now(NULL); /* the hit is selected in the page's first frame */
 }
 static void check_page(lv_obj_t *screen) { /* Fossify's TasksFragment with written buttons in place of long press and dragging */
     int top = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_GAP_M, half = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
@@ -775,8 +787,10 @@ static void check_page(lv_obj_t *screen) { /* Fossify's TasksFragment with writt
     lv_obj_set_width(M.adder, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - INK_GAP));
     lv_obj_set_y(M.adder, ink_ui_px(INK_CANVAS_H - INK_MARGIN - ink_textfield_height(INK_FIELD_SINGLE)));
     ink_textfield_style(M.adder, INK_FIELD_SINGLE, TR("加一项"));
-    ink_ui_pill(screen, TR("完成"), INK_CANVAS_W - INK_MARGIN - INK_CONTROL, y, INK_CONTROL, INK_PRIMARY, false, ui_toggle, NULL);
-    ink_textfield_short_focus(M.adder);
+    lv_obj_t *finish = ink_ui_pill(screen, TR("完成"), INK_CANVAS_W - INK_MARGIN - INK_CONTROL, y, INK_CONTROL, INK_PRIMARY, false, ui_toggle, NULL);
+    ink_textfield_short_focus(M.adder); /* the field rises above the keyboard; 完成 goes up with it */
+    lv_area_t field; lv_obj_update_layout(M.adder); lv_obj_get_coords(M.adder, &field);
+    lv_obj_set_y(finish, field.y2 + 1 - lv_obj_get_height(finish));
 }
 static void item_page(lv_obj_t *screen) { /* Fossify's item menu as a page: one thing per button */
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, half = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2; char due[96];
@@ -857,7 +871,9 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     bool list = mode == LIST || mode == UNDO;
     if (!list && mode != FAIL) {
-        if (!M.id) { M.id = ink_db_new_id(M.db); memset(&M.note, 0, sizeof M.note); M.note.checklist = mode == CHECKLIST; }
+        if (!M.id || (M.id == M.fresh && !read_note(M.db, M.id, &M.note))) {
+            M.id = M.id ? M.id : ink_db_new_id(M.db); memset(&M.note, 0, sizeof M.note); M.note.checklist = mode == CHECKLIST;
+        }
         else if (!read_note(M.db, M.id, &M.note) || M.note.deleted) { lv_label_set_text(M.notice, TR("找不到这条备忘")); return; }
     }
     snprintf(M.object, sizeof M.object, "memo:%u", (unsigned)M.id);
@@ -884,12 +900,12 @@ static void create(lv_obj_t *screen, void *arg) {
     }
 }
 static void destroy(void) {
-    if (M.field) flush_note(); /* to the member who opened it, even when someone else is here now (they switch at once) */
+    if (M.field) flush_note(false); /* to the member who opened it, even when someone else is here now (they switch at once) */
     if (M.mode == RECORD) ink_memo_voice_destroy();
     ink_db_close(M.db); M.db = NULL; M.list = NULL;
     M.field = M.notice = M.retry_button = M.delete_button = M.find = M.adder = M.done_row = M.undo_row = NULL;
 }
-static void background(void) { if (M.field) flush_note(); } /* the device locks over the editor */
+static void background(void) { if (M.field) flush_note(false); } /* the device locks over the editor */
 static int snapshot(char *out, size_t cap) {
     char *body = ink_app_alloc(cap, true), *actions = ink_app_alloc(cap, true), status[160]; int result = -1;
     ink_ui_page_spec_t model = M.model;
@@ -904,6 +920,7 @@ static int snapshot(char *out, size_t cap) {
     }
     snprintf(status, sizeof status, "%s", M.notice ? lv_label_get_text(M.notice) : "");
     if (M.mode == RECORD) ink_memo_voice_status(status, sizeof status);
+    if ((M.mode == LIST || M.mode == UNDO) && M.list && !M.total) snprintf(status, sizeof status, "%s", S.on ? TR("没有找到") : TR("还没有备忘，写一条吧"));
     if (body && actions && ink_ui_semantics_snapshot(&model, actions, cap) > 0) {
         int n = M.field ? ink_textfield_long_snapshot(M.field, body, cap) : M.list ? ink_ui_list_snapshot(M.list, body, cap) : 0;
         if (!n) snprintf(body, cap, "{}");
