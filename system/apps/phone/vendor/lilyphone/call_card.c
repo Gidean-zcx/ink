@@ -3,9 +3,9 @@
  * variable and timer callback left out; SOURCE.md lists every changed line. */
 #include "lily_compat.h"
 
-static lv_obj_t   *scr8_1_status = NULL;
-static lv_obj_t   *scr8_1_answer = NULL;
-static modem_call_state_t scr8_1_shown_state = MODEM_CALL_IDLE;
+static lv_obj_t   *scr8_1_status INK_PSRAM_BSS;
+static lv_obj_t   *scr8_1_answer INK_PSRAM_BSS;
+static modem_call_state_t scr8_1_shown_state INK_PSRAM_BSS; /* MODEM_CALL_IDLE is 0 */
 
 static void scr8_1_answer_event(lv_event_t *e)
 {

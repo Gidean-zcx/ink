@@ -28,7 +28,7 @@
 
 第一次提交 `a95ddf6c` 是原样拷贝，下一个提交才改，`git diff a95ddf6c -- system/apps/phone/vendor/lilyphone/` 能看到下面每一处改动。
 
-## 改了哪几行、为什么（对原文的改动共 27 行）
+## 改了哪几行、为什么（对原文的改动共 32 行，上限 80）
 
 `phone_store.c`
 
@@ -36,12 +36,15 @@
 | --- | --- | --- |
 | `#include <Arduino.h>`、`"FS.h"`、`"SPIFFS.h"`、`"phone_store.h"` | `<ctype.h> <string.h> <stdbool.h>`、`"lily_compat.h"` | 没有 Arduino 和 SPIFFS；`phone_store.h` 由替身头文件代替 |
 | `#define MATCH_DIGITS 7` | `#define MATCH_DIGITS 11` | 中国手机号 11 位：末 7 位相同会把 138xxxx5678 和 139xxxx5678 当成同一个人。改成 11 后 `+8613812345678` 和 `13812345678` 照样相同，10086 这类短号照旧要整串相同。单测 `phone-3-match-reverse` 用 7 编一份，“138/139”那条必须失败 |
+| `static contact_t *contact_list = NULL;`、`static int contact_num = 0;` | 去掉初值，加 `INK_PSRAM_BSS` | 内部内存最紧，静态变量放 PSRAM（零初值和原来一样） |
 
 `call_card.c`
 
 | 原文 | 改成 | 为什么 |
 | --- | --- | --- |
+| 三个静态变量 `scr8_1_status`、`scr8_1_answer`、`scr8_1_shown_state` 的初值 | 去掉初值，加 `INK_PSRAM_BSS` | 同上：放 PSRAM，零初值即 `NULL` 和 `MODEM_CALL_IDLE` |
 | `scr8_1_hangup_event` 里的 `scr_mgr_pop(false);` | 删掉 | 结果留在通话页，不自动关（墨水屏不为关页多刷一次） |
+
 | `scr8_1_render` 里的 `char buf[40];` | 删掉 | 下面不再按秒格式化，变量没用了（`-Werror`） |
 | `"Incoming call"`、`"Calling..."`（两处） | `TR("来电")`、`TR("正在拨号")` | 中文界面，翻译检查 |
 | `MODEM_CALL_ACTIVE` 分支的 `secs`、`lv_snprintf("Connected  %02u:%02u")`、`lv_label_set_text(buf)` 四行 | `lv_label_set_text(scr8_1_status, TR("通话中"));` | 墨水屏不跑秒（第 11 节）：时长在胶水的“N 分钟”那一行，每分钟只刷那一块 |

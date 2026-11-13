@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include "ink/osal.h"
 #include "ink/sys/i18n.h"
 #include "ink/ui_theme.h"
 

@@ -17,8 +17,8 @@
 // Numbers are considered the same contact when this many trailing digits agree.
 #define MATCH_DIGITS 11
 
-static contact_t  *contact_list = NULL;
-static int         contact_num  = 0;
+static contact_t  *contact_list INK_PSRAM_BSS;
+static int         contact_num  INK_PSRAM_BSS;
 
 bool phone_number_match(const char *a, const char *b)
 {
