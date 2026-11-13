@@ -366,15 +366,17 @@ file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.ts
 ink_reader_translations(INK_I18N_TABLES)
 include(apps/mogo/translations.cmake)
 set(INK_HAVE_FONTS OFF)
+set(INK_RAW_FONTS_DIR ${CMAKE_BINARY_DIR}/assets-raw/fonts) # the same faces uncompressed (INKF v1), for tests/font_pack
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
   foreach(px 44) # the one reading font; the UI scales it for text outside its own subset
     set(out ${INK_ASSETS_DIR}/fonts/sans-${px}.inkf)
     add_custom_command(OUTPUT ${out}
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/fonts
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/fonts ${INK_RAW_FONTS_DIR}
       COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py --font ${INK_CJK_FONT}
               --face ${INK_CJK_FACE} --px ${px} --bpp 2 --charset ascii,punct,pinyin,gb2312
               --digits-font ${CMAKE_SOURCE_DIR}/third_party/fonts/Outfit.ttf --digits-weight 400 -o ${out}
+              --raw-out ${INK_RAW_FONTS_DIR}/sans-${px}.inkf
       DEPENDS ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py
       COMMENT "fontgen: CJK bitmap font ${px}px")
     list(APPEND INK_FONT_FILES ${out})
@@ -410,7 +412,7 @@ if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   add_custom_command(OUTPUT ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/ui_fonts.py
       --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT}
-      --out ${INK_ASSETS_DIR}/fonts
+      --out ${INK_ASSETS_DIR}/fonts --raw-out ${INK_RAW_FONTS_DIR}
     DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} ${INK_I18N_TABLES} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
     COMMENT "fontgen: contract UI sizes, CJK weights and Outfit digits")
   add_custom_target(ink_ui_fonts ALL DEPENDS ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp)
@@ -758,6 +760,26 @@ add_executable(sim-asset-pack simulator/runtime/sim_main.c tests/asset_pack/devi
 target_link_libraries(sim-asset-pack PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-asset-pack PRIVATE ${INK_WARN})
 add_test(NAME integration-asset-pack COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/asset_pack/run.py --build ${CMAKE_BINARY_DIR})
+# Compressed fonts (font-pack-1): every glyph of every face against fontgen's uncompressed copy, the negative control
+# (ink_font.c reading the compressed bytes as bitmaps), and 58 more UI characters still leaving font_data 1 MiB.
+add_executable(test-font-pack tests/font_pack/compare.c system/text/ink_font.c)
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/font_pack/ink_font_undecoded.c
+  COMMAND ${CMAKE_COMMAND} -DIN=${CMAKE_SOURCE_DIR}/system/text/ink_font.c -DOUT=${CMAKE_BINARY_DIR}/font_pack/ink_font_undecoded.c
+          -P ${CMAKE_SOURCE_DIR}/tests/font_pack/undecoded.cmake
+  DEPENDS system/text/ink_font.c tests/font_pack/undecoded.cmake)
+add_executable(test-font-pack-undecoded tests/font_pack/compare.c ${CMAKE_BINARY_DIR}/font_pack/ink_font_undecoded.c)
+foreach(t test-font-pack test-font-pack-undecoded)
+  target_include_directories(${t} PRIVATE system/include)
+  target_link_libraries(${t} PRIVATE ink_lvgl)
+  target_compile_options(${t} PRIVATE ${INK_WARN} -UNDEBUG)
+  add_dependencies(${t} ink_fonts ink_ui_fonts)
+endforeach()
+add_test(NAME font-pack-glyphs COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/font_pack/run.py glyphs --build ${CMAKE_BINARY_DIR})
+add_test(NAME font-pack-glyphs-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/font_pack/run.py glyphs
+  --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:test-font-pack-undecoded> --expect-fail)
+add_test(NAME font-pack-overflow COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/font_pack/run.py overflow
+  --build ${CMAKE_BINARY_DIR} --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT})
+set_tests_properties(font-pack-glyphs font-pack-glyphs-reverse font-pack-overflow PROPERTIES TIMEOUT 300)
 add_test(NAME unit-flash-plan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/flash_plan_test.py)
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
 target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
@@ -1009,6 +1031,7 @@ if(INK_HAVE_FONTS)
 endif()
 add_test(NAME hw-bench-report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_bench/report_test.py)
 add_test(NAME hw-selftest-run COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_selftest/run_test.py)
+add_test(NAME trial-run-fonts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_selftest/trial_run_test.py)
 add_test(NAME capability-table-doc COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tools/capabilities.py --check)
 add_test(NAME capability-table-regressions COMMAND ${Python3_EXECUTABLE}

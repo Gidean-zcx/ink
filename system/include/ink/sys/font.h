@@ -6,6 +6,7 @@
 #define INK_SYS_FONT_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #include "lvgl.h"
@@ -21,15 +22,19 @@ typedef struct {
     uint8_t w, h;
     int8_t x_ofs, y_ofs; /* bitmap left/top relative to the pen position on the baseline */
     uint8_t adv;
-    const uint8_t *bits; /* rows MSB-first, `bpp` bits per pixel, byte-padded rows */
+    uint16_t stored;     /* bytes at `bits` */
+    const uint8_t *bits; /* INKF v1: rows MSB-first, `bpp` bits per pixel, byte-padded; v2: runs (tools/fontgen) */
 } ink_glyph_t;
 
 /** Open a font asset; NULL if missing or invalid. Fonts are never freed. */
 ink_font_t *ink_font_open(const char *asset);
 /** Glyph for `cp`; falls back to a replacement glyph. Returns false only if even that is missing. */
 bool ink_font_glyph(const ink_font_t *f, uint32_t cp, ink_glyph_t *out);
-/** About to read the glyph's bitmap (lets simulators charge flash cache misses). */
-void ink_font_touch_bitmap(const ink_font_t *f, const ink_glyph_t *g);
+/** The glyph's coverage (0 .. 2^bpp-1), a byte per pixel, rows of w; a compressed glyph is unpacked here. The
+ *  result lives in one buffer until the next call: the drawing task only (LVGL and the reader's pages). */
+const uint8_t *ink_font_pixels(const ink_font_t *f, const ink_glyph_t *g);
+/** The whole glyph as LVGL A8 (ink_font_darken() of the coverage), row y at out + y * stride. */
+void ink_font_alpha(const ink_font_t *f, const ink_glyph_t *g, uint8_t *out, size_t stride);
 /** How dark to draw a pixel that a glyph covers partly (0..255). Thin strokes come out pale on e-ink,
  *  more so when scaled: this lifts the part-covered pixels and leaves paper and full ink alone. */
 static inline uint8_t ink_font_darken(int cover) { return (uint8_t)(cover + (255 - cover) * cover / 510); }

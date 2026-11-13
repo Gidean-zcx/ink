@@ -22,10 +22,14 @@ def main():
     ap.add_argument('--medium', required=True)
     ap.add_argument('--bold', required=True)
     ap.add_argument('--out', required=True, type=Path)
+    ap.add_argument('--raw-out', type=Path, help='also write each face uncompressed (INKF v1) here, for the tests')
+    ap.add_argument('--extra', default='', help='characters to add as if the UI used them (tests)')
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
+    if a.raw_out:
+        a.raw_out.mkdir(parents=True, exist_ok=True)
     # Dynamic glyphs outside this subset use the runtime's scaled sans-44 fallback.
-    chars = set(''.join(chr(i) for i in range(32, 127)) + '□●·…“”《》——，。！？：；（）【】◀▶')
+    chars = set(''.join(chr(i) for i in range(32, 127)) + '□●·…“”《》——，。！？：；（）【】◀▶' + a.extra)
     import importlib.util
     spec = importlib.util.spec_from_file_location('fontgen', ROOT / 'tools/fontgen/fontgen.py')
     fontgen = importlib.util.module_from_spec(spec)
@@ -54,12 +58,15 @@ def main():
             cmd = [sys.executable, str(ROOT / 'tools/fontgen/fontgen.py'), '--font', str(outfit) if digits else font,
                    '--face', str(0 if digits else face), '--px', str(px), '--bpp', '2', '--exact-line', str(line),
                    '--charset', 'digits' if digits else 'file:' + str(repertoire), '--require-coverage', '-o', str(out)]
+            if a.raw_out:
+                cmd += ['--raw-out', str(a.raw_out / out.name)]
             if digits:
                 cmd += ['--weight', str([300, 400, 500][weight])]
             else:
                 cmd += ['--digits-font', str(outfit), '--digits-weight', str([400, 500, 500][weight])]
             subprocess.run(cmd, check=True)
-            outputs.append({'file': out.name, 'bytes': out.stat().st_size})
+            outputs.append({'file': out.name, 'bytes': out.stat().st_size,
+                            **({'uncompressed_bytes': (a.raw_out / out.name).stat().st_size} if a.raw_out else {})})
     total = sum(p.stat().st_size for p in a.out.glob('*.inkf'))
     (a.out / 'size-report.json').write_text(json.dumps({'ui_glyphs': len(chars), 'files': outputs, 'all_inkf_bytes': total,
                                                       'sp05_target_bytes': 4 * 1024 * 1024, 'over_target_bytes': max(0, total - 4 * 1024 * 1024)}, indent=2) + '\n')
