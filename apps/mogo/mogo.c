@@ -74,6 +74,7 @@ static void ink_mogo_save(lv_timer_t *t) {
     else (void)ink_mogo_start(&req, NULL);
 }
 static void ink_mogo_card_read(void);
+static void ink_mogo_whole(char *s);
 static void ink_mogo_work(void *arg);
 static void ink_mogo_unbound(lv_event_t *e) { (void)e; } /* replaced by the transfer.open binding */
 static void ink_mogo_overlays(void) {
@@ -143,7 +144,10 @@ static void ink_mogo_finished(void *arg) {
     if (call) {
         call->rc.revision = M.req.revision;
         if (M.req.json && M.json[0] && !M.status) ink_cap_result(call, M.json);
-        if (M.status) snprintf(call->rc.say, sizeof call->rc.say, "%s", M.reason ? M.explanation : TR("现在做不了，请稍后再试"));
+        if (M.status) { /* the explanation, as much of it as the reply holds, never half a character */
+            snprintf(call->rc.say, sizeof call->rc.say, "%.*s", (int)sizeof call->rc.say - 1, M.reason ? M.explanation : TR("现在做不了，请稍后再试"));
+            ink_mogo_whole(call->rc.say);
+        }
         else if (M.req.say[0]) snprintf(call->rc.say, sizeof call->rc.say, "%s", M.req.say);
         ink_mogo_reply(call, M.status ? INK_RC_FAILED : INK_RC_DONE);
     }

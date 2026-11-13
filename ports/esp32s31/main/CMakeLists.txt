@@ -65,6 +65,7 @@ target_compile_definitions(ink_miniz PUBLIC MINIZ_NO_ARCHIVE_APIS MINIZ_NO_STDIO
 target_compile_options(ink_miniz PRIVATE -w -fstack-usage)
 include(${root}/apps/mogo/mogo.cmake)
 ink_mogo_build(__idf_ink_apps __idf_ink_system)
+target_include_directories(__idf_ink_apps PRIVATE ${CMAKE_BINARY_DIR}/generated) # the reader page uses the theme (icon names)
 file(GLOB INK_I18N_TABLES ${root}/assets/i18n/*.tsv)
 include(${root}/apps/mogo/translations.cmake)
 execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
