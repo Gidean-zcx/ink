@@ -2,7 +2,7 @@
 
 struct ink_shell_state N INK_PSRAM_BSS;
 
-/* Three home pages, control centre and the first settings pages. */
+/* The home, control centre and the first settings pages. */
 typedef struct {
     char cap[48], args[192];
     uint32_t epoch, member_epoch, version, generation;
@@ -79,49 +79,11 @@ const char *ink_shell_bound_cap(lv_obj_t *obj) {
     return NULL;
 }
 
-static void turn(int delta) {
-    if (N.home_page == 2 && ((delta > 0 && N.apps_page + 1 < N.apps_pages) || (delta < 0 && N.apps_page > 0))) {
-        N.apps_page += delta;
-        ink_ui_content_changed();
-        ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
-        draw_home_content();
-        return;
-    }
-    int next = N.home_page + delta;
-    if (!N.content || next < 0 || next > 2) return;
-    N.home_page = next;
-    ink_ui_content_changed();
-    ink_ui_hint_frame(INK_REFRESH_FLASH_UI); /* D-108: all of it is new, no ghost of the last page */
-    draw_home_content();
-    ink_probe_count("home.page_turns");
-}
-bool ink_shell_home_swipe(ink_swipe_dir_t dir) {
-    if (dir == INK_SWIPE_LEFT)
-        turn(1);
-    else if (dir == INK_SWIPE_RIGHT)
-        turn(-1);
-    else
-        return false;
-    return true;
-}
-bool ink_shell_home_key(ink_key_t key, bool long_press) {
-    if (long_press) return false;
-    if (key == INK_KEY_NEXT)
-        turn(1);
-    else if (key == INK_KEY_PREV)
-        turn(-1);
-    else
-        return false;
-    return true;
-}
-
 static void notify_open(ink_call_t *c);
 const char *ink_shell_board(void) {
     if (N.control) return child() ? "KidControl" : "Control";
-    if (N.home && !strcmp(ink_ui_page_name(), "home")) {
-        if (child()) return N.home_page == 0 ? "KidToday" : N.home_page == 1 ? "KidHome" : "KidApps";
-        return N.home_page == 0 ? "Today" : N.home_page == 1 ? "Main" : "Apps";
-    }
+    if (N.home && !strcmp(ink_ui_page_name(), "home")) return child() ? "KidHome" : "Main";
+    if (child() && !strcmp(ink_ui_top_name(), "Apps")) return "KidApps";
     return ink_ui_top_name();
 }
 
@@ -141,19 +103,6 @@ static void cap_nav(ink_call_t *c) {
     else if (!strcmp(c->cap->id, "shell.more")) {
         N.more = !N.more;
         if (N.control) draw_control();
-    } else if (!strcmp(c->cap->id, "home.next"))
-        turn(1);
-    else if (!strcmp(c->cap->id, "home.prev"))
-        turn(-1);
-    else if (!strcmp(c->cap->id, "shell.search")) {
-        ink_args_get_str(&c->args, "query", N.search, sizeof N.search);
-        N.apps_page = 0;
-        ink_text_blur(0);
-        if (N.content) {
-            N.home_page = 2;
-            ink_ui_content_changed();
-            draw_home_content();
-        }
     } else if (!strcmp(c->cap->id, "shell.settings"))
         ink_shell_open_page("Settings");
     else if (!strcmp(c->cap->id, "shell.display"))
@@ -263,32 +212,12 @@ static const ink_cap_t CAPS[] = {
     NAV("shell.notify_prev", "通知上一页", true),
     NAV("shell.wifi_next", "附近网络下一组", false),
     NAV("shell.wifi_prev", "附近网络上一组", false),
-    {.id = "shell.search",
-     .title = "查找应用",
-     .activity = "home",
-     .input = "{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"maxLength\":64}},\"required\":["
-              "\"query\"]}",
-     .effect = INK_FX_NAVIGATE,
-     .child_ok = true,
-     .run = cap_nav},
     {.id = "shell.wifi_pick",
      .title = "选附近网络（密码由人在设备上填写）",
      .input = "{\"type\":\"object\",\"properties\":{\"index\":{\"type\":\"integer\",\"minimum\":0}},\"required\":["
               "\"index\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = false,
-     .run = cap_nav},
-    {.id = "home.next", .app = "home",
-     .title = "主页下一屏",
-     .activity = "home",
-     .effect = INK_FX_NAVIGATE,
-     .child_ok = true,
-     .run = cap_nav},
-    {.id = "home.prev", .app = "home",
-     .title = "主页上一屏",
-     .activity = "home",
-     .effect = INK_FX_NAVIGATE,
-     .child_ok = true,
      .run = cap_nav},
     {.id = "shell.launch",
      .title = "打开主页上的应用",
@@ -302,7 +231,7 @@ static void refresh(void *unused) {
     (void) unused;
     if (ink_power_state() == INK_PWR_LOCKED) return;
     if (!current_session(N.epoch)) return;
-    if (child() && N.home && N.home_page != 2) kid_time_read();
+    if (child() && N.home) kid_time_read();
     bool body = __atomic_exchange_n(&N.need_body, false, __ATOMIC_ACQ_REL);
     if (body && N.control && ink_member_space_open()) draw_control();
     if (body && N.page_body && ink_member_space_open() && !N.picked_ssid[0]) draw_page_body();
@@ -314,18 +243,7 @@ static void refresh(void *unused) {
             lv_obj_t *bar = ink_shell_statusbar(parent, show_time);
             ink_ui_hint_obj(bar, INK_REFRESH_FAST);
         }
-    if (N.clock) {
-        char clock[16], date[96];
-        ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
-        if (strcmp(lv_label_get_text(N.clock), clock)) {
-            lv_label_set_text(N.clock, clock);
-            ink_ui_hint_obj(N.clock, INK_REFRESH_TEXT);
-        }
-        if (strcmp(lv_label_get_text(N.date), date)) {
-            lv_label_set_text(N.date, date);
-            ink_ui_hint_obj(N.date, INK_REFRESH_UI);
-        }
-    }
+    home_refresh();
 }
 static void changed(void *ctx, int h, const char *id) {
     (void) h;
@@ -369,7 +287,7 @@ static void notify_changed(void *ctx, const char *id, const ink_args_t *args) {
 int ink_shell_init(void) {
     if (ink_cap_subscribe("wifi.changed", known_load, NULL, INK_EXEC_UI)) return -1;
     if (ink_activity_card_init() != 0) return -1;
-    if (today_init() != 0) return -1;
+    if (today_init() != 0 || home_init() != 0) return -1;
     static const ink_cap_t notify = {.id = "shell.notify_open", .title = "打开通知并标为已读", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = notify_open};
     if (ink_search_init() != 0 || ink_cap_register(&notify, 1) != 0) return -1;
     if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0 || ink_time_settings_init() != 0 || ink_mobile_network_init() != 0) return -1;
@@ -387,7 +305,7 @@ int ink_shell_init(void) {
 void ink_shell_activity_refresh(void) {
     if (!current_session(N.epoch)) return;
     ink_ui_content_changed();
-    if (N.home && N.home_page == 1) draw_home_content();
+    if (N.home) draw_home_content();
     if (N.control) draw_control();
 }
 

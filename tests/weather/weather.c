@@ -50,8 +50,7 @@ static void tap_obj(lv_obj_t *o) {
 static void capture_event(void *arg) { CHECK(settled(), "the captured frame is presented"); sim_display_snapshot(arg); }
 static void capture(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, (void *)name); delay_ms(5); }
 static void go_home(void) { CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "back home"); quiet(); }
-static void today_job(void) { ink_shell_home_swipe(INK_SWIPE_RIGHT); }
-static void today(void) { go_home(); on_ui(today_job); quiet(); }
+static void today(void) { go_home(); quiet(); } /* D-135: the weather is on the one page's date line */
 /* The real keyboard, as people press it (same way as tests/ui_input_host.c). */
 static const char *key_label;
 static lv_point_t key_point;
@@ -78,20 +77,6 @@ static void press(const char *label) {
     if (key_seen) tap(key_point.x, key_point.y);
 }
 /* The Today card's icon is the current weather's: the same picture ink_ui_icon gives for that name. */
-static const char *icon_wanted;
-static bool icon_same;
-static void card_icon_job(void) {
-    icon_same = false;
-    find_job_text("12° 小雨 15°/3°");
-    if (!found) return;
-    lv_obj_t *card = lv_obj_get_parent(found), *probe = lv_obj_create(NULL);
-    const void *want = lv_image_get_src(ink_ui_icon(probe, icon_wanted, INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false));
-    for (uint32_t i = 0; i < lv_obj_get_child_count(card); i++) {
-        lv_obj_t *c = lv_obj_get_child(card, (int32_t)i);
-        if (lv_obj_check_type(c, &lv_image_class)) icon_same = lv_image_get_src(c) == want;
-    }
-    lv_obj_delete(probe);
-}
 static void ai_weather(bool fresh) {
     CHECK(AI("weather.get", NULL) && g_rc.status == INK_RC_DONE, "AI weather.get (%s): %.100s", ink_rc_name(g_rc.status), g_rc.say);
     const char *want[] = {"\"city\":\"示例市\"", "\"t\":12", "\"w\":\"小雨\"", "{\"day\":\"今天\",\"w\":\"小雨\",\"hi\":15,\"lo\":3,\"rain\":80}",
@@ -105,7 +90,7 @@ static void restart(void) {
     /* A second boot on the same flash, no network: the city, the last forecast and the Today card are still there. */
     CHECK(!strcmp(ink_weather_city(), "示例市"), "the city survives a restart (%s)", ink_weather_city());
     today();
-    CHECK(WAIT_FOR((on_ui(read_snapshot), strstr(snapshot, "\"label\":\"示例市\",\"value\":\"12° 小雨 15°/3°\"")), 5000), "the Today card survives: %.200s", snapshot);
+    CHECK(WAIT_FOR((on_ui(read_snapshot), strstr(snapshot, " · 12° 小雨；")), 5000), "the date line keeps the last weather: %.200s", snapshot);
     CHECK(BY_HAND("weather.open", NULL), "open weather"); quiet();
     shows("12°"); shows("明天 · 多云"); shows("没联网，"); expect("更新\\n数据来自"); capture("WeatherRestart");
     ai_weather(false);
@@ -119,7 +104,7 @@ static void run(void *arg) {
     CHECK(BY_HAND("weather.open", NULL) && !strcmp(ink_ui_page_name(), "Weather"), "the weather page opens"); quiet();
     shows("还没有设天气城市"); expect("还没有设天气城市"); expect("weather.city"); capture("WeatherEmpty");
     CHECK(AI("shell.today_card", "{\"card\":\"weather:now\"}") && g_rc.status == INK_RC_REJECTED, "no weather card for Today before a city is set");
-    today(); expect("\"title\":\"今日\""); CHECK(!find("示例市"), "Today has no weather card yet");
+    today(); expect("页面=Main"); CHECK((on_ui(read_snapshot), !strstr(snapshot, "°")), "the home has no weather before a city is set");
 
     /* 选城市 → type with the keyboard → search → pick by touch, all in the weather app. */
     CHECK(BY_HAND("weather.open", NULL), "open weather"); quiet();
@@ -155,9 +140,8 @@ static void run(void *arg) {
     CHECK(!find("没联网"), "online: no offline note");
     shows("换城市");
     today();
-    CHECK(WAIT_FOR((on_ui(read_snapshot), strstr(snapshot, "\"label\":\"示例市\",\"value\":\"12° 小雨 15°/3°\"")), 5000), "the first city put the card on Today: %.200s", snapshot);
-    icon_wanted = "rain"; on_ui(card_icon_job); CHECK(icon_same, "the Today card shows the rain icon, like the page");
-    icon_wanted = "cloudsun"; on_ui(card_icon_job); CHECK(!icon_same, "not the app's own icon");
+    CHECK(WAIT_FOR((on_ui(read_snapshot), strstr(snapshot, " · 12° 小雨；")), 5000), "the first city puts the weather on the date line: %.200s", snapshot);
+    CHECK(!find("12° 小雨 15°/3°"), "no separate weather card: it is on the date line");
     capture("WeatherToday");
     ai_weather(true);
 
@@ -172,18 +156,16 @@ static void run(void *arg) {
     shows("12°"); shows("明天 · 多云"); expect("没联网，"); expect("更新\\n数据来自"); capture("WeatherOffline");
     shows("显示上次天气"); expect("显示上次天气"); on_ui(weather_layout);
     ai_weather(false);
-    today(); expect("\"value\":\"12° 小雨 15°/3°\"");
+    today(); expect(" · 12° 小雨；");
     CHECK(BY_HAND("net.set_airplane", "{\"enabled\":false}") && g_rc.status == INK_RC_DONE, "back online");
     int64_t up = 0;
     CHECK(WAIT_FOR(ink_state_get_int(ink_state_find("net.online"), &up) && up, 20000), "the network is back");
 
-    /* Later cities leave Today alone: take the card off, change the city by AI, the card stays off. */
-    CHECK(AI("shell.today_card", "{\"card\":\"weather:now\"}") && g_rc.status == INK_RC_DONE, "take the weather card off Today");
+    /* The weather is no card (D-135): a later city shows on the same date line. */
+    CHECK(AI("shell.today_card", "{\"card\":\"weather:now\"}") && g_rc.status == INK_RC_REJECTED, "the weather is not one of the home's cards");
     CHECK(AI("weather.find", "{\"name\":\"示例\"}") && g_rc.status == INK_RC_DONE && strstr(g_result, "\"id\":102"), "AI finds cities (%s): %.100s %.100s", ink_rc_name(g_rc.status), g_rc.say, g_result);
     CHECK(AI("weather.set_city", "{\"id\":102}") && g_rc.status == INK_RC_DONE, "AI changes the city: %.100s", g_rc.say);
-    today(); CHECK(!find("12° 小雨 15°/3°"), "changing the city does not put the card back");
-    CHECK(AI("shell.today_card", "{\"card\":\"weather:now\"}") && g_rc.status == INK_RC_DONE, "the person puts it back, for the restart");
-    today(); CHECK(WAIT_FOR(find("12° 小雨 15°/3°") != NULL, 5000), "the card is back with the forecast");
+    today(); CHECK(WAIT_FOR((on_ui(read_snapshot), strstr(snapshot, " · 12° 小雨；")), 5000), "the later city's weather is on the date line: %.200s", snapshot);
     delay_ms(70000); /* past the store's batching, so the second boot reads it from flash */
     ink_probe_count("test.finished");
 }

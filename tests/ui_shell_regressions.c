@@ -227,7 +227,7 @@ static void check_theme(void) {
 }
 static void check_search_layout(void) {
     lv_obj_update_layout(lv_screen_active());
-    lv_obj_t *label = find_label(lv_screen_active(), "查找应用");
+    lv_obj_t *label = find_label(lv_screen_active(), "搜索");
     CHECK(label, "the real Apps search field is visible");
     if (!label) return;
     lv_obj_t *field = lv_obj_get_parent(label);
@@ -489,8 +489,8 @@ static void block_background(void *arg) {
 static void background_drained(void *arg) { (void)arg; __atomic_store_n(&bg_drained, true, __ATOMIC_RELEASE); }
 static void member_privacy_tests(void) {
     CHECK(BY_HAND("shell.search", "{\"query\":\"PRIVATE_OWNER_TEST_QUERY\"}") && g_rc.status == INK_RC_DONE, "the adult searches through the real capability"); quiet();
-    CHECK(BY_HAND("shell.display", NULL) && g_rc.status == INK_RC_DONE, "leave home in the same member's session"); quiet();
-    on_ui(ink_ui_home); quiet(); on_ui(read_context);
+    CHECK(BY_HAND("shell.display", NULL) && g_rc.status == INK_RC_DONE, "leave all apps in the same member's session"); quiet();
+    CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "come back to all apps"); quiet(); on_ui(read_context);
     CHECK(strstr(context, "PRIVATE_OWNER_TEST_QUERY"), "ordinary navigation preserves the current member's query");
     CHECK(BY_HAND("shell.network", NULL) && g_rc.status == INK_RC_DONE, "open real network settings"); quiet();
     CHECK(ink_exec_post(INK_EXEC_BG, &blocked_job, block_background, NULL) == 0 && WAIT_FOR(__atomic_load_n(&bg_started, __ATOMIC_ACQUIRE), 2000), "hold the background executor before the scan starts");
@@ -510,7 +510,7 @@ static void member_privacy_tests(void) {
     CHECK(ink_exec_post(INK_EXEC_BG, &drained_job, background_drained, NULL) == 0 && WAIT_FOR(__atomic_load_n(&bg_drained, __ATOMIC_ACQUIRE), 5000), "the old member's queued scan has returned");
     quiet(); on_ui(read_context);
     CHECK(!strstr(context, "没能完成，可以再试一次") && !strstr(context, "已经找过附近的网络"), "a late scan receipt cannot change the new member's result");
-    CHECK(BY_HAND("home.next", NULL) && g_rc.status == INK_RC_DONE, "inspect the child's own apps page"); quiet(); on_ui(read_context);
+    CHECK(BY_HAND("shell.apps", NULL) && g_rc.status == INK_RC_DONE, "inspect the child's own apps page"); quiet(); on_ui(read_context);
     CHECK(strstr(context, "查找=；") && !strstr(context, "PRIVATE_OWNER_TEST_QUERY"), "the child's search field is empty on Apps too");
     wanted = "PRIVATE_OWNER_TEST_QUERY"; on_ui(read_view); CHECK(label_x < 0, "Apps does not reveal the old query");
     CHECK(ink_member_switch("owner") == 0, "return to the adult without reusing the old session"); quiet();
@@ -669,9 +669,9 @@ static void compose_xian(void) {
     quiet();
 }
 static void snapshot_tests(void) {
-    CHECK(BY_HAND("home.prev", NULL) && g_rc.status == INK_RC_DONE, "open Today through its real action"); quiet();
-    wanted = "继续听"; on_ui(read_view); CHECK(label_x >= 0, "Today describes listening as continue listening");
-    wanted = "今日报纸"; on_ui(read_view); CHECK(label_x >= 0, "Today labels today's newspaper explicitly");
+    on_ui(ink_ui_home); quiet(); /* D-135: today's cards are on the one page, and only those with content */
+    wanted = "继续听"; on_ui(read_view); CHECK(label_x < 0, "the home draws no listening card without content");
+    wanted = "今日报纸"; on_ui(read_view); CHECK(label_x < 0, "the home draws no newspaper card without content");
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "open Apps with a two-page tool fixture"); quiet(); on_ui(read_context);
     on_ui(check_search_layout);
     const char *names[] = {"时钟", "短信", "设置", "对话记录", "工具甲", "工具乙"};
@@ -692,10 +692,10 @@ static void snapshot_tests(void) {
         if (label_x >= 0 && !tool_touched) {
             tap(label_x, label_y); quiet();
             CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch launches the advertised stable id");
-            tool_touched = true; on_ui(ink_ui_home); quiet();
+            tool_touched = true; CHECK(BY_HAND("shell.back", NULL), "back to the same page of all apps"); quiet();
         }
         if (current >= total) break;
-        CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn to the next actual tool page"); quiet();
+        CHECK(AI("shell.apps_next", NULL) && g_rc.status == INK_RC_DONE, "turn to the next actual tool page"); quiet();
     }
     CHECK(seen == 63 && tool_touched, "all registered, built-in and fixed-group entries remain visible and callable across pages");
     CHECK(AI("shell.launch", "{\"id\":\"settings\"}") && g_rc.status == INK_RC_DONE, "AI can use the visible settings id"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "Settings"), "the advertised id opens actual settings");

@@ -38,9 +38,9 @@ static void inspect_icons(void) {
     for (unsigned i = 0; i < sizeof titles / sizeof *titles; i++) {
         wanted = titles[i]; find_label();
         if (!found) continue;
-        lv_obj_t *circle = lv_obj_get_child(lv_obj_get_parent(found), (int32_t)lv_obj_get_index(found) - 1);
-        CHECK(circle && ink_shell_bound_cap(circle) && !strcmp(ink_shell_bound_cap(circle), "shell.launch"), "app has a real tile: %s", names[i]);
-        lv_obj_t *expected = ink_ui_icon(lv_screen_active(), names[i], INK_ICON_LIST, INK_ICON_LINE, 0, 0, false);
+        lv_obj_t *row = lv_obj_get_parent(found), *circle = lv_obj_get_child(row, 0); /* D-135: a list row, its icon first */
+        CHECK(ink_shell_bound_cap(row) && !strcmp(ink_shell_bound_cap(row), "shell.launch"), "app has a real row: %s", names[i]);
+        lv_obj_t *expected = ink_ui_icon(lv_screen_active(), names[i], INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false);
         lv_obj_t *image = circle ? lv_obj_get_child(circle, 0) : NULL;
         CHECK(image && lv_obj_check_type(image, &lv_image_class) && lv_image_get_src(image) == lv_image_get_src(expected), "Apps tile uses its own packed icon: %s", names[i]);
         lv_obj_delete(expected); icons_seen |= 1u << i;
@@ -51,7 +51,7 @@ static void icons(void) {
     for (int i = 0; i < 4; i++) {
         on_ui(inspect_icons); char name[32]; snprintf(name, sizeof name, "apps-%d", i + 1); frame(name);
         if (icons_seen == 7) break;
-        call("home.next", NULL);
+        call("shell.apps_next", NULL);
     }
     CHECK(icons_seen == 7, "all three icons appear on Apps");
 }

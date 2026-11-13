@@ -71,6 +71,38 @@ static void find_clock_in(lv_obj_t *root) {
     }
 }
 static void find_clock(void) { clock_tile = false; find_clock_in(lv_screen_active()); }
+static lv_point_t at;
+static bool label_at(lv_obj_t *root, const char *text) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *child = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_check_type(child, &lv_label_class) && !strcmp(lv_label_get_text(child), text)) {
+            lv_area_t a; lv_obj_get_coords(child, &a); at = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
+            return true;
+        }
+        if (label_at(child, text)) return true;
+    }
+    return false;
+}
+static const char *wanted_label;
+static bool wanted_seen;
+static void find_wanted(void) { lv_obj_update_layout(lv_screen_active()); wanted_seen = label_at(lv_screen_active(), wanted_label); }
+static bool tap_label(const char *text) { wanted_label = text; on_ui(find_wanted); if (wanted_seen) tap(at.x, at.y); return wanted_seen; }
+static bool field_at(lv_obj_t *root) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *child = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_check_type(child, &lv_textarea_class)) {
+            lv_area_t a; lv_obj_get_coords(child, &a); at = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
+            return true;
+        }
+        if (field_at(child)) return true;
+    }
+    return false;
+}
+static void find_field(void) { lv_obj_update_layout(lv_screen_active()); wanted_seen = field_at(lv_screen_active()); }
+static void clock_page(void) { /* page on through all apps until the Clock row is shown */
+    on_ui(find_clock);
+    for (int i = 0; i < 6 && !clock_tile; i++) { CHECK(BY_HAND("shell.apps_next", NULL) && g_rc.status == INK_RC_DONE, "page on to the Clock row"); quiet(); on_ui(find_clock); }
+}
 
 static void test_task(void *arg) {
     (void)arg; delay_ms(1800); quiet();
@@ -86,21 +118,26 @@ static void test_task(void *arg) {
     key(HAL_KEY_HOME); quiet();
     CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "settings opens"); quiet();
     swipe(20, 400, 250, 400); quiet(); CHECK(!strcmp(ink_ui_page_name(), "home"), "left edge returns one level");
-    swipe(500, 500, 200, 500); quiet(); CHECK(!strcmp(ink_shell_board(), "Apps"), "foreground swipe turns only on release");
-    on_ui(find_clock);
-    if (!clock_tile) { CHECK(BY_HAND("home.next", NULL) && g_rc.status == INK_RC_DONE, "page past the taller search field"); quiet(); on_ui(find_clock); }
+    swipe(500, 500, 200, 500); quiet(); CHECK(!strcmp(ink_shell_board(), "Main"), "the one page does not turn (D-135)");
+    CHECK(tap_label("全部应用"), "全部应用 is on the home"); quiet();
+    CHECK(!strcmp(ink_shell_board(), "Apps"), "全部应用 opens the second page");
+    swipe(500, 500, 200, 500); quiet(); on_ui(read_screen);
+    CHECK(!strcmp(ink_shell_board(), "Apps") && strstr(g_snap, "工具页=2/"), "foreground swipe turns only on release");
+    clock_page();
     CHECK(clock_tile, "Apps shows its Clock tile on the appropriate page");
-    tap(300, INK_STATUS_BAR + INK_PRIMARY + INK_CONTROL / 2);
+    on_ui(find_field); CHECK(wanted_seen, "the search field is on the page"); if (wanted_seen) tap(at.x, at.y);
     CHECK(ink_text_focused(), "application search takes the input focus");
     CHECK(AI("text.insert", "{\"text\":\"阅读\"}") && g_rc.status == INK_RC_DONE, "the AI can fill the same application query");
     CHECK(BY_HAND("text.submit", NULL) && g_rc.status == INK_RC_DONE, "the search key submits through the text capability");
     quiet(); on_ui(read_screen);
-    CHECK(!strcmp(ink_ui_page_name(), "Search") && strstr(g_snap, "阅读") && !ink_text_focused(), "the real query opens global Search and closes its keyboard");
+    CHECK(!strcmp(ink_ui_page_name(), "Apps") && strstr(g_snap, "查找=阅读") && strstr(g_snap, "阅读（reader）") && !ink_text_focused(),
+          "the real query lists the matching apps in place and closes its keyboard");
     on_ui(find_clock); CHECK(!clock_tile, "the nonmatching Clock tile is absent from the rendered tree");
-    CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "global search returns to the original Apps page");
-    CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "clearing the same query restores Apps");
-    on_ui(find_clock);
-    if (!clock_tile) { CHECK(BY_HAND("home.next", NULL) && g_rc.status == INK_RC_DONE, "reach the restored Clock page"); quiet(); on_ui(find_clock); }
+    CHECK(tap_label("搜索全部内容") && wanted_seen, "the search of everything follows the matches"); quiet();
+    on_ui(read_screen); CHECK(!strcmp(ink_ui_page_name(), "Search") && strstr(g_snap, "阅读"), "it opens global Search with the same words");
+    CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "global search returns to the original Apps page"); quiet();
+    CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "clearing the same query restores Apps"); quiet();
+    clock_page();
     CHECK(clock_tile, "clearing the query restores the rendered tile");
     key(HAL_KEY_PREV); quiet();
     on_ui(open_input); quiet();
@@ -126,9 +163,10 @@ static void test_task(void *arg) {
     CHECK(same && !strcmp(ink_ui_top_name(), "confirm"), "the confirmation returns pixel for pixel after a call");
     key(HAL_KEY_HOME); quiet(); CHECK(!strcmp(ink_ui_top_name(), "home") && hit == 0, "HOME cancels confirmation without executing it");
 
+    CHECK(BY_HAND("shell.apps", NULL) && g_rc.status == INK_RC_DONE, "open all apps, the pages that turn (D-135)"); quiet();
     double clean = sim_metric_value("display.dispatch.FLASH_UI+clean");
     key(HAL_KEY_NEXT); quiet();
-    CHECK(sim_metric_value("display.dispatch.FLASH_UI+clean") > clean, "a home page turn is all new content: a clean refresh, no ghost (D-108)");
+    CHECK(sim_metric_value("display.dispatch.FLASH_UI+clean") > clean, "an all-apps page turn is all new content: a clean refresh, no ghost (D-108)");
     double preview = sim_metric_value("display.two_phase.preview"), gray = sim_metric_value("display.two_phase.gray");
     on_ui(staged_redraw); quiet();
     CHECK(sim_metric_value("display.two_phase.preview") > preview && sim_metric_value("display.two_phase.gray") > gray, "a staged frame has a binary preview and gray refinement");
