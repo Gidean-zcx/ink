@@ -170,7 +170,12 @@ static void run(void *arg) {
         on_ui(check_today_entry);
         CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open Settings"); quiet();
         CHECK(!strcmp(ink_ui_page_name(), "Settings"), "start the visible editor path in Settings");
-        touch("显示和亮度");
+        for (int page = 0; page < 3; page++) { /* settings-1: the brightness row of the home's 显示和阅读 group */
+            wanted = "亮度"; on_ui(find);
+            if (label) break;
+            CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "page to the display group"); quiet();
+        }
+        touch("亮度");
         CHECK(!strcmp(ink_ui_page_name(), "SetDisplay"), "Settings row opens display settings");
         for (int page = 0; page < 3; page++) {
             wanted = "今日屏放什么"; on_ui(find);

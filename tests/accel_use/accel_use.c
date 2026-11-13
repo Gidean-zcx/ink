@@ -217,10 +217,11 @@ static void setting_off(void) {
     key_at(12000);
     CHECK(unlocked_by(30000), "woken by the key");
     CHECK(metric("power.lift_wake") == lifts && metric("power.lift_ignored") == ignored, "off: lifting does not wake it, nor does the chip wake to look");
-    CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open the settings");
+    /* settings-1: the settings home lists its rows, so it is opened on the search for this one (one page, as before) */
+    CHECK(BY_HAND("settings.search", "{\"query\":\"拿起亮屏\"}") && g_rc.status == INK_RC_DONE, "open the settings");
     delay_ms(1500);
     on_ui(read_top);
-    CHECK(strstr(g_snap, "拿起亮屏(power.lift_wake)=0") != NULL, "the settings snapshot shows it off (%.150s)", g_snap);
+    CHECK(strstr(g_snap, "\"id\":\"power.lift_wake\"") && strstr(g_snap, "\"value\":\"关\""), "the settings snapshot shows it off (%.150s)", g_snap);
     CHECK(BY_HAND("shell.wallpaper", NULL) && g_rc.status == INK_RC_DONE, "open the lock screen settings");
     delay_ms(1500);
     on_ui(read_top);

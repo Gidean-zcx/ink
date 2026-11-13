@@ -300,7 +300,7 @@ add_library(ink_system STATIC
   system/ui/icons.c
   system/ui/shell/navigation.c
   system/ui/shell/status_bar.c system/ui/shell/shell_home.c system/ui/shell/control_center.c system/ui/shell/settings_body.c system/ui/shell/today_edit.c
-  system/ui/shell/settings_pages.c
+  system/ui/shell/settings_pages.c system/ui/shell/settings_registry.c
   system/ui/shell/bluetooth_page.c
   system/ui/shell/ai_panel.c
   system/ui/app.c
@@ -464,7 +464,7 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_body.c ${CMAKE_SOURCE_DIR}/system/ui/shell/today_edit.c
   ${CMAKE_SOURCE_DIR}/system/apps/memory/memory.c ${CMAKE_SOURCE_DIR}/system/apps/snake/snake.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/mobile_network.c
-  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_registry.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
   ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c
   ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock.c
@@ -1760,6 +1760,11 @@ set_tests_properties(settings-b PROPERTIES TIMEOUT 360)
 ink_sim_executable(sim-settings-gaps tests/settings_gaps.c)
 target_link_libraries(sim-settings-gaps PRIVATE ink_apps ink_system)
 add_test(NAME settings-gaps COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_gaps.py --build ${CMAKE_BINARY_DIR})
+# settings-1: the home and its search after AOSP, one registry behind rows, search and settings.open; one row per change.
+ink_sim_executable(sim-settings-1 tests/settings_1.c)
+target_link_libraries(sim-settings-1 PRIVATE ink_apps ink_system)
+add_test(NAME settings-1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/settings_1.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(settings-1 PROPERTIES TIMEOUT 900)
 ink_sim_executable(sim-notify-manage tests/notify_manage.c)
 target_link_libraries(sim-notify-manage PRIVATE ink_apps ink_system)
 add_test(NAME notify-manage COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/notify_manage.py --build ${CMAKE_BINARY_DIR})

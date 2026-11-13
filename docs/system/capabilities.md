@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 546 项：可调用能力 504、事件 42；设置 44 项、状态 58 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 548 项：可调用能力 506、事件 42；设置 44 项、状态 58 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -373,6 +373,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `search.show` | 打开全局搜索 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s47](#s47) | [system/ui/search.c](../../system/ui/search.c) |
 | `settings.get` | 查看一项设置 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/policy/settings.c](../../system/policy/settings.c) |
 | `settings.list` | 所有设置，各自的类型、取值范围和现在的值 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s23](#s23) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `settings.open` | 打开一项设置所在的页并定位到那一行；不给 id 打开设置首页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s62](#s62) | [system/ui/shell/settings_body.c](../../system/ui/shell/settings_body.c) |
+| `settings.search` | 在设置里搜一项设置（名称或别名），首页列出结果 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s62](#s62) | [system/ui/shell/settings_body.c](../../system/ui/shell/settings_body.c) |
 | `settings.set` | 改一项设置 | 人、AI | 中 / local_write | 按设置项（见设置表） | 成人、儿童（无需白名单）；设置写入另受设置项限制 | [s22](#s22) | [system/policy/settings.c](../../system/policy/settings.c) |
 | `shell.about` | 打开关于和更新 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s64](#s64) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.ai_ask` | 输入问题 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s49](#s49) | [system/ui/shell/ai_chat.c](../../system/ui/shell/ai_chat.c) |
@@ -1146,7 +1148,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`audio.alarm_ring`、`audio.call_ring`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`voice.handsfree`、`wifi.enabled`。
 
-状态：`audio.route`、`bt.connected`、`cell.config_readonly`、`cell.registered`、`wifi.ssid`、`wifi.state`。
+状态：`audio.route`、`cell.config_readonly`、`cell.registered`、`wifi.ssid`、`wifi.state`。
 
 事件：—。
 
@@ -1164,9 +1166,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s64 — `system/ui/shell/settings_pages`
 
-设置：`ai.read_clipboard`、`backup.auto`、`system.language`、`text.assist`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`。
+设置：`system.language`、`voice.handsfree`、`voice.name`。
 
-状态：`battery.level`、`storage.card`、`storage.free`、`storage.mode`、`update.state`、`update.version`。
+状态：`battery.level`。
 
 事件：`backup.changed`、`file.changed`。
 
