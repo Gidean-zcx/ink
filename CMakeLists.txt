@@ -2404,3 +2404,16 @@ add_test(NAME gallery-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tes
 set_tests_properties(gallery-3 PROPERTIES TIMEOUT 1500)
 add_test(NAME gallery-3-source COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/source_check.py)
 set_tests_properties(gallery-3-source PROPERTIES SKIP_RETURN_CODE 77)
+# clock-3: the copied InfiniTime controllers (verbatim in system/apps/clock/vendor/infinitime) build only through
+# clock_infinitime.cpp, behind the shims in vendor/infinitime/port (searched first); C++20 without exceptions or RTTI.
+set(INK_CLOCK3_INCLUDES ${CMAKE_SOURCE_DIR}/system/apps/clock/vendor/infinitime/port ${CMAKE_SOURCE_DIR}/system/apps/clock/vendor/infinitime/src)
+target_sources(ink_system PRIVATE system/apps/clock/clock_infinitime.cpp)
+set_source_files_properties(system/apps/clock/clock_infinitime.cpp PROPERTIES INCLUDE_DIRECTORIES "${INK_CLOCK3_INCLUDES}"
+  COMPILE_OPTIONS "-fno-exceptions;-fno-rtti")
+add_executable(test-clock3-infinitime tests/clock_3/infinitime.c system/apps/clock/clock_infinitime.cpp)
+target_include_directories(test-clock3-infinitime PRIVATE system/include platform/include system/apps/clock)
+target_compile_features(test-clock3-infinitime PRIVATE cxx_std_20)
+target_compile_options(test-clock3-infinitime PRIVATE ${INK_WARN})
+add_test(NAME clock-3-infinitime COMMAND test-clock3-infinitime)
+add_test(NAME clock-3-source COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/clock_3/source_check.py)
+set_tests_properties(clock-3-source PROPERTIES SKIP_RETURN_CODE 77)
