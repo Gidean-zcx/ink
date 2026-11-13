@@ -29,20 +29,21 @@ with a.elf.open('rb') as f:
     elf = ELFFile(f)
     assert elf.elfclass == 32 and elf.little_endian
     sections = list(elf.iter_sections())
-    groups, current, code, source_file = [], [], [], ''
+    groups, current, funcs, code, source_file = [], [], [], [], ''
     for symbol in elf.get_section_by_name('.symtab').iter_symbols():
         if symbol['st_info']['type'] == 'STT_FILE':
-            source_file = symbol.name
-            if current:
-                groups.append(current)
-            current = []
+            if current or funcs:
+                groups.append((current, funcs, source_file))
+            current, funcs, source_file = [], [], symbol.name
         elif symbol['st_info']['type'] == 'STT_OBJECT' and isinstance(symbol['st_shndx'], int):
             current.append(symbol)
-        elif symbol['st_info']['type'] == 'STT_FUNC' and (symbol.name.startswith(('calendar_', 'ink_almanac_', 'almanac_')) or
-                                                          (symbol['st_info']['bind'] == 'STB_LOCAL' and source_file in ('calendar.c', 'almanac.c'))):
-            code.append((symbol.name, symbol['st_size']))
-    groups.append(current)
-    group = next(g for g in groups if any(s.name == 'calendar_term_days' for s in g))
+        elif symbol['st_info']['type'] == 'STT_FUNC' and symbol['st_info']['bind'] == 'STB_LOCAL':
+            funcs.append((symbol.name, symbol['st_size']))
+        elif symbol['st_info']['type'] == 'STT_FUNC' and symbol.name.startswith(('calendar_', 'ink_almanac_')):
+            code.append((symbol.name, symbol['st_size']))  # globals come after every file's locals
+    groups.append((current, funcs, source_file))
+    group, local_funcs, _ = next(g for g in groups if any(s.name == 'calendar_term_days' for s in g[0]))
+    code += local_funcs + [f for g in groups if g[2] == 'almanac.c' for f in g[1]]
     pointers = {'calendar_terms', 'calendar_ganzhi', 'calendar_yiji', 'calendar_folk',
                 'calendar_yiji_words', 'calendar_folk_words',
                 'calendar_joy', 'calendar_fortune', 'wealth.3', 'animals.2', 'sha.1',

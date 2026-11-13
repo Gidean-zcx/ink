@@ -15,30 +15,35 @@ _Static_assert(sizeof ((ink_almanac_t *)0)->yi == sizeof ((calendar_date_t *)0)-
                sizeof ((ink_almanac_t *)0)->inauspicious == sizeof ((calendar_date_t *)0)->inauspicious,
                "almanac lists must match Mogo's calendar_date_t");
 
-bool ink_almanac_date(int year, int month, int day, ink_almanac_t *out) {
+/* d holds Mogo's ~650 B result: on the caller's stack for ink_almanac_date, in PSRAM for time.almanac. */
+static bool almanac_fill(int year, int month, int day, ink_almanac_t *out, calendar_date_t *d) {
     if (!out) return false;
     memset(out, 0, sizeof *out);
-    calendar_date_t d;
-    if (!calendar_date(year, month, day, &d)) return false;
-#define COPY(field) out->field = d.field
-#define LIST(field) memcpy(out->field, d.field, sizeof out->field)
+    if (!calendar_date(year, month, day, d)) return false;
+#define COPY(field) out->field = d->field
+#define LIST(field) memcpy(out->field, d->field, sizeof out->field)
     COPY(year); COPY(month); COPY(day); COPY(weekday); COPY(days); COPY(first_weekday);
     COPY(lunar_year); COPY(lunar_month); COPY(lunar_day); COPY(year_cycle); COPY(month_cycle); COPY(day_cycle);
     LIST(yi); LIST(ji); COPY(wealth); COPY(clash); COPY(sha); COPY(joy); COPY(fortune);
     LIST(auspicious); LIST(inauspicious); COPY(officer); COPY(guardian); COPY(guardian_type);
 #undef LIST
 #undef COPY
-    out->year_ganzhi = calendar_cycle_name(d.year_cycle);
-    out->month_ganzhi = calendar_cycle_name(d.month_cycle);
-    out->day_ganzhi = calendar_cycle_name(d.day_cycle);
+    out->year_ganzhi = calendar_cycle_name(d->year_cycle);
+    out->month_ganzhi = calendar_cycle_name(d->month_cycle);
+    out->day_ganzhi = calendar_cycle_name(d->day_cycle);
     out->solar_term = "";
-    calendar_lunar_text(&d, false, out->lunar_text, sizeof out->lunar_text);
+    calendar_lunar_text(d, false, out->lunar_text, sizeof out->lunar_text);
     for (int i = 0; i < 2; i++) {
         int term_day = 0;
         const char *term = calendar_term(year, month, i, &term_day);
         if (term_day == day) out->solar_term = term;
     }
     return true;
+}
+
+bool ink_almanac_date(int year, int month, int day, ink_almanac_t *out) {
+    calendar_date_t d;
+    return almanac_fill(year, month, day, out, &d);
 }
 
 static void almanac_fail(ink_call_t *c, ink_rc_t status, const char *text) {
@@ -73,15 +78,16 @@ void ink_almanac_cap_run(ink_call_t *c) {
         almanac_fail(c, INK_RC_INVALID, TR("不在范围（2000—2099 年）"));
         return;
     }
-    /* One temporary PSRAM block holds the ~700 B result and the JSON; nothing large on the stack. */
-    struct almanac_work { ink_almanac_t d; char json[4096]; } *work = osal_malloc(sizeof *work, OSAL_MEM_EXTERNAL);
+    /* One temporary PSRAM block holds Mogo's result, ours and the JSON; nothing large on the stack. */
+    struct almanac_work { calendar_date_t mogo; ink_almanac_t d; char json[4096]; } *work =
+        osal_malloc(sizeof *work, OSAL_MEM_EXTERNAL);
     if (!work) {
         almanac_fail(c, INK_RC_FAILED, TR("内存不足"));
         return;
     }
     const ink_almanac_t *d = &work->d;
     char *out = work->json;
-    if (!ink_almanac_date(y, m, day, &work->d)) {
+    if (!almanac_fill(y, m, day, &work->d, &work->mogo)) {
         almanac_fail(c, INK_RC_INVALID, TR("日期无效"));
         osal_free(work);
         return;
