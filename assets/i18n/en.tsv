@@ -1957,7 +1957,6 @@ language english 中文 英文	language english chinese
 排序	Sort
 收藏 · %s	Favorite · %s
 放到：%s	Into: %s
-文件夹 · %zu 项 · %s	Folder · %zu items · %s
 文件夹总在文件前面；名字里的数字按大小排	Folders come first; numbers in names sort by value
 文本	Text
 新的：%s · %s	New: %s · %s
@@ -1989,3 +1988,5 @@ language english 中文 英文	language english chinese
 ，停下了，没做 %zu	, stopped, %zu not done
 ，没做 %zu 个	, %zu not done
 ，跳过 %zu	, %zu skipped
+文件夹 · %zu 项	Folder · %zu items
+这里没有别的文件夹	No folders inside

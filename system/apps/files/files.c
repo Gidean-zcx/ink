@@ -389,7 +389,7 @@ static void menu_page(const char *type) {
     if (F.selected.dir) snprintf(F.object, sizeof F.object, "%s", "dir:current"); else snprintf(F.object, sizeof F.object, "file:%u", (unsigned)F.selected_id);
     location(F.where, sizeof F.where, F.selected.path, strlen(F.selected.path) - strlen(base(F.selected.path)) - 1);
     size_text(size, sizeof size, F.selected.size); when(time, sizeof time, F.selected.mtime);
-    if (F.selected.dir) snprintf(F.details, sizeof F.details, TR("文件夹 · %zu 项 · %s"), F.rows, time); else snprintf(F.details, sizeof F.details, "%s · %s · %s", size, time, type_name(kind));
+    if (F.selected.dir) snprintf(F.details, sizeof F.details, TR("文件夹 · %zu 项"), F.rows); /* its own time is not in its listing */ else snprintf(F.details, sizeof F.details, "%s · %s · %s", size, time, type_name(kind));
     F.fields[0] = (ink_ui_field_spec_t){.id = "name", .role = "textbox", .label = TR("名称"), .value = F.selected.name, .object = {F.object, F.epoch}};
     F.fields[1] = (ink_ui_field_spec_t){.id = "path", .role = "text", .label = TR("位置"), .value = F.where};
     F.fields[2] = (ink_ui_field_spec_t){.id = "details", .role = "text", .label = TR("详情"), .value = F.details};
@@ -676,7 +676,7 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(F.empty, sizeof F.empty, F.query[0] ? TR("没找到名字里有“%s”的文件") : TR("在这个文件夹和里面的文件夹里找"), F.query);
         list_area(top + INK_GAP_S + ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP, bottom - INK_CONTROL, false); shown(); return;
     }
-    snprintf(F.empty, sizeof F.empty, "%s", TR("这里还没有文件"));
+    snprintf(F.empty, sizeof F.empty, "%s", F.mode == MOVE ? TR("这里没有别的文件夹") : TR("这里还没有文件"));
     if (F.mode == HOME) {
         home_items(); bool adult = ink_member_current()->role == INK_ROLE_ADULT;
         if (adult) { button(2, screen, TR("从手机或电脑传入"), "transfer.open", NULL, INK_MARGIN, bottom - 2 * INK_CONTROL - INK_GAP_S, w, false); button(3, screen, TR("连电脑"), "transfer.usb", NULL, INK_MARGIN, bottom - INK_CONTROL, w, false); }
