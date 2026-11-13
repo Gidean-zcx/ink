@@ -74,8 +74,9 @@ int ink_state_watch(const char *p, ink_state_fn fn, void *c, ink_exec_t e) { (vo
 
 static void data_line(char *out, size_t cap, int idx, unsigned long off, const uint8_t *bytes, size_t n, uint32_t crc, const char *b64) {
     static const char T[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    char enc[4096];
+    char enc[2736]; /* base64 of 2048 bytes and its NUL */
     size_t k = 0;
+    assert(n <= 2048);
     for (size_t i = 0; i < n; i += 3) {
         uint32_t v = (uint32_t)bytes[i] << 16 | (i + 1 < n ? (uint32_t)bytes[i + 1] << 8 : 0) | (i + 2 < n ? bytes[i + 2] : 0);
         enc[k++] = T[v >> 18 & 63];
@@ -84,7 +85,7 @@ static void data_line(char *out, size_t cap, int idx, unsigned long off, const u
         enc[k++] = i + 2 < n ? T[v & 63] : '=';
     }
     enc[k] = 0;
-    snprintf(out, cap, "INKCF1 DATA %d %lu %zu %08x %s\n", idx, off, n, crc, b64 ? b64 : enc);
+    snprintf(out, cap, "INKCF1 DATA %d %lu %zu %08x %s\n", idx, off, n, (unsigned)crc, b64 ? b64 : enc);
 }
 
 /* One GET answered by `reply` (and nothing after it): what usb_fetch returns. */
