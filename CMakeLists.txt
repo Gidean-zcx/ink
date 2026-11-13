@@ -710,7 +710,8 @@ foreach(case nat baud started silent dhcp throttle detect privacy)
   add_test(NAME unit-s31-cell-${case} COMMAND test-s31-cell ${case})
 endforeach()
 set_tests_properties(unit-s31-cell unit-s31-cell-nat unit-s31-cell-baud unit-s31-cell-started
-  unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120)
+  unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120
+  RUN_SERIAL TRUE) # the fake modem answers within 100 ms in real time: a loaded parallel run misses it (unit-s31-cell-baud, 11-13)
 add_test(NAME unit-s31-bt COMMAND test-s31-bt)
 set_tests_properties(unit-s31-bt PROPERTIES TIMEOUT 10)
 add_test(NAME unit-s31-bt-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/bt_negative.py ${CMAKE_BINARY_DIR})
