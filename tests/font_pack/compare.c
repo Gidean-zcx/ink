@@ -25,6 +25,10 @@ const void *hal_asset_map(const char *name, size_t *size) {
     uint8_t *d = n > 0 ? malloc((size_t)n) : NULL;
     if (!d || fread(d, 1, (size_t)n, f) != (size_t)n) { fclose(f); free(d); return NULL; }
     fclose(f);
+    /* An asset stays mapped for good, as on the device: keep it reachable (LeakSanitizer, CI Linux 11-14). */
+    static uint8_t *mapped[64];
+    static size_t nmapped;
+    if (nmapped < sizeof mapped / sizeof *mapped) mapped[nmapped++] = d;
     *size = (size_t)n;
     return d;
 }
