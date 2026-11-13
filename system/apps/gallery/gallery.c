@@ -164,7 +164,7 @@ static void scan(photos_t *d, const char *root, uint32_t epoch, bool trash_too) 
 static void month_row(void *ctx, size_t begin, size_t end) {
     photos_t *d = ctx;
     if (d->nmonths < MONTH_MAX) {
-        month_t *m = &d->months[d->nmonths++]; snprintf(m->key, sizeof m->key, "%s", d->items[begin].month);
+        month_t *m = &d->months[d->nmonths++]; memcpy(m->key, d->items[begin].month, sizeof m->key);
         m->begin = (uint16_t)begin; m->count = (uint16_t)(end - begin);
     }
 }
@@ -767,7 +767,7 @@ static void photo_destroy(void) { G.box = G.status = G.name = G.body = G.image =
 static void info_rows(void) {
     const ink_gallery_item_t *it = item_of(G.photo); size_t at = index_of(G.photo), n = 0;
     char dir[INK_FS_PATH_MAX]; snprintf(dir, sizeof dir, "%.*s", (int)(base_name(G.path) - G.path - (G.path[0] ? 1 : 0)), G.path);
-    G.info_labels[n] = TR("名字"); snprintf(G.info_values[n++], 96, "%s", G.path[0] ? base_name(G.path) : TR("不详"));
+    G.info_labels[n] = TR("名字"); snprintf(G.info_values[n++], 96, "%.63s", G.path[0] ? base_name(G.path) : TR("不详"));
     G.info_labels[n] = TR("相簿"); snprintf(G.info_values[n++], 96, "%s", dir[0] ? album_name(dir) : TR("不详"));
     ink_tm_t t = {0}; int64_t when = G.mtime > 0 ? G.mtime / 1000000000 : -1;
     if (G.info.taken[0] && sscanf(G.info.taken, "%d:%d:%d %d:%d:%d", &t.year, &t.month, &t.day, &t.hour, &t.min, &t.sec) == 6) {
@@ -967,6 +967,7 @@ static const ink_activity_t TRASH = {.name = "GalleryTrash", .app = "gallery", .
 
 typedef struct { ink_exec_job_t job; ink_call_t *call; uint32_t epoch, id; int64_t size, mtime; int err; char from[INK_FS_PATH_MAX], to[INK_FS_PATH_MAX]; } move_t;
 static void parent_of(const char *path, char *out, size_t cap) { snprintf(out, cap, "%.*s", (int)(base_name(path) - 1 - path), path); }
+static void up(char *dir) { char *s = strrchr(dir, '/'); if (s) *s = 0; }
 static void trash_done(void *arg);
 static void trash_job(void *arg) { /* into <space>/最近删除/<today>/<where it was>, by a rename on the same card */
     move_t *m = arg; ink_fs_entry_t e; char day[16], dir[INK_FS_PATH_MAX];
@@ -1040,7 +1041,7 @@ static void cap_restore(ink_call_t *c) { /* background executor */
     if (!r && !restore_target(origin, m->to, sizeof m->to)) r = INK_FS_ERR_EXISTS;
     if (!r) { parent_of(m->to, dir, sizeof dir); r = ink_fs_mkdir(dir); }
     if (!r) r = ink_fs_move(path, m->to);
-    if (!r) { parent_of(path, dir, sizeof dir); while (in_trash(dir) && !ink_fs_remove(dir)) parent_of(dir, dir, sizeof dir); } /* empty folders go */
+    if (!r) { parent_of(path, dir, sizeof dir); while (in_trash(dir) && !ink_fs_remove(dir)) up(dir); } /* empty folders go */
     if (r) {
         c->rc.status = r == INK_FS_ERR_PATH ? INK_RC_INVALID : INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", ink_fs_err_name(r));
         snprintf(m->from, sizeof m->from, "%s", r == INK_FS_ERR_EXISTS ? TR("原来的地方同名的照片太多，照片还在最近删除里") : move_error(r));
@@ -1073,7 +1074,7 @@ static ink_rc_t name_for_card(ink_args_t *args, ink_receipt_t *rc, ink_source_t 
 static void cap_delete_forever(ink_call_t *c) { /* background executor, after the person said yes */
     char path[INK_FS_PATH_MAX]; ink_args_get_str(&c->args, "path", path, sizeof path);
     int r = photo_path(path) ? ink_fs_remove(path) : INK_FS_ERR_PATH;
-    if (!r) { char dir[INK_FS_PATH_MAX]; parent_of(path, dir, sizeof dir); while (in_trash(dir) && !ink_fs_remove(dir)) parent_of(dir, dir, sizeof dir); }
+    if (!r) { char dir[INK_FS_PATH_MAX]; parent_of(path, dir, sizeof dir); while (in_trash(dir) && !ink_fs_remove(dir)) up(dir); }
     if (r) { c->rc.status = r == INK_FS_ERR_PATH ? INK_RC_INVALID : INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", ink_fs_err_name(r)); }
 }
 /* One tree at a time (the file service runs one job): every expired day, or everything for 清空. */

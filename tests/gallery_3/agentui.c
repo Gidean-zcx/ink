@@ -14,9 +14,10 @@ void ink_time_to_local(int64_t utc_s, ink_tm_t *out) {
     time_t t = (time_t)(utc_s + 8 * 3600); struct tm g; gmtime_r(&t, &g);
     *out = (ink_tm_t){g.tm_year + 1900, g.tm_mon + 1, g.tm_mday, g.tm_hour, g.tm_min, g.tm_sec, g.tm_wday, 480, false};
 }
-static int64_t local(int y, int mo, int d, int h, int mi, int s) { /* the UTC second of a UTC+8 wall time */
-    struct tm t = {.tm_year = y - 1900, .tm_mon = mo - 1, .tm_mday = d, .tm_hour = h, .tm_min = mi, .tm_sec = s};
-    return (int64_t)timegm(&t) - 8 * 3600;
+static int64_t local(int y, int mo, int d, int h, int mi, int s) { /* the UTC second of a UTC+8 wall time (days from civil) */
+    y -= mo <= 2; int64_t era = (y >= 0 ? y : y - 399) / 400; int64_t yoe = y - era * 400;
+    int64_t doy = (153 * (mo + (mo > 2 ? -3 : 9)) + 2) / 5 + d - 1, doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+    return (era * 146097 + doe - 719468) * 86400 + h * 3600 + mi * 60 + s - 8 * 3600;
 }
 
 static void agentui_isjpg(void) {
