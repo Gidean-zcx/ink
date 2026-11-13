@@ -232,7 +232,8 @@ static void main_phase(void) {
     /* 4. The old music's favorites and last song, written before the new music first runs. */
     old_records(); open_music();
     CHECK(shows("title", "乙"), "the old last song shows: %s", field("title"));
-    ok("music.favorites", NULL); CHECK(strstr(g_result, MINE "丙.wav"), "the old favorite is a favorite: %.150s", g_result);
+    ok("music.list", "{\"view\":\"list\",\"page\":4}"); quiet();
+    ok("music.favorites", NULL); CHECK(strstr(g_result, MINE "丙.wav") && row_favorite(MINE "丙.wav"), "the old favorite is a favorite: %.150s", g_result);
     ok("music.favorite", "{\"path\":\"" MINE "丙.wav\"}");
     /* 8. Pictures at the default size; the m4a row says it cannot play, and tapping it says why. */
     ok("music.list", "{\"view\":\"list\",\"page\":3}"); quiet();
