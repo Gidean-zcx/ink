@@ -172,6 +172,7 @@ add_library(ink_port_sim STATIC
   simulator/environment/sim_backup.c
   simulator/environment/hub_bridge.c
   simulator/environment/sim_remote.c
+  simulator/environment/sim_installer.c
   simulator/runtime/metrics.c
   simulator/runtime/trace.c
   simulator/runtime/script.c
@@ -233,6 +234,8 @@ add_library(ink_system STATIC
   system/services/data/data_caps.c
   system/services/backup/backup_service.c
   system/services/file/file_service.c
+  system/services/card_files/card_files.c
+  system/ui/card_files_notice.c
   system/services/file/file_caps.c
   system/services/file/transfer.c
   system/services/time/lunar.c
@@ -355,15 +358,17 @@ find_package(Python3 COMPONENTS Interpreter)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
 include(apps/mogo/translations.cmake)
 set(INK_HAVE_FONTS OFF)
+set(INK_RAW_FONTS_DIR ${CMAKE_BINARY_DIR}/assets-raw/fonts) # the same faces uncompressed (INKF v1), for tests/font_pack
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
   foreach(px 44) # the one reading font; the UI scales it for text outside its own subset
     set(out ${INK_ASSETS_DIR}/fonts/sans-${px}.inkf)
     add_custom_command(OUTPUT ${out}
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/fonts
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/fonts ${INK_RAW_FONTS_DIR}
       COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py --font ${INK_CJK_FONT}
               --face ${INK_CJK_FACE} --px ${px} --bpp 2 --charset ascii,punct,pinyin,gb2312
               --digits-font ${CMAKE_SOURCE_DIR}/third_party/fonts/Outfit.ttf --digits-weight 400 -o ${out}
+              --raw-out ${INK_RAW_FONTS_DIR}/sans-${px}.inkf
       DEPENDS ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py
       COMMENT "fontgen: CJK bitmap font ${px}px")
     list(APPEND INK_FONT_FILES ${out})
@@ -399,7 +404,7 @@ if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   add_custom_command(OUTPUT ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/ui_fonts.py
       --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT}
-      --out ${INK_ASSETS_DIR}/fonts
+      --out ${INK_ASSETS_DIR}/fonts --raw-out ${INK_RAW_FONTS_DIR}
     DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} ${INK_I18N_TABLES} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
     COMMENT "fontgen: contract UI sizes, CJK weights and Outfit digits")
   add_custom_target(ink_ui_fonts ALL DEPENDS ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp)
@@ -497,6 +502,7 @@ list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/factory_pages.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_menu.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/card_files_notice.c
 )
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
@@ -511,6 +517,25 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
   DEPENDS tools/licenses.py ${INK_LICENSE_FILES} third_party/tlsf/tlsf.h third_party/fonts/Outfit-OFL.txt)
 add_custom_target(ink_licenses DEPENDS ${CMAKE_BINARY_DIR}/generated/ink/licenses.h)
 add_dependencies(ink_system ink_licenses)
+# Card files (D-138): what apps need on the card, made from tools/card_files.json; the firmware carries the list.
+# fontTools may live in another interpreter than the build's (build-deps/pyenv has none): the first that has it.
+if(NOT INK_FONT_PYTHON)
+  execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/card_files.py python ${Python3_EXECUTABLE} python3
+    OUTPUT_VARIABLE found OUTPUT_STRIP_TRAILING_WHITESPACE RESULT_VARIABLE missing)
+  if(missing)
+    message(FATAL_ERROR "Card files need Python with fontTools (${Python3_EXECUTABLE} or python3). "
+                        "Debian/Ubuntu: apt install python3-fonttools; or pip install fonttools; or set INK_FONT_PYTHON")
+  endif()
+  set(INK_FONT_PYTHON ${found} CACHE FILEPATH "Python with fontTools for the card files")
+endif()
+set(INK_CARD_FILES_DIR ${CMAKE_BINARY_DIR}/card-files)
+add_custom_command(OUTPUT ${INK_CARD_FILES_DIR}/manifest.json ${CMAKE_BINARY_DIR}/generated/ink/card_files_manifest.h
+  COMMAND ${INK_FONT_PYTHON} tools/card_files.py bundle --spec tools/card_files.json --noto ${INK_CJK_FONT} --face ${INK_CJK_FACE} --out ${INK_CARD_FILES_DIR}
+  COMMAND ${INK_FONT_PYTHON} tools/card_files.py header --manifest ${INK_CARD_FILES_DIR}/manifest.json --out ${CMAKE_BINARY_DIR}/generated/ink/card_files_manifest.h
+  DEPENDS tools/card_files.json tools/card_files.py tools/mogo_font.py ${INK_CJK_FONT} tools/appfw-spike/licenses/NotoSansCJK-OFL.txt
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} COMMENT "card files: the reader's font and its licence (D-138)")
+add_custom_target(ink_card_files DEPENDS ${INK_CARD_FILES_DIR}/manifest.json)
+add_dependencies(ink_system ink_card_files)
 target_include_directories(ink_system PUBLIC ${CMAKE_BINARY_DIR}/generated)
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
@@ -747,6 +772,26 @@ add_executable(sim-asset-pack simulator/runtime/sim_main.c tests/asset_pack/devi
 target_link_libraries(sim-asset-pack PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-asset-pack PRIVATE ${INK_WARN})
 add_test(NAME integration-asset-pack COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/asset_pack/run.py --build ${CMAKE_BINARY_DIR})
+# Compressed fonts (font-pack-1): every glyph of every face against fontgen's uncompressed copy, the negative control
+# (ink_font.c reading the compressed bytes as bitmaps), and 58 more UI characters still leaving font_data 1 MiB.
+add_executable(test-font-pack tests/font_pack/compare.c system/text/ink_font.c)
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/font_pack/ink_font_undecoded.c
+  COMMAND ${CMAKE_COMMAND} -DIN=${CMAKE_SOURCE_DIR}/system/text/ink_font.c -DOUT=${CMAKE_BINARY_DIR}/font_pack/ink_font_undecoded.c
+          -P ${CMAKE_SOURCE_DIR}/tests/font_pack/undecoded.cmake
+  DEPENDS system/text/ink_font.c tests/font_pack/undecoded.cmake)
+add_executable(test-font-pack-undecoded tests/font_pack/compare.c ${CMAKE_BINARY_DIR}/font_pack/ink_font_undecoded.c)
+foreach(t test-font-pack test-font-pack-undecoded)
+  target_include_directories(${t} PRIVATE system/include)
+  target_link_libraries(${t} PRIVATE ink_lvgl)
+  target_compile_options(${t} PRIVATE ${INK_WARN} -UNDEBUG)
+  add_dependencies(${t} ink_fonts ink_ui_fonts)
+endforeach()
+add_test(NAME font-pack-glyphs COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/font_pack/run.py glyphs --build ${CMAKE_BINARY_DIR})
+add_test(NAME font-pack-glyphs-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/font_pack/run.py glyphs
+  --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:test-font-pack-undecoded> --expect-fail)
+add_test(NAME font-pack-overflow COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/font_pack/run.py overflow
+  --build ${CMAKE_BINARY_DIR} --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT})
+set_tests_properties(font-pack-glyphs font-pack-glyphs-reverse font-pack-overflow PROPERTIES TIMEOUT 300)
 add_test(NAME unit-flash-plan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/flash_plan_test.py)
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
 target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
@@ -997,6 +1042,7 @@ if(INK_HAVE_FONTS)
 endif()
 add_test(NAME hw-bench-report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_bench/report_test.py)
 add_test(NAME hw-selftest-run COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_selftest/run_test.py)
+add_test(NAME trial-run-fonts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_selftest/trial_run_test.py)
 add_test(NAME capability-table-doc COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tools/capabilities.py --check)
 add_test(NAME capability-table-regressions COMMAND ${Python3_EXECUTABLE}
@@ -2022,6 +2068,12 @@ add_test(NAME perf-latency COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tes
 ink_sim_executable(sim-lock-camera tests/lock_camera/lock_camera.c)
 target_link_libraries(sim-lock-camera PRIVATE ink_apps ink_system)
 add_test(NAME lock-camera COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/lock_camera/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-camera-touch-bus tests/camera_touch_bus/camera_touch_bus.c)
+target_link_libraries(sim-camera-touch-bus PRIVATE ink_apps ink_system)
+add_test(NAME camera-touch-bus COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME camera-touch-bus-rewrite COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR} --reverse rewrite)
+add_test(NAME camera-touch-bus-yield COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR} --reverse yield)
+add_test(NAME camera-touch-bus-both COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_touch_bus/run.py --build ${CMAKE_BINARY_DIR} --reverse both)
 set_tests_properties(perf-latency PROPERTIES TIMEOUT 180)
 add_test(NAME perf-latency-2 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/perf_latency_2/run.py
   --build ${CMAKE_BINARY_DIR} --runs 1 --regression)
@@ -2144,18 +2196,13 @@ target_include_directories(sim-google-ime PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-google-ime PRIVATE ink_apps ink_system)
 add_dependencies(sim-google-ime ink_fonts ink_ui_fonts ink_icons ink_test_content)
 add_test(NAME ime-google COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/google_run.py --build ${CMAKE_BINARY_DIR})
-# The reader's font in the test content, where the device has it on the card (fonts/InkSC.ttf, with its OFL): tests
-# that open a book need it. fontTools may sit in another Python than the one CMake found (CI installs it system-wide).
+# The reader's font in the test content, where the device has it on the card: the card files' own bundle (fonts/InkSC.ttf
+# with its OFL), so tests that open a book have it and the boot check finds it in place.
 if(INK_HAVE_FONTS)
-  set(INK_FONTTOOLS_PYTHON ${Python3_EXECUTABLE})
-  execute_process(COMMAND ${Python3_EXECUTABLE} -c "import fontTools" RESULT_VARIABLE missing_fonttools OUTPUT_QUIET ERROR_QUIET)
-  if(missing_fonttools)
-    unset(INK_FONTTOOLS_PYTHON)
-    find_program(INK_FONTTOOLS_PYTHON NAMES python3 NO_CACHE)
-  endif()
   add_custom_command(OUTPUT ${INK_TEST_CONTENT}/fonts/InkSC.ttf
-    COMMAND ${INK_FONTTOOLS_PYTHON} ${CMAKE_SOURCE_DIR}/tools/mogo_font.py ${INK_CJK_FONT} ${INK_TEST_CONTENT}/fonts/InkSC.ttf
-    DEPENDS tools/mogo_font.py ${INK_TEST_CONTENT}/books/测试长书.txt COMMENT "test content: the reader's font")
+    COMMAND ${CMAKE_COMMAND} -E copy ${INK_CARD_FILES_DIR}/files/0 ${INK_TEST_CONTENT}/fonts/InkSC.ttf
+    COMMAND ${CMAKE_COMMAND} -E copy ${INK_CARD_FILES_DIR}/files/1 ${INK_TEST_CONTENT}/fonts/InkSC.OFL.txt
+    DEPENDS ${INK_CARD_FILES_DIR}/manifest.json ${INK_TEST_CONTENT}/books/测试长书.txt COMMENT "test content: the reader's font")
   add_custom_target(ink_reader_font ALL DEPENDS ${INK_TEST_CONTENT}/fonts/InkSC.ttf)
   add_dependencies(ink_assets ink_reader_font)
   # The one empty book with the reader's font, as a card would have it: it fails as a book, not as a missing font.
@@ -2166,3 +2213,18 @@ if(INK_HAVE_FONTS)
   add_custom_target(ink_content_bad ALL DEPENDS ${CMAKE_BINARY_DIR}/content-bad/fonts/InkSC.ttf)
   add_dependencies(ink_assets ink_content_bad)
 endif()
+
+# Card files (auto-provision-1, D-138): the list's tool, the device's protocol, the install tool, the whole product over boots.
+add_test(NAME card-files-tool COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/tool_test.py --build ${CMAKE_BINARY_DIR})
+add_executable(test-card-files-unit tests/card_files/unit.c system/util/sha256.c system/util/ink_crc.c)
+target_include_directories(test-card-files-unit BEFORE PRIVATE tests/card_files/manifest system/include platform/include)
+target_link_libraries(test-card-files-unit PRIVATE ink_lvgl)
+target_compile_options(test-card-files-unit PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME card-files-unit COMMAND test-card-files-unit)
+add_test(NAME card-files-serve COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/serve_test.py)
+ink_sim_executable(sim-card-files tests/card_files/device.c)
+target_include_directories(sim-card-files PRIVATE tests)
+target_link_libraries(sim-card-files PRIVATE ink_apps ink_system)
+add_dependencies(sim-card-files ink_card_files ink_fonts ink_ui_fonts ink_icons)
+add_test(NAME card-files-sim COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(card-files-sim PROPERTIES TIMEOUT 600)

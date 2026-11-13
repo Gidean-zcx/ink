@@ -68,10 +68,9 @@ const char *app_settings_fonts_dir(void) { return "/me/fonts"; }
 /* A member's own copy wins; otherwise the family's one copy (on the card: fonts/InkSC.ttf). */
 int ink_mogo_font_check(void) {
     ink_fs_file_t *f = NULL;
-    int own = ink_graft_file_open(&ink_mogo_member, INK_MOGO_FONT_OWN, INK_FS_READ, &f), family = 0;
-    if (!own) ink_mogo_font = INK_MOGO_FONT_OWN;
-    else if (!(family = ink_graft_file_open(&ink_mogo_member, INK_MOGO_FONT_FAMILY, INK_FS_READ, &f))) ink_mogo_font = INK_MOGO_FONT_FAMILY;
-    else return own == INK_FS_ERR_NO_CARD || family == INK_FS_ERR_NO_CARD ? INK_MOGO_R_NO_CARD : INK_MOGO_R_NO_FONT;
+    if (!ink_graft_file_open(&ink_mogo_member, INK_MOGO_FONT_OWN, INK_FS_READ, &f)) ink_mogo_font = INK_MOGO_FONT_OWN;
+    else if (!ink_graft_file_open(&ink_mogo_member, INK_MOGO_FONT_FAMILY, INK_FS_READ, &f)) ink_mogo_font = INK_MOGO_FONT_FAMILY;
+    else return INK_MOGO_R_FILES; /* no card, lent, missing: the card files' notice says which */
     ink_fs_close(f);
     return INK_MOGO_R_NONE;
 }

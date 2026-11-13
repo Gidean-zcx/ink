@@ -19,6 +19,12 @@ typedef struct { test_usb_task_t task; void (*event_cb)(tinyusb_event_t *, void 
 #define TINYUSB_TASK_CUSTOM(s, p, c) (test_usb_task_t){s, p, c}
 #define pdMS_TO_TICKS(ms) (ms)
 bool usb_serial_jtag_is_connected(void);
+typedef struct { uint32_t tx_buffer_size, rx_buffer_size; } usb_serial_jtag_driver_config_t;
+int usb_serial_jtag_driver_install(usb_serial_jtag_driver_config_t *);
+int usb_serial_jtag_driver_uninstall(void);
+int usb_serial_jtag_read_bytes(void *, uint32_t, TickType_t);
+size_t heap_caps_get_free_size(unsigned);
+#define portTICK_PERIOD_MS 10
 int tinyusb_msc_install_driver(const tinyusb_msc_driver_config_t *);
 int tinyusb_msc_uninstall_driver(void);
 int tinyusb_msc_new_storage_sdmmc(const tinyusb_msc_storage_config_t *, tinyusb_msc_storage_handle_t *);

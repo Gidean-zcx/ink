@@ -466,7 +466,7 @@ static void context_tests(void) {
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "return to the settings overview"); quiet();
     CHECK(AI("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "read the next settings page at the larger row size"); quiet();
     wanted = "10 分钟"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the automatic lock time");
-    CHECK(AI("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "settings-1: the AI group is on the third page"); quiet();
+    CHECK(AI("settings.open", "{\"id\":\"system\"}") && g_rc.status == INK_RC_DONE, "D-137: the AI group is on the home's 系统 page"); quiet();
     wanted = "叫名字已关闭"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the wake setting");
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "return to the first settings page"); quiet();
     /* A UI-only connection-state fixture; no pairing or real radio is used. */

@@ -4,16 +4,20 @@
 #include "ink/probe.h"
 #include "sim.h"
 #ifdef INK_PREVIEW_DVP
+void ink_test_camera_session(const int *active); /* the simulator's camera model has its own session too */
 #define hal_camera_info ink_test_camera_info
 #define hal_camera_capture ink_test_camera_capture
+#define hal_camera_session ink_test_camera_session
 #include "../hal_camera_s31.c"
 #undef hal_camera_info
 #undef hal_camera_capture
+#undef hal_camera_session
 #undef S
 #include "camera_preview_dvp.inc"
 #else
 #define ink_test_camera_info hal_camera_info
 #define ink_test_camera_capture hal_camera_capture
+#define ink_test_camera_session hal_camera_session
 #endif
 static unsigned detections, captured_frames, fast_hints, gray_hints;
 static bool measuring, overlap;
@@ -21,6 +25,8 @@ bool fixture_camera_info(hal_camera_info_t *out) {
     if (++detections == 1) { *out = (hal_camera_info_t){0}; return false; }
     return ink_test_camera_info(out);
 }
+void fixture_camera_session(const int *active);
+void fixture_camera_session(const int *active) { ink_test_camera_session(active); }
 int fixture_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout) {
     if (measuring && ink_display_busy()) overlap = true;
     int n = ink_test_camera_capture(buf, cap, timeout);

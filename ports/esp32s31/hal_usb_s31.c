@@ -3,6 +3,7 @@
  * SDMMC handoff and USB queue draining follow Metalio @874538e. */
 #include "ink/hal_usb.h"
 #include "driver/usb_serial_jtag.h"
+#include "driver/usb_serial_jtag_vfs.h"
 /* TinyUSB's inline OSAL must not shadow the platform's OSAL. */
 #define osal_queue_t ink_tusb_queue_t
 #define osal_queue_create ink_tusb_queue_create
@@ -206,4 +207,48 @@ int hal_usb_disk_stop(void) {
     osal_mutex_unlock(g_lock);
     card_event(NULL, INK_SD_EVENT, 0, NULL);
     return hal_fs_card_present() ? 0 : -1;
+}
+
+/* The console as a line link to an install tool (card files, D-138), with IDF's standard driver so that reads can
+ * wait. Its receive side has no flow control (a full ring drops bytes), so the ring holds a whole DATA line
+ * (INK_CARD_LINE_MAX 3000). Lines go out under stdout's lock in one write, so log output cannot split them. */
+#define INK_CONSOLE_RX 4096
+#define INK_CONSOLE_TX 1024
+#define INK_CONSOLE_RESERVE (24 * 1024) /* internal RAM left to everything else while it is open (estimate) */
+static bool ink_console_open;
+int hal_usb_console_open(void) {
+    if (ink_console_open) return 0;
+    if (__atomic_load_n(&ink_usb_up, __ATOMIC_ACQUIRE) || ink_usb_card || !usb_serial_jtag_is_connected()) return -1;
+    if (heap_caps_get_free_size(MALLOC_CAP_INTERNAL) < INK_CONSOLE_RX + INK_CONSOLE_TX + INK_CONSOLE_RESERVE) return -1;
+    usb_serial_jtag_driver_config_t cfg = {.tx_buffer_size = INK_CONSOLE_TX, .rx_buffer_size = INK_CONSOLE_RX};
+    if (usb_serial_jtag_driver_install(&cfg) != ESP_OK) return -1;
+    flockfile(stdout);
+    fflush(stdout);
+    usb_serial_jtag_vfs_use_driver();
+    funlockfile(stdout);
+    uint8_t stale[64];
+    while (usb_serial_jtag_read_bytes(stale, sizeof stale, 0) > 0) {} /* nothing from before counts */
+    ink_console_open = true;
+    return 0;
+}
+int hal_usb_console_read(void *buf, size_t cap, uint32_t timeout_ms) {
+    if (!ink_console_open || __atomic_load_n(&ink_usb_up, __ATOMIC_ACQUIRE) || !usb_serial_jtag_is_connected()) return -1;
+    TickType_t ticks = (timeout_ms + portTICK_PERIOD_MS - 1) / portTICK_PERIOD_MS; /* never 0: a wait, not a spin */
+    return usb_serial_jtag_read_bytes(buf, cap > INK_CONSOLE_RX ? INK_CONSOLE_RX : (uint32_t)cap, ticks);
+}
+int hal_usb_console_write(const char *line, size_t n) {
+    flockfile(stdout);
+    size_t written = fwrite(line, 1, n, stdout);
+    int flushed = fflush(stdout);
+    funlockfile(stdout);
+    return written == n && !flushed ? 0 : -1;
+}
+void hal_usb_console_close(void) {
+    if (!ink_console_open) return;
+    flockfile(stdout); /* printf must not meet a driver being removed */
+    fflush(stdout);
+    usb_serial_jtag_vfs_use_nonblocking();
+    usb_serial_jtag_driver_uninstall();
+    funlockfile(stdout);
+    ink_console_open = false;
 }

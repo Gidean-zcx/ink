@@ -1,6 +1,8 @@
 # almanac-2：老黄历数据整块搬 Mogo 的离线历法模型（lunar-javascript 生成的静态表），提供 `time.almanac` 给锁屏和日历用，用 cnlunar 对照
 
-总规则先读 `docs/tasks/codex-rules.md`（第 9、10 节优先）和 `docs/tasks/vendor-common.md`（第 1、2、6、7、11、12 条；第 8 条不碰设备）。
+总规则先读 `docs/tasks/codex-rules.md`（第 9、10、11 节优先）和 `docs/tasks/vendor-common.md`（第 1、2、6、7、11、12 条；第 8 条不碰设备）。
+
+**D-140（总规则第 11 节）**：本任务是“搬代码”（Mogo 的离线历法模型）。原文整文件或整函数拷进来，`SOURCE.md` 写来源、固定提交、改了哪些行和为什么；为这台设备改的地方（墨水屏刷新、灰阶、108 px、随字号一起放大）也逐条记进 `SOURCE.md`。原文搬不动就写证据、停下，写进“要用户定”，不悄悄换成自己写。
 
 ## 为什么
 

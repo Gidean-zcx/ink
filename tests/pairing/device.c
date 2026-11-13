@@ -38,6 +38,11 @@ static void request(const char *method, const char *params) {
 static bool status_has(const char *value) {
     return AI("pairing.status", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, value);
 }
+/* The first-boot page opens its own setup hotspot when it is shown, and a person acts on that page; product_main now
+ * returns before the page is up, so a session started by hand before it would be replaced by the page's (new password). */
+static void first_boot_hotspot(void) {
+    CHECK(WAIT_FOR(status_has("\"hotspot\":true"), 5000), "first-boot page has opened its setup hotspot");
+}
 static void wait_claim(void) {
     CHECK(WAIT_FOR(ink_pairing_state() == INK_PAIR_PAIRING, 18000), "waiting for claim code");
     CHECK(WAIT_FOR(status_has("K7QF2M9X"), 3000), "claim code is visible");
@@ -294,6 +299,7 @@ static void run(void *arg) {
         CHECK(data_present(), "pending rejection preserves local data");
     } else if (!strcmp(phase, "hotspot")) {
         vtk_event_at(vtk_now() + SIM_MS(1), wifi_event, NULL); delay_ms(10);
+        first_boot_hotspot();
         CHECK(BY_HAND("pairing.hotspot_start", NULL) && g_rc.status == INK_RC_DONE, "hotspot started by person");
         const char *p = strstr(g_result, "P:");
         CHECK(p && strlen(p) > 18, "owner receives random hotspot password");
@@ -309,6 +315,7 @@ static void run(void *arg) {
         CHECK(ink_pairing_enabled() && !sim_provision_active(), "identity configuration survives, setup hotspot stays off after reboot");
         CHECK(AI("wifi.list", NULL) && strstr(g_result, "test-wifi"), "Wi-Fi survives its own restart independently of device token");
     } else if (!strcmp(phase, "hotspot-handoff")) {
+        first_boot_hotspot();
         CHECK(BY_HAND("pairing.hotspot_start", NULL) && g_rc.status == INK_RC_DONE, "adult starts setup session");
         const char *p = strstr(g_result, "P:");
         if (p) { memcpy(ap_password, p + 2, 16); ap_password[16] = 0; }

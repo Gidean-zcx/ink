@@ -109,7 +109,9 @@ int ink_mogo_page_start(const ink_member_identity_t *owner,int w,int h,int px) {
     for (int i=0;i<4;++i) s_margin[i]=ink_mogo_scaled(ink_mogo_settings.margin[i]);
     s_margin[2]+=ink_mogo_settings.header?ink_mogo_scaled(64):0; s_margin[3]+=ink_mogo_settings.footer?ink_mogo_scaled(64):0;
     ink_mogo_reason=ink_mogo_font_check();
-    if (!ink_mogo_reason && ttf_font_open(app_settings_font_path()) != ESP_OK) ink_mogo_reason=INK_MOGO_R_BAD_FONT;
+    if (!ink_mogo_reason && ttf_font_open(app_settings_font_path()) != ESP_OK) {
+        ttf_font_unload(); ink_mogo_reason=INK_MOGO_R_FILES; /* no font file stays open while the notice says why */
+    }
     book_layout_set_spacing(ink_mogo_settings.line,ink_mogo_settings.paragraph);
     book_layout_set_first_line_indent(ink_mogo_settings.indent);
     ttf_set_stroke_adjust_fine(ink_mogo_settings.weight);
@@ -119,7 +121,7 @@ static int ink_mogo_scan(void) {
     save_progress(); s_view=SHELF; s_reader_panel=READER_PANEL_NONE;
     free(ink_mogo_shelf); ink_mogo_shelf_page=0; bool no_card;
     ink_mogo_shelf_count=ink_mogo_shelf_list(ink_mogo_current_owner(),&ink_mogo_shelf,&no_card);
-    if (!ink_mogo_reason || ink_mogo_reason>=INK_MOGO_R_BAD_BOOK) ink_mogo_reason=no_card?INK_MOGO_R_NO_CARD:ink_mogo_shelf_count?0:INK_MOGO_R_EMPTY;
+    if (!ink_mogo_reason || ink_mogo_reason>=INK_MOGO_R_BAD_BOOK) ink_mogo_reason=no_card?INK_MOGO_R_FILES:ink_mogo_shelf_count?0:INK_MOGO_R_EMPTY;
     return ink_mogo_reason;
 }
 static bool ink_mogo_encrypted(const char *path) {
@@ -481,7 +483,7 @@ void ink_mogo_page_close(void) {
     s_save_failed=false; s_message[0]=s_reader_notice[0]=0;
 }
 static const char *ink_mogo_panel(void) {
-    static const char *const reasons[]={"",TR_NOOP("没有卡"),TR_NOOP("缺字体"),TR_NOOP("缺字体"),TR_NOOP("打不开"),TR_NOOP("书架空")};
+    static const char *const reasons[]={"",TR_NOOP("缺字体"),TR_NOOP("打不开"),TR_NOOP("书架空")};
     return ink_mogo_reason?reasons[ink_mogo_reason]:s_view==SHELF||!s_text?TR_NOOP("书架"):s_view==TOC?TR_NOOP("目录"):s_reader_panel==INK_MOGO_MARKS?TR_NOOP("书签列表"):
         s_reader_panel==INK_MOGO_SETTINGS?TR_NOOP("设置"):s_reader_panel==INK_MOGO_TOOLS?TR_NOOP("工具"):TR_NOOP("正文");
 }
@@ -493,12 +495,9 @@ static int ink_mogo_put(char *out,size_t cap,int len,const char *line) {
     return len+(int)n;
 }
 #define INK_MOGO_LINE(...) (snprintf(line,sizeof line,__VA_ARGS__),len=ink_mogo_put(out,cap,len,line))
-/* The explanation page's words (interface spec section 0 vocabulary). */
+/* The explanation page's words (interface spec section 0 vocabulary); the font's are the card files' notice. */
 const char *ink_mogo_page_explanation(void) {
     switch (ink_mogo_reason) {
-    case INK_MOGO_R_NO_CARD: return TR("没有插存储卡。书和阅读字体都放在存储卡上，插好后再打开阅读。");
-    case INK_MOGO_R_NO_FONT: return TR("还缺阅读用的字体，暂时不能显示书。字体文件 InkSC.ttf 应放在存储卡的 fonts 文件夹里；连着电脑装机时会自动放进去。");
-    case INK_MOGO_R_BAD_FONT: return TR("阅读字体（存储卡 fonts/InkSC.ttf）读不出来，请连着电脑重新装机补上。");
     case INK_MOGO_R_BAD_BOOK: return ink_mogo_error;
     case INK_MOGO_R_EMPTY: return ink_member_current()->role==INK_ROLE_CHILD?TR("请家长用‘传书’把书传进来。"):
         TR("书架上还没有书。用‘传书’从电脑或手机传进来，会放在‘传进来的’；全家的书放在存储卡的 books 文件夹。");
@@ -514,7 +513,7 @@ int ink_mogo_page_snapshot(char *out,size_t cap) {
     if (s_text && !ink_mogo_reason) INK_MOGO_LINE(TR_NOOP("阅读 《%s》 · %s · 章内页 %zu/%zu · %u%%\n"),s_reader_session.book.title,s_reader_session.book.chapter_title,page+1,pages,percent(page));
     else INK_MOGO_LINE(TR_NOOP("阅读 %s\n"),TR(panel));
     INK_MOGO_LINE(TR_NOOP("章节=%zu 页=%zu/%zu 位置=%zu 结束=%zu 字号=%d 面板=%s 书签=%zu 本页书签=%d\n"),s_text?s_reader_session.position.chapter+1:0,s_text?page+1:0,pages,start,end,s_px,panel,s_text?bookmark_count():0,s_text && bookmark_is_current());
-    if (ink_mogo_reason) INK_MOGO_LINE("%s\n",ink_mogo_page_explanation());
+    if (ink_mogo_reason) { if (*ink_mogo_page_explanation()) INK_MOGO_LINE("%s\n",ink_mogo_page_explanation()); }
     else if (s_view==SHELF || !s_text) for (int i=0;i<ink_mogo_shelf_count;++i)
         INK_MOGO_LINE("%d %s %s %u%%\n",i,ink_mogo_shelf[i].name,TR(ink_mogo_place(ink_mogo_shelf[i].path)),ink_mogo_shelf[i].pct);
     else if (s_view==TOC) {

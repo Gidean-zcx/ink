@@ -121,7 +121,7 @@ static int control_snapshot(char *buf, size_t cap) {
     if (n >= 0 && (size_t)n < cap) n += ink_notification_list_snapshot(buf + n, cap - (size_t)n, !C.kid);
     char activity[512];
     ink_activity_card_snapshot(activity, sizeof activity);
-    if (C.kid) add(buf, cap, &n, "动作：settings.set、system.set_volume、system.full_refresh、shell.bluetooth、shell.notify_open、notify.read、shell.close。");
+    if (C.kid) add(buf, cap, &n, "设置（齿轮）=settings.open {}；动作：settings.open、settings.set、system.set_volume、system.full_refresh、shell.bluetooth、shell.notify_open、notify.read、shell.close。");
     else add(buf, cap, &n, "动作：shell.more、shell.close、shell.members、shell.settings、settings.set、wifi.set_enabled、net.set_airplane、power.set_saving、"
              "system.full_refresh、shell.network、shell.bluetooth、shell.mobile、shell.sound、shell.display、shell.voice、shell.notify_open、notify.read、shell.tasks。%s", activity);
     return n < 0 ? 0 : (size_t) n < cap ? n : (int) cap - 1;
@@ -232,7 +232,7 @@ static void date_text(char *out, size_t cap) { /* the day without the lunar date
 /* Kindle's head row: who uses it (换人), the day, the settings; the status bar above has the time and the battery. */
 static int header(int y) {
     const char *person = ink_member_current()->name;
-    int room = width() - (C.kid ? 0 : INK_CONTROL);
+    int room = width() - INK_CONTROL;
     int name_w = LV_MIN(ink_ui_text_width(person, INK_FONT_LIST, INK_WEIGHT_BOLD), room / 2 - INK_ICON_LIST - INK_GAP_S);
     int who_w = LV_MAX(INK_CONTROL, INK_ICON_LIST + INK_GAP_S + name_w);
     lv_obj_t *who = ink_ui_box(N.control, INK_MARGIN, y, who_w, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
@@ -243,8 +243,8 @@ static int header(int y) {
     C.date = ink_ui_line(N.control, C.date_text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + who_w + INK_GAP_M,
                          y + (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, room - who_w - INK_GAP_M);
     lv_obj_set_style_text_align(C.date, LV_TEXT_ALIGN_RIGHT, 0);
-    if (!C.kid)
-        ink_shell_bind(ink_ui_circle(N.control, "gear", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, y, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL), "shell.settings", NULL);
+    lv_obj_t *gear = ink_ui_circle(N.control, "gear", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, y, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL);
+    ink_shell_bind(gear, C.kid ? "settings.open" : "shell.settings", C.kid ? "{}" : NULL); /* D-137: a child's home lists a child's rows */
     return y + INK_CONTROL;
 }
 

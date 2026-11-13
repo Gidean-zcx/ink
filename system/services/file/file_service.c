@@ -707,6 +707,7 @@ static void on_card(void *ctx) {
     index_invalidate();
     fs_refresh_cb(NULL);
 }
+void ink_fs_changed_outside(void) { on_card(NULL); }
 
 /* ------------------------------------------------------------ jobs */
 

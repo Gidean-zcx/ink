@@ -24,7 +24,7 @@ static struct {
     int busy; /* allocation may ask this task to reclaim its own frame */
 } CAM;
 
-/* Optional retained-session HAL hook; the simulator still supplies single frames. */
+/* Optional retained-session HAL hook (the device port and the simulator keep the sensor set up). */
 __attribute__((weak)) void hal_camera_session(const int *active) { (void)active; }
 static int preview_active;
 static ink_exec_job_t session_job;

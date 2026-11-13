@@ -3,8 +3,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <graft.h>
-/* Why a page shows an explanation instead of the native view (D-138: never a blank page). */
-enum { INK_MOGO_R_NONE, INK_MOGO_R_NO_CARD, INK_MOGO_R_NO_FONT, INK_MOGO_R_BAD_FONT, INK_MOGO_R_BAD_BOOK, INK_MOGO_R_EMPTY };
+/* Why a page shows an explanation instead of the native view (D-138: never a blank page). FILES: the font from the
+ * card files cannot be used (no card, lent, missing, broken): the card files' notice says why; the rest are the reader's. */
+enum { INK_MOGO_R_NONE, INK_MOGO_R_FILES, INK_MOGO_R_BAD_BOOK, INK_MOGO_R_EMPTY };
 /* One engine operation, run on the BG executor for the reader capabilities. */
 enum { INK_MOGO_OP_LOAD, INK_MOGO_OP_OPEN, INK_MOGO_OP_SHELF, INK_MOGO_OP_TURN, INK_MOGO_OP_LIST, INK_MOGO_OP_GOTO_PAGE,
     INK_MOGO_OP_READ, INK_MOGO_OP_CHAPTERS, INK_MOGO_OP_TOC, INK_MOGO_OP_ENTRY, INK_MOGO_OP_CHAPTER, INK_MOGO_OP_TOC_PERCENT,

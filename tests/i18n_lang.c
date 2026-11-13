@@ -130,10 +130,11 @@ static bool language(const char *code) {
     return WAIT_FOR(!strcmp(ink_lang_code(), code) && settled(), 3000);
 }
 
-/* settings-1: the home's rows in their groups, over as many pages as the language needs. */
-static const char *const ZH_ROWS[] = {"设置", "移动网络", "蓝牙", "勿扰", "暖光", "锁屏和壁纸", "语音和 AI", "备份", "关于和更新"};
-static const char *const EN_ROWS[] = {"Settings", "Mobile Network", "Bluetooth", "DND", "Warmth", "Lock Screen", "Voice & AI",
-    "Backup", "About & Updates"};
+/* settings-1: the home's rows in their groups, over as many pages as the language needs. Since D-137 voice and AI,
+ * backup and about are on 系统 (checked with the voice row below), and the home ends in the 系统 row. */
+static const char *const ZH_ROWS[] = {"设置", "移动网络", "蓝牙", "勿扰", "暖光", "锁屏和壁纸", "亮度", "字号", "系统"};
+static const char *const EN_ROWS[] = {"Settings", "Mobile Network", "Bluetooth", "DND", "Warmth", "Lock Screen", "Brightness",
+    "Text Size", "System"};
 static bool last_page(void) {
     const char *at = strstr(g_snap, "\"page_number\":"), *of = strstr(g_snap, "\"pages\":");
     return at && of && atoi(at + 14) == atoi(of + 8);
@@ -225,11 +226,10 @@ static void first_run(void) {
 
     settings_home(EN_ROWS, ZH_ROWS, "Settings-en");
     CHECK(strstr(g_snap, "\"language\":\"en\""), "the settings snapshot tells the AI the language");
-    for (int page = 1; page <= 5; page++) { /* the page with the voice row */
-        on_ui(read_labels);
-        if (shows("Voice & AI") || last_page()) break;
-        CHECK(BY_HAND("shell.page_next", NULL) && ready("Settings"), "turn to the voice row");
-    }
+    CHECK(BY_HAND("settings.open", "{\"id\":\"system\"}") && ready("SetSystem"), "open 系统, the page with the voice row");
+    on_ui(read_labels);
+    CHECK(!crowded && shows("System") && shows("Family & Children") && shows("Voice & AI") && shows("Backup") && shows("About & Updates"),
+          "系统 in English: its rows under their groups, every label whole (%d, last %s)", crowded, crowded_what);
     for (int wake = 2; wake >= 0; wake--) { /* every value of the voice row fits beside its name */
         char args[64]; snprintf(args, sizeof args, "{\"id\":\"voice.handsfree\",\"value\":%d}", wake);
         CHECK(BY_HAND("settings.set", args) && g_rc.status == INK_RC_DONE && WAIT_FOR(settled(), 3000), "wake setting %d", wake);

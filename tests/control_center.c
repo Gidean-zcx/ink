@@ -55,6 +55,14 @@ static void find_back_in(lv_obj_t *o) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(o) && !seen; i++) find_back_in(lv_obj_get_child(o, (int32_t)i));
 }
 static void find_back(void) { seen = false; lv_obj_update_layout(lv_screen_active()); find_back_in(lv_screen_active()); }
+static const char *wanted_cap;
+static void find_bound_in(lv_obj_t *o) { /* what a tap on the panel runs: ink_shell_bind's capability */
+    const char *cap = ink_shell_bound_cap(o);
+    if (cap && !strcmp(cap, wanted_cap)) { lv_obj_get_coords(o, &area); seen = true; }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o) && !seen; i++) find_bound_in(lv_obj_get_child(o, (int32_t)i));
+}
+static void find_bound(void) { seen = false; lv_obj_update_layout(lv_layer_sys()); find_bound_in(lv_layer_sys()); }
+static bool bound(const char *cap) { wanted_cap = cap; on_ui(find_bound); return seen; }
 static void tap_area(void) { tap((area.x1 + area.x2) / 2, (area.y1 + area.y2) / 2); quiet(); }
 static void touch(const char *name) { CHECK(tile(name) || label(name), "visible: %s", name); if (seen) tap_area(); }
 static void hold(const char *name) {
@@ -210,6 +218,9 @@ static void ai_case(void) {
 }
 
 static void kid_case(void) {
+    CHECK(BY_HAND("shell.control", NULL) && top("Control"), "a parent's panel"); look();
+    CHECK(bound("shell.settings") && !bound("settings.open"), "a parent's gear opens the whole settings home");
+    CHECK(BY_HAND("shell.close", NULL), "close"); quiet();
     CHECK(ink_member_switch("kid") == 0, "the child takes the device"); quiet();
     int64_t wifi = ink_setting_get("wifi.enabled");
     CHECK(BY_HAND("shell.control", NULL) && g_rc.status == INK_RC_DONE, "the child's panel"); look();
@@ -221,6 +232,19 @@ static void kid_case(void) {
     CHECK(AI("wifi.set_enabled", wifi ? "{\"enabled\":false}" : "{\"enabled\":true}") && g_rc.status == INK_RC_REJECTED &&
           ink_setting_get("wifi.enabled") == wifi, "nor the AI");
     shot("kid");
+    /* D-137: the gear in the child's head row opens a child's settings home, the way settings.open {} does for the AI. */
+    CHECK(has("设置（齿轮）=settings.open {}") && !bound("shell.settings") && bound("settings.open"), "the child's panel has a settings gear");
+    if (seen) tap_area();
+    look();
+    CHECK(!strcmp(ink_ui_page_name(), "Settings") && !top("KidControl"), "the gear opens the settings home (%s)", ink_ui_page_name());
+    static char touched[sizeof view];
+    memcpy(touched, view, sizeof touched);
+    CHECK(has("\"id\":\"audio.volume\"") && has("\"id\":\"audio.key_tone\"") && !has("\"id\":\"wifi\"") && !has("\"id\":\"system\"") &&
+          !has("家长管理"), "only what a child may change, no parents' row: %.200s", view);
+    shot("kid-settings");
+    CHECK(BY_HAND("system.home", NULL) && AI("settings.open", "{}") && g_rc.status == INK_RC_DONE, "the AI opens the child's settings"); look();
+    const char *a = strstr(view, "\"rows\":["), *b = strstr(touched, "\"rows\":[");
+    CHECK(a && b && !strcmp(a, b), "the AI and the gear see the same rows: %.150s", a ? a : "");
 }
 
 /* The image an icon of this name gets: the same descriptor every time. */

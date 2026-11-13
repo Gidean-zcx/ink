@@ -37,7 +37,9 @@
 #define STRIP_ROWS 128
 #define MAX_HINTS 8
 #define MAX_DIRTY 24
-#define MAX_ACTIVITIES 6
+/* Pages open at once. The deepest path a member can walk is an app, settings, 系统, 关于和更新, 隐私,
+ * 查看和删除记录, AI 替你做过的事 and one of its receipts (9), with the AI's page over it: room for that and two more. */
+#define MAX_ACTIVITIES 12
 #define MAX_OVERLAYS 8
 #define PFIFO 16
 #define INTERACTIVE_IDLE_MS 2500
@@ -564,12 +566,20 @@ static void show_top(void) {
     UI.last_pressed = false;
 }
 
-void ink_ui_push(const ink_activity_t *a, void *arg) {
-    if (UI.depth >= MAX_ACTIVITIES) return;
+static uint32_t push_refusals;
+bool ink_ui_push(const ink_activity_t *a, void *arg) {
+    if (UI.depth >= MAX_ACTIVITIES) { /* never quietly: the capability that asked answers FAILED (cap.c) */
+        __atomic_add_fetch(&push_refusals, 1, __ATOMIC_SEQ_CST);
+        ink_log(INK_LOG_WARN, "ui", "page stack full (%d): %s not opened", UI.depth, a && a->name ? a->name : "?");
+        return false;
+    }
     if (UI.depth && UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
     UI.stack[UI.depth++] = (frame_t){a, arg, false};
     show_top();
+    return true;
 }
+
+uint32_t ink_ui_push_refusals(void) { return __atomic_load_n(&push_refusals, __ATOMIC_SEQ_CST); }
 
 void ink_ui_home(void) {
     if (UI.depth <= 1) return;
@@ -603,6 +613,7 @@ void ink_ui_restart(void (*between)(void)) {
 bool ink_ui_full(void) { return UI.depth >= MAX_ACTIVITIES; }
 
 bool ink_ui_shown_again(void) { return UI.again; }
+int ink_ui_depth(void) { return UI.depth; }
 
 void ink_ui_set_top_hook(void (*fn)(const char *app)) { UI.top_hook = fn; }
 

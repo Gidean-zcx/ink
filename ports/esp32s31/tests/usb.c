@@ -190,6 +190,41 @@ void vTaskDelay(unsigned delay) {
     deferred = NULL;
     if (fn) fn(deferred_arg);
 }
+/* The console driver (card files): installed once, a ring for a whole line, switched back before it goes. */
+enum { VFS_NONBLOCKING, VFS_DRIVER };
+static bool jtag_installed;
+static unsigned jtag_installs, jtag_rx, jtag_tx, vfs_mode, stale_bytes, last_ticks;
+static size_t free_internal = 200000;
+int usb_serial_jtag_driver_install(usb_serial_jtag_driver_config_t *c) {
+    assert(!jtag_installed);
+    jtag_installed = true; jtag_installs++; jtag_rx = c->rx_buffer_size; jtag_tx = c->tx_buffer_size;
+    return 0;
+}
+int usb_serial_jtag_driver_uninstall(void) { assert(jtag_installed && vfs_mode == VFS_NONBLOCKING); jtag_installed = false; return 0; }
+void usb_serial_jtag_vfs_use_driver(void) { assert(jtag_installed); vfs_mode = VFS_DRIVER; }
+void usb_serial_jtag_vfs_use_nonblocking(void) { vfs_mode = VFS_NONBLOCKING; }
+int usb_serial_jtag_read_bytes(void *buf, uint32_t n, TickType_t ticks) {
+    assert(jtag_installed && vfs_mode == VFS_DRIVER && n <= jtag_rx);
+    last_ticks = ticks;
+    unsigned k = stale_bytes < n ? stale_bytes : n;
+    memset(buf, 'x', k); stale_bytes -= k;
+    return (int)k;
+}
+size_t heap_caps_get_free_size(unsigned caps) { assert(caps & MALLOC_CAP_INTERNAL); return free_internal; }
+static void check_console(void) {
+    uint8_t b[16];
+    free_internal = 8192;
+    assert(hal_usb_console_open() == -1 && !jtag_installs); /* not enough internal RAM: nothing installed */
+    free_internal = 200000; stale_bytes = 100;
+    assert(!hal_usb_console_open() && jtag_installs == 1 && jtag_rx >= 3001 && jtag_tx == 1024 && vfs_mode == VFS_DRIVER);
+    assert(!stale_bytes); /* what was waiting before does not count */
+    assert(!hal_usb_console_open() && jtag_installs == 1);
+    assert(hal_usb_console_read(b, sizeof b, 1) == 0 && last_ticks == 1); /* rounded up: a wait, never 0 ticks */
+    assert(hal_usb_console_read(b, sizeof b, 200) == 0 && last_ticks == 20);
+    assert(!hal_usb_console_write("INKCF1 ACK\n", 11));
+    hal_usb_console_close();
+    assert(!jtag_installed && vfs_mode == VFS_NONBLOCKING && hal_usb_console_read(b, sizeof b, 1) == -1);
+}
 static void usb_notify(void *arg) {
     assert(arg == &card && !lock_depth);
     usb_callbacks++;
@@ -222,6 +257,7 @@ int main(void) {
     assert(hal_usb_disk_start() == -1);
     unsigned before = usb_callbacks;
     computer = true; poll_card(); assert(usb_callbacks == before + 1 && !stop_requested);
+    check_console();
     check_local_write();
     hal_file_t *held = hal_fs_open("/content/from-device.txt", HAL_O_READ);
     assert(held && hal_usb_disk_start() == -1 && !hal_fs_close(held));
@@ -230,6 +266,7 @@ int main(void) {
     fail_install = false;
     check_local_write();
     assert(!hal_usb_disk_start()); check_lent();
+    assert(hal_usb_console_open() == -1 && jtag_installs == 1); /* the USB disk has the port */
     tinyusb_event_t attached = {.id = TINYUSB_EVENT_ATTACHED}; usb_event_cb(&attached, NULL);
     assert(!hal_usb_host_done());
     hal_file_t *user_file = hal_fs_open("/user/synthetic", HAL_O_WRITE | HAL_O_CREATE);
@@ -252,6 +289,6 @@ int main(void) {
     snprintf(path, sizeof path, "%s/content", g_root); assert(!rmdir(path));
     snprintf(path, sizeof path, "%s/cache", g_root); assert(!rmdir(path));
     assert(!rmdir(g_root));
-    puts("USB HAL: loan blocks local writes; eject and unplug restore; queued writes drain; failed start restores");
+    puts("USB HAL: loan blocks local writes; eject and unplug restore; queued writes drain; failed start restores; console line link");
     return 0;
 }

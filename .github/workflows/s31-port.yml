@@ -63,9 +63,9 @@ jobs:
           "$IDF_PATH/install.sh" esp32s31
       - name: Generate the same resources as the simulator
         run: |
-          sudo apt-get update && sudo apt-get install -y fonts-noto-cjk python3-pil
+          sudo apt-get update && sudo apt-get install -y fonts-noto-cjk python3-pil python3-fonttools
           cmake -S . -B build
-          cmake --build build --target ink_fonts ink_ui_fonts ink_icons -j2
+          cmake --build build --target ink_fonts ink_ui_fonts ink_icons ink_card_files -j2
       - name: Compile the ink ESP32-S31 port
         run: bash ports/esp32s31/build.sh
       - name: Require the factory screen transport

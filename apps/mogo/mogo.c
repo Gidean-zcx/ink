@@ -6,6 +6,7 @@
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/card_files.h"
 #include "ink/sys/crc.h"
 #include "ink/sys/members.h"
 #include "ink/sys/state.h"
@@ -82,6 +83,13 @@ static void ink_mogo_card_read(void);
 static void ink_mogo_whole(char *s);
 static void ink_mogo_work(void *arg);
 static void ink_mogo_unbound(lv_event_t *e) { (void)e; } /* replaced by the transfer.open binding */
+/* The card files are in place again: the same book (or the shelf) on this screen, its page started over. */
+static void ink_mogo_reopen(void) {
+    ink_mogo_request_t req = {.op = INK_MOGO_OP_LOAD};
+    snprintf(req.text, sizeof req.text, "%s", M.book);
+    if (M.busy && !M.has_next) { M.next = req; M.next_call = NULL; M.has_next = true; }
+    else if (!M.busy) (void)ink_mogo_start(&req, NULL);
+}
 static void ink_mogo_overlays(void) {
     /* only what changed is redrawn: a hidden button or the same note left alone costs the panel no refresh */
     if (M.back_button && M.back == lv_obj_has_flag(M.back_button, LV_OBJ_FLAG_HIDDEN)) {
@@ -97,6 +105,10 @@ static void ink_mogo_overlays(void) {
     M.note = NULL; shown = 0;
     if (!M.reason || !M.back_button) return;
     shown = now;
+    if (M.reason == INK_MOGO_R_FILES) { /* the font: the card files' own words (copying, lent, no card, failed, retry) */
+        M.note = ink_card_files_notice(lv_obj_get_parent(M.back_button), "reader", TR("字体"), ink_mogo_reopen);
+        return;
+    }
     bool child = ink_member_current()->role == INK_ROLE_CHILD;
     M.note = ink_ui_empty(lv_obj_get_parent(M.back_button), M.explanation, M.reason == INK_MOGO_R_EMPTY && !child ? TR("传书") : NULL,
                           M.reason == INK_MOGO_R_EMPTY && !child ? ink_mogo_unbound : NULL, NULL);
@@ -150,7 +162,10 @@ static void ink_mogo_finished(void *arg) {
         call->rc.revision = M.req.revision;
         if (M.req.json && M.req.json[0] && !M.status) ink_cap_result(call, M.req.json);
         if (M.status) { /* the explanation, as much of it as the reply holds, never half a character */
-            snprintf(call->rc.say, sizeof call->rc.say, "%.*s", (int)sizeof call->rc.say - 1, M.reason ? M.explanation : TR("现在做不了，请稍后再试"));
+            if (M.reason == INK_MOGO_R_FILES) {
+                snprintf(call->rc.detail, sizeof call->rc.detail, "font not on the card");
+                ink_card_files_notice_snapshot("reader", call->rc.say, sizeof call->rc.say);
+            } else snprintf(call->rc.say, sizeof call->rc.say, "%.*s", (int)sizeof call->rc.say - 1, M.reason ? M.explanation : TR("现在做不了，请稍后再试"));
             ink_mogo_whole(call->rc.say);
         }
         else if (M.req.say[0]) snprintf(call->rc.say, sizeof call->rc.say, "%s", M.req.say);
@@ -175,10 +190,10 @@ static void ink_mogo_work(void *arg) {
     if (M.active && !M.closing) {
         uint64_t t0 = ink_now_us();
         M.drawn = M.card_new = false;
-        if (!M.loaded) {
+        if (!M.loaded || (M.req.op == INK_MOGO_OP_LOAD && M.reason == INK_MOGO_R_FILES)) { /* the font came: start over */
             ink_mogo_page_close();
             M.status = ink_mogo_page_start(&M.owner, M.w, M.h, M.px);
-            if (M.status != INK_MOGO_R_NO_CARD) (void)ink_mogo_migrate_step(&M.owner, M.req.text);
+            if (!M.status) (void)ink_mogo_migrate_step(&M.owner, M.req.text);
             M.loaded = true;
             M.status = ink_mogo_page_command(&M.req);
         } else M.status = ink_mogo_page_command(&M.req);
@@ -238,7 +253,9 @@ static void ink_mogo_closed(void *ctx) {
 }
 static int ink_mogo_snapshot(void *ctx, char *out, size_t cap) {
     (void)ctx;
-    return snprintf(out, cap, "%s", M.busy ? TR("阅读 正在排版") : M.description);
+    int n = !M.busy && M.reason == INK_MOGO_R_FILES ? ink_card_files_notice_snapshot("reader", out, cap) : 0;
+    if (n > 0 && (size_t)n + 1 < cap) out[n++] = '\n';
+    return n + snprintf(out + n, cap - (size_t)n, "%s", M.busy ? TR("阅读 正在排版") : M.description);
 }
 static bool ink_mogo_call(const char *id, const char *args, ink_source_t src) {
     ink_call_opts_t opts = {.src = src, .args_json = args && args[0] ? args : NULL};

@@ -55,6 +55,7 @@ typedef struct {
     uint32_t seed;            /* deterministic pseudo-randomness (flash timing tails, network) */
     int64_t wall_start_us;    /* RTC time at boot */
     const char *reset_reason;
+    const char *installer;    /* host command answering the console's card-file lines (sim_installer.c), NULL = none */
 } sim_options_t;
 
 extern sim_options_t g_sim;
@@ -152,6 +153,8 @@ void sim_usb_plug(bool on);
 void sim_usb_eject(void);
 void sim_usb_copy_in(const char *host_path, const char *card_path);
 void sim_usb_report(void);
+void sim_usb_console_rx(const char *data, size_t n); /* ISR: bytes from the computer to the console */
+void sim_installer_line(const char *line, size_t n); /* task: a console line to the --installer process */
 void sim_sys_evt(void (*fn)(void *), void *ctx); /* run fn in the platform's event task; ISR-safe; one at a time per fn */
 void sim_power_set_cable(bool on);    /* ISR or locked: the cable carries power */
 

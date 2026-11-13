@@ -78,6 +78,12 @@ bool ink_shell_refused(const ink_receipt_t *rc) {
                                          {"today's time is up", TR_NOOP("今天的时间用完了")},
                                          {"this member's space is locked", TR_NOOP("请先解锁")}};
     if (ink_shell_airplane_card(rc)) return true;
+    if (rc->status == INK_RC_FAILED && !strcmp(rc->detail, "too many pages open")) { /* the full page stack (ui_task.c) */
+        snprintf(A.say, sizeof A.say, TR("没有打开"));
+        A.why = TR("打开的页面太多了，先回主屏再试");
+        show(&OVERLAYS[1], TR("没有打开"), A.why);
+        return true;
+    }
     for (unsigned i = 0; rc->status == INK_RC_REJECTED && i < sizeof WHY / sizeof *WHY; i++)
         if (!strcmp(rc->detail, WHY[i][0])) {
             snprintf(A.say, sizeof A.say, TR("没有做"));

@@ -97,16 +97,16 @@ static void to_settings(void) { to_book(); ok("reader.menu", "{\"view\":\"settin
 static void to_tools(void) { to_book(); ok("reader.menu", NULL); }
 static void to_missing(void) { open_reader("面板=缺字体"); }
 static void missing_font(void) {
-    open_reader("面板=缺字体");
-    CHECK(strstr(view, "InkSC.ttf") && strstr(view, "fonts"), "the page says which file and where: %.200s", view);
-    CHECK(visible("InkSC.ttf"), "the explanation is drawn, not a blank page");
+    open_reader("面板=缺字体"); /* the card files' notice says it (D-138), one screen for the font */
+    CHECK(ready("字体还没放到存储卡上") && strstr(view, "card.files=missing"), "the page says what is missing and that it comes by itself: %.200s", view);
+    CHECK(visible("字体还没放到存储卡上"), "the explanation is drawn, not a blank page");
     CHECK(strstr(view, "动作：reader.back"), "the snapshot names what can be done");
     frame("missing-font");
     back_paths("面板=缺字体", to_missing, NULL, true);
 }
 static void no_card(void) {
-    open_reader("面板=没有卡");
-    CHECK(strstr(view, "没有插存储卡") && visible("没有插存储卡"), "no card is explained: %.150s", view);
+    open_reader("面板=缺字体");
+    CHECK(ready("没有存储卡") && visible("没有存储卡"), "no card is explained: %.150s", view);
     frame("no-card");
     CHECK(AI("reader.list_books", NULL) && g_rc.status == INK_RC_FAILED, "nothing to list without the card");
 }

@@ -1,4 +1,4 @@
-/* INKF bitmap fonts + LVGL adapter. */
+/* INKF bitmap fonts (v1 packed, v2 compressed glyph by glyph) + LVGL adapter. */
 #include <stdio.h>
 #include <string.h>
 
@@ -19,6 +19,7 @@ struct ink_font {
     const uint8_t *index;
     const uint8_t *bitmaps;
     uint32_t bitmap_size;
+    bool runs;            /* INKF v2: every glyph compressed on its own (tools/fontgen/fontgen.py) */
     uint32_t replacement; /* code point used for missing glyphs */
     lv_font_t lv;
     bool lv_ready;
@@ -44,7 +45,10 @@ static const uint8_t *find(const ink_font_t *f, uint32_t cp) {
 ink_font_t *ink_font_open(const char *asset) {
     size_t size = 0;
     const uint8_t *d = hal_asset_map(asset, &size);
-    if (!d || size < INKF_HDR || memcmp(d, "INKF", 4) || rd16(d + 4) != 1) return NULL;
+    /* v1 holds 1, 2, 4 or 8 bpp (the coverage tables are 256 entries), v2 only 2 */
+    if (!d || size < INKF_HDR || memcmp(d, "INKF", 4) || rd16(d + 4) < 1 || rd16(d + 4) > 2 ||
+        (d[6] != 2 && (rd16(d + 4) == 2 || (d[6] != 1 && d[6] != 4 && d[6] != 8))))
+        return NULL;
     const char *prev = osal_mem_tag("fonts");
     ink_font_t *f = osal_calloc(1, sizeof *f, OSAL_MEM_DEFAULT);
     osal_mem_tag(prev);
@@ -59,6 +63,7 @@ ink_font_t *ink_font_open(const char *asset) {
     f->n = rd32(d + 16);
     uint32_t index_off = rd32(d + 20), bitmap_off = rd32(d + 24);
     f->bitmap_size = rd32(d + 28);
+    f->runs = rd16(d + 4) == 2;
     if (index_off + 16ull * f->n > size || bitmap_off + (uint64_t)f->bitmap_size > size) {
         osal_free(f);
         return NULL;
@@ -70,17 +75,16 @@ ink_font_t *ink_font_open(const char *asset) {
 }
 
 static void fill(const ink_font_t *f, const uint8_t *e, ink_glyph_t *out) {
+    uint32_t off = rd32(e + 4), stored = f->runs ? rd16(e + 13) : e[9] * ((e[8] * f->bpp + 7u) / 8);
     out->cp = rd32(e);
     out->w = e[8];
     out->h = e[9];
     out->x_ofs = (int8_t)e[10];
     out->y_ofs = (int8_t)e[11];
     out->adv = e[12];
-    out->bits = f->bitmaps + rd32(e + 4);
+    out->stored = off <= f->bitmap_size && stored <= f->bitmap_size - off ? (uint16_t)stored : 0; /* damaged: blank */
+    out->bits = f->bitmaps + (off <= f->bitmap_size ? off : 0);
 }
-
-/* Bitmap bytes of a glyph (2/4 bpp, rows padded to bytes). */
-static size_t bitmap_bytes(const ink_font_t *f, const ink_glyph_t *g) { return (size_t)g->h * (((size_t)g->w * f->bpp + 7) / 8); }
 
 bool ink_font_has(const ink_font_t *f, uint32_t cp) { return find(f, cp) != NULL; }
 
@@ -92,8 +96,46 @@ bool ink_font_glyph(const ink_font_t *f, uint32_t cp, ink_glyph_t *out) {
     return true;
 }
 
-void ink_font_touch_bitmap(const ink_font_t *f, const ink_glyph_t *g) {
-    if (g->w && g->h) hal_asset_access(g->bits, bitmap_bytes(f, g));
+const uint8_t *ink_font_pixels(const ink_font_t *f, const ink_glyph_t *g) {
+    static uint8_t px[255 * 255 + 16] INK_PSRAM_BSS; /* the largest glyph INKF holds, and room to write 16 past it */
+    uint8_t *o = px, *stop = px + (size_t)g->w * g->h;
+    hal_asset_access(g->bits, g->stored); /* lets simulators charge flash cache misses */
+    if (!f->runs) { /* v1: rows packed MSB-first */
+        int bpp = f->bpp, levels = (1 << bpp) - 1, row_bytes = (g->w * bpp + 7) / 8;
+        if ((size_t)g->h * row_bytes > g->stored) return memset(px, 0, (size_t)(stop - o)); /* damaged: paper */
+        for (int y = 0; y < g->h; y++)
+            for (int x = 0, bit = 0; x < g->w; x++, bit += bpp)
+                *o++ = (g->bits[y * row_bytes + (bit >> 3)] >> (8 - bpp - (bit & 7))) & levels;
+        return px;
+    }
+    /* v2: runs over the whole glyph in nibbles, vvnn; nn = 0: 4 + the next nibbles while they are 15. Past the end
+     * (damaged): paper. */
+    const uint8_t *at = g->bits, *end = g->bits + g->stored;
+    unsigned half = 0, k;
+#define NIBBLE() (at >= end ? 0u : (half ^= 1) ? (unsigned)*at >> 4 : *at++ & 15u)
+    while (o < stop) {
+        unsigned code = NIBBLE(), value = code >> 2;
+        uint32_t n = code & 3;
+        if (!n) {
+            n = 4;
+            do n += k = NIBBLE(); while (k == 15);
+        }
+        if (n > (uint32_t)(stop - o)) n = (uint32_t)(stop - o);
+        memset(o, (int)value, 16); /* one fixed store for a short run: the next run writes over the rest */
+        if (n > 16) memset(o + 16, (int)value, n - 16);
+        o += n;
+    }
+#undef NIBBLE
+    return px;
+}
+
+void ink_font_alpha(const ink_font_t *f, const ink_glyph_t *g, uint8_t *out, size_t stride) {
+    uint8_t dark[256];
+    int levels = (1 << f->bpp) - 1;
+    for (int v = 0; v <= levels; v++) dark[v] = ink_font_darken(v * 255 / levels);
+    const uint8_t *px = ink_font_pixels(f, g);
+    for (int y = 0; y < g->h; y++)
+        for (int x = 0; x < g->w; x++) out[(size_t)y * stride + x] = dark[*px++];
 }
 
 int ink_font_px(const ink_font_t *f) { return f->px; }
@@ -127,20 +169,8 @@ static const void *lv_get_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *draw_b
     const ink_font_t *f = dsc->resolved_font->dsc;
     ink_glyph_t g;
     if (!ink_font_glyph(f, dsc->gid.index, &g) || !g.w || !g.h) return NULL;
-    hal_asset_access(g.bits, bitmap_bytes(f, &g));
     osal_cost_units("glyph.blit", 1);
-    uint8_t *out = draw_buf->data;
-    uint32_t stride_out = lv_draw_buf_width_to_stride(g.w, LV_COLOR_FORMAT_A8);
-    int bpp = f->bpp, levels = (1 << bpp) - 1;
-    int row_bytes = (g.w * bpp + 7) / 8;
-    for (int y = 0; y < g.h; y++) {
-        const uint8_t *row = g.bits + (size_t)y * row_bytes;
-        for (int x = 0; x < g.w; x++) {
-            int bit = x * bpp;
-            int v = (row[bit >> 3] >> (8 - bpp - (bit & 7))) & levels;
-            out[(size_t)y * stride_out + x] = ink_font_darken(v * 255 / levels);
-        }
-    }
+    ink_font_alpha(f, &g, draw_buf->data, lv_draw_buf_width_to_stride(g.w, LV_COLOR_FORMAT_A8));
     return draw_buf;
 }
 
