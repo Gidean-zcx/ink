@@ -89,7 +89,7 @@
 - 扫描 `scan_dir`：原文 `opendir/readdir/stat` 递归换成文件索引 `ink_fs_index`（只在 BG 执行器），深度 2 用路径里的斜杠数保留；后缀表 `ext_wanted` 原样（含 m4a、aac）；超过 200 首记下 `s_truncated`，页面和快照写“只列出了前 200 首”。
 - `music_scan`：两个根各扫一遍再按路径排序（文件索引的顺序随卡变，原文是目录顺序）；收藏一次读全改成读 `music.favorites` 集合（`music_port_favorites_load`，格式和旧音乐一样：按路径 crc32+1 作记录号，内容是路径，所以不用迁移）；按路径找回正在放的曲目、恢复上次曲目两段原样；去掉开机自动续播一次（要用户定）和 ESP 日志。原文 `fav_key` 没拿：它是 NVS 键，我们沿用旧音乐的集合格式。
 - `music_favorite_toggle`、`music_set_mode`：NVS 读写换成 `music_port_favorite_store`、`music_port_mode_store`（`music.favorites`、`music.mode` 集合）。
-- `finish_track` 原样；它要的 `close_track`、`time_freeze`、`bt_trace`、`set_state`、`esp_random` 由端口头文件给出（前三个是空操作，随机数用系统的 `hal_random_fill`）。我们在一首歌开始时就算好下一首（`music_library_pick()` 调原文的 `finish_track`），媒体执行器在曲末只读这条路径并调 `media.play`。
+- `finish_track` 原样；它要的 `close_track`、`time_freeze`、`bt_trace`、`set_state`、`esp_random` 由端口头文件给出（前三个是空操作；应用框架没有随机数接口，`esp_random` 换成用时钟搅动的 xorshift，见报告“缺口”）。我们在一首歌开始时就算好下一首（`music_library_pick()` 调原文的 `finish_track`），`media.finished` 到来时（BG 执行器上的订阅）只读这条路径并调 `media.play`。
 - 文末加“接线层入口”一节：清空、恢复上次曲目和模式、同步正在放的曲目、算下一首、是否超过上限。
 
 ### `music_player.h`（页面用的接口）
