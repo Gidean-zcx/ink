@@ -239,6 +239,8 @@ add_library(ink_system STATIC
   system/services/file/file_caps.c
   system/services/file/transfer.c
   system/services/time/lunar.c
+  system/services/time/almanac.c
+  system/services/time/vendor/mogo-calendar/main/time/calendar.c
   system/services/time/time_service.c
   system/ui/shell/time_settings.c
   system/ui/shell/mobile_network.c
@@ -310,6 +312,7 @@ add_library(ink_system STATIC
   system/ui/app.c
   system/apps/remote/remote.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn third_party/stb)
+target_include_directories(ink_system PRIVATE system/services/time/vendor/mogo-calendar/main)
 target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256 PRIVATE ink_image_codec ink_resampler)
 # The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
 # leak into the system or the apps), and it puts the port after the system on every link line, which
@@ -2224,3 +2227,25 @@ target_link_libraries(sim-card-files PRIVATE ink_apps ink_system)
 add_dependencies(sim-card-files ink_card_files ink_fonts ink_ui_fonts ink_icons)
 add_test(NAME card-files-sim COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(card-files-sim PROPERTIES TIMEOUT 600)
+# Offline almanac: fixed fixtures need neither node nor an upstream checkout.
+add_executable(almanac-model tests/almanac/model.c system/services/time/almanac.c
+  system/services/time/vendor/mogo-calendar/main/time/calendar.c system/services/time/lunar.c
+  system/util/ink_args.c system/util/ink_json.c)
+target_include_directories(almanac-model PRIVATE system/include platform/include third_party/jsmn
+  system/services/time/vendor/mogo-calendar/main)
+target_compile_options(almanac-model PRIVATE ${INK_WARN})
+add_test(NAME almanac-fixtures COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/run.py
+  --binary $<TARGET_FILE:almanac-model>)
+add_test(NAME almanac-oracle COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/run.py
+  --binary $<TARGET_FILE:almanac-model> --mode oracle)
+set_tests_properties(almanac-oracle PROPERTIES SKIP_RETURN_CODE 77)
+# Mogo's own host test, unchanged but for its Date fields; tests/almanac/run_reader_baseline.py is its shim.
+add_test(NAME almanac-mogo-host COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/tests/almanac
+  ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/system/services/time/vendor/mogo-calendar/tools/calendar_host_test.py)
+set_tests_properties(almanac-mogo-host PROPERTIES SKIP_RETURN_CODE 77)
+add_test(NAME almanac-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/reverse.py
+  --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-almanac tests/almanac/device.c)
+target_link_libraries(sim-almanac PRIVATE ink_apps ink_system)
+add_test(NAME almanac-capability COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/device.py
+  --build ${CMAKE_BINARY_DIR})

@@ -145,6 +145,7 @@ static const struct {
     {"notify.dnd_set", ""}, {"notify.replies_set", "index,text"},
     {"settings.search", "query"}, {"settings.open", ""}, /* settings-1 */
     {"card.files_check", NULL}, /* auto-provision-1 */
+    {"time.almanac", ""},
     {NULL, NULL},
 };
 
