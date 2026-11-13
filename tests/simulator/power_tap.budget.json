@@ -1,0 +1,6 @@
+{
+  "_doc": "Taps in every phase of the panel power-up (INK_SELFTEST_POWERTAP, tap-loss-1): each 60 and 80 ms tap arrives once. With --pmic-hold-bus (the power-up holding the bus throughout) this must fail.",
+  "test.fail": {"max": 0, "optional": true, "why": "a CHECK failed (see warnings)"},
+  "test.pass": {"min": 15, "why": "fewer checks ran than expected"},
+  "panic.count": {"max": 0, "optional": true}
+}

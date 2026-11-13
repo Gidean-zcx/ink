@@ -1383,6 +1383,46 @@ static void touch_timing_task(void *arg) {
     ink_probe_mark("touch-timing-done");
 }
 
+/* ------------------------------------------- taps during the panel power-up (tap-loss-1) */
+
+/* The TPS65185 power-up (board driver against the chip models, about 140 ms) takes the shared I2C bus
+ * once per register access and waits 50 + 50 ms with it free (upstream epd_board_metalio_eink4_plus.c:775,
+ * 815; bus/tps65185.c:18-43): a tap in any phase is read and delivered once. --pmic-hold-bus makes the
+ * power-up hold the bus throughout, which must lose taps (the check can see the failure it guards). */
+static void power_tap_task(void *arg) {
+    (void)arg;
+    hal_input_set_sink(tt_sink, NULL);
+    osal_task_delay_us(300000);
+    /* phases measured from the trace: standby write and its wait (0-60 ms), the PMIC set-up burst (61-65),
+     * PWRUP and its wait (66-90), PWR_GOOD polling (91-92), ENABLE and VCOM writes (120-125), PG check (140) */
+    static const int offsets_ms[] = {1, 25, 62, 75, 91, 122, 135};
+    static const int holds_ms[] = {60, 80};
+    int want = 0;
+    for (unsigned h = 0; h < sizeof holds_ms / sizeof holds_ms[0]; h++)
+        for (unsigned i = 0; i < sizeof offsets_ms / sizeof offsets_ms[0]; i++) {
+            /* a touch before, so the controller is out of its monitor scan: this checks the bus, not the scan */
+            vtk_lock();
+            vtk_event_after(SIM_MS(1), tt_finger1, (void *)1);
+            vtk_event_after(SIM_MS(41), tt_finger1, NULL);
+            vtk_unlock();
+            osal_task_delay_us(300000);
+            int d0 = g_tt_down[0], u0 = g_tt_up[0];
+            vtk_lock();
+            vtk_event_after(SIM_MS(offsets_ms[i]), tt_finger0, (void *)1);
+            vtk_event_after(SIM_MS(offsets_ms[i] + holds_ms[h]), tt_finger0, NULL);
+            vtk_unlock();
+            hal_display_wake(30); /* the panel powers up now, off again 30 ms after */
+            osal_task_delay_us(600000);
+            want++;
+            CHECK(g_tt_down[0] == d0 + 1 && g_tt_up[0] == u0 + 1,
+                  "a %d ms tap %d ms into the panel power-up arrives once (%d down, %d up)", holds_ms[h], offsets_ms[i],
+                  g_tt_down[0] - d0, g_tt_up[0] - u0);
+        }
+    /* the driver numbers contacts by controller slot: the touches before took slot 0 as well */
+    CHECK(g_tt_down[0] == 2 * want && g_tt_up[0] == 2 * want, "every tap once (%d/%d of %d)", g_tt_down[0], g_tt_up[0], 2 * want);
+    ink_probe_mark("power-tap-done");
+}
+
 void ink_main(void) {
     if (getenv("INK_SELFTEST_EXPANDER_DEAD")) {
         osal_task_cfg_t cfg = {.name = "exp_dead", .fn = expander_dead_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
@@ -1396,6 +1436,11 @@ void ink_main(void) {
     }
     if (getenv("INK_SELFTEST_CELL")) {
         osal_task_cfg_t cfg = {.name = "cell", .fn = cell_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
+        osal_task_create(&cfg, NULL);
+        return;
+    }
+    if (getenv("INK_SELFTEST_POWERTAP")) {
+        osal_task_cfg_t cfg = {.name = "power_tap", .fn = power_tap_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
         osal_task_create(&cfg, NULL);
         return;
     }

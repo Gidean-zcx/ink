@@ -1155,6 +1155,12 @@ add_test(NAME selftest-board-wiring-pqbn
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.pqbn.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-board-pqbn --quiet --end 90s --no-random-outages)
 set_tests_properties(selftest-board-wiring-pqbn PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
+# Taps in every phase of the panel power-up (tap-loss-1), the monitor scan at its worst.
+add_test(NAME selftest-power-tap
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/simulator/power_tap.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-power-tap --quiet --end 14s --no-random-outages --touch-worst)
+set_tests_properties(selftest-power-tap PROPERTIES ENVIRONMENT "INK_SELFTEST_POWERTAP=1")
 # The touch controller model's timing (tap-loss-1): frame sample time, detection delay.
 add_test(NAME selftest-touch-timing
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
