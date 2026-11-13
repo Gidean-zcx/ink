@@ -1870,6 +1870,11 @@ add_test(NAME confirm-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/te
 set_tests_properties(confirm-pages PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 
 target_sources(ink_system PRIVATE system/apps/files/files.c)
+# files-3: Flipper's archive code (GPL-3.0, vendor/flipper) is one C unit behind its shims, with its own warnings off.
+target_sources(ink_system PRIVATE system/apps/files/files_flipper.c system/apps/files/flipper/flipper_unit.c)
+set_source_files_properties(system/apps/files/files_flipper.c system/apps/files/flipper/flipper_unit.c PROPERTIES INCLUDE_DIRECTORIES
+  "${CMAKE_SOURCE_DIR}/system/apps/files/flipper;${CMAKE_SOURCE_DIR}/system/apps/files/vendor/flipper;${CMAKE_SOURCE_DIR}/system/apps/files/vendor/flipper/helpers")
+set_source_files_properties(system/apps/files/flipper/flipper_unit.c PROPERTIES COMPILE_OPTIONS -w)
 ink_sim_executable(sim-files-app tests/files_app/files_app.c)
 target_link_libraries(sim-files-app PRIVATE ink_apps ink_system)
 add_dependencies(sim-files-app sim-image)
@@ -1878,6 +1883,11 @@ add_test(NAME files-app COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/
 ink_sim_executable(sim-files-ops tests/files_ops/files_ops.c)
 target_link_libraries(sim-files-ops PRIVATE ink_apps ink_system)
 add_test(NAME files-ops COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_ops/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-files3 tests/files3/files3.c)
+target_link_libraries(sim-files3 PRIVATE ink_apps ink_system)
+add_test(NAME files3 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files3/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME files3-keep-both-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files3/run.py --build ${CMAKE_BINARY_DIR} --mutant keep-both)
+set_tests_properties(files3 files3-keep-both-negative PROPERTIES TIMEOUT 1500)
 
 target_sources(ink_system PRIVATE system/apps/camera/camera.c system/apps/gallery/gallery.c)
 add_library(ink_camera_png STATIC system/apps/camera/png.c)

@@ -136,4 +136,10 @@ endif()
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
 # metadata.c includes the unchanged upstream tag parser.
 set_source_files_properties(${root}/system/services/audio/vendor/kiikoread/music_tags.c TARGET_DIRECTORY __idf_ink_system PROPERTIES HEADER_FILE_ONLY ON)
+# files-3: the copied Flipper sources build only through flipper_unit.c (its warnings off), behind the shims.
+file(GLOB flipper_sources ${root}/system/apps/files/vendor/flipper/*/*.c)
+set_source_files_properties(${flipper_sources} TARGET_DIRECTORY __idf_ink_system PROPERTIES HEADER_FILE_ONLY ON)
+set_source_files_properties(${root}/system/apps/files/files_flipper.c ${root}/system/apps/files/flipper/flipper_unit.c TARGET_DIRECTORY __idf_ink_system PROPERTIES INCLUDE_DIRECTORIES
+    "${root}/system/apps/files/flipper;${root}/system/apps/files/vendor/flipper;${root}/system/apps/files/vendor/flipper/helpers")
+set_source_files_properties(${root}/system/apps/files/flipper/flipper_unit.c TARGET_DIRECTORY __idf_ink_system PROPERTIES COMPILE_OPTIONS -w)
 endif()

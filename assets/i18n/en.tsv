@@ -1922,3 +1922,70 @@ language english 中文 英文	language english chinese
 未连接	No device
 没连上	Failed
 清残影	Clear ghosts
+%d年%d月%d日	%d-%d-%d
+%d月%d日	%d/%d
+今天 %d:%02d	Today %d:%02d
+保留两个	Keep both
+保留两个的放成了：%s	Kept both as: %s
+倒序	Descending
+先选一个文件夹	Choose a folder first
+先选文件	Select files first
+其它	Other
+刚放进来的文件可能要等几秒才搜得到	Files just added may take a few seconds to show up
+删除这 %zu 个文件（%s%s），找不回来	Delete these %zu files (%s%s)? They cannot be recovered
+到它所在的文件夹	Go to its folder
+压缩包	Archive
+原有的：%s · %s	Existing: %s · %s
+只列出前 1024 个	Only the first 1024 are listed
+同名文件	Same name
+同名文件已存在	A file with this name exists
+名字	Name
+名字不合法	Invalid name
+后面的同名都这样	Same for the rest
+图片	Picture
+在 %s	In %s
+在这个文件夹和里面的文件夹里找	Searches this folder and the folders inside
+大小	Size
+失败	Failed
+存储卡借给电脑了	Card lent to the computer
+存储卡借给电脑了，拔线或在电脑上推出后自动回来	The card is lent to a computer; it comes back when you unplug or eject it
+已处理 %zu/%zu	Done %zu/%zu
+已经在这个文件夹里	Already in this folder
+成功 %zu 个，跳过 %zu 个，失败 %zu 个	%zu done, %zu skipped, %zu failed
+找不到了	Not found
+找到 · 	Found · 
+排序	Sort
+收藏 · %s	Favorite · %s
+放到：%s	Into: %s
+文件夹 · %zu 项 · %s	Folder · %zu items · %s
+文件夹总在文件前面；名字里的数字按大小排	Folders come first; numbers in names sort by value
+文本	Text
+新的：%s · %s	New: %s · %s
+暂时读不了这个文件夹	Cannot read this folder now
+替换	Replace
+替换 %zu 个同名文件（%s%s），原来的找不回来	Replace %zu files with the same name (%s%s)? The old ones cannot be recovered
+替换同名文件 {replace_ids}，原来的找不回来	Replace same-name files {replace_ids}? The old ones cannot be recovered
+正在做别的拷贝	Another copy is running
+正在整理文件编号，好了自动重读	Indexing files; this reloads when done
+正在检查同名文件	Checking for same names
+正序	Ascending
+没找到名字里有“%s”的文件	No file name contains "%s"
+没有存储卡	No card
+没有权限	Not allowed
+没能打开，请重试	Could not open; try again
+没能检查目标文件夹，请返回后重试	Could not check the folder; go back and try again
+用阅读打开	Open in reader
+空间不够	Not enough space
+第 %zu 个，共 %zu 个	%zu of %zu
+编辑名称	Edit name
+至少输入 2 个字母或数字，或 1 个汉字	Type at least 2 letters or digits, or 1 Chinese character
+详情	Details
+请在设备上确认替换	Confirm the replacement on the device
+读写出错	Read or write error
+这个文件夹	This folder
+选的文件太多，请分几次做	Too many files selected; do it in parts
+都跳过了，没有改动	All skipped; nothing changed
+需要 %s，还剩 %s，放得下的先做，放不下的会列出来	Needs %s, %s left: what fits goes first, the rest is listed
+，停下了，没做 %zu	, stopped, %zu not done
+，没做 %zu 个	, %zu not done
+，跳过 %zu	, %zu skipped

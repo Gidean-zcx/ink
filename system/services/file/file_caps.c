@@ -228,7 +228,7 @@ static void batch_cancel(void *ctx) { __atomic_store_n(&batch_stop, (int)(intptr
 static void batch_next(batch_t *b);
 static void batch_publish(batch_t *b, bool ok) {
     ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", b->path); ink_args_bool(&a, "ok", ok); ink_args_int(&a, "done", b->at); ink_args_int(&a, "total", b->count);
-    ink_args_str(&a, "reason", b->reason ? b->reason : ""); ink_args_int(&a, "skipped", b->skipped); ink_args_int(&a, "task", b->task); ink_cap_emit_for("file.batch_progress", &a, b->context.member);
+    ink_args_str(&a, "reason", b->reason ? b->reason : ""); ink_args_int(&a, "skipped", b->skipped); ink_args_int(&a, "task", b->task); ink_args_int(&a, "not_done", b->stopped); ink_cap_emit_for("file.batch_progress", &a, b->context.member);
 }
 static void batch_result(batch_t *b, int err) { /* err > 0: skipped */
     const char *name = strrchr(b->path, '/');
