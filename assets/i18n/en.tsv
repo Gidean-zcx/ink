@@ -1922,3 +1922,12 @@ language english 中文 英文	language english chinese
 未连接	No device
 没连上	Failed
 清残影	Clear ghosts
+请先校准时间	Please set the clock first
+日期请用 YYYY-MM-DD	Use YYYY-MM-DD for the date
+不在范围（2000—2099 年）	Outside the supported range (2000-2099)
+日期无效	Invalid date
+这些是民俗说法	These are folk traditions
+历法结果过长	The almanac result is too long
+%s%.36s，宜%.*s，忌%.*s。这些是民俗说法。	%s %.36s; Yi: %.*s; Ji: %.*s. These are folk traditions.
+这天	On this day,
+内存不足	Out of memory

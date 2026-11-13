@@ -144,6 +144,7 @@ static const struct {
     {"notify.act", "id,index"}, {"notify.reply", "id"}, {"notify.dnd_get", NULL},
     {"notify.dnd_set", ""}, {"notify.replies_set", "index,text"},
     {"settings.search", "query"}, {"settings.open", ""}, /* settings-1 */
+    {"time.almanac", ""},
     {NULL, NULL},
 };
 
