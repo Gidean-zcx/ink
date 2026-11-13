@@ -194,6 +194,10 @@ static void sort_case(void) {
     order[0] = "第2章.txt"; order[1] = "第1章.txt"; order[2] = "第10章.txt"; on_ui(sorted);
     permit_child_files(); CHECK(ink_member_switch("kid") == 0, "another member"); roots(); CHECK(ink_member_switch("owner") == 0, "back to the owner");
     roots(); browse("/me/SYNTH_章"); on_ui(sorted); CHECK(F.sort == 2 && F.desc, "the member's sort is remembered");
+    /* 用阅读打开: the reader opens the text by its path (reader.open_book, the reader's one name since D-139) */
+    snprintf(args_json, sizeof args_json, "{\"id\":%u}", (unsigned)id_of("/me/SYNTH_章/第1章.txt")); command("files.select", args_json); wait_page("FileActions");
+    touch("用阅读打开"); CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "book"), 30000), "用阅读打开 opens the reader (%s)", ink_ui_page_name());
+    command("system.home", NULL); quiet();
 }
 static void delete_case(void) {
     roots(); browse("/me/SYNTH_文档"); CHECK(AI("files.all", NULL) && g_rc.status == INK_RC_INVALID, "select-all needs the multi mode");

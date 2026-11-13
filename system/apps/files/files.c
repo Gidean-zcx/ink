@@ -37,7 +37,7 @@ static struct {
     char member[16], path[INK_FS_PATH_MAX], dest[INK_FS_PATH_MAX], loaded[INK_FS_PATH_MAX], back_from[INK_FS_PATH_MAX], name_dir[INK_FS_PATH_MAX];
     char cursor[16], preview_text[129], query[64], empty[160], where[224], details[224], stop_args[32];
     char ids[4][32], args[4][384], names[4][INK_FS_NAME_MAX + 8], values[4][240], marks[4][16], crumbs[10][192];
-    char rename[576], target[576], source[288], object[32], from_dir[INK_FS_PATH_MAX], deleting[INK_FS_PATH_MAX], renaming[INK_FS_PATH_MAX], renamed_from[INK_FS_PATH_MAX];
+    char rename[576], target[576], source[288], book[320], object[32], from_dir[INK_FS_PATH_MAX], deleting[INK_FS_PATH_MAX], renaming[INK_FS_PATH_MAX], renamed_from[INK_FS_PATH_MAX];
     uint32_t epoch, serial, selected_id, index_cursor, found, fav_hash, confirm_token;
     bool known, multi, new_text, all_marked, stale, truncated, from_fav, open_found, previewing, busy, indexing, copy, all, expect_receipt;
     uint32_t marked[INK_FS_INDEX_MAX], draft, ref; size_t marked_count;
@@ -379,13 +379,14 @@ static void menu_page(const char *type) {
     static const struct { const char *item, *label, *cap; int event; bool write; const char *id; } MENU[] = {
         {"Run in app", TR_NOOP("打开"), NULL, FILES_EV_RUN, false, "open"}, {"Pin", TR_NOOP("收藏"), "files.fav", 0, false, "pin"}, {"Unpin", TR_NOOP("取消收藏"), "files.fav", 0, false, "unpin"},
         {"Copy", TR_NOOP("拷贝"), "files.move", 0, false, "copy"}, {"Move to", TR_NOOP("移动"), "files.move", 0, true, "move"}, {"Delete", TR_NOOP("删除"), "file.delete", FILES_EV_DELETE, true, "delete"},
-        {"Edit", TR_NOOP("编辑"), "files.edit", 0, true, "edit"}, {"Read", TR_NOOP("用阅读打开"), "mogo.open", 0, false, "read"},
+        {"Edit", TR_NOOP("编辑"), "files.edit", 0, true, "edit"}, {"Read", TR_NOOP("用阅读打开"), "reader.open_book", 0, false, "read"},
         {"Pin folder", TR_NOOP("收藏"), "files.fav", 0, false, "pin"}, {"Unpin folder", TR_NOOP("取消收藏"), "files.fav", 0, false, "unpin"}};
     const char *items[FILES_MENU_MAX]; char size[32], time[32];
     files_fl_select(F.selected.path, F.selected.dir, F.from_fav); int n = files_fl_menu(items), kind = files_fl_type(F.selected.path, F.selected.dir);
     bool can = writable(F.selected.path) && !root_dir(F.selected.path), rename = false;
     for (int i = 0; i < n; i++) rename |= !strcmp(items[i], "Rename");
     pair_json(F.source, sizeof F.source, "path", F.selected.path, NULL, NULL);
+    pair_json(F.book, sizeof F.book, "title", "", "path", F.selected.path); /* reader.open_book: by path, the title left empty */
     if (F.selected.dir) snprintf(F.object, sizeof F.object, "%s", "dir:current"); else snprintf(F.object, sizeof F.object, "file:%u", (unsigned)F.selected_id);
     location(F.where, sizeof F.where, F.selected.path, strlen(F.selected.path) - strlen(base(F.selected.path)) - 1);
     size_text(size, sizeof size, F.selected.size); when(time, sizeof time, F.selected.mtime);
@@ -412,8 +413,8 @@ static void menu_page(const char *type) {
     snprintf(F.args[0], sizeof F.args[0], "{\"id\":%u}", (unsigned)F.selected_id);
     for (int i = 0; i < n && k < ACTION_MAX - 3; i++) for (size_t m = 0; m < sizeof MENU / sizeof *MENU; m++) {
         if (strcmp(items[i], MENU[m].item) || (MENU[m].write && !can)) continue;
-        const char *cap = MENU[m].cap, *args = !strcmp(MENU[m].item, "Copy") ? "{\"copy\":true}" : !strcmp(MENU[m].item, "Move to") || !strcmp(MENU[m].item, "Edit") ? NULL : F.source;
-        if (MENU[m].event == FILES_EV_RUN) { cap = kind == FILES_TYPE_TEXT ? "files.preview" : kind == FILES_TYPE_AUDIO ? "media.play" : kind == FILES_TYPE_IMAGE ? "photo.open" : "mogo.open"; args = kind == FILES_TYPE_TEXT || kind == FILES_TYPE_IMAGE ? F.args[0] : F.source; }
+        const char *cap = MENU[m].cap, *args = !strcmp(MENU[m].item, "Copy") ? "{\"copy\":true}" : !strcmp(MENU[m].item, "Move to") || !strcmp(MENU[m].item, "Edit") ? NULL : !strcmp(MENU[m].item, "Read") ? F.book : F.source;
+        if (MENU[m].event == FILES_EV_RUN) { cap = kind == FILES_TYPE_TEXT ? "files.preview" : kind == FILES_TYPE_AUDIO ? "media.play" : kind == FILES_TYPE_IMAGE ? "photo.open" : "reader.open_book"; args = kind == FILES_TYPE_TEXT || kind == FILES_TYPE_IMAGE ? F.args[0] : kind == FILES_TYPE_AUDIO ? F.source : F.book; }
         events[k] = MENU[m].event; t[k][0] = TR(MENU[m].label); t[k][1] = cap; t[k][2] = args; t[k++][3] = MENU[m].id;
     }
     int top = toolbar(2, k, t); memcpy(F.events + 2, events, k * sizeof *events);
@@ -761,6 +762,7 @@ void files_fl_open(const char *app) {
     F.previewing = !strcmp(app, "files.preview");
     if (F.previewing) { ink_args_str(&a, "path", F.selected.path); ink_args_int(&a, "max_bytes", sizeof F.preview_text - 1); request("file.read", &a, opened, 0); return; }
     if (!strcmp(app, "photo.open")) ink_args_int(&a, "id", F.selected_id); else ink_args_str(&a, "path", F.selected.path);
+    if (!strcmp(app, "reader.open_book")) ink_args_str(&a, "title", ""); /* its schema asks for a title; the path decides */
     ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .member = F.member, .reply_exec = INK_EXEC_UI, .done = operation_done, .ctx = (void *)((uintptr_t)F.serial << 3)};
     if (ink_cap_call(app, &a, &opts)) status(TR("没能打开，请重试"));
 }

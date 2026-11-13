@@ -14,7 +14,7 @@ static const char* archive_get_flipper_app_name(ArchiveFileTypeEnum file_type) {
     case ArchiveFileTypeText:
         return "files.preview";
     case ArchiveFileTypeBook:
-        return "mogo.open";
+        return "reader.open_book";
     case ArchiveFileTypeAudio:
         return "media.play";
     case ArchiveFileTypeImage:

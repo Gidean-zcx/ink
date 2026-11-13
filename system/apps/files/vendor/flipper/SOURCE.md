@@ -37,9 +37,9 @@
 | `views/archive_browser_view.h` | `#define MENU_ITEMS 4u` | `10u` | 任务书：末尾追加我们的菜单项 |
 | `views/archive_browser_view.c` | `#include "../helpers/archive_browser.h"` | `#include "archive_browser.h"` | 原 `archive_browser.h` 没拷（依赖 `archive_i.h`），换成垫片目录里的同名头文件 |
 | `views/archive_browser_view.c` 在 `menu[3]` 之后 | — | 加 `menu[4]`…`menu[9]` 六行：Copy、Move to、Info、Edit、Read、`---` | 任务书：追加拷贝、移动、详情、编辑；“Read”是 `.txt` 的“用阅读打开”，第 10 项留给文件夹收藏 |
-| `views/archive_browser_view.c` 画菜单循环之前 | — | 加一段：不是 `.txt` 的去掉 Edit、Read；不在 `/me/` 下的去掉 Read（`mogo.open` 只收 `/me/`）；文件夹的第 10 项写 Pin folder 或 Unpin folder | 我们的项怎么组成也写在原文函数里，决定菜单的逻辑只有一处。原文对文件夹不给 Pin（`archive_is_known_app` 为假），这条判断没改，文件夹收藏是追加项 |
+| `views/archive_browser_view.c` 画菜单循环之前 | — | 加一段：不是 `.txt` 的去掉 Edit、Read；不在 `/me/` 下的去掉 Read（当时 `mogo.open` 只收 `/me/`；现在是 `reader.open_book`）；文件夹的第 10 项写 Pin folder 或 Unpin folder | 我们的项怎么组成也写在原文函数里，决定菜单的逻辑只有一处。原文对文件夹不给 Pin（`archive_is_known_app` 为假），这条判断没改，文件夹收藏是追加项 |
 | `scenes/archive_scene_browser.c` 1-7 行 | `archive_i.h`、`archive/scenes/archive_scene.h`、`<applications.h>` | 换成垫片 `ink_flipper.h`；`../helpers/archive_browser.h` 换成 `archive_browser.h` | 场景管理器、视图分发、应用表都不拷 |
-| `scenes/archive_scene_browser.c` 16-33 | Flipper 应用名 | `files.preview`、`mogo.open`、`media.play`、`photo.open` | 任务书 D35：交给对应的能力。启动那一句（`loader_start_with_gui_error`）没改，垫片把它接到能力调用 |
+| `scenes/archive_scene_browser.c` 16-33 | Flipper 应用名 | `files.preview`、`reader.open_book`（原来写的 `mogo.open`，D-139 后阅读只有 `reader.*`）、`media.play`、`photo.open` | 任务书 D35：交给对应的能力。启动那一句（`loader_start_with_gui_error`）没改，垫片把它接到能力调用 |
 
 没有改原文函数的控制流程。
 
