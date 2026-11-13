@@ -1,4 +1,5 @@
 /* English shell controls, measured labels and Chinese round trips on the real UI. */
+#include "graft.h"
 #include <stdlib.h>
 #include "../system/ui/shell/member_pages.h"
 #include "../system/ui/shell/ai_pages.h"
@@ -177,6 +178,8 @@ static void extra_pages(void) {
 }
 static bool bookshelf_only, extra_only;
 static void test_mode(void *arg) { (void)arg; bookshelf_only = getenv("INK_I18N_BOOKSHELF") != NULL; extra_only = getenv("INK_I18N_EXTRAS") != NULL; }
+static char shelf[2048];
+static void read_shelf(void) { ink_graft_snapshot(shelf, sizeof shelf); }
 static void inspect_bookshelf(void) {
     labels[0] = issue[0] = 0; nboxes = crowded = 0;
     lv_obj_update_layout(lv_screen_active()); walk(lv_screen_active());
@@ -198,9 +201,10 @@ static void run(void *arg) {
     CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "English previews");
     if (extra_only) { extra_pages(); ink_probe_count("test.finished"); return; }
     if (bookshelf_only) {
-        CHECK(BY_HAND("app.open", "{\"id\":\"reader\"}") && WAIT_FOR(at("reader") && settled(), 10000), "open English bookshelf");
+        /* reader-one-1: the shelf is the grafted reader's page (drawn natively, named in its snapshot) */
+        CHECK(BY_HAND("app.open", "{\"id\":\"reader\"}") && WAIT_FOR(at("book") && (on_ui(read_shelf), strstr(shelf, "面板=书架")) && settled(), 10000), "open English bookshelf");
         picture = "Bookshelf-en"; on_ui(inspect_bookshelf);
-        CHECK(!crowded && strstr(labels, "Bookshelf"), "English bookshelf fits: %.100s", issue);
+        CHECK(!crowded && strstr(shelf, "Bookshelf"), "English bookshelf fits: %.100s %.100s", issue, shelf);
         vtk_host_call(save, NULL);
         captured = false; frame_tries = 0; vtk_event_at(vtk_now() + SIM_MS(1), frame, (void *)picture);
         CHECK(WAIT_FOR(captured, 2000), "bookshelf screenshot captured");

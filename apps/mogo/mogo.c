@@ -405,35 +405,38 @@ static void ink_mogo_action(ink_call_t *call) {
     }
     if (!ink_mogo_start(&req, call)) call->rc.status = M.active ? INK_RC_STALE : INK_RC_FAILED;
 }
-#define INK_MOGO_CAP(name, title_, fx, act, schema) \
-    {.id = "reader." name, .app = "reader", .title = title_, .effect = fx, .child_ok = true, .activity = act, .input = schema, .timeout_ms = 120000, .run = ink_mogo_action}
 static const ink_cap_t INK_MOGO_CAPS[] = {
-    INK_MOGO_CAP("open_book", "打开一本书", INK_FX_NAVIGATE, NULL, "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"index\":{\"type\":\"integer\",\"minimum\":0},\"path\":{\"type\":\"string\"}},\"required\":[\"title\"]}"),
-    INK_MOGO_CAP("continue", "接着读上次的书", INK_FX_NAVIGATE, NULL, NULL),
-    INK_MOGO_CAP("list_books", "书架上有哪些书", INK_FX_READ, NULL, NULL),
-    INK_MOGO_CAP("open_sample", "打开离线原创阅读示例", INK_FX_NAVIGATE, NULL, NULL),
-    INK_MOGO_CAP("next_page", "下一页", INK_FX_NAVIGATE, "book", NULL),
-    INK_MOGO_CAP("prev_page", "上一页", INK_FX_NAVIGATE, "book", NULL),
-    INK_MOGO_CAP("list_next", "书架、目录或书签下一页", INK_FX_NAVIGATE, NULL, NULL),
-    INK_MOGO_CAP("list_prev", "书架、目录或书签上一页", INK_FX_NAVIGATE, NULL, NULL),
-    INK_MOGO_CAP("goto_page", "跳到本章第几页", INK_FX_NAVIGATE, "book", "{\"type\":\"object\",\"properties\":{\"page\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"page\"]}"),
-    INK_MOGO_CAP("read_page", "读出这一页", INK_FX_READ, "book", NULL),
-    INK_MOGO_CAP("chapters", "列出目录", INK_FX_READ, NULL, NULL),
-    INK_MOGO_CAP("show_chapters", "打开目录", INK_FX_NAVIGATE, "book", NULL),
-    INK_MOGO_CAP("goto_chapter", "跳到章节", INK_FX_NAVIGATE, NULL, "{\"type\":\"object\",\"properties\":{\"chapter\":{\"type\":\"integer\",\"minimum\":1},\"entry\":{\"type\":\"integer\",\"minimum\":1}}}"),
-    INK_MOGO_CAP("toc_percent", "目录翻到全书的百分之几", INK_FX_NAVIGATE, "book", "{\"type\":\"object\",\"properties\":{\"value\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":100}},\"required\":[\"value\"]}"),
-    INK_MOGO_CAP("bookmarks", "列出书签", INK_FX_READ, NULL, "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"open\":{\"type\":\"boolean\"}}}"),
-    INK_MOGO_CAP("add_bookmark", "加书签", INK_FX_LOCAL_WRITE, "book", NULL),
-    INK_MOGO_CAP("remove_bookmark", "删书签", INK_FX_LOCAL_WRITE, NULL, "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}}}"),
-    INK_MOGO_CAP("goto_bookmark", "跳到书签", INK_FX_NAVIGATE, NULL, "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}"),
-    INK_MOGO_CAP("get_layout", "查看阅读排版", INK_FX_READ, NULL, NULL),
-    INK_MOGO_CAP("set_layout", "修改阅读排版", INK_FX_LOCAL_WRITE, NULL, "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{"
-        "\"font_size\":{\"type\":\"integer\",\"minimum\":18,\"maximum\":90},\"line_spacing\":{\"type\":\"integer\",\"minimum\":110,\"maximum\":150},"
-        "\"paragraph_spacing\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":100},\"margins\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":96},"
-        "\"weight\":{\"type\":\"integer\",\"minimum\":-32,\"maximum\":32},\"indent\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3},"
-        "\"header\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1},\"footer\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1}}}"),
-    INK_MOGO_CAP("menu", "阅读菜单", INK_FX_NAVIGATE, "book", "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"open\":{\"type\":\"boolean\"},\"view\":{\"type\":\"string\",\"enum\":[\"menu\",\"settings\",\"shelf\"]}}}"),
-    INK_MOGO_CAP("back", "阅读里退一步", INK_FX_NAVIGATE, "book", NULL),
+    {.id = "reader.open_book", .app = "reader", .title = "打开一本书", .effect = INK_FX_NAVIGATE, .child_ok = true,
+     .input = "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"index\":{\"type\":\"integer\",\"minimum\":0},\"path\":{\"type\":\"string\"}},\"required\":[\"title\"]}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.continue", .app = "reader", .title = "接着读上次的书", .effect = INK_FX_NAVIGATE, .child_ok = true, .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.list_books", .app = "reader", .title = "书架上有哪些书", .effect = INK_FX_READ, .child_ok = true, .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.open_sample", .app = "reader", .title = "打开离线原创阅读示例", .effect = INK_FX_NAVIGATE, .child_ok = true, .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.next_page", .app = "reader", .title = "下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.prev_page", .app = "reader", .title = "上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.list_next", .app = "reader", .title = "书架、目录或书签下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.list_prev", .app = "reader", .title = "书架、目录或书签上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.goto_page", .app = "reader", .title = "跳到本章第几页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book",
+     .input = "{\"type\":\"object\",\"properties\":{\"page\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"page\"]}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.read_page", .app = "reader", .title = "读出这一页", .effect = INK_FX_READ, .child_ok = true, .activity = "book", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.chapters", .app = "reader", .title = "列出目录", .effect = INK_FX_READ, .child_ok = true, .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.show_chapters", .app = "reader", .title = "打开目录", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.goto_chapter", .app = "reader", .title = "跳到章节", .effect = INK_FX_NAVIGATE, .child_ok = true,
+     .input = "{\"type\":\"object\",\"properties\":{\"chapter\":{\"type\":\"integer\",\"minimum\":1},\"entry\":{\"type\":\"integer\",\"minimum\":1}}}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.toc_percent", .app = "reader", .title = "目录翻到全书的百分之几", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book",
+     .input = "{\"type\":\"object\",\"properties\":{\"value\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":100}},\"required\":[\"value\"]}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.bookmarks", .app = "reader", .title = "列出书签", .effect = INK_FX_READ, .child_ok = true,
+     .input = "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"open\":{\"type\":\"boolean\"}}}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.add_bookmark", .app = "reader", .title = "加书签", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .activity = "book", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.remove_bookmark", .app = "reader", .title = "删书签", .effect = INK_FX_LOCAL_WRITE, .child_ok = true,
+     .input = "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}}}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.goto_bookmark", .app = "reader", .title = "跳到书签", .effect = INK_FX_NAVIGATE, .child_ok = true,
+     .input = "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.get_layout", .app = "reader", .title = "查看阅读排版", .effect = INK_FX_READ, .child_ok = true, .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.set_layout", .app = "reader", .title = "修改阅读排版", .effect = INK_FX_LOCAL_WRITE, .child_ok = true,
+     .input = "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{" "\"font_size\":{\"type\":\"integer\",\"minimum\":18,\"maximum\":90},\"line_spacing\":{\"type\":\"integer\",\"minimum\":110,\"maximum\":150}," "\"paragraph_spacing\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":100},\"margins\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":96}," "\"weight\":{\"type\":\"integer\",\"minimum\":-32,\"maximum\":32},\"indent\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3}," "\"header\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1},\"footer\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1}}}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.menu", .app = "reader", .title = "阅读菜单", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book",
+     .input = "{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"open\":{\"type\":\"boolean\"},\"view\":{\"type\":\"string\",\"enum\":[\"menu\",\"settings\",\"shelf\"]}}}", .timeout_ms = 120000, .run = ink_mogo_action},
+    {.id = "reader.back", .app = "reader", .title = "阅读里退一步", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .timeout_ms = 120000, .run = ink_mogo_action},
 };
 static void ink_mogo_destroy(void) { M.screen = NULL; ink_graft_detach(); }
 /* The member gate closed the space and the carrier let the page go; the same member back: the same book again. */
