@@ -21,10 +21,12 @@
  * (10-byte header, ink/sys/rt.h) are counted; the "ai.listen.end" notification makes
  * the hub answer like the real one: "ai.stt" (transcript) after stt_ms, the
  * text chunks ("ai.delta") after think_ms, TTS audio as binary frames
- * [2][stream][seq] (stand-in Opus, sent at real time by default,
- * the first tts_first_ms after the thinking), "ai.tts.end", then the result:
+ * [2][stream][seq] (stand-in Opus), "ai.tts.end", then the result. The speech is paced like the real hub's
+ * (hub/ink_hub/voice/flow.py): sentence by sentence, each asked of the speech service once its text is there and the
+ * one before has started (the hub fetches the next one ahead), its first packet tts_first_ms later, then packets at
+ * tts_speed times real time; sent as they come but no more than lead_ms ahead of real time:
  *   {"method": "ai.listen", "listen": {"stt_ms": 300, "transcript": "...",
- *    "tts_first_ms": 500, "tts_chars_per_s": 4.5, "tts_speed": 1},
+ *    "tts_first_ms": 500, "tts_chars_per_s": 4.5, "tts_speed": 2, "lead_ms": 1200},
  *    "think_ms": 1400, "stream": {...}, "result": {...}}
  * A voice rule may list "tools": [{"name": "reader.next_page", "arguments": {},
  * "page_gen_offset": 0, "request_id": "r1", "repeat": 2}] — after the transcript the hub calls them one by one
@@ -57,7 +59,7 @@ static const char *DEFAULT_SCRIPT =
     "\"chunks_en\":[\"This page is about Xiaoman delivering a message for someone for the first time.\"]},"
     "\"result\":{\"done\":true,\"source\":\"page\"}},"
     "{\"method\":\"ai.listen\",\"think_ms\":1400,\"listen\":{\"stt_ms\":300,\"transcript\":\"这一页讲了什么？\","
-    "\"tts_first_ms\":500,\"tts_chars_per_s\":4.5,\"tts_speed\":1},"
+    "\"tts_first_ms\":500,\"tts_chars_per_s\":4.5,\"tts_speed\":2},"
     "\"stream\":{\"notify\":\"ai.delta\",\"interval_ms\":450,\"chunks\":["
     "\"小满替吵架多年的朋友送信，说出对不起，让两人重新联系。\"],"
     "\"chunks_en\":[\"Xiaoman helps old friends make peace.\"]},"
@@ -195,13 +197,17 @@ static cJSON *speech_sentences(const cJSON *chunks) {
     }
     text[used] = 0;
     cJSON *out = cJSON_CreateArray();
-    for (size_t start = 0, at = 0; at < used;) {
+    bool first = true; /* the first sentence also ends at a comma after 8 characters, as the hub cuts it */
+    for (size_t start = 0, at = 0, chars = 0; at < used; chars++) {
         unsigned char ch = (unsigned char)text[at];
         size_t width = ch < 0x80 ? 1 : ch < 0xE0 ? 2 : ch < 0xF0 ? 3 : 4;
         bool end = strchr(".!?;\n", ch) || !strncmp(text + at, "。", 3) || !strncmp(text + at, "！", 3) ||
-                   !strncmp(text + at, "？", 3) || !strncmp(text + at, "；", 3);
+                   !strncmp(text + at, "？", 3) || !strncmp(text + at, "；", 3) ||
+                   (first && chars >= 8 && (ch == ',' || !strncmp(text + at, "，", 3)));
         at += width;
         if (end || at == used || at - start + 4 > 511) {
+            first = false;
+            chars = (size_t)-1;
             char saved = text[at];
             text[at] = 0;
             cJSON_AddItemToArray(out, cJSON_CreateString(text + start));
@@ -227,8 +233,9 @@ static void finish_listen(int i, uint64_t at) {
     const cJSON *chunks = chunks_for(stream, LS[i].lang), *c;
     double iv = num_or(stream, "interval_ms", 400);
     const char *nm = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(stream, "notify"));
-    uint64_t text_at = at, tts_at = at + SIM_MS(num_or(ls, "tts_first_ms", 500));
-    double cps = num_or(ls, "tts_chars_per_s", 4.5), speed = num_or(ls, "tts_speed", 1);
+    uint64_t text_at = at, tts_first = SIM_MS(num_or(ls, "tts_first_ms", 500)), lead = SIM_MS(num_or(ls, "lead_ms", 1200));
+    double cps = num_or(ls, "tts_chars_per_s", 4.5), speed = num_or(ls, "tts_speed", 2);
+    uint64_t target = 0, last = 0, started = 0; /* the hub's pacing: next frame's 1x time, last send, this sentence's start */
     uint32_t seq = 0;
     cJSON *say_chunks = NULL;
     if (cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(rule, "say_from_receipt")) && LS[i].say[0]) {
@@ -240,11 +247,19 @@ static void finish_listen(int i, uint64_t at) {
     cJSON_ArrayForEach(c, sentences) {
         const char *txt = cJSON_GetStringValue(c) ? cJSON_GetStringValue(c) : "";
         if (!cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(rule, "replay"))) notify(ws, text_at, nm ? nm : "ai.delta", id, txt);
+        uint64_t asked = text_at > started ? text_at : started; /* the hub asks for it once the one before has started */
         text_at += SIM_MS(iv);
         size_t chars = 0;
         for (const char *s = txt; *s; s++) chars += ((unsigned char)*s & 0xC0) != 0x80;
         int frames = (int)(chars / cps / 0.06) + 1;
         for (int f = 0; f < frames; f++) {
+            uint64_t now = asked + tts_first + (uint64_t)(f * SIM_MS(60) / speed); /* the packet comes from the service */
+            if (now < last) now = last;
+            if (now > lead && target < now - lead) target = now - lead; /* a late packet: the pace restarts, lead ahead */
+            uint64_t tts_at = now > target ? now : target;
+            if (f == 0) started = now; /* its first packet is in: the hub asks for the next one */
+            target += SIM_MS(60);
+            last = tts_at;
             uint8_t pkt[10 + 200]; /* realtime frame header (ink/sys/rt.h): kind, session, seq, time, flags */
             uint32_t t_ms = (uint32_t)(tts_at / 1000000u);
             pkt[0] = 2;
@@ -259,12 +274,12 @@ static void finish_listen(int i, uint64_t at) {
             double syl = 0.5 + 0.5 * sin(seq * 0.9); /* syllable rhythm */
             int n = sim_opus_fake_packet(pkt + 10, 200, 170.0 + 40.0 * sin(seq * 0.23), 1500.0 + 4000.0 * syl, 180, seq * 2654435761u);
             sim_net_hub_send_at(ws, tts_at, pkt, (size_t)(10 + n), true);
-            tts_at += (uint64_t)(SIM_MS(60) / speed);
             seq++;
         }
     }
     cJSON_Delete(sentences);
     cJSON_Delete(say_chunks);
+    uint64_t tts_at = last > at ? last : at;
     uint64_t end = text_at > tts_at ? text_at : tts_at;
     { /* names its turn: an end arriving after the user started a new question changes nothing there */
         cJSON *n = cJSON_CreateObject();
