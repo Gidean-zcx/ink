@@ -18,11 +18,26 @@
  */
 
 /* Whole functions copied from main/music/music_player.c @746ce316, in source order; see SOURCE.md. */
+/* ink adaptation 2026-11-13 (music-3): only the library and its rules; the media service plays. */
+#include "music_player.h"
+
+#include <stdatomic.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+
+#include "music_tags.h"
+
+#define REQ_NONE (-1)
+static atomic_bool s_media_lost;
+static bool s_truncated;
+
 /* ---- 模块状态 / Module state ---- */
 
 static music_track_t *s_tracks;  // PSRAM
 static int s_count;
-static char s_last_path[240];  // NVS 恢复用 / restored from NVS
+static char s_last_path[240] INK_PSRAM_BSS;  // NVS 恢复用 / restored from NVS
 
 static atomic_int s_index = ATOMIC_VAR_INIT(-1);
 static atomic_int s_state = ATOMIC_VAR_INIT(MUSIC_IDLE);
@@ -31,15 +46,16 @@ static atomic_int s_req = ATOMIC_VAR_INIT(REQ_NONE);
 
 static atomic_int s_mode = ATOMIC_VAR_INIT(MUSIC_MODE_LIST);  // music_mode_t，NVS 持久化 / persisted
 
-static uint8_t s_fav[MUSIC_MAX_TRACKS];  // 收藏缓存，按曲目下标对齐 s_tracks / favorite cache aligned with s_tracks
+static void bump(void) { atomic_fetch_add(&s_serial, 1); }
+static uint8_t s_fav[MUSIC_MAX_TRACKS] INK_PSRAM_BSS;  // 收藏缓存，按曲目下标对齐 s_tracks / favorite cache aligned with s_tracks
 
 // 单曲直放：曲库外的音频（文件管理里点开），不进播放列表，播完即停。
 // Direct play: audio outside the library (opened from the file manager) never joins the
 // playlist and stops when it ends.
 static atomic_bool s_single;
-static char s_single_path[256];
-static char s_single_title[96];
-static char s_single_artist[64];
+static char s_single_path[256] INK_PSRAM_BSS;
+static char s_single_title[96] INK_PSRAM_BSS;
+static char s_single_artist[64] INK_PSRAM_BSS;
 
 /* ---- 扫描 / Library scan ---- */
 
@@ -53,19 +69,16 @@ static bool ext_wanted(const char *name) {
 }
 
 static void scan_dir(const char *path, int depth, music_track_t *out, int *count) {
-    DIR *dir = opendir(path);
-    if (!dir) return;
-    struct dirent *ent;
-    while (*count < MUSIC_MAX_TRACKS && (ent = readdir(dir)) != NULL) {
-        if (ent->d_name[0] == '.') continue;
-        char child[300];
-        const int n = snprintf(child, sizeof(child), "%s/%s", path, ent->d_name);
-        if (n <= 0 || n >= (int)sizeof(child)) continue;
-        struct stat st;
-        if (stat(child, &st) != 0) continue;
-        if (S_ISDIR(st.st_mode)) {
-            if (depth + 1 < 2) scan_dir(child, depth + 1, out, count);  // 深度 2 / depth 2
-        } else if (S_ISREG(st.st_mode) && ext_wanted(ent->d_name)) {
+    // ink: the file index walks the tree (BG); depth 2 is kept by counting folders below the root.
+    uint32_t cursor = 0;
+    ink_fs_entry_t ent;
+    const size_t root = strlen(path);
+    while (ink_fs_index(path, INK_FS_ANY, &cursor, &ent) == 1) {
+        const char *child = ent.path, *slash = strchr(child + root + 1, '/');
+        if (strncmp(child, path, root) || child[root] != '/') continue;
+        if (slash && (depth + 1 >= 2 || strchr(slash + 1, '/'))) continue;  // 深度 2 / depth 2
+        if (ext_wanted(child)) {
+            if (*count >= MUSIC_MAX_TRACKS) { s_truncated = true; break; }
             music_track_t *t = &out[*count];
             memset(t, 0, sizeof(*t));
             strlcpy(t->path, child, sizeof(t->path));
@@ -74,7 +87,6 @@ static void scan_dir(const char *path, int depth, music_track_t *out, int *count
             ++(*count);
         }
     }
-    closedir(dir);
 }
 
 // 收藏循环：从 cur 之后找下一首收藏，绕回开头；一首收藏都没有时返回 -1。
@@ -150,34 +162,26 @@ int music_find_path(const char *path) {
     return -1;
 }
 
+static int by_path(const void *a, const void *b) {
+    return strcmp(((const music_track_t *)a)->path, ((const music_track_t *)b)->path);
+}
+
 int music_scan(void) {
-    if (music_player_start() != ESP_OK) return s_count;
-    // 扫得动根目录就说明卡在位：清掉丢卡闩锁（USB 占用期间目录打不开，闩锁保留）。
-    // Opening the root means the card is back: clear the media-lost latch (while USB owns
-    // the card the directory does not open, so the latch stays).
-    (void)music_media_probe();
     music_track_t *fresh = heap_caps_malloc(sizeof(music_track_t) * MUSIC_MAX_TRACKS,
                                             MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    if (!fresh) fresh = malloc(sizeof(music_track_t) * MUSIC_MAX_TRACKS);
     if (!fresh) return s_count;
     memset(fresh, 0, sizeof(music_track_t) * MUSIC_MAX_TRACKS);
 
     int count = 0;
+    s_truncated = false;
     scan_dir(music_root(), 0, fresh, &count);
+    scan_dir(MUSIC_FAMILY_ROOT, 0, fresh, &count);  // ink: the family's shared music is the second root
+    qsort(fresh, (size_t)count, sizeof *fresh, by_path);  // ink: index order is not stable across cards
 
     // 收藏一次读全：单句柄批量查，翻列表时不再碰 NVS。
     // Load every favorite in one handle pass so listing never touches NVS afterwards.
     memset(s_fav, 0, sizeof(s_fav));
-    nvs_handle_t fav_h;
-    if (nvs_open(NVS_NS, NVS_READONLY, &fav_h) == ESP_OK) {
-        for (int i = 0; i < count; ++i) {
-            char key[13];
-            uint8_t value = 0;
-            fav_key(fresh[i].path, key);
-            if (nvs_get_u8(fav_h, key, &value) == ESP_OK && value == 1) s_fav[i] = 1;
-        }
-        nvs_close(fav_h);
-    }
+    music_port_favorites_load(fresh, count, s_fav);
 
     // 播放中重扫：按路径把当前曲目映射到新表，别让标题指错。
     // Rescan while playing: remap the current file by path so the title cannot point elsewhere.
@@ -214,18 +218,7 @@ int music_scan(void) {
                 break;
             }
     }
-    // 开机续播：本会话仅试一次；上次在播且卡在位时，从恢复出的曲目接着放（位置由 open_track 续）。
-    // Boot resume: try once per session; if it was playing last time and the card is present,
-    // keep playing from the restored track (position resumed by open_track).
-    if (!s_boot_resume_done) {
-        s_boot_resume_done = true;
-        if (s_resume_was_playing && !atomic_load(&s_media_lost)) {
-            const int cur = atomic_load(&s_index);
-            if (cur >= 0 && atomic_load(&s_state) == MUSIC_IDLE) music_play_index(cur);
-        }
-    }
-    if (old) free(old);
-    ESP_LOGI(TAG, "scan: %d track(s)", count);
+    if (old) osal_free(old);
     return count;
 }
 
@@ -281,15 +274,7 @@ void music_favorite_toggle(int index) {
     if (index < 0 || index >= s_count || !s_tracks) return;
     const uint8_t value = s_fav[index] ? 0 : 1;
     s_fav[index] = value;
-    nvs_handle_t h;
-    if (nvs_open(NVS_NS, NVS_READWRITE, &h) == ESP_OK) {
-        char key[13];
-        fav_key(s_tracks[index].path, key);
-        esp_err_t err = value ? nvs_set_u8(h, key, 1) : nvs_erase_key(h, key);
-        if (err == ESP_ERR_NVS_NOT_FOUND && !value) err = ESP_OK;
-        if (err == ESP_OK) err = nvs_commit(h);
-        nvs_close(h);
-    }
+    music_port_favorite_store(s_tracks[index].path, value);
     bump();
 }
 
@@ -304,11 +289,7 @@ music_mode_t music_mode(void) { return (music_mode_t)atomic_load(&s_mode); }
 void music_set_mode(music_mode_t mode) {
     if ((int)mode < 0 || (int)mode > MUSIC_MODE_FAV) mode = MUSIC_MODE_LIST;
     atomic_store(&s_mode, (int)mode);
-    nvs_handle_t h;
-    if (nvs_open(NVS_NS, NVS_READWRITE, &h) == ESP_OK) {
-        if (nvs_set_u8(h, NVS_KEY_MODE, (uint8_t)mode) == ESP_OK) (void)nvs_commit(h);
-        nvs_close(h);
-    }
+    music_port_mode_store(mode);
     bump();
 }
 
@@ -329,3 +310,44 @@ const char *music_mode_label(void) {
     default:                 return "列表循环";
     }
 }
+
+/* ---- ink: what the glue (apps/music/music.c) sets and reads; it owns the BG executor ---- */
+void music_library_reset(void) {
+    osal_free(s_tracks);
+    s_tracks = NULL;
+    s_count = 0;
+    s_last_path[0] = 0;
+    memset(s_fav, 0, sizeof(s_fav));
+    atomic_store(&s_index, -1);
+    atomic_store(&s_state, MUSIC_IDLE);
+    atomic_store(&s_single, false);
+    atomic_store(&s_mode, MUSIC_MODE_LIST);
+    bump();
+}
+void music_library_restore(const char *last, int mode) {
+    strlcpy(s_last_path, last, sizeof(s_last_path));
+    atomic_store(&s_mode, mode >= 0 && mode <= MUSIC_MODE_FAV ? mode : MUSIC_MODE_LIST);
+}
+void music_library_now(int state, const char *path, const char *title, const char *artist) {
+    const int index = path[0] ? music_find_path(path) : atomic_load(&s_index);
+    const bool single = path[0] && index < 0;
+    if (state != atomic_load(&s_state) || index != atomic_load(&s_index) || single != atomic_load(&s_single)) bump();
+    atomic_store(&s_state, state);
+    atomic_store(&s_index, single ? -1 : index);
+    atomic_store(&s_single, single);
+    if (single) {
+        strlcpy(s_single_path, path, sizeof(s_single_path));
+        strlcpy(s_single_title, title, sizeof(s_single_title));
+        strlcpy(s_single_artist, artist, sizeof(s_single_artist));
+    }
+}
+int music_library_pick(void) {
+    if (atomic_load(&s_single)) return -1;  // a direct file stops at its end (finish_track's first branch)
+    atomic_store(&s_req, REQ_NONE);
+    const int state = atomic_load(&s_state);
+    atomic_store(&s_state, MUSIC_PLAYING);  // the pick is made while the track still plays
+    finish_track();
+    atomic_store(&s_state, state);
+    return atomic_load(&s_req);
+}
+bool music_library_truncated(void) { return s_truncated; }

@@ -6,7 +6,8 @@
 #include "../../system/boot/main.c"
 #undef ink_main
 #include "../integration/whole_product.h"
-static char snapshot[12000], target[48];
+#include "../../apps/music/port/music_page.h"
+static char snapshot[12000];
 static const char *stack_format;
 static void read_format(void *arg) { (void)arg; stack_format = getenv("INK_MUSIC_STACK_FORMAT"); }
 static ink_media_status_t status(void) { ink_media_status_t s; ink_media_status(&s); return s; }
@@ -23,34 +24,52 @@ static void pause_at(unsigned ms) {
 }
 static void capture(void *arg) { sim_display_snapshot(arg); }
 static void evidence(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture, (void *)name); delay_ms(5); }
-static void bounds(lv_obj_t *o) {
-    const char *cap = ink_shell_bound_cap(o);
-    if (cap && !strncmp(cap, "music.", 6)) { lv_area_t a; lv_obj_get_coords(o, &a); CHECK(a.x1 >= 0 && a.y1 >= 0 && a.x2 < ink_ui_width() && a.y2 < ink_ui_height(), "music control fits %.40s", cap); }
-    if (cap && !strcmp(cap, "music.play") && lv_obj_get_child_count(o) > 1) {
-        lv_obj_t *parent = lv_obj_get_parent(o);
-        for (uint32_t i = 0; i < lv_obj_get_child_count(parent); i++) {
-            lv_obj_t *sibling = lv_obj_get_child(parent, (int32_t)i), *caption = lv_obj_get_child(sibling, 0);
-            if (!caption || !lv_obj_check_type(caption, &lv_label_class) || strcmp(lv_label_get_text(caption), "上级目录")) continue;
-            lv_area_t row, footer; lv_obj_get_coords(o, &row); lv_obj_get_coords(sibling, &footer);
-            CHECK(row.y2 < footer.y1, "music rows clear the directory and paging controls");
-        }
+/* The page draws on the graft surface: its tap targets come from the page's own hit table, read on its executor. */
+static EpdRect targets[48];
+static int ntargets, x, y;
+static volatile bool listed;
+static ink_exec_job_t list_job;
+static void read_targets(void *arg) { (void)arg; ntargets = music_page_targets(targets, 48); listed = true; }
+static void locate(void) {
+    quiet(); listed = false; ink_exec_post(INK_EXEC_BG, &list_job, read_targets, NULL); CHECK(WAIT_FOR(listed, 3000), "page hit table");
+    const int top = ink_ui_px(INK_STATUS_BAR), min = ink_ui_px(INK_CONTROL);
+    for (int i = 0; i < ntargets; i++) {
+        const EpdRect r = targets[i];
+        CHECK(r.width >= min && r.height >= min, "music target at least 108 px (%dx%d)", r.width, r.height);
+        CHECK(r.x >= 0 && r.y >= 0 && r.x + r.width <= ink_ui_width() && top + r.y + r.height <= ink_ui_height(), "music control fits %d,%d", r.x, r.y);
+        for (int k = 0; k < i; k++)
+            CHECK(r.x >= targets[k].x + targets[k].width || targets[k].x >= r.x + r.width || r.y >= targets[k].y + targets[k].height || targets[k].y >= r.y + r.height,
+                  "music rows clear the directory and paging controls");
     }
-    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) bounds(lv_obj_get_child(o, (int)i));
 }
-static int x, y;
-static void locate_at(lv_obj_t *o) {
-    const char *cap = ink_shell_bound_cap(o);
-    if (cap && !strcmp(cap, target)) { lv_area_t a; lv_obj_get_coords(o, &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2; }
-    if (!strcmp(target, "music.seek") && lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), "快进10秒")) {
-        lv_area_t a; lv_obj_get_coords(lv_obj_get_parent(o), &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2;
-    }
-    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) locate_at(lv_obj_get_child(o, (int)i));
+/* The nth full-width target: the progress bar first, then the list rows. */
+static EpdRect wide(int nth) {
+    int widest = 0;
+    for (int i = 0; i < ntargets; i++) if (targets[i].width > widest) widest = targets[i].width;
+    for (int i = 0; i < ntargets; i++) if (targets[i].width == widest && !nth--) return targets[i];
+    return (EpdRect){-1, -1, 0, 0};
 }
-static void locate(void) { x = y = -1; lv_obj_update_layout(lv_screen_active()); locate_at(lv_screen_active()); bounds(lv_screen_active()); }
-static void press(const char *cap) {
-    quiet(); snprintf(target, sizeof target, "%s", cap); on_ui(locate); CHECK(x >= 0, "touch binding %.40s", cap);
+static void touch_at(int px, int py) {
+    x = px; y = ink_ui_px(INK_STATUS_BAR) + py;
     double before = sim_metric_value("input.touch_delivery_ms"); tap(x, y);
     CHECK(WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > before, 1000), "touch delivered"); quiet();
+}
+/* Tap the progress bar where `ms` falls; the page seeks to what that point means for the song now playing. */
+static unsigned seek_by_touch(unsigned ms) {
+    locate(); EpdRect bar = wide(0); unsigned duration = status().duration_ms;
+    CHECK(bar.width > 0 && duration > 0, "touch binding music.seek");
+    unsigned rel = (unsigned)(((uint64_t)ms * (unsigned)bar.width + duration - 1) / duration);
+    touch_at(bar.x + (int)rel, bar.y + bar.height / 2);
+    return (unsigned)((uint64_t)duration * rel / (unsigned)bar.width);
+}
+/* The bookmark column of the playing song's row. */
+static void favorite_by_touch(void) {
+    ok("music.list", "{\"view\":\"player\"}"); const char *at = strstr(g_result, status().path); int row = 0;
+    for (const char *p = strstr(g_result, "\"items\":["); p && at && (p = strstr(p, "{\"path\":")) && p < at; p++) row++;
+    row--;
+    locate(); EpdRect r = wide(1 + row);
+    CHECK(at && r.width > 0, "touch binding music.favorite");
+    touch_at(r.x + ink_ui_px(INK_CONTROL) / 2, r.y + r.height / 2);
 }
 static void switch_to(const char *id) {
     char args[48]; snprintf(args, sizeof args, "{\"id\":\"%s\"}", id);
@@ -75,9 +94,9 @@ static void test(void *arg) {
     ok("music.play", "{\"path\":\"/family/audio/文件夹/快进测试.wav\"}"); pause_at(1000);
     ok("music.list", "{\"view\":\"player\"}"); CHECK(WAIT_FOR(has("0:01"), 3000), "skip player starts at one second");
     pause_at(2000); CHECK(WAIT_FOR(has("0:02"), 3000), "partial update reaches two seconds");
-    press("music.seek"); CHECK(WAIT_FOR(status().position_ms == 12000, 2000), "skip uses updated progress");
+    unsigned expect = seek_by_touch(12000); CHECK(WAIT_FOR(status().position_ms == expect, 2000), "skip uses updated progress");
     pause_at(3000); CHECK(WAIT_FOR(has("0:03"), 3000), "partial update reaches three seconds");
-    press("music.seek"); CHECK(WAIT_FOR(status().position_ms == 13000, 2000), "skip updates again without rebuilding");
+    expect = seek_by_touch(13000); CHECK(WAIT_FOR(status().position_ms == expect, 2000), "skip updates again without rebuilding");
     const char *const files[] = {"tone-16000-1.mp3", "tone-16000-1.flac", "tone-16000-1.wav", "tone-16000-1.ogg"};
     for (unsigned i = 0; i < sizeof files / sizeof *files; i++) {
         char args[180]; snprintf(args, sizeof args, "{\"path\":\"/family/audio/%s\"}", files[i]); ok("music.play", args);
@@ -89,13 +108,14 @@ static void test(void *arg) {
     char original[128]; snprintf(original, sizeof original, "%s", status().path); ok("music.next", NULL); CHECK(strcmp(status().path, original), "next changes track");
     ok("music.prev", NULL); CHECK(!strcmp(status().path, original), "prev returns to previous track"); pause_at(1000);
     ok("music.list", "{\"view\":\"player\"}"); CHECK(WAIT_FOR(has("0:01"), 3000), "page shares progress");
-    press("music.favorite"); ok("music.now", NULL); press("music.favorite");
+    favorite_by_touch(); ok("music.now", NULL); CHECK(strstr(g_result, "\"favorite\":true"), "touch favorites the playing song");
+    favorite_by_touch(); ok("music.now", NULL); CHECK(strstr(g_result, "\"favorite\":false"), "touch unfavorites it");
     for (int scale = 1; scale <= 3; scale += 2) {
         char args[96]; snprintf(args, sizeof args, "{\"id\":\"display.font_size\",\"value\":%d}", scale); ok("settings.set", args);
         ok("music.list", "{\"view\":\"player\"}"); CHECK(WAIT_FOR(has("0:01"), 3000), "player snapshot ready");
-        evidence(scale == 1 ? "player-100" : "player-120"); on_ui(locate);
-        ok("music.list", "{\"view\":\"list\",\"page\":0}"); CHECK(WAIT_FOR(has("track0"), 3000), "playlist snapshot ready"); evidence(scale == 1 ? "list-100" : "list-120"); on_ui(locate);
-        ok("music.list", "{\"view\":\"all\",\"page\":0}"); quiet(); evidence(scale == 1 ? "all-100" : "all-120"); on_ui(locate);
+        evidence(scale == 1 ? "player-100" : "player-120"); locate();
+        ok("music.list", "{\"view\":\"list\",\"page\":0}"); CHECK(WAIT_FOR(has("track0"), 3000), "playlist snapshot ready"); evidence(scale == 1 ? "list-100" : "list-120"); locate();
+        ok("music.list", "{\"view\":\"all\",\"page\":0}"); quiet(); evidence(scale == 1 ? "all-100" : "all-120"); locate();
     }
     ok("music.list", "{\"page\":1}"); CHECK(WAIT_FOR(has("track0"), 3000), "next list page");
     switch_to("kid"); ok("app.open", "{\"id\":\"music\"}"); ok("music.play", "{\"path\":\"/family/audio/tone-16000-1.flac\"}"); pause_at(2000);
