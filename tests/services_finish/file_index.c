@@ -144,6 +144,8 @@ static void reboot_and_swap(bool swap) {
 
 static void capacity(void) {
     char path[80];
+    /* Count what the first background pass indexed (the card's books), not whatever it reached so far. */
+    CHECK(WAIT_FOR(state_is("ready"), 10000), "first index pass finished before counting");
     unsigned existing = ink_test_file_index_count();
     for (unsigned i = 0; i <= INK_FS_INDEX_MAX - existing; i++) {
         snprintf(path, sizeof path, "/me/capacity/SYNTH_%04d.txt", i);
