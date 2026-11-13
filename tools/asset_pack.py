@@ -42,21 +42,34 @@ def split(assets, font_limit=FONT_LIMIT, embedded_limit=EMBEDDED_LIMIT):
              or p.name.rsplit('-', 2)[0] in state_icons]
     if not files:
         raise ValueError('no generated fonts/icons; build host assets first')
-    groups, used, second = [[], []], HEADER.size, False
+    # font_data holds the fonts: each font that fits goes in, also after one that did not (one big face no longer
+    # pushes all the others into the image). Icons and the word list stay in the image, compressed, where they
+    # were: a new image then still finds them while font_data holds an older pack (upgrades write it afterwards).
+    groups, used = [[], []], HEADER.size
     for path in files:
         data = path.read_bytes()
         cost = ENTRY.size + len(data)
-        if used + cost > font_limit:
-            second = True
-        group = 1 if second else 0
-        groups[group].append((path.relative_to(assets).as_posix(), data))
-        if not second:
-            used += cost
+        first = path.parent.name == 'fonts' and used + cost <= font_limit
+        groups[0 if first else 1].append((path.relative_to(assets).as_posix(), data))
+        used += cost if first else 0
     result = tuple(pack(group, compress=(i == 1)) for i, group in enumerate(groups))
     for label, data, limit in zip(('font_data', 'embedded'), result, (font_limit, embedded_limit)):
         if len(data) > limit:
             raise ValueError(f'{label}: {len(data)} bytes exceed {limit} by {len(data) - limit} bytes')
     return result
+
+
+def entries(data):
+    """(name, stored bytes) of each entry of a pack."""
+    count = HEADER.unpack_from(data)[1]
+    return [(key.rstrip(b'\0').decode('utf-8'), stored & 0x7fffffff)
+            for key, _, stored in (ENTRY.unpack_from(data, HEADER.size + i * ENTRY.size) for i in range(count))]
+
+
+def spilled(embedded):
+    """What the build says when fonts went into the app image: which ones and how big."""
+    fonts = [f'{name} {size} bytes' for name, size in entries(embedded) if name.startswith('fonts/')]
+    return 'fonts that did not fit in font_data, now in the app image: ' + ', '.join(fonts) if fonts else ''
 
 
 def main():
@@ -76,6 +89,8 @@ def main():
             (args.out / 'ink-fonts.bin').write_bytes(first)
             (args.out / 'ink-embedded.bin').write_bytes(second)
             print(f'font_data {len(first)}/{FONT_LIMIT}; embedded {len(second)}/{EMBEDDED_LIMIT} bytes')
+            if spilled(second):
+                print(spilled(second))
     except ValueError as error:
         ap.exit(1, f'{error}\n')
 
