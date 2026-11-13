@@ -296,7 +296,7 @@ add_library(ink_system STATIC
   system/text/linebreak.c
   system/text/layout.c
   system/ui/lock_mark.c
-  system/ui/lock_faces/faces.c
+  system/ui/lock_faces/faces.c system/ui/lock_faces/drawn.c
   system/ui/ui_task.c
   system/ui/ui_semantics.c
   system/ui/ui_list.c
@@ -690,6 +690,7 @@ add_subdirectory(third_party/mogo)
 include(system/graft/graft_build.cmake)
 ink_graft_build(ink_system)
 include(apps/mogo/mogo.cmake)
+include(apps/mogo_lock/mogo_lock.cmake)
 add_executable(sim-graft-carrier simulator/runtime/sim_main.c tests/graft_mogo/device.c)
 target_link_libraries(sim-graft-carrier PRIVATE ink_apps ink_system ink_port_sim)
 target_include_directories(sim-graft-carrier PRIVATE tests)
@@ -772,6 +773,17 @@ ink_sim_executable(sim-lock-faces tests/lock_faces.c)
 target_link_libraries(sim-lock-faces PRIVATE ink_apps ink_system)
 add_test(NAME lock-faces COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_faces.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(lock-faces PROPERTIES TIMEOUT 240)
+# lock-styles-1: Mogo's lock styles on the real lock screen (tests/lock_styles.c), case by case.
+ink_sim_executable(sim-lock-styles tests/lock_styles.c)
+target_compile_definitions(sim-lock-styles PRIVATE INK_MOGO_SIM=1)
+target_include_directories(sim-lock-styles PRIVATE tests)
+target_link_libraries(sim-lock-styles PRIVATE ink_apps ink_system)
+add_dependencies(sim-lock-styles ink_fonts ink_ui_fonts ink_icons)
+foreach(lock_case styles almanac refresh privacy entry upgrade empty nofont)
+  add_test(NAME lock-styles-${lock_case} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_styles.py
+    --build ${CMAKE_BINARY_DIR} --case ${lock_case})
+  set_tests_properties(lock-styles-${lock_case} PROPERTIES TIMEOUT 600)
+endforeach()
 ink_sim_executable(sim-lock-cover tests/lock_cover.c)
 target_link_libraries(sim-lock-cover PRIVATE ink_apps ink_system)
 add_test(NAME lock-cover COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_cover.py --build ${CMAKE_BINARY_DIR})

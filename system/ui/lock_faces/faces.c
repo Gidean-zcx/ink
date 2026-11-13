@@ -19,8 +19,20 @@
 
 const char *ink_lunar_solar_term(int year, int month, int day);
 
-const char *const ink_lock_face_choices[] = {TR_NOOP("这一页"), TR_NOOP("时钟和待办"), TR_NOOP("壁纸"), TR_NOOP("简约时钟"), TR_NOOP("待机时钟"), TR_NOOP("月历"), NULL};
+/* The one list of styles (settings_body.c uses it too). New ones only go at the end: a saved number keeps its style. */
+const char *const ink_lock_face_choices[] = {TR_NOOP("时钟和通知"), TR_NOOP("时钟和待办"), TR_NOOP("壁纸"), TR_NOOP("简约时钟"), TR_NOOP("待机时钟"), TR_NOOP("月历"),
+    TR_NOOP("票根"), TR_NOOP("拼贴"), TR_NOOP("数字时钟"), TR_NOOP("老黄历"), TR_NOOP("万年历"), TR_NOOP("迷你书库"), NULL};
+const char *const ink_lock_face_notes[] = {TR_NOOP("时间、今天的安排、未读通知和家人"), TR_NOOP("时间、下一个闹钟和通知数"),
+    TR_NOOP("选好的图片铺满屏幕"), TR_NOOP("上下两行的大时间"), TR_NOOP("时间、农历、待办和继续读"), TR_NOOP("这个月的日历和农历"),
+    TR_NOOP("正在读的书和今天读了多久"), TR_NOOP("书架上的封面拼在一起"), TR_NOOP("大号数字时间、日期和电量"),
+    TR_NOOP("今天的宜忌、冲煞和农历"), TR_NOOP("整月日历、农历和宜忌"), TR_NOOP("最近读的五本书，点一本接着读"), NULL};
 _Static_assert(sizeof ink_lock_face_choices / sizeof *ink_lock_face_choices == INK_LOCK_FACE_COUNT + 1, "face choices match");
+_Static_assert(sizeof ink_lock_face_notes / sizeof *ink_lock_face_notes == INK_LOCK_FACE_COUNT + 1, "face notes match");
+void ink_lock_drawn_draw(lv_obj_t *parent);
+void ink_lock_drawn_clear(void);
+bool ink_lock_drawn_update(int style);
+void ink_lock_drawn_resume(void);
+size_t ink_lock_drawn_fields(ink_ui_field_spec_t *fields);
 static struct {
     lv_obj_t *parent, *body, *clock, *date, *lunar, *todo, *reading;
     int style, day;
@@ -41,6 +53,7 @@ static void read_clicked(lv_event_t *e) {
     ink_power_unlock(ink_now_us());
 }
 void ink_lock_face_resume(void) {
+    ink_lock_drawn_resume();
     if (!R.pending) return;
     if (strcmp(R.owner, ink_member_current()->id)) { R.pending = false; return; }
     if (ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open()) return;
@@ -140,6 +153,7 @@ static void calendar(const ink_tm_t *t, int y) {
 }
 void ink_lock_face_draw(lv_obj_t *parent, int style) {
     F.parent = parent; F.style = style;
+    if (style >= INK_LOCK_DRAWN) { ink_lock_drawn_draw(parent); return; }
     snprintf(F.owner, sizeof F.owner, "%s", ink_member_current()->id);
     F.body = ink_ui_box(parent, 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
     lv_obj_set_style_bg_opa(F.body, LV_OPA_TRANSP, 0);
@@ -172,6 +186,8 @@ void ink_lock_face_draw(lv_obj_t *parent, int style) {
     else widgets(y + INK_GAP_L);
 }
 bool ink_lock_face_update(void) {
+    int chosen = (int)ink_setting_get("display.lock_style");
+    if (chosen >= INK_LOCK_DRAWN) return ink_power_state() == INK_PWR_LOCKED && ink_lock_drawn_update(chosen);
     if (!F.body) return false;
     ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t);
     int day = t.year * 10000 + t.month * 100 + t.day;
@@ -186,10 +202,12 @@ bool ink_lock_face_update(void) {
     lv_label_set_text(F.clock, time); ink_ui_hint_obj(F.clock, INK_REFRESH_TEXT); return true;
 }
 void ink_lock_face_clear(void) {
+    ink_lock_drawn_clear();
     if (F.body) lv_obj_delete(F.body);
     memset(&F, 0, sizeof F);
 }
 size_t ink_lock_face_fields(ink_ui_field_spec_t *fields) {
+    if (F.parent && F.style >= INK_LOCK_DRAWN) return ink_lock_drawn_fields(fields);
     if (!F.body) return 0;
     lv_obj_t *objects[] = {F.clock, F.date, F.lunar, NULL, F.todo, F.reading};
     static const char *const names[] = {"time", "date", "lunar", "calendar", "todo", "reading"};

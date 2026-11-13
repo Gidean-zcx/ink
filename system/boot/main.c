@@ -100,6 +100,8 @@ void ink_main(void) {
     extern const ink_app_def_t ink_appdef_mogo;
     extern int ink_mogo_init(void);
     MUST(ink_mogo_init(), "Mogo capabilities failed to start"); MUST(ink_app_register(&ink_appdef_mogo), "Mogo app failed to start");
+    extern int ink_mogo_lock_init(void);
+    MUST(ink_mogo_lock_init(), "Mogo lock styles failed to start"); /* lock-styles-1 */
 #endif
     MUST(ink_card_files_init(), "card files failed to start");
     if (ink_contacts_init() != 0) osal_panic("contacts failed to start");

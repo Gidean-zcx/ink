@@ -59,6 +59,8 @@ include(${root}/system/graft/graft_build.cmake)
 ink_graft_build(__idf_ink_system)
 include(${root}/apps/mogo/mogo.cmake)
 ink_mogo_build(__idf_ink_apps __idf_ink_system ${COMPONENT_LIB})
+include(${root}/apps/mogo_lock/mogo_lock.cmake)
+ink_mogo_lock_build(__idf_ink_apps __idf_ink_system)
 # Share the reader's pinned inflate implementation with uploads.
 set(miniz ${root}/third_party/reader_miniz/miniz.c)
 get_target_property(reader_sources ink_reader_vendor SOURCES)

@@ -129,3 +129,4 @@ static void ink_mogo_host_sort(void *arg) { ink_mogo_sort_t *s=arg; qsort(s->bas
 void ink_mogo_qsort(void *base,size_t count,size_t size,int (*compare)(const void *,const void *)) {
     ink_mogo_sort_t sort={base,count,size,compare}; ink_reader_host_call(ink_mogo_host_sort,&sort);
 }
+void ink_mogo_dimensions_get(int *w, int *h, int *px) { *w = ink_mogo_w; *h = ink_mogo_h; *px = ink_mogo_px; } /* lock-styles-1: the lock styles put the page's size back */
