@@ -550,7 +550,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`audio.volume`、`display.font_size`。
 
-状态：`media.state`。
+状态：`audio.route`、`media.state`。
 
 事件：`media.finished`。
 
