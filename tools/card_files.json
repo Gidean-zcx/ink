@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "entries": [
+    {"path": "/content/fonts/InkSC.ttf", "app": "mogo", "make": "mogo_font"},
+    {"path": "/content/fonts/InkSC.OFL.txt", "app": "mogo", "make": "mogo_font_ofl"}
+  ]
+}

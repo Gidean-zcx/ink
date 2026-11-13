@@ -33,6 +33,8 @@ def compile_baseline(commit, name):
         current = (ROOT / 'system/services/file/file_service.c').read_text()
         wrapper = 'int fs_write_atomic_for(' + current.split('int fs_write_atomic_for(', 1)[1].split('\nint ink_fs_write_atomic(', 1)[0]
         old_source += '\n' + wrapper
+    if 'void ink_fs_changed_outside(' not in old_source:  # today's card files tell the index this way (auto-provision-1)
+        old_source += '\nvoid ink_fs_changed_outside(void) { on_card(NULL); }\n'
     source.write_text(old_source)
     link = shlex.split((build / 'CMakeFiles/sim-index-durable.dir/link.txt').read_text())
     obj = area / (name + '.o')

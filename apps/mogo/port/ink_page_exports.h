@@ -1,3 +1,4 @@
+bool ink_mogo_font_missing;
 static book_shelf_entry_t *ink_mogo_shelf;
 static int ink_mogo_shelf_count, ink_mogo_shelf_page;
 enum { INK_MOGO_SETTING_COUNT=8, INK_MOGO_SHELF_ROWS=4, INK_MOGO_TOOL_COUNT=6 };
@@ -16,7 +17,10 @@ static bool ink_mogo_setup(const ink_member_identity_t *owner, int w, int h, int
     ink_mogo_page_width=w; ink_mogo_page_height=h; s_reader_session=(reader_session_t){0};
     for (int i=0;i<4;++i) s_margin[i]=ink_mogo_scaled(ink_mogo_settings.margin[i]);
     s_margin[2]+=ink_mogo_settings.header?ink_mogo_scaled(64):0; s_margin[3]+=ink_mogo_settings.footer?ink_mogo_scaled(64):0;
-    if (ttf_font_open(app_settings_font_path()) != ESP_OK) return false;
+    if ((ink_mogo_font_missing = ttf_font_open(app_settings_font_path()) != ESP_OK)) {
+        ttf_font_unload(); /* no font file stays open while the page says why (the card files may replace it) */
+        return false;
+    }
     book_layout_set_spacing(ink_mogo_settings.line,ink_mogo_settings.paragraph);
     book_layout_set_first_line_indent(ink_mogo_settings.indent);
     ttf_set_stroke_adjust_fine(ink_mogo_settings.weight);

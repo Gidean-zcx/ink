@@ -41,6 +41,18 @@ cd ~/Documents/Workspace/ink-hw && venv/bin/python ../ink/tools/device/trial_run
 
 它会把这次动过的五个区（otadata、ota_1、model、font_data、coredump）全部照备份写回，逐段核对，然后启动出厂固件。另外有个安全网：试用版如果开机 60 秒内连续崩溃 3 次，会自己切回出厂固件。
 
+## 装新版（主会话做）
+
+交付目录里镜像旁边要有构建出的装机包 `card-files/`（`build-s31/card-files/` 整个拷过去）：新阅读要的字体在里面，装好后由装机工具经 USB 串口自动放到存储卡上（D-138，见 [card-files.md](../system/card-files.md)），不用进 U 盘模式。
+
+```bash
+cd ~/Documents/Workspace/ink-hw && venv/bin/python ../ink/tools/device/trial_run.py --install --port '/dev/cu.usbmodem*' --backup backup-20261110/private/flash_full_1.bin --image trial-20261111/delivery-N/ink-s31.bin --fonts trial-20261111/delivery-N/ink-fonts.bin --out trial-20261111/install-N
+```
+
+- 没有 `card-files/` 时它在写任何东西之前停下（退出 2）；确实不要卡上文件时加 `--no-card-files`。
+- 退出码 5：装好了、在运行，但卡上文件没有全部到位，看输出目录里的 `card_files.txt`。
+- 装好以后字体被删了之类：`--card-files-only --card-files 交付目录/card-files [--reset]` 只服务装机包，不要备份和镜像，不写闪存（`--reset` 让设备重新开机核对）。
+
 ## 闪存怎么用的
 
 见 [flash-layout.md](../hardware/flash-layout.md)。出厂固件、原厂设置（nvs）、引导程序和分区表都没动过。

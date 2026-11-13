@@ -97,6 +97,10 @@ bool hal_usb_host_done(void) { return false; }
 void hal_usb_set_callback(void (*cb)(void *ctx), void *ctx) {  }
 int hal_usb_disk_start(void) { return -1; }
 int hal_usb_disk_stop(void) { return -1; }
+int hal_usb_console_open(void) { return -1; }
+int hal_usb_console_read(void *buf, size_t cap, uint32_t timeout_ms) { (void)buf; (void)cap; (void)timeout_ms; return -1; }
+int hal_usb_console_write(const char *line, size_t n) { (void)line; (void)n; return -1; }
+void hal_usb_console_close(void) {}
 
 void ink_probe_value(const char *metric, double value) { }
 void ink_probe_count(const char *metric) { }

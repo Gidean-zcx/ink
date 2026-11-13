@@ -75,7 +75,7 @@ static void usage(void) {
             "               [--end 20s] [--cpu annotated|measured[:factor]] [--realtime[=speed]]\n"
             "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--hub F.json]\n"
             "               [--no-random-outages] [--seed N] [--flash-timing typ|max|tail] [--quiet]\n"
-            "               [--i2c-faults RATE[:DEVICE]] [--panel-vcom-mv MV]\n"
+            "               [--i2c-faults RATE[:DEVICE]] [--panel-vcom-mv MV] [--installer \"COMMAND\"]\n"
             "               [--hub-url ws://127.0.0.1:PORT/v1/device] (1x realtime, fake media)\n");
 }
 
@@ -201,6 +201,7 @@ int sim_main(int argc, char **argv) {
         }
         else if (!strcmp(a, "--panel-vcom-mv")) { NEEDV(); g_sim.panel_vcom_mv = (unsigned)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--reset-reason")) { NEEDV(); g_sim.reset_reason = v; }
+        else if (!strcmp(a, "--installer")) { NEEDV(); g_sim.installer = v; } /* card files over the console */
         else if (!strcmp(a, "--wall-start")) { NEEDV(); g_sim.wall_start_us = strtoll(v, NULL, 0) * 1000000ll; } /* the RTC's time at boot, Unix seconds */
         else if (!strcmp(a, "--trace")) g_sim.trace = true;
         else if (!strcmp(a, "--frames")) g_sim.frames = true;

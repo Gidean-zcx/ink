@@ -41,6 +41,9 @@ idf_limited --preview -B "$BUILD" -DIDF_TARGET=esp32s31 -DSDKCONFIG="$BUILD/sdkc
 export CMAKE_BUILD_PARALLEL_LEVEL=2 IDF_PY_BUILD_JOBS=2 MAKEFLAGS=-j2
 idf_limited --preview -B "$BUILD" build
 python "$ROOT/tools/asset_pack.py" "$ROOT/build/assets" --out "$BUILD" --firmware "$BUILD/ink-s31.bin"
+# The install bundle next to the firmware (D-138): trial_run.py --install serves it; it must be the list built in.
+rm -rf "$BUILD/card-files" && cp -R "$ROOT/build/card-files" "$BUILD/card-files"
+python "$ROOT/tools/card_files.py" verify --manifest "$BUILD/card-files/manifest.json" --header "$BUILD/generated/ink/card_files_manifest.h"
 idf_limited --preview -B "$BUILD" size | tee "$BUILD/size.txt"
 idf_limited --preview -B "$BUILD" size-components > "$BUILD/size-components.txt"
 python "$ROOT/tests/esp32s31/stack_report.py" "$BUILD" > "$BUILD/stack.txt"

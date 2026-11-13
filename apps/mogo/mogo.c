@@ -3,6 +3,7 @@
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/card_files.h"
 #include <ink/ui_theme.h>
 #include "ink/sys/settings.h"
 #include <book_reader_input.h>
@@ -14,12 +15,15 @@ static struct {
     ink_exec_job_t work, done;
     ink_call_t *call;
     uint8_t *pixels;
+    lv_obj_t *screen, *notice;
     int w, h, direction, px;
     const char *ink_mogo_operation;
     bool active, busy, loaded, ok;
     char path[INK_FS_PATH_MAX], description[2048];
 } M;
 static const ink_activity_t INK_MOGO_ACTIVITY;
+static void ink_mogo_reopen(void);
+static void ink_mogo_notice_gone(lv_event_t *e) { (void)e; M.notice = NULL; }
 static void ink_mogo_cleanup(void) { ink_mogo_page_close(); ink_app_free(M.pixels); M.pixels = NULL; M.loaded = false; memset(&M.owner,0,sizeof M.owner); M.path[0]=0; M.ink_mogo_operation=NULL; }
 static void ink_mogo_finished(void *arg) {
     (void)arg;
@@ -27,6 +31,10 @@ static void ink_mogo_finished(void *arg) {
         if (M.ok) {
             lv_area_t a = {0,0,M.w-1,M.h-1};
             M.ok = !ink_graft_present(M.pixels,M.w,&a,INK_GRAFT_PAGE);
+            if (M.ok && M.notice) lv_obj_delete(M.notice); /* the page is drawn under it */
+        } else if (ink_mogo_font_missing) { /* not a blank page */
+            M.notice = ink_card_files_notice(M.screen,"mogo",TR("字体"),ink_mogo_reopen);
+            lv_obj_add_event_cb(M.notice,ink_mogo_notice_gone,LV_EVENT_DELETE,NULL);
         }
         ink_ui_content_changed();
     } else M.ok = false;
@@ -34,6 +42,7 @@ static void ink_mogo_finished(void *arg) {
     if (M.call) {
         ink_call_t *call=M.call; M.call=NULL;
         call->rc.status = M.ok ? INK_RC_DONE : INK_RC_FAILED;
+        if (!M.ok && ink_mogo_font_missing) ink_mogo_snprintf(call->rc.detail,sizeof call->rc.detail,"font not on the card");
         ink_cap_done(call);
     }
 }
@@ -63,6 +72,7 @@ static bool ink_mogo_start(const char *ink_mogo_operation,int direction, ink_cal
     }
     return true;
 }
+static void ink_mogo_reopen(void) { ink_mogo_start(NULL,0,NULL); } /* the files are in place: the same book, this screen */
 static bool ink_mogo_opened(void *ctx, const ink_member_identity_t *owner, int w, int h) {
     (void)ctx;
     if (M.busy) return false;
@@ -81,6 +91,7 @@ static void ink_mogo_closed(void *ctx) {
 }
 static int ink_mogo_snapshot(void *ctx, char *out, size_t cap) {
     (void)ctx;
+    if (!M.busy && ink_mogo_font_missing) return ink_card_files_notice_snapshot("mogo",out,cap);
     return ink_mogo_snprintf(out,cap,"%s",M.busy ? TR_NOOP("新阅读 正在排版") : M.description);
 }
 static const char *ink_mogo_argument_key(const char *ink_mogo_operation) {
@@ -113,6 +124,7 @@ static bool ink_mogo_input(void *ctx, const ink_graft_input_t *e) {
 static const ink_graft_client_t INK_MOGO_CLIENT = {.app = "mogo",.open = ink_mogo_opened,.close = ink_mogo_closed,
     .input = ink_mogo_input,.snapshot = ink_mogo_snapshot};
 static void ink_mogo_create(lv_obj_t *screen, void *arg) {
+    M.screen = screen;
     if (ink_graft_attach(screen,&INK_MOGO_CLIENT)) return;
     if (arg) {
         ink_mogo_snprintf(M.path,sizeof M.path,"%s",(const char *)arg);

@@ -223,8 +223,22 @@ static void photo_found(void *ctx, const ink_receipt_t *rc) {
     else ink_ui_push(&PHOTO, (void *)(uintptr_t)id);
     ink_cap_done(c);
 }
+static struct { ink_svc_deadline_t at; photo_question_t *p; int waits; } photo_retry; /* one question waits at a time */
+static void photo_question_ready(void *ctx, const ink_receipt_t *rc);
+static void photo_question_again(void *ctx) { /* timer task: the thumbnail once more (a member switch fails the epoch check) */
+    photo_question_t *p = ctx; ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", p->photo);
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = photo_question_ready, .ctx = p};
+    if (ink_cap_call("file.thumb", &a, &o)) osal_free(p);
+}
 static void photo_question_ready(void *ctx, const ink_receipt_t *rc) {
     photo_question_t *p = ctx;
+    if (photo_retry.p == p) photo_retry.p = NULL;
+    /* 0 means the files are busy (an index batch), not a new version: as read_photos, try again shortly */
+    if (!ink_fs_revision() && !photo_retry.p && photo_retry.waits++ < 50) {
+        photo_retry.p = p;
+        ink_svc_at(&photo_retry.at, osal_now_us() + 100000ull, photo_question_again, p);
+        return;
+    }
     if (p->epoch == ink_member_epoch() && p->generation == ink_ui_generation() && p->photo == G.photo &&
         p->revision && p->revision == ink_fs_revision() && ink_ui_page_current() && !strcmp(ink_ui_page_name(), "Photo") && rc->status == INK_RC_DONE && rc->result)
         ink_ai_ask_photo(rc->result);
@@ -236,6 +250,7 @@ static void gallery_action(ink_call_t *c) {
         photo_question_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL);
         if (!p || !G.path[0] || !G.revision || G.revision != ink_fs_revision()) { osal_free(p); c->rc.status = INK_RC_STALE; return; }
         *p = (photo_question_t){ink_member_epoch(), ink_ui_generation(), G.photo, ink_fs_revision()};
+        photo_retry.waits = 0;
         ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", G.photo);
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = photo_question_ready, .ctx = p};
         if (ink_cap_call("file.thumb", &a, &o)) { osal_free(p); c->rc.status = INK_RC_FAILED; }

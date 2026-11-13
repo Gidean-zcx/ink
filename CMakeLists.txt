@@ -172,6 +172,7 @@ add_library(ink_port_sim STATIC
   simulator/environment/sim_backup.c
   simulator/environment/hub_bridge.c
   simulator/environment/sim_remote.c
+  simulator/environment/sim_installer.c
   simulator/runtime/metrics.c
   simulator/runtime/trace.c
   simulator/runtime/script.c
@@ -233,6 +234,8 @@ add_library(ink_system STATIC
   system/services/data/data_caps.c
   system/services/backup/backup_service.c
   system/services/file/file_service.c
+  system/services/card_files/card_files.c
+  system/ui/card_files_notice.c
   system/services/file/file_caps.c
   system/services/file/transfer.c
   system/services/time/lunar.c
@@ -510,6 +513,7 @@ list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/factory_pages.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_menu.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/card_files_notice.c
 )
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
@@ -524,6 +528,25 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
   DEPENDS tools/licenses.py ${INK_LICENSE_FILES} third_party/tlsf/tlsf.h third_party/fonts/Outfit-OFL.txt)
 add_custom_target(ink_licenses DEPENDS ${CMAKE_BINARY_DIR}/generated/ink/licenses.h)
 add_dependencies(ink_system ink_licenses)
+# Card files (D-138): what apps need on the card, made from tools/card_files.json; the firmware carries the list.
+# fontTools may live in another interpreter than the build's (build-deps/pyenv has none): the first that has it.
+if(NOT INK_FONT_PYTHON)
+  execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/card_files.py python ${Python3_EXECUTABLE} python3
+    OUTPUT_VARIABLE found OUTPUT_STRIP_TRAILING_WHITESPACE RESULT_VARIABLE missing)
+  if(missing)
+    message(FATAL_ERROR "Card files need Python with fontTools (${Python3_EXECUTABLE} or python3). "
+                        "Debian/Ubuntu: apt install python3-fonttools; or pip install fonttools; or set INK_FONT_PYTHON")
+  endif()
+  set(INK_FONT_PYTHON ${found} CACHE FILEPATH "Python with fontTools for the card files")
+endif()
+set(INK_CARD_FILES_DIR ${CMAKE_BINARY_DIR}/card-files)
+add_custom_command(OUTPUT ${INK_CARD_FILES_DIR}/manifest.json ${CMAKE_BINARY_DIR}/generated/ink/card_files_manifest.h
+  COMMAND ${INK_FONT_PYTHON} tools/card_files.py bundle --spec tools/card_files.json --noto ${INK_CJK_FONT} --face ${INK_CJK_FACE} --out ${INK_CARD_FILES_DIR}
+  COMMAND ${INK_FONT_PYTHON} tools/card_files.py header --manifest ${INK_CARD_FILES_DIR}/manifest.json --out ${CMAKE_BINARY_DIR}/generated/ink/card_files_manifest.h
+  DEPENDS tools/card_files.json tools/card_files.py tools/mogo_font.py ${INK_CJK_FONT} tools/appfw-spike/licenses/NotoSansCJK-OFL.txt
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} COMMENT "card files: the reader's font and its licence (D-138)")
+add_custom_target(ink_card_files DEPENDS ${INK_CARD_FILES_DIR}/manifest.json)
+add_dependencies(ink_system ink_card_files)
 target_include_directories(ink_system PUBLIC ${CMAKE_BINARY_DIR}/generated)
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
@@ -2185,3 +2208,19 @@ target_include_directories(sim-google-ime PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-google-ime PRIVATE ink_apps ink_system)
 add_dependencies(sim-google-ime ink_fonts ink_ui_fonts ink_icons ink_test_content)
 add_test(NAME ime-google COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/google_run.py --build ${CMAKE_BINARY_DIR})
+
+# Card files (auto-provision-1, D-138): the list's tool, the device's protocol, the install tool, the whole product over boots.
+add_test(NAME card-files-tool COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/tool_test.py --build ${CMAKE_BINARY_DIR})
+add_executable(test-card-files-unit tests/card_files/unit.c system/util/sha256.c system/util/ink_crc.c)
+target_include_directories(test-card-files-unit BEFORE PRIVATE tests/card_files/manifest system/include platform/include)
+target_link_libraries(test-card-files-unit PRIVATE ink_lvgl)
+target_compile_options(test-card-files-unit PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME card-files-unit COMMAND test-card-files-unit)
+add_test(NAME card-files-serve COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/serve_test.py)
+ink_sim_executable(sim-card-files tests/card_files/device.c)
+target_include_directories(sim-card-files PRIVATE tests)
+target_compile_definitions(sim-card-files PRIVATE INK_MOGO_SIM=1)
+target_link_libraries(sim-card-files PRIVATE ink_apps ink_system)
+add_dependencies(sim-card-files ink_card_files ink_fonts ink_ui_fonts ink_icons)
+add_test(NAME card-files-sim COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(card-files-sim PROPERTIES TIMEOUT 600)
