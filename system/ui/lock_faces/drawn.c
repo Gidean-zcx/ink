@@ -33,11 +33,10 @@ static struct {
 /* The power task reads these before the chip sleeps (ink_lock_face_busy): a render counts from start() until rendered()
  * has run on the UI task, the cache job from its post until it has run. A frozen render would leave the default lock
  * up, or last minute's time, for a whole sleep slice. */
-static bool g_rendering;
-static uint32_t g_after_posted, g_after_done, g_settle_posted, g_settle_seen, g_settle_done;
+static struct { bool rendering; uint32_t after_posted, after_done, settle_posted, settle_seen, settle_done; } W INK_PSRAM_BSS; /* not internal RAM */
 static bool pending(uint32_t *posted, uint32_t *done) { return __atomic_load_n(posted, __ATOMIC_ACQUIRE) != __atomic_load_n(done, __ATOMIC_ACQUIRE); }
 bool ink_lock_face_busy(void) {
-    return __atomic_load_n(&g_rendering, __ATOMIC_ACQUIRE) || pending(&g_after_posted, &g_after_done) || pending(&g_settle_posted, &g_settle_done);
+    return __atomic_load_n(&W.rendering, __ATOMIC_ACQUIRE) || pending(&W.after_posted, &W.after_done) || pending(&W.settle_posted, &W.settle_done);
 }
 
 static const ink_lock_client_t *client(int style) {
@@ -106,8 +105,8 @@ static void start(int style) {
     memset(D.back, 255, BYTES);
     if (style == INK_LOCK_TICKET && D.want.option == 1) ink_wallpaper_fill(D.back, INK_LOCK_CANVAS_W, INK_LOCK_CANVAS_H);
     D.busy = true; D.again = false;
-    __atomic_store_n(&g_rendering, true, __ATOMIC_RELEASE);
-    if (ink_exec_post(INK_EXEC_BG, &D.job, render, NULL)) { D.busy = false; __atomic_store_n(&g_rendering, false, __ATOMIC_RELEASE); }
+    __atomic_store_n(&W.rendering, true, __ATOMIC_RELEASE);
+    if (ink_exec_post(INK_EXEC_BG, &D.job, render, NULL)) { D.busy = false; __atomic_store_n(&W.rendering, false, __ATOMIC_RELEASE); }
 }
 static int locked_style(void) {
     int style = (int)ink_setting_get("display.lock_style");
@@ -154,16 +153,16 @@ static void bind_image(void) {
         .h = INK_LOCK_CANVAS_H, .stride = INK_LOCK_CANVAS_W}, .data_size = BYTES, .data = D.front};
 }
 static void shown_job(void *arg) { /* BG; one run answers every post before it started (a waiting job is not queued twice) */
-    uint32_t posted = __atomic_load_n(&g_after_posted, __ATOMIC_ACQUIRE);
+    uint32_t posted = __atomic_load_n(&W.after_posted, __ATOMIC_ACQUIRE);
     const ink_lock_client_t *c = client((int)(intptr_t)arg);
     if (c && c->shown) c->shown((int)(intptr_t)arg, D.front);
-    __atomic_store_n(&g_after_done, posted, __ATOMIC_RELEASE);
+    __atomic_store_n(&W.after_done, posted, __ATOMIC_RELEASE);
 }
 static void rendered(void *arg) { /* UI */
     bool ok = (uintptr_t)arg != 0;
     ink_probe_count("lock.drawn.renders");
     D.busy = false;
-    __atomic_store_n(&g_rendering, false, __ATOMIC_RELEASE);
+    __atomic_store_n(&W.rendering, false, __ATOMIC_RELEASE);
     int style = locked_style();
     ink_lock_request_t now; if (style >= 0) request(style, &now);
     bool current = style == D.want.style && same(&now, &D.want, true);
@@ -196,8 +195,8 @@ static void rendered(void *arg) { /* UI */
         if (style == D.want.style) { ink_probe_count("lock.drawn.whole"); tell(1); }
     }
     if (ok && D.image) {
-        uint32_t posted = __atomic_add_fetch(&g_after_posted, 1, __ATOMIC_ACQ_REL);
-        if (ink_exec_post(INK_EXEC_BG, &D.after, shown_job, (void *)(intptr_t)D.shown.style)) __atomic_store_n(&g_after_done, posted, __ATOMIC_RELEASE);
+        uint32_t posted = __atomic_add_fetch(&W.after_posted, 1, __ATOMIC_ACQ_REL);
+        if (ink_exec_post(INK_EXEC_BG, &D.after, shown_job, (void *)(intptr_t)D.shown.style)) __atomic_store_n(&W.after_done, posted, __ATOMIC_RELEASE);
     }
     if (style >= 0 && (!current || D.again)) start(style);
 }
@@ -207,18 +206,18 @@ static void settled(void *arg) { /* UI */
     (void)arg;
     int style = locked_style();
     if (style >= 0) ink_lock_drawn_update(style);
-    __atomic_store_n(&g_settle_done, __atomic_load_n(&g_settle_seen, __ATOMIC_ACQUIRE), __ATOMIC_RELEASE);
+    __atomic_store_n(&W.settle_done, __atomic_load_n(&W.settle_seen, __ATOMIC_ACQUIRE), __ATOMIC_RELEASE);
 }
 static void settle(void *arg) { /* BG */
     (void)arg;
-    __atomic_store_n(&g_settle_seen, __atomic_load_n(&g_settle_posted, __ATOMIC_ACQUIRE), __ATOMIC_RELEASE);
+    __atomic_store_n(&W.settle_seen, __atomic_load_n(&W.settle_posted, __ATOMIC_ACQUIRE), __ATOMIC_RELEASE);
     ink_exec_post(INK_EXEC_UI, &D.settled, settled, NULL);
 }
 static void settle_after(int style) {
     const ink_lock_client_t *c = client(style);
     if (!c || !c->revision) return;
-    uint32_t posted = __atomic_add_fetch(&g_settle_posted, 1, __ATOMIC_ACQ_REL);
-    if (ink_exec_post(INK_EXEC_BG, &D.settle, settle, NULL)) __atomic_store_n(&g_settle_done, posted, __ATOMIC_RELEASE);
+    uint32_t posted = __atomic_add_fetch(&W.settle_posted, 1, __ATOMIC_ACQ_REL);
+    if (ink_exec_post(INK_EXEC_BG, &D.settle, settle, NULL)) __atomic_store_n(&W.settle_done, posted, __ATOMIC_RELEASE);
 }
 bool ink_lock_face_ready(int style) {
     if (style < INK_LOCK_DRAWN) return true;
