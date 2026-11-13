@@ -7,6 +7,7 @@
 #include "files_flipper.h"
 #include "ink/osal.h"
 #include "ink/sys/data.h"
+#include "ink/sys/json.h"
 #include "ink/sys/members.h"
 _Static_assert((int)FILES_EV_RUN == (int)ArchiveBrowserEventFileMenuRun && (int)FILES_EV_ENTER == (int)ArchiveBrowserEventEnterDir &&
     (int)FILES_EV_NEXT == (int)ArchiveBrowserEventLoadNextItems && (int)FILES_EV_EXIT == (int)ArchiveBrowserEventExit &&
@@ -14,11 +15,10 @@ _Static_assert((int)FILES_EV_RUN == (int)ArchiveBrowserEventFileMenuRun && (int)
 #define FAV_CAP sizeof(((files_prefs_t *)0)->fav)
 struct FuriString { char s[2 * INK_FS_PATH_MAX]; size_t n; };
 struct File { int which; size_t pos; FS_Error err; };
-static const ink_db_def_t PREFS = {.name = "files.prefs", .title = "文件的排序、收藏和上次放的位置", .scope = INK_DB_MEMBER, .schema = 1, .max_records = 1};
 static struct {
     osal_mutex_t *lock; osal_task_t *owner; int depth; bool dirty, exists[2], has, dir, removed; uint32_t epoch, rec; char member[16];
     files_prefs_t prefs; char tmp[FAV_CAP]; ArchiveApp app; ArchiveBrowserView view; ArchiveBrowserViewModel model; ArchiveFile_t file;
-    int menu_n; const char *menu[FILES_MENU_MAX];
+    int menu_n; const char *menu[FILES_MENU_MAX]; char json[INK_DB_RECORD_MAX];
 } G INK_PSRAM_BSS;
 
 FuriString *furi_string_alloc(void) { return osal_calloc(1, sizeof(FuriString), OSAL_MEM_EXTERNAL); }
@@ -44,17 +44,25 @@ bool furi_string_end_withi(const FuriString *s, const char *e) {
     }
 }
 
-/* The two favourites "files" in memory; files.prefs is read when the member changes and written on the last close. */
+/* The two favourites "files" in memory, read when the member changes and written on the last close. The preferences
+ * are one JSON record ("files_prefs") in the member's files.drafts: the data store has no collection slot to spare. */
 static char *buffer(int which) { return which ? G.tmp : G.prefs.fav; }
 static int which(const char *path) { return !strcmp(path, ARCHIVE_FAV_PATH) ? 0 : !strcmp(path, ARCHIVE_FAV_TEMP_PATH) ? 1 : -1; }
 static void load(void) {
     memset(&G.prefs, 0, sizeof G.prefs); G.tmp[0] = 0; G.rec = 0; G.epoch = ink_member_epoch();
     snprintf(G.member, sizeof G.member, "%s", ink_member_current()->id);
-    ink_db_t *db = ink_db_open_member(&PREFS, G.member); ink_db_cursor_t c = {0}; ink_rec_t rec;
-    if (db && ink_db_next(db, &c, &rec, &G.prefs, sizeof G.prefs) == 1) G.rec = rec.id;
-    ink_db_close(db); G.prefs.fav[FAV_CAP - 1] = G.prefs.last[INK_FS_PATH_MAX - 1] = 0; G.exists[0] = G.prefs.fav[0]; G.exists[1] = false;
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("files.drafts"), G.member); ink_db_cursor_t c = {0}; ink_rec_t rec;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t sort = 0;
+    while (db && j && ink_db_next(db, &c, &rec, G.json, sizeof G.json - 1) == 1) {
+        G.json[rec.len < sizeof G.json ? rec.len : sizeof G.json - 1] = 0;
+        if (rec.len >= sizeof G.json || ink_json_parse(j, G.json, rec.len) || ink_json_find(j, 0, "files_prefs") < 0) continue;
+        G.rec = rec.id; ink_json_int(j, ink_json_find(j, 0, "sort"), &sort); G.prefs.sort = (int32_t)sort; G.prefs.desc = ink_json_eq(j, ink_json_find(j, 0, "desc"), "true");
+        ink_json_str(j, ink_json_find(j, 0, "last"), G.prefs.last, sizeof G.prefs.last); ink_json_str(j, ink_json_find(j, 0, "fav"), G.prefs.fav, FAV_CAP); break;
+    }
+    osal_free(j); ink_db_close(db); G.exists[0] = G.prefs.fav[0]; G.exists[1] = false;
 }
 void *furi_record_open(const char *name) {
+    if (!G.lock) G.lock = osal_mutex_create(); /* first used on the UI task (a page reads the sort) before any rescan is posted */
     if (G.owner != osal_task_self()) { osal_mutex_lock(G.lock, OSAL_WAIT_FOREVER); G.owner = osal_task_self(); }
     if (!G.depth++ && G.epoch != ink_member_epoch()) load();
     return (void *)name;
@@ -62,9 +70,11 @@ void *furi_record_open(const char *name) {
 void furi_record_close(const char *name) {
     (void)name;
     if (--G.depth) return;
-    ink_db_t *db = G.dirty && G.epoch == ink_member_epoch() ? ink_db_open_member(&PREFS, G.member) : NULL;
-    ink_db_write_t put = {.id = G.rec, .data = &G.prefs, .len = sizeof G.prefs};
-    if (db && !ink_db_put(db, &put, &G.rec)) ink_db_flush(db);
+    ink_db_t *db = G.dirty && G.epoch == ink_member_epoch() ? ink_db_open_member(ink_db_find_def("files.drafts"), G.member) : NULL;
+    ink_jw_t w; ink_jw_init(&w, G.json, sizeof G.json); ink_jw_raw(&w, "{\"files_prefs\":1,\"sort\":"); ink_jw_int(&w, G.prefs.sort);
+    ink_jw_raw(&w, G.prefs.desc ? ",\"desc\":true,\"last\":" : ",\"desc\":false,\"last\":"); ink_jw_str(&w, G.prefs.last); ink_jw_raw(&w, ",\"fav\":"); ink_jw_str(&w, G.prefs.fav); ink_jw_raw(&w, "}");
+    ink_db_write_t put = {.id = G.rec, .data = G.json, .len = w.len};
+    if (db && !w.overflow && !ink_db_put(db, &put, &G.rec)) ink_db_flush(db);
     ink_db_close(db); G.dirty = false; G.owner = NULL; osal_mutex_unlock(G.lock);
 }
 files_prefs_t *files_prefs_begin(void) { furi_record_open(RECORD_STORAGE); return &G.prefs; }
@@ -140,9 +150,9 @@ void loader_start_with_gui_error(Loader *l, const char *name, const char *args) 
 static void send(ArchiveBrowserEvent event, void *context) { archive_scene_browser_on_event(context, (SceneManagerEvent){SceneManagerEventTypeCustom, event}); }
 
 int files_fl_init(void) {
-    G.lock = osal_mutex_create(); ArchiveFile_t_init(&G.file); G.app.fav_move_str = furi_string_alloc();
+    ArchiveFile_t_init(&G.file); G.app.fav_move_str = furi_string_alloc();
     G.app.browser = &G.view; G.view.callback = send; G.view.context = &G.app; G.model.files->items = &G.file; G.model.files->count = 1;
-    return G.lock && G.file.path && G.app.fav_move_str ? ink_db_register(&PREFS) : -1;
+    return G.file.path && G.app.fav_move_str ? 0 : -1;
 }
 /* Folders are favourites only by an exact line, "path/" (an addition: the original cannot pin folders, and its prefix
  * match would make a folder look pinned for any pinned file inside it). */

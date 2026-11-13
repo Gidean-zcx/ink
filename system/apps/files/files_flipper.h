@@ -9,7 +9,7 @@ enum { FILES_FAV_MAX = 32, FILES_MENU_MAX = 10, FILES_SCENE_RENAME = 1, FILES_SC
 enum { FILES_EV_MENU = 0, FILES_EV_RUN = 2, FILES_EV_PIN, FILES_EV_RENAME, FILES_EV_DELETE, FILES_EV_ENTER,
        FILES_EV_PREV = 12, FILES_EV_NEXT, FILES_EV_REFRESH, FILES_EV_EXIT };
 enum { FILES_TYPE_TEXT, FILES_TYPE_BOOK, FILES_TYPE_AUDIO, FILES_TYPE_IMAGE, FILES_TYPE_ZIP, FILES_TYPE_FOLDER, FILES_TYPE_UNKNOWN };
-/* files.prefs, one record per member: sort, last destination and the favourites "file" (a path per line). */
+/* The member's preferences (a record in files.drafts): sort, last destination and the favourites "file" (a path per line). */
 typedef struct { int32_t sort, desc; char last[INK_FS_PATH_MAX]; char fav[FILES_FAV_MAX * INK_FS_PATH_MAX + 1]; } files_prefs_t;
 int files_fl_init(void);
 /** The member's preferences, held (any task) until files_prefs_end, which saves a change. */
