@@ -68,7 +68,7 @@ if a.baseline or a.mutant:
         seed_line = '    static unsigned entropy = 1; entropy ^= g_sim.seed ^ (uint32_t)osal_now_us();\n'
         assert power.count(seed_line) == 1, 'counterexample removes the unused private stream'
         target = area / 'hal_storage_sim.c'
-        target.write_text(power.replace(old, 'out[i] = (uint8_t)(sim_rand01() * 256);').replace(seed_line, ''))
+        target.write_text(power.replace(old, 'out[i] = (uint8_t)(sim_rand01(SIM_RNG_FLASH) * 256);').replace(seed_line, ''))
         power_flags = {}
         for line in (build / 'CMakeFiles/ink_port_sim.dir/flags.make').read_text().splitlines():
             if ' = ' in line:

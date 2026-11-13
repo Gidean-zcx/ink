@@ -94,7 +94,7 @@ void sim_net_peer_key(const uint8_t key[32]) { memcpy(g_peer_key, key, 32); }
 /* ------------------------------------------------------------- helpers */
 
 static double gauss(void) { /* Box-Muller on the deterministic PRNG */
-    double u1 = sim_rand01(), u2 = sim_rand01();
+    double u1 = sim_rand01(SIM_RNG_NET), u2 = sim_rand01(SIM_RNG_NET);
     if (u1 < 1e-9) u1 = 1e-9;
     return sqrt(-2.0 * log(u1)) * cos(2.0 * M_PI * u2);
 }
@@ -1332,7 +1332,7 @@ void sim_net_hub_send(struct hal_ws *w, uint64_t t_send, const void *data, size_
     uint64_t x = xfer_ns(len);
     N.down_free = t + x;
     uint64_t arrive = t + x + rtt_ns() / 2;
-    if (N.L && sim_rand01() < N.L->loss) {
+    if (N.L && sim_rand01(SIM_RNG_NET) < N.L->loss) {
         arrive += SIM_MS(300) + rtt_ns(); /* TCP retransmission */
         sim_metric_add("net.retransmissions", 1);
     }
@@ -1503,7 +1503,7 @@ static void ws_task(void *arg) {
             uint64_t x = xfer_ns(m->len);
             N.up_free = t + x;
             uint64_t arrive = t + x + rtt_ns() / 2;
-            if (N.L && sim_rand01() < N.L->loss) {
+            if (N.L && sim_rand01(SIM_RNG_NET) < N.L->loss) {
                 arrive += SIM_MS(300) + rtt_ns();
                 sim_metric_add("net.retransmissions", 1);
             }
@@ -1658,12 +1658,12 @@ void hal_ws_free(hal_ws_t *w) {
 static void random_outage_cb(void *arg) { /* ISR */
     (void)arg;
     if (N.up && N.L) {
-        double s = N.L->outage_min_s + (N.L->outage_max_s - N.L->outage_min_s) * sim_rand01();
+        double s = N.L->outage_min_s + (N.L->outage_max_s - N.L->outage_min_s) * sim_rand01(SIM_RNG_NET);
         sim_net_outage((uint64_t)(s * 1e9));
     }
     if (N.L && N.L->outages_per_hour > 0) {
         double mean_s = 3600.0 / N.L->outages_per_hour;
-        double next = -log(1.0 - sim_rand01() * 0.999) * mean_s;
+        double next = -log(1.0 - sim_rand01(SIM_RNG_NET) * 0.999) * mean_s;
         vtk_event_after((uint64_t)(next * 1e9), random_outage_cb, NULL);
     }
 }
@@ -1724,7 +1724,7 @@ void sim_net_init(void) {
     osal_mem_tag(prev);
     if (N.L && N.L->outages_per_hour > 0 && !g_sim.no_random_outages) {
         double mean_s = 3600.0 / N.L->outages_per_hour;
-        vtk_event_after((uint64_t)(-log(1.0 - sim_rand01() * 0.999) * mean_s * 1e9), random_outage_cb, NULL);
+        vtk_event_after((uint64_t)(-log(1.0 - sim_rand01(SIM_RNG_NET) * 0.999) * mean_s * 1e9), random_outage_cb, NULL);
     }
 }
 

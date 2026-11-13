@@ -57,8 +57,8 @@ static uint64_t sample_us(uint32_t typ, uint32_t max) {
     case 0: return typ;
     case 1: return max;
     default: /* tail: mostly a bit above typical, 10% anywhere up to max */
-        if (sim_rand() % 10 == 0) return typ + (uint64_t)((double)(max - typ) * sim_rand01());
-        return typ + (uint64_t)((double)typ * 0.2 * sim_rand01());
+        if (sim_rand(SIM_RNG_FLASH) % 10 == 0) return typ + (uint64_t)((double)(max - typ) * sim_rand01(SIM_RNG_FLASH));
+        return typ + (uint64_t)((double)typ * 0.2 * sim_rand01(SIM_RNG_FLASH));
     }
 }
 
@@ -254,11 +254,11 @@ void sim_storage_power_cut(void) { /* ISR context */
         uint32_t n = (uint32_t)(f * FL.op_len);
         if (FL.op == OP_PROG) {
             nor_program(FL.op_off, FL.op_data, n);
-            if (n < FL.op_len) FL.img[FL.op_off + n] &= (uint8_t)(FL.op_data[n] | (sim_rand() & 0xff)); /* torn byte */
+            if (n < FL.op_len) FL.img[FL.op_off + n] &= (uint8_t)(FL.op_data[n] | (sim_rand(SIM_RNG_FLASH) & 0xff)); /* torn byte */
         } else {
             for (uint32_t i = 0; i < FL.op_len; i++) /* partially erased sector: bits drift towards 1 */
-                if (sim_rand01() < f) FL.img[FL.op_off + i] = 0xff;
-                else FL.img[FL.op_off + i] |= (uint8_t)(sim_rand() & sim_rand() & 0xff);
+                if (sim_rand01(SIM_RNG_FLASH) < f) FL.img[FL.op_off + i] = 0xff;
+                else FL.img[FL.op_off + i] |= (uint8_t)(sim_rand(SIM_RNG_FLASH) & sim_rand(SIM_RNG_FLASH) & 0xff);
         }
         sim_note("power cut tore an in-flight flash %s at 0x%x (%.0f%% done)", FL.op == OP_PROG ? "program" : "erase",
                  FL.op_off, f * 100);

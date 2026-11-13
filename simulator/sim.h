@@ -73,9 +73,18 @@ static inline uint64_t sim_cycles_ns(double cycles) {
 void sim_charge_cycles(double cycles);
 /** Charge CPU work regardless of mode (hardware-ish costs that the host does not reproduce, e.g. PSRAM copies). */
 void sim_charge_ns_always(uint64_t ns);
-/** Deterministic PRNG (xorshift), seeded from g_sim.seed. ISR-safe. */
-uint32_t sim_rand(void);
-double sim_rand01(void);
+/** Deterministic PRNG (xorshift), one stream per model, each derived from g_sim.seed: a model drawing
+ * more or fewer numbers (one more flash write) does not shift another's (network loss). ISR-safe. */
+typedef enum {
+    SIM_RNG_NET,     /* link latency, loss, outages */
+    SIM_RNG_FLASH,   /* flash timing tails, torn writes */
+    SIM_RNG_TOUCH,   /* the touch controller's monitor scan */
+    SIM_RNG_AFE,     /* the voice front end's residual echo */
+    SIM_RNG_ENTROPY, /* the hardware random number generator (hal_random_fill) */
+    SIM_RNG_COUNT
+} sim_rng_t;
+uint32_t sim_rand(sim_rng_t stream);
+double sim_rand01(sim_rng_t stream);
 
 /* ---- host work in task context ----
  * The stack estimate measures what a task's code uses on its host stack. Simulator work that the

@@ -96,7 +96,7 @@ void hal_afe_feed(const int16_t *mic, const int16_t *ref, int samples, uint64_t 
     }
     /* residual echo: while the speaker plays, now and then heard as speech for a moment */
     double rate = g_profile.afe.echo_false_per_min;
-    if (!st && !F.speech && rate > 0 && ref && loud(ref, samples) && sim_rand01() < rate * samples / (60.0 * 16000.0)) {
+    if (!st && !F.speech && rate > 0 && ref && loud(ref, samples) && sim_rand01(SIM_RNG_AFE) < rate * samples / (60.0 * 16000.0)) {
         F.speech = true;
         F.speech_since_ns = now;
         F.echo_until_ns = now + SIM_MS(200);

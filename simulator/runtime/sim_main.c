@@ -22,17 +22,29 @@
 
 sim_options_t g_sim;
 
-static uint32_t rng_state = 0x9e3779b9u;
+static uint32_t rng_state[SIM_RNG_COUNT];
 
-uint32_t sim_rand(void) {
-    uint32_t x = rng_state;
+/* Each stream from the seed through a mixer, so neighbouring seeds and streams are unrelated. The touch
+ * salt is the one its private stream had (tap-loss-1): its draws stay what they were. */
+static void rng_seed(uint32_t seed) {
+    static const uint32_t salt[SIM_RNG_COUNT] = {0x3C6EF372u, 0xA54FF53Au, 0x7F4A7C15u, 0x510E527Fu, 0x9B05688Cu};
+    for (int i = 0; i < SIM_RNG_COUNT; i++) {
+        uint32_t z = (seed ? seed : 1u) ^ salt[i];
+        z = (z ^ (z >> 16)) * 0x85EBCA6Bu;
+        z = (z ^ (z >> 13)) * 0xC2B2AE35u;
+        rng_state[i] = (z ^ (z >> 16)) | 1u;
+    }
+}
+
+uint32_t sim_rand(sim_rng_t stream) {
+    uint32_t x = rng_state[stream];
     x ^= x << 13;
     x ^= x >> 17;
     x ^= x << 5;
-    return rng_state = x;
+    return rng_state[stream] = x;
 }
 
-double sim_rand01(void) { return (double)(sim_rand() >> 8) / (double)(1u << 24); }
+double sim_rand01(sim_rng_t stream) { return (double)(sim_rand(stream) >> 8) / (double)(1u << 24); }
 
 typedef struct {
     size_t n, size;
@@ -237,7 +249,7 @@ int sim_main(int argc, char **argv) {
         g_sim.realtime = true;
     }
     if (!g_sim.nasset_dirs) g_sim.asset_dirs[g_sim.nasset_dirs++] = "assets";
-    rng_state = g_sim.seed ? g_sim.seed * 2654435761u : 0x9e3779b9u;
+    rng_seed(g_sim.seed);
 
     char err[300];
     if (profile_load(g_sim.profile_path, &g_profile, err, sizeof err)) {
