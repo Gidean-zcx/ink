@@ -16,7 +16,7 @@ static uint8_t expander[8], regs[4][256], page, pointer;
 static uint64_t now;
 static bool absent, wrong_id, no_frames, fail_write, repeated_nack, display_held, refreshing;
 static bool bad_size, no_memory, start_error;
-static unsigned cut_frame, reset_frame, frames, saved_frame, output_requests, sensor_resets, writes, table_at;
+static unsigned cut_frame, reset_frame, frames, saved_frame, output_requests, sensor_resets, writes, table_at, yields;
 static bool check_table;
 static unsigned allocations, releases, controllers;
 static int continuous, *cancel_active;
@@ -37,6 +37,7 @@ osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout) {
 void osal_mutex_unlock(osal_mutex_t *m) { assert(m == &board_lock && m->held); m->held = false; }
 uint64_t osal_now_us(void) { return now; }
 void osal_task_delay_us(uint64_t us) { now += us; }
+void osal_task_yield(void) { yields++; }
 void vTaskDelay(uint32_t ticks) { now += ticks * 1000u; }
 void esp_rom_delay_us(unsigned us) { now += us; }
 void hal_log_write(const char *line) { assert(line); }
@@ -61,6 +62,7 @@ hal_i2c_status_t hal_i2c_write(hal_i2c_dev_t *d, const uint8_t *b, size_t n) {
     if (check_table && (table_at || (b[0] == 0xfe && b[1] == 0xf0)) && table_at < sizeof kGc2145Vga / sizeof *kGc2145Vga) {
         while (kGc2145Vga[table_at].reg == 0xff) table_at++;
         assert(b[0] == kGc2145Vga[table_at].reg && b[1] == kGc2145Vga[table_at].value);
+        assert(yields == writes); /* every earlier write let a waiting touch read have the bus */
         table_at++;
     }
     writes++;
@@ -149,7 +151,7 @@ esp_err_t esp_cam_ctlr_del(esp_cam_ctlr_handle_t c) { assert(!c->running && !c->
 static void reset(void) {
     assert(!ink_s31_camera_busy() && !display_held);
     absent = wrong_id = no_frames = fail_write = repeated_nack = bad_size = no_memory = start_error = false;
-    cut_frame = reset_frame = frames = saved_frame = output_requests = sensor_resets = writes = 0;
+    cut_frame = reset_frame = frames = saved_frame = output_requests = sensor_resets = writes = yields = 0;
     check_table = false; table_at = 0;
     allocations = releases = controllers = 0; continuous = 0; cancel_active = NULL;
     now = 0; ink_cam_checked = ink_cam_present = false;
