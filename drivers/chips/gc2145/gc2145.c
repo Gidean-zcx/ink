@@ -31,6 +31,9 @@ hal_i2c_status_t gc2145_start_until(hal_i2c_dev_t *dev, uint64_t deadline_us) {
         }
         hal_i2c_status_t s = wr(dev, e->reg, e->value);
         if (s != HAL_I2C_OK) return s;
+        /* Between writes the bus goes to a task that waits for it: the input task's touch read, whose priority this
+         * task inherited and keeps while it holds the camera's locks (a 0.4 s table otherwise loses a cover-key press). */
+        osal_task_yield();
     }
     return wr(dev, 0xFE, 0x00); /* page 0, as upstream leaves it */
 }
