@@ -50,7 +50,7 @@ static void inbox(void) {
 }
 static bool shelf(void) {
     ok("app.open","{\"id\":\"reader\"}"); CHECK(ready("面板=书架"),"the shelf is laid out"); frame("shelf");
-    CHECK(strstr(view,"收件箱来信 传进来的") && strstr(view,"随手读 传进来的"),"inbox books appear, marked as transferred: %.300s",view);
+    CHECK(strstr(view,"收件箱来信 传进来的") && strstr(view,"随手读 传进来的"),"inbox books appear, marked as transferred: %.200s",view);
     CHECK(!strstr(view,"不是书") && !strstr(view,"未完成") && !strstr(view,"文件夹"),"partial, non-book and directories absent");
     return strstr(view,"收件箱来信")!=NULL;
 }
