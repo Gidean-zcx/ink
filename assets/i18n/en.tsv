@@ -1835,3 +1835,68 @@ Wi-Fi 已关闭	Wi-Fi is off
 已从主屏拿掉	Removed from Home
 已放到主屏	Added to Home
 没有这张卡片	No such card
+# settings-1: the settings home, its search and the registry (system/ui/shell/settings_registry.c, settings_body.c)
+网络和连接	Network & Connections
+声音和通知	Sound & Notifications
+显示和阅读	Display & Reading
+家人和孩子	Family & Children
+存储	Storage
+家长管理	Managed by parents
+已关闭	Off
+4G 在线	4G online
+没有 SIM 卡	No SIM card
+关了 %d 类	%d kinds off
+都收	All on
+飞行模式开着	Airplane mode is on
+振动已关闭	Vibration is off
+这台设备不能用蓝牙耳机	This device cannot use Bluetooth headphones
+找一项设置，例如暖光	Find a setting, e.g. warm light
+找到 %d 项设置	Found %d settings
+没有找到这项设置	No such setting found
+没有这项设置	No such setting
+wifi wlan 无线 上网 网络	wifi wlan wireless internet network
+4g sim 流量 运营商 接入点 apn 漫游	4g sim mobile cellular data carrier apn roaming
+耳机 蓝牙耳机	headphones bluetooth headset
+声音 大声 小声	sound volume loud quiet
+免打扰 安静 静音	do not disturb quiet silent dnd
+前光 屏幕亮度 灯	front light screen brightness lamp
+色温 夜间 护眼 暖色	color temperature night eye warm
+文字大小 字体 大字	text size font large
+壁纸 表盘 锁屏画面	wallpaper clock face lock screen
+成员 家长 孩子 密码	members parents children password
+叫名字 语音 唤醒	voice wake word hands-free
+空间 存储卡 容量	space storage card capacity
+家庭服务器 恢复	family server restore
+版本 系统更新 升级 关于本机	version system update upgrade about
+飞行 断网	airplane flight offline
+4g 自动 流量	4g auto data preference
+切卡 内置卡 外置卡 sim	sim card slot internal external
+忘掉 密码 wifi	forget password wifi saved
+按键音 提示音	key sound click tone
+震动	vibrate vibration
+震动强度	vibration strength
+铃声 电话	ringtone call phone
+铃声 闹钟	ringtone alarm
+提醒 消息	alerts messages
+锁屏 休眠 待机	lock sleep screen timeout
+残影 清屏	ghosting clean screen
+主屏 卡片	home cards today
+孩子 时长 应用名单 禁用时段	child screen time apps quiet hours
+叫名字 唤醒	wake word hands-free
+名字 唤醒词	name wake word
+打断	interrupt
+记忆	memory
+联想 输入法	predictions keyboard suggestions
+缓存 临时文件	cache temporary files
+更新 升级 新版本	update upgrade new version
+language english 中文 英文	language english chinese
+时间 时区 校时 日期	time zone clock date
+数据	data
+型号 电量	model battery
+许可 开源	licenses open source
+流量	data
+恢复出厂 重置	factory reset erase
+剪贴板 复制	clipboard copy
+记录 删除记录	records delete history
+版本	version
+电池	battery
