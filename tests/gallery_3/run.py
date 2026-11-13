@@ -32,6 +32,10 @@ REVERSE = {
     "trash": ("system/apps/gallery/gallery.c", "ink_fs_move_if_revision(m->from, m->to, revision, NULL)", "ink_fs_remove(m->from)", "walk", "trash_no_confirm"),
     "return": ("system/apps/gallery/gallery.c", "    if (at < G.count) { G.position.page = at / PHOTO_SLOTS;", "    if (false) { G.position.page = at / PHOTO_SLOTS;", "walk", "return_position"),
     "purge": ("system/apps/gallery/gallery.c", "    if (!s->all && !ink_time_valid()) { osal_free(s); return; }", "    if (false) { osal_free(s); return; }", "purge", "purge_time_invalid"),
+    "month_line": ("system/apps/gallery/gallery.c", "G.content = G.status = G.month_line = G.segments = NULL;", "G.content = G.status = NULL;", "more", "month_line_destroyed"),
+    "album": ("system/apps/gallery/gallery.c", "    if (!G.data || a >= G.data->nalbums) G.filter = FILTER_NONE; else G.album = (uint16_t)a;",
+              "    if (!G.data || G.album >= G.data->nalbums) G.filter = FILTER_NONE; (void)a;", "ai", "album_by_path"),
+    "empty_busy": ("system/apps/gallery/gallery.c", "        if (r < 0) {\n            s->call->rc.status", "        if (false) {\n            s->call->rc.status", "more", "empty_busy"),
 }
 
 
@@ -163,7 +167,10 @@ def run(build, work, binary, phase, size):
     passed = r.returncode == 0 and m.get("test.finished") == 1 and not m.get("test.fail", 0)
     counts, problems = {}, []
     if (out / "trace.json").exists():
-        trace = json.loads((out / "trace.json").read_text())
+        try:
+            trace = json.loads((out / "trace.json").read_text())
+        except json.JSONDecodeError:  # the run died mid-write: no refresh judgement, and it does not pass
+            trace, problems = [], ["trace.json cut short: the run died"]
         trace = trace.get("traceEvents", []) if isinstance(trace, dict) else trace
         for step, (most, needed) in STEPS.items():
             got = inside(trace, m, step)

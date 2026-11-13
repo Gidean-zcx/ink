@@ -68,9 +68,10 @@ static struct {
     photos_t *data;
     uint32_t ids[INK_FS_INDEX_MAX], epoch, photo, revision, last_photo, batch, seq, view_photo, opened;
     size_t count;
-    int view, filter, seen, layout; bool fresh, waiting; uint16_t album; char month[8];
+    int view, filter, seen, layout, empty_refused; bool fresh, waiting; uint16_t album; char month[8];
     lv_obj_t *slots[PHOTO_SLOTS], *box, *status, *name, *body, *content, *image, *segments, *month_line;
     char objects[LIST_SLOTS][32], args[LIST_SLOTS][INK_FS_PATH_MAX + 32], labels[LIST_SLOTS][96], values[LIST_SLOTS][96];
+    char album_path[INK_FS_PATH_MAX]; /* the album filter is a folder: its number changes when another album gets a newer photo */
     char path[INK_FS_PATH_MAX], message[160], caption[INK_FS_PATH_MAX + 64], line[96], trashing[INK_FS_PATH_MAX], notice[160];
     char undo_args[INK_FS_PATH_MAX + 32], forever_args[INK_FS_PATH_MAX + 32], info_values[INFO_ROWS][96];
     const char *info_labels[INFO_ROWS]; size_t ninfo;
@@ -282,6 +283,11 @@ static void release_job(void *arg) { ink_image_free(&M_ORIGINAL); osal_free(arg)
 
 /* ------------------------------------------------------------------ the list on screen */
 
+static void album_follow(void) { /* after a reload: the same folder, wherever it sorts now; gone, the filter goes */
+    if (G.filter != FILTER_ALBUM) return;
+    size_t a = 0; while (G.data && a < G.data->nalbums && strcmp(G.data->albums[a].path, G.album_path)) a++;
+    if (!G.data || a >= G.data->nalbums) G.filter = FILTER_NONE; else G.album = (uint16_t)a;
+}
 static void filtered(void) {
     G.count = 0;
     for (size_t i = 0; G.data && i < G.data->count; i++) {
@@ -681,7 +687,7 @@ static void loaded(void *arg) {
         if (!p->id && p->data) {
             bool same = same_list(G.data, p->data), first = !G.data;
             osal_free(G.data); G.data = p->data; p->data = NULL;
-            if (G.filter == FILTER_ALBUM && G.album >= G.data->nalbums) G.filter = FILTER_NONE;
+            album_follow();
             filtered();
             const char *page = ink_ui_page_name(); G.fresh = true;
             if (!strcmp(page, "Gallery") && (first || !same || (G.waiting && !organizing()))) {
@@ -716,6 +722,7 @@ static void segment_clicked(lv_event_t *e) {
     if (at >= 0 && at < 3 && at != G.view) ink_exec_post(INK_EXEC_UI, &job, segment_job, (void *)(uintptr_t)at);
 }
 static void purge_start(void);
+static const char *empty_refused_text(void);
 static void draw_segments(void) { /* in their own box: a new row redraws that box, not the whole screen */
     const char *labels[] = {TR("全部"), TR("相簿"), TR("日期")};
     lv_obj_clean(G.segments);
@@ -736,7 +743,7 @@ static void gallery_create(lv_obj_t *root, void *arg) {
     G.segments = ink_ui_box(root, 0, INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S, INK_CANVAS_W, INK_SEGMENT, 0, INK_SURFACE_WHITE, false); draw_segments();
     int y = INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S + INK_SEGMENT + INK_GAP;
     G.content = ink_ui_box(root, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
-    G.message[0] = 0; G.fresh = false; filtered(); place_last(); build_content(); load(0, 0); purge_start();
+    G.message[0] = 0; G.fresh = false; G.empty_refused = 0; filtered(); place_last(); build_content(); load(0, 0); purge_start();
 }
 static void view_changed(void) { /* the segments and what is under them, nothing else */
     if (!G.content) { ink_ui_redraw(); return; }
@@ -758,8 +765,8 @@ static void photo_create(lv_obj_t *root, void *arg) {
         lv_label_set_text(G.name, TR("正在读取照片"));
     } else { build_body(); caption(); }
 }
-static void gallery_destroy(void) {
-    G.list = NULL; G.content = G.status = NULL; memset(G.slots, 0, sizeof G.slots); ink_svc_cancel(&G.batch_at); G.batch++;
+static void gallery_destroy(void) { /* every object of the page goes with it: 信息 and 最近删除 turn their own lists */
+    G.list = NULL; G.content = G.status = G.month_line = G.segments = NULL; memset(G.slots, 0, sizeof G.slots); ink_svc_cancel(&G.batch_at); G.batch++;
     for (unsigned i = 0; i < PHOTO_SLOTS; i++) ink_image_free(&G.thumbs[i]);
 }
 static void photo_destroy(void) { G.box = G.status = G.name = G.body = G.image = NULL; G.tap_us = 0; }
@@ -854,7 +861,8 @@ static void trash_create(lv_obj_t *root, void *arg) {
     if (n) qsort(trash_order, n, sizeof *trash_order, trash_newer);
     if (n) { char label[48]; snprintf(label, sizeof label, TR("清空 %zu 张"), n); top_button(root, TR("最近删除"), label, TR("清空"), "gallery.empty_trash", NULL); }
     int y = INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S;
-    lv_obj_t *note = ink_ui_notice(root, TR("照片在这里留 30 天，之后自动删除"), y);
+    if (!n) G.empty_refused = 0; /* emptied after all: nothing left to explain */
+    lv_obj_t *note = ink_ui_notice(root, G.empty_refused ? empty_refused_text() : TR("照片在这里留 30 天，之后自动删除"), y);
     lv_obj_update_layout(note); y += lv_obj_get_height(note) * INK_CANVAS_H / ink_ui_px(INK_CANVAS_H) + INK_GAP;
     int h = INK_CANVAS_H - INK_MARGIN - y, row = ink_ui_row_double() + ink_ui_line_height(INK_FONT_NOTE) + INK_CONTROL;
     int capacity = LV_MAX(1, LV_MIN(LIST_SLOTS, (h - INK_GAP - INK_CONTROL) / (row + INK_GAP_M)));
@@ -942,7 +950,12 @@ static int trash_snapshot(char *out, size_t cap) {
         return ink_ui_semantics_snapshot(&page, out, cap);
     }
     int n = ink_ui_list_snapshot(G.list, out, cap);
-    char extra[160]; ink_jw_t w; ink_jw_init(&w, extra, sizeof extra);
+    char extra[320]; ink_jw_t w; ink_jw_init(&w, extra, sizeof extra);
+    if (G.empty_refused) { /* the notice the page shows instead of the 30 days */
+        ink_jw_raw(&w, ",{\"id\":\"notice\",\"role\":\"status\",\"label\":"); ink_jw_str(&w, TR("最近删除")); ink_jw_raw(&w, ",\"value\":"); ink_jw_str(&w, empty_refused_text()); ink_jw_raw(&w, "}");
+        n = n < 0 || w.overflow ? -1 : add_json(out, cap, n, "],\"actions\":[", extra);
+        ink_jw_init(&w, extra, sizeof extra);
+    }
     ink_jw_raw(&w, ",{\"id\":\"empty\",\"label\":"); ink_jw_str(&w, TR("清空")); ink_jw_raw(&w, ",\"capability\":\"gallery.empty_trash\",\"args_json\":\"{}\"}");
     return n < 0 || w.overflow ? -1 : add_json(out, cap, n, "],\"pagination\":", extra);
 }
@@ -1079,18 +1092,39 @@ static void cap_delete_forever(ink_call_t *c) { /* background executor, after th
     if (!r) { char dir[INK_FS_PATH_MAX]; parent_of(path, dir, sizeof dir); while (in_trash(dir) && !ink_fs_remove(dir)) up(dir); }
     if (r) { c->rc.status = r == INK_FS_ERR_PATH ? INK_RC_INVALID : INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", ink_fs_err_name(r)); }
 }
-/* One tree at a time (the file service runs one job): every expired day, or everything for 清空. */
+/* One tree at a time (the file service runs one job): every expired day, or everything for 清空.
+ * The 30-day purge simply waits for the next opening when the files are busy; 清空 says it did not happen. */
+enum { SWEEP_MEMBER = -101, SWEEP_JOB = -102 }; /* someone else came; a delete job ended without finishing */
 typedef struct { ink_call_t *call; bool all; char member[16]; } sweep_t;
-static bool sweep_next(sweep_t *s);
-static void sweep_ended(void *ctx, const ink_fs_job_status_t *st) {
-    sweep_t *s = ctx;
-    if (st->state == INK_FS_JOB_DONE && sweep_next(s)) return;
-    if (s->call) { if (st->state != INK_FS_JOB_DONE) s->call->rc.status = INK_RC_FAILED; ink_cap_done(s->call); }
+static ink_exec_job_t refused_job INK_PSRAM_BSS;
+static void empty_refused_show(void *arg) { /* UI executor: 最近删除 says why the photos are still there */
+    G.empty_refused = (int)(intptr_t)arg;
+    if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), "GalleryTrash")) ink_ui_redraw();
+}
+static const char *empty_refused_text(void) {
+    return G.empty_refused == INK_FS_ERR_BUSY ? TR("没有清空：正在处理别的文件，稍后再试") : TR("没有清空，照片还在，请再试一次");
+}
+static int sweep_next(sweep_t *s);
+static void sweep_end(sweep_t *s, int r) { /* r: 0 nothing left to delete, below 0 what stopped it */
+    if (s->call) {
+        if (r < 0) {
+            s->call->rc.status = r == SWEEP_MEMBER ? INK_RC_STALE : INK_RC_FAILED;
+            snprintf(s->call->rc.detail, sizeof s->call->rc.detail, "%s", r == SWEEP_MEMBER ? "someone else is using the device now" :
+                     r == SWEEP_JOB ? "the delete did not finish" : ink_fs_err_name(r));
+            if (r != SWEEP_MEMBER) ink_exec_post(INK_EXEC_UI, &refused_job, empty_refused_show, (void *)(intptr_t)r);
+        }
+        ink_cap_done(s->call);
+    }
     osal_free(s);
 }
-static bool sweep_next(sweep_t *s) {
+static void sweep_ended(void *ctx, const ink_fs_job_status_t *st) {
+    sweep_t *s = ctx;
+    int r = st->state == INK_FS_JOB_DONE ? sweep_next(s) : SWEEP_JOB;
+    if (r <= 0) sweep_end(s, r);
+}
+static int sweep_next(sweep_t *s) { /* 1: a delete started, 0: nothing left, below 0: refused */
     const char *spaces[] = {"/me", ink_member_current()->role != INK_ROLE_CHILD ? "/family" : NULL};
-    if (strcmp(s->member, ink_member_current()->id)) return false;
+    if (strcmp(s->member, ink_member_current()->id)) return SWEEP_MEMBER;
     for (int k = 0; k < 2 && spaces[k]; k++) {
         char root[40], dir[INK_FS_PATH_MAX] = ""; ink_fs_dir_t *d = NULL; ink_fs_stat_t st;
         trash_root(spaces[k], root, sizeof root);
@@ -1105,17 +1139,16 @@ static bool sweep_next(sweep_t *s) {
         }
         if (!dir[0]) continue;
         int id = ink_fs_delete_start(dir);
-        if (id <= 0) return false; /* a job already runs: the next opening of the gallery tries again */
-        ink_fs_job_on_end(id, sweep_ended, s); return true;
+        if (id <= 0) return id < 0 ? id : INK_FS_ERR_BUSY; /* the purge tries again at the next opening */
+        ink_fs_job_on_end(id, sweep_ended, s); return 1;
     }
-    return false;
+    return 0;
 }
 static void sweep(void *arg) {
     sweep_t *s = arg;
     if (!s->all && !ink_time_valid()) { osal_free(s); return; } /* no trustworthy date: nothing is old enough */
-    if (sweep_next(s)) return;
-    if (s->call) ink_cap_done(s->call);
-    osal_free(s);
+    int r = sweep_next(s);
+    if (r <= 0) sweep_end(s, r);
 }
 static ink_exec_job_t purge_job INK_PSRAM_BSS;
 static void purge_start(void) { /* once per opening, never on a timer */
@@ -1211,7 +1244,7 @@ static void browse_action(ink_call_t *c) { /* gallery.show, gallery.find */
         if (s[0] && (!G.data || a >= G.data->nalbums)) { c->rc.status = INK_RC_INVALID; snprintf(c->rc.detail, sizeof c->rc.detail, "no such album"); return; }
         int y = 0, m = 0;
         if (month[0] && strcmp(month, "undated") && (sscanf(month, "%4d-%2d", &y, &m) != 2 || strlen(month) != 7)) { c->rc.status = INK_RC_INVALID; return; }
-        G.filter = s[0] ? FILTER_ALBUM : month[0] ? FILTER_MONTH : FILTER_NONE; G.album = (uint16_t)a;
+        G.filter = s[0] ? FILTER_ALBUM : month[0] ? FILTER_MONTH : FILTER_NONE; G.album = (uint16_t)a; snprintf(G.album_path, sizeof G.album_path, "%s", s);
         snprintf(G.month, sizeof G.month, "%.7s", month); G.view = VIEW_ALL;
         memset(&G.position, 0, sizeof G.position);
     }

@@ -1981,6 +1981,8 @@ language english 中文 英文	language english chinese
 清空 %zu 张	Empty %zu
 清空最近删除里的全部照片，不能恢复	Empty all photos in Recently deleted? They cannot be restored
 照片在这里留 30 天，之后自动删除	Photos stay here for 30 days, then are deleted automatically
+没有清空：正在处理别的文件，稍后再试	Not emptied: other files are being worked on. Try again shortly
+没有清空，照片还在，请再试一次	Not emptied; the photos are still here. Try again
 照片已恢复	Photo restored
 相簿	Albums
 相簿：%s	Album: %s

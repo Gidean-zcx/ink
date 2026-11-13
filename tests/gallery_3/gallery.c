@@ -8,17 +8,31 @@
 #include "ink/sys/confirm.h"
 #include "src/core/lv_obj_draw_private.h" /* lv_obj_get_ext_draw_size: what an object may draw past its box */
 bool g3_time_valid(void);
+int g3_delete_start(const char *path);
 #define ink_time_valid g3_time_valid /* the clock can be marked untrusted while the wall clock keeps running */
+#define ink_fs_delete_start g3_delete_start /* the file service can be made busy with another job */
 #include "../../system/apps/gallery/gallery.c"
 #undef ink_time_valid
+#undef ink_fs_delete_start
+int ink_fs_delete_start(const char *path); /* its prototype in file.h was renamed with the rest */
 #include "../../system/services/media/image.c" /* compiled here so run.py --reverse can change it */
 #define ink_main product_main
 #include "../../system/boot/main.c"
 #undef ink_main
 #include "../integration/whole_product.h"
 
-static bool untrusted;
+static bool untrusted, files_busy;
 bool g3_time_valid(void) { return !untrusted && ink_time_valid(); }
+int g3_delete_start(const char *path) { return files_busy ? INK_FS_ERR_BUSY : ink_fs_delete_start(path); }
+static char empty_status[24], empty_detail[64];
+static volatile bool empty_answered;
+static void empty_result(void *ctx, const char *id, const ink_args_t *a) { /* what whoever asked for 清空 is told */
+    (void)ctx; (void)id; char cap[48] = "";
+    ink_args_get_str(a, "cap", cap, sizeof cap);
+    if (strcmp(cap, "gallery.empty_trash")) return;
+    ink_args_get_str(a, "status", empty_status, sizeof empty_status); ink_args_get_str(a, "detail", empty_detail, sizeof empty_detail);
+    empty_answered = true;
+}
 static char phase[16], size_text[4], snap[8192], found_text[160];
 static const char *wanted_cap, *wanted_text;
 static lv_point_t point;
@@ -249,6 +263,15 @@ static void ai_walk(void) {
     look(); CHECK(G.count == 9 && has("2026年9月 · 9 张"), "AI: the September filter, the same snapshot");
     n = metric("gallery.page_ready"); ok("gallery.find", "{\"album\":\"/me/旅行\"}"); page_ready(n);
     look(); CHECK(G.filter == FILTER_ALBUM && G.count == 9 && has("相簿：旅行 · 9 张"), "find_album: one folder");
+    /* a newer photo in a new folder sorts that album first and moves 旅行's number: the filter is still 旅行 */
+    size_t albums = G.data->nalbums; uint16_t number = G.album;
+    CHECK(ink_fs_mkdir("/me/新相簿") == 0 && ink_fs_write_atomic("/me/新相簿/新.png", "a synthetic newer file", 22) == 0, "a photo in a new folder");
+    CHECK(WAIT_FOR(G.data && G.data->nalbums == albums + 1, 10000), "the gallery reads the new folder"); quiet(); look();
+    CHECK(G.filter == FILTER_ALBUM && G.album != number && !strcmp(G.data->albums[G.album].path, "/me/旅行") && G.count == 9 && has("相簿：旅行 · 9 张"),
+          "album_by_path: after the albums reorder the filter still shows 旅行's 9 photos (album %u, %zu photos)", (unsigned)G.album, G.count);
+    CHECK(ink_fs_remove("/me/新相簿/新.png") == 0 && ink_fs_remove("/me/新相簿") == 0, "the new folder goes again");
+    CHECK(WAIT_FOR(G.data && G.data->nalbums == albums, 10000), "the gallery reads it gone"); quiet();
+    CHECK(G.filter == FILTER_ALBUM && !strcmp(G.data->albums[G.album].path, "/me/旅行") && G.count == 9, "and 旅行 again sits where it was");
     n = metric("gallery.page_ready"); ok("gallery.find", "{}"); page_ready(n);
     CHECK(G.filter == FILTER_NONE && G.count == 28, "find_clear: no arguments, no filter");
     CHECK(AI("gallery.find", "{\"album\":\"/me/没有\"}") && g_rc.status == INK_RC_INVALID, "an unknown album is refused");
@@ -270,6 +293,8 @@ static void ai_walk(void) {
     CHECK(AI("photo.pan", "{\"dir\":\"right\"}") && g_rc.status == INK_RC_INVALID, "AI: at the edge a pan says it cannot move");
     n = metric("gallery.photo_drawn"); ok("photo.zoom", "{\"step\":\"fit\"}"); photo_drawn(n);
     n = metric("gallery.photo_drawn"); ok("photo.next", NULL); photo_drawn(n); look(); CHECK(has("第2/9张"), "AI: next is 2 of 9");
+    n = metric("gallery.photo_drawn"); press("photo.prev"); photo_drawn(n); look(); CHECK(has("第1/9张"), "prev_next_buttons: the written 上一张 button");
+    n = metric("gallery.photo_drawn"); press("photo.next"); photo_drawn(n); look(); CHECK(has("第2/9张"), "prev_next_buttons: the written 下一张 button");
     uint32_t second = G.photo;
     ok("photo.info", NULL); quiet(); look(); CHECK(has("文件时间"), "AI: details"); ok("shell.back", NULL); quiet();
     n = metric("gallery.page_ready"); ok("shell.back", NULL); page_ready(n);
@@ -347,7 +372,16 @@ static void more(void) {
     CHECK(G.info.width == 200 && G.info.height == 300 && G.dw == 200 && G.dh == 300, "exif_orientation: the tall photo stands upright (%u x %u)", G.info.width, G.info.height);
     ok("photo.info", NULL); quiet(); look();
     CHECK(has("2026年11月2日 10:20") && !has("文件时间") && has("200×300") && has("照片") && has("JPEG") && has("KB"), "info_exif_date: EXIF time, upright size, size, album");
-    shot("info_jpeg"); ok("shell.back", NULL); quiet(); ok("shell.back", NULL); quiet();
+    shot("info_jpeg");
+    /* opened from 全部 without a filter (the month line was up); 信息 has two pages: turning them never touches the grid's objects */
+    bool forgotten = G.month_line == NULL && G.content == NULL && G.segments == NULL;
+    CHECK(forgotten, "month_line_destroyed: the grid's objects are forgotten with its page");
+    if (forgotten) { /* otherwise the turn below writes into the deleted label and the run dies before it can report */
+        ok("gallery.next", NULL); quiet(); look();
+        CHECK(G.info_position.page == 1 && !strcmp(ink_ui_page_name(), "PhotoInfo"), "info_turn: 信息's second page (page %u)", (unsigned)G.info_position.page);
+        key(INK_KEY_PREV); quiet(); CHECK(G.info_position.page == 0, "info_turn: the cover key turns back");
+    }
+    ok("shell.back", NULL); quiet(); ok("shell.back", NULL); quiet();
     ok("system.home", NULL); quiet(); open_gallery(); ok("gallery.show", "{\"view\":\"months\"}"); quiet(); look();
     CHECK(has("日期不详") && G.data->nmonths && !strcmp(G.data->months[G.data->nmonths - 1].key, "undated"), "undated_bucket: the last row is 日期不详");
     ok("gallery.show", "{\"view\":\"all\"}"); quiet();
@@ -361,6 +395,8 @@ static void more(void) {
     ink_confirm_view_t card;
     press("photo.delete_forever"); CHECK(ink_confirm_list(&card, 1) == 1 && strstr(card.detail, "不能恢复"), "delete_forever_card says it cannot be undone");
     CHECK(ink_confirm_decide(card.token, false, INK_SRC_TOUCH) == 0, "cancel"); quiet(); CHECK(exists(LONG_PNG), "cancelled: the photo stays");
+    press("photo.delete_forever"); CHECK(ink_confirm_list(&card, 1) == 1 && ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "delete it forever");
+    CHECK(WAIT_FOR(!exists(LONG_PNG), 8000), "delete_forever_done: after yes the file is gone"); quiet();
     ok("shell.back", NULL); quiet();
     /* restore beside a newer photo of the same name; restore what is not in 最近删除; trash a photo that changed */
     open_photo("/me/照片/nov-02.png"); ok("photo.trash", NULL); quiet(); on_ui(read_undo);
@@ -377,12 +413,24 @@ static void more(void) {
     ok("system.home", NULL); quiet(); open_gallery(); on_ui(area_empty); publish("book"); mark("book", "before");
     CHECK(ink_fs_mkdir("/me/书") == 0 && ink_fs_write_atomic("/me/书/合成.txt", "synthetic", 9) == 0, "a book arrives"); delay_ms(1500); quiet(); mark("book", "after");
     /* trash two, empty asks, cancel keeps */
-    open_photo("/me/照片/nov-01.png"); ok("photo.trash", NULL); quiet(); ok("shell.back", NULL); quiet();
+    open_photo("/me/照片/nov-01.png"); ok("photo.trash", NULL); quiet(); on_ui(read_undo); ok("shell.back", NULL); quiet();
     ok("gallery.show", "{\"view\":\"trash\"}"); CHECK(WAIT_FOR(G.data && G.data->ntrash == 1, 5000), "one in 最近删除"); quiet();
     press("gallery.empty_trash"); CHECK(ink_confirm_list(&card, 1) == 1 && strstr(card.detail, "不能恢复"), "empty_trash_card");
     CHECK(ink_confirm_decide(card.token, false, INK_SRC_TOUCH) == 0, "cancel emptying"); quiet(); CHECK(G.data->ntrash == 1, "cancelled: still there");
+    /* the file service busy with another job: 清空 did not happen, and says so to the person and to whoever asked */
+    CHECK(ink_cap_subscribe("confirm.result", empty_result, NULL, INK_EXEC_DIRECT) == 0, "listen for the 清空 receipt");
+    files_busy = true; empty_answered = false;
+    press("gallery.empty_trash"); CHECK(ink_confirm_list(&card, 1) == 1 && ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "empty it while the files are busy");
+    CHECK(WAIT_FOR(empty_answered, 8000) && !strcmp(empty_status, ink_rc_name(INK_RC_FAILED)) && !strcmp(empty_detail, ink_fs_err_name(INK_FS_ERR_BUSY)),
+          "empty_busy: the receipt says failed, busy (%s, %s)", empty_status, empty_detail);
+    CHECK(WAIT_FOR(find_text("没有清空：正在处理别的文件"), 8000), "empty_busy: the page says why the photo is still there"); quiet();
+    look(); CHECK(G.data->ntrash == 1 && exists(trashed) && has("没有清空") && has("photo.restore"), "empty_busy: the photo stays, the snapshot names the notice");
+    shot("trash_refused");
+    files_busy = false; empty_answered = false;
     press("gallery.empty_trash"); CHECK(ink_confirm_list(&card, 1) == 1 && ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "empty it");
     CHECK(WAIT_FOR(G.data && !G.data->ntrash && !G.list, 8000), "emptied"); quiet();
+    CHECK(WAIT_FOR(empty_answered, 8000) && !strcmp(empty_status, ink_rc_name(INK_RC_DONE)) && !exists(trashed) && !G.empty_refused && !find_text("没有清空"),
+          "emptied: done, the photo gone, the notice gone (%s)", empty_status);
     ok("shell.back", NULL); quiet();
     /* the card goes and comes back */
     vtk_event_at(vtk_now() + SIM_MS(1), no_card, NULL);
