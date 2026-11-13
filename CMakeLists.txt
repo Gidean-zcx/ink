@@ -2172,6 +2172,10 @@ add_test(NAME almanac-fixtures COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_D
 add_test(NAME almanac-oracle COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/run.py
   --binary $<TARGET_FILE:almanac-model> --mode oracle)
 set_tests_properties(almanac-oracle PROPERTIES SKIP_RETURN_CODE 77)
+# Mogo's own host test, unchanged but for its Date fields; tests/almanac/run_reader_baseline.py is its shim.
+add_test(NAME almanac-mogo-host COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/tests/almanac
+  ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/system/services/time/vendor/mogo-calendar/tools/calendar_host_test.py)
+set_tests_properties(almanac-mogo-host PROPERTIES SKIP_RETURN_CODE 77)
 add_test(NAME almanac-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/almanac/reverse.py
   --build ${CMAKE_BINARY_DIR})
 ink_sim_executable(sim-almanac tests/almanac/device.c)
