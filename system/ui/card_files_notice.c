@@ -1,6 +1,6 @@
 /* What an app page says while a file it needs from the card cannot be used (D-138: never a blank page): one paragraph,
  * no button (plugging in a computer is noticed by itself). Only that text changes with the state (progress in tenths);
- * once the files are in place the page opens again. */
+ * once the files are in place the app opens it again on the same screen, and takes the notice down when it has. */
 #include <stdio.h>
 #include <string.h>
 
@@ -8,7 +8,6 @@
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/card_files.h"
-#include "ink/sys/exec.h"
 #include "ink/sys/i18n.h"
 #include "ink/sys/state.h"
 #include "ink/sys/ui.h"
@@ -17,10 +16,10 @@
 static struct {
     lv_obj_t *box, *label;
     const char *app, *what;
+    void (*reopen)(void);
     int watch[2];
-    bool from_ready; /* shown while the list said ready: that file is broken; one recheck, no reopening loop */
-    char text[192], top[32];
-    ink_exec_job_t barrier, again;
+    bool from_ready; /* shown while the list said ready (or reopened): one recheck, no reopening loop */
+    char text[192];
 } N INK_PSRAM_BSS;
 
 static const char *app_title(const char *id) {
@@ -45,11 +44,6 @@ static int compose(bool *lent) { /* the words for now, into N.text; the app's st
     return s;
 }
 
-static void again(void *arg) { /* UI, after the old page's own cleanup on BG: a grafted page opens on this try */
-    (void)arg;
-    if (!strcmp(ink_ui_top_name(), N.top)) ink_ui_redraw();
-}
-static void barrier(void *arg) { (void)arg; ink_exec_post(INK_EXEC_UI, &N.again, again, NULL); }
 static void changed(void *ctx, int h, const char *id) { /* UI */
     (void)ctx; (void)h; (void)id;
     bool lent;
@@ -57,9 +51,9 @@ static void changed(void *ctx, int h, const char *id) { /* UI */
     int s = compose(&lent);
     if (lent || (s != INK_CARD_READY && s != INK_CARD_CHECKING)) N.from_ready = false;
     if (s == INK_CARD_READY && !lent && !N.from_ready && lv_obj_get_screen(N.box) == lv_screen_active()) {
-        snprintf(N.top, sizeof N.top, "%s", ink_ui_top_name());
-        ink_ui_redraw(); /* this notice goes with the old screen */
-        ink_exec_post(INK_EXEC_BG, &N.barrier, barrier, NULL);
+        N.from_ready = true; /* the text stays until the page is drawn under it: no blank moment, no whole-screen flash */
+        if (N.reopen) N.reopen();
+        else ink_ui_redraw();
         return;
     }
     if (strcmp(lv_label_get_text(N.label), N.text)) lv_label_set_text(N.label, N.text); /* only this text is redrawn */
@@ -71,10 +65,10 @@ static void gone(lv_event_t *e) { /* the watches go with the text (the table has
     N.watch[0] = N.watch[1] = 0, N.box = N.label = NULL;
 }
 
-lv_obj_t *ink_card_files_notice(lv_obj_t *screen, const char *app, const char *what) {
+lv_obj_t *ink_card_files_notice(lv_obj_t *screen, const char *app, const char *what, void (*reopen)(void)) {
     bool lent;
     if (N.box) lv_obj_delete(N.box);
-    N.app = app, N.what = what;
+    N.app = app, N.what = what, N.reopen = reopen;
     N.from_ready = compose(&lent) == INK_CARD_READY && !lent;
     N.box = ink_ui_empty(screen, N.text, NULL, NULL, NULL);
     N.label = lv_obj_get_child(N.box, 0);
@@ -89,9 +83,9 @@ lv_obj_t *ink_card_files_notice(lv_obj_t *screen, const char *app, const char *w
     return N.box;
 }
 
-int ink_card_files_notice_snapshot(char *out, size_t cap) {
+int ink_card_files_notice_snapshot(const char *app, char *out, size_t cap) { /* out may be NULL with cap 0 */
     char state[16] = "";
-    if (!N.box) return snprintf(out, cap, "%s", "");
+    if (!N.box || strcmp(N.app, app)) return snprintf(out, cap, "%s", "");
     ink_state_get_str(ink_state_find("card.files"), state, sizeof state);
     return snprintf(out, cap, "%s：%.180s（card.files=%s）", app_title(N.app), N.text, state);
 }

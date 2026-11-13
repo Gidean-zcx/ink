@@ -22,7 +22,6 @@
 #include "ink/sys/sha256.h"
 #include "ink/sys/state.h"
 #include "ink/card_files_manifest.h"
-_Static_assert(INK_CARD_FILES_COUNT <= INK_CARD_FILES_MAX, "card files: manifest rows");
 
 enum {
     INK_CARD_CHUNK = 2048, INK_CARD_LINE_MAX = 3000, /* base64 of 2048 bytes is 2732, plus the fields */
@@ -33,10 +32,11 @@ enum {
     CF_STEP = 256 * 1024, CF_BUF = 16 * 1024,        /* hashed per executor turn, read per call */
     CF_RESUME = 64 * 1024,                           /* a .part resumes at a multiple of this; synced as often */
 };
+_Static_assert(INK_CARD_FILES_COUNT <= 8, "card files: at most 8 rows (tools/card_files.py MAX_ENTRIES)");
 enum { E_UNKNOWN, E_OK, E_MISSING, E_WRONG, E_SKIP, NOT_OK = -1 };
 enum { F_OK, F_NO, F_IO };        /* a fetch */
-enum { D_OK, D_BAD, D_IO, D_NO }; /* a file's end, as DONE says it */
-static const char *const DONE_WORD[] = {"ok", "bad", "io", "no"};
+enum { D_OK, D_BAD, D_IO, D_NO, D_KEPT }; /* a file's end, as DONE says it (KEPT: whole, not installed yet) */
+static const char *const DONE_WORD[] = {"ok", "bad", "io", "no", "io"};
 static const char *const STATE_WORD[] = {"ready", "checking", "missing", "copying", "failed", "no_card"};
 
 /* Where chunks come from: the install tool on the USB console now, the hub later (docs/system/card-files.md §7). */
@@ -50,14 +50,14 @@ typedef struct {
 
 static struct {
     int h_files, h_progress, h_card, h_mode, h_usb, i, step, need, len, rx_n, rx_pos; /* i, step, off: the check's cursor */
-    uint8_t st[INK_CARD_FILES_MAX];
-    bool valid[INK_CARD_FILES_MAX], busy, again, prev_card, prev_normal, prev_usb, swap_from_task, overflow;
+    uint8_t st[INK_CARD_FILES_COUNT];
+    bool valid[INK_CARD_FILES_COUNT], busy, again, prev_card, prev_normal, prev_usb, swap_from_task, overflow;
     volatile int phase, pct;
     volatile bool stop; /* the card is about to be lent: let go */
     int64_t off;
     ink_sha256_t sha;
     uint64_t t0, done_bytes, total_bytes;
-    uint32_t swap, apps_stopped;
+    uint32_t swap, let_go; /* let_go: those files' apps hold none of them */
     uint8_t *buf, *chunk; /* PSRAM, with line */
     char *line, rx[512], out[200];
     volatile bool swapped; /* the task's install is done (no semaphore: internal RAM) */
@@ -121,10 +121,10 @@ static void swap_bg(void *arg) {
         if (!(CF.swap & 1u << i) || ink_fs_card_hold()) continue;
         const char *path = INK_CARD_FILES[i].path;
         part_path(part, sizeof part, i);
-        /* the card's file system cannot remove a file someone has open: the old one goes only while its app is stopped */
-        if (hal_fs_size(path) < 0 || ((CF.apps_stopped & 1u << i) && !hal_fs_remove(path))) {
-            if (!hal_fs_rename(part, path)) CF.st[i] = E_OK, changed = true;
-        }
+        /* the card's file system cannot remove a file someone has open: the old one goes only while its app lets go */
+        bool gone = hal_fs_size(path) < 0 || ((CF.let_go & 1u << i) && !hal_fs_remove(path)); /* the old one */
+        if (gone && !hal_fs_rename(part, path)) CF.st[i] = E_OK, changed = true;
+        else ink_log(INK_LOG_WARN, "card", "card files: %s not replaced yet, its .part stays", path);
         ink_fs_card_release();
     }
     CF.swap = 0;
@@ -133,11 +133,13 @@ static void swap_bg(void *arg) {
     else check_finish();
 }
 
-static void swap_ui(void *arg) { /* app states are the UI task's */
+static void swap_ui(void *arg) { /* app states and notices are the UI task's */
     (void)arg;
-    CF.apps_stopped = 0;
-    for (int i = 0; i < INK_CARD_FILES_COUNT; i++)
-        if (ink_app_state_of(INK_CARD_FILES[i].app) == INK_APP_STOPPED) CF.apps_stopped |= 1u << i;
+    CF.let_go = 0;
+    for (int i = 0; i < INK_CARD_FILES_COUNT; i++) {
+        const char *app = INK_CARD_FILES[i].app; /* stopped, or its page shows the notice */
+        if (ink_app_state_of(app) == INK_APP_STOPPED || ink_card_files_notice_snapshot(app, NULL, 0)) CF.let_go |= 1u << i;
+    }
     ink_exec_post(INK_EXEC_BG, &CF.swap_job, swap_bg, NULL);
 }
 
@@ -249,8 +251,7 @@ static int usb_fetch(int idx, uint32_t off, uint8_t *buf, uint32_t len) {
             int r = usb_reply(idx, off, buf, len);
             if (r == 0) ink_probe_count("card_files.chunk");
             if (r >= 0) return r ? F_NO : F_OK;
-            if (r == -1) ink_probe_count("card_files.rejected");
-            if (r == -1) break;
+            if (r == -1) { ink_probe_count("card_files.rejected"); break; }
         }
     }
     return F_IO;
@@ -318,7 +319,7 @@ static int fetch_file(const ink_card_source_t *src, int i) {
             CF.swapped = false;
             swap_start(1u << i, true);
             while (!CF.swapped) osal_task_delay_us(10000);
-            return D_OK;
+            return CF.st[i] == E_OK ? D_OK : CF.stop ? D_IO : D_KEPT; /* installed, or said so: the .part stays */
         }
         CF.done_bytes -= e->size;
         ink_probe_count(start ? "card_files.restart" : "card_files.bad_hash"); /* a resumed one may be an older list's */
@@ -471,7 +472,6 @@ int ink_card_files_init(void) {
     if (ink_fs_on_release(on_release, NULL) || ink_state_watch("storage.card", on_storage, NULL, INK_EXEC_BG) ||
         ink_state_watch("storage.mode", on_storage, NULL, INK_EXEC_BG) || ink_state_watch("usb.connected", on_storage, NULL, INK_EXEC_BG))
         return -1;
+    kick(); /* the boot check */
     return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS);
 }
-
-void ink_card_files_start(void) { kick(); }

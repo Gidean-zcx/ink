@@ -51,6 +51,7 @@ void ink_fs_card_release(void) {}
 void ink_fs_changed_outside(void) {}
 int ink_fs_on_release(ink_fs_release_fn fn, void *ctx) { (void)fn; (void)ctx; return 0; }
 ink_app_state_t ink_app_state_of(const char *id) { (void)id; return INK_APP_STOPPED; }
+int ink_card_files_notice_snapshot(const char *app, char *out, size_t cap) { (void)app; (void)out; (void)cap; return 0; }
 int ink_cap_register(const ink_cap_t *c, int n) { (void)c; (void)n; return 0; }
 int ink_exec_post(ink_exec_t e, ink_exec_job_t *j, void (*fn)(void *), void *a) { (void)e; (void)j; (void)fn; (void)a; return 0; }
 void ink_log(ink_log_level_t l, const char *m, const char *fmt, ...) { (void)l; (void)m; (void)fmt; }

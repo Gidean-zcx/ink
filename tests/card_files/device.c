@@ -35,6 +35,9 @@ static void find_label(lv_obj_t *o) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); ++i) find_label(lv_obj_get_child(o, (int32_t)i));
 }
 static void look(void) { found[0] = 0; find_label(lv_screen_active()); }
+static lv_obj_t *screen_now;
+static void grab_screen(void) { screen_now = lv_screen_active(); }
+static lv_obj_t *active_screen(void) { on_ui(grab_screen); return screen_now; }
 static bool on_screen(const char *needle) { /* drawn, not only described */
     g_needle = needle;
     on_ui(look);
@@ -72,7 +75,7 @@ static void run(void *arg) {
     (void)arg;
     ink_power_hold(INK_NEED_AWAKE);
     ink_power_hold(INK_NEED_NO_LOCK);
-    bool plug = strcmp(phase, "E3");
+    bool plug = strcmp(phase, "E3") && strcmp(phase, "I") && strcmp(phase, "J"); /* I, J: the computer comes later */
     if (plug) hw(HW_USB_ON, 0, 0);
     if (!strcmp(phase, "A")) { /* a computer, no install tool */
         CHECK(state_is("missing", 20000), "missing without the tool: %s", files);
@@ -113,11 +116,32 @@ static void run(void *arg) {
         notice("存储卡正给电脑用", "notice-lent");
         CHECK(!strstr(view, "没有存储卡"), "not called a missing card: %.200s", view);
         double checks = sim_metric_value("card_files.check");
+        lv_obj_t *page = active_screen();
         vtk_event_at(vtk_now() + SIM_MS(1), eject, NULL);
         CHECK(WAIT_FOR(sim_metric_value("card_files.check") > checks, 10000), "checked again after the eject");
         CHECK(state_is("ready", 60000), "ready after the eject: %s", files);
-        CHECK(shows("面板=") && !on_screen("存储卡正给电脑用"), "the reader comes back by itself: %.200s", view); /* its shelf: a redraw has no book argument */
+        CHECK(shows("面板=正文") && !on_screen("存储卡正给电脑用"), "the reader comes back by itself, in the book: %.200s", view);
+        CHECK(active_screen() == page, "the same screen: no rebuilt page, no blank one in between");
         close_book();
+    } else if (!strcmp(phase, "I")) { /* a wrong font (an interrupted copy) while the reader explains it */
+        CHECK(state_is("missing", 20000), "a wrong-sized font is missing: %s", files);
+        notice("还没放到存储卡上", NULL);
+        lv_obj_t *page = active_screen();
+        hw(HW_USB_ON, 0, 0); /* the computer: the old file goes while the notice is up (the reader holds no font) */
+        CHECK(state_is("ready", 120000), "replaced under the notice: %s", files);
+        CHECK(shows("面板=正文") && !on_screen("还没放到存储卡上") && !on_screen("正在从电脑放"), "the reader opens the book: %.200s", view);
+        CHECK(active_screen() == page, "the same screen: no rebuilt page, no blank one in between");
+        close_book();
+    } else if (!strcmp(phase, "J")) { /* a wrong font the open reader is using: not replaced under it, and said so */
+        CHECK(state_is("missing", 20000), "a wrong font needs fetching: %s", files);
+        open_book();
+        CHECK(shows("面板=正文"), "the reader opens with the font it has: %.200s", view);
+        hw(HW_USB_ON, 0, 0);
+        CHECK(state_is("failed", 120000), "fetched but not installed under the open reader: %s", files);
+        CHECK(shows("面板=正文"), "the reader is left alone: %.200s", view);
+        close_book();
+        CHECK(AI("card.files_check", "{}") && g_rc.status == INK_RC_DONE, "check again: rc=%d", g_rc.status);
+        CHECK(state_is("ready", 60000), "the whole .part goes in once the reader is closed: %s", files);
     }
     sim_note("card files: phase %s finished", phase);
     ink_probe_count("test.finished");

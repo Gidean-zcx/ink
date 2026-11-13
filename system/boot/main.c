@@ -107,7 +107,6 @@ void ink_main(void) {
     MUST(ink_ui_start(&ink_app_home), "ui failed to start"); MUST(ink_ui_lock_mark_init(), "ui failed to start"); MUST(ink_shell_interrupt_card_init(), "ui failed to start"); MUST(ink_shell_confirm_card_init(), "ui failed to start"); MUST(ink_shell_keyboard_init(), "ui failed to start"); MUST(ink_shell_member_gate_init(), "ui failed to start"); MUST(ink_shell_update_card_init(), "ui failed to start"); MUST(ink_shell_power_menu_init(), "ui failed to start"); MUST(ink_shell_off_picture_init(), "ui failed to start");
     if (ink_file_picker_init() != 0) osal_panic("file picker failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
-    ink_card_files_start();
     ink_pairing_start();
     ink_data_refresh_state();
     ink_power_battery_policy_start();

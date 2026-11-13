@@ -66,7 +66,7 @@ def run(build, only=None, binary=None):
     digest = json.loads((build / "card-files/manifest.json").read_text())["digest"]
     shots = area / "shots"
     started = time.monotonic()
-    phases = only or ["A", "B", "C", "H", "D", "E", "E2", "E3", "F", "G"]
+    phases = only or ["A", "B", "C", "H", "D", "E", "E2", "E3", "F", "G", "I", "J"]
 
     def want(p):
         return p in phases
@@ -138,6 +138,26 @@ def run(build, only=None, binary=None):
             counts, sent, out = boot(build, area, phase, six, tool, binary=binary)
             assert not (six / "content/fonts").exists() or not any((six / "content/fonts").iterdir()), phase
             assert not gets(sent) and not counts.get("card_files.written"), phase
+    if want("I"):  # an interrupted copy: the font's first 64 KiB only, while the reader explains it
+        seven = card(area, "seven")
+        (seven / "content/fonts").mkdir(parents=True)
+        (seven / FONT).write_bytes((build / "card-files/files/0").read_bytes()[:65536])
+        shutil.copy(build / "card-files/files/1", seven / OFL)
+        counts, sent, out = boot(build, area, "I", seven, [], binary=binary)
+        same(seven, build)
+        assert not parts(seven) and "INKCF1 DONE 0 ok" in sent and "INKCF1 BYE 1 0" in sent, (parts(seven), sent[-4:])
+    if want("J"):  # a font of another version (one byte), open in the reader while it is fetched
+        eight = card(area, "eight")
+        (eight / "content/fonts").mkdir(parents=True)
+        data = bytearray((build / "card-files/files/0").read_bytes())
+        data[len(data) // 2] ^= 0x01
+        (eight / FONT).write_bytes(bytes(data))
+        shutil.copy(build / "card-files/files/1", eight / OFL)
+        counts, sent, out = boot(build, area, "J", eight, [], binary=binary)
+        assert "INKCF1 DONE 0 io" in sent and "INKCF1 BYE 0 1" in sent, sent[-6:]
+        assert not any(l.startswith("INKCF1 DONE 0 ok") for l in sent), sent[-6:]
+        same(eight, build)
+        assert not parts(eight) and counts.get("card_files.written") == 1, (parts(eight), counts.get("card_files.written"))
     took = time.monotonic() - started
     print(f"card files across boots: PASS in {took:.0f} s", flush=True)
     assert took <= 300, took

@@ -20,7 +20,7 @@ import tempfile
 from pathlib import Path
 
 PREFIXES = ("/content/fonts/", "/content/.system/")
-MAX_ENTRIES = 8          # INK_CARD_FILES_MAX in system/include/ink/sys/card_files.h
+MAX_ENTRIES = 8          # the _Static_assert in system/services/card_files/card_files.c
 MAX_FILE = 5 * 1024 * 1024
 FIELDS = ("path", "size", "sha256", "app")
 
