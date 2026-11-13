@@ -263,8 +263,10 @@ static void run(void *arg) {
     vtk_event_at(vtk_now() + SIM_MS(1), revoke_event, NULL); delay_ms(10); ink_hub_reconnect();
     capture("BootRevoked");
     vtk_event_at(vtk_now() + SIM_MS(1), reset_fault, NULL); delay_ms(10);
-    press("重新加入"); CHECK(ready("FirstBoot"), "revoked device can return to setup");
-    press("在设备上设置"); CHECK(ready("BootWifi"), "revoked retry can return to Wi-Fi selection");
+    /* Network and family server are still known, so setup skips FirstBoot and shows the new join code
+     * (system-ui-spec §7.1); a tap on the FirstBoot it passes through would race that code. */
+    press("重新加入"); CHECK(ready("BootClaim"), "revoked device returns to setup with a new join code");
+    press("返回选网"); CHECK(ready("BootWifi"), "revoked retry can return to Wi-Fi selection");
     CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "leave setup before member switch");
     CHECK(ink_member_switch("kid") == 0, "switch to synthetic child");
     CHECK(AI("shell.launch", "{\"id\":\"boot\"}") && g_rc.status == INK_RC_REJECTED, "child cannot enter household setup");
