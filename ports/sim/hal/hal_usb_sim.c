@@ -109,16 +109,14 @@ void sim_usb_report(void) {
 
 void sim_usb_console_rx(const char *data, size_t n) { /* ISR: the install tool's answer arrives */
     if (!U.console || n > sizeof U.rx - U.rx_n) return;
-    memcpy(U.rx + U.rx_n, data, n);
-    U.rx_n += n;
+    memcpy(U.rx + U.rx_n, data, n), U.rx_n += n;
     vtk_isr_wake_one(&U.rx_wq);
 }
 
 int hal_usb_console_open(void) {
     if (!U.connected || U.lent) return -1;
     vtk_lock();
-    U.console = true;
-    U.rx_n = 0; /* nothing from before counts */
+    U.console = true, U.rx_n = 0; /* nothing from before counts */
     vtk_unlock();
     return 0;
 }
@@ -128,11 +126,7 @@ int hal_usb_console_read(void *buf, size_t cap, uint32_t timeout_ms) {
     uint64_t end = vtk_now() + SIM_MS(timeout_ms);
     while (U.console && U.connected && !U.rx_n && vtk_now() < end) vtk_block_locked(&U.rx_wq, end - vtk_now());
     int n = !U.console || !U.connected ? -1 : (int)(U.rx_n < cap ? U.rx_n : cap);
-    if (n > 0) {
-        memcpy(buf, U.rx, (size_t)n);
-        U.rx_n -= (size_t)n;
-        memmove(U.rx, U.rx + n, U.rx_n);
-    }
+    if (n > 0) memcpy(buf, U.rx, (size_t)n), memmove(U.rx, U.rx + n, U.rx_n -= (size_t)n);
     vtk_unlock();
     return n;
 }
@@ -144,7 +138,6 @@ int hal_usb_console_write(const char *line, size_t n) {
 
 void hal_usb_console_close(void) {
     vtk_lock();
-    U.console = false;
-    U.rx_n = 0;
+    U.console = false, U.rx_n = 0;
     vtk_unlock();
 }

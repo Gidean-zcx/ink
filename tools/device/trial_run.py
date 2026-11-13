@@ -12,9 +12,8 @@ The device runs the factory firmware only between runs; writing needs the user's
                --out DIR --seconds N [--until TEXT]
 
 --install writes and verifies the trial build and leaves it running (the delivery; the backup stays the way back).
-  Then it serves the card files (D-138) on the console: the install bundle next to the image (build-s31/card-files,
-  or --card-files DIR) goes onto the storage card automatically, logged in DIR/card_files.txt. Without the bundle it
-  stops before writing anything, unless --no-card-files.
+  Then it serves the card files (D-138): the install bundle next to the image (or --card-files DIR) goes onto the card
+  over the console (DIR/card_files.txt). Without the bundle it stops before writing, unless --no-card-files.
 --restore-only writes the five regions back from the backup, checks them and boots the factory firmware.
 --card-files-only [--reset] only serves the card files to the running build: no backup, no image, no esptool.
 
@@ -27,7 +26,6 @@ import argparse
 import hashlib
 import json
 import os
-import re
 import shlex
 import subprocess
 import sys
@@ -84,7 +82,7 @@ def serve_card_files(r, reset=False):
 
 
 def card_files_ok(result):
-    return re.fullmatch(r"all-present|done ok=\d+ failed=0", result) is not None
+    return result == "all-present" or (result.startswith("done ok=") and result.endswith(" failed=0"))
 
 
 def prepare(r):
@@ -218,26 +216,20 @@ def main(argv=None):
         ap.error("--backup is needed unless --card-files-only")
     if not a.restore_only and not a.card_files_only and not a.image:
         ap.error("--image is needed unless --restore-only or --card-files-only")
-    if not a.card_files and a.image:
-        a.card_files = os.path.join(os.path.dirname(os.path.abspath(a.image)), "card-files")
+    a.card_files = a.card_files or (os.path.join(os.path.dirname(os.path.abspath(a.image)), "card-files") if a.image else None)
     a.esptool = [a.python, "-m", "esptool"]
     a.port_now = a.port
     os.makedirs(a.out, exist_ok=True)
     r = base.Run(a)
     r.touched = False
     try:
-        if a.card_files_only:  # nothing is written to flash, esptool is not run
-            try:
-                check_bundle(a)
-            except base.Stop as e:
-                r.say(f"STOP: {e}")
-                return 2
-            return 0 if card_files_ok(serve_card_files(r, a.reset)) else 5
         try:
-            p = prepare(r)
+            p = check_bundle(a) if a.card_files_only else prepare(r)
         except base.Stop as e:
             r.say(f"STOP before writing anything: {e}")
             return 2
+        if a.card_files_only:  # nothing is written to flash, esptool is not run
+            return 0 if card_files_ok(serve_card_files(r, a.reset)) else 5
         if a.restore_only:
             r.touched = True
         elif a.install:
@@ -250,9 +242,7 @@ def main(argv=None):
             if started is not None:
                 r.say("INSTALLED: the trial build is running; the way back is --restore-only" + ("" if started else
                       " (the console did not show the system start: look at trial_console.txt)"))
-                if not started:
-                    return 4
-                return 0 if a.no_card_files or card_files_ok(serve_card_files(r)) else 5
+                return 4 if not started else 0 if a.no_card_files or card_files_ok(serve_card_files(r)) else 5
         else:
             try:
                 install_and_run(r, p)

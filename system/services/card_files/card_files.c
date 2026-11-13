@@ -1,10 +1,7 @@
-/*
- * Card files (D-138, docs/system/card-files.md): the files apps need on the storage card, from the list built into
- * the firmware. Checked at boot, when a card goes in, when the USB disk ends, when a computer is plugged in and on
- * card.files_check; what is missing is fetched from the install tool on the USB console (protocol INKCF1) into
- * <path>.part and installed only when its whole sha256 matches the list. The computer never names a path: only the
- * list's paths and their .part are ever written. The fetch runs in a short-lived task that touches only the card.
- */
+/* Card files (D-138, docs/system/card-files.md): the files apps need on the card, from the list built into the firmware.
+ * Checked at boot, card in, USB disk over, computer plugged in and on card.files_check; what is missing comes from the
+ * install tool on the USB console (INKCF1) into <path>.part, installed only when its whole sha256 matches the list.
+ * The computer never names a path. The fetch runs in a short-lived task that touches only the card. */
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,9 +33,9 @@ enum {
     CF_STEP = 256 * 1024, CF_BUF = 16 * 1024,        /* hashed per executor turn, read per call */
     CF_RESUME = 64 * 1024,                           /* a .part resumes at a multiple of this; synced as often */
 };
-enum { E_UNKNOWN, E_OK, E_MISSING, E_WRONG, E_SKIP };
-enum { F_OK, F_NO, F_IO };                    /* a fetch */
-enum { D_OK, D_BAD, D_IO, D_NO };             /* a file's end, as DONE says it */
+enum { E_UNKNOWN, E_OK, E_MISSING, E_WRONG, E_SKIP, NOT_OK = -1 };
+enum { F_OK, F_NO, F_IO };        /* a fetch */
+enum { D_OK, D_BAD, D_IO, D_NO }; /* a file's end, as DONE says it */
 static const char *const DONE_WORD[] = {"ok", "bad", "io", "no"};
 static const char *const STATE_WORD[] = {"ready", "checking", "missing", "copying", "failed", "no_card"};
 
@@ -52,21 +49,17 @@ typedef struct {
 } ink_card_source_t;
 
 static struct {
-    int h_files, h_progress, h_card, h_mode, h_usb;
+    int h_files, h_progress, h_card, h_mode, h_usb, i, step, need, len, rx_n, rx_pos; /* i, step, off: the check's cursor */
     uint8_t st[INK_CARD_FILES_MAX];
-    bool valid[INK_CARD_FILES_MAX];
+    bool valid[INK_CARD_FILES_MAX], busy, again, prev_card, prev_normal, prev_usb, swap_from_task, overflow;
     volatile int phase, pct;
-    bool busy, again, prev_card, prev_normal, prev_usb, swap_from_task; /* exec.bg */
-    volatile bool stop;                       /* the card is about to be lent: let go */
-    int i, step, need;                        /* the check's cursor (exec.bg) */
+    volatile bool stop; /* the card is about to be lent: let go */
     int64_t off;
     ink_sha256_t sha;
     uint64_t t0, done_bytes, total_bytes;
     uint32_t swap, apps_stopped;
-    uint8_t *buf, *chunk;                     /* PSRAM */
+    uint8_t *buf, *chunk; /* PSRAM, with line */
     char *line, rx[512], out[200];
-    int len, rx_n, rx_pos;
-    bool overflow;
     osal_sem_t *swapped;
     ink_exec_job_t kick_job, step_job, ui_job, swap_job, end_job;
 } CF;
@@ -83,15 +76,14 @@ static bool path_ok(const char *p) {
 static void part_path(char *out, size_t cap, int i) { snprintf(out, cap, "%s.part", INK_CARD_FILES[i].path); }
 
 static void publish(int phase, int pct) { /* the conclusion is written first: then what others see */
-    CF.phase = phase;
-    CF.pct = pct;
+    CF.phase = phase, CF.pct = pct;
     ink_state_set_int(CF.h_progress, pct);
     ink_state_set_str(CF.h_files, STATE_WORD[phase]);
 }
 
-static int count(bool ok) { /* listed files that are in place (ok) or not */
+static int count(int status) { /* listed files with this status (NOT_OK: not in place) */
     int n = 0;
-    for (int i = 0; i < INK_CARD_FILES_COUNT; i++) n += CF.valid[i] && (CF.st[i] == E_OK) == ok;
+    for (int i = 0; i < INK_CARD_FILES_COUNT; i++) n += CF.valid[i] && (status == NOT_OK ? CF.st[i] != E_OK : CF.st[i] == status);
     return n;
 }
 
@@ -119,8 +111,6 @@ static bool hash_is(int i) {
     ink_sha256_final(&CF.sha, d);
     return !memcmp(d, INK_CARD_FILES[i].sha256, 32);
 }
-
-/* ------------------------------------------------------------ installing a checked .part */
 
 static void check_finish(void);
 static void swap_bg(void *arg) {
@@ -152,12 +142,9 @@ static void swap_ui(void *arg) { /* app states are the UI task's */
 }
 
 static void swap_start(uint32_t mask, bool from_task) {
-    CF.swap = mask;
-    CF.swap_from_task = from_task;
+    CF.swap = mask, CF.swap_from_task = from_task;
     ink_exec_post(INK_EXEC_UI, &CF.ui_job, swap_ui, NULL);
 }
-
-/* ------------------------------------------------------------ the install tool on the USB console */
 
 static int usb_line(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
 static int usb_line(const char *fmt, ...) {
@@ -187,8 +174,7 @@ static int usb_recv(uint32_t ms) {
             CF.line[CF.len] = 0;
             int n = CF.len;
             bool keep = !CF.overflow && !strncmp(CF.line, "INKCF1 ", 7);
-            CF.len = 0;
-            CF.overflow = false;
+            CF.len = 0, CF.overflow = false;
             if (keep) return n;
         }
         uint64_t now = osal_now_us();
@@ -197,8 +183,7 @@ static int usb_recv(uint32_t ms) {
         uint64_t left = (end - now + 999) / 1000;
         int n = hal_usb_console_read(CF.rx, sizeof CF.rx, left < CF_SLICE_MS ? (uint32_t)left : CF_SLICE_MS);
         if (n < 0) return -1;
-        CF.rx_n = n;
-        CF.rx_pos = 0;
+        CF.rx_n = n, CF.rx_pos = 0;
     }
 }
 
@@ -211,13 +196,9 @@ static int b64_decode(const char *s, uint8_t *out, size_t cap) {
                     : c == '+' ? 62 : c == '/' ? 63 : c == '=' ? 64 : -1;
         if (v < 0 || (pad && v != 64)) return -1;
         if (v == 64) { pad++; continue; }
-        acc = acc << 6 | (uint32_t)v;
-        bits += 6;
-        if (bits >= 8) {
-            bits -= 8;
-            if (n >= cap) return -1;
-            out[n++] = (uint8_t)(acc >> bits);
-        }
+        acc = acc << 6 | (uint32_t)v, bits += 6;
+        if (bits >= 8 && n >= cap) return -1;
+        if (bits >= 8) out[n++] = (uint8_t)(acc >> (bits -= 8));
     }
     return chars % 4 || pad > 2 ? -1 : (int)n;
 }
@@ -236,15 +217,9 @@ static int usb_reply(int idx, uint32_t off, uint8_t *buf, uint32_t len) {
     return b64_decode(l + 5 + pos, buf, len) == (int)len && ink_crc32(0, buf, len) == crc ? 0 : -1;
 }
 
-static void usb_close(void) {
-    hal_usb_console_close();
-    ink_power_release(INK_NEED_AWAKE);
-}
-
 static int usb_begin(void) { /* only a SERVE with our digest, after our HELLO, makes the tool count as there */
     if (hal_usb_console_open()) return -1;
-    CF.len = CF.rx_n = CF.rx_pos = 0;
-    CF.overflow = false;
+    CF.len = CF.rx_n = CF.rx_pos = 0, CF.overflow = false;
     ink_power_hold(INK_NEED_AWAKE);
     for (uint64_t start = osal_now_us(); osal_now_us() - start < CF_HELLO_FOR_MS * 1000ull;) {
         usb_line("HELLO %s %d", INK_CARD_FILES_DIGEST, CF.need);
@@ -256,7 +231,8 @@ static int usb_begin(void) { /* only a SERVE with our digest, after our HELLO, m
         }
     }
 none:
-    usb_close();
+    hal_usb_console_close();
+    ink_power_release(INK_NEED_AWAKE);
     return -1;
 }
 
@@ -271,15 +247,10 @@ static int usb_fetch(int idx, uint32_t off, uint8_t *buf, uint32_t len) {
             if (n < 0) return F_IO;
             if (n == 0) break;
             int r = usb_reply(idx, off, buf, len);
-            if (r == 0) {
-                ink_probe_count("card_files.chunk");
-                return F_OK;
-            }
-            if (r == 1) return F_NO;
-            if (r == -1) {
-                ink_probe_count("card_files.rejected");
-                break;
-            }
+            if (r == 0) ink_probe_count("card_files.chunk");
+            if (r >= 0) return r ? F_NO : F_OK;
+            if (r == -1) ink_probe_count("card_files.rejected");
+            if (r == -1) break;
         }
     }
     return F_IO;
@@ -291,20 +262,16 @@ static void usb_done(int idx, int how) {
 
 static void usb_end(int ok, int failed) {
     if (!usb_line("BYE %d %d", ok, failed)) usb_recv(CF_REPLY_MS);
-    usb_close();
+    hal_usb_console_close();
+    ink_power_release(INK_NEED_AWAKE);
 }
 
 static const ink_card_source_t USB_SOURCE = {"usb", usb_begin, usb_fetch, usb_done, usb_end};
 
-/* ------------------------------------------------------------ the fetch task (card, states, log and probes only) */
-
-static void make_parents(const char *path) {
+static void make_parents(const char *path) { /* below /content/ */
     char dir[INK_FS_PATH_MAX + 8];
     snprintf(dir, sizeof dir, "%s", path);
-    for (char *p = dir + 9; (p = strchr(p, '/')) != NULL; *p++ = '/') {
-        *p = 0;
-        hal_fs_mkdir(dir);
-    }
+    for (char *p = dir + 9; (p = strchr(p, '/')) != NULL; *p++ = '/') *p = 0, hal_fs_mkdir(dir);
 }
 
 /* Write <path>.part from its source, resuming a .part that is there; check the whole file; install it (D_*). */
@@ -332,8 +299,7 @@ static int fetch_file(const ink_card_source_t *src, int i) {
             r = src->fetch(i, off, CF.chunk, len);
             if (r == F_OK && hal_fs_write(f, CF.chunk, len) != (ssize_t)len) r = F_IO;
             if (r != F_OK) break;
-            off += len;
-            CF.done_bytes += len;
+            off += len, CF.done_bytes += len;
             if (off % CF_RESUME == 0) hal_fs_sync(f);
             publish(INK_CARD_COPYING, (int)(CF.done_bytes * 100 / (CF.total_bytes ? CF.total_bytes : 1)));
         }
@@ -354,19 +320,15 @@ static int fetch_file(const ink_card_source_t *src, int i) {
             return D_OK;
         }
         CF.done_bytes -= e->size;
-        if (!start) {
-            ink_probe_count("card_files.bad_hash");
-            return D_BAD;
-        }
-        ink_probe_count("card_files.restart"); /* perhaps a .part of an older list: once more from 0 */
+        ink_probe_count(start ? "card_files.restart" : "card_files.bad_hash"); /* a resumed one may be an older list's */
+        if (!start) return D_BAD;
     }
     return D_BAD;
 }
 
 static void kick_bg(void *arg);
-static void session_end_bg(void *arg) {
-    (void)arg;
-    CF.busy = false;
+static void session_end_bg(void *arg) { /* also the check's end */
+    (void)arg, CF.busy = false;
     if (CF.again) kick_bg(NULL);
 }
 
@@ -388,16 +350,14 @@ static void session(void *arg) {
         }
         src->end(ok, failed);
         ink_log(INK_LOG_INFO, "card", "card files: session %s ok=%d failed=%d", src->name, ok, failed);
-        bool all = count(false) == 0;
+        bool all = count(NOT_OK) == 0;
         publish(all ? INK_CARD_READY : INK_CARD_FAILED, all ? 100 : CF.pct);
     }
     ink_exec_post(INK_EXEC_BG, &CF.end_job, session_end_bg, NULL);
 }
 
-/* ------------------------------------------------------------ the check (exec.bg, a step at a time) */
-
 static void check_finish(void) {
-    CF.need = count(false);
+    CF.need = count(NOT_OK);
     publish(CF.need ? INK_CARD_MISSING : INK_CARD_READY, CF.need ? 0 : 100);
     osal_task_cfg_t cfg = {.name = "cardfiles", .fn = session, .arg = (void *)&USB_SOURCE, .stack_bytes = 6144,
                            .priority = OSAL_PRIO_LOW, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -438,9 +398,7 @@ static void check_step(void *arg) {
         else CF.step = 0, CF.i++;
     }
     ink_fs_card_release();
-    int wrong = 0;
-    for (int i = 0; i < INK_CARD_FILES_COUNT; i++) wrong += CF.st[i] == E_WRONG;
-    ink_log(INK_LOG_INFO, "card", "card files: need=%d ok=%d failed=%d check_ms=%llu", count(false), count(true), wrong,
+    ink_log(INK_LOG_INFO, "card", "card files: need=%d ok=%d failed=%d check_ms=%llu", count(NOT_OK), count(E_OK), count(E_WRONG),
             (unsigned long long)((osal_now_us() - CF.t0) / 1000));
     if (CF.swap) swap_start(CF.swap, false);
     else check_finish();
@@ -450,29 +408,27 @@ static void kick_bg(void *arg) {
     (void)arg;
     CF.again = CF.busy;
     if (CF.busy) return;
-    CF.busy = true;
-    CF.i = CF.step = 0;
-    CF.off = 0;
-    CF.swap = 0;
-    CF.t0 = osal_now_us();
+    CF.busy = true, CF.i = CF.step = 0, CF.off = 0, CF.swap = 0, CF.t0 = osal_now_us();
     ink_probe_count("card_files.check");
     check_step(NULL);
 }
 
 static void kick(void) { ink_exec_post(INK_EXEC_BG, &CF.kick_job, kick_bg, NULL); }
 
-static void on_storage(void *ctx, int h, const char *id) { /* exec.bg: a card in, the USB disk over, a computer */
-    (void)ctx; (void)h; (void)id;
+static bool storage_rose(void) { /* a card in, the USB disk over, a computer plugged in: since the last look */
     int64_t card = 0, usb = 0;
     char mode[8] = "";
     ink_state_get_int(CF.h_card, &card);
     ink_state_get_int(CF.h_usb, &usb);
     ink_state_get_str(CF.h_mode, mode, sizeof mode);
-    bool normal = !strcmp(mode, "normal"), go = (card && !CF.prev_card) || (normal && !CF.prev_normal) || (usb && !CF.prev_usb);
-    CF.prev_card = card;
-    CF.prev_normal = normal;
-    CF.prev_usb = usb;
-    if (go) kick_bg(NULL);
+    bool normal = !strcmp(mode, "normal"), rose = (card && !CF.prev_card) || (normal && !CF.prev_normal) || (usb && !CF.prev_usb);
+    CF.prev_card = card, CF.prev_normal = normal, CF.prev_usb = usb;
+    return rose;
+}
+
+static void on_storage(void *ctx, int h, const char *id) { /* exec.bg */
+    (void)ctx, (void)h, (void)id;
+    if (storage_rose()) kick_bg(NULL);
 }
 
 static void on_release(void *ctx) { (void)ctx; CF.stop = true; }
@@ -487,8 +443,7 @@ static const ink_cap_t CAPS[] = {
 };
 static const ink_state_def_t ST_FILES = {.id = "card.files", .type = INK_ST_STR,
     .title = "存储卡上系统要用的文件（ready 齐了，checking，missing 缺，copying 正从电脑放，failed 没放成，no_card）"};
-static const ink_state_def_t ST_PROGRESS = {.id = "card.files_progress", .type = INK_ST_INT, .title = "从电脑放文件的进度（0-100）",
-    .min_interval_ms = 2000};
+static const ink_state_def_t ST_PROGRESS = {.id = "card.files_progress", .type = INK_ST_INT, .title = "从电脑放文件的进度（0-100）", .min_interval_ms = 2000};
 
 ink_card_state_t ink_card_files_state(const char *app, int *percent) {
     bool mine = false, all = true;
@@ -507,17 +462,12 @@ int ink_card_files_init(void) {
     CF.buf = osal_malloc(CF_BUF + INK_CARD_CHUNK + INK_CARD_LINE_MAX + 1, OSAL_MEM_EXTERNAL);
     CF.swapped = osal_sem_create(0, 1);
     if (CF.h_files < 0 || CF.h_progress < 0 || !CF.buf || !CF.swapped) return -1;
-    CF.chunk = CF.buf + CF_BUF;
-    CF.line = (char *)CF.chunk + INK_CARD_CHUNK;
+    CF.chunk = CF.buf + CF_BUF, CF.line = (char *)CF.chunk + INK_CARD_CHUNK;
     publish(INK_CARD_CHECKING, 0);
     CF.h_card = ink_state_find("storage.card"); /* the file service's, defined before this */
     CF.h_usb = ink_state_find("usb.connected");
     CF.h_mode = ink_state_find("storage.mode");
-    int64_t v = 0;
-    char mode[8] = "";
-    CF.prev_card = ink_state_get_int(CF.h_card, &v) && v;
-    CF.prev_usb = ink_state_get_int(CF.h_usb, &v) && v;
-    CF.prev_normal = ink_state_get_str(CF.h_mode, mode, sizeof mode) > 0 && !strcmp(mode, "normal");
+    storage_rose(); /* as it is now: the boot check covers it */
     if (ink_fs_on_release(on_release, NULL) || ink_state_watch("storage.card", on_storage, NULL, INK_EXEC_BG) ||
         ink_state_watch("storage.mode", on_storage, NULL, INK_EXEC_BG) || ink_state_watch("usb.connected", on_storage, NULL, INK_EXEC_BG))
         return -1;

@@ -1,8 +1,6 @@
-/*
- * What an app page says while a file it needs from the storage card cannot be used (D-138: never a blank page). One
- * paragraph over the page and no button: the next step is plugging in a computer, which the system notices by
- * itself. Only that text changes with the state (progress in tenths); once the files are in place the page opens again.
- */
+/* What an app page says while a file it needs from the card cannot be used (D-138: never a blank page): one paragraph,
+ * no button (plugging in a computer is noticed by itself). Only that text changes with the state (progress in tenths);
+ * once the files are in place the page opens again. */
 #include <stdio.h>
 #include <string.h>
 
@@ -51,7 +49,6 @@ static void again(void *arg) { /* UI, after the old page's own cleanup on BG: a 
     if (!strcmp(ink_ui_top_name(), N.top)) ink_ui_redraw();
 }
 static void barrier(void *arg) { (void)arg; ink_exec_post(INK_EXEC_UI, &N.again, again, NULL); }
-
 static void changed(void *ctx, int h, const char *id) { /* UI */
     (void)ctx; (void)h; (void)id;
     bool lent;
@@ -67,19 +64,16 @@ static void changed(void *ctx, int h, const char *id) { /* UI */
     if (strcmp(lv_label_get_text(N.label), N.text)) lv_label_set_text(N.label, N.text); /* only this text is redrawn */
 }
 
-static void gone(lv_event_t *e) {
+static void gone(lv_event_t *e) { /* the watches go with the text (the table has 96 places) */
     (void)e;
-    for (int i = 0; i < 2; i++)
-        if (N.watch[i] > 0) ink_state_unwatch(N.watch[i]);
-    N.watch[0] = N.watch[1] = 0;
-    N.box = N.label = NULL;
+    for (int i = 0; i < 2; i++) if (N.watch[i] > 0) ink_state_unwatch(N.watch[i]);
+    N.watch[0] = N.watch[1] = 0, N.box = N.label = NULL;
 }
 
 lv_obj_t *ink_card_files_notice(lv_obj_t *screen, const char *app, const char *what) {
     bool lent;
     if (N.box) lv_obj_delete(N.box);
-    N.app = app;
-    N.what = what;
+    N.app = app, N.what = what;
     N.from_ready = compose(&lent) == INK_CARD_READY && !lent;
     N.box = ink_ui_empty(screen, N.text, NULL, NULL, NULL);
     N.label = lv_obj_get_child(N.box, 0);
@@ -90,8 +84,7 @@ lv_obj_t *ink_card_files_notice(lv_obj_t *screen, const char *app, const char *w
     lv_obj_add_event_cb(N.box, gone, LV_EVENT_DELETE, NULL);
     N.watch[0] = ink_state_watch_handle("card.files", changed, NULL, INK_EXEC_UI); /* and card.files_progress */
     N.watch[1] = ink_state_watch_handle("storage.mode", changed, NULL, INK_EXEC_UI);
-    ink_call_opts_t opts = {.src = INK_SRC_SYSTEM};
-    if (N.from_ready) ink_cap_call("card.files_check", NULL, &opts);
+    if (N.from_ready) ink_cap_call("card.files_check", NULL, &(ink_call_opts_t){.src = INK_SRC_SYSTEM});
     return N.box;
 }
 
