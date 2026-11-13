@@ -52,7 +52,8 @@ int hal_cell_sms_take(int index, hal_cell_sms_t *m) {
     return (int)strlen(m->text);
 }
 
-int hal_cell_dial(const char *number) { return nt26_dial(number) == NT26_OK ? 0 : -1; }
+int hal_cell_dial(const char *number) { nt26_result_t r = nt26_dial(number); return r == NT26_OK || r == NT26_CALL_ENDED ? 0 : -1; }
+int hal_cell_call_active(void) { bool on; return nt26_outgoing_active(&on) == NT26_OK ? on : -1; }
 int hal_cell_answer(void) { return nt26_answer() == NT26_OK ? 0 : -1; }
 int hal_cell_hangup(void) { return nt26_hangup() == NT26_OK ? 0 : -1; }
 int hal_cell_mute(bool on, bool *muted) { return nt26_mute(on, muted) == NT26_OK ? 0 : -1; }
@@ -80,6 +81,12 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
         ev->type = HAL_CELL_EV_CALL_ENDED;
         return 1;
     }
+    if (!strcmp(line, "BUSY") || !strcmp(line, "NO ANSWER")) { /* why an outgoing call did not connect */
+        ev->type = HAL_CELL_EV_CALL_ENDED;
+        ev->end = line[0] == 'B' ? HAL_CELL_END_BUSY : HAL_CELL_END_NO_ANSWER;
+        return 1;
+    }
+
     int index, direction, status;
     if (sscanf(line, "+CLCC: %d,%d,%d", &index, &direction, &status) == 3 && direction == 0 && status == 0) {
         ev->type = HAL_CELL_EV_CALL_ACTIVE;

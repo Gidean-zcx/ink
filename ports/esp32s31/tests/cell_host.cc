@@ -57,7 +57,7 @@ static std::mutex threads_mu, log_mu, event_mu, rx_mu, pool_mu;
 static std::condition_variable pool_cv;
 static std::vector<std::thread> threads;
 static std::string logs;
-static std::array<std::atomic<int>, F_CORRUPT + 1> flags;
+static std::array<std::atomic<int>, F_CALL + 1> flags;
 static std::array<std::atomic<unsigned>, N_DNS + 1> counts;
 static std::atomic<int> mrdy{1}, srdy{1}, rate{2000000}, slot{0};
 static std::atomic<bool> bh{false}, prompt{false};
@@ -264,6 +264,10 @@ esp_err_t UartUhci::Transmit(const uint8_t *p,size_t n) {
     else if (cmd=="AT+CGMR") reply("\r\nFAKE_R1 123456789012345\r\nOK\r\n");
     else if (cmd=="ATI") reply("\r\nATI\r\nFAKE-NT26\r\n+CMTI: \"SM\",7\r\nOK\r\n");
     else if (cmd.find("AT+CFUN=")==0) { counts[N_RADIO]++; reply("\r\nOK\r\n"); }
+    else if (cmd.find("ATD")==0 && (flags[F_CALL]==1 || flags[F_CALL]==2)) reply(flags[F_CALL]==1 ? "\r\nBUSY\r\n" : "\r\nNO ANSWER\r\n");
+    else if (cmd=="AT+CHUP" && flags[F_CALL]==3) reply("\r\nNO CARRIER\r\n");
+    else if (cmd=="AT+CLCC" && (flags[F_CALL]==4 || flags[F_CALL]==5))
+        reply(flags[F_CALL]==4 ? "\r\n+CLCC: 1,0,3,0,0,\"00000000000\",129\r\nOK\r\n" : "\r\n+CLCC: 1,0,0,0,0,\"00000000000\",129\r\nOK\r\n");
     else reply("\r\nOK\r\n");
     return ESP_OK;
 }

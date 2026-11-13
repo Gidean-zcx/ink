@@ -6,7 +6,7 @@
 
 | 本地文件 | 原厂路径 | 原文 SHA-256 | 本地 SHA-256 |
 | --- | --- | --- | --- |
-| `uart_eth_modem.cc` | `main/boards/common/board/uart_eth_modem.cc` | `5e9157aa89136be4c4ff3d634fd7d4066b1ea200373b9a60266f603d72c11c26` | `4640ac044672a68279f9262ccf1b5be67b67683462437e1b02f9c31ffba25ed4` |
+| `uart_eth_modem.cc` | `main/boards/common/board/uart_eth_modem.cc` | `5e9157aa89136be4c4ff3d634fd7d4066b1ea200373b9a60266f603d72c11c26` | `ad9fd56e46b1bd06d8fc8d93965d309d51ed757a367b3a717afa0fc06c328788` |
 | `uart_eth_modem.h` | `main/boards/common/board/uart_eth_modem.h` | `00ffb790a900a072e6daeefd0192c361b93d7df13b08669ad4389d2cef47b78d` | `8ff6aba40eda4ac5cb3f4057f6492a7ddfe5eed6226936d1c435034f1eb354c2` |
 | `LICENSE` | `main/boards/common/camera/GC2145-LICENSE` | `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` | `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` |
 | `LICENSE-MIT` | `LICENSE` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` |
@@ -22,6 +22,7 @@
 5. `ECSCLKEX` 按未知持久性拒绝：初始化保留配置只读失败事件，不打印初始化成功；已有真实握手的通道接 iot_eth，睡眠配置没有成功。这个继续接网行为与任务书“被拒不能继续”的严格解释冲突，见 REPORT，待主会话复核。
 6. `nt26_lifecycle.*` 从 `nt26_board.*` 整函数提取 `OnNetworkEvent`、`SignalWaitBits`、`TearDownModem`、`PreparePowerOff`、`StartOrRestartModem`、`IsNetworkReady`、`EnsureNetworkReady`、`OnPowerRestored`；保留 epoch、共享所有权、操作互斥、P14 后 1 秒、5 秒节流。删除 Board/UI/Application/NVS/状态栏接口，不复制重启整机或额外恢复任务；零等待请求不在网络事件任务里阻塞冷启动。配置拒绝不触发无限配置重试。
 7. `CMakeLists.txt`、`ink_modem_log.h` 为本项目适配；`ports/esp32s31/s31_*` 是 C HAL/策略胶水。源组件的硬件实现仍来自 `vendor/uart-uhci`，不另建 UHCI 对象。
+8. phone-3 复核（2026-11-13）：在已列出的本地 1502–1524 段内，`AT+CLCC` 等待回复期间收到的 `+CLCC:` 行算作它的回复（原来按 URC 收走，查询只拿到 `OK`），用于通话接通前每秒查一次；行数不变。
 
 ## 改动行清单
 

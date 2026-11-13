@@ -35,7 +35,11 @@ try:
     end = source.index('    case K_CLCC:', start)
     model.write_text(source[:start] + '    case K_CMUT_Q: case K_CMUT: case K_VTS: r = HAL_AT_ERROR; break;\n' + source[end:])
     audio.write_text(original[audio].replace('    bool go = want != AU.route;\n', '    bool go = want != AU.route;\n    for (int i = 0; i < MAX_FOCUS && go; i++)\n        if (AU.focus[i].token && AU.focus[i].prio == INK_AUDIO_PRIO_CALL) go = false;\n'))
-    phone.write_text(original[phone].replace('    ink_cap_call(a->capability, NULL, &o);', '    o.done = NULL;\n    ink_cap_call(a->capability, NULL, &o);'))
+    # phone-3: the call screen's buttons go through control(); the mutant calls the capability without a reply
+    needle = '    request(a->capability, a->args_json);\n}'
+    assert original[phone].count(needle) == 1
+    phone.write_text(original[phone].replace(needle, '    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = P.member, .args_json = a->args_json};\n    ink_cap_call(a->capability, NULL, &o);\n}'))
+
     build('negative')
     result, data = run('negative')
     failures = '\n'.join(data.get('warnings', []))

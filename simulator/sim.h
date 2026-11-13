@@ -400,4 +400,12 @@ void sim_fatal(const char *reason) __attribute__((noreturn));
 /** Entry point of the simulated system (provided by the system/app under test). */
 void ink_main(void);
 
+/* ---- phone-3: the far end of an outgoing call that has not connected (state 3) refuses it, in event context ---- */
+void sim_net_remote_busy(void);      /* the modem reports BUSY (busy, or the call was rejected) */
+void sim_net_remote_no_answer(void); /* the modem reports NO ANSWER (nobody picked up) */
+/* How the NT26 may report a call, unverified on the device (phone-3 review): no unsolicited +CLCC (AT+CLCC still
+ * answers), BUSY or NO ANSWER as ATD's own final result, NO CARRIER ending AT+CHUP before its OK. */
+enum { SIM_CALL_NO_CLCC_URC = 1, SIM_CALL_ATD_BUSY = 2, SIM_CALL_ATD_NO_ANSWER = 4, SIM_CALL_CHUP_NO_CARRIER = 8 };
+void sim_net_call_quirks(unsigned quirks); /* SIM_CALL_* flags, 0 = the default model */
+
 #endif

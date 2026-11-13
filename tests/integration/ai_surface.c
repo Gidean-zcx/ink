@@ -148,6 +148,7 @@ static const struct {
     {"card.files_check", NULL}, /* auto-provision-1 */
     {"time.almanac", ""},
     {"music.mode", "mode"}, {"music.favorites", NULL}, /* music-3 */
+    {"phone.detail", "id"}, {"phone.delete", "id"}, {"phone.clear", NULL}, /* phone-3 */
     {NULL, NULL},
 };
 
@@ -176,7 +177,9 @@ static const struct {
     {"system.upgrade_from_card", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", ""},
     {"shell.pin_submit", "only the person submits the local PIN buffer", NULL},
     {"memo.voice", "the memo app's own step: a finished recording or the hub's words, never typed in by the model", ""},
+    {"phone.restore", "the inverse of phone.delete: reached only through system.undo (phone-3)", "token"},
     {NULL, NULL, NULL},
+
 };
 
 static const char *const STATES[] = {
