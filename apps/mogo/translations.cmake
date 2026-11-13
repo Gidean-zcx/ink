@@ -9,7 +9,10 @@ foreach(table ${INK_I18N_TABLES})
     set(base "${base}\n${extra}")
   endif()
   file(WRITE ${CMAKE_BINARY_DIR}/reader-i18n/${language} "${base}")
-  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${table}) # a changed system table is copied again
+  if(NOT ESP_PLATFORM) # on the S31 the ink_system component already lists the system tables: a second spelling of
+    # the same path is a duplicate output for Ninja ("en.tsv is defined as an output multiple times", CI 11-14)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${table}) # a changed system table is copied again
+  endif()
   list(APPEND mogo_tables ${CMAKE_BINARY_DIR}/reader-i18n/${language})
 endforeach()
 set(INK_I18N_TABLES ${mogo_tables})
