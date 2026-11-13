@@ -77,6 +77,8 @@ def card(sd, phase):
         longer.mkdir(parents=True)
         png(longer / ("a" * 36 + ".png"), 90)
         files += [(photos / "坏的.png", when(11, 12)), (longer / ("a" * 36 + ".png"), when(11, 13))]
+        png(photos / "旧照.png", 120)  # from a clock that was never set: before 2020
+        files.append((photos / "旧照.png", datetime.datetime(2019, 6, 1, 10, tzinfo=TZ).timestamp()))
     kid = sd / "content/.m/kid/照片"
     kid.mkdir(parents=True)
     png(kid / "kid-1.png", 30)

@@ -247,10 +247,23 @@ static void ai_walk(void) {
     ok("gallery.show", "{\"view\":\"months\"}"); quiet(); look(); CHECK(has("2026年9月"), "AI: the months");
     double n = metric("gallery.page_ready"); ok("gallery.find", "{\"month\":\"2026-09\"}"); page_ready(n);
     look(); CHECK(G.count == 9 && has("2026年9月 · 9 张"), "AI: the September filter, the same snapshot");
+    n = metric("gallery.page_ready"); ok("gallery.find", "{\"album\":\"/me/旅行\"}"); page_ready(n);
+    look(); CHECK(G.filter == FILTER_ALBUM && G.count == 9 && has("相簿：旅行 · 9 张"), "find_album: one folder");
+    n = metric("gallery.page_ready"); ok("gallery.find", "{}"); page_ready(n);
+    CHECK(G.filter == FILTER_NONE && G.count == 28, "find_clear: no arguments, no filter");
+    CHECK(AI("gallery.find", "{\"album\":\"/me/没有\"}") && g_rc.status == INK_RC_INVALID, "an unknown album is refused");
+    n = metric("gallery.page_ready"); ok("gallery.find", "{\"month\":\"2026-09\"}"); page_ready(n);
     char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)G.ids[0]);
     n = metric("gallery.photo_drawn"); ok("photo.open", args); photo_drawn(n);
     look(); CHECK(!strcmp(G.path, TEXT_PNG) && has("第1/9张") && has("适合屏幕") && has("photo.zoom"), "AI: the same photo and actions");
     n = metric("gallery.photo_drawn"); ok("photo.zoom", "{\"step\":\"in\"}"); photo_drawn(n);
+    n = metric("gallery.photo_drawn"); ok("photo.zoom", "{\"step\":\"in\"}"); photo_drawn(n);
+    look(); CHECK(G.v.zoom == 4 && has("4 倍"), "zoom_steps: fit, 2x, 4x");
+    CHECK(AI("photo.zoom", "{\"step\":\"in\"}") && G.v.zoom == 4, "no further than 4x");
+    n = metric("gallery.photo_drawn"); ok("photo.zoom", "{\"step\":\"out\"}"); photo_drawn(n); CHECK(G.v.zoom == 2, "out: back to 2x");
+    uint32_t shown = G.photo; float cy = G.v.cy; n = metric("gallery.photo_drawn"); key(INK_KEY_NEXT); photo_drawn(n);
+    CHECK(G.photo == shown && G.v.cy > cy, "keys_pan_then_next: zoomed, the page key reads down the photo first");
+    n = metric("gallery.photo_drawn"); key(INK_KEY_PREV); photo_drawn(n);
     for (int i = 0; i < 4; i++) { n = metric("gallery.photo_drawn"); if (AI("photo.pan", "{\"dir\":\"right\"}") && g_rc.status == INK_RC_DONE) photo_drawn(n); }
     for (int i = 0; i < 4; i++) { n = metric("gallery.photo_drawn"); if (AI("photo.pan", "{\"dir\":\"down\"}") && g_rc.status == INK_RC_DONE) photo_drawn(n); }
     on_ui(check_text); look(); CHECK(G.v.zoom == 2 && text_visible && has("2 倍"), "AI: 2x and panned to the words (bottom right)");
@@ -335,7 +348,10 @@ static void more(void) {
     ok("photo.info", NULL); quiet(); look();
     CHECK(has("2026年11月2日 10:20") && !has("文件时间") && has("200×300") && has("照片") && has("JPEG") && has("KB"), "info_exif_date: EXIF time, upright size, size, album");
     shot("info_jpeg"); ok("shell.back", NULL); quiet(); ok("shell.back", NULL); quiet();
-    open_photo("/me/照片/坏的.png"); ok("photo.info", NULL); quiet(); look();
+    ok("system.home", NULL); quiet(); open_gallery(); ok("gallery.show", "{\"view\":\"months\"}"); quiet(); look();
+    CHECK(has("日期不详") && G.data->nmonths && !strcmp(G.data->months[G.data->nmonths - 1].key, "undated"), "undated_bucket: the last row is 日期不详");
+    ok("gallery.show", "{\"view\":\"all\"}"); quiet();
+    open_photo("/me/照片/坏的.png"); CHECK(find_text("这张照片读不出来"), "a broken file says so"); ok("photo.info", NULL); quiet(); look();
     CHECK(!has("尺寸") && has("文件时间") && has("名字") && has("大小"), "info_probe_fail: what is known, no size row, no empty line"); shot("info_missing");
     ok("shell.back", NULL); quiet(); ok("shell.back", NULL); quiet();
     /* long path: only delete forever, and that asks */
@@ -345,6 +361,17 @@ static void more(void) {
     ink_confirm_view_t card;
     press("photo.delete_forever"); CHECK(ink_confirm_list(&card, 1) == 1 && strstr(card.detail, "不能恢复"), "delete_forever_card says it cannot be undone");
     CHECK(ink_confirm_decide(card.token, false, INK_SRC_TOUCH) == 0, "cancel"); quiet(); CHECK(exists(LONG_PNG), "cancelled: the photo stays");
+    ok("shell.back", NULL); quiet();
+    /* restore beside a newer photo of the same name; restore what is not in 最近删除; trash a photo that changed */
+    open_photo("/me/照片/nov-02.png"); ok("photo.trash", NULL); quiet(); on_ui(read_undo);
+    CHECK(ink_fs_write_atomic("/me/照片/nov-02.png", "a newer synthetic file", 22) == 0, "a new file takes the old name");
+    char again[INK_FS_PATH_MAX + 16]; snprintf(again, sizeof again, "{\"path\":\"%s\"}", trashed); ok("photo.restore", again);
+    CHECK(exists("/me/照片/nov-02（恢复）.png") && exists("/me/照片/nov-02.png") && !exists(trashed), "restore_name_clash: 「（恢复）」 before the extension");
+    CHECK(AI("photo.restore", "{\"path\":\"/me/照片/nov-04.png\"}") && g_rc.status == INK_RC_INVALID && exists("/me/照片/nov-04.png"), "restore_error: only what is in 最近删除");
+    open_photo("/me/照片/nov-03.png");
+    CHECK(ink_fs_write_atomic("/me/照片/nov-03.png", "changed under the viewer", 24) == 0, "the shown file changes");
+    CHECK(AI("photo.trash", NULL) && g_rc.status == INK_RC_STALE && exists("/me/照片/nov-03.png"), "trash_stale: refused, the photo stays");
+    quiet(); look(); CHECK(has("这张照片刚刚变了"), "and the page says why");
     ok("shell.back", NULL); quiet();
     /* a book arrives: nothing is redrawn */
     ok("system.home", NULL); quiet(); open_gallery(); on_ui(area_empty); publish("book"); mark("book", "before");

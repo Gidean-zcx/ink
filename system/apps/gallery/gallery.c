@@ -965,6 +965,7 @@ static const ink_activity_t TRASH = {.name = "GalleryTrash", .app = "gallery", .
 
 /* ------------------------------------------------------------------ 最近删除 on the card (background executor) */
 
+enum { PHOTO_CHANGED = -100 }; /* the photo on the screen is not the one on the card any more */
 typedef struct { ink_exec_job_t job; ink_call_t *call; uint32_t epoch, id; int64_t size, mtime; int err; char from[INK_FS_PATH_MAX], to[INK_FS_PATH_MAX]; } move_t;
 static void parent_of(const char *path, char *out, size_t cap) { snprintf(out, cap, "%.*s", (int)(base_name(path) - 1 - path), path); }
 static void up(char *dir) { char *s = strrchr(dir, '/'); if (s) *s = 0; }
@@ -978,7 +979,8 @@ static void trash_job(void *arg) { /* into <space>/最近删除/<today>/<where i
         uint32_t revision = 0; parent_of(m->to, dir, sizeof dir);
         m->err = ink_fs_mkdir(dir);
         if (!m->err) m->err = ink_fs_lookup(m->id, &e);
-        if (!m->err && (strcmp(e.path, m->from) || e.size != m->size || e.mtime != m->mtime)) m->err = INK_FS_ERR_EXISTS - 100; /* changed */
+        if ((!m->err && (strcmp(e.path, m->from) || e.size != m->size || e.mtime != m->mtime)) || m->err == INK_FS_ERR_NOT_FOUND)
+            m->err = PHOTO_CHANGED; /* not the photo on the screen any more */
         for (int i = 0; !m->err && !(revision = ink_fs_revision()) && i < 50; i++) osal_task_delay_us(20000);
         if (!m->err) m->err = revision ? ink_fs_move_if_revision(m->from, m->to, revision, NULL) : INK_FS_ERR_BUSY;
     }
@@ -986,7 +988,7 @@ static void trash_job(void *arg) { /* into <space>/最近删除/<today>/<where i
 }
 static const char *move_error(int err) {
     switch (err) {
-    case INK_FS_ERR_EXISTS - 100: return TR("这张照片刚刚变了，请重新打开");
+    case PHOTO_CHANGED: return TR("这张照片刚刚变了，请重新打开");
     case INK_FS_ERR_PATH: return TR("这张照片的路径太长，放不进最近删除，只能永久删除");
     case INK_FS_ERR_NO_SPACE: return TR("存储卡满了，照片还在原处");
     case INK_FS_ERR_EXISTS: return TR("最近删除里已经有同名的照片，照片还在原处");
@@ -999,8 +1001,8 @@ static void trash_done(void *arg) {
     move_t *m = arg; ink_call_t *c = m->call;
     G.trashing[0] = 0;
     if (m->epoch == ink_member_epoch() && m->err) {
-        c->rc.status = m->err == INK_FS_ERR_EXISTS - 100 ? INK_RC_STALE : INK_RC_FAILED;
-        snprintf(c->rc.detail, sizeof c->rc.detail, "%s", ink_fs_err_name(m->err == INK_FS_ERR_EXISTS - 100 ? INK_FS_ERR_EXISTS : m->err));
+        c->rc.status = m->err == PHOTO_CHANGED ? INK_RC_STALE : INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "%s", ink_fs_err_name(m->err == PHOTO_CHANGED ? INK_FS_ERR_EXISTS : m->err));
         clear_status(); snprintf(G.message, sizeof G.message, "%s", move_error(m->err));
         if (m->err == INK_FS_ERR_PATH) { ink_jw_t w; ink_jw_init(&w, G.forever_args, sizeof G.forever_args); ink_jw_raw(&w, "{\"path\":"); ink_jw_str(&w, m->from); ink_jw_raw(&w, "}"); }
         if (G.body && !strcmp(ink_ui_page_name(), "Photo")) { build_body(); ink_ui_hint_obj(G.body, INK_REFRESH_UI); ink_ui_content_changed(); }
