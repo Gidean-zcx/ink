@@ -1497,7 +1497,7 @@ if(INK_HAVE_FONTS)
     COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.budget.json
-            --assets ${INK_ASSETS_DIR} --content ${CMAKE_SOURCE_DIR}/tests/fixtures/content-bad
+            --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/content-bad
             --out ${CMAKE_BINARY_DIR}/test-out/reader_empty-metalio-plus --quiet --trace --frames --no-random-outages)
   # PQ-BN direct drive (research PR #7) on the same scenarios and budgets, plus its flash pause
   add_test(NAME scenario-reader_basic-metalio-plus-pqbn
@@ -2158,4 +2158,11 @@ if(INK_HAVE_FONTS)
     DEPENDS tools/mogo_font.py ${INK_TEST_CONTENT}/books/测试长书.txt COMMENT "test content: the reader's font")
   add_custom_target(ink_reader_font ALL DEPENDS ${INK_TEST_CONTENT}/fonts/InkSC.ttf)
   add_dependencies(ink_assets ink_reader_font)
+  # The one empty book with the reader's font, as a card would have it: it fails as a book, not as a missing font.
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/content-bad/fonts/InkSC.ttf
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/fixtures/content-bad ${CMAKE_BINARY_DIR}/content-bad
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${INK_TEST_CONTENT}/fonts ${CMAKE_BINARY_DIR}/content-bad/fonts
+    DEPENDS ${INK_TEST_CONTENT}/fonts/InkSC.ttf COMMENT "test content: the empty book with the reader's font")
+  add_custom_target(ink_content_bad ALL DEPENDS ${CMAKE_BINARY_DIR}/content-bad/fonts/InkSC.ttf)
+  add_dependencies(ink_assets ink_content_bad)
 endif()

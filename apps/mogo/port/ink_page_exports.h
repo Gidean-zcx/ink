@@ -6,6 +6,7 @@ static int ink_mogo_shelf_count, ink_mogo_shelf_page, ink_mogo_reason;
 static char ink_mogo_error[160];
 static ink_mogo_card_t ink_mogo_card_written;
 static size_t ink_mogo_anchor=SIZE_MAX, ink_mogo_anchor_chapter=SIZE_MAX; /* the reading place a reflow keeps */
+static char ink_mogo_last_set[BOOK_STORE_PATH_MAX]; /* the book to continue, as written last */
 enum { INK_MOGO_SHELF_ROWS=4, INK_MOGO_TOOL_COUNT=6 };
 enum { INK_MOGO_TOOLS=10, INK_MOGO_MARKS, INK_MOGO_SETTINGS };
 const char *const ink_mogo_layout_keys[INK_MOGO_LAYOUT_COUNT]={"font_size","line_spacing","paragraph_spacing","margins","weight","indent","header","footer"};
@@ -81,7 +82,7 @@ int ink_mogo_shelf_query(const ink_member_identity_t *owner,char *json,size_t ca
 }
 /* The font lives on the card (runtime.c); a missing or broken one is explained, never a blank page. */
 int ink_mogo_page_start(const ink_member_identity_t *owner,int w,int h,int px) {
-    memset(&ink_mogo_card_written,0,sizeof ink_mogo_card_written);
+    memset(&ink_mogo_card_written,0,sizeof ink_mogo_card_written); memset(&s_progress_saved,0,sizeof s_progress_saved); ink_mogo_last_set[0]=0;
     ink_mogo_owner(owner); ink_mogo_dimensions(w,h,px); ink_mogo_settings_load();
     ink_mogo_page_width=w; ink_mogo_page_height=h; s_reader_session=(reader_session_t){0};
     for (int i=0;i<4;++i) s_margin[i]=ink_mogo_scaled(ink_mogo_settings.margin[i]);
@@ -110,14 +111,15 @@ static bool ink_mogo_encrypted(const char *path) {
 static int ink_mogo_open_book(const char *path) {
     if (ink_mogo_reason && ink_mogo_reason<INK_MOGO_R_BAD_BOOK) return ink_mogo_reason;
     bool locked=ink_mogo_encrypted(path);
-    if (locked || !open_book_impl(&ink_mogo_context,path)) {
+    s_turning=true; bool opened=!locked && open_book_impl(&ink_mogo_context,path); s_turning=false; /* opening writes nothing either */
+    if (!opened) {
         const char *why=locked||strstr(s_message,"压缩方式")?TR_NOOP("这本书已加密或压缩方式不支持，请换一本未加密的 EPUB"):strstr(s_message,"仅支持")?TR_NOOP("这不是 EPUB 或 TXT，请选择支持的书"):
             strstr(s_message,"不可读")?TR_NOOP("读不到这本书，请检查存储卡后重试"):strstr(s_message,"内存不足")?TR_NOOP("内存不足，请返回书架再试"):TR_NOOP("文件损坏或没有正文，请重新传入这本书");
         free_book(); copy_text(ink_mogo_error,sizeof ink_mogo_error,TR(why)); s_view=SHELF;
         return ink_mogo_reason=INK_MOGO_R_BAD_BOOK;
     }
     ink_mogo_book_title(path,s_reader_session.book.title,sizeof s_reader_session.book.title);
-    ink_mogo_reason=0; (void)book_progress_set_last_path(path);
+    ink_mogo_reason=0;
     return 0;
 }
 static unsigned ink_mogo_mark_percent(const reader_bookmark_entry_t *m) {
@@ -187,6 +189,13 @@ static void ink_mogo_card_save(void) {
     nvs_close(h);
 }
 /* The open book's place (shown at once; written after a pause), else the one written last. */
+/* After a pause and at the close: the place, the book to continue, the card. */
+static void ink_mogo_save_all(void) {
+    save_progress();
+    if (s_text && strcmp(ink_mogo_last_set,s_reader_session.book.path) && book_progress_set_last_path(s_reader_session.book.path)==ESP_OK)
+        copy_text(ink_mogo_last_set,sizeof ink_mogo_last_set,s_reader_session.book.path);
+    ink_mogo_card_save();
+}
 bool ink_mogo_page_card(ink_mogo_card_t *out) { if (!ink_mogo_card_now(out)) *out=ink_mogo_card_written; return out->path[0]; }
 static bool ink_mogo_layout(const int *values) {
     ink_mogo_settings_t old=ink_mogo_settings, *p=&ink_mogo_settings;
@@ -260,7 +269,10 @@ static bool ink_mogo_turn(int pages,ink_mogo_request_t *r) {
     if (!s_text || s_view!=READING) return false;
     ink_mogo_context.now_ms=ink_now_us()/1000; s_reader_panel=READER_PANEL_NONE;
     reader_position_t before=s_reader_session.position;
-    for (int i=0;i<(pages<0?-pages:pages);++i) (void)turn_page(&ink_mogo_context,pages<0?-1:1);
+    /* Mogo saves every 8th turn; here the place is written after a pause instead, so no flash write lands on a waveform. */
+    s_turning=true;
+    for (int i=0;i<(pages<0?-pages:pages);++i) { s_unsaved=0; (void)turn_page(&ink_mogo_context,pages<0?-1:1); }
+    s_turning=false;
     for (int i=1;i<(pages<0?-pages:pages);++i) ink_probe_count("reader.turns_coalesced");
     r->revision=(uint32_t)s_reader_session.position.page+1;
     return s_text && (before.chapter!=s_reader_session.position.chapter || before.page!=s_reader_session.position.page);
@@ -268,9 +280,18 @@ static bool ink_mogo_turn(int pages,ink_mogo_request_t *r) {
 int ink_mogo_page_command(ink_mogo_request_t *r) {
     int v=r->value; bool ok=true;
     r->revision=0; r->say[0]=0;
-    if (r->op==INK_MOGO_OP_SAVE) { save_progress(); ink_mogo_card_save(); return s_save_failed?-1:0; }
-    if (r->op==INK_MOGO_OP_LOAD) return r->text[0]?ink_mogo_open_book(r->text):ink_mogo_scan();
-    if (r->op==INK_MOGO_OP_OPEN) return ink_mogo_open_book(r->text);
+    if (r->op==INK_MOGO_OP_SAVE) { ink_mogo_save_all(); return s_save_failed?-1:0; }
+    if (r->op==INK_MOGO_OP_LOAD || r->op==INK_MOGO_OP_OPEN) {
+        int status=r->op==INK_MOGO_OP_OPEN || r->text[0]?ink_mogo_open_book(r->text):ink_mogo_scan();
+        if (!status && s_text) { /* reader.restored_page: about which page of the whole book (the old reader numbered TXT pages so) */
+            size_t pages=book_layout_page_count(); uint32_t start=book_chapter_byte_offset(s_reader_session.position.chapter), end=chapter_end();
+            size_t per=pages && end>start?(end-start)/pages:0;
+            size_t before=0; /* each earlier chapter: its bytes at this chapter's bytes per page, at least one page */
+            for (size_t c=0;c<s_reader_session.position.chapter;++c) { uint32_t bytes=book_chapter_byte_offset(c+1)-book_chapter_byte_offset(c); before+=per?(bytes+per-1)/per:1; if (per && !bytes) before++; }
+            r->revision=(uint32_t)(before+s_reader_session.position.page+1); (void)start;
+        }
+        return status;
+    }
     if (r->op==INK_MOGO_OP_SHELF) return ink_mogo_scan();
     if (r->op==INK_MOGO_OP_GET_LAYOUT) return r->json && ink_mogo_json_layout(r->json,r->cap)>0?0:-1;
     if (r->op==INK_MOGO_OP_LAYOUT) {
@@ -418,7 +439,7 @@ const char *ink_mogo_page_hit(int x,int y,char *args,size_t cap) {
     return "";
 }
 void ink_mogo_page_close(void) {
-    save_progress(); ink_mogo_card_save(); free_book(); ink_mogo_font_shutdown(); memset(&s_reader_session,0,sizeof s_reader_session);
+    ink_mogo_save_all(); free_book(); ink_mogo_font_shutdown(); memset(&s_reader_session,0,sizeof s_reader_session);
     free(ink_mogo_shelf); ink_mogo_shelf=NULL; ink_mogo_shelf_count=ink_mogo_shelf_page=0; ink_mogo_reason=0; ink_mogo_error[0]=0; ink_mogo_anchor=SIZE_MAX;
     memset(&ink_mogo_settings,0,sizeof ink_mogo_settings); /* the card written stays readable until the next session starts */
     s_reader_panel=READER_PANEL_NONE; s_reader_slider=-1; s_view=SHELF;

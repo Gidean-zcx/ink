@@ -2,7 +2,7 @@
 # not play (the platform doc: HOME/BACK close the sheet and stop playback). Before the fix (audit
 # AUD-006, 2026-11) the whole answer played after the sheet was gone (10.7 s of audio).
 @3s      tap   80% 56%        # 阅读 (favourite)
-+2500ms  tap   50% 160dp          # 星星邮差
++2500ms  tap   50% 44%            # 星星邮差: the second shelf row (reader-one-1)
 +3s      mic   speech
 +0ms     key   ai 1500ms          # hold to talk, release at +1.5 s
 +2000ms  key   home               # 0.5 s after release (the hub answers ~1.7 s after release)

@@ -28,7 +28,7 @@ static struct {
     ink_mogo_request_t next; /* the page opened again before that cleanup ran: its first operation, after it */
     ink_call_t *next_call;
     char card_member[16]; /* whose card M.card is (kept after the session closes) */
-    uint64_t opened_us;
+    uint64_t opened_us, saved_us; /* saved_us: the place was last written (or the book opened) */
     ink_mogo_card_t card;
     lv_obj_t *back_button, *note, *screen; /* screen: the page's, while the activity lives */
     char screen_member[16], book[288];      /* whose page it is and the book on it, to come back after a member gate */
@@ -118,7 +118,11 @@ static void ink_mogo_finished(void *arg) {
         if (!M.status && ink_mogo_idle && (op == INK_MOGO_OP_TURN || op == INK_MOGO_OP_GOTO_PAGE || op == INK_MOGO_OP_ENTRY || op == INK_MOGO_OP_CHAPTER ||
             op == INK_MOGO_OP_GOTO_MARK || op == INK_MOGO_OP_LAYOUT || op == INK_MOGO_OP_OPEN || op == INK_MOGO_OP_LOAD)) {
             lv_timer_set_repeat_count(ink_mogo_idle, 1); lv_timer_reset(ink_mogo_idle); lv_timer_resume(ink_mogo_idle);
+            /* reading on without a pause: at most a minute is lost (SR-PL-08) */
+            if (ink_now_us() - M.saved_us > 60000000ull) lv_timer_set_period(ink_mogo_idle, 1);
         }
+        if (op == INK_MOGO_OP_SAVE || op == INK_MOGO_OP_LOAD || op == INK_MOGO_OP_OPEN) { M.saved_us = ink_now_us(); if (ink_mogo_idle) lv_timer_set_period(ink_mogo_idle, 8000); }
+        if (!M.status && M.req.op == INK_MOGO_OP_TURN) for (int i = 0; i < (M.req.value < 0 ? -M.req.value : M.req.value); i++) ink_probe_count("reader.page_turns"); /* each press a turn did */
         if (M.drawn && (M.req.op == INK_MOGO_OP_LOAD || M.req.op == INK_MOGO_OP_OPEN) && !M.reason && M.req.text[0]) {
             ink_probe_value("reader.open_ms", (double)(ink_now_us() - M.opened_us) / 1000.0);
             ink_probe_value("reader.restored_page", (double)(M.req.revision ? M.req.revision - 1 : 0));
@@ -227,7 +231,8 @@ static bool ink_mogo_call(const char *id, const char *args, ink_source_t src) {
 /* Keys, taps and swipes become reader.* calls. BACK on the shelf or an explanation page is the shell's: no loop. */
 static bool ink_mogo_input(void *ctx, const ink_graft_input_t *e) {
     (void)ctx;
-    bool reading = !M.root && !M.back, lists = M.root ? !M.reason : M.back;
+    /* a book that would not open is still a book page: its page keys are refused by reader.next_page/prev_page */
+    bool reading = (!M.root && !M.back) || M.reason == INK_MOGO_R_BAD_BOOK, lists = M.root ? !M.reason : M.back;
     if (e->kind == INK_GRAFT_KEY && e->value == INK_KEY_BACK) return M.root ? false : M.busy || ink_mogo_call("reader.back", NULL, e->source);
     if (M.busy) { /* page keys while a page is being laid out are turned together with the next pass */
         bool turn = e->kind == INK_GRAFT_KEY && !e->held && (e->value == INK_KEY_NEXT || e->value == INK_KEY_PREV);
@@ -400,8 +405,8 @@ static void ink_mogo_action(ink_call_t *call) {
         return;
     }
     if (req.op == INK_MOGO_OP_TURN) {
-        ink_probe_count("reader.page_turns");
-        if (M.busy && M.active && M.loaded && M.req.op == INK_MOGO_OP_TURN) { M.turns += req.value; return; } /* turned with the next pass */
+        ink_ui_content_changed(); /* a call prepared for this page no longer applies (F-6), from the press on */
+        if (M.busy && M.active && M.loaded) { M.turns += req.value; return; } /* turned with the next pass, after what runs now */
     }
     if (!ink_mogo_start(&req, call)) call->rc.status = M.active ? INK_RC_STALE : INK_RC_FAILED;
 }
@@ -439,6 +444,15 @@ static const ink_cap_t INK_MOGO_CAPS[] = {
     {.id = "reader.back", .app = "reader", .title = "阅读里退一步", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .timeout_ms = 120000, .run = ink_mogo_action},
 };
 static void ink_mogo_destroy(void) { M.screen = NULL; ink_graft_detach(); }
+/* The page keys reach the top page only past sheets that let them through (the AI's answer): they turn the page there
+ * as they always did, though the carrier holds other input while a sheet is up. */
+static bool ink_mogo_key(ink_key_t key, bool held) {
+    if (!held && (key == INK_KEY_NEXT || key == INK_KEY_PREV) && M.active && ink_graft_current()) {
+        ink_graft_input_t e = {.kind = INK_GRAFT_KEY, .value = key, .source = INK_SRC_KEY};
+        return ink_mogo_input(NULL, &e);
+    }
+    return ink_graft_key(key, held);
+}
 /* The member gate closed the space and the carrier let the page go; the same member back: the same book again. */
 static void ink_mogo_reattach(void) {
     char book[288]; snprintf(book, sizeof book, "%s", M.book);
@@ -446,7 +460,7 @@ static void ink_mogo_reattach(void) {
     ink_mogo_create(M.screen, book[0] ? book : NULL);
 }
 static const ink_activity_t INK_MOGO_ACTIVITY = {.name = "book", .app = "reader", .create = ink_mogo_create,
-    .destroy = ink_mogo_destroy, .on_key = ink_graft_key, .on_swipe = ink_graft_swipe, .settle = ink_graft_settle, .snapshot = ink_graft_snapshot};
+    .destroy = ink_mogo_destroy, .on_key = ink_mogo_key, .on_swipe = ink_graft_swipe, .settle = ink_graft_settle, .snapshot = ink_graft_snapshot};
 
 /* What is being read: home's "继续读" and the lock screen, from the mirror only. */
 /* Drop a character that a byte limit cut in two. */

@@ -3,7 +3,7 @@
 # press turns a page and the wait after any press stays bounded (before: presses were lost and the
 # panel caught up over five seconds and more).
 @3s      tap   80% 56%        # 阅读 (favourite)
-+2500ms  tap   50% 284dp          # 测试长书: third 108 px row
++2500ms  tap   50% 57%            # 测试长书: the third shelf row (reader-one-1)
 +3s      key   next
 +200ms      key   next
 +200ms      key   next

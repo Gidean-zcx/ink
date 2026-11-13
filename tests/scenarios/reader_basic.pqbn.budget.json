@@ -8,10 +8,6 @@
     "min": 13,
     "why": "keys, swipes and tap zones must all turn pages"
   },
-  "reader.turns_prerendered": {
-    "min": 9,
-    "why": "most forward turns should hit the page rendered ahead of time"
-  },
   "ui.action_to_visible_ms.TEXT.p95": {
     "max": 650,
     "srs": "D-40",

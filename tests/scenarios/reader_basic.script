@@ -3,7 +3,7 @@
 # go home. Coordinates in dp / % (portable).
 @3s      tap   80% 56%        # the "阅读" favourite on the one-page home (D-135)
 +2500ms  snap  library
-+500ms   tap   50% 228dp          # third book (64 + 2*68 dp): 测试长书 (40 parts)
++500ms   tap   50% 57%            # third shelf row: 测试长书 (40 parts) (reader-one-1)
 +3s      snap  page1
 +1500ms  key   next
 +1500ms  key   next

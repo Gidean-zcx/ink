@@ -76,12 +76,18 @@ static void fit_text(char *s,int px,int width) {
 }
 static void free_book(void) { reader_session_close(&s_reader_session); s_text = NULL; }
 static unsigned percent(size_t page);
+/* The place written last in this session: the same place is not written to the flash again (a close after a pause). */
+static struct { char path[288]; uint16_t chapter; uint32_t byte_off; } s_progress_saved;
+static bool s_turning; /* page turns write nothing: the place is written after a pause (and at least every minute) */
 static void save_progress(void) {
+    if (s_turning) return;
     if (!s_text || !book_layout_page_count()) return;
     book_progress_t p = {.file_size=s_reader_session.book.file_size,
         .chapter=(uint16_t)s_reader_session.position.chapter,
         .byte_off=(uint32_t)book_layout_page_start_offset(s_reader_session.position.page),.px=ink_mogo_settings.px,.pct=(uint8_t)percent(s_reader_session.position.page)};
+    if (!s_save_failed && s_progress_saved.chapter == p.chapter && s_progress_saved.byte_off == p.byte_off && !strcmp(s_progress_saved.path, s_reader_session.book.path)) return;
     s_save_failed = book_progress_save(s_reader_session.book.path,&p) != ESP_OK;
+    if (!s_save_failed) { snprintf(s_progress_saved.path, sizeof s_progress_saved.path, "%s", s_reader_session.book.path); s_progress_saved.chapter = p.chapter; s_progress_saved.byte_off = p.byte_off; }
 }
 static void copy_text(char *out, size_t cap, const char *s) {
     size_t n = strlen(s);
