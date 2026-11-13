@@ -12,7 +12,7 @@
 | --- | --- | --- | --- |
 | `main/apps/app_music.c`（1049 行） | `app_music.c` | `99d6d50b59250b00a12a84f032314a9160ea12ae7054782a1fa5f9d6c69f0889` | `3a88bc193ac5c7b9b33d930ae897bad84a135a8ed858697eeadb1b91466cc0b7` |
 | `main/music/music_player.h`（183 行） | `music_player.h` | `84271ec302c9d18624d20ac89047d02c6f339f62e282a2bc3762d7e0ebe19d85` | `4e29a14bf0e3b2c479f1efe2c568d74220c976a347da6361ee3d05e6c4b70063` |
-| `main/music/music_player.c`（1628 行，只拿整函数） | `music_library.c` | `a98e87294803647031c656d290e7a70241e9783e01c29c976ebcabf318d70e85` | `5502320d4c9219e2d68420d4239f5785d9ed600a2be4150dcfa7d0fa13567275` |
+| `main/music/music_player.c`（1628 行，只拿整函数） | `music_library.c` | `a98e87294803647031c656d290e7a70241e9783e01c29c976ebcabf318d70e85` | `6ab1cbf554dc70972ad2fb17040cab7daded838a8c469fcc80eedf0342ab76d8` |
 | `LICENSE` | `kiikoread-xiugai-LICENSE` | `b1a477173eada381b15f2cd522bba1a9ab546759f6534e8c9943f0cb933aeb30` | 同左 |
 | `licenses/Apache-2.0.txt` | `Apache-2.0.txt` | `c2ede378097fb1fcdcd128c47880c918663f475eba53e1e2dc59d95b537c8809` | 同左 |
 

@@ -2129,6 +2129,7 @@ add_test(NAME music-kiikoread-provenance COMMAND ${Python3_EXECUTABLE} -B ${CMAK
 
 ink_sim_executable(sim-music tests/music/product.c)
 target_link_libraries(sim-music PRIVATE ink_apps ink_system)
+target_include_directories(sim-music PRIVATE apps/music/port third_party/kiikoread_music)
 add_test(NAME music-product COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(music-product PROPERTIES TIMEOUT 180)
 
@@ -2136,7 +2137,7 @@ add_dependencies(sim-music ink_fonts ink_ui_fonts ink_icons ink_test_content)
 # music-3: the kiikoread walk by touch and by AI, playing on, members, old data, refreshes, what is missing.
 ink_sim_executable(sim-music-player tests/music/player.c)
 target_link_libraries(sim-music-player PRIVATE ink_apps ink_system)
-target_include_directories(sim-music-player PRIVATE system/graft)
+target_include_directories(sim-music-player PRIVATE system/graft apps/music/port third_party/kiikoread_music)
 target_compile_definitions(sim-music-player PRIVATE INK_MOGO_SIM=1)
 add_dependencies(sim-music-player ink_fonts ink_ui_fonts ink_icons ink_test_content)
 add_test(NAME music-player COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR}

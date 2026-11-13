@@ -7,12 +7,12 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-#include "ink/osal.h"
+#include "ink/sys/app.h"
 #include "ink/sys/file.h"
 #include "ink/sys/i18n.h"
 #include <ink/ui_theme.h>
-#include "epdiy.h"
-#include "music_page.h"
+#include <epdiy.h>
+#include <music_page.h>
 
 #define ui_clear_page ink_music_clear
 #define ui_fill_rect_fast ink_music_fill
@@ -44,7 +44,8 @@ typedef struct app_ctx app_ctx_t;
 #define time_freeze() ((void)0)
 #define set_state(s) atomic_store(&s_state, (int)(s))
 #define esp_random ink_music_random
-#define heap_caps_malloc(n, caps) osal_malloc((n), OSAL_MEM_EXTERNAL)
+#define heap_caps_malloc(n, caps) ink_app_alloc((n), true)
+#define heap_caps_free ink_app_free
 #define MALLOC_CAP_SPIRAM 0
 #define MALLOC_CAP_8BIT 0
 

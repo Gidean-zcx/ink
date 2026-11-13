@@ -1,7 +1,7 @@
 /* The music page's own drawing on its L8 surface (never Mogo's drawing.c); text goes through Mogo's TrueType
  * engine, which writes through epd_draw_pixel with the size set by ink_mogo_dimensions. Lines and corners are
  * the theme's stroke and radius, scaled with the text size like the rest of the page. */
-#include "ttf_font.h"
+#include <ttf_font.h>
 
 static int W, H;
 void ink_music_canvas(int w, int h) { W = w; H = h; }

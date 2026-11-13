@@ -15,8 +15,6 @@ static uint8_t saved_fav[260];
 static int saved_mode = -1;
 static uint32_t seed = 12345; /* fixed: the same picks every run */
 
-void *osal_malloc(size_t n, uint32_t caps) { (void)caps; return malloc(n); }
-void osal_free(void *p) { free(p); }
 uint32_t ink_music_random(void) { seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5; return seed; }
 int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {
     (void)type;

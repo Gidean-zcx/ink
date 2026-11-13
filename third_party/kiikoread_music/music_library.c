@@ -218,7 +218,7 @@ int music_scan(void) {
                 break;
             }
     }
-    if (old) osal_free(old);
+    if (old) heap_caps_free(old);
     return count;
 }
 
@@ -313,7 +313,7 @@ const char *music_mode_label(void) {
 
 /* ---- ink: what the glue (apps/music/music.c) sets and reads; it owns the BG executor ---- */
 void music_library_reset(void) {
-    osal_free(s_tracks);
+    heap_caps_free(s_tracks);
     s_tracks = NULL;
     s_count = 0;
     s_last_path[0] = 0;

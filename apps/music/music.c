@@ -1,21 +1,18 @@
 /* ui-scale-runtime: dimension text_percent The 字号 percentage (90-120, a child 110) in this panel's pixels, as Mogo does. */
 /* 音乐: the kiikoread player's page and library (third_party/kiikoread_music) on the graft surface, playing through
- * the media service. Touch and AI share the music.* capabilities. The library, the page and every capability run
- * on the BG executor; the UI task only presents finished pixels; the media executor only starts the next song. */
+ * the media service. Touch and AI share the music.* capabilities. The library, the page, every capability and the
+ * end-of-song follow-up run on the BG executor; the UI task only presents finished pixels. */
 #ifdef ESP_PLATFORM
-#include "esp_attr.h" /* INK_PSRAM_BSS=EXT_RAM_BSS_ATTR comes from music.cmake */
+#include <esp_attr.h> /* INK_PSRAM_BSS=EXT_RAM_BSS_ATTR comes from music.cmake */
 #endif
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
 #include <graft.h>
-#include "ink/hal_device.h"
-#include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
-#include "ink/sys/audio.h"
 #include "ink/sys/crc.h"
 #include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
@@ -24,12 +21,10 @@
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
-#include "ink/sys/svc.h"
 #include "ink/sys/ui_semantics.h"
-#include "ink/ui_shell.h"
 #include <ink/ui_theme.h>
-#include "port/music_page.h"
-#include "../../system/services/audio/vendor/kiikoread/music_lyrics.h"
+#include <port/music_page.h>
+#include <music_lyrics.h>
 void ink_music_tags(const char *path, char *title, char *artist, char *album, size_t cap);
 /* Mogo's TrueType engine and its member-scoped font reads (apps/mogo/port/runtime.c), shared, never copied. */
 int ttf_font_open(const char *path);
@@ -52,7 +47,7 @@ static const ink_db_def_t MODE = {.name = "music.mode", .title = "循环模式",
 static const char *const MODES[] = {"list", "one", "shuffle", "favorites"};
 static const ink_activity_t PAGE;
 
-/* What plays after what music started: any task, under the service lock (the media executor reads it). */
+/* What plays after what music started (BG, like the media.finished subscription that reads it). */
 static struct { char member[INK_MEMBER_ID_MAX], playing[INK_FS_PATH_MAX], next[INK_FS_PATH_MAX], why[24]; } S INK_PSRAM_BSS;
 /* The BG executor's. */
 static struct {
@@ -65,7 +60,7 @@ static struct {
     ink_source_t src;
     lv_area_t area, shown;               /* what the next frame changes; what the frame on its way changed */
     ink_graft_refresh_t refresh, shown_refresh;
-    ink_exec_job_t open_job, close_job, tick_job, tap_job, key_job, advanced_job, present_job;
+    ink_exec_job_t open_job, close_job, tick_job, tap_job, key_job, present_job;
     music_view_t view;
 } B INK_PSRAM_BSS;
 static volatile bool presenting; /* BG sets it, the UI task clears it */
@@ -85,7 +80,11 @@ int ink_music_px(int px) { return B.screen_w ? (px * B.screen_w + INK_CANVAS_W /
 uint8_t ink_music_gray(int which) {
     return which == 0 ? 255 : which == 1 ? 0 : lv_color_luminance(which == 2 ? ink_ui_secondary() : ink_ui_separator());
 }
-uint32_t ink_music_random(void) { uint32_t r; hal_random_fill(&r, sizeof r); return r; }
+uint32_t ink_music_random(void) { /* the app framework has no random source: xorshift stirred with the clock */
+    static uint32_t x = 2463534242u;
+    x ^= (uint32_t)ink_now_us(); x ^= x << 13; x ^= x >> 17; x ^= x << 5;
+    return x;
+}
 const char *music_root(void) { return MUSIC_ROOT; }
 const char *music_root_of(const char *path) { return strncmp(path, MUSIC_FAMILY_ROOT "/", sizeof MUSIC_FAMILY_ROOT) ? MUSIC_ROOT : MUSIC_FAMILY_ROOT; }
 bool music_playable(const char *path) {
@@ -99,7 +98,7 @@ const char *music_error(void) { return ""; }
 uint32_t music_elapsed_ms(void) { return B.st.position_ms; }
 uint32_t music_duration_ms(void) { return B.st.duration_ms ? B.st.duration_ms : music_track(music_track_index()) ? music_track(music_track_index())->duration_ms : 0; }
 uint8_t music_volume(void) { return (uint8_t)ink_setting_get("audio.volume"); }
-music_output_t music_output(void) { return ink_audio_route() == INK_ROUTE_HEADSET ? MUSIC_OUT_BT : MUSIC_OUT_SPK; }
+music_output_t music_output(void) { char r[16] = ""; ink_state_get_str(ink_state_find("audio.route"), r, sizeof r); return strcmp(r, "speaker") ? MUSIC_OUT_BT : MUSIC_OUT_SPK; }
 void music_play_index(int index) { B.want = index; }
 static uint32_t favorite_id(const char *p) { return (ink_crc32(0, p, strlen(p)) & 0x7fffffff) + 1; }
 static bool favorite_of(ink_db_t *db, const char *path) {
@@ -174,14 +173,10 @@ static void pick(void) { /* music_library_pick runs the original finish_track ru
     }
     if (skipped && now >= 0) music_library_now(music_state(), music_track(now)->path, "", "");
     const music_track_t *t = next >= 0 ? music_track(next) : NULL;
-    ink_svc_lock();
     snprintf(S.next, sizeof S.next, "%.127s", t ? t->path : ""); /* library paths come from the file index: under 128 */
-    ink_svc_unlock();
 }
 static void started(const char *path) { /* music put this song on: it follows the mode at its end */
-    ink_svc_lock();
     snprintf(S.member, sizeof S.member, "%s", ink_member_current()->id); snprintf(S.playing, sizeof S.playing, "%s", path);
-    ink_svc_unlock();
     if (music_find_path(path) >= 0) record(&LAST, path);
     if (music_page_notice()[0]) {
         music_page_message(NULL);
@@ -279,12 +274,10 @@ static void tick_bg(void *arg) {
 }
 static void tap_bg(void *arg) { (void)arg; B.src = INK_SRC_TOUCH; if (B.open && B.font) music_page_tap(B.tap_x, B.tap_y); }
 static void key_bg(void *arg) { (void)arg; B.src = INK_SRC_KEY; if (B.open && B.font) music_page_key(B.key); }
-static void advanced_bg(void *arg) { /* the media executor started the next song, or the song ended */
+static void advanced_bg(void *arg) { /* the next song started, or the song ended: what the page and library follow */
     (void)arg;
     char playing[INK_FS_PATH_MAX], why[24];
-    ink_svc_lock();
     snprintf(playing, sizeof playing, "%s", S.playing); snprintf(why, sizeof why, "%s", S.why);
-    ink_svc_unlock();
     if (strcmp(B.member, S.member)) return;
     if (!strcmp(why, "read_failed")) music_page_message("");
     if (playing[0] && !strcmp(why, "finished")) {
@@ -294,20 +287,18 @@ static void advanced_bg(void *arg) { /* the media executor started the next song
     }
     draw(music_page_changed("play", NULL));
 }
-static void finished(void *ctx, const char *id, const ink_args_t *a) { /* media executor: pick nothing, read the next */
+static void finished(void *ctx, const char *id, const ink_args_t *a) { /* BG: the next song was picked when this one began */
     (void)ctx; (void)id;
     char why[24] = "", path[INK_FS_PATH_MAX] = "", member[INK_MEMBER_ID_MAX] = "", next[INK_FS_PATH_MAX] = "";
     ink_args_get_str(a, "why", why, sizeof why); ink_args_get_str(a, "path", path, sizeof path); ink_args_get_str(a, "member", member, sizeof member);
-    ink_svc_lock();
     const bool ours = !strcmp(S.member, member) && !strcmp(S.playing, path);
     if (ours) snprintf(S.why, sizeof S.why, "%s", why);
     if (ours && !strcmp(why, "finished")) {
         snprintf(next, sizeof next, "%s", S.next); snprintf(S.playing, sizeof S.playing, "%s", S.next);
         S.next[0] = 0;
     }
-    ink_svc_unlock();
     if (next[0]) ink_media_play(next, 0);
-    if (ours) ink_exec_post(INK_EXEC_BG, &B.advanced_job, advanced_bg, NULL);
+    if (ours) advanced_bg(NULL);
 }
 static void state_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
@@ -373,9 +364,7 @@ static void play(ink_call_t *c, const char *path, int64_t start) {
     }
     ink_args_str(&a, "path", path);
     if (start >= 0) ink_args_int(&a, "start_ms", start);
-    ink_svc_lock(); /* a song ending right now must not start its successor over this choice */
-    snprintf(S.playing, sizeof S.playing, "%s", path); S.next[0] = 0;
-    ink_svc_unlock();
+    snprintf(S.playing, sizeof S.playing, "%s", path); S.next[0] = 0; /* a song ending now must not start its successor over this */
     forward(c, "media.play", &a);
 }
 static const char *under(const char *path) { /* a library folder, relative to its root ("/" for the root), or NULL */
@@ -619,6 +608,6 @@ static const ink_cap_t CAPS[] = {
     CAP("music.favorites", "收藏的歌", "{\"type\":\"object\"}", INK_FX_READ),
     CAP("music.mode", "循环方式：列表、单曲、随机、收藏循环，或 cycle 顺着切", "{\"type\":\"object\",\"properties\":{\"mode\":{\"type\":\"string\",\"enum\":[\"list\",\"one\",\"shuffle\",\"favorites\",\"cycle\"]}},\"required\":[\"mode\"]}", INK_FX_LOCAL_WRITE)};
 int ink_music_app_init(void) {
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("media.finished", finished, NULL, INK_EXEC_MEDIA) ||
+    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("media.finished", finished, NULL, INK_EXEC_BG) ||
            ink_state_watch("media.state", state_changed, NULL, INK_EXEC_BG) ? -1 : 0;
 }

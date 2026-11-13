@@ -13,7 +13,8 @@
 #define time_freeze() ((void)0)
 #define set_state(s) atomic_store(&s_state, (int)(s))
 #define esp_random ink_music_random
-#define heap_caps_malloc(n, caps) osal_malloc((n), 0)
+#define heap_caps_malloc(n, caps) malloc(n)
+#define heap_caps_free free
 #define MALLOC_CAP_SPIRAM 0
 #define MALLOC_CAP_8BIT 0
 #undef strlcpy

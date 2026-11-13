@@ -17,6 +17,7 @@ get_target_property(app_sources ${app_target} SOURCES)
 list(FILTER app_sources EXCLUDE REGEX "/apps/music/")
 set_property(TARGET ${app_target} PROPERTY SOURCES ${app_sources})
 target_sources(${app_target} PRIVATE ${music_dir}/music.c)
+target_include_directories(${app_target} PRIVATE ${music_dir} ${music_page} ${music_root}/system/services/audio/vendor/kiikoread)
 target_link_libraries(${app_target} PRIVATE ink_music_native)
 if(ESP_PLATFORM)
   # Large tables in PSRAM as in ink_system (the apps component does not define this itself).

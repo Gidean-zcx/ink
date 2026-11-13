@@ -3,8 +3,8 @@
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>
-#include "epdiy.h"
-#include "../../../third_party/kiikoread_music/music_player.h"
+#include <epdiy.h>
+#include <music_player.h>
 
 enum { APP_REDRAW_NONE = 0, APP_REDRAW_PAGE, APP_REDRAW_AREA };
 typedef int app_redraw_t;
