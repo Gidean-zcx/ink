@@ -112,7 +112,16 @@ int main(int argc,char **argv) {
     drain_urcs(); hal_cell_event_t event; hal_cell_wait_event(&event,0);
     ink_test_reply("\r\nNO CARRIER\r\n"); ink_test_drain();
     assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && !ink_test_bh());
+    assert(event.end==HAL_CELL_END_HANGUP);
+    /* phone-3: BUSY and NO ANSWER end a call too, and say why (the call screen shows 对方忙或拒接 / 没人接) */
+    assert(hal_cell_dial("00000000000")==0 && ink_test_bh());
+    ink_test_reply("\r\nBUSY\r\n"); ink_test_drain();
+    assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && event.end==HAL_CELL_END_BUSY && !ink_test_bh());
+    assert(hal_cell_dial("00000000000")==0 && ink_test_bh());
+    ink_test_reply("\r\nNO ANSWER\r\n"); ink_test_drain();
+    assert(hal_cell_wait_event(&event,0)==1 && event.type==HAL_CELL_EV_CALL_ENDED && event.end==HAL_CELL_END_NO_ANSWER && !ink_test_bh());
     assert(hal_modem_at("AT+ECNETCFG?",s,sizeof s,1000)==HAL_AT_OK && strlen(s)>96 && strstr(s,"lease"));
+
     assert(hal_modem_at("AT+ECNETCFG?",s,32,1000)==HAL_AT_ERROR);
     ink_test_set(F_NO_ACK,1); before=ink_test_count(N_WRITES); at_ok("AT"); assert(ink_test_count(N_WRITES)==before+1); ink_test_set(F_NO_ACK,0);
     unsigned stops=ink_test_count(N_STOPS), starts=ink_test_count(N_STARTS);

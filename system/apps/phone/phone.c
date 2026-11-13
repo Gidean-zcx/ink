@@ -1,7 +1,7 @@
 /* Calls (phone-3): the dial pad, recent calls, call details and the call screen after Fossify Phone, adapted to
  * e-ink (docs/tasks/phone-3/对照表.md); number matching, caller names and the call card are LilyPhone's code
  * (vendor/lilyphone). The modem side is comm_service.c; the member data store keeps each member's history. */
-/* ui-scale-runtime: dimension w,y,height,width,dw,lw,x,side,text theme sizes passed on and widths measured from text */
+/* ui-scale-runtime: dimension w,y,height,width,dw,lw,x,side,text,pager,name_w,nw theme sizes passed on and widths measured from text */
 /* ui-scale-exception: 140 the emergency dialler (D-119) keeps its layout */
 /* ui-scale-exception: 218 the emergency dialler (D-119) keeps its layout */
 /* ui-scale-exception: 270 the emergency dialler (D-119) keeps its layout */
@@ -58,7 +58,9 @@ static struct {
     uint64_t started;
     int64_t minutes, seconds;
     uint32_t detail;
-    int rows, cpage, pages, first, cand_y, contacts; /* contacts: 1 read, 0 reading, -1 unreadable */
+    int rows, cpage, pages, first, cand_y, side_w, pager_w, contacts; /* contacts: 1 read, 0 reading, -1 unreadable */
+
+
 
     bool selecting, active, muted, incoming, headset, log_failed;
 
@@ -211,6 +213,10 @@ static void load_log(void) {
     ink_app_free(j);
 }
 static const char *card_name(const char *sim) { return !strcmp(sim, "internal") ? TR("内置卡") : sim[0] ? TR("卡 1") : ""; }
+static void sim_in_use(char *out, size_t cap) { /* cell.sim once the modem has said; until then the card the setting picks */
+    out[0] = 0; ink_state_get_str(ink_state_find("cell.sim"), out, cap);
+    if (!out[0]) snprintf(out, cap, "%s", ink_setting_get("cell.sim_slot") == 1 ? "internal" : "external");
+}
 static void when(int64_t at, char *out, size_t cap) { /* RecentCallsAdapter.kt:510-516, the day named */
     ink_tm_t t; ink_time_to_local(at, &t);
     int64_t days = local_day(ink_time_now_s()) - local_day(at);
@@ -282,13 +288,15 @@ static void show_if(lv_obj_t *o, bool shown) { if (o && lv_obj_has_flag(o, LV_OB
 static void set_text(lv_obj_t *l, const char *s) { if (l && strcmp(lv_label_get_text(l), s)) lv_label_set_text(l, s); }
 static void set_w(lv_obj_t *o, int w) { if (lv_obj_get_style_width(o, 0) != ink_ui_px(w)) lv_obj_set_width(o, ink_ui_px(w)); }
 static void set_y(lv_obj_t *o, int y) { if (lv_obj_get_y(o) != ink_ui_px(y)) lv_obj_set_y(o, ink_ui_px(y)); }
+static void set_x(lv_obj_t *o, int x) { if (lv_obj_get_style_x(o, 0) != ink_ui_px(x)) lv_obj_set_x(o, ink_ui_px(x)); }
+
 static void card_status(void) { /* the card in use and the network, from cell.* (no SIM choice when dialling: D-128) */
-    char sim[12] = ""; int64_t registered = 0, missing = 0;
-    ink_state_get_str(ink_state_find("cell.sim"), sim, sizeof sim);
+    char sim[12]; int64_t registered = 0, missing = 0;
+    sim_in_use(sim, sizeof sim);
     ink_state_get_int(ink_state_find("cell.registered"), &registered); ink_state_get_int(ink_state_find("cell.sim_missing"), &missing);
     if (ink_setting_get("net.airplane")) snprintf(P.card, sizeof P.card, "%s", TR("飞行模式"));
     else if (missing) snprintf(P.card, sizeof P.card, "%s", TR("没有卡"));
-    else snprintf(P.card, sizeof P.card, "%s%s%s", card_name(sim[0] ? sim : "external"), registered ? "" : " · ", registered ? "" : TR("没有信号"));
+    else snprintf(P.card, sizeof P.card, "%s%s%s", card_name(sim), registered ? "" : " · ", registered ? "" : TR("没有信号"));
     set_text(P.card_line, P.card);
 }
 /* The candidate rows, in place: the notice first (until the next action), then a page of candidates or why there are none. */
@@ -310,11 +318,13 @@ static void cands_show(void) {
         bool row = item >= 0 && (none ? item == 0 : at < X.ncand), narrow = item == 0 && (add || P.pages > 1);
         show_if(s, row);
         if (!row) continue;
-        int room = narrow ? w - PAGER_W - INK_GAP_M : w;
+        int room = narrow ? w - (add ? P.side_w : P.pager_w) - INK_GAP_M : w;
+        const lv_font_t *font = ink_ui_font_px(none ? INK_FONT_NOTE : INK_FONT_LIST, none ? INK_WEIGHT_REGULAR : INK_WEIGHT_MEDIUM);
+        if (lv_obj_get_style_text_font(main, 0) != font) lv_obj_set_style_text_font(main, font, 0); /* why there are none: a note */
         if (none) {
-            set_text(main, P.contacts < 0 ? TR("联系人暂时读不到") : !P.contacts ? TR("正在读取联系人") : P.number[0] ? TR("没有匹配的联系人") : TR("还没有联系人"));
-            set_text(side, ""); set_w(main, room);
-            P.fields[P.model.field_count++] = (ink_ui_field_spec_t){.id = "candidates", .role = "status", .label = TR("候选"), .value = lv_label_get_text(main)};
+            const char *why = P.contacts < 0 ? TR("联系人暂时读不到") : !P.contacts ? TR("正在读取联系人") : P.number[0] ? TR("没有匹配的联系人") : TR("还没有联系人");
+            set_text(main, why); set_text(side, ""); set_w(main, room);
+            P.fields[P.model.field_count++] = (ink_ui_field_spec_t){.id = "candidates", .role = "status", .label = TR("候选"), .value = why};
             continue;
         }
         int16_t c = X.cand[at];
@@ -322,9 +332,12 @@ static void cands_show(void) {
         snprintf(P.cand_values[item], sizeof P.cand_values[item], "%s · %s", number, c >= 0 ? TR("联系人") : TR("最近通话"));
         number_args(P.cand_args[item], sizeof P.cand_args[item], number);
         set_text(main, c >= 0 ? X.book[c].name : number); set_text(side, c >= 0 ? number : TR("最近通话"));
-        set_w(main, room / 2); set_w(side, room / 2);
-        if (lv_obj_get_style_x(side, 0) != ink_ui_px(room - w)) lv_obj_set_x(side, ink_ui_px(room - w)); /* clear of the page button */
-        P.fields[P.model.field_count++] = (ink_ui_field_spec_t){.id = P.cand_args[item], .role = "listitem", .label = lv_label_get_text(main), .value = P.cand_values[item]};
+        int name_w = LV_MIN(ink_ui_text_width(lv_label_get_text(main), INK_FONT_LIST, INK_WEIGHT_MEDIUM), room / 3);
+        int nw = LV_MIN(ink_ui_text_width(lv_label_get_text(side), INK_FONT_NOTE, INK_WEIGHT_REGULAR) + INK_GAP_XS, room - name_w - INK_GAP_S);
+        set_w(side, nw); set_w(main, room - nw - INK_GAP_S); /* the whole number, and a name that keeps a third at least */
+        set_x(side, room - w); /* clear of the page button */
+        P.fields[P.model.field_count++] = (ink_ui_field_spec_t){.id = P.cand_args[item], .role = "listitem", .label = c >= 0 ? X.book[c].name : number, .value = P.cand_values[item]};
+
         P.actions[P.model.action_count++] = (ink_ui_action_spec_t){.id = P.cand_args[item], .label = TR("填入这个号码"), .capability = "phone.open", .args_json = P.cand_args[item], .enabled = true};
     }
     show_if(P.add_btn, add); show_if(P.pager_btn, P.pages > 1);
@@ -333,7 +346,7 @@ static void cands_show(void) {
         P.actions[P.model.action_count++] = (ink_ui_action_spec_t){.id = "add", .label = TR("加为联系人"), .capability = "contacts.edit", .enabled = true};
     }
     if (P.pages > 1) {
-        snprintf(P.pager, sizeof P.pager, TR("%d/%d 下一页"), P.cpage + 1, P.pages);
+        snprintf(P.pager, sizeof P.pager, TR("%d/%d 翻页"), P.cpage + 1, P.pages); /* the last page turns back to the first */
         set_text(lv_obj_get_child(P.pager_btn, 0), P.pager); set_y(P.pager_btn, P.cand_y + say * INK_CONTROL);
         P.actions[P.model.action_count++] = (ink_ui_action_spec_t){.id = "next", .label = P.pager, .capability = "phone.next", .enabled = true};
     }
@@ -380,7 +393,8 @@ static void control(lv_event_t *e) {
 static void refresh_history(void *db) { /* BG wrote or removed records: the open history shows them */
     (void)db;
     if (strcmp(P.member, ink_member_current()->id) || !ink_member_space_open()) return;
-    if (on_page(&RECENTS) || on_page(&DETAIL)) ink_ui_redraw();
+    if (on_page(&RECENTS)) ink_ui_redraw(); /* a details page goes back with its delete's reply */
+
 }
 static void loaded(void *ctx, const ink_receipt_t *rc) { /* data.list brought a collection into memory: show it in place */
     if ((uintptr_t)ctx >> 1 != (uintptr_t)ink_ui_generation() || !ink_ui_page_current()) return;
@@ -433,6 +447,7 @@ static void number_changed(bool rebuild) { /* the field and the candidates chang
     if (!P.field || !on_page(&ink_phone_page)) return;
     if (rebuild) make_field(lv_obj_get_parent(P.field));
     P.cpage = 0; card_status(); match(); cands_show();
+    ink_ui_hint_obj(P.field, INK_REFRESH_UI); /* the field asks for a fast refresh: one waveform for both, one refresh */
 }
 static void entered(void *ctx, const char *value) {
     (void)ctx; snprintf(P.number, sizeof P.number, "%s", value); P.say[0] = 0; number_changed(false);
@@ -487,8 +502,13 @@ static void create_dial(lv_obj_t *screen, void *arg) {
     P.notice = ink_ui_label(screen, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, cand_y, w);
     lv_label_set_long_mode(P.notice, LV_LABEL_LONG_DOT);
     lv_obj_set_height(P.notice, ink_ui_px(LV_MIN(INK_CONTROL, 2 * ink_ui_line_height(INK_FONT_NOTE))));
-    P.pager_btn = ink_ui_pill(screen, "", INK_CANVAS_W - INK_MARGIN - PAGER_W, cand_y, PAGER_W, INK_CONTROL, false, page_next, NULL);
-    P.add_btn = ink_ui_pill(screen, TR("加为联系人"), INK_CANVAS_W - INK_MARGIN - PAGER_W, cand_y, PAGER_W, INK_CONTROL, false, add_contact, NULL);
+    int side = LV_MAX(PAGER_W, ink_ui_text_width(TR("加为联系人"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP); /* its words fit at every size */
+    char sample[32]; snprintf(sample, sizeof sample, TR("%d/%d 翻页"), 8, 8); /* pages up to 9; more still fit the word */
+    int pager = LV_MAX(INK_CONTROL + INK_GAP_L, ink_ui_text_width(sample, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP);
+
+    P.side_w = side; P.pager_w = pager;
+    P.pager_btn = ink_ui_pill(screen, "", INK_CANVAS_W - INK_MARGIN - pager, cand_y, pager, INK_CONTROL, false, page_next, NULL);
+    P.add_btn = ink_ui_pill(screen, TR("加为联系人"), INK_CANVAS_W - INK_MARGIN - side, cand_y, side, INK_CONTROL, false, add_contact, NULL);
     for (int i = 0; i < 12; i++) {
         lv_obj_t *b = ink_ui_pill(screen, keys[i], INK_MARGIN + (i % 3) * cell + (cell - INK_DIGIT) / 2, KEYS_Y + (i / 3) * (INK_CONTROL + INK_GAP_S),
             INK_DIGIT, INK_CONTROL, false, digit, (void *)keys[i]);
@@ -815,7 +835,7 @@ static void on_call(void *ctx, const char *id, const ink_args_t *a) { /* BG: eve
         H.incoming = !strcmp(id, "call.incoming"); H.answered = false; H.active = true;
         ink_args_get_str(a, "member", H.member, sizeof H.member);
         ink_args_get_str(a, H.incoming ? "from" : "number", H.number, sizeof H.number);
-        H.sim[0] = 0; ink_state_get_str(ink_state_find("cell.sim"), H.sim, sizeof H.sim);
+        sim_in_use(H.sim, sizeof H.sim);
         H.at = ink_time_now_s(); H.started = ink_now_us();
     } else if (!strcmp(id, "call.answered") || !strcmp(id, "call.connected")) {
         H.answered = true; H.started = ink_now_us();
@@ -897,7 +917,8 @@ static void changed(void *ctx, const char *id, const ink_args_t *a) {
         P.active = true; P.incoming = !strcmp(id, "call.incoming");
         snprintf(P.call_member, sizeof P.call_member, "%s", member);
         ink_args_get_str(a, P.incoming ? "from" : "number", P.calling, sizeof P.calling);
-        P.call_sim[0] = 0; ink_state_get_str(ink_state_find("cell.sim"), P.call_sim, sizeof P.call_sim);
+        sim_in_use(P.call_sim, sizeof P.call_sim);
+
         snprintf(P.status, sizeof P.status, "%s", P.incoming ? TR_NOOP("来电") : TR_NOOP("正在拨号"));
         if (!P.incoming && !strcmp(member, P.member)) P.number[0] = 0; /* Fossify clears the dial pad after a call: here with the page change */
     } else if (!strcmp(id, "call.answered") || !strcmp(id, "call.connected")) { P.started = ink_now_us(); snprintf(P.status, sizeof P.status, TR_NOOP("通话中")); }

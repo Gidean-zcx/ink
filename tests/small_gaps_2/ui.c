@@ -75,7 +75,11 @@ static void inspect_phone(void) {
 static void phone(void) {
     for (int level = 1; level <= 3; level += 2) {
         font_size(level); call("phone.open", NULL);
-        tap(INK_CANVAS_W / 2, INK_CANVAS_H - INK_MARGIN - INK_DIGIT / 2); quiet();
+        wanted = "拨打"; on_ui(find_label); /* phone-3: the worded 拨打, found where it is drawn */
+        if (found) touch("拨打");
+        else { tap(INK_CANVAS_W / 2, INK_CANVAS_H - INK_MARGIN - INK_DIGIT / 2); quiet(); } /* reverse.py's baseline: the old circle had no words */
+
+
         /* the dial waits its turn on the modem (the boot sets the radio first, as the vendor): wait for its result */
         CHECK(WAIT_FOR((on_ui(look_for_error), found != NULL), 5000), "the dial result arrives");
         quiet(); on_ui(inspect_phone); frame(level == 1 ? "phone-100" : "phone-120");

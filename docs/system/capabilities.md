@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 548 项：可调用能力 506、事件 42；设置 44 项、状态 58 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 552 项：可调用能力 510、事件 42；设置 44 项、状态 58 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -307,7 +307,10 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `pairing.reject` | 取消加入这个家庭 | 人、AI | 高 / system | 无需 | 仅成人 | [s33](#s33) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `pairing.restart` | 重新加入家庭 | 人、AI | 高 / system | 无需 | 仅成人 | [s33](#s33) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `pairing.status` | 查看加入家庭的进度 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s33](#s33) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
+| `phone.clear` | 清空全部通话记录 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.contacts` | 从联系人选择号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `phone.delete` | 删除一组通话记录（可撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `phone.detail` | 打开一组通话记录的详情 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.emergency` | 拨紧急电话 | 仅人（设备） | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s29](#s29) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `phone.emergency_close` | 返回锁屏 | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.emergency_hangup` | 挂断紧急电话 | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s29](#s29) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
@@ -315,11 +318,12 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `phone.emergency_open` | 打开紧急呼叫页面 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时可打开公开页面（不含成员数据） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.key` | 按拨号键或删除一位 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Phone | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.keypad` | 打开或收起通话键盘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
-| `phone.next` | 通话记录下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneRecents | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `phone.next` | 候选、通话记录或详情的下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.number` | 输入电话号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Phone | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.open` | 打开拨号盘，可填入号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
-| `phone.prev` | 通话记录上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneRecents | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `phone.prev` | 候选、通话记录或详情的上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.recents` | 打开最近通话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `phone.restore` | 恢复刚删除的通话记录 | 仅人（设备） | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.return` | 回到通话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `photo.ask` | 把当前有权查看的照片缩略图交给 AI | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Photo | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `photo.open` | 查看有权访问的图片文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
@@ -666,9 +670,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s14 — `system/apps/phone`
 
-设置：—。
+设置：`cell.sim_slot`、`net.airplane`。
 
-状态：`audio.route`、`bt.connected`、`time.minute`。
+状态：`audio.route`、`bt.connected`、`cell.registered`、`cell.sim`、`cell.sim_missing`、`time.minute`。
 
 事件：`call.answered`、`call.connected`、`call.controls`、`call.dialed`、`call.ended`、`call.incoming`、`contacts.selected`。
 

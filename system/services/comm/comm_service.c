@@ -628,9 +628,11 @@ static void cap_hangup(ink_call_t *c) {
     if (!strcmp(c->cap->id, "phone.emergency_hangup") && (!CM.emergency || strcmp(CM.call_member, ink_cap_call_member(c)))) {
         osal_mutex_unlock(CM.at); c->rc.status = INK_RC_REJECTED; return;
     }
+    CM.hung_up = true; /* before the modem: its NO CARRIER can reach the comm task before ATH returns */
     int r = hal_cell_hangup();
-    if (r == 0) CM.hung_up = true;
+    if (r != 0) CM.hung_up = false;
     osal_mutex_unlock(CM.at);
+
 
     call_result(c, r, TR("挂断了"), "no call to end");
 }

@@ -8,7 +8,8 @@ root = Path(__file__).resolve().parents[2]
 build = Path(sys.argv[1]).resolve()
 source = root / "system/apps/phone/phone.c"
 original = source.read_bytes()
-needle = b"ink_db_open_cached_member(&HISTORY, P.member)"
+# phone-3: the recent calls page's own read (the dial pad and the details read the same history elsewhere)
+needle = b"P.db = ink_db_open_cached_member(&HISTORY, P.member);\n    if (!P.db) {\n        set_text(P.notice, P.log_failed"
 assert original.count(needle) == 1
 
 
@@ -26,7 +27,8 @@ def check(output):
 
 
 try:
-    source.write_bytes(original.replace(needle, b'ink_db_open_cached_member(&HISTORY, "owner")'))
+    source.write_bytes(original.replace(needle, needle.replace(b"P.member)", b'"owner")')))
+
     rebuild()
     negative = check(build / "test-out/phone-reverse")
     (build / "phone-reverse.log").write_text(negative.stdout + negative.stderr)

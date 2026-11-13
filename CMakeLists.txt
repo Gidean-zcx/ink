@@ -1722,6 +1722,29 @@ ink_sim_executable(sim-phone-calls tests/phone_calls/phone_calls.c)
 target_link_libraries(sim-phone-calls PRIVATE ink_apps ink_system)
 add_test(NAME phone-calls COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/phone_calls/run.py
   $<TARGET_FILE:sim-phone-calls> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/phone-calls)
+# phone-3: LilyPhone's number match on the host, and the reverse control with its original MATCH_DIGITS 7.
+set(INK_LILY_STORE_SRC ${CMAKE_SOURCE_DIR}/system/apps/phone/vendor/lilyphone/phone_store.c)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${INK_LILY_STORE_SRC})
+file(READ ${INK_LILY_STORE_SRC} INK_LILY_STORE)
+string(REPLACE "#define MATCH_DIGITS 11" "#define MATCH_DIGITS 7" INK_LILY_STORE "${INK_LILY_STORE}")
+file(WRITE ${CMAKE_BINARY_DIR}/phone-3/phone_store_7.c "${INK_LILY_STORE}")
+foreach(variant match match-7)
+  add_executable(phone-3-${variant} tests/phone_3/match.c
+    $<IF:$<STREQUAL:${variant},match>,${INK_LILY_STORE_SRC},${CMAKE_BINARY_DIR}/phone-3/phone_store_7.c>)
+  target_include_directories(phone-3-${variant} PRIVATE system/apps/phone/vendor/lilyphone $<TARGET_PROPERTY:ink_system,INCLUDE_DIRECTORIES>)
+  target_compile_definitions(phone-3-${variant} PRIVATE $<TARGET_PROPERTY:ink_system,COMPILE_DEFINITIONS>)
+  add_dependencies(phone-3-${variant} ink_system)
+endforeach()
+add_test(NAME phone-3-match COMMAND phone-3-match)
+add_test(NAME phone-3-match-reverse COMMAND phone-3-match-7)
+set_tests_properties(phone-3-match-reverse PROPERTIES PASS_REGULAR_EXPRESSION "FAIL 138/139")
+ink_sim_executable(sim-phone-3 tests/phone_3/phone_3.c)
+target_link_libraries(sim-phone-3 PRIVATE ink_apps ink_system)
+add_test(NAME phone-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/phone_3/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME phone-3-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/phone_3/run.py --build ${CMAKE_BINARY_DIR} --reverse)
+set_tests_properties(phone-3 phone-3-reverse PROPERTIES TIMEOUT 900)
+
+
 
 target_sources(ink_system PRIVATE system/ui/shell/power_pages.c)
 ink_sim_executable(sim-power-pages tests/power_pages.c)
