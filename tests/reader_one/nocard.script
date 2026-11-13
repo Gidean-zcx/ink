@@ -1,0 +1,3 @@
+# The card is out from the start: the reader explains it, and the migration waits for the card.
+@0 sd remove
+@600s end

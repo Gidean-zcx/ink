@@ -300,6 +300,7 @@ static void ink_mogo_action(ink_call_t *call) {
         return;
     }
     if (!strcmp(id, "open_sample")) { snprintf(call->rc.object, sizeof call->rc.object, "book:sample"); ink_cap_defer(call); ink_mogo_open_path(call, "asset:sample/welcome.txt"); return; }
+    if (!strcmp(id, "back")) ink_probe_count("reader.back"); /* each call, by hand, key or AI: the tests count that BACK never loops */
     if (!strcmp(id, "back") && M.root && !M.busy) { ink_mogo_call("shell.back", NULL, call->src); return; }
     static const struct { const char *id; int op, value; bool json; } OPS[] = {
         {"next_page", INK_MOGO_OP_TURN, 1, false}, {"prev_page", INK_MOGO_OP_TURN, -1, false}, {"list_next", INK_MOGO_OP_LIST, 1, false}, {"list_prev", INK_MOGO_OP_LIST, -1, false},

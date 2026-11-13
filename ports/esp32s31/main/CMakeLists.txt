@@ -51,31 +51,23 @@ if(INK_AUTOTEST)
     endforeach()
 endif()
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
-include(${root}/apps/reader/reader_build.cmake)
 add_subdirectory(${root}/third_party/speexdsp ${CMAKE_BINARY_DIR}/speexdsp)
 target_link_libraries(${ink_system_lib} PRIVATE ink_resampler)
-ink_reader_build(__idf_ink_apps __idf_ink_system __idf_ink_lvgl)
 include(${root}/system/graft/graft_build.cmake)
 ink_graft_build(__idf_ink_system)
-include(${root}/apps/mogo/mogo.cmake)
-ink_mogo_build(__idf_ink_apps __idf_ink_system ${COMPONENT_LIB})
-# Share the reader's pinned inflate implementation with uploads.
-set(miniz ${root}/third_party/reader_miniz/miniz.c)
-get_target_property(reader_sources ink_reader_vendor SOURCES)
-list(FILTER reader_sources EXCLUDE REGEX "/reader_miniz/miniz\\.c$")
-set_property(TARGET ink_reader_vendor PROPERTY SOURCES ${reader_sources})
-add_library(ink_miniz STATIC ${miniz})
+# The pinned inflater for the reader's EPUBs, uploads and assets; renamed so it never binds to the ROM's tinfl.
+add_library(ink_miniz STATIC ${root}/third_party/reader_miniz/miniz.c)
 target_include_directories(ink_miniz PUBLIC ${root}/third_party PRIVATE ${root}/system/include)
-get_target_property(miniz_definitions ink_reader_vendor INTERFACE_COMPILE_DEFINITIONS)
-list(FILTER miniz_definitions INCLUDE REGEX "^(MINIZ_|tinfl_|mz_)")
-target_compile_definitions(ink_miniz PUBLIC ${miniz_definitions})
+target_compile_definitions(ink_miniz PUBLIC MINIZ_NO_ARCHIVE_APIS MINIZ_NO_STDIO MINIZ_NO_TIME MINIZ_NO_DEFLATE_APIS
+    tinfl_decompress=ink_tinfl_decompress tinfl_decompress_mem_to_heap=ink_tinfl_decompress_mem_to_heap
+    tinfl_decompress_mem_to_mem=ink_tinfl_decompress_mem_to_mem tinfl_decompress_mem_to_callback=ink_tinfl_decompress_mem_to_callback
+    mz_crc32=ink_mz_crc32 mz_adler32=ink_mz_adler32 mz_free=ink_mz_free)
 target_compile_options(ink_miniz PRIVATE -w -fstack-usage)
-target_link_libraries(ink_reader_vendor PRIVATE ink_miniz)
-file(GLOB reader_tables ${root}/assets/i18n/*.tsv)
-ink_reader_translations(reader_tables)
-set(INK_I18N_TABLES ${reader_tables})
+include(${root}/apps/mogo/mogo.cmake)
+ink_mogo_build(__idf_ink_apps __idf_ink_system)
+file(GLOB INK_I18N_TABLES ${root}/assets/i18n/*.tsv)
 include(${root}/apps/mogo/translations.cmake)
-execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${reader_tables}
+execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
     --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
     --sources ${root}/system/apps/memory/memory.c ${root}/system/apps/snake/snake.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)

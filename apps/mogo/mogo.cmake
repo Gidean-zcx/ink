@@ -24,6 +24,9 @@ target_include_directories(${app_target} PRIVATE ${mogo_dir} ${mogo_dir}/port ${
 target_link_libraries(${app_target} PRIVATE ink_mogo_native)
 if(ESP_PLATFORM)
   target_compile_options(ink_mogo_native PRIVATE -Os -fstack-usage)
+  # The page's text buffers stay out of internal RAM, like the system's own tables.
+  set_source_files_properties(${mogo_dir}/mogo.c TARGET_DIRECTORY ${app_target} PROPERTIES
+    COMPILE_DEFINITIONS INK_PSRAM_BSS=EXT_RAM_BSS_ATTR COMPILE_OPTIONS "-include;esp_attr.h")
 else()
   target_include_directories(${app_target} PRIVATE ${mogo_root}/simulator/kernel/vtk)
 endif()

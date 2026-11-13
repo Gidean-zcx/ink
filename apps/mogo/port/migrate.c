@@ -10,6 +10,7 @@
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/layout.h"
+#include "ink/sys/state.h"
 #include "ink/sys/storage.h"
 #include "ink/probe.h"
 
@@ -17,9 +18,13 @@
 static const ink_db_def_t INK_MOGO_OLD_MARKS = {.name = "reader.bookmarks", .title = "旧阅读书签（迁移用）", .scope = INK_DB_MEMBER, .schema = 1, .json = true};
 int ink_mogo_migrate_init(void) { return ink_db_register(&INK_MOGO_OLD_MARKS); }
 
-typedef struct { uint32_t last_crc, marks_ver, marks_count, pos_found; } ink_mogo_print_t;
+typedef struct { uint32_t last_crc, marks_ver, marks_count, layout_crc, pos_found; } ink_mogo_print_t;
+/* The old key (crc32 names the .pos file), the old physical path (bookmarks) and the new path, for one book. */
+typedef struct { char key[96], old[200], path[288]; } ink_mogo_book_t;
 static struct {
-    char member[16], last_key[96], text[1024], json_text[2048];
+    char member[16], last_key[96], text[1024], json_text[2048], layout[160], inbox[160], name[128], pos[96], scratch[288], files[96];
+    ink_mogo_book_t book, other;
+    ink_mogo_card_t card;
     uint32_t last_offset, epoch;
     int next, done, failed;
     ink_mogo_print_t print;
@@ -37,26 +42,25 @@ static int ink_mogo_old_read(const char *member, const char *name, char *out, si
     return n;
 }
 static int ink_mogo_old_number(const char *text, const char *key) { const char *p = strstr(text, key); return p ? atoi(p + strlen(key)) : -1; }
-/* The old key (crc32 names the .pos file), the old physical path (bookmarks) and the new path, for one book. */
-typedef struct { char key[96], old[200], path[288]; } ink_mogo_book_t;
+/* The books the old reader listed, in its folders on the card (read like it did: no file index scan). */
 static bool ink_mogo_book_at(int index, ink_mogo_book_t *b) {
-    char inbox[64]; snprintf(inbox, sizeof inbox, "/me/%s", TR_NOOP("收件箱"));
-    const char *const roots[] = {"/family/books", inbox};
-    int seen = 0;
+    char *inbox = R.inbox, *name = R.name; bool dir; int seen = 0;
+    if (ink_layout_member_files(R.files, sizeof R.files, R.member) < 0) return false;
+    snprintf(inbox, sizeof R.inbox, "%s/%s", R.files, TR_NOOP("收件箱"));
     for (int r = 0; r < 2; r++) {
-        uint32_t cursor = 0; ink_fs_entry_t e;
-        while (ink_fs_index(roots[r], INK_FS_ANY, &cursor, &e) == 1) {
-            const char *name = e.path + strlen(roots[r]) + 1, *dot = strrchr(name, '.');
-            if (strchr(name, '/') || !dot || (strcmp(dot, ".txt") && strcmp(dot, ".epub")) || seen++ != index) continue;
-            char files[96];
-            if (r && ink_layout_member_files(files, sizeof files, R.member) < 0) return false;
+        ink_dir_t *d = ink_dir_open(r ? inbox : "/content/books");
+        while (d && ink_dir_next(d, name, sizeof R.name, &dir) == 1) {
+            const char *dot = strrchr(name, '.');
+            if (dir || !dot || (strcmp(dot, ".txt") && strcmp(dot, ".epub")) || seen++ != index) continue;
             if (r) snprintf(b->key, sizeof b->key, "inbox/%.89s", name);
             else snprintf(b->key, sizeof b->key, "%.*s", strcmp(dot, ".epub") ? (int)(dot - name) : (int)strlen(name), name);
-            if (r) snprintf(b->old, sizeof b->old, "%s/%s/%s", files, TR_NOOP("收件箱"), name);
-            else snprintf(b->old, sizeof b->old, "/content/books/%s", name);
-            snprintf(b->path, sizeof b->path, "%s", e.path);
+            snprintf(b->old, sizeof b->old, "%s/%s", r ? inbox : "/content/books", name);
+            if (r) snprintf(b->path, sizeof b->path, "/me/%s/%s", TR_NOOP("收件箱"), name);
+            else snprintf(b->path, sizeof b->path, "/family/books/%s", name);
+            ink_dir_close(d);
             return true;
         }
+        ink_dir_close(d);
     }
     if (seen != index) return false;
     snprintf(b->key, sizeof b->key, "%s", TR_NOOP("夜邮（示例）"));
@@ -124,9 +128,9 @@ static bool ink_mogo_marks(const ink_mogo_book_t *b, bool epub, uint32_t size) {
     ink_db_cursor_t cursor = {0}; ink_rec_t rec; int count = marks->count <= BOOKMARK_MAX ? marks->count : 0;
     memcpy(all, marks->entries, (size_t)count * sizeof *all);
     while (R.marks && count < BOOKMARK_MAX + 64 && ink_db_next(R.marks, &cursor, &rec, R.json_text, sizeof R.json_text - 1) == 1) {
-        int64_t v[4]; char book[200], excerpt[64] = ""; uint16_t ch; uint32_t off;
+        int64_t v[4]; char excerpt[64] = ""; uint16_t ch; uint32_t off;
         if (rec.len >= sizeof R.json_text || ink_json_parse(&R.json, R.json_text, rec.len) ||
-            ink_json_str(&R.json, ink_json_find(&R.json, 0, "book"), book, sizeof book) < 0 || strcmp(book, b->old)) continue;
+            ink_json_str(&R.json, ink_json_find(&R.json, 0, "book"), R.scratch, sizeof R.scratch) < 0 || strcmp(R.scratch, b->old)) continue;
         static const char *const fields[] = {"chapter", "block", "offset", "added_at"};
         bool ok = true;
         for (int i = 0; i < 4; i++) ok = ok && ink_json_int(&R.json, ink_json_find(&R.json, 0, fields[i]), &v[i]);
@@ -148,8 +152,8 @@ static bool ink_mogo_marks(const ink_mogo_book_t *b, bool epub, uint32_t size) {
 }
 /* One book: its saved position (unless Mogo has one) and its marks; the card and "last" when it was read last. */
 static bool ink_mogo_book(const ink_mogo_book_t *b) {
-    char pos[96]; bool last = !strcmp(b->key, R.last_key);
-    int found = ink_mogo_pos(b->key, pos, sizeof pos);
+    char *pos = R.pos; bool last = !strcmp(b->key, R.last_key);
+    int found = ink_mogo_pos(b->key, pos, sizeof R.pos);
     struct stat st;
     if (stat(b->path, &st) || book_open(b->path) != ESP_OK) return true;
     bool epub = book_kind() == BOOK_KIND_EPUB, ok = true;
@@ -163,35 +167,44 @@ static bool ink_mogo_book(const ink_mogo_book_t *b) {
         p = (book_progress_t){.file_size = size, .chapter = ch, .byte_off = off, .px = 48, .pct = (uint8_t)(total ? (uint64_t)at * 100 / total : 0)};
         ok = book_progress_save(b->path, &p) == ESP_OK;
         if (ok) ink_probe_count("reader.migrated_progress");
-        nvs_handle_t h; ink_mogo_card_t card = {.chapter_no = ch, .pct = p.pct}; size_t n = 0;
+        nvs_handle_t h; ink_mogo_card_t *card = &R.card; size_t n = 0;
         if (ok && last && !nvs_open("ink_card", NVS_READWRITE, &h)) {
-            snprintf(card.path, sizeof card.path, "%s", b->path); ink_mogo_book_title(b->path, card.title, sizeof card.title);
-            if (book_chapter_title(ch, card.chapter, sizeof card.chapter) != ESP_OK) card.chapter[0] = 0;
-            if (nvs_get_blob(h, "last", NULL, &n)) ok = !nvs_set_blob(h, "last", &card, sizeof card) && !nvs_commit(h);
+            *card = (ink_mogo_card_t){.chapter_no = ch, .pct = p.pct};
+            snprintf(card->path, sizeof card->path, "%s", b->path); ink_mogo_book_title(b->path, card->title, sizeof card->title);
+            if (book_chapter_title(ch, card->chapter, sizeof card->chapter) != ESP_OK) card->chapter[0] = 0;
+            if (nvs_get_blob(h, "last", NULL, &n)) ok = !nvs_set_blob(h, "last", card, sizeof *card) && !nvs_commit(h);
             nvs_close(h);
         }
     }
-    char now[288];
-    if (ok && last && !book_progress_last_path(now, sizeof now)) ok = book_progress_set_last_path(b->path) == ESP_OK;
+    if (ok && last && !book_progress_last_path(R.scratch, sizeof R.scratch)) ok = book_progress_set_last_path(b->path) == ESP_OK;
     ok = ink_mogo_marks(b, epub, size) && ok;
     html_text_free(&R.chapter); book_close();
     return ok;
 }
 /* Per-member layout keys in the settings file, kept there by the settings service after the old reader left. */
-static bool ink_mogo_layout_old(void) {
-    static const int px[] = {40, 48, 56, 72}, line[] = {110, 120, 135, 150}, gap[] = {25, 50, 75, 100}, margin[] = {16, 24, 40, 56};
+static void ink_mogo_layout_read(void) {
     static const char *const keys[] = {"font_size", "line_spacing", "paragraph_spacing", "margins", "footer_mask"};
-    char path[64], *text = ink_app_alloc(2048, true); int v[5]; bool changed = false;
-    if (!text) return false;
-    int n = ink_layout_sys(path, sizeof path, "settings.json") < 0 ? -1 : ink_storage_read(path, text, 2047);
-    text[n > 0 ? n : 0] = 0;
+    char path[64], *text = ink_app_alloc(2048, true); int n = -1, len = 0;
+    R.layout[0] = 0;
+    if (text && ink_layout_sys(path, sizeof path, "settings.json") >= 0) n = ink_storage_read(path, text, 2047);
+    if (n <= 0) { ink_app_free(text); return; }
+    text[n] = 0;
     for (int i = 0; i < 5; i++) {
         char key[64]; snprintf(key, sizeof key, "\"reader.%s:%s\":", keys[i], R.member);
         const char *at = strstr(text, key);
-        v[i] = at ? atoi(at + strlen(key)) : i == 4 ? 3 : 1;
-        changed = changed || (i == 4 ? v[i] != 3 : v[i] != 1);
+        if (at) len += snprintf(R.layout + len, sizeof R.layout - (size_t)len, "%d=%d;", i, atoi(at + strlen(key)));
     }
     ink_app_free(text);
+}
+static bool ink_mogo_layout_old(void) {
+    static const int px[] = {40, 48, 56, 72}, line[] = {110, 120, 135, 150}, gap[] = {25, 50, 75, 100}, margin[] = {16, 24, 40, 56};
+    int v[5] = {1, 1, 1, 1, 3}; bool changed = false;
+    for (int i = 0; i < 5; i++) {
+        char key[8]; snprintf(key, sizeof key, "%d=", i);
+        const char *at = strstr(R.layout, key);
+        if (at) v[i] = atoi(at + 2);
+        changed = changed || (i == 4 ? v[i] != 3 : v[i] != 1);
+    }
     nvs_handle_t h; size_t size = 0;
     if (!changed || nvs_open("reading", NVS_READWRITE, &h)) return !changed;
     bool ok = true;
@@ -228,37 +241,39 @@ static bool ink_mogo_begin(const ink_member_identity_t *owner) {
     R.last_offset = n > 0 ? (uint32_t)ink_mogo_old_number(R.text, "\noffset=") : 0;
     R.marks = ink_db_open_member(&INK_MOGO_OLD_MARKS, R.member);
     if (R.marks) { R.print.marks_ver = ink_db_last_ver(R.marks); R.print.marks_count = (uint32_t)ink_db_count(R.marks); }
-    ink_mogo_book_t b; char pos[96];
-    for (int i = 0; ink_mogo_book_at(i, &b); i++) R.print.pos_found += ink_mogo_pos(b.key, pos, sizeof pos) > 0;
+    ink_mogo_layout_read();
+    R.print.layout_crc = R.layout[0] ? ink_crc32(0, R.layout, strlen(R.layout)) : 0;
+    if (!R.print.last_crc && !R.print.marks_count && !R.print.layout_crc) return false; /* nothing of the old reader: not even the card is read */
+    for (int i = 0; ink_mogo_book_at(i, &R.book); i++) R.print.pos_found += ink_mogo_pos(R.book.key, R.pos, sizeof R.pos) > 0;
     return !ink_mogo_marker(false);
 }
 int ink_mogo_migrate_step(const ink_member_identity_t *owner, const char *only) {
-    ink_fs_entry_t probe; uint32_t cursor = 0;
+    int64_t card = 0;
     ink_mogo_owner(owner);
-    if (ink_fs_index("/family/books", INK_FS_ANY, &cursor, &probe) == INK_FS_ERR_NO_CARD) return -1; /* the card is out: not "the book is gone" */
+    if (!ink_state_get_int(ink_state_find("storage.card"), &card) || !card) return -1; /* the card is out: not "the book is gone" */
     if ((only || strcmp(R.member, owner->member) || R.epoch != owner->epoch || !R.next) && !ink_mogo_begin(owner)) return 0;
-    ink_mogo_book_t b;
+    ink_mogo_book_t *b = &R.book, *other = &R.other;
     if (only) { /* this session's book and the last one now; the rest and the marker in the background run */
-        for (int i = 0; ink_mogo_book_at(i, &b); i++)
-            if (!strcmp(b.key, R.last_key) || !strcmp(b.path, only)) (void)ink_mogo_book(&b);
+        for (int i = 0; ink_mogo_book_at(i, b); i++)
+            if (!strcmp(b->key, R.last_key) || !strcmp(b->path, only)) (void)ink_mogo_book(b);
         R.next = 0;
         return 0;
     }
-    if (ink_mogo_book_at(R.next, &b)) {
-        R.failed += !ink_mogo_book(&b);
+    if (ink_mogo_book_at(R.next, b)) {
+        R.failed += !ink_mogo_book(b);
         R.next++;
         return 1;
     }
     if (R.last_key[0]) { /* the book read last is gone */
         bool there = false;
-        for (int i = 0; ink_mogo_book_at(i, &b); i++) there = there || !strcmp(b.key, R.last_key);
+        for (int i = 0; ink_mogo_book_at(i, other); i++) there = there || !strcmp(other->key, R.last_key);
         if (!there) ink_probe_count("reader.migration_skipped");
     }
     ink_db_cursor_t c = {0}; ink_rec_t rec; /* marks whose book is gone */
     while (R.marks && ink_db_next(R.marks, &c, &rec, R.json_text, sizeof R.json_text - 1) == 1) {
-        char book[200]; bool there = false;
-        if (rec.len >= sizeof R.json_text || ink_json_parse(&R.json, R.json_text, rec.len) || ink_json_str(&R.json, ink_json_find(&R.json, 0, "book"), book, sizeof book) < 0) continue;
-        for (int i = 0; !there && ink_mogo_book_at(i, &b); i++) there = !strcmp(b.old, book);
+        bool there = false;
+        if (rec.len >= sizeof R.json_text || ink_json_parse(&R.json, R.json_text, rec.len) || ink_json_str(&R.json, ink_json_find(&R.json, 0, "book"), R.scratch, sizeof R.scratch) < 0) continue;
+        for (int i = 0; !there && ink_mogo_book_at(i, other); i++) there = !strcmp(other->old, R.scratch);
         if (!there) ink_probe_count("reader.migration_skipped");
     }
     R.failed += !ink_mogo_layout_old();

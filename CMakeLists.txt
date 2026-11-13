@@ -2144,3 +2144,18 @@ target_include_directories(sim-google-ime PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-google-ime PRIVATE ink_apps ink_system)
 add_dependencies(sim-google-ime ink_fonts ink_ui_fonts ink_icons ink_test_content)
 add_test(NAME ime-google COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/google_run.py --build ${CMAKE_BINARY_DIR})
+# The reader's font in the test content, where the device has it on the card (fonts/InkSC.ttf, with its OFL): tests
+# that open a book need it. fontTools may sit in another Python than the one CMake found (CI installs it system-wide).
+if(INK_HAVE_FONTS)
+  set(INK_FONTTOOLS_PYTHON ${Python3_EXECUTABLE})
+  execute_process(COMMAND ${Python3_EXECUTABLE} -c "import fontTools" RESULT_VARIABLE missing_fonttools OUTPUT_QUIET ERROR_QUIET)
+  if(missing_fonttools)
+    unset(INK_FONTTOOLS_PYTHON)
+    find_program(INK_FONTTOOLS_PYTHON NAMES python3 NO_CACHE)
+  endif()
+  add_custom_command(OUTPUT ${INK_TEST_CONTENT}/fonts/InkSC.ttf
+    COMMAND ${INK_FONTTOOLS_PYTHON} ${CMAKE_SOURCE_DIR}/tools/mogo_font.py ${INK_CJK_FONT} ${INK_TEST_CONTENT}/fonts/InkSC.ttf
+    DEPENDS tools/mogo_font.py ${INK_TEST_CONTENT}/books/测试长书.txt COMMENT "test content: the reader's font")
+  add_custom_target(ink_reader_font ALL DEPENDS ${INK_TEST_CONTENT}/fonts/InkSC.ttf)
+  add_dependencies(ink_assets ink_reader_font)
+endif()

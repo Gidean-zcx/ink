@@ -1,2 +1,301 @@
-/* placeholder */
-#include "graft_mogo_flow/device.c"
+/* reader-one-1: the one reader. Phases (INK_READER_ONE_PHASE): what a missing piece shows, the three book places and
+ * the back paths, the bookmark rules, and the old reader's data moving over at boot. Synthetic content only. */
+#include <stdlib.h>
+#define ink_main product_main
+#include "configured_boot.c"
+#undef ink_main
+#include "integration/whole_product.h"
+#include "graft.h"
+#include "ink/sys/appreg.h"
+#include "ink/sys/crc.h"
+#include "ink/sys/layout.h"
+#include "ink/sys/storage.h"
+#include "ink/ui_shell.h"
+#include "ink/ui_theme.h"
+
+static char view[4096], phase[24], text[2048];
+static const char *wanted;
+static lv_obj_t *found;
+static bool captured, card_present;
+static ink_card_t card;
+static int bx, by, bw;
+static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
+static void quiet(void) { CHECK(WAIT_FOR(settled(), 15000), "display settles"); }
+static void inspect(void) { ink_graft_snapshot(view, sizeof view); }
+static bool ready(const char *needle) {
+    for (int i = 0; i < 600; i++) {
+        on_ui(inspect);
+        if (strstr(view, needle) && settled()) return true;
+        delay_ms(50);
+    }
+    return false;
+}
+static void ok(const char *id, const char *args) { CHECK(AI(id, args) && g_rc.status == INK_RC_DONE, "%s done (%d): %.80s", id, g_rc.status, g_rc.say); quiet(); }
+static void capture(void *name) { sim_display_snapshot(name); captured = true; }
+static void frame(const char *name) {
+    quiet(); captured = false; vtk_event_at(vtk_now() + SIM_MS(1), capture, (void *)name);
+    CHECK(WAIT_FOR(captured, 2000), "capture %s", name);
+}
+static void locate(lv_obj_t *o) {
+    if (lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
+    if (lv_obj_check_type(o, &lv_label_class) && strstr(lv_label_get_text(o), wanted)) found = o;
+    const char *cap = ink_shell_bound_cap(o); /* "<reader.back>": the control bound to that capability */
+    if (wanted[0] == '<' && cap && !strncmp(wanted + 1, cap, strlen(cap)) && wanted[strlen(cap) + 1] == '>') found = o;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) locate(lv_obj_get_child(o, (int32_t)i));
+}
+static void find(void) {
+    found = NULL; lv_obj_update_layout(lv_screen_active()); locate(lv_screen_active());
+    if (found) { lv_area_t a; lv_obj_get_coords(found, &a); bx = (a.x1 + a.x2) / 2; by = (a.y1 + a.y2) / 2; bw = a.x2 - a.x1 + 1; }
+}
+static bool visible(const char *what) { wanted = what; on_ui(find); return found != NULL; }
+static void touch(const char *what) { CHECK(visible(what), "%s is on the screen", what); if (found) { tap(bx, by); quiet(); } }
+static int top_y, page_h, page_w;
+static void geometry(void) { top_y = ink_ui_px(INK_STATUS_BAR); page_h = ink_ui_height() - top_y; page_w = ink_ui_width(); }
+static void tap_native(int x, int y) { on_ui(geometry); tap(x * page_w / 684, top_y + y * page_h / 1216); quiet(); }
+static bool top_is(const char *name) { return !strcmp(ink_ui_top_name(), name); }
+static void home(void) { ink_ui_home(); }
+static void go_home(void) { on_ui(home); quiet(); }
+static double backs(void) { return sim_metric_value("reader.back"); }
+/* A BACK key as the UI task hands it to the page on top (ui_task.c: on_key, else pop). The Plus has no back key and
+ * its edge swipe and shell.back pop the page without asking it, so the key path is driven here directly. */
+static void back_key(void) {
+    const ink_activity_t *page = NULL;
+    for (int i = 0; i < ink_app_count(); i++) if (!strcmp(ink_app_at(i)->id, "reader")) page = ink_app_at(i)->entry;
+    if (top_is("book") && page && !(page->on_key && page->on_key(INK_KEY_BACK, false))) ink_ui_pop();
+}
+static void read_card(void) {
+    memset(&card, 0, sizeof card);
+    for (int i = 0; i < ink_app_count(); i++) if (!strcmp(ink_app_at(i)->id, "reader") && ink_app_at(i)->card) ink_app_at(i)->card(0, &card);
+}
+static bool card_has(const char *needle) { on_ui(read_card); return card.text[0] && strstr(card.text, needle); }
+static void set_card(void *ctx) { (void)ctx; sim_sd_set_present(card_present); }
+static void sd(bool present) { card_present = present; vtk_event_at(vtk_now() + SIM_MS(1), set_card, NULL); delay_ms(10); ink_fs_refresh_state(); quiet(); }
+static void open_reader(const char *panel) { go_home(); ok("app.open", "{\"id\":\"reader\"}"); CHECK(ready(panel), "the reader shows %s: %.150s", panel, view); }
+
+/* ---------------------------------------------------------------- explanation pages and the back paths */
+static void back_paths(const char *panel, void (*to)(void), const char *after, bool root) {
+    static const char *const how[] = {"button", "BACK", "AI"};
+    for (int path = 0; path < 3; path++) {
+        to(); CHECK(ready(panel), "%s again: %.120s", panel, view);
+        double before = backs();
+        if (path == 0) { CHECK(visible("<reader.back>") && bw >= ink_ui_px(INK_CONTROL), "%s has the back button, %d px wide", panel, bw); if (found) tap(bx, by); }
+        else if (path == 1) on_ui(back_key);
+        else CHECK(AI("reader.back", NULL), "AI reader.back accepted");
+        quiet();
+        if (root) CHECK(WAIT_FOR(top_is("home"), 3000), "%s by %s leaves the reader (%s)", panel, how[path], ink_ui_top_name());
+        else CHECK(ready(after), "%s by %s goes to %s: %.120s", panel, how[path], after, view);
+        double calls = backs() - before;
+        CHECK(calls == (path == 1 && root ? 0 : 1), "%s by %s calls reader.back %g times", panel, how[path], calls);
+    }
+}
+static void to_shelf(void) { open_reader("面板=书架"); }
+static void to_book(void) { go_home(); ok("reader.open_book", "{\"title\":\"我的小书\"}"); CHECK(ready("面板=正文"), "the book is open"); }
+static void to_toc(void) { to_book(); ok("reader.show_chapters", NULL); }
+static void to_marks(void) { to_book(); ok("reader.bookmarks", "{\"open\":true}"); }
+static void to_settings(void) { to_book(); ok("reader.menu", "{\"view\":\"settings\"}"); }
+static void to_tools(void) { to_book(); ok("reader.menu", NULL); }
+static void to_missing(void) { open_reader("面板=缺字体"); }
+static void missing_font(void) {
+    open_reader("面板=缺字体");
+    CHECK(strstr(view, "InkSC.ttf") && strstr(view, "fonts"), "the page says which file and where: %.200s", view);
+    CHECK(visible("InkSC.ttf"), "the explanation is drawn, not a blank page");
+    CHECK(strstr(view, "动作：reader.back"), "the snapshot names what can be done");
+    frame("missing-font");
+    back_paths("面板=缺字体", to_missing, NULL, true);
+}
+static void no_card(void) {
+    open_reader("面板=没有卡");
+    CHECK(strstr(view, "没有插存储卡") && visible("没有插存储卡"), "no card is explained: %.150s", view);
+    frame("no-card");
+    CHECK(AI("reader.list_books", NULL) && g_rc.status == INK_RC_FAILED, "nothing to list without the card");
+}
+static void empty_shelf(void) {
+    open_reader("面板=书架空");
+    CHECK(visible("书架上还没有书") && visible("<transfer.open>"), "the adult is told how books get here, with 传书");
+    CHECK(strstr(view, "transfer.open"), "the AI sees the same action");
+    frame("empty-adult");
+    touch("<transfer.open>");
+    CHECK(WAIT_FOR(!top_is("book"), 3000), "传书 opens the transfer page (%s)", ink_ui_top_name());
+    CHECK(!ink_member_switch("kid"), "the child"); quiet();
+    open_reader("面板=书架空");
+    CHECK(visible("请家长") && !visible("<transfer.open>"), "the child is told to ask a parent, without a button");
+    frame("empty-child");
+}
+static void places(void) {
+    open_reader("面板=书架");
+    CHECK(strstr(view, "我的小书 我的书") && strstr(view, "测试长书 全家的") && strstr(view, "收件箱的书 传进来的"), "three places, each named: %.300s", view);
+    frame("shelf-places");
+    ink_member_identity_t me; ink_member_identity(&me); ink_fs_file_t *f = NULL;
+    CHECK(ink_graft_file_open(&me, "/family/books/测试长书.txt", INK_FS_READ, &f) == 0, "the family books are readable"); if (f) ink_fs_close(f);
+    f = NULL; CHECK(ink_graft_file_open(&me, "/family/books/新.txt", INK_FS_WRITE, &f) != 0 && !f, "but not writable through the graft");
+    ok("reader.list_books", NULL);
+    CHECK(strstr(g_result, "\"place\":\"传进来的\"") && strstr(g_result, "\"title\":\"测试长书\""), "list_books names the places: %.200s", g_result);
+    /* back from every page, three ways, never more than one reader.back */
+    back_paths("面板=书架", to_shelf, NULL, true);
+    back_paths("面板=目录", to_toc, "面板=正文", false);
+    back_paths("面板=书签列表", to_marks, "面板=正文", false);
+    back_paths("面板=设置", to_settings, "面板=正文", false);
+    back_paths("面板=工具", to_tools, "面板=正文", false);
+    to_book(); CHECK(!visible("<reader.back>"), "the bare body keeps the page clean: no back button");
+    tap_native(342, 600); CHECK(ready("面板=工具") && visible("<reader.back>"), "a tap in the middle brings the tools and the back button");
+    frame("tools-back");
+    ok("reader.back", NULL); CHECK(ready("面板=正文"), "back to the body");
+    ok("reader.back", NULL); CHECK(ready("面板=书架"), "the body goes back to the shelf");
+    /* BACK while a page is being laid out does not leave the reader */
+    to_book();
+    ink_call_opts_t opts = {.src = INK_SRC_KEY};
+    CHECK(!ink_cap_call("reader.next_page", NULL, &opts), "a turn starts");
+    on_ui(back_key); quiet();
+    CHECK(top_is("book"), "BACK while laying out stays in the reader (%s)", ink_ui_top_name());
+}
+/* ---------------------------------------------------------------- bookmarks */
+static int marks(uint32_t ids[32]) {
+    ok("reader.bookmarks", NULL);
+    int n = 0;
+    for (const char *p = g_result; (p = strstr(p, "\"id\":")) && n < 32; p += 5) ids[n++] = (uint32_t)strtoul(p + 5, NULL, 10);
+    return n;
+}
+static void bookmarks(void) {
+    go_home(); ok("reader.open_book", "{\"title\":\"测试长书\"}");
+    uint32_t ids[32], again[32];
+    for (int i = 0; i < 26; i++) { ok("reader.add_bookmark", NULL); ok("reader.next_page", NULL); }
+    CHECK(marks(ids) == 24, "at most 24 bookmarks are kept (%d)", marks(ids));
+    for (int i = 0; i < 24; i++) for (int j = i + 1; j < 24; j++) CHECK(ids[i] != ids[j], "ids are distinct");
+    ok("reader.prev_page", NULL); ok("reader.add_bookmark", NULL); ok("reader.add_bookmark", NULL);
+    CHECK(marks(again) == 24 && !memcmp(ids, again, sizeof(uint32_t) * 24), "adding the same page again changes nothing");
+    char args[32]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)ids[5]); ok("reader.remove_bookmark", args);
+    int n = marks(again);
+    CHECK(n == 23, "one removed (%d)", n);
+    for (int i = 0, k = 0; i < 24; i++) if (i != 5) CHECK(again[k++] == ids[i], "the others keep their ids");
+    snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)ids[10]); ok("reader.goto_bookmark", args);
+    ok("reader.bookmarks", NULL); CHECK(strstr(g_result, "\"excerpt\":\"") && !strstr(g_result, "\"excerpt\":\"\""), "excerpts are read from the book");
+    ok("reader.bookmarks", "{\"open\":true}"); CHECK(ready("面板=书签列表"), "the list opens"); frame("bookmarks");
+}
+/* ---------------------------------------------------------------- the old reader's data */
+static const char *env(const char *name) { const char *v = getenv(name); return v ? v : ""; }
+static void put_old(const char *member, const char *name, const char *data) {
+    char path[160]; CHECK(ink_layout_member(path, sizeof path, member, name) > 0, "old path fits");
+    CHECK(ink_storage_write_member_atomic(path, data, strlen(data)) == 0, "old file %s written", name);
+}
+static uint32_t old_crc(const char *member, const char *name) {
+    char path[160], data[512] = {0}; ink_layout_member(path, sizeof path, member, name);
+    int n = ink_storage_read(path, data, sizeof data);
+    return n > 0 ? ink_crc32(0, data, (size_t)n) : 0;
+}
+static char pos_name[40];
+static const char *pos(const char *key) { snprintf(pos_name, sizeof pos_name, "reader.%08x.pos", (unsigned)ink_crc32(0, key, strlen(key))); return pos_name; }
+static void old_mark(ink_db_t *db, const char *book, int chapter, int block, unsigned offset, int64_t added, const char *excerpt) {
+    char json[512]; snprintf(json, sizeof json, "{\"book\":\"%s\",\"id\":%lld,\"chapter\":%d,\"block\":%d,\"offset\":%u,\"end_chapter\":%d,\"end_block\":%d,\"end_offset\":%u,\"page\":1,\"added_at\":%lld,\"excerpt\":\"%s\"}",
+        book, (long long)added, chapter, block, offset, chapter, block, offset + 100, (long long)added, excerpt);
+    ink_db_write_t w = {.data = json, .len = strlen(json), .src = INK_SRC_SYSTEM};
+    CHECK(ink_db_put(db, &w, NULL) == INK_DB_OK, "old bookmark written");
+}
+static uint32_t marks_print(const char *member) {
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("reader.bookmarks"), member); ink_db_cursor_t c = {0}; ink_rec_t r; uint32_t crc = 0;
+    while (db && ink_db_next(db, &c, &r, text, sizeof text - 1) == 1) crc = ink_crc32(crc, text, r.len);
+    ink_db_close(db); return crc;
+}
+static void seed(bool extra) {
+    const ink_db_def_t *def = ink_db_find_def("reader.bookmarks");
+    CHECK(def && def->scope == INK_DB_MEMBER && def->json && !def->ai_read && !def->ai_write, "the old bookmark collection stays registered, not for the AI");
+    ink_db_t *db = ink_db_open_member(def, "owner");
+    if (extra) { old_mark(db, "/content/books/测试长书.txt", 0, 0, (unsigned)atoi(env("INK_ONE_MARK5")), 1800000500, env("INK_ONE_EXCERPT5")); ink_db_flush(db); ink_db_close(db); return; }
+    char last[256];
+    snprintf(last, sizeof last, "page=9\nbook=测试长书\noffset=%s\nfile=测试长书\nchapter=0\n", env("INK_ONE_LAST"));
+    put_old("owner", "reader.last", last);
+    snprintf(last, sizeof last, "offset=%s\nchapter=0\n", env("INK_ONE_LAST")); put_old("owner", pos("测试长书"), last);
+    put_old("owner", pos("inbox/来信.epub"), "offset=12\nchapter=1\n");
+    put_old("owner", pos("夜邮（示例）"), "offset=200\nchapter=0\n");
+    for (int i = 1; i <= 4; i++) {
+        char name[24], ex[24]; snprintf(name, sizeof name, "INK_ONE_MARK%d", i); snprintf(ex, sizeof ex, "INK_ONE_EXCERPT%d", i);
+        old_mark(db, "/content/books/测试长书.txt", 0, 0, (unsigned)atoi(env(name)), 1800000000 + i, env(ex));
+    }
+    old_mark(db, "/content/books/已删.txt", 0, 0, 10, 1800000100, "早就删了");
+    ink_db_flush(db); CHECK(ink_db_wait(db, ink_db_last_ver(db), 5000000) == 0, "old bookmarks durable"); ink_db_close(db);
+    snprintf(last, sizeof last, "page=2\nbook=测试长书\noffset=%s\nfile=测试长书\nchapter=0\n", env("INK_ONE_KID"));
+    put_old("kid", "reader.last", last);
+    snprintf(last, sizeof last, "offset=%s\nchapter=0\n", env("INK_ONE_KID")); put_old("kid", pos("测试长书"), last);
+    char path[64], settings[2048] = {0}; ink_layout_sys(path, sizeof path, "settings.json");
+    int n = ink_storage_read(path, settings, sizeof settings - 200);
+    if (n <= 2) snprintf(settings, sizeof settings, "{}");
+    char *end = strrchr(settings, '}');
+    if (end) snprintf(end, sizeof settings - (size_t)(end - settings), "%s\"reader.font_size:owner\":2,\"reader.line_spacing:owner\":3,\"reader.margins:owner\":0,\"reader.footer_mask:owner\":1}", n > 2 ? "," : "");
+    CHECK(ink_storage_write_atomic(path, settings, strlen(settings)) == 0, "old per-member layout in the settings file");
+    CHECK(WAIT_FOR(!ink_storage_pending(), 15000), "old data durable");
+}
+static void boot_checks(int again) {
+    uint32_t before[4] = {old_crc("owner", "reader.last"), old_crc("owner", pos("测试长书")), old_crc("kid", "reader.last"), marks_print("owner")};
+    CHECK(WAIT_FOR(card_has("测试长书"), 20000), "the home card continues the old book: %.95s", card.text);
+    CHECK(strstr(card.text, "读到") && !strcmp(card.action, "reader.continue") && card.bookmark, "card text and action: %.95s", card.text);
+    char card_text[96]; snprintf(card_text, sizeof card_text, "%s", card.text);
+    ok("settings.set", "{\"id\":\"display.lock_reading\",\"value\":1}"); ok("settings.set", "{\"id\":\"display.lock_style\",\"value\":4}");
+    CHECK(BY_HAND("shell.lock", NULL), "lock"); quiet();
+    char lock[4096]; ink_ui_snapshot(lock, sizeof lock, NULL);
+    on_ui(read_card); CHECK(!strcmp(card.text, card_text), "the lock screen reads the same card");
+    frame(again ? "lock-again" : "lock-continue");
+    key(HAL_KEY_HOME); quiet(); go_home();
+    ok("reader.continue", NULL);
+    /* The first boot continues where the old reader stopped; later boots where this test left the book (the oldest mark). */
+    CHECK(ready("面板=正文") && strstr(view, env(again ? "INK_ONE_EXCERPT1" : "INK_ONE_EXCERPT_LAST")), "continue opens where the old reader stopped: %.200s", view);
+    const char *chapter = strstr(view, "》 · "), *chapter_end = chapter ? strstr(chapter, " · 章内页") : NULL;
+    char name[96] = "";
+    if (chapter && chapter_end) snprintf(name, sizeof name, "%.*s", (int)(chapter_end - chapter - strlen("》 · ")), chapter + strlen("》 · "));
+    CHECK(name[0] && strstr(card_text, name), "the card names the chapter the book opens in (%s / %s)", name, card_text);
+    uint32_t ids[32]; int n = marks(ids);
+    CHECK(n == (again == 2 ? 5 : 4), "the old marks of this book moved over once (%d)", n);
+    if (n > 0) {
+        char args[32]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)ids[n - 1]); ok("reader.goto_bookmark", args);
+        CHECK(ready("面板=正文") && strstr(view, env("INK_ONE_EXCERPT1")), "the oldest mark opens at its excerpt: %.200s", view);
+    }
+    ok("reader.get_layout", NULL);
+    CHECK(strstr(g_result, "\"font_size\":56") && strstr(g_result, "\"line_spacing\":150") && strstr(g_result, "\"margins\":16") && strstr(g_result, "\"footer\":1"),
+          "the old layout, converted: %.200s", g_result);
+    double progress = sim_metric_value("reader.migrated_progress"), moved = sim_metric_value("reader.migrated_bookmarks"), skipped = sim_metric_value("reader.migration_skipped");
+    if (!again) CHECK(progress == 3 && moved == 4 && skipped == 1, "counters: progress %g, bookmarks %g, skipped %g", progress, moved, skipped);
+    else if (again == 1) CHECK(progress == 0 && moved == 0 && skipped == 0, "a second boot moves nothing: %g %g %g", progress, moved, skipped);
+    else CHECK(moved == 1, "a restored older backup moves only the new mark: %g", moved);
+    go_home(); CHECK(WAIT_FOR(card_has("测试长书"), 5000), "the card follows the reading");
+    snprintf(card_text, sizeof card_text, "%s", card.text);
+    CHECK(!ink_member_switch("kid"), "the child"); quiet();
+    CHECK(WAIT_FOR(card_has("测试长书") && strcmp(card.text, card_text), 20000), "the child's own card: %.95s", card.text);
+    ok("reader.continue", NULL);
+    CHECK(ready("面板=正文") && strstr(view, env("INK_ONE_EXCERPT_KID")) && strstr(view, "书签=0"), "the child's place and no adult marks: %.200s", view);
+    go_home(); CHECK(!ink_member_switch("owner"), "the adult again"); quiet();
+    CHECK(WAIT_FOR(card_has(card_text), 20000), "the adult's card is unchanged: %.95s", card.text);
+    uint32_t after[4] = {old_crc("owner", "reader.last"), old_crc("owner", pos("测试长书")), old_crc("kid", "reader.last"), marks_print("owner")};
+    CHECK(!memcmp(before, after, sizeof before) && before[0] && before[3], "the old files are only read");
+}
+static bool marker(void) {
+    static const ink_db_def_t prefs = {.name = "mogo.preferences", .title = "阅读偏好与进度", .scope = INK_DB_MEMBER, .schema = 1, .max_records = 256, .max_bytes = 131072};
+    ink_db_t *db = ink_db_open_member(&prefs, "owner"); ink_db_cursor_t c = {0}; ink_rec_t r; bool seen = false;
+    while (db && ink_db_next(db, &c, &r, text, sizeof text) == 1) seen = seen || !strncmp(text, "ink_migr", 8);
+    ink_db_close(db); return seen;
+}
+static void no_card_boot(void) {
+    delay_ms(3000);
+    CHECK(!marker() && !card_has("测试长书"), "with the card out nothing is marked done and no card shows");
+    sd(true);
+    CHECK(WAIT_FOR(card_has("测试长书"), 20000), "the card in: the migration runs");
+    CHECK(WAIT_FOR(marker(), 5000), "and marks it done");
+}
+static void run(void *arg) {
+    (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
+    snprintf(phase, sizeof phase, "%s", env("INK_READER_ONE_PHASE"));
+    if (!strcmp(phase, "nofont")) missing_font();
+    else if (!strcmp(phase, "nocard")) no_card();
+    else if (!strcmp(phase, "empty")) empty_shelf();
+    else if (!strcmp(phase, "places")) places();
+    else if (!strcmp(phase, "bookmarks")) bookmarks();
+    else if (!strcmp(phase, "seed")) seed(false);
+    else if (!strcmp(phase, "seed-extra")) seed(true);
+    else if (!strcmp(phase, "boot")) boot_checks(0);
+    else if (!strcmp(phase, "again")) boot_checks(1);
+    else if (!strcmp(phase, "restored")) boot_checks(2);
+    else if (!strcmp(phase, "boot-nocard")) no_card_boot();
+    ink_probe_count("test.finished");
+}
+void ink_main(void) {
+    product_main(); test_start_home();
+    osal_task_cfg_t cfg = {.name = "test.reader-one", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
+    CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "start the reader-one checks");
+}
