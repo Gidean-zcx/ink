@@ -293,6 +293,7 @@ int ink_shell_init(void) {
     if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0 || ink_time_settings_init() != 0 || ink_mobile_network_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0 || ink_kid_pages_init() != 0) return -1;
+    int ink_shell_bar_init(void); if (ink_shell_bar_init() != 0) return -1; /* control-1: the status bars and the control centre follow their states */
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||
         ink_settings_define(SETTINGS, sizeof SETTINGS / sizeof *SETTINGS))
         return -1;

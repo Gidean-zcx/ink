@@ -1,6 +1,12 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
 /* ui-scale-runtime: dimension bb_x,bb_y The battery icon's position, passed from the theme-sized status bar. */
+/* ui-scale-runtime: dimension x,w Right-to-left positions measured from theme-sized text and icons. */
 #include "shell_internal.h"
+
+/* The status bar after MuditaOS (module-gui/gui/widgets/StatusBar.cpp:30-105, 2cd0e472): the time on the left; on the
+ * right only what is real, a connection or a fault (Bluetooth only while connected, airplane mode in place of the
+ * network); in the middle what needs attention now (a call, the microphone). Each bar redraws itself: a new minute
+ * changes its time alone, anything else the icons beside it, and nothing while what it shows stays the same (D-127). */
 
 void ink_shell_time_strings(char *clock, size_t cc, char *date, size_t dc) {
     if (!ink_time_valid()) {
@@ -18,12 +24,30 @@ void ink_shell_time_strings(char *clock, size_t cc, char *date, size_t dc) {
     snprintf(date, dc, TR("%d月%d日 %s · %s"), tm.month, tm.day, TR(WEEK[tm.wday]), lunar_name);
 }
 
-static void status_deleted(lv_event_t *e) {
-    lv_obj_t *obj = lv_event_get_target_obj(e);
-    for (unsigned i = 0; i < sizeof N.status / sizeof *N.status; i++)
-        if (N.status[i] == obj) N.status[i] = NULL;
-}
+/* What the icons beside the time show (zeroed whole, so two can be compared bytewise). cell: bars while registered. */
+typedef struct { int battery; signed char cell; char mic; bool plane, wifi, bt, bell, call; } bar_state_t;
+enum { BARS_MAX = 6, CELL_NO_SERVICE = -1, CELL_NO_SIM = -2, CELL_OFF = -3 };
+static struct {
+    lv_obj_t *bar[BARS_MAX], *time[BARS_MAX];
+    bar_state_t shown[BARS_MAX];
+    ink_exec_job_t job;
+} B;
 
+static void read_state(bar_state_t *s) {
+    memset(s, 0, sizeof *s);
+    char type[8], mic[16], who[8];
+    state_text("net.type", type, sizeof type);
+    state_text("audio.mic", mic, sizeof mic);
+    s->plane = ink_setting_get("net.airplane") != 0;
+    s->wifi = !strcmp(type, "wifi") && integer("net.online");
+    s->cell = s->plane ? CELL_OFF : integer("cell.registered") ? (signed char)cell_bars(integer("cell.signal"))
+                                  : integer("cell.sim_missing") ? CELL_NO_SIM : CELL_NO_SERVICE;
+    s->bt = integer("bt.connected") != 0;
+    s->bell = integer("notify.unread") > 0;
+    s->mic = !strcmp(mic, "recording") ? 'r' : !strcmp(mic, "sending") ? 's' : !strcmp(mic, "local") ? 'l' : 0;
+    s->call = ink_phone_activity(who, sizeof who);
+    s->battery = (int)integer("battery.level");
+}
 
 /* The battery's bars, in quarters: the outline alone said nothing at a glance (trial report 2026-11-11). Placed in
  * pixels from the drawn icon, as the icon itself is, so they sit centred in its body: inside the stroke the body is
@@ -43,79 +67,131 @@ static void battery_bars(lv_obj_t *bar, int bb_x, int bb_y, int64_t level) {
     }
 }
 
+/* Signal bars in a small icon's square, the left edge at x. */
+static void signal_bars(lv_obj_t *bar, int x, int bars) {
+    int s = ink_ui_px(INK_ICON_SMALL), step = s / 4, top = ink_ui_px((INK_STATUS_BAR - INK_ICON_SMALL) / 2);
+    for (int i = 0; i < 4; i++) {
+        lv_obj_t *o = lv_obj_create(bar);
+        lv_obj_remove_style_all(o);
+        lv_obj_set_style_border_color(o, ink_ui_ink(), 0);
+        lv_obj_set_style_border_width(o, ink_ui_px(INK_STROKE) / 2, 0);
+        lv_obj_set_style_bg_color(o, ink_ui_ink(), 0);
+        lv_obj_set_style_bg_opa(o, i < bars ? LV_OPA_COVER : LV_OPA_TRANSP, 0);
+        int h = step * (i + 1);
+        lv_obj_set_pos(o, ink_ui_px(x) + i * step, top + s - h);
+        lv_obj_set_size(o, step - ink_ui_px(INK_STROKE), h);
+    }
+}
+
+/* Right to left: what is drawn ends at x; returns where the next one ends. */
+static int put_icon(lv_obj_t *bar, int x, const char *icon) {
+    ink_ui_icon(bar, icon, INK_ICON_SMALL, INK_ICON_LINE, x - INK_ICON_SMALL, (INK_STATUS_BAR - INK_ICON_SMALL) / 2, false);
+    return x - INK_ICON_SMALL - INK_GAP_S;
+}
+static int put_text(lv_obj_t *bar, int x, const char *text) {
+    int w = ink_ui_text_width(text, INK_FONT_STATUS, INK_WEIGHT_MEDIUM);
+    ink_ui_line(bar, text, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, x - w, (INK_STATUS_BAR - ink_ui_line_height(INK_FONT_STATUS)) / 2, w);
+    return x - w - INK_GAP_S;
+}
+
+static void draw_icons(lv_obj_t *bar, const bar_state_t *s, bool show_time) {
+    int x = INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST, battery_y = (INK_STATUS_BAR - INK_ICON_LIST) / 2;
+    ink_ui_icon(bar, "battery", INK_ICON_LIST, INK_ICON_LINE, x, battery_y, false);
+    battery_bars(bar, x, battery_y, s->battery);
+    char text[12];
+    snprintf(text, sizeof text, "%d", s->battery);
+    x = put_text(bar, x - INK_GAP_S, text) - INK_GAP_S;
+    if (s->plane) x = put_icon(bar, x, "plane"); /* airplane mode in place of the network, as the phone mode there */
+    else if (s->cell >= 0) {
+        signal_bars(bar, x - INK_ICON_SMALL, s->cell);
+        x = put_text(bar, x - INK_ICON_SMALL - INK_GAP_S, "4G");
+    } else x = put_text(bar, x, s->cell == CELL_NO_SIM ? TR("无卡") : TR("无服务"));
+    if (s->wifi) x = put_icon(bar, x, "wifi");
+    if (s->bt) put_icon(bar, x, "bluetooth"); /* only while headphones are connected */
+    static const char WIDEST[] = "00:00";
+    int y = (INK_STATUS_BAR - INK_ICON_SMALL) / 2, w = show_time ? ink_ui_text_width(WIDEST, INK_FONT_STATUS, INK_WEIGHT_MEDIUM) + INK_GAP_S : 0;
+    if (s->bell) ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, INK_MARGIN + w, y, false); /* unread, after the time */
+    const char *now = s->call ? TR("通话中") : s->mic == 'r' ? TR("录音") : s->mic == 's' ? TR("在听") : NULL;
+    if (now) {
+        int pill_w = ink_ui_text_width(now, INK_FONT_STATUS, INK_WEIGHT_MEDIUM) + 2 * INK_GAP_S, h = ink_ui_line_height(INK_FONT_STATUS) + INK_GAP_S;
+        lv_obj_t *pill = ink_ui_box(bar, (INK_CANVAS_W - pill_w) / 2, (INK_STATUS_BAR - h) / 2, pill_w, h, INK_RADIUS_KEY, INK_SURFACE_BLACK, false);
+        lv_obj_t *l = ink_ui_line(pill, now, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, 0, INK_GAP_S / 2, pill_w);
+        lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
+    } else if (s->mic == 'l')
+        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, (INK_CANVAS_W - INK_ICON_SMALL) / 2, y, false);
+}
+
+static void bar_deleted(lv_event_t *e) {
+    lv_obj_t *obj = lv_event_get_target_obj(e);
+    for (int i = 0; i < BARS_MAX; i++)
+        if (B.bar[i] == obj) B.bar[i] = B.time[i] = NULL;
+}
+
 lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     lv_obj_t *bar = ink_ui_box(parent, 0, 0, INK_CANVAS_W, INK_STATUS_BAR, 0, INK_SURFACE_WHITE, false);
     ink_shell_bind(bar, "shell.control", NULL);
-    char clock[16], date[96];
-    ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
-    int x = INK_MARGIN;
-    int bar_h = INK_STATUS_BAR, text_y = (bar_h - ink_ui_line_height(INK_FONT_STATUS)) / 2;
-    int icon_y = (bar_h - INK_ICON_SMALL) / 2;
-    int time_w = ink_ui_text_width(clock, INK_FONT_STATUS, INK_WEIGHT_MEDIUM);
+    lv_obj_t *time = NULL;
     if (show_time) {
-        ink_ui_line(bar, clock, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, x, text_y, time_w);
-        x += time_w + INK_GAP_S;
+        char clock[16], date[96];
+        ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
+        time = ink_ui_line(bar, clock, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_MARGIN,
+                           (INK_STATUS_BAR - ink_ui_line_height(INK_FONT_STATUS)) / 2, 0);
     }
-    char net[32], mic[32];
-    state_text("net.type", net, sizeof net);
-    state_text("audio.mic", mic, sizeof mic);
-    bool plane = ink_setting_get("net.airplane"), wifi = !strcmp(net, "wifi");
-    const char *cell = integer("cell.registered") ? "4G" : integer("cell.sim_missing") ? TR("无卡") : TR("无服务");
-    int cell_w = ink_ui_text_width(cell, INK_FONT_STATUS, INK_WEIGHT_MEDIUM);
-    if (plane) { ink_ui_icon(bar, "plane", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false); x += INK_ICON_LIST; }
-    ink_ui_icon(bar, wifi ? "wifi" : "wifioff", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
-    x += INK_ICON_LIST;
-    if (!plane) {
-        ink_ui_line(bar, cell, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, x, text_y, cell_w);
-        x += cell_w + INK_GAP_S;
-        if (integer("cell.registered")) {
-            int bars = cell_bars(integer("cell.signal"));
-            __atomic_store_n(&N.cell_bars_shown, bars, __ATOMIC_RELEASE);
-            int s = ink_ui_px(INK_ICON_SMALL), step = s / 4;
-            for (int i = 0; i < 4; i++) {
-                lv_obj_t *o = lv_obj_create(bar);
-                lv_obj_remove_style_all(o);
-                lv_obj_set_style_border_color(o, ink_ui_ink(), 0);
-                lv_obj_set_style_border_width(o, ink_ui_px(INK_STROKE) / 2, 0);
-                lv_obj_set_style_bg_color(o, ink_ui_ink(), 0);
-                lv_obj_set_style_bg_opa(o, i < bars ? LV_OPA_COVER : LV_OPA_TRANSP, 0);
-                int h = step * (i + 1);
-                lv_obj_set_pos(o, ink_ui_px(x) + i * step, ink_ui_px(icon_y) + s - h);
-                lv_obj_set_size(o, step - ink_ui_px(INK_STROKE), h);
-            }
-            x += INK_ICON_LIST;
-        }
-    }
-    if (integer("notify.unread"))
-        ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
-    if (!strcmp(mic, "local"))
-        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, x + INK_ICON_LIST, icon_y, false);
-    else if (!strcmp(mic, "sending") || !strcmp(mic, "recording")) {
-        int pill_h = ink_ui_line_height(INK_FONT_STATUS) + INK_GAP_S;
-        if (pill_h > bar_h) pill_h = bar_h;
-        lv_obj_t *s = ink_ui_box(bar, x + INK_ICON_LIST, (bar_h - pill_h) / 2, INK_CONTROL, pill_h, INK_RADIUS_KEY,
-                                 INK_SURFACE_BLACK, false);
-        lv_obj_t *on_air =
-            ink_ui_line(s, !strcmp(mic, "recording") ? TR("录音") : TR("在听"), INK_FONT_STATUS, INK_WEIGHT_MEDIUM, 0,
-                        (pill_h - ink_ui_line_height(INK_FONT_STATUS)) / 2, INK_CONTROL);
-        lv_obj_set_style_text_align(on_air, LV_TEXT_ALIGN_CENTER, 0);
-    }
-    char battery[12];
-    snprintf(battery, sizeof battery, "%lld", (long long) integer("battery.level"));
-    int battery_w = ink_ui_text_width(battery, INK_FONT_STATUS, INK_WEIGHT_MEDIUM);
-    ink_ui_line(bar, battery, INK_FONT_STATUS, INK_WEIGHT_MEDIUM,
-                INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST - INK_GAP_S - battery_w, text_y, battery_w);
-    int battery_x = INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST, battery_y = (bar_h - INK_ICON_LIST) / 2;
-    ink_ui_icon(bar, "battery", INK_ICON_LIST, INK_ICON_LINE, battery_x, battery_y, false);
-    battery_bars(bar, battery_x, battery_y, integer("battery.level"));
-    for (unsigned i = 0; i < sizeof N.status / sizeof *N.status; i++)
-        if (!N.status[i]) {
-            N.status[i] = bar;
-            N.status_time[i] = show_time;
+    bar_state_t s;
+    read_state(&s);
+    draw_icons(bar, &s, show_time);
+    __atomic_store_n(&N.cell_bars_shown, s.cell > 0 ? s.cell : 0, __ATOMIC_RELEASE);
+    for (int i = 0; i < BARS_MAX; i++)
+        if (!B.bar[i]) {
+            B.bar[i] = bar, B.time[i] = time, B.shown[i] = s;
+            lv_obj_add_event_cb(bar, bar_deleted, LV_EVENT_DELETE, NULL);
             break;
         }
-    lv_obj_add_event_cb(bar, status_deleted, LV_EVENT_DELETE, NULL);
     return bar;
+}
+
+/* UI task: a new minute changes the time label alone; other changes redraw the icons, if what they show changed. */
+static void bar_refresh(void *arg) {
+    (void)arg;
+    if (ink_power_state() == INK_PWR_LOCKED) return;
+    char clock[16], date[96];
+    ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
+    bar_state_t s;
+    read_state(&s);
+    __atomic_store_n(&N.cell_bars_shown, s.cell > 0 ? s.cell : 0, __ATOMIC_RELEASE);
+    for (int i = 0; i < BARS_MAX; i++) {
+        if (!B.bar[i]) continue;
+        if (B.time[i] && strcmp(lv_label_get_text(B.time[i]), clock)) {
+            ink_ui_hint_obj(B.time[i], INK_REFRESH_FAST); /* where it was, then where it is */
+            lv_label_set_text(B.time[i], clock);
+            ink_ui_hint_obj(B.time[i], INK_REFRESH_FAST);
+        }
+        if (!memcmp(&s, &B.shown[i], sizeof s)) continue;
+        for (int c = (int)lv_obj_get_child_count(B.bar[i]) - 1; c >= 0; c--)
+            if (lv_obj_get_child(B.bar[i], c) != B.time[i]) lv_obj_delete(lv_obj_get_child(B.bar[i], c));
+        draw_icons(B.bar[i], &s, B.time[i] != NULL);
+        B.shown[i] = s;
+        ink_ui_hint_obj(B.bar[i], INK_REFRESH_FAST);
+    }
+    if (N.control) draw_control(); /* its tiles read the same states */
+}
+static void bar_changed(void *ctx, int h, const char *id) { /* any task: a state or the airplane setting */
+    (void)ctx; (void)h;
+    static const char *const SHOWN[] = {"time.", "battery.level", "net.", "wifi.", "cell.", "bt.", "audio.mic", "notify.unread", "power.state", "member."};
+    for (unsigned i = 0; i < sizeof SHOWN / sizeof *SHOWN; i++)
+        if (!strncmp(id, SHOWN[i], strlen(SHOWN[i]))) {
+            ink_exec_post(INK_EXEC_UI, &B.job, bar_refresh, NULL);
+            return;
+        }
+}
+static void call_event(void *ctx, const char *id, const ink_args_t *args) { /* a call began or ended */
+    (void)ctx; (void)id; (void)args;
+    ink_exec_post(INK_EXEC_UI, &B.job, bar_refresh, NULL);
+}
+
+int ink_shell_bar_init(void) {
+    return ink_state_watch("", bar_changed, NULL, INK_EXEC_DIRECT) || ink_settings_watch("net.airplane", bar_changed, NULL, INK_EXEC_UI) ||
+        ink_cap_subscribe("call.", call_event, NULL, INK_EXEC_UI) ? -1 : 0;
 }
 
 void ink_shell_topbar(lv_obj_t *parent, const char *title) {
