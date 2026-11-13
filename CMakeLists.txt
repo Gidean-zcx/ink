@@ -2121,6 +2121,11 @@ target_include_directories(test-music-formats PRIVATE platform/include system/in
 target_compile_options(test-music-formats PRIVATE ${INK_WARN} -UNDEBUG)
 target_link_libraries(test-music-formats PRIVATE m)
 add_test(NAME music-formats COMMAND test-music-formats ${CMAKE_SOURCE_DIR}/tests/music/fixtures)
+# music-3: the kiikoread library rules as copied, on a fake file index.
+add_executable(test-music-library tests/music/library.c third_party/kiikoread_music/music_library.c)
+target_include_directories(test-music-library PRIVATE platform/include system/include third_party/kiikoread_music system/services/audio/vendor/kiikoread)
+target_compile_options(test-music-library PRIVATE ${INK_WARN} -UNDEBUG -include ${CMAKE_SOURCE_DIR}/tests/music/library_port.h)
+add_test(NAME music-library COMMAND test-music-library)
 
 ink_sim_executable(sim-music tests/music/product.c)
 target_link_libraries(sim-music PRIVATE ink_apps ink_system)
