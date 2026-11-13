@@ -60,10 +60,18 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     ${root}/system/ui/shell/factory_pages.c
     ${root}/system/ui/shell/power_menu.c
     ${root}/system/ui/shell/power_pages.c
+    ${root}/system/ui/card_files_notice.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${i18n_tables})
 execute_process(COMMAND ${PYTHON} ${root}/tools/licenses.py ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
+# The card files list (D-138) comes from the host build's bundle, so the firmware and build-s31/card-files agree.
+if(NOT EXISTS ${root}/build/card-files/manifest.json)
+    message(FATAL_ERROR "No ${root}/build/card-files/manifest.json: do the host build first (target ink_card_files)")
+endif()
+execute_process(COMMAND ${PYTHON} ${root}/tools/card_files.py header --manifest ${root}/build/card-files/manifest.json
+    --out ${CMAKE_BINARY_DIR}/generated/ink/card_files_manifest.h WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${root}/build/card-files/manifest.json)
 
 include(${root}/system/services/text/google_build.cmake)
 ink_google_pinyin(${COMPONENT_LIB})
