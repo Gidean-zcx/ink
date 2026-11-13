@@ -37,7 +37,8 @@
 - 字：Mogo 的 `ui_text*` / `ui_text_fixed*` / `ui_text_title_vc` 在 `ui_kit.h` 里改名接到 `lock_port.c`，字号一律经过 `ink_mogo_scaled`（跟系统“文字大小”走，孩子按 110%）；Mogo 自己的截字、换行、缩小规矩照旧。两套数字点阵保持原尺寸。`book_cover_auto.c` 用的内置 UI 字体（`ui_font_*`）我们没有：换成卡上字体的覆盖率，写回它自己的 4 位画布。
 - 设置：`app_settings_ticket_background()` 返回新设置“票根背景”（封面 → COVER，壁纸 → TRANSPARENT：画布先铺好已选壁纸，没有壁纸就是白底；Mogo 的“留着锁屏前那一页”不做，D-135）；迷你书库的“最近 / 随机”来自新设置 `display.lock_library`；`app_settings_device_name()` 是当前家人的名字（拼贴写“某某 的书架”）；对比度 100、不快刷、书目录 `/me/books`。
 - 封面队列：Mogo 的 `book_cover_jobs_*` 是解码任务，这里在同一个后台执行器上当场做一张。解码一律用我们的 `ink_image_decode`（`book_image_grayscale`），取样照 Mogo 用最近点。
-- 书库：`book_store_*` 只有一个根 `/me/books`；`board_sd`、`boot_state`、`device_power`、MOBI 元数据是空实现（这台设备不读 MOBI）。
+- 最近一本书：Mogo 的阅读开书时把它记进 `book_progress` 的 `last`（`app_book.c:7867`），票根读 `book_progress_last_path()`；我们的阅读不记。`lock_port.h` 把这批文件里的 `book_progress_last_path(out, cap)` 换成 `ink_mogo_lock_last_path`：每次都按进度保存的先后（`last_open_s` 是保存序号）找最近一本，什么都不写；一条进度都没有时才读存着的 `last`。原文不改。
+- 书库：`home_library` 的书目和封面在两次画之间留着，只在换家人、进度版本变了、换模式、卡的版本变了时重扫（胶水 `library_load`），分钟和点选不碰卡，合 Mogo 自己“静止不扫描”（`MINI_LIBRARY.md:39`）；重扫失败时同一位家人接着用上次的结果（`MINI_LIBRARY.md:12`）。`book_store_*` 只有一个根 `/me/books`；`board_sd`、`boot_state`、`device_power`、MOBI 元数据是空实现（这台设备不读 MOBI）。
 - 电量图标：`ui_nav_battery_draw` 读电源服务的 `battery.level`、`battery.charging`。Mogo 的 Lucide 图标没带：空书库的“打开的书”画成两页框，“换一批”的图标不画（锁屏上不放“换一批”，胶水把那块涂白）。
 
 ## 不搬的（换成我们的胶水或已有的）

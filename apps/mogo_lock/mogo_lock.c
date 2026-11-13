@@ -18,6 +18,8 @@
 #include <nvs.h>
 #include <ink/sys/almanac.h>
 #include "ink/sys/i18n.h"
+#include "ink/sys/file.h"
+#include "ink/probe.h"
 #include <mogo_lock.h>
 
 /* The one place that names how a book opens after the unlock (D-139 renames it: change it here only). */
@@ -28,9 +30,10 @@ static struct lock_glue {
     char font_owner[16], collage_owner[16];
     /* the background executor's stack is 8 KB and Mogo's drawing takes most of it: the glue's words live here */
     char path[288], title[256], author[128], meta[256], line[INK_LOCK_SAYS_MAX / 2];
-    struct { char path[288]; uint32_t when; } latest;
     book_mini_item_t books[BOOK_MINI_LIBRARY_MAX], own[BOOK_MINI_LIBRARY_MAX]; /* drawn, for a tap; the member's own */
     home_library_cover_t own_covers[BOOK_MINI_LIBRARY_MAX];
+    home_library_view_t shelf;                /* the member's own books as last loaded, with Mogo's covers */
+    struct { char member[16]; uint32_t epoch, progress, card; int option; bool ok; } loaded; /* what shelf was loaded for */
     unsigned count, selected;
     bool recent;
 } *G;
@@ -121,22 +124,9 @@ static void book_line(char *says, const char *path) {
     }
     if (book_excerpt_load(path, L.line)) line(says, TR("书摘"), L.line);
 }
-/* Mogo's reader names the last book when it opens one (app_book.c:7867); ours does not yet (reader-2): until it does,
- * the book read most recently by the saved progress stands in, saved the way Mogo saves it. */
-static bool latest_book(const char *path, const book_progress_t *p, void *ctx) {
-    (void)ctx;
-    if (p->last_open_s >= L.latest.when) { L.latest.when = p->last_open_s; snprintf(L.latest.path, sizeof L.latest.path, "%s", path); }
-    return true;
-}
-static void last_book(void) {
-    L.latest.path[0] = 0; L.latest.when = 0;
-    if (book_progress_last_path(L.path, sizeof L.path) || book_progress_list(latest_book, NULL) != ESP_OK || !L.latest.path[0]) return;
-    (void)book_progress_set_last_path(L.latest.path);
-}
 static bool ticket_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_drawn_t *out) {
     if (!r->open) return closed(fb, r, out);
-    last_book();
-    L.author[0] = 0;
+    L.author[0] = 0; /* book_progress_last_path: the book read last, worked out each draw (lock_port.c) */
     uint8_t *cover = book_progress_last_path(L.path, sizeof L.path) && book_title_from_path(L.path, L.title, sizeof L.title) ?
                      ink_mogo_malloc(BOOK_COVER_W * BOOK_COVER_H) : NULL;
     if (cover) { /* Mogo's shelf fills the cover cache the lock reads; here the lock fills it first, the same way */
@@ -180,13 +170,34 @@ static home_library_view_t own(home_library_view_t v) {
     v.books = L.own; v.covers = L.own_covers; v.count = n; v.selected = selected;
     return v;
 }
+/* Loaded (Mogo's scan of /me/books, then its covers) only when what the books come from changed: another member, a book
+ * read (the progress revision), the other list, or the card (its revision, taken after the load: the covers it caches
+ * are written by then; 0 = something is being written, read as unchanged). A minute or a tap draws from what is kept,
+ * with no card work; a load that fails keeps the last good one for the same member. */
 static bool library_load(const ink_lock_request_t *r) {
-    home_library_invalidate(); /* scanned afresh for whoever it draws for: no one else's books stay in the model */
-    home_library_enter();
-    if (!home_library_poll(NULL, NULL)) { home_library_leave(); return false; }
-    home_library_cover_generation(1);
-    for (int i = 0; i < BOOK_MINI_LIBRARY_MAX && home_library_poll(NULL, NULL); i++) {}
-    home_library_select((unsigned)r->select);
+    uint32_t progress = book_progress_revision(), card = ink_fs_revision();
+    bool other = strcmp(L.loaded.member, r->owner.member) || L.loaded.epoch != r->owner.epoch;
+    bool files = card && card != L.loaded.card;
+    if (other || files || !L.loaded.ok || L.loaded.progress != progress || L.loaded.option != r->option) {
+        home_library_invalidate(); /* scanned afresh: no one else's books stay in the model, new files and the other list come in */
+        home_library_enter();
+        bool ok = home_library_poll(NULL, NULL);
+        if (ok) {
+            home_library_cover_generation(1);
+            for (int i = 0; i < BOOK_MINI_LIBRARY_MAX && home_library_poll(NULL, NULL); i++) {}
+            L.shelf = own(home_library_view());
+            L.shelf.loading = false;
+        }
+        home_library_leave();
+        ink_probe_count(ok ? "mogo_lock.library_loads" : "mogo_lock.library_load_failed");
+        if (!ok && (other || !L.loaded.ok)) { L.loaded.ok = false; return false; }
+        if (ok) {
+            snprintf(L.loaded.member, sizeof L.loaded.member, "%s", r->owner.member);
+            L.loaded.epoch = r->owner.epoch; L.loaded.progress = progress; L.loaded.option = r->option; L.loaded.ok = true;
+            L.loaded.card = ink_fs_revision();
+        }
+    }
+    L.shelf.selected = L.shelf.count && (unsigned)r->select < L.shelf.count ? (unsigned)r->select : 0;
     return true;
 }
 static bool collage_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_drawn_t *out) {
@@ -194,11 +205,7 @@ static bool collage_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_dra
     if (strcmp(L.collage_owner, r->owner.member)) book_lock_collage_invalidate(); /* the catalogue index was someone else's */
     snprintf(L.collage_owner, sizeof L.collage_owner, "%s", r->owner.member);
     if (!book_lock_collage_prepare(fb)) { snprintf(out->why, sizeof out->why, "%s", TR("书架拼贴没画出来，先显示默认锁屏")); return false; }
-    if (library_load(r)) { /* the recent books, for the snapshot: the collage puts the most recent first */
-        home_library_view_t v = own(home_library_view());
-        titles(out->says, v.books, v.count);
-        home_library_leave();
-    }
+    if (library_load(r)) titles(out->says, L.shelf.books, L.shelf.count); /* the recent books, for the snapshot: the collage puts the most recent first */
     return true;
 }
 static bool library_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_drawn_t *out) {
@@ -209,8 +216,7 @@ static bool library_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_dra
     out->minute = (lv_area_t){0, 150, INK_LOCK_CANVAS_W - 1, 300};
     line(out->says, TR("时间"), t); line(out->says, TR("日期"), d);
     if (!library_load(r)) { snprintf(out->why, sizeof out->why, "%s", TR("书库暂不可用，请稍后重试")); return false; }
-    home_library_view_t v = own(home_library_view());
-    v.loading = false;
+    home_library_view_t v = L.shelf;
     ui_mini_library_draw(fb, (EpdRect){0, LIBRARY_Y, INK_LOCK_CANVAS_W, LIBRARY_H}, &v, (ui_mini_library_frame_t){v.selected, 256, 256, false});
     if (!v.recent) epd_fill_rect((EpdRect){526, LIBRARY_Y + 408, 134, 44}, 255, fb); /* no shuffle on the lock screen */
     L.count = v.count; L.selected = v.selected; L.recent = v.recent;
@@ -218,7 +224,6 @@ static bool library_style(uint8_t *fb, const ink_lock_request_t *r, ink_lock_dra
     line(out->says, TR("迷你书库"), v.recent ? TR("最近") : TR("随机"));
     titles(out->says, v.books, v.count);
     if (!v.count) line(out->says, TR("书"), v.recent ? TR("还没有阅读记录") : TR("书匣等你放入第一本书"));
-    home_library_leave();
     return true;
 }
 static bool draw(const ink_lock_request_t *r, uint8_t *canvas, ink_lock_drawn_t *out) {

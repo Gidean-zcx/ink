@@ -415,6 +415,7 @@ int ink_ui_lock_mark_init(void) {
     if (ink_state_watch("member.", on_member, NULL, INK_EXEC_UI) || ink_settings_watch("display.lock_", on_style, NULL, INK_EXEC_UI)) return -1;
     if (ink_state_watch("media.state", on_audio, NULL, INK_EXEC_UI) || ink_state_watch("audio.now_playing", on_audio, NULL, INK_EXEC_UI)) return -1;
     if (ink_power_add_busy_check(ink_ui_busy) != 0 || ink_power_add_busy_check(minute_due) != 0 || ink_state_watch("time.minute", on_minute, NULL, INK_EXEC_UI) != 0) return -1;
+    if (ink_power_add_busy_check(ink_lock_face_busy) != 0) return -1; /* after ink_ui_busy: a render the UI starts is seen */
     if (ink_cap_subscribe("time.changed", on_time, NULL, INK_EXEC_UI)) return -1;
     ink_lock_face_hook(face_changed);
     return ink_power_subscribe(on_power, NULL);

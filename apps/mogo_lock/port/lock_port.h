@@ -15,6 +15,7 @@ struct dirent *ink_mogo_lock_readdir(DIR *dir);
 int ink_mogo_lock_closedir(DIR *dir);
 time_t ink_mogo_lock_time(time_t *out);
 int ink_mogo_lock_stat(const char *path, struct stat *st);
+bool ink_mogo_lock_last_path(char *out, size_t cap);
 #ifndef INK_MOGO_PORT_IMPL
 #undef fopen
 #define fopen ink_mogo_lock_fopen
@@ -31,4 +32,6 @@ int ink_mogo_lock_stat(const char *path, struct stat *st);
 #define lstat(p, s) ink_mogo_lock_stat(p, s)
 #undef time
 #define time ink_mogo_lock_time
+/* The book the ticket shows: worked out on every call, never saved (lock_port.c). (book_progress_last_path)(…) is the stored one. */
+#define book_progress_last_path(out, cap) ink_mogo_lock_last_path(out, cap)
 #endif

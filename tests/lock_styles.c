@@ -50,12 +50,14 @@ static void choose(int style, ink_source_t src) {
     quiet();
 }
 static void show_style(int style) { choose(style, INK_SRC_AI); lock(); CHECK(WAIT_FOR(drawn(), 30000), "style %d is drawn: %.60s", style, snapshot); quiet(); }
-static void read_some(void) {
-    CHECK(AI("mogo.open", "{\"path\":\"/me/books/星星邮差.epub\"}") && (g_rc.status == INK_RC_DONE || g_rc.status == INK_RC_QUEUED), "reader opens a book");
+static void read_book(const char *path) {
+    char args[96]; snprintf(args, sizeof args, "{\"path\":\"%s\"}", path);
+    CHECK(AI("mogo.open", args) && (g_rc.status == INK_RC_DONE || g_rc.status == INK_RC_QUEUED), "reader opens %s", path);
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "MogoReader"), 30000), "reader page"); quiet();
     for (int i = 0; i < 3; i++) { CHECK(AI("mogo.next", NULL), "turn"); quiet(); }
     CHECK(BY_HAND("system.home", NULL), "home"); quiet();
 }
+static void read_some(void) { read_book("/me/books/星星邮差.epub"); }
 
 /* Seven styles (six new, and the wallpaper) at the default and the largest text size, with something to show. */
 static void wallpaper(void) { /* a photo on the card, chosen the way the settings choose it */
@@ -149,6 +151,22 @@ static void refresh(void) {
     CHECK(ink_setting_set("time.zone", 1, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "change the zone"); quiet();
     CHECK(WAIT_FOR(sim_metric_value("lock.drawn.renders") > zone, 15000), "a zone change draws the style again");
     CHECK(ink_setting_set("time.zone", 0, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "zone back"); quiet();
+    wake();
+    /* The mini library's minute draws from the books it holds: no scan, and only the time reaches the panel. */
+    date(2026, 11, 11, 9, 0); show_style(INK_LOCK_LIBRARY);
+    double loads = sim_metric_value("mogo_lock.library_loads"), renders = sim_metric_value("lock.drawn.renders"), shown = updates();
+    CHECK(loads >= 1, "the library was loaded for its first draw");
+    ink_time_set(ink_time_now_s() + 60, false); quiet();
+    CHECK(WAIT_FOR(sim_metric_value("lock.drawn.renders") > renders, 15000), "the library's minute is drawn"); quiet();
+    CHECK(has("09:01"), "the library's time follows the minute");
+    CHECK(sim_metric_value("mogo_lock.library_loads") == loads, "a minute scans nothing (%g loads)", sim_metric_value("mogo_lock.library_loads") - loads);
+    CHECK(area("lock.drawn.y1") >= 150 && area("lock.drawn.y2") <= 300, "the library's minute refresh stays in its time (%g..%g)", area("lock.drawn.y1"), area("lock.drawn.y2"));
+    CHECK(updates() - shown >= 1 && updates() - shown <= 2, "one refresh for the library's minute (%g)", updates() - shown);
+    wake();
+    read_book("/me/books/星星邮差GBK.txt");
+    show_style(INK_LOCK_LIBRARY);
+    CHECK(WAIT_FOR(sim_metric_value("mogo_lock.library_loads") > loads, 15000), "a book read since loads the library again, without waiting for the minute");
+    CHECK(WAIT_FOR(has("星星邮差GBK"), 15000), "the library shows the book read since");
     wake();
 }
 
@@ -254,6 +272,45 @@ static void nofont(void) {
     CHECK(WAIT_FOR(has("字体还没放到卡上"), 30000), "a missing font is said on the default lock: %.60s", snapshot);
     CHECK(g_next != NULL, "the default lock shows, not the page below"); frame("no-font"); wake();
 }
+/* The ticket follows the book read last, every time, and its first lock costs one render and one whole refresh. */
+static void latest(void) {
+    date(2026, 11, 11, 8, 30);
+    read_book("/me/books/星星邮差.epub");
+    choose(INK_LOCK_TICKET, INK_SRC_AI);
+    double renders = sim_metric_value("lock.drawn.renders"), whole = sim_metric_value("lock.drawn.whole");
+    lock(); CHECK(WAIT_FOR(drawn(), 30000), "ticket drawn"); quiet();
+    CHECK(strstr(snapshot, "书名：星星邮差\\n") != NULL, "the ticket shows the epub read first: %.80s", strstr(snapshot, "书名") ? strstr(snapshot, "书名") : snapshot);
+    CHECK(sim_metric_value("lock.drawn.renders") - renders == 1 && sim_metric_value("lock.drawn.whole") - whole == 1,
+          "the first ticket lock is drawn once and replaces the default lock once (%g renders, %g whole)",
+          sim_metric_value("lock.drawn.renders") - renders, sim_metric_value("lock.drawn.whole") - whole);
+    wake();
+    read_book("/me/books/星星邮差GBK.txt");
+    lock(); CHECK(WAIT_FOR(has("书名：星星邮差GBK"), 30000), "the ticket follows the book read next: %.80s", strstr(snapshot, "书名") ? strstr(snapshot, "书名") : snapshot);
+    wake();
+    read_book("/me/books/星星邮差.epub");
+    lock(); CHECK(WAIT_FOR(has("书名：星星邮差\\n"), 30000), "and back to the epub when it is read again"); wake();
+}
+
+/* The chip does not sleep under a style still being drawn. The background executor is held up 4 s, the way a slow
+ * cover decode or library scan holds it: the first sleep after the lock comes only once the style is on the panel,
+ * not after the default lock with the render frozen for a whole slice. */
+static ink_exec_job_t slow;
+static void slow_job(void *arg) { (void)arg; osal_task_delay_us(4000000); }
+static void sleep_case(void) {
+    date(2026, 11, 11, 8, 30);
+    choose(INK_LOCK_ALMANAC, INK_SRC_AI);
+    double whole = sim_metric_value("lock.drawn.whole"), slept = sim_metric_value("power.wake.timer");
+    ink_power_release(INK_NEED_AWAKE);
+    CHECK(ink_exec_post(INK_EXEC_BG, &slow, slow_job, NULL) == 0, "hold the background executor up");
+    lock();
+    delay_ms(70000); /* no UI calls meanwhile: they would keep the chip awake on their own */
+    CHECK(sim_metric_value("power.wake.timer") > slept, "the chip slept while locked");
+    double first = sim_metric_last("power.lock_to_sleep_ms");
+    CHECK(first >= 4000, "the first sleep waits for the style being drawn (%.0f ms after the lock)", first);
+    CHECK(sim_metric_value("lock.drawn.whole") > whole && drawn(), "the style is on the lock: %.60s", snapshot);
+    wake();
+    ink_power_hold(INK_NEED_AWAKE);
+}
 static void run(void *arg) {
     (void)arg; CHECK(WAIT_FOR(ink_member_space_open(), 10000), "space opens"); test_start_home();
     ink_power_hold(INK_NEED_AWAKE);
@@ -265,6 +322,8 @@ static void run(void *arg) {
     else if (!strcmp(control, "upgrade")) { read_some(); upgrade(); }
     else if (!strcmp(control, "empty")) empty();
     else if (!strcmp(control, "nofont")) nofont();
+    else if (!strcmp(control, "sleep")) sleep_case();
+    else if (!strcmp(control, "latest")) latest();
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

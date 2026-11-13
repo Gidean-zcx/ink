@@ -48,6 +48,9 @@ int ink_lock_face_register(const ink_lock_client_t *client);
 /* lock_mark: a style can be drawn now (a drawn style is ready), else the default lock and *why, if any, explain. */
 bool ink_lock_face_ready(int style);
 const char *ink_lock_face_why(void);
+/* Power task, before the chip sleeps: a drawn style is still being drawn or cached on the background executor, which the
+ * sleep would freeze. lock_mark registers it after ink_ui_busy, so a render the UI starts is seen. */
+bool ink_lock_face_busy(void);
 /* lock_mark: how=1 build the lock again, how=2 only its bottom line changed, how=0 content changed in place. */
 void ink_lock_face_hook(void (*changed)(int how));
 /* wallpaper.c: the chosen wallpaper scaled to cover a w x h L8 canvas (UI task); false and untouched without one. */

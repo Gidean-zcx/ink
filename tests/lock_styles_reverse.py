@@ -15,7 +15,7 @@ p.add_argument('--only')
 a = p.parse_args()
 build = a.build.resolve()
 database = json.loads((build / 'compile_commands.json').read_text())
-DRAWN, GLUE = ROOT / 'system/ui/lock_faces/drawn.c', ROOT / 'apps/mogo_lock/mogo_lock.c'
+DRAWN, GLUE, PORT = ROOT / 'system/ui/lock_faces/drawn.c', ROOT / 'apps/mogo_lock/mogo_lock.c', ROOT / 'apps/mogo_lock/port/lock_port.c'
 CONTROLS = [
     ('refresh', DRAWN, 'refresh', '        for (int y = rects[i].y1; y <= rects[i].y2; y++)',
      '        rects[i] = (lv_area_t){0, 0, INK_LOCK_CANVAS_W - 1, INK_LOCK_CANVAS_H - 1}; /* reverse: the whole canvas */\n'
@@ -25,7 +25,15 @@ CONTROLS = [
     ('privacy-key', DRAWN, 'privacy',
      'static bool personal(int style) { return style == INK_LOCK_TICKET || style == INK_LOCK_COLLAGE || style == INK_LOCK_LIBRARY; }',
      'static bool personal(int style) { return style < 0; } /* reverse: books never depend on the open space */'),
-    ('privacy-draw', GLUE, 'privacy', '    if (!r->open) return closed(fb, r, out);\n    last_book();', '    last_book();'),
+    ('privacy-draw', GLUE, 'privacy', '    if (!r->open) return closed(fb, r, out);\n    L.author[0] = 0;', '    L.author[0] = 0;'),
+    ('latest', PORT, 'latest', '    if (book_progress_list(latest, &l) == ESP_OK && l.any) return true;',
+     '    if ((book_progress_last_path)(out, cap)) return true; /* reverse: the first book stored stays */\n'
+     '    if (book_progress_list(latest, &l) == ESP_OK && l.any) { (void)book_progress_set_last_path(out); return true; }'),
+    ('library', GLUE, 'refresh', '    if (other || files || !L.loaded.ok',
+     '    if (true || other || files || !L.loaded.ok /* reverse: scanned on every draw */'),
+    ('sleep', DRAWN, 'sleep', 'bool ink_lock_face_busy(void) {',
+     'bool ink_lock_face_busy(void) { return false; } /* reverse: the chip sleeps under a render */\n'
+     '__attribute__((unused)) static bool reverse_busy(void) {'),
 ]
 link = shlex.split((build / 'CMakeFiles/sim-lock-styles.dir/link.txt').read_text())
 for name, source, case, needle, replacement in CONTROLS:

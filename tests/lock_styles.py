@@ -39,7 +39,7 @@ def content(kind, case):
     return root
 
 
-cases = a.case or ['styles', 'almanac', 'refresh', 'privacy', 'entry', 'upgrade', 'empty', 'nofont']
+cases = a.case or ['styles', 'almanac', 'refresh', 'privacy', 'entry', 'upgrade', 'empty', 'nofont', 'sleep', 'latest']
 for case in cases:
     kind = 'empty' if case == 'empty' else 'nofont' if case == 'nofont' else 'full'
     root = content(kind, case)

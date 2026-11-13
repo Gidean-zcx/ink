@@ -123,6 +123,26 @@ uint32_t ink_mogo_lock_random(void) {
     return s;
 }
 
+/* Mogo's reader stores the last book when it opens one (app_book.c:7867) and the ticket reads it back; ours does not store it
+ * (reader-2). So each call asks again and saves nothing: the book whose progress was saved last (book_progress_save numbers
+ * every save in last_open_s), and only with no progress at all the stored one. Nothing is written while the lock draws. */
+bool (book_progress_last_path)(char *out, size_t cap); /* book_progress.h's, which lock_port.h's macro renames here */
+typedef struct { char *out; size_t cap; uint32_t when; bool any; } latest_t;
+static bool latest(const char *path, const book_progress_t *p, void *ctx) {
+    latest_t *l = ctx;
+    if ((!l->any || p->last_open_s > l->when) && strlen(path) < l->cap) {
+        snprintf(l->out, l->cap, "%s", path); l->when = p->last_open_s; l->any = true;
+    }
+    return true;
+}
+bool ink_mogo_lock_last_path(char *out, size_t cap) {
+    if (!out || !cap) return false;
+    latest_t l = {.out = out, .cap = cap};
+    out[0] = 0;
+    if (book_progress_list(latest, &l) == ESP_OK && l.any) return true;
+    return (book_progress_last_path)(out, cap);
+}
+
 /* Settings the styles read, answered by the lock style's own settings and the member drawn for. */
 app_ticket_background_t app_settings_ticket_background(void) {
     return ink_mogo_lock_request && ink_mogo_lock_request->option == 1 ? APP_TICKET_BACKGROUND_TRANSPARENT : APP_TICKET_BACKGROUND_COVER;

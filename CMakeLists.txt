@@ -779,7 +779,7 @@ target_compile_definitions(sim-lock-styles PRIVATE INK_MOGO_SIM=1)
 target_include_directories(sim-lock-styles PRIVATE tests)
 target_link_libraries(sim-lock-styles PRIVATE ink_apps ink_system)
 add_dependencies(sim-lock-styles ink_fonts ink_ui_fonts ink_icons)
-foreach(lock_case styles almanac refresh privacy entry upgrade empty nofont)
+foreach(lock_case styles almanac refresh privacy entry upgrade empty nofont sleep latest)
   add_test(NAME lock-styles-${lock_case} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_styles.py
     --build ${CMAKE_BINARY_DIR} --case ${lock_case})
   set_tests_properties(lock-styles-${lock_case} PROPERTIES TIMEOUT 600)
@@ -787,7 +787,7 @@ endforeach()
 add_test(NAME mogo-lock-provenance COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/mogo_lock_host/provenance.py)
 add_test(NAME lock-styles-reverse COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_styles_reverse.py
   --build ${CMAKE_BINARY_DIR})
-set_tests_properties(lock-styles-reverse PROPERTIES TIMEOUT 1500)
+set_tests_properties(lock-styles-reverse PROPERTIES TIMEOUT 2400)
 # Mogo's own lock-style host tests, unchanged, in a Mogo-shaped tree of links (tests/mogo_lock_host/run.py).
 foreach(mogo_test wallpaper_crop mini_library_host_test.py home_library_host_test.py clock-generator calendar-generator
         lock_collage_host_test.py book_excerpt_host_test.py lock_clock_ui_host_test.py)

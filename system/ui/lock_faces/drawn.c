@@ -27,9 +27,18 @@ static struct {
     bool front_ok, busy, again;
     char why[INK_LOCK_WHY_MAX], time[24], date[96], privacy[48];
     char pending_cap[32], pending_args[INK_LOCK_PATH_MAX + 16], pending_owner[16];
-    ink_exec_job_t job, done, after;
+    ink_exec_job_t job, done, after, settle, settled;
     void (*changed)(int how);
 } D INK_PSRAM_BSS;
+/* The power task reads these before the chip sleeps (ink_lock_face_busy): a render counts from start() until rendered()
+ * has run on the UI task, the cache job from its post until it has run. A frozen render would leave the default lock
+ * up, or last minute's time, for a whole sleep slice. */
+static bool g_rendering;
+static uint32_t g_after_posted, g_after_done, g_settle_posted, g_settle_seen, g_settle_done;
+static bool pending(uint32_t *posted, uint32_t *done) { return __atomic_load_n(posted, __ATOMIC_ACQUIRE) != __atomic_load_n(done, __ATOMIC_ACQUIRE); }
+bool ink_lock_face_busy(void) {
+    return __atomic_load_n(&g_rendering, __ATOMIC_ACQUIRE) || pending(&g_after_posted, &g_after_done) || pending(&g_settle_posted, &g_settle_done);
+}
 
 static const ink_lock_client_t *client(int style) {
     for (int i = 0; i < INK_LOCK_CLIENTS; i++)
@@ -76,11 +85,13 @@ static bool same(const ink_lock_request_t *a, const ink_lock_request_t *b, bool 
 static bool has_minute(const ink_lock_drawn_t *d) { return d->minute.x2 >= d->minute.x1 && d->minute.y2 >= d->minute.y1; }
 
 static void rendered(void *arg);
+bool ink_lock_drawn_update(int style);
 static void render(void *arg) { /* BG */
     (void)arg;
     const ink_lock_client_t *c = client(D.want.style);
     memset(&D.next, 0, sizeof D.next);
     D.next.minute = (lv_area_t){1, 1, 0, 0};
+    D.want_revision = revision(D.want.style); /* here, not when posted: a book saved by work queued before (the reader closing) is in it */
     bool ok = c && c->draw(&D.want, D.back, &D.next);
     if (!ok && !D.next.why[0]) snprintf(D.next.why, sizeof D.next.why, "%s", c ? TR("这个锁屏样式没画出来，先显示默认锁屏") : TR("这个锁屏样式在这台设备上用不了"));
     if (ok) D.next.why[0] = 0;
@@ -92,11 +103,11 @@ static void start(int style) {
     if (!D.back) D.back = osal_malloc(BYTES, OSAL_MEM_EXTERNAL);
     if (!D.front || !D.back) { snprintf(D.why, sizeof D.why, "%s", TR("内存不足")); tell(2); return; }
     request(style, &D.want);
-    D.want_revision = revision(style);
     memset(D.back, 255, BYTES);
     if (style == INK_LOCK_TICKET && D.want.option == 1) ink_wallpaper_fill(D.back, INK_LOCK_CANVAS_W, INK_LOCK_CANVAS_H);
     D.busy = true; D.again = false;
-    if (ink_exec_post(INK_EXEC_BG, &D.job, render, NULL)) D.busy = false;
+    __atomic_store_n(&g_rendering, true, __ATOMIC_RELEASE);
+    if (ink_exec_post(INK_EXEC_BG, &D.job, render, NULL)) { D.busy = false; __atomic_store_n(&g_rendering, false, __ATOMIC_RELEASE); }
 }
 static int locked_style(void) {
     int style = (int)ink_setting_get("display.lock_style");
@@ -142,14 +153,17 @@ static void bind_image(void) {
     D.dsc = (lv_image_dsc_t){.header = {.magic = LV_IMAGE_HEADER_MAGIC, .cf = LV_COLOR_FORMAT_L8, .w = INK_LOCK_CANVAS_W,
         .h = INK_LOCK_CANVAS_H, .stride = INK_LOCK_CANVAS_W}, .data_size = BYTES, .data = D.front};
 }
-static void shown_job(void *arg) { /* BG */
+static void shown_job(void *arg) { /* BG; one run answers every post before it started (a waiting job is not queued twice) */
+    uint32_t posted = __atomic_load_n(&g_after_posted, __ATOMIC_ACQUIRE);
     const ink_lock_client_t *c = client((int)(intptr_t)arg);
     if (c && c->shown) c->shown((int)(intptr_t)arg, D.front);
+    __atomic_store_n(&g_after_done, posted, __ATOMIC_RELEASE);
 }
 static void rendered(void *arg) { /* UI */
     bool ok = (uintptr_t)arg != 0;
     ink_probe_count("lock.drawn.renders");
     D.busy = false;
+    __atomic_store_n(&g_rendering, false, __ATOMIC_RELEASE);
     int style = locked_style();
     ink_lock_request_t now; if (style >= 0) request(style, &now);
     bool current = style == D.want.style && same(&now, &D.want, true);
@@ -181,14 +195,36 @@ static void rendered(void *arg) { /* UI */
         D.shown = D.want; D.shown_revision = D.want_revision; D.drawn = D.next; D.front_ok = true; D.why[0] = 0;
         if (style == D.want.style) { ink_probe_count("lock.drawn.whole"); tell(1); }
     }
-    if (ok && D.image) ink_exec_post(INK_EXEC_BG, &D.after, shown_job, (void *)(intptr_t)D.shown.style);
+    if (ok && D.image) {
+        uint32_t posted = __atomic_add_fetch(&g_after_posted, 1, __ATOMIC_ACQ_REL);
+        if (ink_exec_post(INK_EXEC_BG, &D.after, shown_job, (void *)(intptr_t)D.shown.style)) __atomic_store_n(&g_after_done, posted, __ATOMIC_RELEASE);
+    }
     if (style >= 0 && (!current || D.again)) start(style);
+}
+/* A style shown from its canvas may still miss a book whose save was queued on the background executor before the lock
+ * (the reader closing): once the executor is past it, the UI looks at the revision again and draws only if it moved. */
+static void settled(void *arg) { /* UI */
+    (void)arg;
+    int style = locked_style();
+    if (style >= 0) ink_lock_drawn_update(style);
+    __atomic_store_n(&g_settle_done, __atomic_load_n(&g_settle_seen, __ATOMIC_ACQUIRE), __ATOMIC_RELEASE);
+}
+static void settle(void *arg) { /* BG */
+    (void)arg;
+    __atomic_store_n(&g_settle_seen, __atomic_load_n(&g_settle_posted, __ATOMIC_ACQUIRE), __ATOMIC_RELEASE);
+    ink_exec_post(INK_EXEC_UI, &D.settled, settled, NULL);
+}
+static void settle_after(int style) {
+    const ink_lock_client_t *c = client(style);
+    if (!c || !c->revision) return;
+    uint32_t posted = __atomic_add_fetch(&g_settle_posted, 1, __ATOMIC_ACQ_REL);
+    if (ink_exec_post(INK_EXEC_BG, &D.settle, settle, NULL)) __atomic_store_n(&g_settle_done, posted, __ATOMIC_RELEASE);
 }
 bool ink_lock_face_ready(int style) {
     if (style < INK_LOCK_DRAWN) return true;
     ink_lock_request_t now; request(style, &now);
     if (D.front_ok && D.shown.style == style && same(&now, &D.shown, false) && D.shown_revision == revision(style)) {
-        if (same(&now, &D.shown, true) || !has_minute(&D.drawn)) return true;
+        if (same(&now, &D.shown, true) || !has_minute(&D.drawn)) { settle_after(style); return true; }
         /* the minute moved since: the style shows at once without the old time, and the time follows in its own area */
         for (int y = D.drawn.minute.y1; y <= D.drawn.minute.y2; y++)
             memset(D.front + (size_t)y * INK_LOCK_CANVAS_W + D.drawn.minute.x1, 255, (size_t)(D.drawn.minute.x2 - D.drawn.minute.x1 + 1));
