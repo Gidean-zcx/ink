@@ -1,3 +1,4 @@
+/* ui-scale-runtime: dimension text_percent The 字号 percentage (90-120, a child 110) in this panel's pixels, as Mogo does. */
 /* 音乐: the kiikoread player's page and library (third_party/kiikoread_music) on the graft surface, playing through
  * the media service. Touch and AI share the music.* capabilities. The library, the page and every capability run
  * on the BG executor; the UI task only presents finished pixels; the media executor only starts the next song. */
@@ -52,7 +53,7 @@ static const ink_activity_t PAGE;
 static struct { char member[INK_MEMBER_ID_MAX], playing[INK_FS_PATH_MAX], next[INK_FS_PATH_MAX], why[24]; } S;
 /* The BG executor's. */
 static struct {
-    char member[INK_MEMBER_ID_MAX], track[INK_FS_PATH_MAX], album[96], single_title[96], single_artist[96];
+    char member[INK_MEMBER_ID_MAX], track[INK_FS_PATH_MAX], album[96], single_title[INK_FS_PATH_MAX], single_artist[96];
     ink_media_status_t st;
     ink_member_identity_t owner;
     uint8_t *pixels;
@@ -177,7 +178,7 @@ static void pick(void) { /* music_library_pick runs the original finish_track ru
     if (skipped && now >= 0) music_library_now(music_state(), music_track(now)->path, "", "");
     const music_track_t *t = next >= 0 ? music_track(next) : NULL;
     ink_svc_lock();
-    snprintf(S.next, sizeof S.next, "%s", t ? t->path : "");
+    snprintf(S.next, sizeof S.next, "%.127s", t ? t->path : ""); /* library paths come from the file index: under 128 */
     ink_svc_unlock();
 }
 static void started(const char *path) { /* music put this song on: it follows the mode at its end */
@@ -220,7 +221,7 @@ static void fill_view(void) {
         const music_track_t *t = music_track(rows[i].index);
         v->row[i].folder = !t;
         snprintf(v->row[i].name, sizeof v->row[i].name, "%s", t ? t->title : rows[i].folder);
-        snprintf(v->row[i].path, sizeof v->row[i].path, "%s", t ? t->path : rows[i].folder);
+        snprintf(v->row[i].path, sizeof v->row[i].path, "%.127s", t ? t->path : rows[i].folder);
         if (!t) snprintf(v->row[i].detail, sizeof v->row[i].detail, TR("%d 首"), rows[i].count);
         else {
             char d[192];
@@ -484,7 +485,7 @@ static void run(ink_call_t *c) {
             const music_track_t *t = NULL;
             for (int i = 0; i < music_track_count() && !t; i++)
                 if (!n || (!strncmp(music_track(i)->path, path, n) && music_track(i)->path[n] == '/')) t = music_track(i);
-            snprintf(path, sizeof path, "%s", t ? t->path : "");
+            snprintf(path, sizeof path, "%.127s", t ? t->path : "");
         }
         /* open_track's rule: the last song goes on where it was, another starts from the beginning */
         play(c, path, !asked || !strcmp(path, last) || !strcmp(path, B.st.path) ? -1 : 0);

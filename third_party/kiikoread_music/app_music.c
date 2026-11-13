@@ -593,8 +593,8 @@ static void render(app_ctx_t *ctx, uint8_t *fb) {
 
     // 音量行：减/加在两端，中间显示「音量 NN%」。
     // Volume row: minus/plus at both ends, "音量 NN%" in the middle.
-    button(fb, L.minus, "-", true);
-    button(fb, L.plus, "+", true);
+    button(fb, L.minus, "－", true);
+    button(fb, L.plus, "＋", true);
     unsigned pct = music_volume();
     snprintf(text, sizeof(text), TR("音量 %u%%"), pct);
     ui_text_fixed_vc(fb, L.w / 2, L.volume.y + L.volume.height / 2, sy(INK_FONT_BODY), text, EPD_DRAW_ALIGN_CENTER, false);

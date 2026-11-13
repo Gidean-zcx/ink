@@ -133,7 +133,7 @@ int main(void) {
 
     /* A rescan finds the playing song by its path, even when it moved in the list. */
     playing(2);
-    char was[INK_FS_PATH_MAX];
+    char was[240];
     snprintf(was, sizeof was, "%s", music_track(2)->path);
     snprintf(files[nfiles++], sizeof files[0], MUSIC_ROOT "/000a.mp3");
     music_scan();

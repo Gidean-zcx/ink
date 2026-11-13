@@ -86,7 +86,7 @@ static void seek_to(bool by_touch, int rel, bool check) { /* rel: pixels into th
     unsigned ms = bar_ms(rel);
     if (by_touch) touch(T[BAR].x + rel, T[BAR].y + T[BAR].height / 2);
     else { char a[32]; snprintf(a, sizeof a, "{\"ms\":%u}", ms); ok("music.seek", a); }
-    if (check) CHECK(WAIT_FOR(status().position_ms >= ms && status().position_ms <= ms + 1500, 3000), "seek lands at %u (%u)", ms, status().position_ms);
+    if (check) CHECK(WAIT_FOR(status().position_ms >= ms && status().position_ms <= ms + 1500, 3000), "seek lands at %u (%u)", ms, (unsigned)status().position_ms);
 }
 static void seek(bool by_touch, int rel) { seek_to(by_touch, rel, true); }
 static void near_end(bool by_touch) { if (by_touch || !nt) targets(); seek_to(by_touch, T[BAR].width - 2, false); }
@@ -255,7 +255,7 @@ static void main_phase(void) {
     ok("music.list", "{\"view\":\"player\"}");
     /* 1. The kiikoread walk by touch, then the same by AI: same results and snapshots. */
     walk(true); walk(false);
-    for (int i = 0; i < 13; i++) CHECK(!strcmp(walk_log[0][i], walk_log[1][i]), "touch and AI agree at %d:\n%.300s\n%.300s", i, walk_log[0][i], walk_log[1][i]);
+    for (int i = 0; i < 13; i++) CHECK(!strcmp(walk_log[0][i], walk_log[1][i]), "touch and AI agree at %d:\n%.120s\n%.120s", i, walk_log[0][i], walk_log[1][i]);
     /* 5. No rebinding: 200 progress refreshes add no callbacks, then one tap is one call. */
     ok("music.list", "{\"view\":\"player\"}"); ok("music.play", "{\"path\":\"" MINE "长歌.wav\"}"); ok("music.pause", NULL); quiet();
     on_ui(count_callbacks); int before = counted; double parts = counter("music.present.part");
@@ -339,7 +339,7 @@ static void main_phase(void) {
     ok("music.list", "{\"view\":\"player\",\"page\":0}"); picture("child-player"); targets();
     ok("music.play", "{\"path\":\"" MINE "孩子.wav\"}");
     switch_to("owner"); open_music(); ok("music.play", NULL);
-    CHECK(WAIT_FOR(!strcmp(status().path, MINE "长歌.wav"), 3000) && status().position_ms >= 59000 && status().position_ms <= 61500, "the adult goes on at about a minute (%u)", status().position_ms);
+    CHECK(WAIT_FOR(!strcmp(status().path, MINE "长歌.wav"), 3000) && status().position_ms >= 59000 && status().position_ms <= 61500, "the adult goes on at about a minute (%u)", (unsigned)status().position_ms);
     ok("music.now", NULL); CHECK(strstr(g_result, "\"mode\":\"favorites\""), "mode kept");
     ok("music.favorites", NULL); CHECK(strstr(g_result, "甲.wav"), "favorites kept");
     ok("music.seek", "{\"ms\":45000}"); ok("music.pause", NULL);
@@ -350,7 +350,7 @@ static void restart_phase(void) {
     ok("music.now", NULL); CHECK(strstr(g_result, "\"mode\":\"favorites\""), "the mode survives a restart");
     ok("music.play", NULL);
     CHECK(WAIT_FOR(status().state == INK_MEDIA_PLAYING, 3000) && !strcmp(status().path, MINE "长歌.wav") && status().position_ms >= 44000 && status().position_ms <= 46500,
-          "play goes on where it was (%s %u)", status().path, status().position_ms);
+          "play goes on where it was (%s %u)", status().path, (unsigned)status().position_ms);
     ok("music.pause", NULL);
 }
 static void test(void *arg) {
