@@ -532,6 +532,7 @@ int ink_fs_dir_next(ink_fs_dir_t *d, ink_fs_stat_t *out) {
         snprintf(out->name, sizeof out->name, "%s", d->e.name);
         out->is_dir = d->e.is_dir;
         out->size = d->e.is_dir ? 0 : d->e.size;
+        out->mtime = d->e.mtime < 0 ? -1 : d->e.mtime / 1000000000;
         return 1;
     }
 }
@@ -1073,6 +1074,25 @@ int fs_job_begin_for(const file_context_t *c, int op, const char *from, const ch
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
     int r = job_begin_unlocked(c, op, from, to);
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+
+/* file.batch: under one edit lock "keep both" (how 1) takes the first free "name (n).ext" and "replace" (how 2) removes
+ * the target first, so no other write can take the name in between. to becomes the name used. */
+int fs_place_for(const file_context_t *c, int op, const char *from, char *to, size_t cap, int how) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    char phys[PHYS_MAX], base[INK_FS_PATH_MAX]; snprintf(base, sizeof base, "%s", to);
+    char *dot = strrchr(base, '.'); if (!dot || dot < strrchr(base, '/') + 2) dot = base + strlen(base);
+    int r = how == 2 && !strcmp(from, to) ? INK_FS_ERR_EXISTS : 0;
+    if (how == 1 && !(r = resolve_held(c, to, true, phys, sizeof phys))) {
+        for (int n = 1; !r && hal_fs_size(phys) >= 0; n++)
+            r = n > 999 || snprintf(to, cap, "%.*s (%d)%s", (int)(dot - base), base, n, dot) >= (int)cap ? INK_FS_ERR_EXISTS : resolve_for(c, to, true, phys, sizeof phys);
+        ink_fs_card_release();
+    }
+    if (how == 2 && !r && (r = fs_remove_unlocked(c, to)) == INK_FS_ERR_NOT_FOUND) r = 0;
+    if (!r) r = op == 2 ? fs_move_unlocked(c, from, to) : job_begin_unlocked(c, op, from, to);
     osal_mutex_unlock(FS.edits);
     return r;
 }
@@ -1892,7 +1912,7 @@ static int index_query(const file_context_t *c, const char *root, ink_fs_type_t 
         if (access) { if (!root) { r = access; break; } continue; }
         out->type = index_type(e.path);
         if (root && type != INK_FS_ANY && type != out->type) continue;
-        out->id = rec.id; out->size = st.size; *cursor = rec.id;
+        out->id = rec.id; out->size = st.size; out->mtime = e.mtime < 0 ? -1 : e.mtime / 1000000000; *cursor = rec.id;
         break;
     }
     ink_db_close(db); ink_fs_card_release();
