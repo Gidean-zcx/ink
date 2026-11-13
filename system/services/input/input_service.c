@@ -220,7 +220,11 @@ static bool power_filter(const hal_input_event_t *h) {
         return true;
     }
     if (is_key && h->key.key == HAL_KEY_POWER) {
-        if (!h->key.pressed && !(IS.power_key_hook && IS.power_key_hook())) ink_power_lock();
+        if (h->key.pressed) return true;
+        if (IS.power_key_hook && IS.power_key_hook())
+            ink_power_activity(h->t_us); /* it answered the alarm or call: someone is here, auto-lock starts over */
+        else
+            ink_power_lock();
         return true;
     }
     ink_power_activity(h->t_us);
