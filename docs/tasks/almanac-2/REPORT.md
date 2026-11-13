@@ -296,3 +296,36 @@ S31 链接后的表（`measure_flash.py`）：
 - `ports/esp32s31/build.sh`（`INK_S31_BUILD=build-s31-own`）改前、改后各一次，都退出 0。
 - gcccheck：`almanac.c`、`time_caps.c`、`calendar.c`、`tests/almanac/model.c`、`tests/almanac/device.c`、`tests/integration/ai_surface.c`，`6 compiled, 0 with findings`。
 - 结束时删了 `build-asan`、`build-s31-own`、`build-s31-host`，留 `build`。
+
+---
+
+# 复核修复（2026-11-13 晚）
+
+两位复核人各提了一条“挡合并”，说的是同一件事：本任务带进 8 个界面字库里原来没有的汉字，`font_data` 放不下，整套界面粗体 `ui-2-53` 进了程序镜像（+706,912 B，应用分区只剩 1%），在这件事解决前分支不能合。
+
+## 结论
+
+- **属实，我重新核过，数字一个不差。** 本轮没有改产品代码。
+- **不在本分支修，原因是正确的修法已经单独立项：** 主会话在 `fe5938e3` 建了任务 [font-pack-1](../font-pack-1.md)（字形无损压缩；`split()` 放不下一个文件时，后面放得下的照样进 `font_data`），提交说明写明“这个先合”，backlog“字体分区快满了”那条也改成指向它。这就是“要用户定”第 1 条里的 A。font-pack-1 的验收要求 `font_data` 至少余 1 MB、再加 50 个没用过的字也全在 `font_data` 里；本任务这 8 个字共 5,922 B，到时放得下，本分支一行不用改。
+- **所以合并顺序是：font-pack-1 先进主线 → 本分支合上主线 → 重跑一次 `build.sh`，确认镜像增量回到约 43,856 B（≤ 61,440）、所有字体都在 `font_data` → 再合。** 在那之前本分支不能合，这一点和两位复核人一致。
+
+## 怎么核的
+
+- 字：按 `tools/fontgen/ui_fonts.py` 同样的范围（`system/ui`、`system/apps`、`apps`、`system/services`、`system/policy` 下的 `.c`，加 `assets/i18n/*.tsv`）比较 `d7c508f8` 和 `HEAD`：新增正好 8 个字“俗北南宜忌民老黄”，没有减少的字；出处和第二轮那张表一样（宜忌：`almanac.c`、`en.tsv`；民俗：`almanac.c`、`time_caps.c`、`en.tsv`、`calendar.c` 注释；老黄：`time_caps.c` 能力标题；北南：`calendar.c` 两个方位表）。主线 `fe5938e3` 相对 `d7c508f8` 没有新增字，问题全部来自本任务。
+- 宿主构建的字体：9 个字体文件合计 4,722,083 B，比 `font_data` 的 4,718,592 B 多 3,491 B（还没算打包头）；界面字形 971 个（改前 963）；`ui-2-53.inkf` 661,420 B。
+- S31：重跑一次原来的 `ports/esp32s31/build.sh`（`INK_S31_BUILD=build-s31-own`），退出 0；日志里 `factory screen output layer @690a023` 出现 2 次，“没有屏幕输出层” 0 次，编译器警告 0 条。打包打印 `font_data 4061507/4718592; embedded 1441214/2097152 bytes`；`ink-s31.bin` 5,190,960 B，`Smallest app partition is 0x500000 bytes. 0xcad0 bytes (1%) free`，即余 51,920 B，构建提示“快满了”。和第二轮报告逐字节相同。
+
+## 为什么不在本分支用别的办法压下去
+
+- **B（把回执、标题、方位表挪进头文件，躲开字库扫描）**：`ui_fonts.py` 注释写明界面字库外的字由正文 `sans-44` 缩放顶上，不会变豆腐块；但宜忌这些字在粗体标题里会变成细体混排，而且只是让扫描看不见，问题原样留给 `lock-styles-1`、`calendar-3`——它们在页面上显示宜忌时还得把这些字加回字库，照样撞上。还要改原文里任务书没列的行。不做。
+- **只改能力标题（省“老黄”）或原文方位表（省“北南”）**：剩下宜忌民俗 4 个字约 2.96 KB，仍大于剩余的 1,483 B，解决不了；“老黄历”这个名字也没了。不做。
+- **C（接受字体进镜像）、D（改短回执）**：第二轮已说明不建议；D 还会让 v1 定好、验收要求逐字一致的回执变样。
+- 第二轮“要用户定”第 1 条保留原文作记录；现在的实际状态是主会话已按 A 排了 font-pack-1。只有用户要求本任务赶在 font-pack-1 之前合，才需要在 B、C、D 里选。
+
+## 本轮测试
+
+- 重新 configure、构建（`INK_WERROR=ON`）通过。
+- 相关测试 `ctest -R '^almanac-|services-mid-capability-doc|i18n|ui-font|font'`：`100% tests passed out of 18`。
+- 全量（清掉 `build/test-out`、重新 configure，`ctest -j2`）：`99% tests passed, 1 tests failed out of 455`，`Total Test time (real) = 901.08 sec`。失败的是 `autotest-cap`，和第二轮一样是主线原有的相机脚本失败（第二轮已在改前的 `85fcc4ed` 上复现），和本任务无关；`memo-save-busy` 原本禁用。
+- gcccheck（`almanac.c`、`time_caps.c`、`calendar.c`、`tests/almanac/model.c`、`tests/almanac/device.c`、`tests/integration/ai_surface.c`）：`6 compiled, 0 with findings`。本轮没有改任何 C 文件，没有改任何测试。
+- S31 构建见上；结束时删了 `build-s31-own`（`build-asan` 本轮没建），留 `build`。
