@@ -29,7 +29,10 @@ static const ink_activity_t PAGES[] = {
      .snapshot = page_snapshot,
      .on_key = page_key},
     {.name = "SetNotifications", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key},
-    {.name = "KnownNetworks", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key}};
+    {.name = "KnownNetworks", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key},
+    {.name = "SetSystem", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key}};
+/* D-137: 系统, the home's rarely used rows, drawn as the home draws its own (without the search) */
+#define PAGE_SYSTEM ((page_t)(PAGE_KNOWN + 1))
 
 static void known_reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != N.known_epoch || !current_session(N.epoch) || !N.page_body || (N.page_id != PAGE_KNOWN && N.page_id != PAGE_NETWORK)) return;
@@ -184,14 +187,16 @@ static struct {
     bool gray[HOME_ROWS];
     int n, nseen, page;
 } H INK_PSRAM_BSS;
+static bool home_like(void) { return N.page_id == PAGE_SETTINGS || N.page_id == PAGE_SYSTEM; }
+static const char *query(void) { return N.page_id == PAGE_SETTINGS ? H.query : ""; }
 /* What a row says: its value, or for a search its path and value, joined as AOSP's search_breadcrumb_connector does.
  * False: not shown (the font has no ›, so the path takes " > " as AOSP). */
 static bool home_line(const ink_sr_item_t *it, char *out, size_t cap, bool *gray) {
     char value[96];
     ink_sr_state_t s = ink_sr_value(it, value, sizeof value);
     *gray = s == INK_SR_PARENT || s == INK_SR_DEPENDENT;
-    if (s == INK_SR_NOT_NOW || s == INK_SR_UNSUPPORTED || (!H.query[0] && s == INK_SR_PARENT)) return false;
-    if (H.query[0]) snprintf(out, cap, "%s > %s%s%s", ink_sr_group(it->group), TR(it->title), value[0] ? " · " : "", value);
+    if (s == INK_SR_NOT_NOW || s == INK_SR_UNSUPPORTED || (!query()[0] && s == INK_SR_PARENT)) return false;
+    if (query()[0]) snprintf(out, cap, "%s > %s%s%s", ink_sr_group(it->group), TR(it->title), value[0] ? " · " : "", value);
     else snprintf(out, cap, "%s", value);
     return true;
 }
@@ -217,13 +222,13 @@ static void row_json(ink_jw_t *w, const ink_sr_item_t *it, bool comma, bool home
 /* One line with the value on the right; a value that does not fit there goes under the name and wraps, never cut. */
 static int row_h(const ink_sr_item_t *it, const char *text) {
     int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = width() - left - INK_BLOCK - INK_GAP;
-    if (!H.query[0] && ink_ui_text_width(TR(it->title), INK_FONT_LIST, INK_WEIGHT_REGULAR) + INK_GAP_M +
+    if (!query()[0] && ink_ui_text_width(TR(it->title), INK_FONT_LIST, INK_WEIGHT_REGULAR) + INK_GAP_M +
                        ink_ui_text_width(text, INK_FONT_NOTE, INK_WEIGHT_REGULAR) <= room + INK_GAP) return INK_CONTROL;
     return LV_MAX(ink_ui_row_double(), ink_ui_line_height(INK_FONT_LIST) + 2 * INK_GAP_XS +
                   ink_ui_text_height(text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, room));
 }
 static void home_row(lv_obj_t *box, const ink_sr_item_t *it, const char *text, bool gray, int y, int h) {
-    bool found = H.query[0] != 0;
+    bool found = query()[0] != 0;
     int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = width() - left - INK_BLOCK - INK_GAP;
     lv_obj_t *r = ink_ui_list_row(box, it->icon ? it->icon : "gear", TR(it->title), text, 0, y, width(), h > INK_CONTROL, NULL, NULL);
     lv_obj_t *label = NULL, *value = NULL;
@@ -255,31 +260,32 @@ static void home_row(lv_obj_t *box, const ink_sr_item_t *it, const char *text, b
 }
 static void home_blocks(void) {
     const ink_sr_item_t *found[FOUND_MAX];
-    int count = H.query[0] ? ink_sr_search(H.query, found, FOUND_MAX) : 0, shown = -1;
+    int count = query()[0] ? ink_sr_search(query(), found, FOUND_MAX) : 0, shown = -1;
     int top = 0;
     lv_obj_t *box = NULL;
     H.nseen = 0;
     if (F.draw) H.n = 0;
-    if (H.query[0] && !count) {
+    if (query()[0] && !count) {
         const char *none = TR("没有找到这项设置");
         if (block(ink_ui_line_height(INK_FONT_NOTE))) ink_ui_notice(N.page_body, none, F.y);
         F.y += ink_ui_line_height(INK_FONT_NOTE);
     }
     for (int i = 0;; i++) {
-        const ink_sr_item_t *it = H.query[0] ? (i < count ? found[i] : NULL) : ink_sr_at(i);
+        const ink_sr_item_t *it = query()[0] ? (i < count ? found[i] : NULL) : ink_sr_at(i);
         char text[192];
         bool gray;
         if (!it) break;
-        if ((!H.query[0] && !(it->where & INK_SR_HOME)) || !home_line(it, text, sizeof text, &gray)) continue;
+        if ((!query()[0] && !(it->where & (N.page_id == PAGE_SYSTEM ? INK_SR_SYSTEM : child() ? INK_SR_KID : INK_SR_HOME))) || !home_line(it, text, sizeof text, &gray)) continue;
         int h = row_h(it, text), page = F.page;
-        if (!H.query[0] && (it->group != shown || (F.y && F.y + h > F.room))) { /* a group's name, kept with its row */
+        if (!query()[0] && (it->group != shown || (F.y && F.y + h > F.room))) { /* a group's name, kept with its row */
             shown = it->group;
-            if (block(INK_GROUP_TITLE + h)) {
+            int head = strcmp(ink_sr_group(shown), TR(it->title)) ? INK_GROUP_TITLE : INK_GAP_M; /* not 系统 above 系统 */
+            if (block(head + h) && head == INK_GROUP_TITLE) {
                 lv_obj_t *l = ink_ui_line(N.page_body, ink_sr_group(shown), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
                                           F.y + (INK_GROUP_TITLE - ink_ui_line_height(INK_FONT_NOTE)) / 2, width());
                 lv_obj_set_style_text_color(l, ink_ui_secondary(), 0);
             }
-            F.y += INK_GROUP_TITLE;
+            F.y += head;
             box = NULL;
         }
         bool here = block(h);
@@ -297,7 +303,7 @@ static void home_blocks(void) {
 static bool home_update(void) {
     char text[192];
     bool gray;
-    if (N.page_id != PAGE_SETTINGS || !H.n || H.n != H.nseen || memcmp(H.it, H.seen, (size_t)H.n * sizeof *H.it)) return false;
+    if (!home_like() || !H.n || H.n != H.nseen || memcmp(H.it, H.seen, (size_t)H.n * sizeof *H.it)) return false;
     for (int k = 0; k < H.n; k++) /* a row turning gray, or a value needing another line, is a new layout */
         if (!H.value[k] || !home_line(H.it[k], text, sizeof text, &gray) || gray != H.gray[k] ||
             row_h(H.it[k], text) != row_h(H.it[k], lv_label_get_text(H.value[k]))) return false;
@@ -306,7 +312,7 @@ static bool home_update(void) {
     return true;
 }
 void ink_settings_home_sync(void) {
-    if (N.page_body && N.page_id == PAGE_SETTINGS && current_session(N.epoch)) draw_page_body();
+    if (N.page_body && home_like() && current_session(N.epoch)) draw_page_body();
 }
 static int body_top(void) {
     return INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS +
@@ -333,7 +339,7 @@ static void bind_choices(lv_obj_t *row, int count, const char *id) {
 }
 
 static void body_blocks(void) {
-    if (N.page_id == PAGE_SETTINGS) {
+    if (home_like()) {
         home_blocks();
     } else if (N.page_id == PAGE_CHANNELS) {
         const char *note = TR(CHANNEL_NOTE);
@@ -727,7 +733,7 @@ static void create_page(lv_obj_t *screen, void *arg) {
     N.page_id = (page_t) (intptr_t) arg;
     if (N.page_id == PAGE_SETTINGS && strcmp(H.member, ink_member_current()->id)) memset(&H, 0, sizeof H); /* not theirs */
     N.body_page = N.page_id == PAGE_SETTINGS ? H.page : 0;
-    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知"), TR_NOOP("通知"), TR_NOOP("已存的网络")};
+    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知"), TR_NOOP("通知"), TR_NOOP("已存的网络"), TR_NOOP("系统")};
     _Static_assert(sizeof titles / sizeof *titles == sizeof PAGES / sizeof *PAGES, "page titles");
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, TR(titles[N.page_id]));
@@ -745,7 +751,8 @@ static void create_page(lv_obj_t *screen, void *arg) {
     if (N.page_id == PAGE_KNOWN || N.page_id == PAGE_NETWORK) known_load(NULL, NULL, NULL);
 }
 static void destroy_page(void) {
-    if (N.page_id == PAGE_SETTINGS) { H.page = N.body_page; H.n = 0; } /* back from a row's page: the same page of rows */
+    if (N.page_id == PAGE_SETTINGS) H.page = N.body_page; /* back from a row's page: the same page of rows */
+    if (home_like()) H.n = 0;
     if (N.page_id == PAGE_KNOWN || N.page_id == PAGE_NETWORK) N.known_epoch++;
     if (N.page_id == PAGE_NETWORK) {
         N.picked_ssid[0] = 0;
@@ -771,14 +778,15 @@ static bool page_key(ink_key_t key, bool lng) {
 }
 static int page_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
-    if (N.page_id == PAGE_SETTINGS) { /* the groups' rows on this page, or what the search found: name, value, state, action */
+    if (home_like()) { /* the groups' rows on this page, or what the search found: name, value, state, action */
         ink_jw_t w; ink_jw_init(&w, buf, cap);
-        ink_jw_raw(&w, "{\"page\":\"Settings\",\"query\":"); ink_jw_str(&w, H.query);
+        ink_jw_raw(&w, "{\"page\":"); ink_jw_str(&w, PAGES[N.page_id].name);
+        ink_jw_raw(&w, ",\"query\":"); ink_jw_str(&w, query());
         ink_jw_raw(&w, ",\"language\":"); ink_jw_str(&w, ink_lang_code());
         ink_jw_raw(&w, ",\"page_number\":"); ink_jw_int(&w, N.body_page + 1);
         ink_jw_raw(&w, ",\"pages\":"); ink_jw_int(&w, N.body_pages);
         ink_jw_raw(&w, ",\"rows\":[");
-        for (int k = 0; k < H.n; k++) row_json(&w, H.it[k], k, !H.query[0]);
+        for (int k = 0; k < H.n; k++) row_json(&w, H.it[k], k, !query()[0]);
         ink_jw_raw(&w, "],\"actions\":[\"settings.search(query)\",\"settings.open(id)\",\"settings.set(id,value)\",\"shell.page_next\",\"shell.page_prev\",\"shell.back\"]}");
         return w.overflow ? -1 : (int)w.len;
     }
