@@ -144,7 +144,9 @@ static void run(void *arg) {
         CHECK(ink_cap_find("family.pin") == NULL && ink_cap_find("family.old_pin") == NULL && ink_cap_find("family.pin_save") == NULL, "duplicate password capabilities are removed");
         CHECK(ink_cap_find("member.rename") != NULL, "member startup registers rename with the other member capabilities");
         CHECK(AI("shell.settings", NULL), "open the real settings entry page"); quiet();
-        seek_press("家人", "shell.page_next"); /* settings-1: the family row of the home's 家人和孩子 group */
+        seek_press("系统", "shell.page_next"); /* D-137: the family row is on 系统, under 家人和孩子 */
+        CHECK(!strcmp(ink_ui_page_name(), "SetSystem"), "the home's 系统 row opens SetSystem");
+        seek_press("家人", "shell.page_next");
         CHECK(!strcmp(ink_ui_page_name(), "SetMembers"), "settings family card opens SetMembers");
         press("我的密码"); CHECK(!strcmp(ink_ui_top_name(), "PinSet"), "member password row opens shared PinSet");
         CHECK(BY_HAND("shell.pin_cancel", NULL), "close shared password overlay"); quiet();

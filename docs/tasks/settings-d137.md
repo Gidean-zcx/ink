@@ -1,0 +1,5 @@
+# settings-d137
+
+（主会话在第一波编排里直接写给实现代理的任务说明，原文英文。）
+
+D-137 (user: “都按推荐做”): (1) the settings home fits two pages at the default text size: rarely used rows (storage, about, backup and other non-daily ones) move into one row “系统” that opens a list page; groups and current values stay; the registry stays the single declaration (system/ui/shell/settings_registry.c). (2) children get a settings entry in the control centre (a gear in the child's header row, system/ui/shell/control_center.c) that opens a settings home showing only what the settings service already lets children change (brightness, warmth, volume, do-not-disturb, key sounds, vibration, ringtone); parent items still need a parent; the child's rules do not change. Only change: settings_body.c, settings_pages.c, settings_registry.c/.h, control_center.c, their tests, CMake lines if needed. Budget 250 product lines. Accept: page counts at the default and the largest size, the child entry exists only for children and lists only child items, touch and AI agree, reverse checks, screenshots (default and largest size) returned in the report.

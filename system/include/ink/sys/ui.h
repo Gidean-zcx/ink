@@ -70,8 +70,11 @@ bool ink_ui_overlay_up(void);
 
 /** Start the UI task with `home` as the root activity. */
 int ink_ui_start(const ink_activity_t *home);
-/** Open an activity on top (UI task only). The new screen is drawn with a flashing refresh. */
-void ink_ui_push(const ink_activity_t *a, void *arg);
+/** Open an activity on top (UI task only). The new screen is drawn with a flashing refresh.
+ *  False: the stack is full and nothing changed (logged, and counted in ink_ui_push_refusals). */
+bool ink_ui_push(const ink_activity_t *a, void *arg);
+/** How many pushes the full stack has refused since boot: a capability that refused one answers FAILED. Any task. */
+uint32_t ink_ui_push_refusals(void);
 /** Open an activity from a tapped control: the control inverts at once (fast feedback),
  *  the activity is built afterwards (UI task only). */
 void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
@@ -92,6 +95,8 @@ void ink_shell_home_settle(void);
 void ink_ui_restart(void (*between)(void));
 /** The stack has no room for another activity. */
 bool ink_ui_full(void);
+/** How many activities are open, the root one included. UI task. */
+int ink_ui_depth(void);
 /** An activity of this app is open: it comes to the top (what is above it closes). False: there is none. UI task. */
 bool ink_ui_bring_up(const char *app);
 /** Off the stack with all its activities. UI task. */

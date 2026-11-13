@@ -54,6 +54,7 @@ for size in a.sizes.split(','):
         a.shots.mkdir(parents=True, exist_ok=True)
         for picture in sorted(out.glob('snap-*.png')):
             shutil.copyfile(picture, a.shots / f'{picture.stem[5:]}-{size}.png')
+    print(f'size {size}: the home has {m.get("settings1.home_pages")} pages, a child\'s home {m.get("settings1.kid_pages")}', flush=True)
     print(f'size {size}:', 'PASS' if passed else 'FAIL', 'exit', run.returncode, 'checks', m.get('test.pass', 0),
           'failures', m.get('test.fail', 0), flush=True)
     if not passed and run.returncode:

@@ -77,8 +77,15 @@ static bool home_page_with(const char *id) { /* the home from its first page, tu
 }
 static const char *say(void) { return g_rc.say; }
 
-/* Every row the home shows comes from the registry, and every row of it says what it is now. */
-static void walk_home(bool kid) {
+static bool child_may_change(const char *id) { /* what the settings service lets a child change */
+    const ink_setting_def_t *d;
+    for (int i = 0; id && (d = ink_setting_at(i)); i++) if (!strcmp(d->id, id)) return d->child_may_change;
+    return false;
+}
+/* Every row the home shows comes from the registry, and every row of it says what it is now. A parent's home is the
+ * registry's home rows, a child's only its child rows, each one a setting the service lets a child change (D-137). */
+static int walk_home(bool kid) {
+    unsigned mask = kid ? INK_SR_KID : INK_SR_HOME;
     CHECK(BY_HAND("settings.open", "{}") && g_rc.status == INK_RC_DONE && on_page("Settings"), "the home opens");
     quiet();
     int pages = 0, rows = 0;
@@ -89,9 +96,10 @@ static void walk_home(bool kid) {
             char id[48], value[96]; p += 7;
             snprintf(id, sizeof id, "%.*s", (int)(strchr(p, '"') - p), p);
             const ink_sr_item_t *it = ink_sr_find(id);
-            CHECK(it && (it->where & INK_SR_HOME), "a home row is a home item of the registry: %s", id);
+            CHECK(it && (it->where & mask), "a home row is a home item of the registry: %s", id);
             CHECK(row(view, id, "value", value, sizeof value) && value[0], "every row says what it is now: %s", id);
-            CHECK(!kid || (it && !it->adult), "a child's home has only a child's rows: %s", id);
+            CHECK(!kid || (it && !it->adult && child_may_change(it->setting)), "a child's home has only what a child may change: %s", id);
+            CHECK(kid || !(it && (it->where & INK_SR_KID) && !(it->where & INK_SR_HOME)), "a parent's home has no child-only row: %s", id);
             rows++;
         }
         pages++;
@@ -99,8 +107,10 @@ static void walk_home(bool kid) {
         CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "turn the home"); quiet();
     }
     int home = 0;
-    for (int i = 0; ink_sr_at(i); i++) home += (ink_sr_at(i)->where & INK_SR_HOME) && (!kid || !ink_sr_at(i)->adult);
+    for (int i = 0; ink_sr_at(i); i++) home += (ink_sr_at(i)->where & mask) && (!kid || !ink_sr_at(i)->adult);
     CHECK(rows >= home, "all the home items are drawn across %d pages (%d of %d)", pages, rows, home);
+    CHECK(!kid || home == 8, "a child's home: brightness, warmth, volume, do-not-disturb, key tone, vibration, two rings (%d)", home);
+    return pages;
 }
 
 /* One declaration (acceptance 3): each item is found by search under its name, named in settings.open's description, and
@@ -129,6 +139,42 @@ static void one_declaration(void) {
     }
 }
 
+
+/* 1c. The deepest walks (review of D-137: 系统 put one page more between the home and 关于和更新). */
+static int depth_now;
+static void read_depth(void) { depth_now = ink_ui_depth(); }
+static int depth(void) { on_ui(read_depth); return depth_now; }
+static void find_card(void) { seen = framed = false; lv_obj_update_layout(lv_layer_sys()); locate(lv_layer_sys()); } /* system cards */
+static bool on_card(const char *text) { wanted = text; on_ui(find_card); return seen; }
+static void fill_with_records(void) { while (!ink_ui_full()) ink_settings_family_open("Records"); }
+static const char *const RECORD_TITLES[] = {"AI 替你做过的事", "和 AI 说过的话", "AI 记得的事", "运行记录"};
+static const char *const RECORD_PAGES[] = {"AiLog", "AiHome", "AiMemory", "RuntimeRecords"};
+static const char *const RECORD_CAPS[] = {"shell.ai_log", "shell.ai_home", "shell.ai_memory", "shell.runtime_records"};
+/* 设置, 系统, 关于和更新, 隐私, 查看和删除记录 from wherever the gear is pressed, each by the capability its row binds;
+ * then every row of Records opens its page by touch and by the AI, one level up, and back. */
+static void records_walk(const char *where) {
+    int base = depth();
+    CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE && on_page("Settings"), "%s: the gear opens settings", where); quiet();
+    CHECK(home_page_with("system") && row_is("system", "capability", "settings.open"), "%s: the home's 系统 row", where);
+    touch(ink_tr("系统"));
+    CHECK(on_page("SetSystem"), "%s: 系统 (%s)", where, ink_ui_page_name());
+    touch(ink_tr("关于和更新"));
+    CHECK(on_page("SetAbout"), "%s: 关于和更新 (%s)", where, ink_ui_page_name());
+    CHECK(BY_HAND("shell.privacy", NULL) && g_rc.status == INK_RC_DONE && on_page("SetPrivacy"), "%s: 隐私 (%s)", where, ink_ui_page_name()); quiet();
+    CHECK(BY_HAND("shell.records", NULL) && g_rc.status == INK_RC_DONE && on_page("Records"), "%s: 查看和删除记录 (%s)", where, ink_ui_page_name()); quiet();
+    int records = depth();
+    CHECK(records == base + 5, "%s: Records is %d pages deep (from %d)", where, records, base);
+    for (int i = 0; i < 4; i++) {
+        touch(ink_tr(RECORD_TITLES[i]));
+        CHECK(on_page(RECORD_PAGES[i]) && depth() == records + 1, "%s: a tap on %s opens %s one level up (%s, depth %d)", where,
+              RECORD_TITLES[i], RECORD_PAGES[i], ink_ui_page_name(), depth());
+        CHECK(BY_HAND("shell.back", NULL) && on_page("Records") && depth() == records, "%s: back on Records from %s", where, RECORD_PAGES[i]); quiet();
+        CHECK(AI(RECORD_CAPS[i], NULL) && g_rc.status == INK_RC_DONE && on_page(RECORD_PAGES[i]) && depth() == records + 1,
+              "%s: the AI's %s opens %s too (%s, %s)", where, RECORD_CAPS[i], RECORD_PAGES[i], ink_rc_name(g_rc.status), ink_ui_page_name());
+        quiet();
+        CHECK(BY_HAND("shell.back", NULL) && on_page("Records"), "%s: back on Records", where); quiet();
+    }
+}
 static void run(void *arg) {
     (void)arg;
     const char *size = getenv("INK_SETTINGS1_TEXT");
@@ -145,7 +191,69 @@ static void run(void *arg) {
     on_ui(inspect);
     CHECK(strstr(view, "\"group\":\"网络和连接\"") && visible("网络和连接") && visible("Wi-Fi"), "the first group and its rows: %.200s", view);
     shot("home");
-    walk_home(false);
+    int pages = walk_home(false);
+    sim_metric_set("settings1.home_pages", pages);
+    CHECK(text_size != 1 || pages == 2, "the home fits two pages at the default text size (%d)", pages);
+    shot("home-last");
+
+    /* 1b. 系统 (D-137): the rarely used rows on one list page, under their groups and with their values; a tap on one
+     * opens its page as it did from the home. The touch and the AI take settings.open {"id":"system"}. */
+    char got[96];
+    CHECK(home_page_with("system") && row_is("system", "capability", "settings.open") && row(view, "system", "value", got, sizeof got) &&
+          strstr(got, ink_tr("存储")) && strstr(got, ink_tr("关于和更新")), "the home's 系统 says what it holds: %s", got);
+    for (int i = 0; ink_sr_at(i); i++)
+        CHECK(!(ink_sr_at(i)->where & INK_SR_SYSTEM) || !(ink_sr_at(i)->where & INK_SR_HOME), "a row is on the home or on 系统: %s", ink_sr_at(i)->id);
+    touch("系统");
+    on_ui(inspect); memcpy(touched, view, sizeof touched);
+    CHECK(on_page("SetSystem"), "a tap on 系统 opens its page (%s)", ink_ui_page_name());
+    int listed = 0, sys = 0;
+    for (int i = 0; ink_sr_at(i); i++) {
+        const ink_sr_item_t *it = ink_sr_at(i);
+        char key[64]; snprintf(key, sizeof key, "{\"id\":\"%s\"", it->id);
+        sys += (it->where & INK_SR_SYSTEM) != 0;
+        if (!strstr(view, key)) continue;
+        CHECK(it->where & INK_SR_SYSTEM, "系统 lists only its registry rows: %s", it->id);
+        CHECK(row(view, it->id, "value", got, sizeof got) && got[0], "every 系统 row says what it is now: %s", it->id);
+        listed++;
+    }
+    CHECK(strstr(view, "\"pages\":1,") && listed == sys && sys == 5, "家人, 语音和 AI, 存储, 备份, 关于和更新 on one page (%d of %d)", listed, sys);
+    CHECK(visible("家人和孩子") && visible("存储和备份") && visible("关于和更新") && strstr(view, "\"capability\":\"settings.open\""),
+          "under their groups, each opening its page: %.200s", view);
+    shot("system");
+    CHECK(BY_HAND("shell.back", NULL) && AI("settings.open", "{\"id\":\"system\"}") && g_rc.status == INK_RC_DONE && on_page("SetSystem"), "the AI opens 系统");
+    quiet(); on_ui(inspect);
+    const char *x = strstr(view, "\"rows\":["), *y = strstr(touched, "\"rows\":[");
+    CHECK(x && y && !strcmp(x, y), "the AI and the touch see the same 系统 rows: %.150s", x ? x : "");
+    touch("存储");
+    CHECK(on_page("SetStorage"), "存储 opens 存储和备份 as it did from the home (%s)", ink_ui_page_name());
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("settings.open", "{}") && on_page("Settings"), "the settings home again"); quiet();
+
+    /* 1c. With 系统 between the home and 关于和更新, Records' four rows still open: from the home (Records 6 deep), and from
+     * an app through the gear (7 deep). A full page stack is never silent: the page stays, the touch is told on screen,
+     * the AI is answered FAILED with the reason. */
+    CHECK(BY_HAND("system.home", NULL) && depth() == 1, "from the home"); quiet();
+    records_walk("home");
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("shell.launch", "{\"id\":\"clock\"}") && on_page("Clock") && depth() == 2, "from the clock (%s)", ink_ui_page_name()); quiet();
+    records_walk("clock");
+    on_ui(fill_with_records); quiet();
+    int full = depth();
+    CHECK(ink_ui_full() && on_page("Records"), "the page stack is full of Records pages (%d)", full);
+    touch(ink_tr(RECORD_TITLES[0]));
+    on_ui(inspect);
+    CHECK(on_page("Records") && depth() == full && !strcmp(ink_ui_top_name(), "Refused") && on_card(ink_tr("没有打开")) &&
+          on_card(ink_tr("打开的页面太多了，先回主屏再试")) && strstr(view, "打开的页面太多了"),
+          "a tap that cannot open says so on screen and in the snapshot (%s, %s): %.120s", ink_ui_page_name(), ink_ui_top_name(), view);
+    shot("stack-full");
+    CHECK(on_card(ink_tr("知道了")), "the card's 知道了"); if (seen) tap(lx, ly); quiet();
+    CHECK(!on_card(ink_tr("打开的页面太多了，先回主屏再试")) && !strcmp(ink_ui_top_name(), "Records"), "知道了 closes the card (%s)", ink_ui_top_name());
+    for (int i = 0; i < 4; i++) {
+        CHECK(AI(RECORD_CAPS[i], NULL) && (i == 1 ? g_rc.status == INK_RC_DONE && on_page("AiHome") && depth() == 2 :
+              g_rc.status == INK_RC_FAILED && strstr(say(), "打开的页面太多") && on_page("Records") && depth() == full),
+              "the AI's %s on a full stack: %s, %s (%s)", RECORD_CAPS[i], ink_rc_name(g_rc.status), say(), ink_ui_page_name());
+        quiet();
+        if (i == 1) { on_ui(fill_with_records); quiet(); full = depth(); } /* 和 AI 说过的话 is an app: it starts from the home (app_registry.c) */
+    }
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("settings.open", "{}") && on_page("Settings"), "the settings home again"); quiet();
 
     /* 2. Search 暖光 by touch: the field, the words, the result with where it is and what it is now. */
     on_ui(find_field); CHECK(seen, "the search field is there"); if (seen) tap(lx, ly); quiet();
@@ -224,7 +332,8 @@ static void run(void *arg) {
 
     /* 7. A child: only a child's rows; the parents' rows are found but say 家长管理, never their value. */
     CHECK(ink_member_switch("kid") == 0, "the child takes the device"); quiet();
-    walk_home(true);
+    CHECK(ink_setting_get("display.font_size") == text_size, "the child reads at the same text size %d", text_size);
+    sim_metric_set("settings1.kid_pages", walk_home(true));
     CHECK(BY_HAND("settings.open", "{}") && on_page("Settings"), "the child's home"); quiet();
     shot("kid");
     CHECK(AI("settings.search", "{\"query\":\"密码\"}") && strstr(g_result, "\"id\":\"family\"") && strstr(g_result, "家长管理") &&
@@ -233,6 +342,8 @@ static void run(void *arg) {
     CHECK(row_is("family", "value", "家长管理") && row_is("family", "state", "parent") && visible("家人"), "drawn the same, grayed");
     shot("kid-search");
     CHECK(AI("settings.open", "{\"id\":\"family\"}") && g_rc.status == INK_RC_REJECTED && strstr(say(), "家长管理"), "and not opened for a child");
+    CHECK(AI("settings.open", "{\"id\":\"system\"}") && g_rc.status == INK_RC_REJECTED && strstr(say(), "家长管理") && !on_page("SetSystem"),
+          "nor 系统, the parents' rows");
     CHECK(AI("settings.open", "{\"id\":\"display.warmth\"}") && g_rc.status == INK_RC_DONE && on_page("SetDisplay") && visible("暖光") &&
           !visible("字号") && !visible("自动锁屏 10 分钟"), "the child's 暖光 opens a page without the parents' rows");
     ink_probe_count("test.finished");

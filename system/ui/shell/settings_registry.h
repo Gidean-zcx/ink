@@ -15,7 +15,8 @@ typedef enum {           /* the six states of BasePreferenceController.java:75-1
     INK_SR_PARENT,       /* DISABLED_FOR_USER: a child sees 家长管理, never the value */
     INK_SR_DEPENDENT,    /* DISABLED_DEPENDENT_SETTING: grayed, the reason in place of the value */
 } ink_sr_state_t;
-enum { INK_SR_HOME = 1, INK_SR_LIST = 2 }; /* its row is on the settings home / in its page's list */
+/* its row is on the settings home / in its page's list / on 系统 (the home's rarely used rows, D-137) / on a child's home */
+enum { INK_SR_HOME = 1, INK_SR_LIST = 2, INK_SR_SYSTEM = 4, INK_SR_KID = 8 };
 
 typedef struct ink_sr_item ink_sr_item_t;
 struct ink_sr_item {
