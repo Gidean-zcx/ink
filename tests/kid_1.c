@@ -27,8 +27,22 @@ static void locate(void) {
     CHECK(lv_area_get_height(&r) >= ink_ui_px(INK_CONTROL), "member control has a full touch target");
     px = (r.x1 + r.x2) / 2; py = (r.y1 + r.y2) / 2;
 }
+/* A tap that falls whole into a flash erase (the member table is written as soon as the panel is quiet after a
+ * submit) is never read by the touch driver, on the device too: tap again, as a person would, only when the driver
+ * delivered nothing, so a digit is never entered twice. */
 static void touch(const char *label) {
-    quiet(); wanted = label; on_ui(locate); if (found) tap(px, py); quiet();
+    quiet(); wanted = label; on_ui(locate);
+    if (found) {
+        bool seen = false;
+        for (int i = 0; i < 3 && !seen; i++) {
+            double delivered = sim_metric_value("input.touch_delivery_ms");
+            tap(px, py);
+            seen = WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > delivered, 1000);
+            if (!seen) ink_probe_count("test.taps_unseen");
+        }
+        CHECK(seen, "the touch driver received the tap on a member control");
+    }
+    quiet();
 }
 static bool page(const char *name) { on_ui(read_screen); return !strcmp(g_top, name); }
 static void host_context(void *arg) {

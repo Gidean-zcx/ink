@@ -98,11 +98,13 @@ def main():
         trial_run.subprocess.call = no_esptool
         (tmp / "img").mkdir()
         (tmp / "img/ink-s31.bin").write_bytes(b"\xe9" + bytes(100))
+        (tmp / "img/ink-fonts.bin").write_bytes(b"INKF" + bytes(60))
         (tmp / "backup.bin").write_bytes(bytes(16))
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             rc = trial_run.main(["--port", "/dev/null-fake", "--backup", str(tmp / "backup.bin"), "--image",
-                                 str(tmp / "img/ink-s31.bin"), "--out", str(tmp / "o1"), "--install", "--dry-run"])
+                                 str(tmp / "img/ink-s31.bin"), "--fonts", str(tmp / "img/ink-fonts.bin"), "--out",
+                                 str(tmp / "o1"), "--install", "--dry-run"])
         check(rc == 2 and "STOP before writing anything: no install bundle" in out.getvalue(),
               f"--install without the bundle: exit 2 before writing ({rc})\n{out.getvalue()[-500:]}")
         trial_run.open_console = lambda a, reset: (lambda: Port(f"{p}HELLO {digest} 0\n"))
