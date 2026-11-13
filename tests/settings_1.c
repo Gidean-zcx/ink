@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "ink/ui_shell.h"
 #include "../system/ui/shell/settings_registry.h"
+#include "ink/hal_afe.h"
 #define ink_main product_main
 #include "../system/boot/main.c"
 #undef ink_main
@@ -196,6 +197,15 @@ static void run(void *arg) {
     CHECK(BY_HAND("settings.set", "{\"id\":\"audio.vibration\",\"value\":0}") && BY_HAND("settings.search", "{\"query\":\"振动\"}"), "vibration off");
     CHECK(row_is("audio.vibration_level", "state", "dependent") && row_is("audio.vibration_level", "value", "振动已关闭"), "振动强度 says why in search");
     CHECK(BY_HAND("settings.set", "{\"id\":\"audio.vibration\",\"value\":1}"), "vibration on"); quiet();
+    /* The other two states: not here on this device (no wake-word front end in this profile), not now (SIM read-only). */
+    if (!hal_afe_available())
+        CHECK(AI("settings.search", "{\"query\":\"叫名字\"}") && !strstr(g_result, "\"voice.handsfree\"") && AI("settings.open", "{\"id\":\"voice.handsfree\"}") &&
+              g_rc.status == INK_RC_REJECTED && strstr(say(), "这台设备暂不支持叫名字"), "UNSUPPORTED: not found, not opened, the reason told");
+    ink_state_set_bool(ink_state_find("cell.config_readonly"), true);
+    CHECK(AI("settings.search", "{\"query\":\"sim\"}") && !strstr(g_result, "\"cell.sim_slot\"") && strstr(g_result, "\"cell\""),
+          "NOT_NOW: the SIM card choice is left out while it cannot change: %.150s", g_result);
+    ink_state_set_bool(ink_state_find("cell.config_readonly"), false);
+    CHECK(AI("settings.search", "{\"query\":\"sim\"}") && strstr(g_result, "\"cell.sim_slot\""), "and back when it can"); quiet();
 
     /* 6. The same path by the AI: the same results, the same page. */
     CHECK(AI("settings.search", "{\"query\":\"暖光\"}") && g_rc.status == INK_RC_DONE && strstr(g_result, "\"id\":\"display.warmth\""), "the AI searches: %.150s", g_result);
