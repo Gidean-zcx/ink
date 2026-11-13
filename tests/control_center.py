@@ -60,7 +60,7 @@ for case, text in RUNS:
             print('  ', str(w)[:300])
         if not data:
             print(r.stderr[-3000:])
-    if case in ('touch', 'bar') and passed:
+    if case in ('touch', 'bar') and (out / 'trace.json').exists():  # judged even when an earlier check failed
         trace = json.loads((out / 'trace.json').read_text())
         if isinstance(trace, dict):
             trace = trace.get('traceEvents', [])

@@ -1,7 +1,7 @@
 """Reverse checks for control-1: take one piece of the feature out, the control-center walk that covers it must fail;
 then put it back. Manual only, not in ctest (it rebuilds sources).
 
-Run from the repository root: python3 tests/control_center_reverse.py [build] [python]. Each mutation is applied to the
+Run from the repository root: python3 tests/control_center_reverse.py [build] [python] [mutation...]. Each mutation is applied to the
 source text, sim-control-center is rebuilt, the named walks run, and the original text is written back whatever
 happens."""
 import json
@@ -45,11 +45,16 @@ def build():
 def run(case):
     r = subprocess.run(['taskpolicy', '-c', 'utility', PYTHON, '-B', str(ROOT / 'tests/control_center.py'), '--build', str(BUILD),
                         '--case', case], capture_output=True, text=True)
-    return r.returncode != 0, [line.strip()[:160] for line in r.stdout.splitlines() if 'FAILED' in line or ': NO' in line][:3]
+    lines = r.stdout.splitlines()  # the refresh verdicts first, then the first failed checks
+    return r.returncode != 0, ([line.strip()[:160] for line in lines if 'refreshes only' in line] +
+                               [line.strip()[:160] for line in lines if 'FAILED' in line])[:3]
 
 
+ONLY = set(sys.argv[3:])
 results = []
 for name, path, edits, cases in MUTATIONS:
+    if ONLY and name not in ONLY:
+        continue
     original = path.read_text()
     text = original
     for old, new in edits:
