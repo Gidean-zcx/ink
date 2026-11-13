@@ -145,6 +145,9 @@ static const struct {
     {"notify.dnd_set", ""}, {"notify.replies_set", "index,text"},
     {"settings.search", "query"}, {"settings.open", ""}, /* settings-1 */
     {"card.files_check", NULL}, /* auto-provision-1 */
+    {"gallery.show", "view"}, {"gallery.find", ""}, {"photo.next", NULL}, {"photo.prev", NULL}, {"photo.info", NULL}, /* gallery-3 */
+    {"photo.zoom", "step"}, {"photo.pan", "dir"}, {"photo.rotate", "dir"}, {"photo.trash", NULL}, {"photo.restore", "path"},
+    {"photo.delete_forever", "path"}, {"gallery.empty_trash", NULL},
     {NULL, NULL},
 };
 

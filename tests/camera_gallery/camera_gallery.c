@@ -37,7 +37,7 @@ static int camera_frame(uint8_t *buf, size_t cap, uint32_t timeout) {
 #include "../integration/whole_product.h"
 #include "image_fixtures.h"
 
-static char phase[16], scene[16], snapshot[4096], saved_path[INK_FS_PATH_MAX];
+static char phase[16], scene[16], snapshot[4096], saved_path[INK_FS_PATH_MAX], expect_path[INK_FS_PATH_MAX];
 static uint32_t saved_id;
 static const char *wanted_cap;
 static lv_point_t point;
@@ -161,11 +161,24 @@ static void wait_photo(void) {
     for (unsigned i = 0; i < 500; i++) { on_ui(inspect_photo_ready); if (photo_ready) { break; } delay_ms(20); }
     CHECK(photo_ready, "photo viewer loads a real indexed file"); quiet();
 }
-static void inspect_photo(void) {
+static void inspect_photo(void) { /* gallery-3: the viewer renders the visible part into a buffer the size of its photo area */
     const lv_image_dsc_t *d = G.box && lv_obj_get_child_count(G.box) ? lv_image_get_src(lv_obj_get_child(G.box, 0)) : NULL;
-    CHECK(d && d->header.w == 640 && d->header.h == 480, "Photo displays the original VGA dimensions");
+    CHECK(G.info.width == 640 && G.info.height == 480, "Photo reads the original VGA dimensions");
+    CHECK(d && (int)d->header.w == lv_obj_get_width(G.box) && (int)d->header.h == lv_obj_get_height(G.box), "Photo fills exactly its photo area");
     if (d) { ink_image_t im = {d->header.w, d->header.h, (uint8_t *)d->data}; gray_pixels(&im); }
-    read_snapshot(); CHECK(strstr(snapshot, saved_path) && strstr(snapshot, "file.delete") && strstr(snapshot, "photo.ask"), "Photo snapshot exposes the displayed file and the same buttons");
+    read_snapshot(); CHECK(strstr(snapshot, expect_path) && strstr(snapshot, "photo.trash") && strstr(snapshot, "photo.ask"), "Photo snapshot exposes the displayed file and the same buttons");
+}
+static char trashed[INK_FS_PATH_MAX];
+static void expect_first(void) { /* the grid is newest first: the photo a tap opens is the one in that cell */
+    ink_fs_entry_t e; expect_path[0] = 0;
+    if (!ink_fs_lookup(G.ids[G.position.page * PHOTO_SLOTS], &e)) snprintf(expect_path, sizeof expect_path, "%s", e.path);
+}
+static bool listed;
+static void inspect_trash(void) { listed = G.list && G.data && G.data->ntrash == 1 && !strcmp(ink_ui_page_name(), "GalleryTrash"); }
+static bool trash_listed(void) { on_ui(inspect_trash); return listed; }
+static void trashed_path(void) { /* the 撤销 button's argument names where the photo went */
+    const char *p = strstr(G.undo_args, "\"path\":\""); trashed[0] = 0;
+    if (p) snprintf(trashed, sizeof trashed, "%.*s", (int)(strchr(p + 8, '"') - p - 8), p + 8);
 }
 static void first_slot(void) {
     lv_obj_t *slot = G.slots[0]; lv_area_t a; lv_obj_get_coords(slot, &a); point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
@@ -237,20 +250,27 @@ static void run(void *arg) {
         on_ui(index_completed); grid_ready();
         ink_fs_entry_t last; CHECK(ink_fs_lookup(G.ids[9], &last) == 0, "resolve the actual final fixture id");
         last_gray = strstr(last.path, "/7.png") ? 255 : 0; on_ui(inspect_last_thumb);
-        ok("gallery.prev", NULL); grid_ready(); on_ui(first_slot); tap(point.x, point.y); wait_photo(); on_ui(inspect_photo); capture("Photo");
+        ok("gallery.prev", NULL); grid_ready(); on_ui(first_slot); expect_first(); tap(point.x, point.y); wait_photo(); on_ui(inspect_photo); capture("Photo");
         press_cap("shell.back"); grid_ready();
-        char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)saved_id); ok("photo.open", args); wait_photo(); on_ui(inspect_photo);
-        CHECK(AI("file.delete", G.delete_args) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI deletion uses the existing irreversible-delete confirmation");
-        unsigned token = 0; sscanf(g_rc.object, "confirm:%u", &token);
-        CHECK(ink_confirm_decide(token, true, INK_SRC_AI) != 0, "AI cannot approve its own photo deletion");
-        CHECK(ink_confirm_decide(token, false, INK_SRC_TOUCH) == 0, "person can cancel deletion"); quiet();
-        ink_fs_stat_t st; CHECK(ink_fs_stat(saved_path, &st) == 0, "cancel keeps the actual photo on card");
+        char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)saved_id); snprintf(expect_path, sizeof expect_path, "%s", saved_path); ok("photo.open", args); wait_photo(); on_ui(inspect_photo);
+        /* gallery-3: deleting moves the photo to 最近删除 (no card, it comes back); only deleting it forever asks */
+        ink_confirm_view_t card; ink_fs_stat_t st;
+        CHECK(AI("photo.trash", NULL) && g_rc.status == INK_RC_DONE && ink_confirm_list(&card, 1) == 0, "AI moves the photo to 最近删除 without a card");
+        char undo[160]; snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, (unsigned)g_rc.revision);
+        quiet(); on_ui(trashed_path);
+        CHECK(ink_fs_stat(saved_path, &st) == INK_FS_ERR_NOT_FOUND && trashed[0] && ink_fs_stat(trashed, &st) == 0, "the photo is in 最近删除, not where it was");
+        CHECK(AI("system.undo", undo) && g_rc.status == INK_RC_UNDONE, "the AI's undo brings it back");
+        CHECK(ink_fs_stat(saved_path, &st) == 0 && ink_fs_stat(trashed, &st) == INK_FS_ERR_NOT_FOUND, "undo puts the actual photo back where it was"); quiet();
         press_cap("shell.back"); grid_ready(); member_isolation();
         ok("app.open", "{\"id\":\"gallery\"}"); grid_ready(); ok("photo.open", args); wait_photo();
-        press_cap("file.delete");
-        ink_confirm_view_t card; CHECK(ink_confirm_list(&card, 1) == 1, "touch deletion also opens a confirmation card");
+        press_cap("photo.trash"); on_ui(trashed_path);
+        CHECK(ink_confirm_list(&card, 1) == 0 && ink_fs_stat(saved_path, &st) == INK_FS_ERR_NOT_FOUND && ink_fs_stat(trashed, &st) == 0, "touch moves it to 最近删除 at once");
+        press_cap("shell.back"); ok("gallery.show", "{\"view\":\"trash\"}"); CHECK(WAIT_FOR(trash_listed(), 5000), "最近删除 lists the photo"); quiet();
+        press_cap("photo.delete_forever");
+        CHECK(ink_confirm_list(&card, 1) == 1, "deleting forever opens a confirmation card");
+        CHECK(ink_confirm_decide(card.token, true, INK_SRC_AI) != 0, "AI cannot approve the photo's deletion");
         CHECK(ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "person approves deletion");
-        CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "Gallery"), 5000), "confirmed deletion returns to Gallery"); quiet();
+        CHECK(WAIT_FOR(ink_fs_stat(trashed, &st) == INK_FS_ERR_NOT_FOUND, 5000), "the confirmed photo leaves 最近删除"); quiet();
         CHECK(ink_fs_stat(saved_path, &st) == INK_FS_ERR_NOT_FOUND && count_images() == 9, "confirmed photo is absent from card and index");
     }
     ok("system.home", NULL); ink_db_flush_all(); CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "persist index and member data");

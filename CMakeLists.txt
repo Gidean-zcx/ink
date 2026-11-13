@@ -514,6 +514,7 @@ list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_menu.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/power_pages.c
   ${CMAKE_SOURCE_DIR}/system/ui/card_files_notice.c
+  ${CMAKE_SOURCE_DIR}/system/apps/gallery/vendor/agentui/camera_gallery_repository_part.h
 )
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
@@ -2224,3 +2225,12 @@ target_link_libraries(sim-card-files PRIVATE ink_apps ink_system)
 add_dependencies(sim-card-files ink_card_files ink_fonts ink_ui_fonts ink_icons)
 add_test(NAME card-files-sim COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(card-files-sim PROPERTIES TIMEOUT 600)
+# gallery-3: AgentUI's gallery helpers (verbatim in system/apps/gallery/vendor/agentui) behind a C shim. They use
+# std::string, so whatever links the system also links the C++ library (the executables link with the C driver).
+target_sources(ink_system PRIVATE system/apps/gallery/repository.cpp)
+set_source_files_properties(system/apps/gallery/repository.cpp PROPERTIES COMPILE_OPTIONS "-fno-exceptions;-fno-rtti")
+if(APPLE)
+  target_link_libraries(ink_system INTERFACE c++)
+else()
+  target_link_libraries(ink_system INTERFACE stdc++)
+endif()
