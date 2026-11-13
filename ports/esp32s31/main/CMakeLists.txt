@@ -138,3 +138,5 @@ if(NOT CMAKE_BUILD_EARLY_EXPANSION)
 # metadata.c includes the unchanged upstream tag parser.
 set_source_files_properties(${root}/system/services/audio/vendor/kiikoread/music_tags.c TARGET_DIRECTORY __idf_ink_system PROPERTIES HEADER_FILE_ONLY ON)
 endif()
+# gallery-3: the AgentUI gallery helpers behind a C interface, as the gomoku engine (IDF builds C++ without exceptions or RTTI).
+target_sources(${ink_system_lib} PRIVATE ${root}/system/apps/gallery/repository.cpp)
