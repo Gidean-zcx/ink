@@ -2137,3 +2137,71 @@ language english 中文 英文	language english chinese
 文件夹 · %zu 项	Folder · %zu items
 这里没有别的文件夹	No folders inside
 没有替换，什么都没动	Nothing was replaced or changed
+%.*s（恢复%d）%s	%.*s (restored %d)%s
+%d 倍	%d×
+%d年%d月%d日 %s	%d-%d-%d %s
+%d年%d月%d日 %s（文件时间）	%d-%d-%d %s (file time)
+%d年%s	%d %s
+%d月%d日删除	Deleted %d/%d
+还剩 %d 天	%d days left
+%d月—%d月	%d–%d
+%s · %zu 张	%s · %zu photos
+%s · 第%zu/%zu张 · %s	%s · %zu of %zu · %s
+%u 张	%u photos
+%u 张 · 最新 %s	%u photos · newest %s
+%zu 张	%zu photos
+上一张	Previous
+下一张	Next
+下移	Down
+不详	Unknown
+信息	Details
+其他照片	Other photos
+删除日期不详	Deletion date unknown
+原来的地方同名的照片太多，照片还在最近删除里	Too many photos with that name where it was; it stays in Recently deleted
+右移	Right
+存储卡借给了电脑，拔线或在电脑上推出后自动回来	The storage card is lent to a computer; it comes back by itself when you unplug or eject it there
+存储卡满了，照片还在原处	The storage card is full; the photo stays where it was
+存储卡读写出错，照片还在原处	The storage card failed; the photo stays where it was
+尺寸	Dimensions
+左移	Left
+已移到最近删除	Moved to Recently deleted
+恢复	Restore
+拍摄时间	Taken
+放大	Zoom in
+文件太多，有些照片没列出来	Too many files; some photos are not listed
+旋转	Rotate
+日期不详	Undated
+最近删除	Recently deleted
+最近删除里已经有同名的照片，照片还在原处	Recently deleted already has a photo with that name; the photo stays where it was
+最近删除里没有照片	No photos in Recently deleted
+格式	Format
+正在整理照片，好了会自动出来	Organizing photos; they appear by themselves when ready
+正在看	Showing
+永久删除	Delete forever
+永久删除这张照片（{name}），不能恢复	Delete this photo ({name}) forever? It cannot be restored
+没插存储卡，插上后照片会自动出来	No storage card; photos appear by themselves when one is inserted
+没有权限挪这张照片	Not allowed to move this photo
+清空 %zu 张	Empty %zu
+清空最近删除里的全部照片，不能恢复	Empty all photos in Recently deleted? They cannot be restored
+照片在这里留 30 天，之后自动删除	Photos stay here for 30 days, then are deleted automatically
+没有清空：正在处理别的文件，稍后再试	Not emptied: other files are being worked on. Try again shortly
+没有清空，照片还在，请再试一次	Not emptied; the photos are still here. Try again
+照片已恢复	Photo restored
+相簿	Albums
+相簿：%s	Album: %s
+看不了预览	No preview
+第%zu/%zu张	%zu of %zu
+第几张	Position
+缩小	Zoom out
+缩放	Zoom
+转了 %d 度	Turned %d°
+这个相簿里没有照片了	No photos here any more
+这张照片刚刚变了，请重新打开	This photo just changed; open it again
+这张照片太大（%u×%u），设备只能看 100 万像素以内的	This photo is too large (%u×%u); the device shows photos up to 1 megapixel
+这张照片的路径太长，放不进最近删除，只能永久删除	This photo's path is too long for Recently deleted; it can only be deleted forever
+这张照片读不出来，文件可能坏了	This photo cannot be read; the file may be damaged
+这种格式（%s）还看不了	This format (%s) cannot be shown yet
+适合屏幕	Fit to screen
+（恢复）	(restored)
+大小未知	Size unknown
+不会自动删除	Not deleted automatically

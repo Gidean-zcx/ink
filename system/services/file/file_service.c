@@ -1936,7 +1936,8 @@ static int index_query(const file_context_t *c, const char *root, ink_fs_type_t 
         if (access) { if (!root) { r = access; break; } continue; }
         out->type = index_type(e.path);
         if (root && type != INK_FS_ANY && type != out->type) continue;
-        out->id = rec.id; out->size = st.size; out->mtime = e.mtime < 0 ? -1 : e.mtime / 1000000000; *cursor = rec.id;
+        out->id = rec.id; out->size = st.size; *cursor = rec.id;
+        out->mtime = rec.schema >= 2 && e.mtime >= 0 ? e.mtime / 1000000000 : -1; /* schema 1 kept no time (gallery-3) */
         break;
     }
     ink_db_close(db); ink_fs_card_release();

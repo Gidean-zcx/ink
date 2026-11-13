@@ -66,6 +66,7 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     ${root}/system/ui/shell/power_menu.c
     ${root}/system/ui/shell/power_pages.c
     ${root}/system/ui/card_files_notice.c
+    ${root}/system/apps/gallery/vendor/agentui/camera_gallery_repository_part.h
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${i18n_tables})
 execute_process(COMMAND ${PYTHON} ${root}/tools/licenses.py ${CMAKE_BINARY_DIR}/generated/ink/licenses.h

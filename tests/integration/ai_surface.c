@@ -154,6 +154,9 @@ static const struct {
     {"memo.clear_done", "id"}, {"memo.uncheck_all", "id"}, {"memo.set_due", "id"}, {"memo.show_done", "id"},
     {"file.batch_replace", "op,to,replace_ids"}, {"files.search", ""}, {"files.sort", ""}, {"files.fav", "path"}, {"files.folder", NULL},
     {"files.place", NULL}, {"files.start", NULL}, {"files.conflict", ""}, /* files-3 */
+    {"gallery.show", "view"}, {"gallery.find", ""}, {"photo.next", NULL}, {"photo.prev", NULL}, {"photo.info", NULL}, /* gallery-3 */
+    {"photo.zoom", "step"}, {"photo.pan", "dir"}, {"photo.rotate", "dir"}, {"photo.trash", NULL}, {"photo.restore", "path"},
+    {"photo.delete_forever", "path"}, {"gallery.empty_trash", NULL},
     {NULL, NULL},
 };
 

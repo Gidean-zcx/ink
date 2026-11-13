@@ -22,6 +22,68 @@ static bool complete(const uint8_t *p, size_t n) {
     return false;
 }
 
+static uint32_t le32(const uint8_t *p) {
+    return (uint32_t)p[3] << 24 | (uint32_t)p[2] << 16 | (uint32_t)p[1] << 8 | p[0];
+}
+
+/* EXIF in a JPEG's APP1 (TIFF layout): orientation 0x0112 in IFD0, DateTimeOriginal 0x9003 in the
+ * Exif IFD. Whatever is out of bounds or malformed leaves orientation 1 and no time. */
+typedef struct { const uint8_t *p; size_t n; bool le; } tiff_t;
+static unsigned tiff16(const tiff_t *t, size_t at) {
+    return t->le ? (unsigned)(t->p[at] | t->p[at + 1] << 8) : (unsigned)(t->p[at] << 8 | t->p[at + 1]);
+}
+static uint32_t tiff32(const tiff_t *t, size_t at) {
+    return t->le ? tiff16(t, at) | (uint32_t)tiff16(t, at + 2) << 16 : (uint32_t)tiff16(t, at) << 16 | tiff16(t, at + 2);
+}
+static void exif_ifd(const tiff_t *t, uint32_t ifd, ink_image_info_t *out, bool top) {
+    if (ifd > t->n || t->n - ifd < 2 || (t->n - ifd - 2) / 12 < tiff16(t, ifd)) return; /* an IFD past the block is broken whole */
+    for (unsigned i = 0, count = tiff16(t, ifd); i < count; i++) {
+        size_t e = ifd + 2 + (size_t)i * 12;
+        unsigned tag = tiff16(t, e), type = tiff16(t, e + 2);
+        uint32_t n = tiff32(t, e + 4), value = tiff32(t, e + 8);
+        if (top && tag == 0x0112 && type == 3 && n == 1 && tiff16(t, e + 8) >= 1 && tiff16(t, e + 8) <= 8) out->orientation = tiff16(t, e + 8);
+        else if (top && tag == 0x8769 && (type == 4 || type == 13) && n == 1) exif_ifd(t, value, out, false);
+        else if (!top && tag == 0x9003 && type == 2 && n >= 19 && n <= 20 && value <= t->n && t->n - value >= 19) {
+            const uint8_t *s = t->p + value;
+            bool ok = s[4] == ':' && s[7] == ':' && s[10] == ' ' && s[13] == ':' && s[16] == ':' && s[0] != '0';
+            for (int k = 0; k < 19; k++) if (k != 4 && k != 7 && k != 10 && k != 13 && k != 16 && (s[k] < '0' || s[k] > '9')) ok = false;
+            if (ok) { memcpy(out->taken, s, 19); out->taken[19] = 0; }
+        }
+    }
+}
+static void jpeg_exif(const uint8_t *p, size_t n, ink_image_info_t *out) {
+    if (n > INK_IMAGE_PROBE_BYTES) n = INK_IMAGE_PROBE_BYTES;
+    if (n < 4 || p[0] != 0xff || p[1] != 0xd8) return;
+    for (size_t at = 2; n - at >= 4 && p[at] == 0xff;) {
+        unsigned marker = p[at + 1];
+        if (marker == 0xff) { at++; continue; }
+        if (marker == 0xda || marker == 0xd9) return;
+        size_t len = (size_t)p[at + 2] << 8 | p[at + 3];
+        if (len < 2 || len > n - at - 2) return;
+        if (marker == 0xe1 && len >= 16 && !memcmp(p + at + 4, "Exif\0\0", 6)) {
+            tiff_t t = {p + at + 10, len - 8, p[at + 10] == 'I'};
+            if ((!memcmp(t.p, "II", 2) || !memcmp(t.p, "MM", 2)) && tiff16(&t, 2) == 42) exif_ifd(&t, tiff32(&t, 4), out, true);
+            return;
+        }
+        at += 2 + len;
+    }
+}
+/* Where upright pixel (x, y) comes from in the stored w x h picture (EXIF orientation o). */
+static size_t source_at(unsigned o, unsigned x, unsigned y, unsigned w, unsigned h) {
+    unsigned sx = x, sy = y;
+    switch (o) {
+    case 2: sx = w - 1 - x; break;
+    case 3: sx = w - 1 - x; sy = h - 1 - y; break;
+    case 4: sy = h - 1 - y; break;
+    case 5: sx = y; sy = x; break;
+    case 6: sx = y; sy = h - 1 - x; break;
+    case 7: sx = w - 1 - y; sy = h - 1 - x; break;
+    case 8: sx = w - 1 - y; sy = x; break;
+    default: break;
+    }
+    return (size_t)sy * w + sx;
+}
+
 int ink_image_decode(const void *data, size_t size, ink_image_t *out) {
     if (!out) return INK_IMAGE_ERROR;
     *out = (ink_image_t){0};
@@ -45,7 +107,46 @@ int ink_image_decode(const void *data, size_t size, ink_image_t *out) {
         }
         osal_cost_cycles((uint64_t)w * 64);
     }
+    ink_image_info_t info = {.orientation = 1};
+    jpeg_exif(data, size, &info);
+    if (info.orientation > 1) { /* upright into a new gray buffer, then the RGBA one goes */
+        unsigned o = info.orientation, W = o >= 5 ? (unsigned)h : (unsigned)w, H = o >= 5 ? (unsigned)w : (unsigned)h;
+        uint8_t *q = osal_malloc((size_t)w * h, OSAL_MEM_EXTERNAL);
+        if (!q) { osal_free(p); return INK_IMAGE_ERROR; }
+        for (unsigned y = 0; y < H; y++) {
+            for (unsigned x = 0; x < W; x++) q[(size_t)y * W + x] = p[source_at(o, x, y, (unsigned)w, (unsigned)h)];
+            osal_cost_cycles((uint64_t)W * 16);
+        }
+        osal_free(p); p = q; w = (int)W; h = (int)H;
+    }
     *out = (ink_image_t){(unsigned)w, (unsigned)h, p};
+    return INK_IMAGE_OK;
+}
+
+int ink_image_probe(const void *data, size_t size, ink_image_info_t *out) {
+    if (!out) return INK_IMAGE_ERROR;
+    *out = (ink_image_info_t){.orientation = 1};
+    const uint8_t *p = data;
+    if (!p) return INK_IMAGE_ERROR;
+    if (size > INK_IMAGE_PROBE_BYTES) size = INK_IMAGE_PROBE_BYTES;
+    if (size >= 3 && p[0] == 0xff && p[1] == 0xd8 && p[2] == 0xff) { out->format = INK_IMAGE_JPEG; jpeg_exif(p, size, out); }
+    else if (size >= 8 && !memcmp(p, "\x89PNG\r\n\x1a\n", 8)) out->format = INK_IMAGE_PNG;
+    else if (size >= 10 && (!memcmp(p, "GIF87a", 6) || !memcmp(p, "GIF89a", 6))) {
+        out->format = INK_IMAGE_GIF; out->width = p[6] | p[7] << 8; out->height = p[8] | p[9] << 8;
+    } else if (size >= 26 && p[0] == 'B' && p[1] == 'M') {
+        int32_t h = (int32_t)le32(p + 22);
+        out->format = INK_IMAGE_BMP; out->width = le32(p + 18); out->height = h < 0 ? 0u - (uint32_t)h : (uint32_t)h;
+    } else if (size >= 30 && !memcmp(p, "RIFF", 4) && !memcmp(p + 8, "WEBP", 4)) {
+        out->format = INK_IMAGE_WEBP;
+        if (!memcmp(p + 12, "VP8X", 4)) { out->width = 1 + (le32(p + 24) & 0xffffff); out->height = 1 + (le32(p + 27) & 0xffffff); }
+        else if (!memcmp(p + 12, "VP8 ", 4)) { out->width = (p[26] | p[27] << 8) & 0x3fff; out->height = (p[28] | p[29] << 8) & 0x3fff; }
+        else if (!memcmp(p + 12, "VP8L", 4) && size >= 25) { uint32_t b = le32(p + 21); out->width = (b & 0x3fff) + 1; out->height = (b >> 14 & 0x3fff) + 1; }
+    } else return INK_IMAGE_ERROR;
+    int w, h, channels;
+    if ((out->format == INK_IMAGE_JPEG || out->format == INK_IMAGE_PNG) && stbi_info_from_memory(p, (int)size, &w, &h, &channels)) {
+        out->width = (unsigned)w; out->height = (unsigned)h;
+    }
+    if (out->orientation >= 5) { unsigned t = out->width; out->width = out->height; out->height = t; }
     return INK_IMAGE_OK;
 }
 

@@ -142,3 +142,5 @@ set_source_files_properties(${root}/system/apps/files/files_flipper.c ${root}/sy
     "${root}/system/apps/files/flipper;${root}/system/apps/files/vendor/flipper;${root}/system/apps/files/vendor/flipper/helpers")
 set_source_files_properties(${root}/system/apps/files/flipper/flipper_unit.c TARGET_DIRECTORY __idf_ink_system PROPERTIES COMPILE_OPTIONS -w)
 endif()
+# gallery-3: the AgentUI gallery helpers behind a C interface, as the gomoku engine (IDF builds C++ without exceptions or RTTI).
+target_sources(${ink_system_lib} PRIVATE ${root}/system/apps/gallery/repository.cpp)
