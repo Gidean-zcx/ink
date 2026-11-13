@@ -6,7 +6,7 @@
 #include "ink/hal_input.h"
 #include "ink/sys/cap.h"
 #define INK_SCRIPT_MS(n) ((uint64_t)(n) * 1000000ull)
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB, A_HUB_CLOCK, A_RTC_LINE, A_HEADSET, A_AP, A_CAP } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB, A_HUB_CLOCK, A_RTC_LINE, A_HEADSET, A_AP, A_CAP, A_STALL } akind_t;
 
 typedef struct {
     uint64_t t;

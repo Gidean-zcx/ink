@@ -1267,11 +1267,33 @@ typedef struct {
     struct hal_ws *ws;
     uint64_t gen;
     sim_msg_t *m;
+    bool held; /* by a stall: delivered at its end */
 } arrival_t;
+
+/* Script "stall": nothing reaches the device until stall_until; what was due meanwhile comes then, in order (a
+ * delivery due exactly at the end waits behind the held ones). */
+static uint64_t g_stall_until;
+static int g_stall_held;
+
+void sim_net_stall(uint64_t ns) { /* ISR (script) */
+    uint64_t until = vtk_isr_now() + ns;
+    if (until > g_stall_until) g_stall_until = until;
+    sim_metric_add("net.stalls", 1);
+    sim_trace_span("net", "downlink stall", vtk_isr_now(), until, NULL);
+}
 
 static void deliver_cb(void *arg) { /* ISR */
     arrival_t *a = arg;
     struct hal_ws *w = a->ws;
+    if (a->held) {
+        a->held = false;
+        g_stall_held--;
+    } else if (vtk_isr_now() < g_stall_until || g_stall_held) {
+        a->held = true;
+        g_stall_held++;
+        vtk_event_at(vtk_isr_now() < g_stall_until ? g_stall_until : vtk_isr_now(), deliver_cb, a);
+        return;
+    }
     if (w->gen != a->gen || w->state != 1 || w->dead) {
         sim_host_free(a->m);
         sim_host_free(a);
@@ -1350,6 +1372,7 @@ void sim_net_hub_send(struct hal_ws *w, uint64_t t_send, const void *data, size_
     a->ws = w;
     a->gen = w->gen;
     a->m = m;
+    a->held = false;
     vtk_event_at(arrive, deliver_cb, a);
     N.bytes_down += len;
     N.msgs_down++;
