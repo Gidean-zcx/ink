@@ -1941,3 +1941,55 @@ language english 中文 英文	language english chinese
 %s%.36s，宜%.*s，忌%.*s。这些是民俗说法。	%s %.36s; Yi: %.*s; Ji: %.*s. These are folk traditions.
 这天	On this day,
 内存不足	Out of memory
+时钟和通知	Clock and notifications
+票根	Ticket
+拼贴	Collage
+数字时钟	Digital clock
+老黄历	Almanac
+万年历	Perpetual calendar
+迷你书库	Mini library
+时间、今天的安排、未读通知和家人	Time, today's plans, unread notifications and the family
+时间、下一个闹钟和通知数	Time, the next alarm and how many notifications
+选好的图片铺满屏幕	The chosen picture fills the screen
+上下两行的大时间	Large time on two lines
+时间、农历、待办和继续读	Time, lunar date, to-dos and continue reading
+这个月的日历和农历	This month's calendar with lunar dates
+正在读的书和今天读了多久	The book you are reading and how long you read today
+书架上的封面拼在一起	Covers from your shelf put together
+大号数字时间、日期和电量	Large digital time, date and battery
+今天的宜忌、冲煞和农历	Today's do's and don'ts, clash and lunar date
+整月日历、农历和宜忌	The whole month with lunar dates and do's and don'ts
+最近读的五本书，点一本接着读	The five books read last; tap one to go on reading
+封面	Cover
+随机	Random
+票根背景	Ticket background
+迷你书库显示	Mini library shows
+第 %d/%d 页	Page %d of %d
+页	Page
+解锁后显示	Shown after unlocking
+读书内容	Reading
+画面上写着	On the screen
+这个锁屏样式没画出来，先显示默认锁屏	This lock style could not be drawn; the default lock screen shows instead
+这个锁屏样式在这台设备上用不了	This lock style is not available on this device
+锁屏样式要用的字体还没放到卡上	The font the lock styles use is not on the card yet
+解锁一次后才能显示这个锁屏样式	Unlock once and this lock style can show
+公历	Gregorian
+干支	Stems and branches
+宜	Do
+忌	Avoid
+冲	Clash
+煞	Sha
+书名	Title
+作者	Author
+已读 %u%% · 第 %u 章	%u%% read · chapter %u
+书摘	Excerpt
+还没有读过的书，读过一本后这里显示票根	Nothing read yet; the ticket appears once you have read a book
+今日阅读	Read today
+书架拼贴没画出来，先显示默认锁屏	The shelf collage could not be drawn; the default lock screen shows instead
+书库暂不可用，请稍后重试	The library is not available; try again later
+还没有阅读记录	No reading yet
+书匣等你放入第一本书	Put your first book on the shelf
+%d月%d日 %s	%d/%d %s
+农历	Lunar
+无	None
+日历	Calendar

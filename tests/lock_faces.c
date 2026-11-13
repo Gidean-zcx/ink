@@ -106,6 +106,18 @@ static void touch(const char *text) {
     if (tx >= 0 && ty >= 0) tap(tx, ty);
     quiet();
 }
+/* lock-styles-1: the picker is a paged list; a style's row is turned to with the page buttons' own capability. */
+static void touch_face(const char *text) {
+    for (int page = 1; page <= 4; page++) {
+        wanted = text; on_ui(locate);
+        if (tx >= 0) break;
+        char args[24]; snprintf(args, sizeof args, "{\"page\":%d}", page % 4 + 1);
+        CHECK(BY_HAND("shell.lock_faces", args), "turn the picker"); quiet();
+    }
+    CHECK(tx >= 0 && ty >= 0, "row %s is on a page", text);
+    if (tx >= 0 && ty >= 0) tap(tx, ty);
+    quiet();
+}
 static void seed(void) {
     const ink_db_def_t *def = ink_db_find_def("memo.notes"); ink_db_t *db = ink_db_open(def, NULL);
     const char *note = "{\"body\":\"合成已完成\\n合成成人私密待办\",\"checklist\":true,\"checked\":1}";
@@ -137,10 +149,10 @@ static void matrix(void) {
             for (int face = 0; face < INK_LOCK_FACE_COUNT; face++) {
                 setting("display.lock_style", face); on_ui(render); quiet();
                 if (face == 1 && background) { on_ui(image_pixels); CHECK(pixels_ready, "legacy minute clock overlays the selected PNG"); }
-                if (face >= INK_LOCK_STANDBY) CHECK(WAIT_FOR(has("合成成人私密待办"), 15000), "current owner sees unchecked memo");
+                if (face >= INK_LOCK_STANDBY && face < INK_LOCK_DRAWN) CHECK(WAIT_FOR(has("合成成人私密待办"), 15000), "current owner sees unchecked memo");
                 on_ui(unchanged);
                 char name[64]; snprintf(name, sizeof name, "face-%d-size-%d-bg-%d", face, size, background); frame(name);
-                if (face >= INK_LOCK_STANDBY) {
+                if (face >= INK_LOCK_STANDBY && face < INK_LOCK_DRAWN) {
                     CHECK(has(reading_shown) && !strstr(snapshot, "合成已完成"), "same reading card and unfinished checklist (%s)", reading_shown);
                     wanted = "合成成人私密待办"; on_ui(locate);
                 }
@@ -156,7 +168,7 @@ static void picker(void) {
         CHECK(!strcmp(ink_ui_page_name(), "LockFaces"), "settings row opens the face picker without cycling");
         char name[64]; snprintf(name, sizeof name, "picker-size-%d", size); frame(name);
         for (int face = 0; face < INK_LOCK_FACE_COUNT; face++) {
-            touch(ink_lock_face_choices[face]);
+            touch_face(ink_lock_face_choices[face]);
             CHECK(ink_setting_get("display.lock_style") == face && has("已选择"), "tap selects face %d", face);
             CHECK(BY_HAND("shell.lock", NULL), "lock after selecting face %d", face); quiet();
             CHECK(has(ink_lock_face_choices[face]), "real lock shows selected face %d", face);
@@ -168,8 +180,8 @@ static void picker(void) {
             CHECK(has(ink_lock_face_choices[other]), "AI and touch share face definitions");
             key(HAL_KEY_POWER); quiet();
         }
-        touch("锁屏显示待办"); CHECK(ink_setting_get("display.lock_todo") == (size == 1), "picker toggles to-dos");
-        touch("锁屏继续读"); CHECK(ink_setting_get("display.lock_reading") == (size == 1), "picker toggles reading");
+        touch_face("锁屏显示待办"); CHECK(ink_setting_get("display.lock_todo") == (size == 1), "picker toggles to-dos");
+        touch_face("锁屏继续读"); CHECK(ink_setting_get("display.lock_reading") == (size == 1), "picker toggles reading");
     }
     CHECK(BY_HAND("system.home", NULL), "leave the picker"); quiet();
 }

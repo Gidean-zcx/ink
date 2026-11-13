@@ -218,7 +218,7 @@ static void run(void *arg) {
         CHECK(ink_setting_get("display.lock_style") == 0, "selecting an image does not force the clock style");
         press("锁屏时显示");
         CHECK(!strcmp(ink_ui_page_name(), "LockFaces") && ink_setting_get("display.lock_style") == 0, "lock settings open the picker without changing style");
-        static const char *const styles[] = {"这一页", "时钟和待办", "壁纸", "简约时钟", "待机时钟", "月历"};
+        static const char *const styles[] = {"时钟和通知", "时钟和待办", "壁纸", "简约时钟", "待机时钟", "月历"};
         for (int style = 0; style < 6; style++) {
             press(styles[style]);
             CHECK(ink_setting_get("display.lock_style") == style, "picker selects the requested style");

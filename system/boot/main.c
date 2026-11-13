@@ -48,6 +48,7 @@ extern const ink_app_def_t ink_appdef_home, ink_appdef_mogo;
 int ink_system_actions_init(void);
 void ink_factory_reset_resume(void);
 int ink_mogo_init(void);
+int ink_mogo_lock_init(void);
 int ink_remote_init(void);
 int ink_ui_lock_mark_init(void);
 int ink_shell_interrupt_card_init(void);
@@ -98,6 +99,7 @@ void ink_main(void) {
     MUST(ink_apps_init(), "app directory failed to start"); MUST(ink_app_register(&ink_appdef_home), "app directory failed to start"); 
     /* The reader (D-139); its init also registers the old reader's bookmark collection, so restoring an older backup keeps it. */
     MUST(ink_mogo_init(), "reader failed to start"); MUST(ink_app_register(&ink_appdef_mogo), "reader failed to start");
+    MUST(ink_mogo_lock_init(), "lock styles failed to start"); /* lock-styles-1: the lock styles the reader's code draws */
     MUST(ink_card_files_init(), "card files failed to start");
     if (ink_contacts_init() != 0) osal_panic("contacts failed to start");
     if (ink_phone_init() != 0) osal_panic("phone failed to start");

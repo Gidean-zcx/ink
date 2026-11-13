@@ -545,6 +545,51 @@
       "path": "tools/zip_host_stubs/miniz.h",
       "sha256": "8f07eba673882bd33ee8f977047d3d8cf83d9d34dcfcb3a822fa56162f0d6a51",
       "bytes": 2120
+    },
+    {
+      "path": "main/book/book_cover.c",
+      "sha256": "ded0599e091c511c6c655be2a090e12586d94b4fcf04cf9bf22df30a953b4cda",
+      "bytes": 17353
+    },
+    {
+      "path": "main/book/book_cover_auto.c",
+      "sha256": "98b18eeab5bd9eb719dc234ef4dcd89850d3bb9d9a21718a8ba4247ebf27b1ae",
+      "bytes": 14818
+    },
+    {
+      "path": "main/book/book_cover_auto.h",
+      "sha256": "9380a935307fecf0e1eb3532935ac300df72e439e2379d6d80219c3d6b08975c",
+      "bytes": 1196
+    },
+    {
+      "path": "main/book/book_excerpt.c",
+      "sha256": "ae0420947213cae6d1121a2e8279522f66bfe09ef4b6504de41ec370290a3ff8",
+      "bytes": 12066
+    },
+    {
+      "path": "main/book/book_excerpt.h",
+      "sha256": "56e225ce1eeb49d31852b1ff3c70bae46237666bb0b24b68b19f7b68b75cea74",
+      "bytes": 1949
+    },
+    {
+      "path": "main/book/book_title.c",
+      "sha256": "52e510aadfc3b4f357beb885fc0c475be594824c28d9afa11fa8cf7115386cbe",
+      "bytes": 5210
+    },
+    {
+      "path": "main/book/book_title.h",
+      "sha256": "d715595f614dd197d6fe3601163d7ce60f03e2daf92a9685e5c2d165db6be9bf",
+      "bytes": 896
+    },
+    {
+      "path": "main/book/book_metadata.c",
+      "sha256": "28be0a480d84d8a2d2e86b76ebde3736d1d311c50116d95d85989f1ea5738f7e",
+      "bytes": 1554
+    },
+    {
+      "path": "main/book/book_metadata.h",
+      "sha256": "386e300f0e4548eb8191486788e252f33945452103176e6038bac4cc37960006",
+      "bytes": 708
     }
   ]
 }

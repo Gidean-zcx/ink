@@ -1,5 +1,6 @@
 /* Locked: a cover with the time, today's next thing, unread counts by kind and the family (D-135); or a chosen face. */
 /* ui-scale-runtime: dimension date_y Keep the date below the emergency control using theme spacing. */
+/* ui-scale-runtime: dimension ew The emergency call's width from its own words at the current text size. */
 /* ui-scale-runtime: dimension y,x,w,row,top,bottom,cell,x0,inset Cover rows follow theme line heights; avatars share the width. */
 /* ui-scale-runtime: font font Centered cover lines receive theme font tokens. */
 #include <stdio.h>
@@ -54,15 +55,16 @@ static void act(lv_event_t *e, const ink_ui_action_spec_t *actions, size_t count
 }
 static void camera_clicked(lv_event_t *e) { act(e, ACTIONS, 2); }
 static void avatar_clicked(lv_event_t *e) { act(e, C.actions, C.nactions); }
-static void camera_button(void) {
+static void camera_at(int x, int y) {
     if (!ink_cap_find("camera.capture")) return;
-    lv_obj_t *b = ink_ui_circle(g_mark, "camera", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR + INK_GAP,
-        INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_WHITE, camera_clicked, "camera");
+    lv_obj_t *b = ink_ui_circle(g_mark, "camera", x, y, INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_WHITE, camera_clicked, "camera");
     lv_obj_set_style_border_width(b, ink_ui_px(INK_STROKE), 0);
     ink_shell_bind(b, ACTIONS[1].capability, ACTIONS[1].args_json);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
 }
+static void camera_button(void) { camera_at(INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR + INK_GAP); }
 static const char *mark_text(void) {
+    if (ink_lock_face_why()) return ink_lock_face_why(); /* a drawn style that cannot show says why (D-138) */
     return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? TR("正在听，按电源键或 AI 键唤醒") : TR("已锁定，按电源键或 AI 键唤醒");
 }
 
@@ -244,7 +246,8 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
-    bool face = ink_setting_get("display.lock_style") >= INK_LOCK_SIMPLE;
+    int style = (int)ink_setting_get("display.lock_style");
+    bool face = style >= INK_LOCK_SIMPLE && ink_lock_face_ready(style); /* a drawn style not ready yet: the default first */
     g_mark = lv_obj_create(lv_layer_sys());
     lv_obj_remove_style_all(g_mark);
     lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
@@ -252,9 +255,17 @@ static void show(void) {
     lv_obj_add_flag(g_mark, LV_OBJ_FLAG_CLICKABLE);
     if (face) {
         lv_obj_set_style_bg_color(g_mark, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);
-        if (ink_setting_get("display.lock_background")) ink_wallpaper_draw(g_mark);
-        ink_lock_face_draw(g_mark, (int)ink_setting_get("display.lock_style"));
-        ink_shell_statusbar(g_mark, false); camera_button(); ink_shell_emergency_button(g_mark, false);
+        if (ink_setting_get("display.lock_background") && style < INK_LOCK_DRAWN) ink_wallpaper_draw(g_mark);
+        ink_lock_face_draw(g_mark, style);
+        ink_shell_statusbar(g_mark, false);
+        if (style >= INK_LOCK_DRAWN) { /* a drawn style fills the page under the bar: emergency call and camera sit in the bar */
+            int ew = ink_ui_text_width(TR("紧急呼叫"), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * INK_GAP;
+            lv_obj_t *e = ink_ui_pill(g_mark, TR("紧急呼叫"), INK_MARGIN, 0, ew, INK_CONTROL, false, NULL, NULL);
+            ink_ui_pill_text(e, INK_FONT_NOTE, INK_WEIGHT_MEDIUM); ink_shell_bind(e, ACTIONS[0].capability, NULL);
+            camera_at(INK_MARGIN + ew + INK_GAP, 0);
+            ink_ui_overlay_add(&OVERLAY, g_mark); changed(); ink_ui_hint_obj(g_mark, INK_REFRESH_UI); return;
+        }
+        camera_button(); ink_shell_emergency_button(g_mark, false);
         g_label = ink_ui_notice(g_mark, mark_text(), INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE));
         lv_obj_set_style_bg_color(g_label, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(g_label, LV_OPA_COVER, 0);
         ink_ui_overlay_add(&OVERLAY, g_mark); changed(); ink_ui_hint_obj(g_mark, INK_REFRESH_UI); return;
@@ -373,6 +384,19 @@ static void on_member(void *ctx, int h, const char *id) {
     else if (g_mark) { hide(); show(); }
     ink_lock_face_resume();
 }
+/* A drawn style finished: in place (0), instead of the default lock (1), or only the reason under it changed (2). */
+static void face_changed(int how) {
+    if (!g_mark) return;
+    if (how == 0) { changed(); return; }
+    if (how == 2) {
+        if (!g_label || !strcmp(lv_label_get_text(g_label), mark_text())) return;
+        lv_label_set_text(g_label, mark_text()); changed(); ink_ui_hint_obj(g_label, INK_REFRESH_TEXT); return;
+    }
+    ink_ui_overlay_remove(&OVERLAY); ink_lock_face_clear(); /* not hide(): no unlock is being timed */
+    lv_obj_delete(g_mark); g_mark = g_clock = g_label = g_date = g_alarm = g_notice = g_next = g_rows = NULL;
+    C.shown = 0; C.nactions = 0;
+    show();
+}
 static void on_style(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (g_mark) { hide(); show(); } }
 static void on_unread(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (g_next) fill_rows(false); }
 static void on_audio(void *ctx, int h, const char *id) {
@@ -391,6 +415,8 @@ int ink_ui_lock_mark_init(void) {
     if (ink_state_watch("member.", on_member, NULL, INK_EXEC_UI) || ink_settings_watch("display.lock_", on_style, NULL, INK_EXEC_UI)) return -1;
     if (ink_state_watch("media.state", on_audio, NULL, INK_EXEC_UI) || ink_state_watch("audio.now_playing", on_audio, NULL, INK_EXEC_UI)) return -1;
     if (ink_power_add_busy_check(ink_ui_busy) != 0 || ink_power_add_busy_check(minute_due) != 0 || ink_state_watch("time.minute", on_minute, NULL, INK_EXEC_UI) != 0) return -1;
+    if (ink_power_add_busy_check(ink_lock_face_busy) != 0) return -1; /* after ink_ui_busy: a render the UI starts is seen */
     if (ink_cap_subscribe("time.changed", on_time, NULL, INK_EXEC_UI)) return -1;
+    ink_lock_face_hook(face_changed);
     return ink_power_subscribe(on_power, NULL);
 }
