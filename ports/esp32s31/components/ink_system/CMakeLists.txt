@@ -14,6 +14,9 @@ target_compile_definitions(${COMPONENT_LIB} PRIVATE INK_PSRAM_BSS=EXT_RAM_BSS_AT
 # The two codec translation units include upstream stb implementations.
 set_source_files_properties(${root}/system/services/media/image_codec.c ${root}/system/apps/camera/png.c
     PROPERTIES COMPILE_OPTIONS -w)
+# The copied ZSWatch recording screen and its glue only: Zephyr-shaped shim headers (system/apps/memo/vendor/zswatch/SOURCE.md).
+set_source_files_properties(${root}/system/apps/memo/memo_voice.c ${root}/system/apps/memo/vendor/zswatch/voice_memo_ui.c PROPERTIES INCLUDE_DIRECTORIES
+    "${root}/system/apps/memo/vendor/zswatch/port;${root}/system/apps/memo/vendor/zswatch")
 set_source_files_properties(${quirc_sources} PROPERTIES COMPILE_OPTIONS "-include;${root}/system/apps/camera/quirc_alloc.h;-w")
 file(GLOB_RECURSE ui_sources ${root}/system/ui/*.c ${root}/system/apps/*.c ${root}/system/apps/*.cpp)
 # Keep the installer at -O2: -Os exposes existing path truncation diagnostics.
@@ -33,6 +36,7 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     ${root}/system/apps/calculator/calculator.c ${root}/system/apps/camera/camera.c
     ${root}/system/apps/contacts/contacts.c ${root}/system/apps/gallery/gallery.c
     ${root}/system/apps/memo/memo.c ${root}/system/apps/phone/phone.c ${root}/system/apps/phone/vendor/lilyphone/call_card.c
+    ${root}/system/apps/memo/memo_voice.c ${root}/system/apps/memo/vendor/zswatch/voice_memo_ui.c
     ${root}/system/apps/remote/remote.c ${root}/system/apps/sms/sms.c
     ${root}/system/apps/weather/weather.c ${root}/system/apps/camera/scan.c
   ${root}/system/ui/shell/activity_card.c

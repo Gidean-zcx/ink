@@ -149,6 +149,9 @@ static const struct {
     {"time.almanac", ""},
     {"music.mode", "mode"}, {"music.favorites", NULL}, /* music-3 */
     {"phone.detail", "id"}, {"phone.delete", "id"}, {"phone.clear", NULL}, /* phone-3 */
+    {"memo.search", "query"}, {"memo.find", "id"}, {"memo.find_next", NULL}, {"memo.find_prev", NULL}, {"memo.find_close", NULL},
+    {"memo.add_item", "id,text"}, {"memo.edit_item", "id,index,text"}, {"memo.delete_item", "id,index"}, {"memo.move_item", "id,index,to"},
+    {"memo.clear_done", "id"}, {"memo.uncheck_all", "id"}, {"memo.set_due", "id"}, {"memo.show_done", "id"},
     {NULL, NULL},
 };
 

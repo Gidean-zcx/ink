@@ -1115,7 +1115,8 @@ int ink_db_import(ink_db_t *db, const void *data, size_t len, uint32_t expected_
     memcpy(&h, data, sizeof h);
     const uint8_t *buf = data;
     uint32_t crc = ink_crc32(0, &h, offsetof(snap_hdr_t, crc));
-    if (h.magic != SNAP_MAGIC || h.format != SNAP_FORMAT || h.schema != db->def->schema || !h.next_id ||
+    /* Each record keeps its own schema: a backup from an older schema of the collection restores (memo.notes 1 -> 2). */
+    if (h.magic != SNAP_MAGIC || h.format != SNAP_FORMAT || h.schema > db->def->schema || !h.next_id ||
         ink_crc32(crc, buf + sizeof h, len - sizeof h) != h.crc) return -1;
     ink_db_t *fresh = osal_malloc(sizeof *fresh, OSAL_MEM_EXTERNAL);
     uint8_t *copy = osal_malloc(len, OSAL_MEM_EXTERNAL);

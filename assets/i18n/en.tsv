@@ -2028,3 +2028,45 @@ language english 中文 英文	language english chinese
 通话结束	Call ended
 通话记录暂时读不到	Call history cannot be read now
 通话详情	Call details
+# memo-3
+%d月%d日 %d:%02d	%d/%d %d:%02d
+%s 到期	Due %s
+%u 分钟	%u min
+%u/%u 已完成	%u/%u done
+上一个	Previous
+不到 1 分钟	Under 1 min
+全部取消勾选	Uncheck all
+共 %d 处	%d matches
+删掉已完成	Delete done
+删除这一项	Delete item
+到期	Due
+加一项	Add item
+已删掉已完成的项 · 撤销	Done items deleted · Undo
+已完成 %u 项	%u done
+已清除搜索	Search cleared
+已过期	Overdue
+录于 %d月%d日 %02d:%02d · 连上网后整理成文字	Recorded %d/%d %02d:%02d · Turned into text once online
+找到 %u 条	%u found
+提醒没设上，点这里重试	Reminder not set, tap to retry
+搜索备忘	Search notes
+改	Edit
+改文字	Edit text
+新清单	New list
+昨天	Yesterday
+正在保存录音	Saving recording
+没有到期	No due date
+没有找到	Not found
+清单是空的	The list is empty
+清单最多 32 项	At most 32 items
+清除到期	Clear due date
+清除搜索	Clear search
+移到最上	Move to top
+移到最下	Move to bottom
+第 %d 处，共 %d 处	%d of %d
+设到期时间	Set due date
+设好了	Done
+还能录约 %u 分钟	About %u min left
+这一项	This item
+连上网后整理成文字	Turned into text once online
+提醒没设上	Reminder not set
+有一条备忘没存上 · 重试	A memo was not saved · Retry

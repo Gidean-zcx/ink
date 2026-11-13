@@ -21,17 +21,17 @@ binary = build / "sim-memo"
 if args.mutant:
     source = (ROOT / "system/apps/memo/memo.c").read_text()
     old, new = {
-        "member": ("ink_db_open_member(&MEMOS, ink_cap_call_member(c))", 'ink_db_open_member(&MEMOS, "owner")'),
-        "write": ("ink_db_put(db, &wr, NULL)", "(save ? 0 : ink_db_put(db, &wr, NULL))"),
+        "member": ("ink_db_open_member(&MEMOS, ink_cap_call_member(c));\n    memo_t *n = ink_app_alloc(sizeof *n, true); char *raw", 'ink_db_open_member(&MEMOS, "owner");\n    memo_t *n = ink_app_alloc(sizeof *n, true); char *raw'),
+        "write": ("ink_db_put(db, &wr, NULL)", "(n->draft ? 0 : ink_db_put(db, &wr, NULL))"),
         "failure": ("if (rc->status != INK_RC_DONE && M.field && M.mode == EDIT)",
                     "if (false && rc->status != INK_RC_DONE && M.field && M.mode == EDIT)"),
         "undo": ("rec.ver > undo_ver", "rec.id > undo_ver"),
         "draft-session": ("save_failed(true);", "ink_ui_push(&PAGES[FAIL], (void *)(uintptr_t)M.id);"),
         "resume": ("else if (rc->status == INK_RC_DONE && M.field && M.mode == FAIL)",
                    "else if (false && rc->status == INK_RC_DONE && M.field && M.mode == FAIL)"),
-        "checks": ("n->checked = remap_checks(raw, n->body, n->checked)", "(void)remap_checks(raw, n->body, n->checked)"),
-        "long-item": ('bool truncated = M.mode == CHECKLIST && strcspn(text, "\\n") > len', "bool truncated = false"),
-        "final-save": ("if (M.field && M.mode != FAIL && ink_ui_page_current()", "if (false && M.field && M.mode != FAIL && ink_ui_page_current()"),
+        "checks": ("n->checked = remap_checks(raw, n->body, n->checked, n)", "(void)remap_checks(raw, n->body, n->checked, n)"),
+        "long-item": ('snprintf(M.labels[0], sizeof M.labels[0], "%.*s", (int)len, text);', 'snprintf(M.labels[0], sizeof M.labels[0], "%.*s", (int)LV_MIN(len, 24), text);'),
+        "final-save": ("if (M.field && !flush_note(M.mode == FAIL)) {", "if (0 && !flush_note(M.mode == FAIL)) {"),
     }[args.mutant]
     assert source.count(old) == 1
     source = source.replace(old, new)

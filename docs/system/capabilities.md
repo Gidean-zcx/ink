@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 536 项：可调用能力 494、事件 42；设置 41 项、状态 60 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 549 项：可调用能力 507、事件 42；设置 41 项、状态 60 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -237,18 +237,31 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `member.time_get` | 查看孩子今天的用时和每天的时长 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.time_set` | 改孩子每天能用多久 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人、儿童（无需白名单） | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.unlock` | 输密码进入家人的空间（只能在设备上） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
+| `memo.add_item` | 清单加一项（多行就是多项，最多 32 项；id 是新的就建一条清单） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.check` | 勾选或取消清单项 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.clear_done` | 删掉清单里已完成的项（可撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.convert` | 逐行转成清单（最多 32 项） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.delete` | 删除备忘（可撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.edit` | 写一条或编辑备忘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.delete` | 删除备忘（可撤销，到期提醒一起删） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.delete_item` | 删除清单这一项 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.edit` | 写一条或编辑备忘（checklist：新清单） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.edit_item` | 改清单这一项的文字 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find` | 在这条备忘里查找（打开查找条，停在第 1 处） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find_close` | 关闭这条备忘里的查找 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find_next` | 这条备忘里查找：下一处（到最后回到第 1 处） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.find_prev` | 这条备忘里查找：上一处 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.move_item` | 把清单这一项移到最上或最下 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.next` | 备忘下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.open` | 查看备忘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.open` | 查看备忘（query：停在这条里的第 1 处；index：清单的这一项；due：到期时间页） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.play` | 播放语音备忘的录音 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.prev` | 备忘上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.record` | 说一句：录一条语音备忘（联网后整理成文字） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.retry` | 重试记下备忘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.save` | 记下当前成员的长文草稿 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
-| `memo.undo` | 撤销删除备忘 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.search` | 搜全部备忘（标题和正文，不分大小写；空串清除搜索） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.set_due` | 设到期时间（at 本地时间 YYYY-MM-DD HH:MM，空或不给就清除；到期前提醒；index 是清单的项，文本备忘不给） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.show_done` | 清单里已完成的项：展开或收起 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.uncheck_all` | 清单全部取消勾选 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.undo` | 撤销删除备忘，或撤销刚才删掉已完成的清单项 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.voice` | 把录好的音存成语音备忘，或填上中枢整理的文字 | 仅人（设备） | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `message.list` | 最近的短信 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `message.send` | 发短信 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
@@ -626,7 +639,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：`net.online`。
+状态：`audio.recording`、`net.online`、`storage.free`。
 
 事件：`audio.record_done`。
 
