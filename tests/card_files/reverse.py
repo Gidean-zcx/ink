@@ -19,10 +19,10 @@ MUTATIONS = [
     ("no-restart-after-bad-resume", CF, "for (int again = 0; again < 2; again++)", "for (int again = 0; again < 1; again++)", ["E2"]),
     ("any-answer-is-serve", CF, 'if (n > 0 && !strncmp(CF.line, "INKCF1 SERVE ", 13) && !strcmp(CF.line + 13, INK_CARD_FILES_DIGEST)) return 0;',
      "if (n > 0) return 0;", ["G"]),
-    ("no-reader-notice", MOGO, "else if (ink_mogo_font_missing) { /* not a blank page */", "else if (0 && ink_mogo_font_missing) {", ["A"]),
+    ("no-reader-notice", MOGO, "if (M.reason == INK_MOGO_R_FILES) { /* the font", "if (0) { /* the font", ["A"]),
     ("done-ok-without-install", CF, "return CF.st[i] == E_OK ? D_OK : CF.stop ? D_IO : D_KEPT;", "return D_OK;", ["J"]),
     ("notice-holds-the-file", CF, " || ink_card_files_notice_snapshot(app, NULL, 0) > 0", "", ["I"]),
-    ("reopen-by-redraw", MOGO, "static void ink_mogo_reopen(void) { ink_mogo_start(NULL,0,NULL); }", "static void ink_mogo_reopen(void) { ink_ui_redraw(); }", ["H"]),
+    ("reopen-by-redraw", MOGO, "static void ink_mogo_reopen(void) {\n", "static void ink_mogo_reopen(void) { ink_ui_redraw(); return;\n", ["H"]),
     ("tool-ignores-get-hash", SERVE, '        if sha != e["sha256"]:\n            return f"{PREFIX}NO {idx} sha"\n', "", ["serve"]),
 ]
 

@@ -1,5 +1,5 @@
 # Desktop simulator, headless (SDL dummy video driver): boot the device in the window, open the
-# shelf (the 阅读 favourite on the one-page home, D-135) and a book with mouse clicks on the panel, turn the page
+# shelf (the 阅读 favourite on the one-page home, D-135) and its first book (D-139 shelf rows) with mouse clicks on the panel, turn the page
 # with the NEXT cover key, and check that the system saw it all. The clicks go through the window's own input path (--gui-click at
 # window points; the layout is fixed for the 1400x940 headless window). Real-time speed: a click's
 # press and release reach the system a window frame apart, so at --speed 4 a slow runner's frames
@@ -19,7 +19,7 @@ foreach(attempt 1 2)
   file(REMOVE_RECURSE ${dir})
   execute_process(
     COMMAND ${GUI} --data ${dir} --speed 1 --no-random-outages
-            --gui-click 389,657@1 --gui-click 590,386@3 --gui-click 498,207@6 --gui-click 481,657@12
+            --gui-click 389,657@1 --gui-click 590,386@3 --gui-click 498,241@6 --gui-click 481,657@12
             --gui-exit-after 16 --gui-screenshot ${dir}/window.png
     RESULT_VARIABLE rc OUTPUT_VARIABLE out ERROR_VARIABLE err)
   if(NOT rc EQUAL 0)

@@ -109,7 +109,7 @@ static void check_apps(void) {
 }
 static void check_home(void) {
     inspect();
-    CHECK(strstr(view, "页面=KidHome") && strstr(view, "第 2 页") && !strstr(view, "第 4 页"), "KidHome shows only the child's provider reading position");
+    CHECK(strstr(view, "页面=KidHome") && strstr(view, "第三章") && !strstr(view, "第七章"), "KidHome shows only the child's provider reading position");
     CHECK(strstr(view, "今天不限时"), "KidHome reads the actual unlimited policy");
     wanted = "今天不限时"; find();
     lv_area_t time_area = {0}, tile = {0};
@@ -190,9 +190,9 @@ static void expired_apps(void) {
 }
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
-    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", "{\"page\":4}");
-    on_ui(home); quiet(); on_ui(inspect);
-    CHECK(strstr(view, "页面=Main") && strstr(view, "第 4 页"), "adult Main name stays unchanged, with the adult's book");
+    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_chapter", "{\"chapter\":7}");
+    on_ui(home); quiet();
+    CHECK(WAIT_FOR((on_ui(inspect), strstr(view, "第七章") != NULL), 5000) && strstr(view, "页面=Main"), "adult Main name stays unchanged, with the adult's book");
     call_ok("shell.today_edit", NULL); call_ok("shell.today_card", "{\"card\":\"listen:resume\"}"); call_ok("shell.back", NULL);
     call_ok("shell.apps", NULL); on_ui(inspect);
     bool files = false, remote = false, settings = false;
@@ -204,8 +204,8 @@ static void run(void *arg) {
     }
     CHECK(!strncmp(view, "Apps；", strlen("Apps；")) && files && remote && settings, "adult Apps retains its original entries and name");
     CHECK(ink_member_switch("kid") == 0, "enter the child's actual member space"); quiet();
-    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", "{\"page\":2}");
-    on_ui(home); quiet();
+    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_chapter", "{\"chapter\":3}");
+    on_ui(home); quiet(); WAIT_FOR((on_ui(inspect), strstr(view, "第三章") != NULL), 5000); /* the card follows the close */
     /* The child's own six: a full home refuses a seventh, one off makes room (shell.favorite, as the long press). */
     CHECK(AI("shell.favorite", "{\"id\":\"listen\"}") && g_rc.status == INK_RC_REJECTED, "a seventh favourite is refused, nothing replaced");
     call_ok("shell.favorite", "{\"id\":\"clock\"}"); call_ok("shell.favorite", "{\"id\":\"listen\"}");

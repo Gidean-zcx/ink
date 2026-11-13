@@ -329,23 +329,17 @@ target_compile_features(ink_system PRIVATE cxx_std_20)
 set(CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES FALSE)
 set_source_files_properties(system/apps/gomoku/vendor/crossmux/GomokuAI.cpp PROPERTIES COMPILE_OPTIONS -Wno-shadow)
 
-add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
+add_library(ink_apps STATIC apps/home/home.c)
 target_link_libraries(ink_apps PUBLIC ink_system)
 target_compile_options(ink_apps PRIVATE ${INK_WARN})
-include(apps/reader/reader_build.cmake)
-ink_reader_build(ink_apps ink_system ink_lvgl)
 # The existing inflater; the HAL supplies its PSRAM output and workspace.
-add_library(ink_miniz STATIC ${reader_third_party}/reader_miniz/miniz.c)
+add_library(ink_miniz STATIC third_party/reader_miniz/miniz.c)
 target_include_directories(ink_miniz PUBLIC third_party PRIVATE system/include platform/include)
 target_compile_definitions(ink_miniz PUBLIC MINIZ_NO_MALLOC MINIZ_NO_ZLIB_APIS MINIZ_NO_ARCHIVE_APIS
   MINIZ_NO_STDIO MINIZ_NO_TIME MINIZ_NO_DEFLATE_APIS mz_version=ink_asset_mz_version
   miniz_def_alloc_func=ink_asset_alloc miniz_def_realloc_func=ink_asset_realloc miniz_def_free_func=ink_asset_free)
 target_compile_options(ink_miniz PRIVATE -w)
 target_link_libraries(ink_port_sim PRIVATE ink_miniz)
-add_executable(sim-reader-epub simulator/runtime/sim_main.c tests/reader_epub/device.c)
-target_include_directories(sim-reader-epub PRIVATE tests apps/reader)
-target_link_libraries(sim-reader-epub PRIVATE ink_apps ink_system ink_port_sim)
-target_compile_options(sim-reader-epub PRIVATE ${INK_WARN})
 
 # The product: ink_main() starts the services and the apps (the composition root).
 add_library(ink_boot STATIC system/boot/main.c)
@@ -361,12 +355,7 @@ add_custom_target(ink_sample ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/sample
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/assets/sample/welcome.txt ${INK_ASSETS_DIR}/sample/welcome.txt)
 find_package(Python3 COMPONENTS Interpreter)
-add_test(NAME reader-epub COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/run.py --build ${CMAKE_BINARY_DIR})
-add_test(NAME reader-epub-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR})
-add_test(NAME reader-epub-segments COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR} --segments)
-add_test(NAME reader-epub-toc-save-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR} --unsaved-toc)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
-ink_reader_translations(INK_I18N_TABLES)
 include(apps/mogo/translations.cmake)
 set(INK_HAVE_FONTS OFF)
 set(INK_RAW_FONTS_DIR ${CMAKE_BINARY_DIR}/assets-raw/fonts) # the same faces uncompressed (INKF v1), for tests/font_pack
@@ -485,7 +474,7 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
 file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
 list(APPEND INK_I18N_SOURCES ${INK_I18N_SERVICES})
-list(APPEND INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/apps/home/home.c ${CMAKE_SOURCE_DIR}/apps/reader/reader.c
+list(APPEND INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/apps/home/home.c ${CMAKE_SOURCE_DIR}/apps/mogo/mogo.c
   ${CMAKE_SOURCE_DIR}/system/include/ink/sys/ai.h ${CMAKE_SOURCE_DIR}/system/ui/shell/member_pages.h ${CMAKE_SOURCE_DIR}/system/text/i18n.c)
 list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/activity_card.c
@@ -1048,7 +1037,6 @@ add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
   --out ${CMAKE_BINARY_DIR}/test-out/hub --end 3s --quiet --no-random-outages)
 set_tests_properties(hub-export-caps PROPERTIES FIXTURES_SETUP hub-caps)
 ink_sim_executable(sim-capability-inventory tests/capability_table/export.c)
-target_compile_definitions(sim-capability-inventory PRIVATE INK_MOGO_SIM=1)
 target_link_libraries(sim-capability-inventory PRIVATE ink_apps ink_system)
 if(INK_HAVE_FONTS)
   add_dependencies(sim-capability-inventory ink_fonts ink_test_content)
@@ -1556,7 +1544,7 @@ if(INK_HAVE_FONTS)
     COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.budget.json
-            --assets ${INK_ASSETS_DIR} --content ${CMAKE_SOURCE_DIR}/tests/fixtures/content-bad
+            --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/content-bad
             --out ${CMAKE_BINARY_DIR}/test-out/reader_empty-metalio-plus --quiet --trace --frames --no-random-outages)
   # PQ-BN direct drive (research PR #7) on the same scenarios and budgets, plus its flash pause
   add_test(NAME scenario-reader_basic-metalio-plus-pqbn
@@ -2209,6 +2197,23 @@ target_include_directories(sim-google-ime PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-google-ime PRIVATE ink_apps ink_system)
 add_dependencies(sim-google-ime ink_fonts ink_ui_fonts ink_icons ink_test_content)
 add_test(NAME ime-google COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/google_run.py --build ${CMAKE_BINARY_DIR})
+# The reader's font in the test content, where the device has it on the card: the card files' own bundle (fonts/InkSC.ttf
+# with its OFL), so tests that open a book have it and the boot check finds it in place.
+if(INK_HAVE_FONTS)
+  add_custom_command(OUTPUT ${INK_TEST_CONTENT}/fonts/InkSC.ttf
+    COMMAND ${CMAKE_COMMAND} -E copy ${INK_CARD_FILES_DIR}/files/0 ${INK_TEST_CONTENT}/fonts/InkSC.ttf
+    COMMAND ${CMAKE_COMMAND} -E copy ${INK_CARD_FILES_DIR}/files/1 ${INK_TEST_CONTENT}/fonts/InkSC.OFL.txt
+    DEPENDS ${INK_CARD_FILES_DIR}/manifest.json ${INK_TEST_CONTENT}/books/测试长书.txt COMMENT "test content: the reader's font")
+  add_custom_target(ink_reader_font ALL DEPENDS ${INK_TEST_CONTENT}/fonts/InkSC.ttf)
+  add_dependencies(ink_assets ink_reader_font)
+  # The one empty book with the reader's font, as a card would have it: it fails as a book, not as a missing font.
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/content-bad/fonts/InkSC.ttf
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/fixtures/content-bad ${CMAKE_BINARY_DIR}/content-bad
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${INK_TEST_CONTENT}/fonts ${CMAKE_BINARY_DIR}/content-bad/fonts
+    DEPENDS ${INK_TEST_CONTENT}/fonts/InkSC.ttf COMMENT "test content: the empty book with the reader's font")
+  add_custom_target(ink_content_bad ALL DEPENDS ${CMAKE_BINARY_DIR}/content-bad/fonts/InkSC.ttf)
+  add_dependencies(ink_assets ink_content_bad)
+endif()
 
 # Card files (auto-provision-1, D-138): the list's tool, the device's protocol, the install tool, the whole product over boots.
 add_test(NAME card-files-tool COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/tool_test.py --build ${CMAKE_BINARY_DIR})
@@ -2220,7 +2225,6 @@ add_test(NAME card-files-unit COMMAND test-card-files-unit)
 add_test(NAME card-files-serve COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/serve_test.py)
 ink_sim_executable(sim-card-files tests/card_files/device.c)
 target_include_directories(sim-card-files PRIVATE tests)
-target_compile_definitions(sim-card-files PRIVATE INK_MOGO_SIM=1)
 target_link_libraries(sim-card-files PRIVATE ink_apps ink_system)
 add_dependencies(sim-card-files ink_card_files ink_fonts ink_ui_fonts ink_icons)
 add_test(NAME card-files-sim COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/card_files/run.py --build ${CMAKE_BINARY_DIR})

@@ -1,4 +1,4 @@
-"""EPUB C API, real reader, members and restart, using only synthetic local content."""
+"""EPUB and TXT books in the one reader, members and restart, using only synthetic local content."""
 import argparse
 import json
 import os
@@ -8,14 +8,28 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 
-def run(build, binary=None, reverse=False, name=None, expected='reader.open_book returns done'):
+def run(build, binary=None, reverse=False, name=None, expected='reader.open_book returns done', segments=False):
     area = build / 'test-out' / (name or ('reader-epub-reverse' if reverse else 'reader-epub'))
     if area.exists(): shutil.rmtree(area)
     content = area / 'content'
     shutil.copytree(build/'test-content', content)
     for path in (ROOT/'tests/reader_epub/fixtures').iterdir(): shutil.copyfile(path,content/'books'/path.name)
     for i in range(24): (content/'books'/f'填充{i:02d}.txt').write_text(f'原创测试书{i}。\n')
-    for phase in (('read',) if reverse else ('read','restart')):
+    # Neither NCX/NAV nor headings: the spine fallback (built here, like the fillers).
+    import zipfile
+    with zipfile.ZipFile(content/'books'/'plain.epub','w') as z:
+        z.writestr('mimetype','application/epub+zip',compress_type=zipfile.ZIP_STORED)
+        z.writestr('META-INF/container.xml','<container><rootfiles><rootfile full-path="book.opf"/></rootfiles></container>')
+        z.writestr('book.opf','<package xmlns="http://www.idpf.org/2007/opf" version="2.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>无标题散记</dc:title></metadata><manifest><item id="a" href="a.xhtml" media-type="application/xhtml+xml"/><item id="b" href="b.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="a"/><itemref idref="b"/></spine></package>')
+        for name in ('a','b'): z.writestr(f'{name}.xhtml','<html><body>'+'<p>没有标题的一段原创文字。</p>'*40+'</body></html>')
+    # A long chapter Mogo loads whole (about 400 KB of text), then a short one.
+    with zipfile.ZipFile(content/'books'/'long-read.epub','w',zipfile.ZIP_DEFLATED) as z:
+        z.writestr('mimetype','application/epub+zip',compress_type=zipfile.ZIP_STORED)
+        z.writestr('META-INF/container.xml','<container><rootfiles><rootfile full-path="book.opf"/></rootfiles></container>')
+        z.writestr('book.opf','<package xmlns="http://www.idpf.org/2007/opf" version="2.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>长章读完</dc:title></metadata><manifest><item id="a" href="a.xhtml" media-type="application/xhtml+xml"/><item id="b" href="b.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="a"/><itemref idref="b"/></spine></package>')
+        z.writestr('a.xhtml','<html><body><h1>第一章 长路</h1>'+''.join(f'<p>长章第{i}段。我们在长长的山路上留下脚印，也把星光记进日记。</p>' for i in range(5000))+'</body></html>')
+        z.writestr('b.xhtml','<html><body><h1>第二章 海边</h1><p>海边的晨风吹过纸页。</p></body></html>')
+    for phase in (('segments',) if segments else ('read',) if reverse else ('read','restart')):
         out=area/phase
         result=subprocess.run([str(binary or build/'sim-reader-epub'), '--profile',str(ROOT/'simulator/profiles/metalio-plus.json'),
             '--script',str(ROOT/'tests/kid_3.script'),'--budget',str(ROOT/'tests/ui_scene.budget.json'),
@@ -34,4 +48,5 @@ def run(build, binary=None, reverse=False, name=None, expected='reader.open_book
     if not os.environ.get('INK_KEEP_EVIDENCE'): shutil.rmtree(area)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__); p.add_argument('--build',type=Path,required=True); a=p.parse_args(); run(a.build.resolve())
+    p=argparse.ArgumentParser(description=__doc__); p.add_argument('--build',type=Path,required=True); p.add_argument('--segments',action='store_true')
+    a=p.parse_args(); run(a.build.resolve(),name='reader-epub-segments' if a.segments else None,segments=a.segments)

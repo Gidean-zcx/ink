@@ -74,7 +74,9 @@ static void enter_right_pin(void) {
 
 static void open_page(void) {
     CHECK(BY_HAND("reader.open_book", "{\"title\":\"测试长书\"}") && g_rc.status == INK_RC_DONE, "open the real reader (%s)", g_rc.detail);
-    CHECK(BY_HAND("reader.goto_page", "{\"page\":4}") && g_rc.status == INK_RC_DONE && g_rc.revision == 4, "read page four");
+    /* reader-one-1: pages count within a chapter: the fifth chapter's second page */
+    CHECK(BY_HAND("reader.goto_chapter", "{\"chapter\":5}") && g_rc.status == INK_RC_DONE, "the fifth chapter");
+    CHECK(BY_HAND("reader.goto_page", "{\"page\":2}") && g_rc.status == INK_RC_DONE && g_rc.revision == 2, "read its second page");
     delay_ms(3000); /* until the next page's start is known: the snapshot ends there */
     on_ui(inspect);
     CHECK(!strcmp(g_top, "book"), "a book is open (%s)", g_top);
@@ -83,13 +85,18 @@ static void open_page(void) {
     saved_version = version;
 }
 
-static void same_page(void) {
-    on_ui(inspect);
-    CHECK(!strcmp(g_top, "book") && !strcmp(g_snap, saved_snapshot), "the same visible page and text (%s)", g_top);
-    CHECK(screen == saved_screen && version == saved_version, "the page object and content version were kept");
-    CHECK(AI("reader.read_page", NULL) && g_rc.status == INK_RC_DONE && g_rc.revision == 4 && strstr(g_rc.object, "#page=4"), "the AI sees the same fourth page (%s)", g_rc.object);
+/* reader-one-1: the grafted reader's session is dropped by its carrier when the member space closes (graft.c fails
+ * closed) and laid out again, same book and place, when the same member comes back; the page object stays, its
+ * content version is new after a gate. Without a gate both are kept. */
+static void same_page_after(bool gate) {
+    for (int i = 0; i < 200; i++) { on_ui(inspect); if (!strcmp(g_snap, saved_snapshot)) break; delay_ms(50); }
+    CHECK(!strcmp(g_top, "book") && !strcmp(g_snap, saved_snapshot), "the same visible page and text (%s): %.300s", g_top, g_snap);
+    CHECK(screen == saved_screen && (gate || version == saved_version), "the page object and content version were kept");
+    CHECK(AI("reader.read_page", NULL) && g_rc.status == INK_RC_DONE && g_rc.revision == 2 && strstr(g_rc.say, "第五章"), "the AI sees the same page (%u %.80s)", (unsigned)g_rc.revision, g_rc.say);
     CHECK(ink_app_state_of("reader") == INK_APP_FOREGROUND, "the reader resumes after the gate");
+    if (gate) { on_ui(inspect); saved_version = version; }
 }
+static void same_page(void) { same_page_after(false); }
 
 static uint64_t lock_now(void) {
     key(HAL_KEY_POWER);
@@ -131,7 +138,7 @@ static void authenticate(bool wrong_first) {
     on_ui(enter_right_pin);
     CHECK(WAIT_FOR(ink_member_space_open(), 5000), "the person's right PIN opens the space");
     CHECK(WAIT_FOR((on_ui(inspect), !strcmp(g_top, "book")), 2000), "the member gate goes away");
-    same_page();
+    same_page_after(true);
 }
 
 static void adult_wake(hal_key_t wake_key, int seconds) {
@@ -232,7 +239,7 @@ static void test_task(void *arg) {
     locked = lock_now();
     wake_at(locked + 121000000ull, HAL_KEY_POWER);
     CHECK(ink_member_space_open(), "an adult without a PIN also remains unaffected");
-    same_page();
+    same_page_after(true); /* the lock gave this member a new incarnation: the carrier laid the same page out again */
     ink_probe_count("test.finished");
 }
 

@@ -29,15 +29,26 @@ void ui_draw_round_rect(uint8_t *fb, EpdRect r, int radius, uint8_t gray) {
         }
     }
 }
+/* The title Mogo makes up for a chapter without one ("第 %u 节", kept so in the book's data, where it is compared and
+ * parsed) in the current language where it is shown; any other text as it is. */
+const char *ink_mogo_words(const char *s, char *buf, size_t cap) {
+    size_t head = strlen("第 ");
+    if (strncmp(s, "第 ", head) || s[head] < '0' || s[head] > '9') return s;
+    char *end; unsigned long n = strtoul(s + head, &end, 10);
+    if (strcmp(end, " 节") || n > 65535) return s;
+    snprintf(buf, cap, TR("第 %u 节"), (unsigned)n);
+    return buf;
+}
 int ui_text_effective_px(int px) { return ink_mogo_scaled((px*6+2)/5); }
 int ui_text_title_fit(const char *s, int px, int width, const char *sample) {
-    (void)sample;
+    (void)sample; char words[48]; s = ink_mogo_words(s, words, sizeof words);
     while (px>1 && ttf_text_width_px(px,s)>width) --px;
     return px;
 }
 void ui_text_box(uint8_t *fb, EpdRect r, int px, const char *s, enum EpdFontFlags align, bool inverted) {
     r=ink_mogo_rect(r); px=ui_text_effective_px(px);
     if (px>r.height-2) px=r.height-2;
+    char words[48]; s=ink_mogo_words(s,words,sizeof words);
     char text[320]; size_t n=strlen(s);
     if (n>=sizeof text) n=sizeof text-1;
     while (n && ((unsigned char)s[n]&0xc0)==0x80) --n;

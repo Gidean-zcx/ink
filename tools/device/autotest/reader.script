@@ -1,4 +1,4 @@
-# Put reader.txt on the test TF card as 自动测试长文.txt before the trial.
+# Put reader.txt on the test TF card as 自动测试长文.txt before the trial, with the reader's font at fonts/InkSC.ttf.
 @6s cap app.open {"id":"reader"}
 +3s cap reader.open_book {"title":"自动测试长文"}
 +3s note reader_20_pages_start

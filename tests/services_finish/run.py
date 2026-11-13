@@ -27,7 +27,6 @@ suites = {
     'file_late': ('sim-media', ['file_late_boundary.c'], '25s'),
     'member_writes': ('sim-media', ['members_boundary.c'], '40s'),
     'late_writers': ('sim-media', ['late_app_boundary.c', 'late_media_boundary.c', 'late_notify_boundary.c', 'late_activity_boundary.c'], '25s'),
-    'reader_late': ('sim-media', ['reader_boundary.c'], '35s'),
     'member_inventory': ('sim-media', [], '30s'),
     'wifi_undo': ('sim-media', ['wifi_boundary.c'], '35s'),
     'undo_schedules': ('sim-media', ['time_boundary.c', 'time_caps_boundary.c'], '40s'),
@@ -75,10 +74,10 @@ def compile_suite(name):
     defines = []
     if a.baseline:
         # Read only: source copies and binaries live in the ignored build directory.
-        for rel in ['system/ui/app_registry.c', 'system/services/audio/ogg.c', 'system/services/audio/media_service.c', 'apps/reader/reader.c', 'system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/policy/members.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c', 'system/services/time/time_service.c', 'system/services/time/time_caps.c', 'system/services/res/task.c', 'system/services/data/data_caps.c', 'system/services/file/file_caps.c', 'system/ui/textfield.c', 'system/ui/ui_task.c', 'system/ui/shell/off_picture.c', 'system/services/notify/notify_service.c', 'system/services/notify/notify_caps.c']:
+        for rel in ['system/ui/app_registry.c', 'system/services/audio/ogg.c', 'system/services/audio/media_service.c', 'system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/policy/members.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c', 'system/services/time/time_service.c', 'system/services/time/time_caps.c', 'system/services/res/task.c', 'system/services/data/data_caps.c', 'system/services/file/file_caps.c', 'system/ui/textfield.c', 'system/ui/ui_task.c', 'system/ui/shell/off_picture.c', 'system/services/notify/notify_service.c', 'system/services/notify/notify_caps.c']:
             target = work / Path(rel).name
             target.write_bytes(subprocess.check_output(['git', 'show', a.baseline + ':' + rel], cwd=ROOT))
-            macro = 'INK_TEST_' + {'app_registry.c': 'APP', 'ogg.c': 'OGG', 'media_service.c': 'MEDIA', 'reader.c': 'READER', 'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'members.c': 'MEMBERS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI', 'time_service.c': 'TIME', 'time_caps.c': 'TIME_CAPS', 'task.c': 'TASK', 'data_caps.c': 'DATA_CAPS', 'file_caps.c': 'FILE_CAPS', 'textfield.c': 'TEXTFIELD', 'ui_task.c': 'UI', 'off_picture.c': 'OFF', 'notify_service.c': 'NOTIFY', 'notify_caps.c': 'NOTIFY_CAPS'}[Path(rel).name] + '_SOURCE'
+            macro = 'INK_TEST_' + {'app_registry.c': 'APP', 'ogg.c': 'OGG', 'media_service.c': 'MEDIA', 'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'members.c': 'MEMBERS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI', 'time_service.c': 'TIME', 'time_caps.c': 'TIME_CAPS', 'task.c': 'TASK', 'data_caps.c': 'DATA_CAPS', 'file_caps.c': 'FILE_CAPS', 'textfield.c': 'TEXTFIELD', 'ui_task.c': 'UI', 'off_picture.c': 'OFF', 'notify_service.c': 'NOTIFY', 'notify_caps.c': 'NOTIFY_CAPS'}[Path(rel).name] + '_SOURCE'
             if rel.endswith('members.c') and 'ink_member_io_begin' not in target.read_text():
                 defines += ['-DINK_TEST_OLD_MEMBER_IO=1']
             if rel.endswith('text_service.c') and 'ink_text_edit_revision' not in target.read_text():
@@ -217,16 +216,6 @@ def review_matrix(name, binary):
                 if variant == 'control': env['INK_REVIEW_CONTROL'] = '1'
                 if variant == 'removed': env['INK_REVIEW_NO_REUSE'] = '1'
                 boot(path, 'run', env)
-    elif name == 'reader_late':
-        for callback in ('destroy', 'timer', 'submit'):
-            for variant in ('control', 'removed', 'reused'):
-                path = work / ('reader-' + callback + '-' + variant)
-                (path / 'sd').mkdir(parents=True)
-                env = {'INK_REVIEW_SAVE_TIMER': '1'} if callback == 'timer' else {}
-                if callback == 'submit': env['INK_REVIEW_SAVE_GAP'] = '1'
-                if variant == 'control': env['INK_REVIEW_CONTROL'] = '1'
-                if variant == 'removed': env['INK_REVIEW_NO_REUSE'] = '1'
-                boot(path, 'run', env)
     elif name in ('removal_alarm', 'empty_removal', 'update_history', 'member_inventory'):
         path = work / (name + '-state')
         (path / 'sd').mkdir(parents=True)
@@ -338,7 +327,7 @@ for name in a.suites:
     if name == 'update':
         failed |= not update_matrix(binary)
         continue
-    if name in ('file_index', 'upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late', 'file_events', 'file_paths', 'member_caps'):
+    if name in ('file_index', 'upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'member_inventory', 'late_writers', 'file_late', 'file_events', 'file_paths', 'member_caps'):
         failed |= not review_matrix(name, binary)
         continue
     out = work / (name + '-out')

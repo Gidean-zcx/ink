@@ -15,12 +15,14 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/card_files.h"
 #include "ink/sys/crc.h"
+#include "ink/sys/display.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/file.h"
 #include "ink/sys/log.h"
 #include "ink/sys/power.h"
 #include "ink/sys/sha256.h"
 #include "ink/sys/state.h"
+#include "ink/sys/svc.h"
 #include "ink/card_files_manifest.h"
 
 enum {
@@ -31,6 +33,7 @@ enum {
     CF_HELLO_EVERY_MS = 2000, CF_HELLO_FOR_MS = 30000, /* HELLO again every 2 s for 30 s (nobody may read yet) */
     CF_STEP = 256 * 1024, CF_BUF = 16 * 1024,        /* hashed per executor turn, read per call */
     CF_RESUME = 64 * 1024,                           /* a .part resumes at a multiple of this; synced as often */
+    CF_QUIET_US = 500000,                            /* the screen idle and no input this long before a read */
 };
 _Static_assert(INK_CARD_FILES_COUNT <= 8, "card files: at most 8 rows (tools/card_files.py MAX_ENTRIES)");
 enum { E_UNKNOWN, E_OK, E_MISSING, E_WRONG, E_SKIP, NOT_OK = -1 };
@@ -58,10 +61,12 @@ static struct {
     ink_sha256_t sha;
     uint64_t t0, done_bytes, total_bytes;
     uint32_t swap, let_go; /* let_go: those files' apps hold none of them */
+    unsigned concluded; /* checks and sessions that reached a conclusion (ink_card_files_checks) */
     uint8_t *buf, *chunk; /* PSRAM, with line */
     char *line, rx[512], out[200];
     volatile bool swapped; /* the task's install is done (no semaphore: internal RAM) */
     ink_exec_job_t kick_job, step_job, ui_job, swap_job, end_job;
+    ink_svc_deadline_t quiet_at; /* the next read waits for a quiet screen */
 } CF INK_PSRAM_BSS; /* internal RAM is short */
 
 static bool path_ok(const char *p) {
@@ -77,6 +82,7 @@ static void part_path(char *out, size_t cap, int i) { snprintf(out, cap, "%s.par
 
 static void publish(int phase, int pct) { /* the conclusion is written first: then what others see */
     CF.phase = phase, CF.pct = pct;
+    if (phase != INK_CARD_CHECKING && phase != INK_CARD_COPYING) __atomic_add_fetch(&CF.concluded, 1, __ATOMIC_RELEASE);
     ink_state_set_int(CF.h_progress, pct);
     ink_state_set_str(CF.h_files, STATE_WORD[phase]);
 }
@@ -364,12 +370,23 @@ static void check_finish(void) {
     osal_task_cfg_t cfg = {.name = "cardfiles", .fn = session, .arg = (void *)&USB_SOURCE, .stack_bytes = 6144,
                            .priority = OSAL_PRIO_LOW, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     CF.stop = false;
-    if (hal_usb_host_connected() && osal_task_create(&cfg, NULL) == OSAL_OK) return;
+    if (hal_usb_host_connected() && osal_task_create(&cfg, NULL) == OSAL_OK) {
+        CF.prev_usb = true; /* this computer is seen: its connected event, if it comes late, is not news */
+        return;
+    }
     session_end_bg(NULL);
 }
 
+static void check_step(void *arg);
+static void step_again(void *ctx) { (void)ctx; ink_exec_post(INK_EXEC_BG, &CF.step_job, check_step, NULL); }
 static void check_step(void *arg) {
     (void)arg;
+    /* Reading a whole file waits while the screen draws or someone is using the device (as background storage does):
+     * the shared executor and the card stay free for what they are doing. */
+    if (ink_display_busy() > 0 || osal_now_us() < ink_power_last_activity() + CF_QUIET_US) {
+        ink_svc_at(&CF.quiet_at, osal_now_us() + CF_QUIET_US, step_again, NULL);
+        return;
+    }
     int r = ink_fs_card_hold();
     if (r) { /* lent to a computer: as it was, until it comes back */
         if (r != INK_FS_ERR_USB) {
@@ -446,6 +463,8 @@ static const ink_cap_t CAPS[] = {
 static const ink_state_def_t ST_FILES = {.id = "card.files", .type = INK_ST_STR,
     .title = "存储卡上系统要用的文件（ready 齐了，checking，missing 缺，copying 正从电脑放，failed 没放成，no_card）"};
 static const ink_state_def_t ST_PROGRESS = {.id = "card.files_progress", .type = INK_ST_INT, .title = "从电脑放文件的进度（0-100）", .min_interval_ms = 2000};
+
+unsigned ink_card_files_checks(void) { return __atomic_load_n(&CF.concluded, __ATOMIC_ACQUIRE); }
 
 ink_card_state_t ink_card_files_state(const char *app, int *percent) {
     bool mine = false, all = true;

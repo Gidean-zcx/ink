@@ -393,7 +393,7 @@ static void cards(void) {
     CHECK(AI("reader.open_book", "{\"title\":\"测试\"}") && g_rc.status == INK_RC_DONE, "a book (%s)", g_rc.detail);
     CHECK(!strcmp(fg_state(), "reader"), "the reader is in the foreground (%s)", fg_state());
     delay_ms(1500);
-    CHECK(AI("app.cards", NULL) && strstr(g_result, "\"app\":\"reader\"") && strstr(g_result, "第 "), "and has a card (%s)", g_result);
+    CHECK(AI("app.cards", NULL) && strstr(g_result, "\"app\":\"reader\"") && strstr(g_result, "《测试长书》") && strstr(g_result, " · 读到 "), "and has a card (%s)", g_result);
     on_ui(go_home);
     delay_ms(1500);
 }

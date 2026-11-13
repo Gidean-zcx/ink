@@ -41,13 +41,13 @@
 #include "ink/sys/log.h"
 
 extern const ink_activity_t ink_app_home;
-extern const ink_app_def_t ink_appdef_home, ink_appdef_reader;
+extern const ink_app_def_t ink_appdef_home, ink_appdef_mogo;
 
 #include "ink/sys/backup.h"
 
 int ink_system_actions_init(void);
 void ink_factory_reset_resume(void);
-int ink_reader_actions_init(void);
+int ink_mogo_init(void);
 int ink_remote_init(void);
 int ink_ui_lock_mark_init(void);
 int ink_shell_interrupt_card_init(void);
@@ -93,14 +93,11 @@ void ink_main(void) {
     hal_device_get_info(&di);
     if (ink_camera_init() != 0 || (di.has_modem && ink_comm_init() != 0)) osal_panic("camera or communication service failed to start");
     if (ink_ai_init() != 0) osal_panic("ai service failed to start");
-    if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
+    if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
-    MUST(ink_apps_init(), "app directory failed to start"); MUST(ink_app_register(&ink_appdef_home), "app directory failed to start"); MUST(ink_app_register(&ink_appdef_reader), "app directory failed to start");
-#ifdef INK_MOGO_SIM
-    extern const ink_app_def_t ink_appdef_mogo;
-    extern int ink_mogo_init(void);
-    MUST(ink_mogo_init(), "Mogo capabilities failed to start"); MUST(ink_app_register(&ink_appdef_mogo), "Mogo app failed to start");
-#endif
+    MUST(ink_apps_init(), "app directory failed to start"); MUST(ink_app_register(&ink_appdef_home), "app directory failed to start"); 
+    /* The reader (D-139); its init also registers the old reader's bookmark collection, so restoring an older backup keeps it. */
+    MUST(ink_mogo_init(), "reader failed to start"); MUST(ink_app_register(&ink_appdef_mogo), "reader failed to start");
     MUST(ink_card_files_init(), "card files failed to start");
     if (ink_contacts_init() != 0) osal_panic("contacts failed to start");
     if (ink_phone_init() != 0) osal_panic("phone failed to start");

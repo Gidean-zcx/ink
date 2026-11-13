@@ -95,6 +95,9 @@ void ink_shell_home_settle(void);
 void ink_ui_restart(void (*between)(void));
 /** The stack has no room for another activity. */
 bool ink_ui_full(void);
+/** In an activity's create: it was on the stack already and is built again (a page above it closed, a redraw), not
+ *  just opened. Its frame's arg is the one it was opened with: what it shows now is its own state. UI task. */
+bool ink_ui_shown_again(void);
 /** How many activities are open, the root one included. UI task. */
 int ink_ui_depth(void);
 /** An activity of this app is open: it comes to the top (what is above it closes). False: there is none. UI task. */

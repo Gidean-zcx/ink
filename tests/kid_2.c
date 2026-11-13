@@ -71,7 +71,7 @@ static void limit(void) {
     setup(); unsigned token = request("member.time_set", "{\"minutes\":2}");
     approve(token, "90817263", INK_PIN_WRONG); counters(); CHECK(minutes == 0, "wrong PIN leaves the daily allowance unchanged");
     approve(token, "24681357", INK_PIN_OK); counters(); CHECK(minutes == 2 && extra == 0, "two-minute policy belongs to this child");
-    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", "{\"page\":4}");
+    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_chapter", "{\"chapter\":5}"); call_ok("reader.goto_page", "{\"page\":2}");
     delay_ms(30000); counters(); int64_t before = used;
     key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "lock through the real power key");
     delay_ms(90000); counters(); CHECK(used >= before && used - before < 3, "locked time is not charged");
@@ -99,7 +99,7 @@ static void limit(void) {
     CHECK(extra == 15 && !strcmp(ink_member_current()->id, "kid"), "the parent adds today's fifteen minutes without switching identity");
     call_ok("app.open", "{\"id\":\"clock\"}"); CHECK(!strcmp(ink_ui_page_name(), "Clock"), "the child resumes ordinary use after addition");
     on_ui(home); quiet(); call_ok("reader.open_book", "{\"title\":\"测试长书\"}");
-    CHECK(AI("reader.read_page", NULL) && g_rc.status == INK_RC_DONE && g_rc.revision == 4, "time-up keeps the real reading position at page four (%s, rev=%u, %.60s; top=%s)", ink_rc_name(g_rc.status), (unsigned)g_rc.revision, g_rc.detail, ink_ui_top_name());
+    CHECK(AI("reader.read_page", NULL) && g_rc.status == INK_RC_DONE && g_rc.revision == 2 && strstr(g_rc.say, "第五章"), "time-up keeps the real reading position at the fifth chapter's second page (%s, rev=%u, %.60s; top=%s)", ink_rc_name(g_rc.status), (unsigned)g_rc.revision, g_rc.say, ink_ui_top_name());
     key(HAL_KEY_POWER); counters(); CHECK(used >= 120 && used < 240, "usage includes the elapsed unlocked time"); save();
 }
 static void restart(void) {

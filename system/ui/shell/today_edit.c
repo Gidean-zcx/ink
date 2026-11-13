@@ -18,6 +18,7 @@ static struct {
     ink_ui_field_spec_t fields[3];
     ink_ui_action_spec_t actions[4];
 } T INK_PSRAM_BSS;
+static bool app_listed(const char *id) { for (int i = 0; i < T.app_count; i++) if (!strcmp(T.apps[i], id)) return true; return false; }
 static int today_selected(const char *key) {
     for (int i = 0; i < T.count; i++) if (!strcmp(T.selected[i], key)) return i;
     return -1;
@@ -53,7 +54,8 @@ void today_load(void) {
             at = ink_json_find(j, 0, "apps");
             T.apps_saved = at >= 0;
             for (int k = at + 1; at >= 0 && k < j->ntok && T.app_count < FAVORITES && j->tok[k].start < j->tok[at].end; k++)
-                if (ink_json_str(j, k, T.apps[T.app_count], sizeof T.apps[0]) > 0 && home_usable(T.apps[T.app_count])) T.app_count++;
+                if (ink_json_str(j, k, T.apps[T.app_count], sizeof T.apps[0]) > 0 && (strcmp(T.apps[T.app_count], "mogo") || memcpy(T.apps[T.app_count], "reader", 7)) && /* build 21's new reader */
+                    home_usable(T.apps[T.app_count]) && !app_listed(T.apps[T.app_count])) T.app_count++;
         }
         osal_free(j);
     }

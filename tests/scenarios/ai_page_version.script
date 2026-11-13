@@ -6,7 +6,7 @@
 # 3) the hub sends the same request twice (a retry): the page turns once and
 #    both answers are the same.
 @3s      tap   80% 56%        # 阅读 (favourite)
-+2500ms  tap   50% 160dp          # 星星邮差
++2500ms  tap   50% 30%            # Field Notes on E-Ink, the first shelf row: the book 160dp opened on the old shelf (reader-one-1)
 +3s      mic   speech
 +0       key   ai 1200ms          # turn 1
 +9s      key   ai 1200ms          # turn 2: the tool call comes ~4 s after the press

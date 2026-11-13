@@ -1,24 +1,22 @@
-/* The continue-reading card outlives the open book: per member, across a restart, gone with the book. */
+/* The continue-reading card outlives the open book: per member, across a restart, gone with the book (reader-one-1:
+ * the card says the chapter and how far, 《书名》章名 · 读到 N%, and a tap goes back to the same place). */
 #include <stdlib.h>
 #define ink_main product_main
 #include "configured_boot.c"
 #undef ink_main
 #include "integration/whole_product.h"
+#include "graft.h"
 #include "ink/hal_storage.h"
 #include "ink/sys/file.h"
 #include "ink/sys/app.h"
 #include "ink/sys/storage.h"
-#include "ink/sys/crc.h"
-#include "ink/sys/layout.h"
 #include "ink/ui_shell.h"
 
-static char view[3072];
+static char view[3072], page[3072], place_now[64], place_saved[64];
 static const char *wanted;
 static lv_obj_t *label;
 static bool card_present;
 static ink_card_t reading;
-static void durable(void);
-
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 15000), "display settles"); }
 static void call_ok(const char *id, const char *args) {
@@ -28,6 +26,7 @@ static void call_ok(const char *id, const char *args) {
 static void home(void) { ink_ui_home(); }
 static void inspect(void) {
     CHECK(ink_ui_snapshot(view, sizeof view, NULL) > 0, "snapshot fits the AI buffer");
+    ink_graft_snapshot(page, sizeof page);
     memset(&reading, 0, sizeof reading);
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *app = ink_app_at(i);
@@ -37,18 +36,17 @@ static void inspect(void) {
 static bool today_has(const char *text) { on_ui(inspect); return strstr(view, text) != NULL; }
 static void capture(void *ctx) { sim_display_snapshot(ctx); }
 static void frame(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture, (void *)name); delay_ms(5); }
-static void percentage(void) {
-    durable(); on_ui(inspect);
-    char name[40], path[200], data[64] = {0}, expected[16]; unsigned offset = 0;
-    snprintf(name, sizeof name, "reader.%08x.pos", (unsigned)ink_crc32(0, "测试长书", strlen("测试长书")));
-    CHECK(ink_layout_member(path, sizeof path, ink_member_current()->id, name) > 0, "position path fits");
-    CHECK(ink_storage_read(path, data, sizeof data - 1) > 0 && sscanf(data, "offset=%u", &offset) == 1, "saved byte position exists");
-    int64_t bytes = ink_file_size("/content/books/测试长书.txt");
-    CHECK(bytes > 0 && offset > 0 && offset < bytes, "middle-book progress has a valid byte fraction");
-    snprintf(expected, sizeof expected, "%u%%", bytes > 0 ? (unsigned)(offset * 100ull / (uint64_t)bytes) : 0);
-    CHECK(!strcmp(reading.title, "继续读") && strstr(reading.text, expected), "card title and exact byte percentage: %.95s (%s)", reading.text, expected);
-    CHECK(strstr(view, expected), "AI sees the same percentage");
+/* Where the reader is: chapter and place in it, from the page snapshot. */
+static const char *place(void) {
+    for (int i = 0; i < 300; i++) {
+        on_ui(inspect);
+        const char *c = strstr(page, "章节="), *end = c ? strstr(c, " 结束=") : NULL;
+        if (c && end && strstr(page, "面板=正文")) { snprintf(place_now, sizeof place_now, "%.*s", (int)(end - c), c); return place_now; }
+        delay_ms(50);
+    }
+    return "";
 }
+static unsigned percent_shown(void) { place(); const char *p = strstr(page, "章内页"); p = p ? strstr(p, " · ") : NULL; return p ? (unsigned)atoi(p + strlen(" · ")) : 999; }
 static void locate(lv_obj_t *obj) {
     if (!lv_obj_is_visible(obj)) return;
     if (lv_obj_check_type(obj, &lv_label_class) && strstr(lv_label_get_text(obj), wanted)) label = obj;
@@ -62,10 +60,6 @@ static void touch(const char *text) {
     lv_area_t a; lv_obj_get_coords(label, &a);
     tap((a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2); quiet();
 }
-static int page_now(void) {
-    CHECK(AI("reader.read_page", NULL) && g_rc.status == INK_RC_DONE, "the book is open (%s, top=%s)", g_rc.detail, ink_ui_top_name());
-    return (int)g_rc.revision;
-}
 /* The home's card (D-135: today's cards are on the one page), as the person sees it and as the AI reads it.
  * NULL: no card at all, rather than an empty one. */
 static void today(const char *expect) {
@@ -76,55 +70,71 @@ static void today(const char *expect) {
     call_ok("app.cards", NULL);
     CHECK(expect ? strstr(g_result, expect) != NULL : !strstr(g_result, "测试长书"), "app.cards agrees (%.200s)", g_result);
 }
-static void read_to(int page) {
-    char args[32]; snprintf(args, sizeof args, "{\"page\":%d}", page);
-    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", args);
+/* The card names the chapter and the percentage the open book shows. */
+static void card_matches(void) {
+    unsigned shown = percent_shown();
+    const char *chapter = strstr(page, "》 · "), *chapter_end = chapter ? strstr(chapter, " · 章内页") : NULL;
+    char name[96] = "", expected[16];
+    if (chapter && chapter_end) snprintf(name, sizeof name, "%.*s", (int)(chapter_end - chapter - strlen("》 · ")), chapter + strlen("》 · "));
+    snprintf(expected, sizeof expected, "读到 %u%%", shown);
+    on_ui(home); quiet(); /* leaving the book writes its place on BG; the card follows */
+    WAIT_FOR((on_ui(inspect), name[0] && strstr(reading.text, name) && strstr(reading.text, expected)), 5000);
+    CHECK(!strcmp(reading.title, "继续读") && name[0] && strstr(reading.text, name) && strstr(reading.text, expected) && reading.value == (int64_t)shown,
+          "card title, chapter and percentage: %.95s (%s, %s)", reading.text, name, expected);
+    CHECK(strstr(view, expected), "AI sees the same percentage");
+}
+static void read_to(int chapter) {
+    char args[32]; snprintf(args, sizeof args, "{\"chapter\":%d}", chapter);
+    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_chapter", args); call_ok("reader.next_page", NULL);
+    snprintf(place_saved, sizeof place_saved, "%s", place());
 }
 static void durable(void) { CHECK(WAIT_FOR(!ink_storage_pending(), 15000), "positions written"); }
 static void set_card(void *ctx) { (void)ctx; sim_sd_set_present(card_present); }
 static void card(bool present) {
     card_present = present; vtk_event_at(vtk_now() + SIM_MS(1), set_card, NULL); delay_ms(10); ink_fs_refresh_state();
 }
+static void back_to_saved(const char *how) { CHECK(!strcmp(place(), place_saved), "%s goes back to the same place (%s / %s)", how, place_now, place_saved); }
 
 static void first_run(void) {
     today(NULL);
-    read_to(5); on_ui(home); quiet();
-    today("《测试长书》第 5 页");
-    percentage(); frame("continue-reading");
-    touch("第 5 页"); CHECK(page_now() == 5, "tapping the card goes back to page 5");
-    on_ui(home); quiet(); call_ok("shell.resume", NULL); CHECK(page_now() == 5, "the main page's line goes back to page 5");
-    on_ui(home); quiet(); call_ok("reader.continue", NULL); CHECK(page_now() == 5, "the AI capability goes back to page 5");
-    call_ok("reader.goto_page", "{\"page\":20}"); on_ui(home); quiet();
-    today("《测试长书》第 20 页"); percentage(); frame("continue-progress");
-    CHECK(!strstr(reading.text, "· 0%"), "later pages show nonzero progress");
-    read_to(5); on_ui(home); quiet();
+    read_to(5); card_matches(); today("《测试长书》"); frame("continue-reading");
+    on_ui(home); quiet(); CHECK(today_has("《测试长书》"), "back on home the card is still there");
+    touch("测试长书"); back_to_saved("tapping the card");
+    on_ui(home); quiet(); call_ok("shell.resume", NULL); back_to_saved("the main page's line");
+    on_ui(home); quiet(); call_ok("reader.continue", NULL); back_to_saved("the AI capability");
+    call_ok("reader.goto_chapter", "{\"chapter\":20}"); call_ok("reader.next_page", NULL); card_matches(); frame("continue-progress");
+    CHECK(!strstr(reading.text, "读到 0%"), "later chapters show nonzero progress");
+    read_to(5); card_matches(); char adult[96]; snprintf(adult, sizeof adult, "%s", reading.text);
     CHECK(ink_member_switch("kid") == 0, "the child takes the device"); quiet();
     today(NULL);
-    read_to(2); on_ui(home); quiet();
-    today("《测试长书》第 2 页"); CHECK(!strstr(view, "第 5 页"), "the child does not see the adult's place");
+    read_to(2); card_matches(); char child[96]; snprintf(child, sizeof child, "%s", reading.text);
+    CHECK(strcmp(child, adult), "the child's card is the child's place (%s / %s)", child, adult);
     CHECK(ink_member_switch("owner") == 0, "the adult again"); quiet();
-    today("《测试长书》第 5 页"); CHECK(!strstr(view, "第 2 页"), "the adult does not see the child's place");
+    today("《测试长书》"); on_ui(inspect); CHECK(!strcmp(reading.text, adult), "the adult does not see the child's place (%s)", reading.text);
     on_ui(home); quiet(); durable();
 }
 static void after_restart(void) {
-    today("《测试长书》第 5 页");
-    percentage(); frame("continue-restarted");
-    on_ui(home); quiet(); call_ok("reader.continue", NULL); CHECK(page_now() == 5, "after a restart the card still goes to page 5");
+    today("《测试长书》"); on_ui(inspect); char adult[96]; snprintf(adult, sizeof adult, "%s", reading.text);
+    CHECK(strstr(adult, "读到"), "after a restart the card is back: %s", adult); frame("continue-restarted");
+    on_ui(home); quiet(); call_ok("reader.continue", NULL); snprintf(place_saved, sizeof place_saved, "%s", place());
+    card_matches();
     CHECK(ink_member_switch("kid") == 0, "the child after the restart"); quiet();
-    today("《测试长书》第 2 页");
-    touch("第 2 页"); CHECK(page_now() == 2, "the child's card goes to page 2");
+    today("《测试长书》"); on_ui(inspect); CHECK(strcmp(reading.text, adult), "the child's own card");
+    touch("测试长书"); CHECK(place()[0], "the child's card opens the child's book");
     CHECK(ink_member_switch("owner") == 0, "the adult again"); quiet();
-    today("《测试长书》第 5 页");
+    today("《测试长书》");
     card(false);
     CHECK(WAIT_FOR(!today_has("测试长书"), 3000), "the home updates after card removal without navigation"); frame("continue-removed");
     on_ui(home); quiet(); CHECK(AI("reader.continue", NULL) && g_rc.status == INK_RC_FAILED, "nothing to continue without the card");
     card(true);
-    CHECK(WAIT_FOR(today_has("《测试长书》第 5 页"), 3000), "the home updates after card insertion without navigation"); frame("continue-inserted");
+    CHECK(WAIT_FOR(today_has("《测试长书》"), 3000), "the home updates after card insertion without navigation"); frame("continue-inserted");
     on_ui(home); quiet();
-    CHECK(hal_fs_remove("/content/books/测试长书.txt") == 0, "the book is deleted");
+    CHECK(ink_fs_remove("/family/books/测试长书.txt") == 0, "the book is deleted (through the file service, as the files app does)");
     today(NULL);
     on_ui(home); quiet(); CHECK(AI("reader.continue", NULL) && g_rc.status == INK_RC_FAILED, "a deleted book is not opened");
-    call_ok("shell.resume", NULL); CHECK(!strcmp(ink_ui_top_name(), "reader"), "the main page's line opens the shelf instead (%s)", ink_ui_top_name());
+    call_ok("shell.resume", NULL);
+    for (int i = 0; i < 300 && (on_ui(inspect), !strstr(page, "面板=书架")); i++) delay_ms(50);
+    CHECK(!strcmp(ink_ui_top_name(), "book") && strstr(page, "面板=书架"), "the main page's line opens the shelf instead (%s)", ink_ui_top_name());
 }
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();

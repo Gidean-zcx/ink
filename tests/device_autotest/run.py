@@ -14,6 +14,7 @@ try:
     content = work / "content" / "books"
     content.mkdir(parents=True)
     shutil.copyfile(root / "tools/device/autotest/reader.txt", content / "自动测试长文.txt")
+    shutil.copytree(build / "test-content" / "fonts", content.parent / "fonts")  # the reader's font, as the card has it
     for scene in ("cap", "camera", "reader", "memo"):
         script = root / ("tests/device_autotest/cap.script" if scene == "cap" else f"tools/device/autotest/{scene}.script")
         out = work / scene

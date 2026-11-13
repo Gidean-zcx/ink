@@ -56,7 +56,7 @@ bool ink_graft_shake(int direction);
 int ink_graft_snapshot(char *out, size_t cap);
 /* UI only: check that the mounted session still owns the current member incarnation. */
 bool ink_graft_current(void);
-/* BG only: open a virtual member file for the captured session; stale sessions fail closed. */
+/* BG only: open a virtual member file for the captured session (/me/, or read-only /family/fonts/ and /family/books/); stale sessions fail closed. */
 int ink_graft_file_open(const ink_member_identity_t *owner, const char *path, int mode, ink_fs_file_t **out);
 /* BG only: open the client's member-scoped preference collection; binary records may hold native NVS values. */
 ink_db_t *ink_graft_preferences_open(const ink_member_identity_t *owner, const char *app, const ink_db_def_t *def);

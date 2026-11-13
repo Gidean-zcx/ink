@@ -1930,4 +1930,5 @@ language english 中文 英文	language english chinese
 没有存储卡。%s要用的%s放在卡上，插上卡后连电脑会自动放进去	No storage card. %s keeps its %s on the card; insert one and connect a computer to copy it automatically
 %s要用的%s还没放到存储卡上，连上电脑后会自动放进去	%s needs its %s on the storage card; it is copied there automatically when a computer is connected
 %s要用的%s现在打不开，正在重新检查	%s cannot open its %s right now; checking again
+%s要用的%s检查过是好的，但现在打不开。请返回后再打开试试	%s: its %s checks out, but cannot be opened right now. Go back and open it again
 字体	font

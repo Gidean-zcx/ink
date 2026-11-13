@@ -101,12 +101,12 @@ assert result.returncode and 'the airplane error panel closes after the successf
 summary.append({'case': 'airplane-ai', 'exit': result.returncode, 'expected': 'AI airplane error panel stays open'})
 print('airplane-ai expected failure', flush=True)
 
-path = 'apps/reader/reader.c'
+# The one reader (reader-one-1): its card follows storage.card through the watch in apps/mogo/mogo.c.
+path = 'apps/mogo/mogo.c'
 fixed = (ROOT / path).read_text()
-watch = ' ||\n        ink_state_watch("storage.card", card_changed, NULL, INK_EXEC_UI)'
-watch_fn = 'static void card_changed(void *ctx, int h, const char *id) {\n    (void)ctx; (void)h; (void)id; ink_app_card_changed("reader");\n}\n'
-assert fixed.count(watch) == 1 and fixed.count(watch_fn) == 1
-for name, source in (('reader', original(path)), ('reader-card', fixed.replace(watch, '').replace(watch_fn, ''))):
+watch = 'ink_state_watch("storage.card", ink_mogo_kick, NULL, INK_EXEC_UI) || '
+assert fixed.count(watch) == 1
+for name, source in (('reader-card', fixed.replace(watch, '')),):
     binary = link_variant(name, 'sim-reader-continue', [(path, source)])
     shutil.rmtree(area / (name + '-out'), ignore_errors=True)
     failures, warnings = 0, []
@@ -122,7 +122,7 @@ for name, source in (('reader', original(path)), ('reader-card', fixed.replace(w
         assert data['metrics'].get('test.finished') == 1
         failures += data['metrics'].get('test.fail', 0)
         warnings += data.get('warnings', [])
-    expected = 'card title and exact byte percentage' if name == 'reader' else 'Today updates after card removal without navigation'
+    expected = 'the home updates after card removal without navigation'
     assert failures and expected in str(warnings), (name, warnings)
     summary.append({'case': name, 'failures': failures, 'expected': expected})
     print(name, 'expected failures:', failures, flush=True)

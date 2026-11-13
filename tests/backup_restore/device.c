@@ -65,7 +65,10 @@ static void fixtures(const char *who) {
     CHECK(ink_fs_write_atomic("/me/empty.txt","",0)==0,"empty personal file fixture");
     if (!strcmp(who,"owner")) {
         CHECK(BY_HAND("reader.open_book","{\"title\":\"测试长书\"}") && g_rc.status==INK_RC_DONE,"open real reader");
-        CHECK(BY_HAND("reader.goto_page","{\"page\":4}") && g_rc.status==INK_RC_DONE,"real reader fourth page");
+        /* reader-one-1: pages count within a chapter; the place is the fifth chapter's second page, with a bookmark there */
+        CHECK(BY_HAND("reader.goto_chapter","{\"chapter\":5}") && g_rc.status==INK_RC_DONE,"real reader fifth chapter");
+        CHECK(BY_HAND("reader.goto_page","{\"page\":2}") && g_rc.status==INK_RC_DONE,"its second page");
+        CHECK(BY_HAND("reader.add_bookmark",NULL) && g_rc.status==INK_RC_DONE,"a bookmark there");
         CHECK(BY_HAND("system.home",NULL) && g_rc.status==INK_RC_DONE,"leave reader and save position");
         CHECK(WAIT_FOR(ink_storage_pending()==0,5000),"reader position durable");
     }
@@ -473,7 +476,8 @@ static void run(void *arg) {
     } else if (!strcmp(phase,"verify-reboot")) {
         verify("owner");
         CHECK(BY_HAND("reader.open_book","{\"title\":\"测试长书\"}") && g_rc.status==INK_RC_DONE,"restored book can open after restart");
-        CHECK(AI("reader.read_page",NULL) && g_rc.revision==4 && strstr(g_rc.object,"#page=4"),"actual reader returns to fourth page (%s)",g_rc.object);
+        CHECK(AI("reader.read_page",NULL) && g_rc.revision==2 && strstr(g_rc.say,"第五章"),"actual reader returns to the fifth chapter's second page (%u %.80s)",(unsigned)g_rc.revision,g_rc.say);
+        CHECK(AI("reader.bookmarks",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,"\"id\":") && !strstr(strstr(g_result,"\"id\":")+5,"\"id\":"),"the bookmark is restored too (%.150s)",g_result);
         CHECK(BY_HAND("system.home",NULL),"leave restored page"); verify("kid");
         CHECK(sim_metric_value("hub.requests.message/send")==0 && sim_metric_value("hub.requests.confirm/request")==0,"restore never replays external actions");
     } else if (!strcmp(phase,"upload-cut") || !strcmp(phase,"network")) {

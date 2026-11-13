@@ -1,40 +1,29 @@
-/* Whole-product inbox and bookmark checks use synthetic books only. */
+/* Inbox books on the shelf, bookmarks added, listed, jumped to and removed, members and restart (reader-one-1:
+ * the one reader; bookmark ids are stable, a mark's place is Mogo's chapter and UTF-8 offset). Synthetic books only. */
 #include <stdlib.h>
 #define ink_main product_main
 #include "configured_boot.c"
 #undef ink_main
 #include "integration/whole_product.h"
+#include "graft.h"
 #include "ink/sys/app.h"
 #include "ink/sys/data.h"
 #include "ink/sys/file.h"
-#include "bookmarks.h"
+#include "ink/ui_theme.h"
 
-static char view[16384], marks[4096];
-static const char *wanted;
-static lv_obj_t *found;
+static char view[8192], marks[4096];
 static volatile bool captured;
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(),15000),"reader settles"); }
 static void ok(const char *id,const char *args) {
-    CHECK(AI(id,args) && g_rc.status==INK_RC_DONE,"%s returns done: %.95s / %.95s",id,g_rc.detail,g_rc.say); quiet();
+    CHECK(AI(id,args) && g_rc.status==INK_RC_DONE,"%s returns done (%d): %.95s / %.95s",id,g_rc.status,g_rc.detail,g_rc.say); quiet();
 }
-static void inspect(void) { CHECK(ink_ui_snapshot(view,sizeof view,NULL)>0,"page has an AI snapshot"); }
-static void get(void) { on_ui(inspect); }
-static void locate(lv_obj_t *obj) {
-    if (!lv_obj_is_visible(obj)) return;
-    if (lv_obj_check_type(obj,&lv_label_class) && !strcmp(lv_label_get_text(obj),wanted)) found=obj;
-    for (uint32_t i=0;i<lv_obj_get_child_count(obj);i++) locate(lv_obj_get_child(obj,(int32_t)i));
-}
-static void find(void) { found=NULL; lv_obj_update_layout(lv_screen_active()); locate(lv_screen_active()); }
-static void touch(const char *text) {
-    wanted=text; on_ui(find); CHECK(found,"visible label %s",text); if (!found) return;
-    lv_area_t a; lv_obj_get_coords(found,&a); tap((a.x1+a.x2)/2,(a.y1+a.y2)/2); quiet();
-}
-static void delete_fits(void) {
-    wanted="删除"; find(); CHECK(found,"bookmark delete control visible");
-    if (found) { lv_point_t size; lv_text_get_size(&size,wanted,lv_obj_get_style_text_font(found,0),0,0,LV_COORD_MAX,LV_TEXT_FLAG_NONE);
-        CHECK(size.x<=lv_obj_get_content_width(found),"bookmark delete label fits at the current system font"); }
-}
+static void graft_view(void) { ink_graft_snapshot(view,sizeof view); }
+static void get(void) { on_ui(graft_view); }
+static bool ready(const char *needle) { for (int i=0;i<300;i++) { get(); if (strstr(view,needle) && settled()) return true; delay_ms(50); } return false; }
+static int geometry_top, geometry_h, geometry_w;
+static void geometry(void) { geometry_top=ink_ui_px(INK_STATUS_BAR); geometry_h=ink_ui_height()-geometry_top; geometry_w=ink_ui_width(); }
+static void tap_native(int x,int y) { on_ui(geometry); tap(x*geometry_w/684,geometry_top+y*geometry_h/1216); quiet(); }
 static void capture(void *name) { sim_display_snapshot(name); captured=true; }
 static void frame(const char *name) { quiet(); captured=false; vtk_event_at(vtk_now()+SIM_MS(1),capture,(void *)name); CHECK(WAIT_FOR(captured,2000),"headless frame captured"); }
 static void home(void) { ink_ui_home(); }
@@ -60,52 +49,50 @@ static void inbox(void) {
     CHECK(!ink_fs_mkdir("/me/收件箱/文件夹.txt"),"book-like directory");
 }
 static bool shelf(void) {
-    ok("app.open","{\"id\":\"reader\"}"); get(); frame("shelf");
-    CHECK(strstr(view,"收件箱来信") && strstr(view,"随手读") && strstr(view,"新"),"inbox books appear with new marks");
+    ok("app.open","{\"id\":\"reader\"}"); CHECK(ready("面板=书架"),"the shelf is laid out"); frame("shelf");
+    CHECK(strstr(view,"收件箱来信 传进来的") && strstr(view,"随手读 传进来的"),"inbox books appear, marked as transferred: %.300s",view);
     CHECK(!strstr(view,"不是书") && !strstr(view,"未完成") && !strstr(view,"文件夹"),"partial, non-book and directories absent");
     return strstr(view,"收件箱来信")!=NULL;
 }
 static void txt(void) {
-    ok("reader.open_book","{\"title\":\"随手读\"}"); ok("reader.goto_chapter","{\"entry\":2}"); get(); uint64_t at=number(view,"offset=");
+    ok("reader.open_book","{\"title\":\"随手读\"}"); ok("reader.goto_chapter","{\"entry\":2}"); get(); uint64_t at=number(view,"位置=");
     ok("reader.add_bookmark",NULL); uint32_t id=first_mark(); CHECK(id && strstr(g_result,"第二章 夜晚"),"TXT bookmark has its current chapter name");
-    close_book(); ok("reader.continue",NULL); get(); CHECK(number(view,"offset=")==at,"inbox TXT continues at saved text");
-    ok("reader.set_layout","{\"font_size\":72,\"line_spacing\":3}"); ok("reader.goto_page","{\"page\":1}"); mark_action("reader.goto_bookmark",id); get();
-    CHECK(number(view,"offset=")<=at && number(view,"end=")>at && strstr(view,"bookmark=true"),"TXT bookmark survives reflow");
+    close_book(); ok("reader.continue",NULL); get(); CHECK(number(view,"位置=")==at,"inbox TXT continues at saved text");
+    ok("reader.set_layout","{\"font_size\":72,\"line_spacing\":150}"); ok("reader.goto_chapter","{\"entry\":1}"); mark_action("reader.goto_bookmark",id); get();
+    CHECK(number(view,"位置=")<=at && number(view,"结束=")>at && strstr(view,"本页书签=1"),"TXT bookmark survives reflow: %.200s",view);
     mark_action("reader.remove_bookmark",id); CHECK(first_mark()==0,"TXT bookmark deleted"); close_book();
-    ok("reader.set_layout","{\"font_size\":44,\"line_spacing\":1}");
+    ok("reader.set_layout","{\"font_size\":48,\"line_spacing\":150}");
 }
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
-    const ink_db_def_t *definition=ink_db_find_def("reader.bookmarks");
-    CHECK(definition && definition->scope==INK_DB_MEMBER && definition->ai_read && !definition->ai_write,"bookmarks registered for AI before a book opens");
     const char *phase=getenv("INK_READER_MORE_PHASE");
     if (phase && !strcmp(phase,"restart")) {
         open_book(); uint32_t id=first_mark(); CHECK(id && strstr(marks,"\"chapter\":2"),"adult bookmarks survive restart");
-        mark_action("reader.goto_bookmark",id); get(); CHECK(strstr(view,"chapter=2 ") && strstr(view,"bookmark=true"),"restarted bookmark returns to chapter two");
+        mark_action("reader.goto_bookmark",id); get(); CHECK(strstr(view,"章节=2 ") && strstr(view,"本页书签=1"),"restarted bookmark returns to chapter two");
         close_book(); CHECK(!ink_member_switch("kid"),"child after restart"); quiet();
         ok("reader.open_book","{\"title\":\"共同读本\"}"); CHECK(first_mark()!=0,"child bookmark survives restart"); close_book();
     } else {
         inbox(); if (!shelf()) { ink_probe_count("test.finished"); return; }
         if (phase && !strcmp(phase,"large")) { ok("settings.set","{\"id\":\"display.font_size\",\"value\":3}"); close_book(); shelf(); }
-        open_book(); ok("reader.continue",NULL); ok("reader.goto_chapter","{\"chapter\":2}"); ok("reader.goto_page","{\"page\":2}"); get();
-        uint64_t at=number(view,"offset="); CHECK(at>0,"bookmark starts in chapter two body");
-        ok("reader.menu",NULL); touch("加书签"); get(); CHECK(strstr(view,"bookmark=true"),"touch adds current page mark visible to AI"); frame("marked");
+        open_book(); ok("reader.goto_chapter","{\"chapter\":2}"); ok("reader.goto_page","{\"page\":2}"); get();
+        uint64_t at=number(view,"位置="); CHECK(at>0,"bookmark starts in chapter two body");
+        ok("reader.menu",NULL); tap_native(501,750+56); CHECK(ready("本页书签=1"),"touch adds current page mark visible to AI"); frame("marked");
         uint32_t id=first_mark(); if (!id) { CHECK(false,"bookmark created"); ink_probe_count("test.finished"); return; }
-        CHECK(strstr(marks,"\"chapter\":2") && number(marks,"\"block\":")>0 && strstr(marks,"\"added_at\":"),"bookmark exposes source block and time");
+        CHECK(strstr(marks,"\"chapter\":2") && strstr(marks,"\"added_at\":") && strstr(marks,"海边段落0"),"bookmark exposes chapter, time and excerpt: %.200s",marks);
         snprintf(marks,sizeof marks,"%.4095s",g_result); ok("reader.add_bookmark",NULL); ok("reader.bookmarks",NULL); CHECK(!strcmp(marks,g_result),"AI add on the same page is idempotent");
-        ok("reader.next_page",NULL); get(); CHECK(strstr(view,"bookmark=false"),"following page has no mark");
-        ok("reader.set_layout","{\"font_size\":72,\"line_spacing\":3}"); mark_action("reader.goto_bookmark",id); get();
-        CHECK(number(view,"offset=")<=at && number(view,"end=")>at && strstr(view,"chapter=2 ") && strstr(view,"bookmark=true"),"EPUB source position survives font and spacing changes");
-        ok("reader.menu",NULL); touch("书签"); get(); CHECK(!strcmp(ink_ui_top_name(),"bookmarks") && strstr(view,"海边"),"bookmark list has named chapter and excerpt"); on_ui(delete_fits); frame("bookmarks");
-        touch("第二章 海边"); get(); CHECK(strstr(view,"bookmark=true"),"touching a list entry jumps to the same source position");
-        ok("reader.menu",NULL); touch("删书签"); get(); CHECK(strstr(view,"bookmark=false") && first_mark()==0,"touch removes bookmark consistently");
-        ok("reader.add_bookmark",NULL); id=first_mark(); ok("reader.bookmarks","{\"open\":true}"); touch("删除"); CHECK(first_mark()==0,"list delete uses the shared capability"); ok("shell.back",NULL);
+        ok("reader.next_page",NULL); get(); CHECK(strstr(view,"本页书签=0"),"following page has no mark");
+        ok("reader.set_layout","{\"font_size\":72,\"line_spacing\":150}"); mark_action("reader.goto_bookmark",id); get();
+        CHECK(number(view,"位置=")<=at && number(view,"结束=")>at && strstr(view,"章节=2 ") && strstr(view,"本页书签=1"),"EPUB source position survives font and spacing changes");
+        ok("reader.next_page",NULL); ok("reader.bookmarks","{\"open\":true}"); get();
+        CHECK(strstr(view,"面板=书签列表") && strstr(view,"第二章 海边"),"bookmark list has the named chapter: %.200s",view); frame("bookmarks");
+        tap_native(342,656+40); CHECK(ready("面板=正文") && strstr(view,"本页书签=1"),"touching a list entry jumps to the same source position");
+        ok("reader.remove_bookmark",NULL); get(); CHECK(strstr(view,"本页书签=0") && first_mark()==0,"removing the page's mark");
         ok("reader.add_bookmark",NULL); id=first_mark(); close_book();
-        ok("reader.continue",NULL); get(); CHECK(strstr(view,"收件箱来信") && strstr(view,"bookmark=true"),"inbox EPUB continues with bookmarks"); close_book();
+        ok("reader.continue",NULL); get(); CHECK(strstr(view,"收件箱来信") && strstr(view,"本页书签=1"),"inbox EPUB continues with bookmarks: %.200s",view); close_book();
         if (!phase || strcmp(phase,"large")) {
             txt(); CHECK(!ink_member_switch("kid"),"switch to child"); quiet();
-            ok("reader.list_books",NULL); CHECK(!strstr(g_rc.say,"收件箱来信") && !strstr(g_rc.say,"随手读"),"AI cannot see another member inbox from a cached shelf");
-            ok("app.open","{\"id\":\"reader\"}"); get(); CHECK(!strstr(view,"收件箱来信") && !strstr(view,"随手读"),"child shelf excludes adult inbox");
+            ok("reader.list_books",NULL); CHECK(!strstr(g_result,"收件箱来信") && !strstr(g_result,"随手读"),"AI cannot see another member's inbox");
+            ok("app.open","{\"id\":\"reader\"}"); CHECK(ready("面板=书架"),"child shelf"); CHECK(!strstr(view,"收件箱来信") && !strstr(view,"随手读"),"child shelf excludes adult inbox");
             CHECK(AI("reader.open_book","{\"title\":\"收件箱来信\"}") && g_rc.status==INK_RC_FAILED,"child cannot open adult inbox book");
             ok("reader.open_book","{\"title\":\"共同读本\"}"); CHECK(first_mark()==0,"child has independent bookmarks"); ok("reader.add_bookmark",NULL); close_book();
             CHECK(!ink_member_switch("owner"),"return to adult"); quiet(); ok("reader.open_book","{\"title\":\"共同读本\"}"); CHECK(first_mark()==0,"adult cannot see child bookmarks for shared book"); close_book();

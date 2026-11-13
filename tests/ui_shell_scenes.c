@@ -182,6 +182,14 @@ static bool listed(const char *id) {
     return found;
 }
 static bool label_visible(const char *label) { wanted = label; find_label(); return label_x >= 0; }
+/* A visible label that starts with `prefix` (a long line is cut at its end to fit). */
+static bool label_starts_in(lv_obj_t *o, const char *prefix) {
+    if (!lv_obj_is_visible(o)) return false;
+    if (lv_obj_check_type(o, &lv_label_class) && !strncmp(lv_label_get_text(o), prefix, strlen(prefix))) return true;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) if (label_starts_in(lv_obj_get_child(o, (int32_t)i), prefix)) return true;
+    return false;
+}
+static bool label_starts(const char *prefix) { lv_obj_update_layout(lv_screen_active()); return label_starts_in(lv_screen_active(), prefix); }
 static bool snapshot_has(const char *text) {
     char *snapshot = osal_malloc(4096, OSAL_MEM_EXTERNAL);
     const char *name;
@@ -260,8 +268,9 @@ static void assert_identity(void) {
     if (!strcmp(scene, "SetNetwork")) CHECK(snapshot_has("网络组=1") && snapshot_has("SIM="), "network selection context is present");
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today")) { /* the cards drawn, the favourites, no empty placeholder */
         CHECK(!strcmp(scene, "Main") ? snapshot_has("卡片=没有") && !label_visible("继续读") && !label_visible("接下来")
-                                     : snapshot_has("卡片=继续读：《星星邮差》第 1 页 · 0%；接下来：接孩子 15:00") &&
-                                       label_visible("第 1 页 · 0%") && label_visible("接下来"),
+                                     /* reader-one-1: the card names the chapter and how far, 《书名》章名 · 读到 N% */
+                                     : snapshot_has("卡片=继续读：《星星邮差》第一章") && snapshot_has(" · 读到 0%；接下来：接孩子 15:00") &&
+                                       label_starts("第一章") && label_visible("接下来"), /* the card's line under 《书名》 */
               "%s: cards with content are drawn and named, cards without are not", scene);
         CHECK(snapshot_has("常用=电话（phone）；短信（message）；阅读（reader）") && label_visible("全部应用") && !snapshot_has("home.next"),
               "%s: the favourites and 全部应用, nothing to turn", scene);

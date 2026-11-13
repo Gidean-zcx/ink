@@ -72,7 +72,7 @@ static const ink_cap_t INK_JOT_CAPS[] = {
 
 ## 4. F1：快照和控件语义
 
-出处：[ui_semantics.h:16，字段与动作](../../system/include/ink/sys/ui_semantics.h#L16)、[ui_semantics.h:42，生命周期约定](../../system/include/ink/sys/ui_semantics.h#L42)、[ui_semantics.h:50，快照与动作桥](../../system/include/ink/sys/ui_semantics.h#L50)、[ui.h:129，运行时快照](../../system/include/ink/sys/ui.h#L129)。
+出处：[ui_semantics.h:16，字段与动作](../../system/include/ink/sys/ui_semantics.h#L16)、[ui_semantics.h:42，生命周期约定](../../system/include/ink/sys/ui_semantics.h#L42)、[ui_semantics.h:50，快照与动作桥](../../system/include/ink/sys/ui_semantics.h#L50)、[ui.h:137，运行时快照](../../system/include/ink/sys/ui.h#L137)。
 
 页面模型 `id` 等于页面的 `name`。字段提供稳定 id、角色、标签、可见值与对象版本；动作提供能力、参数和可用性。屏幕控件与快照读同一份值。字段、模型及其字符串由页面持有，不能借用返回后的栈变量。值或可用动作变化后通知 `ink_ui_content_changed()`；`page_version` 和业务对象的 `revision` 是两种不同版本。
 

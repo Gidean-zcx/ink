@@ -34,7 +34,7 @@ const ink_member_identity_t *ink_mogo_current_owner(void);
 void ink_mogo_ui_coordinates(bool enabled);
 void ink_mogo_canvas(int w, int h);
 void ink_mogo_dimensions(int w, int h, int px);
-extern bool ink_mogo_font_missing; /* the last open could not open its font (D-138: the page says why) */
+const char *ink_mogo_words(const char *s, char *buf, size_t cap);
 #ifndef INK_MOGO_PORT_IMPL
 #define time ink_mogo_time
 #define qsort ink_mogo_qsort

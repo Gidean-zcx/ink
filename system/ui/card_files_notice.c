@@ -19,6 +19,7 @@ static struct {
     void (*reopen)(void);
     int watch[2];
     bool from_ready; /* shown while the list said ready (or reopened): one recheck, no reopening loop */
+    unsigned asked;  /* ink_card_files_checks() when the recheck was asked for: a later conclusion answers it */
     char text[192];
 } N INK_PSRAM_BSS;
 
@@ -40,6 +41,8 @@ static int compose(bool *lent) { /* the words for now, into N.text; the app's st
     else if (s == INK_CARD_FAILED) snprintf(N.text, sizeof N.text, TR("%s没放成，下次连上电脑会再放"), N.what);
     else if (s == INK_CARD_NO_CARD) snprintf(N.text, sizeof N.text, TR("没有存储卡。%s要用的%s放在卡上，插上卡后连电脑会自动放进去"), name, N.what);
     else if (s == INK_CARD_MISSING) snprintf(N.text, sizeof N.text, TR("%s要用的%s还没放到存储卡上，连上电脑后会自动放进去"), name, N.what);
+    else if (N.from_ready && ink_card_files_checks() != N.asked) /* checked again and right: not a card file problem */
+        snprintf(N.text, sizeof N.text, TR("%s要用的%s检查过是好的，但现在打不开。请返回后再打开试试"), name, N.what);
     else snprintf(N.text, sizeof N.text, TR("%s要用的%s现在打不开，正在重新检查"), name, N.what);
     return s;
 }
@@ -68,8 +71,9 @@ static void gone(lv_event_t *e) { /* the watches go with the text (the table has
 lv_obj_t *ink_card_files_notice(lv_obj_t *screen, const char *app, const char *what, void (*reopen)(void)) {
     bool lent;
     if (N.box) lv_obj_delete(N.box);
-    N.app = app, N.what = what, N.reopen = reopen;
+    N.app = app, N.what = what, N.reopen = reopen, N.from_ready = false;
     N.from_ready = compose(&lent) == INK_CARD_READY && !lent;
+    N.asked = ink_card_files_checks();
     N.box = ink_ui_empty(screen, N.text, NULL, NULL, NULL);
     N.label = lv_obj_get_child(N.box, 0);
     lv_label_set_long_mode(N.label, LV_LABEL_LONG_WRAP); /* a sentence, at any text size */

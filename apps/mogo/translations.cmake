@@ -1,10 +1,24 @@
-# Extend the existing generated language tables with this app's own keys.
+# The reader's own keys extend copies of the language tables in the build tree; the sources stay as they are.
+set(mogo_tables)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/reader-i18n)
 foreach(table ${INK_I18N_TABLES})
   get_filename_component(language ${table} NAME)
+  file(READ ${table} base)
   if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/${language})
     file(READ ${CMAKE_CURRENT_LIST_DIR}/${language} extra)
-    file(APPEND ${table} "\n${extra}")
-    configure_file(${table} ${CMAKE_BINARY_DIR}/reader-i18n-check/assets/i18n/${language} COPYONLY)
+    set(base "${base}\n${extra}")
   endif()
+  file(WRITE ${CMAKE_BINARY_DIR}/reader-i18n/${language} "${base}")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${table}) # a changed system table is copied again
+  list(APPEND mogo_tables ${CMAKE_BINARY_DIR}/reader-i18n/${language})
 endforeach()
+set(INK_I18N_TABLES ${mogo_tables})
+if(NOT ESP_PLATFORM)
+  # i18n-literals reads the sources and these tables from one root.
+  set(check_root ${CMAKE_BINARY_DIR}/reader-i18n-check)
+  file(MAKE_DIRECTORY ${check_root}/assets/i18n)
+  file(CREATE_LINK ${CMAKE_CURRENT_LIST_DIR}/../../system ${check_root}/system SYMBOLIC)
+  file(CREATE_LINK ${CMAKE_CURRENT_LIST_DIR}/../../apps ${check_root}/apps SYMBOLIC)
+  file(COPY ${mogo_tables} DESTINATION ${check_root}/assets/i18n)
+endif()
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_LIST_DIR}/en.tsv)
