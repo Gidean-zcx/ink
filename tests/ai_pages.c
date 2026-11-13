@@ -205,7 +205,10 @@ static void cold_records(void) {
     CHECK(ink_member_switch("owner") == 0, "switch away from newly loaded page"); quiet();
     CHECK(AI("shell.ai_log", NULL), "open original member log"); quiet(); on_ui(check_child_screen);
 }
+static bool cell_registered(void) { int64_t v = 0; ink_state_get_int(ink_state_find("cell.registered"), &v); return v != 0; }
 static void real_receipts(void) {
+    /* The 4G modem registers some seconds after boot and the status bar redraws then: the captures must not race it. */
+    CHECK(WAIT_FOR(cell_registered(), 30000), "the boot-time 4G registration is over"); quiet();
     int64_t before = ink_setting_get("display.light");
     CHECK(AI("settings.set", "{\"id\":\"display.light\",\"value\":3}") && g_rc.status == INK_RC_DONE && g_rc.undo_ms == 10000, "real brightness change returns undo window");
     char undo[160]; snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, (unsigned)g_rc.revision);

@@ -33,7 +33,19 @@ static void locate(lv_obj_t *obj) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) locate(lv_obj_get_child(obj, (int32_t)i));
 }
 static void find_label(void) { found = false; lv_obj_update_layout(lv_screen_active()); locate(lv_screen_active()); locate(lv_layer_sys()); }
-static void touch(const char *label) { quiet(); wanted = label; on_ui(find_label); CHECK(found, "visible button: %s", label); if (found) tap(point.x, point.y); quiet(); }
+/* A tap the touch controller never reported (it fell into a flash erase, which stops the touch driver on the device
+ * too) is tapped again, as a person would (tests/integration/dictation.c); whether it was seen is the driver's count. */
+static void touch(const char *label) {
+    quiet(); wanted = label; on_ui(find_label); CHECK(found, "visible button: %s", label);
+    bool seen = false;
+    for (int i = 0; found && !seen && i < 3; i++) {
+        double delivered = sim_metric_value("input.touch_delivery_ms");
+        tap(point.x, point.y);
+        seen = WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > delivered, 1000);
+        if (!seen) ink_probe_count("test.taps_unseen");
+    }
+    CHECK(!found || seen, "the touch driver received the tap on %s", label); quiet();
+}
 static void enter(const char *pin) { for (const char *p = pin; *p; p++) { char label[2] = {*p, 0}; touch(label); } touch("确定"); }
 static void counters(void) {
     CHECK(AI("member.time_get", "{\"id\":\"kid\"}") && g_rc.status == INK_RC_DONE, "read the synthetic child's policy");

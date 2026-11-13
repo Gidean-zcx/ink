@@ -145,8 +145,10 @@ static void snake_game(void) {
     CHECK(WAIT_FOR(moved(head), 1500), "next key turn reaches next tick");
     ok("games.snake.reset", NULL); touch("games.snake.turn"); state("snake");
     CHECK(number("next") == 0 || number("direction") == 0, "screen direction control shares AI action");
-    eat(); ok("games.snake.pause", NULL); state("snake"); parent_score = number("best"); same_page("SnakeGame"); capture("SnakePlaying");
-    ok("games.snake.resume", NULL); CHECK(WAIT_FOR(ended(), 10000), "wall ends running game"); same_page("SnakeGame"); capture("SnakeEnd");
+    eat(); ok("games.snake.pause", NULL); state("snake"); same_page("SnakeGame"); capture("SnakePlaying");
+    ok("games.snake.resume", NULL); CHECK(WAIT_FOR(ended(), 10000), "wall ends running game");
+    state("snake"); parent_score = number("best"); /* after the run: food (hardware random) may lie on the way to the wall */
+    same_page("SnakeGame"); capture("SnakeEnd");
     ok("games.snake.reset", NULL); ok("system.home", NULL); state("snake"); snprintf(old_board, sizeof old_board, "%s", board);
     delay_ms(1500); state("snake"); CHECK(flag("paused") && !strcmp(board, old_board), "leaving page stops snake");
 }
