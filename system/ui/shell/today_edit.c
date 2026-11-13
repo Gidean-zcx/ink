@@ -9,7 +9,7 @@ static const char *const DEFAULT_APPS[FAVORITES] = {"phone", "message", "reader"
 static struct {
     bool saved, apps_saved;
     int count, total, app_count;
-    char selected[4][48], keys[6][48], args[6][96], up[6][96], order[6][32], apps[FAVORITES][24], app_args[96], which[32];
+    char selected[4][48], keys[6][48], args[6][96], up[6][96], order[6][32], apps[FAVORITES][32], app_args[96], which[32];
     ink_card_t items[6];
     ink_ui_list_t *list;
     ink_ui_list_position_t position;

@@ -89,11 +89,13 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     P.model = (ink_ui_page_spec_t){.id = "SetMobile", .title = TR("移动网络"), .object = {"net.mobile", 0}, .fields = P.fields, .field_count = P.edit ? 3 : 4, .actions = P.actions, .action_count = P.edit ? 1 : 4};
 }
-static void destroy(void) { P.screen = NULL; P.generation++; memset(P.password, 0, sizeof P.password); }
+/* A redraw also destroys and recreates the page; only a new visit (shell.mobile) starts a new generation, so a
+ * reply still in flight across a redraw (readonly metadata, font size) is not dropped and the page never stays unavailable. */
+static void destroy(void) { P.screen = NULL; memset(P.password, 0, sizeof P.password); }
 static int snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&P.model, out, cap); }
 static const ink_activity_t PAGE = {.name = "SetMobile", .create = create, .destroy = destroy, .snapshot = snapshot};
 static void navigate(ink_call_t *c) {
-    if (!strcmp(c->cap->id, "shell.mobile")) { P.edit = false; P.unavailable = true; ink_ui_push(&PAGE, NULL); reload(NULL, 0, NULL); return; }
+    if (!strcmp(c->cap->id, "shell.mobile")) { P.edit = false; P.unavailable = true; P.generation++; ink_ui_push(&PAGE, NULL); reload(NULL, 0, NULL); return; }
     if (!current() || P.unavailable || ink_member_current()->role == INK_ROLE_CHILD) { c->rc.status = INK_RC_REJECTED; return; }
     int64_t readonly = 0; ink_state_get_int(ink_state_find("cell.config_readonly"), &readonly);
     if (readonly) { c->rc.status = INK_RC_REJECTED; snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("暂不能更改")); return; }

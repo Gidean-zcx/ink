@@ -939,6 +939,11 @@ static void cap_upgrade_card(ink_call_t *c) { /* exec.bg */
 /* ---- the new system proves itself ---- */
 
 static void told_result(bool ok, const char *version, const char *why) {
+    /* The notification first: whoever hears update.result (the AI, a page) finds it in the list, not one being written. */
+    char body[80];
+    snprintf(body, sizeof body, ok ? TR("现在是 %s") : TR("%s 没装成，还是原来的系统"), version);
+    ink_notify_t n = {.channel = "system", .title = ok ? TR("系统升级好了") : TR("系统升级失败"), .body = body, .tag = "update.result", .prio = ok ? INK_NOTIFY_NORMAL : INK_NOTIFY_HIGH, .src = INK_SRC_SYSTEM};
+    ink_notify_post(&n, NULL);
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (a) {
         ink_args_init(a);
@@ -948,10 +953,6 @@ static void told_result(bool ok, const char *version, const char *why) {
         ink_cap_emit("update.result", a);
         osal_free(a);
     }
-    char body[80];
-    snprintf(body, sizeof body, ok ? TR("现在是 %s") : TR("%s 没装成，还是原来的系统"), version);
-    ink_notify_t n = {.channel = "system", .title = ok ? TR("系统升级好了") : TR("系统升级失败"), .body = body, .tag = "update.result", .prio = ok ? INK_NOTIFY_NORMAL : INK_NOTIFY_HIGH, .src = INK_SRC_SYSTEM};
-    ink_notify_post(&n, NULL);
 }
 
 /* What was not in the slot: fonts and resources, after the system has proved itself. From where a power cut left it. */

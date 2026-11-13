@@ -15,7 +15,7 @@ endfunction()
 pkg(hub ${OUT}/hub.inkfw --version 2.0.0 --code 200 --app-size 1048576 --font 4096 --resources 8192)
 
 # How a run has to end: restart (the device restarted), off (the power went), done (the test got to the end),
-# gives_up (the new system did not hold, and restarted before the test had even started).
+# gives_up (the new system did not hold, and restarted by itself soon after the panel first drew, before the test could check).
 function(run phase expect)
   set(envs INK_UPDATE_PHASE=${phase} INK_SIM_UPDATE_PKG=${OUT}/hub.inkfw ${ARGN})
   execute_process(COMMAND ${CMAKE_COMMAND} -E env ${envs}

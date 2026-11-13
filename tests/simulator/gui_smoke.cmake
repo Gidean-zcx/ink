@@ -19,7 +19,7 @@ foreach(attempt 1 2)
   file(REMOVE_RECURSE ${dir})
   execute_process(
     COMMAND ${GUI} --data ${dir} --speed 1 --no-random-outages
-            --gui-click 389,657@1 --gui-click 498,372@3 --gui-click 498,207@6 --gui-click 481,657@12
+            --gui-click 389,657@1 --gui-click 590,386@3 --gui-click 498,207@6 --gui-click 481,657@12
             --gui-exit-after 16 --gui-screenshot ${dir}/window.png
     RESULT_VARIABLE rc OUTPUT_VARIABLE out ERROR_VARIABLE err)
   if(NOT rc EQUAL 0)

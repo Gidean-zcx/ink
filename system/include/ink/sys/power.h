@@ -57,6 +57,9 @@ uint64_t ink_power_last_activity(void);
 void ink_power_lock(void);
 /** A wake key was pressed at t_us while locked: unlock. Returns false if it was not locked. */
 bool ink_power_unlock(uint64_t t_us);
+/** The chip sleeps in a slice or is still coming out of it (a wake key's unlock may yet come). A redraw only the
+ *  locked screen needs can wait for the busy checks, which run before the chip sleeps again. Any task. */
+bool ink_power_waking(void);
 
 /** The next time something is due (alarms): a sleep slice ends there, and the chip does not sleep past it until
  *  the owner moves it, for a few seconds at most. 0 = nothing. Any task. */

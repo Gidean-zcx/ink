@@ -24,6 +24,7 @@ static lv_obj_t *g_mark, *g_clock, *g_label, *g_date, *g_alarm, *g_notice, *g_ne
 static uint32_t g_version, g_revision;
 static uint64_t g_unlock_cause;
 static int g_locked;
+static bool g_minute_due; /* a minute turned while the chip slept or woke */
 enum { LOCK_FIELDS = 6 + INK_LOCK_FACE_FIELDS, KINDS = 16, COVER_FIELDS = 5 + KINDS + INK_MEMBERS_MAX };
 /* The cover's state: what each row and avatar shows, so a count that changes redraws only its number. */
 static struct {
@@ -36,7 +37,7 @@ static struct {
     ink_ui_action_spec_t actions[INK_MEMBERS_MAX];
     size_t nactions;
 } C INK_PSRAM_BSS;
-static ink_exec_job_t g_job;
+static ink_exec_job_t g_job, g_minute_job;
 static const ink_ui_action_spec_t ACTIONS[] = {
     {.id = "emergency", .label = TR_NOOP("打开紧急呼叫页面"), .capability = "phone.emergency_open", .enabled = true},
     {.id = "camera", .label = TR_NOOP("拍照"), .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = true}
@@ -353,7 +354,18 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
     else return;
     ink_exec_post(INK_EXEC_UI, &g_job, sync_mark, NULL);
 }
-static void on_minute(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; update_clock(); update_next(); if (ink_lock_face_update()) changed(); }
+static void minute_now(void *arg) { (void)arg; update_clock(); update_next(); if (ink_lock_face_update()) changed(); }
+static void on_minute(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id;
+    /* Woken from a slice: a wake key's unlock takes the cover off at once, and a clock drawn first holds the page back on the panel. */
+    if (ink_power_waking()) { __atomic_store_n(&g_minute_due, true, __ATOMIC_RELEASE); return; }
+    minute_now(NULL);
+}
+static bool minute_due(void) { /* power task, before the chip sleeps again: still locked, the clock catches up now */
+    if (!__atomic_exchange_n(&g_minute_due, false, __ATOMIC_ACQ_REL)) return false;
+    ink_exec_post(INK_EXEC_UI, &g_minute_job, minute_now, NULL);
+    return true;
+}
 static void on_time(void *ctx, const char *id, const ink_args_t *args) { (void)args; on_minute(ctx, 0, id); }
 static void on_member(void *ctx, int h, const char *id) {
     (void)ctx; (void)h;
@@ -378,7 +390,7 @@ int ink_ui_lock_mark_init(void) {
     if (ink_cap_register(&enter_cap, 1) || ink_state_watch("notify.unread", on_unread, NULL, INK_EXEC_UI)) return -1;
     if (ink_state_watch("member.", on_member, NULL, INK_EXEC_UI) || ink_settings_watch("display.lock_", on_style, NULL, INK_EXEC_UI)) return -1;
     if (ink_state_watch("media.state", on_audio, NULL, INK_EXEC_UI) || ink_state_watch("audio.now_playing", on_audio, NULL, INK_EXEC_UI)) return -1;
-    if (ink_power_add_busy_check(ink_ui_busy) != 0 || ink_state_watch("time.minute", on_minute, NULL, INK_EXEC_UI) != 0) return -1;
+    if (ink_power_add_busy_check(ink_ui_busy) != 0 || ink_power_add_busy_check(minute_due) != 0 || ink_state_watch("time.minute", on_minute, NULL, INK_EXEC_UI) != 0) return -1;
     if (ink_cap_subscribe("time.changed", on_time, NULL, INK_EXEC_UI)) return -1;
     return ink_power_subscribe(on_power, NULL);
 }

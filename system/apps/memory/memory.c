@@ -17,7 +17,8 @@ static struct {
     ink_memory_t s;
     best_t best;
     ink_db_t *db;
-    ink_call_t *call;
+    ink_call_t *call, *waiting[4]; /* the call that loads this member's score, and calls that came meanwhile */
+    int nwait;
     ink_exec_job_t job;
     uint32_t epoch, loading;
     uint64_t since, elapsed, hide_at;
@@ -63,9 +64,10 @@ static void changed(void) {
 }
 static void fail(ink_call_t *c, ink_rc_t rc) { c->rc.status = rc; snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("暂时不能翻牌，请重试")); }
 static void loaded(void *arg) {
-    (void)arg; ink_call_t *c = M.call; M.call = NULL;
-    if (M.loading != ink_member_epoch() || !ink_member_space_open()) { ink_db_close(M.db); M.db = NULL; fail(c, INK_RC_CANCELLED); }
-    else if (!M.db) fail(c, INK_RC_FAILED);
+    (void)arg; ink_call_t *c = M.call, *waiting[4]; int n = M.nwait; ink_rc_t rc = INK_RC_DONE;
+    memcpy(waiting, M.waiting, sizeof waiting); M.call = NULL; M.nwait = 0;
+    if (M.loading != ink_member_epoch() || !ink_member_space_open()) { ink_db_close(M.db); M.db = NULL; fail(c, rc = INK_RC_CANCELLED); }
+    else if (!M.db) fail(c, rc = INK_RC_FAILED);
     else {
         ink_rec_t rec; M.best = (best_t){0};
         if (ink_db_get(M.db, 1, &rec, &M.best, sizeof M.best) || rec.len != sizeof M.best) M.best = (best_t){0};
@@ -73,10 +75,22 @@ static void loaded(void *arg) {
         M.epoch = M.loading; show(); run(c);
     }
     ink_cap_done(c);
+    for (int i = 0; i < n; i++) { /* the page's own read and the AI's may both wait for one load */
+        if (M.call) { /* another load began: wait for that one */
+            if (M.nwait < (int)(sizeof M.waiting / sizeof *M.waiting)) { M.waiting[M.nwait++] = waiting[i]; continue; }
+            fail(waiting[i], INK_RC_FAILED);
+        } else if (rc != INK_RC_DONE) fail(waiting[i], rc);
+        else run(waiting[i]);
+        if (M.call != waiting[i]) ink_cap_done(waiting[i]);
+    }
 }
 static void load(void *arg) { (void)arg; M.db = ink_db_open_member(&DB, M.member); ink_exec_post(INK_EXEC_UI, &M.job, loaded, NULL); }
 static void run(ink_call_t *c) {
-    if (M.call) { fail(c, INK_RC_FAILED); return; }
+    if (M.call) { /* a load is under way: answer after it */
+        if (M.nwait == (int)(sizeof M.waiting / sizeof *M.waiting)) fail(c, INK_RC_FAILED);
+        else { ink_cap_defer(c); M.waiting[M.nwait++] = c; }
+        return;
+    }
     if (!M.db || M.epoch != ink_member_epoch()) {
         if (ink_exec_ready(INK_EXEC_BG)) { fail(c, INK_RC_FAILED); return; }
         ink_db_close(M.db); M.db = NULL; M.loading = ink_member_epoch();
