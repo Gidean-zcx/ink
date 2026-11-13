@@ -84,5 +84,14 @@ int main(int argc, char **argv) {
     ink_format_t *r = NULL; int error; char path[1024]; snprintf(path, sizeof path, "%s/bad.mp3", argv[1]); size_t before = live;
     assert(ink_format_open_for("test", path, &r, &error) != 0 && !r && live == before);
     char a[96], b[96], c[96]; ink_music_tags(path, a, b, c, sizeof a); assert(!b[0] && !c[0]);
+    /* A FLAC with TITLE/ARTIST tags and no .lrc next to it: lyrics fall back to the Vorbis comment, read with no
+     * title or artist buffer (music_tags_lyrics). It used to strlen(NULL) there (music-product, 3130ab06). */
+    const char *lone = "music-formats-lone.flac"; snprintf(path, sizeof path, "%s/tone-16000-1.flac", argv[1]);
+    FILE *in = fopen(path, "rb"), *out = fopen(lone, "wb"); assert(in && out);
+    for (int ch; (ch = fgetc(in)) != EOF;) assert(fputc(ch, out) != EOF);
+    assert(fclose(in) == 0 && fclose(out) == 0);
+    ink_music_tags(lone, a, b, c, sizeof a); assert(!strcmp(a, "合成音调") && !strcmp(b, "测试歌手"));
+    music_lyrics_load(lone, 3000); assert(!music_lyrics_at(0)[0] && !music_lyrics_at(1500)[0]);
+    music_lyrics_clear(); assert(remove(lone) == 0);
     puts("music formats: passed"); return 0;
 }

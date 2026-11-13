@@ -313,11 +313,15 @@ static void parse_vorbis(const uint8_t *buf, uint32_t len, char *title, size_t t
             const uint8_t *val = eq + 1;
             const size_t val_len = l - key_len - 1;
             if (key_len == 5 && strncasecmp((const char *)(buf + p), "TITLE", 5) == 0) {
-                utf8_copy(val, val_len, title, tcap);
-                trim_end(title);
+                if (tcap) {  // the lyrics-only call passes no title buffer (NULL, 0)
+                    utf8_copy(val, val_len, title, tcap);
+                    trim_end(title);
+                }
             } else if (key_len == 6 && strncasecmp((const char *)(buf + p), "ARTIST", 6) == 0) {
-                utf8_copy(val, val_len, artist, acap);
-                trim_end(artist);
+                if (acap) {  // nor an artist buffer
+                    utf8_copy(val, val_len, artist, acap);
+                    trim_end(artist);
+                }
             } else if (lyrics && !lyrics[0] &&
                        ((key_len == 6 && strncasecmp((const char *)(buf + p), "LYRICS", 6) == 0) ||
                         (key_len == 14 &&
