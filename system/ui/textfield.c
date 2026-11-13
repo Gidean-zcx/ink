@@ -109,6 +109,14 @@ static void compose_line(field_t *f, const char *v, const char *c, char *line, s
     }
 }
 
+/* LVGL scrolls a text area to its cursor with an animation, when its text is set and from its own style and
+ * size events (a restyle in a page's settle): each step would be one more refresh after the frame. Land at once. */
+static void scroll_now(lv_obj_t *area) {
+    lv_point_t end; lv_obj_get_scroll_end(area, &end);
+    lv_obj_scroll_to(area, end.x, end.y, LV_ANIM_OFF);
+}
+static void area_changed(lv_event_t *e) { scroll_now(lv_event_get_current_target(e)); }
+
 static void show(field_t *f) {
     const char *v = f->session ? ink_text_value() : f->text;
     const char *c = f->session ? ink_text_composing() : "";
@@ -127,8 +135,7 @@ static void show(field_t *f) {
     size_t start = 0, end = 0;
     if (f->session) ink_text_selection(&start, &end);
     if (f->session) lv_textarea_set_cursor_pos(f->area, (int32_t)(start - f->window + ink_text_char_offset(c, strlen(c))));
-    lv_point_t scroll; lv_obj_get_scroll_end(f->area, &scroll);
-    lv_obj_scroll_to(f->area, scroll.x, scroll.y, LV_ANIM_OFF);
+    scroll_now(f->area);
     lv_label_set_text_selection_start(f->label, start == end ? LV_LABEL_TEXT_SELECTION_OFF : (uint32_t)(start - f->window));
     lv_label_set_text_selection_end(f->label, start == end ? LV_LABEL_TEXT_SELECTION_OFF : (uint32_t)(end - f->window));
     lv_obj_set_style_opa(f->area, f->session ? LV_OPA_COVER : LV_OPA_TRANSP, LV_PART_CURSOR);
@@ -459,6 +466,8 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     lv_obj_set_style_border_side(f->area, LV_BORDER_SIDE_LEFT, LV_PART_CURSOR);
     lv_obj_set_style_anim_duration(f->area, 0, LV_PART_CURSOR);
     lv_textarea_set_cursor_click_pos(f->area, false);
+    lv_obj_add_event_cb(f->area, area_changed, LV_EVENT_STYLE_CHANGED, NULL); /* runs after the text area's own handler */
+    lv_obj_add_event_cb(f->area, area_changed, LV_EVENT_SIZE_CHANGED, NULL);
     lv_textarea_set_placeholder_text(f->area, f->hint);
     lv_textarea_set_password_show_time(f->area, 0);
     lv_textarea_set_password_bullet(f->area, "*");
