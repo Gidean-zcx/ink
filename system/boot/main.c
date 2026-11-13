@@ -105,6 +105,7 @@ void ink_main(void) {
     if (ink_file_picker_init() != 0) osal_panic("file picker failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_pairing_start();
+    ink_data_refresh_state();
     ink_power_battery_policy_start();
     ink_update_boot_check();
     ink_probe_mark("system-started");
@@ -145,5 +146,4 @@ void ink_main(void) {
     MUST(ink_app_packages_init(), "installed apps failed to start");
     if (ink_log_start()) osal_panic("logging capabilities failed to start");
     ink_backup_start(); /* Replay only after all collection definitions are registered. */
-    ink_data_refresh_state(); /* waits for the storage task, which waits for the first full refresh: after the apps */
 }
