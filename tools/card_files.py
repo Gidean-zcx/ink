@@ -115,8 +115,18 @@ def c_text(m):
         "#endif", ""])
 
 
+def same_list(m, spec_path):
+    """The manifest was made from this spec: same paths and apps in the same order (a stale bundle is refused)."""
+    spec = json.loads(Path(spec_path).read_text())["entries"]
+    if [(e["path"], e["app"]) for e in m["entries"]] != [(e["path"], e["app"]) for e in spec]:
+        raise SystemExit(f"card files: the manifest is not made from {spec_path}: rebuild it (target ink_card_files)")
+
+
 def header(a):
-    text, out = c_text(load(a.manifest)), Path(a.out)
+    m = load(a.manifest)
+    if a.spec:
+        same_list(m, a.spec)
+    text, out = c_text(m), Path(a.out)
     if not out.exists() or out.read_text() != text:  # unchanged: nothing recompiles
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(text)
@@ -160,6 +170,7 @@ def main(argv=None):
     h = sub.add_parser("header")
     h.add_argument("--manifest", required=True)
     h.add_argument("--out", required=True)
+    h.add_argument("--spec", help="refuse a manifest not made from this list (the S31 build reads the host build's)")
     v = sub.add_parser("verify")
     v.add_argument("--manifest", required=True)
     v.add_argument("--header", required=True)

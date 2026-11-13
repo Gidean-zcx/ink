@@ -75,9 +75,11 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/licenses.py ${CMAKE_BINARY_DIR}/
 if(NOT EXISTS ${root}/build/card-files/manifest.json)
     message(FATAL_ERROR "No ${root}/build/card-files/manifest.json: do the host build first (target ink_card_files)")
 endif()
+# --spec: a host build older than tools/card_files.json (another path or app list) stops here instead of going in.
 execute_process(COMMAND ${PYTHON} ${root}/tools/card_files.py header --manifest ${root}/build/card-files/manifest.json
-    --out ${CMAKE_BINARY_DIR}/generated/ink/card_files_manifest.h WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${root}/build/card-files/manifest.json)
+    --out ${CMAKE_BINARY_DIR}/generated/ink/card_files_manifest.h --spec ${root}/tools/card_files.json
+    WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${root}/build/card-files/manifest.json ${root}/tools/card_files.json)
 
 include(${root}/system/services/text/google_build.cmake)
 ink_google_pinyin(${COMPONENT_LIB})
