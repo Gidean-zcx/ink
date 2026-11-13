@@ -32,9 +32,9 @@ def boot(build, area, phase, sd, tool=None, binary=None):
     if tool is not None:
         cmd += ["--installer", " ".join([sys.executable, str(ROOT / "tests/card_files/fake_host.py"),
                                          "--bundle", str(build / "card-files"), "--log", str(log)] + tool)]
-    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=240,
+    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, errors="replace", timeout=240,
                             env={**os.environ, "INK_CF_PHASE": phase, "UBSAN_OPTIONS": "halt_on_error=1"})
-    data = json.loads((out / "metrics.json").read_text()) if (out / "metrics.json").exists() else {}
+    data = json.loads((out / "metrics.json").read_text(errors="replace")) if (out / "metrics.json").exists() else {}
     counts = data.get("metrics", {})
     if result.returncode or counts.get("test.finished") != 1 or counts.get("test.fail"):
         raise SystemExit(f"{phase}: FAIL exit={result.returncode}\n{result.stdout[-3000:]}\n{result.stderr[-3000:]}\n"
