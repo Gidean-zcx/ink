@@ -2234,3 +2234,23 @@ if(APPLE)
 else()
   target_link_libraries(ink_system INTERFACE stdc++)
 endif()
+# gallery-3: the AgentUI helpers through the shim, EXIF orientation and probe, the walks on the whole product.
+add_executable(test-gallery-agentui tests/gallery_3/agentui.c system/apps/gallery/repository.cpp)
+target_include_directories(test-gallery-agentui PRIVATE system/include platform/include system/apps/gallery)
+target_compile_options(test-gallery-agentui PRIVATE ${INK_WARN})
+add_test(NAME gallery-3-agentui COMMAND test-gallery-agentui)
+set(INK_GALLERY3_FIXTURES ${CMAKE_BINARY_DIR}/generated/gallery3_fixtures.h)
+add_custom_command(OUTPUT ${INK_GALLERY3_FIXTURES}
+  COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/fixtures.py ${INK_GALLERY3_FIXTURES}
+  DEPENDS tests/gallery_3/fixtures.py)
+ink_sim_executable(sim-gallery-3-exif tests/gallery_3/exif.c ${INK_GALLERY3_FIXTURES})
+target_include_directories(sim-gallery-3-exif PRIVATE ${CMAKE_BINARY_DIR}/generated system/include)
+target_link_libraries(sim-gallery-3-exif PRIVATE ink_system)
+add_test(NAME gallery-3-exif COMMAND sim-gallery-3-exif --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/media/image.budget.json --out ${CMAKE_BINARY_DIR}/test-out/gallery-3-exif --end 10s --quiet --no-random-outages)
+ink_sim_executable(sim-gallery-3 tests/gallery_3/gallery.c)
+target_link_libraries(sim-gallery-3 PRIVATE ink_apps ink_system)
+add_test(NAME gallery-3 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(gallery-3 PROPERTIES TIMEOUT 1500)
+add_test(NAME gallery-3-source COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/gallery_3/source_check.py)
+set_tests_properties(gallery-3-source PROPERTIES SKIP_RETURN_CODE 77)

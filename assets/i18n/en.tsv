@@ -1937,7 +1937,7 @@ language english 中文 英文	language english chinese
 %d年%d月%d日 %s（文件时间）	%d-%d-%d %s (file time)
 %d年%s	%d %s
 %d月%d日删除	Deleted %d/%d
-%d月%d日删除 · 还剩 %d 天	Deleted %d/%d · %d days left
+还剩 %d 天	%d days left
 %d月—%d月	%d–%d
 %s · %zu 张	%s · %zu photos
 %s · 第%zu/%zu张 · %s	%s · %zu of %zu · %s
@@ -1950,7 +1950,7 @@ language english 中文 英文	language english chinese
 不详	Unknown
 信息	Details
 其他照片	Other photos
-删除日期不详，不会自动删除	Deletion date unknown; not deleted automatically
+删除日期不详	Deletion date unknown
 原来的地方同名的照片太多，照片还在最近删除里	Too many photos with that name where it was; it stays in Recently deleted
 右移	Right
 名字	Name
@@ -2000,3 +2000,4 @@ language english 中文 英文	language english chinese
 （恢复）	(restored)
 %d月%d日	%d/%d
 大小未知	Size unknown
+不会自动删除	Not deleted automatically

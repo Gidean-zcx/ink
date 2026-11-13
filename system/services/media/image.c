@@ -36,10 +36,9 @@ static uint32_t tiff32(const tiff_t *t, size_t at) {
     return t->le ? tiff16(t, at) | (uint32_t)tiff16(t, at + 2) << 16 : (uint32_t)tiff16(t, at) << 16 | tiff16(t, at + 2);
 }
 static void exif_ifd(const tiff_t *t, uint32_t ifd, ink_image_info_t *out, bool top) {
-    if (ifd > t->n || t->n - ifd < 2) return;
+    if (ifd > t->n || t->n - ifd < 2 || (t->n - ifd - 2) / 12 < tiff16(t, ifd)) return; /* an IFD past the block is broken whole */
     for (unsigned i = 0, count = tiff16(t, ifd); i < count; i++) {
         size_t e = ifd + 2 + (size_t)i * 12;
-        if (e > t->n || t->n - e < 12) return;
         unsigned tag = tiff16(t, e), type = tiff16(t, e + 2);
         uint32_t n = tiff32(t, e + 4), value = tiff32(t, e + 8);
         if (top && tag == 0x0112 && type == 3 && n == 1 && tiff16(t, e + 8) >= 1 && tiff16(t, e + 8) <= 8) out->orientation = tiff16(t, e + 8);

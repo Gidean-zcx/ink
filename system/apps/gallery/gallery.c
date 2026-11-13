@@ -66,12 +66,12 @@ typedef struct { const char *icon, *label, *cap, *args; } tool_t;
 static struct {
     ink_ui_list_t *list; ink_ui_list_position_t position, rows, trash_position, info_position;
     photos_t *data;
-    uint32_t ids[INK_FS_INDEX_MAX], epoch, photo, revision, last_photo, batch, seq, view_photo;
+    uint32_t ids[INK_FS_INDEX_MAX], epoch, photo, revision, last_photo, batch, seq, view_photo, opened;
     size_t count;
-    int view, filter, seen, layout; bool fresh; uint16_t album; char month[8];
+    int view, filter, seen, layout; bool fresh, waiting; uint16_t album; char month[8];
     lv_obj_t *slots[PHOTO_SLOTS], *box, *status, *name, *body, *content, *image, *segments, *month_line;
     char objects[LIST_SLOTS][32], args[LIST_SLOTS][INK_FS_PATH_MAX + 32], labels[LIST_SLOTS][96], values[LIST_SLOTS][96];
-    char path[INK_FS_PATH_MAX], message[160], caption[INK_FS_PATH_MAX + 64], line[96], trashing[INK_FS_PATH_MAX];
+    char path[INK_FS_PATH_MAX], message[160], caption[INK_FS_PATH_MAX + 64], line[96], trashing[INK_FS_PATH_MAX], notice[160];
     char undo_args[INK_FS_PATH_MAX + 32], forever_args[INK_FS_PATH_MAX + 32], info_values[INFO_ROWS][96];
     const char *info_labels[INFO_ROWS]; size_t ninfo;
     unsigned expected, arrived; int8_t thumb_state[PHOTO_SLOTS]; ink_image_t thumbs[PHOTO_SLOTS];
@@ -441,13 +441,13 @@ static void line_text(void) { /* which month this page is, or what the filter sh
 }
 static void draw_content(void) {
     if (!G.content) return;
-    lv_obj_clean(G.content); G.list = NULL; G.status = G.month_line = NULL; memset(G.slots, 0, sizeof G.slots);
+    lv_obj_clean(G.content); G.list = NULL; G.status = G.month_line = NULL; G.waiting = false; memset(G.slots, 0, sizeof G.slots);
     G.batch++; ink_svc_cancel(&G.batch_at);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, h = INK_CANVAS_H - INK_MARGIN - (INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S + INK_SEGMENT + INK_GAP), y = 0;
     bool empty = !G.data || (!G.data->count && !G.data->ntrash);
     if (!G.data) { G.status = ink_ui_notice(G.content, TR("正在读取照片"), 0); return; }
     if (empty && G.data->err) { empty_state(G.content, read_error(G.data->err), TR("重读照片"), "gallery.reload"); return; }
-    if (empty && organizing()) { empty_state(G.content, TR("正在整理照片，好了会自动出来"), NULL, NULL); return; }
+    if (empty && organizing()) { G.waiting = true; empty_state(G.content, TR("正在整理照片，好了会自动出来"), NULL, NULL); return; }
     if (G.data->err) { G.status = ink_ui_notice(G.content, read_error(G.data->err), 0); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S; }
     if (G.view == VIEW_ALL) {
         line_text();
@@ -529,12 +529,12 @@ static void photo_target(view_t *v) {
 static void photo_box_event(lv_event_t *e);
 static void show_view(void) {
     if (!G.box) return;
-    lv_obj_clean(G.box); G.image = NULL;
-    if (G.seen) {
-        char text[160];
-        if (G.seen == SEEN_TOO_BIG) snprintf(text, sizeof text, TR("这张照片太大（%u×%u），设备只能看 100 万像素以内的"), G.info.width, G.info.height);
-        else if (G.seen == SEEN_FORMAT) snprintf(text, sizeof text, TR("这种格式（%s）还看不了"), G.info.format == INK_IMAGE_WEBP ? "WebP" : G.info.format == INK_IMAGE_GIF ? "GIF" : "BMP");
-        else snprintf(text, sizeof text, "%s", TR("这张照片读不出来，文件可能坏了"));
+    lv_obj_clean(G.box); G.image = NULL; G.notice[0] = 0;
+    if (G.seen) { /* why it cannot be shown, in one sentence (also for the AI) */
+        char *text = G.notice; size_t cap = sizeof G.notice;
+        if (G.seen == SEEN_TOO_BIG) snprintf(text, cap, TR("这张照片太大（%u×%u），设备只能看 100 万像素以内的"), G.info.width, G.info.height);
+        else if (G.seen == SEEN_FORMAT) snprintf(text, cap, TR("这种格式（%s）还看不了"), G.info.format == INK_IMAGE_WEBP ? "WebP" : G.info.format == INK_IMAGE_GIF ? "GIF" : "BMP");
+        else snprintf(text, cap, "%s", TR("这张照片读不出来，文件可能坏了"));
         lv_obj_t *l = ink_ui_label(G.box, text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, 0, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0); lv_obj_set_style_text_color(l, ink_ui_secondary(), 0); lv_obj_center(l);
         return;
@@ -597,7 +597,7 @@ static void photo_changed_view(void) { /* one refresh: the body when its layout 
     if (!G.body) return;
     if (G.layout != layout_key()) { build_body(); ink_ui_hint_obj(G.body, INK_REFRESH_UI); }
     else { show_view(); if (G.box) ink_ui_hint_obj(G.box, INK_REFRESH_UI); }
-    ink_ui_content_changed();
+    ink_ui_content_changed(); ink_probe_count("gallery.photo_drawn"); /* for tests */
 }
 static void rendered(void *arg) {
     load_t *p = arg;
@@ -662,7 +662,7 @@ static void photo_loaded(load_t *p) {
     if (p->im.pixels) { ink_image_free(&G.shown); G.shown = p->im; p->im = (ink_image_t){0}; G.view_photo = p->id; G.v.cx = p->v.cx; G.v.cy = p->v.cy; }
     caption();
     if (G.layout != layout_key()) build_body(); else show_view();
-    ink_ui_hint_obj(G.body, INK_REFRESH_UI); ink_ui_hint_obj(G.name, INK_REFRESH_UI); ink_ui_content_changed();
+    ink_ui_hint_obj(G.body, INK_REFRESH_UI); ink_ui_hint_obj(G.name, INK_REFRESH_UI); ink_ui_content_changed(); ink_probe_count("gallery.photo_drawn");
 }
 static void photo_open_id(uint32_t id) { /* the next or previous one: no blank in between, one refresh when it is ready */
     G.photo = G.last_photo = id; G.v = (view_t){.zoom = 1, .cx = -1, .cy = -1}; G.dw = G.dh = 0; G.seen = SEEN_OK;
@@ -682,7 +682,7 @@ static void loaded(void *arg) {
             if (G.filter == FILTER_ALBUM && G.album >= G.data->nalbums) G.filter = FILTER_NONE;
             filtered();
             const char *page = ink_ui_page_name(); G.fresh = true;
-            if (!strcmp(page, "Gallery") && (first || !same)) {
+            if (!strcmp(page, "Gallery") && (first || !same || (G.waiting && !organizing()))) {
                 place_last(); build_content(); if (G.content) ink_ui_hint_obj(G.content, INK_REFRESH_UI);
             } else if (!strcmp(page, "Gallery") && G.arrived >= G.expected) ink_probe_count("gallery.page_ready");
             else if (!strcmp(page, "GalleryTrash") && !same) ink_ui_redraw();
@@ -703,21 +703,21 @@ static lv_obj_t *top_button(lv_obj_t *root, const char *title, const char *label
     lv_obj_t *b = ink_ui_text_button(root, label, INK_CANVAS_W - INK_MARGIN - w, INK_STATUS_BAR + INK_GAP_S, w, NULL, NULL);
     ink_shell_bind(b, cap, args); return b;
 }
-static void segment_clicked(lv_event_t *e) {
-    lv_obj_t *b = lv_event_get_target_obj(e), *row = lv_obj_get_parent(b);
+static void segment_job(void *arg) { /* after the tap's own event: the segments it pressed are drawn anew */
     static const char *const VIEW_ARGS[] = {"{\"view\":\"all\"}", "{\"view\":\"albums\"}", "{\"view\":\"months\"}"};
-    int at = (int)lv_obj_get_index(b);
-    if (at >= 0 && at < 3 && at != G.view && row) {
-        ink_call_opts_t o = {.src = INK_SRC_TOUCH, .args_json = VIEW_ARGS[at], .reply_exec = INK_EXEC_UI, .member = ink_member_current()->id};
-        ink_cap_call("gallery.show", NULL, &o);
-    }
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .args_json = VIEW_ARGS[(uintptr_t)arg], .reply_exec = INK_EXEC_UI, .member = ink_member_current()->id};
+    ink_cap_call("gallery.show", NULL, &o);
+}
+static void segment_clicked(lv_event_t *e) {
+    static ink_exec_job_t job;
+    int at = (int)lv_obj_get_index(lv_event_get_target_obj(e));
+    if (at >= 0 && at < 3 && at != G.view) ink_exec_post(INK_EXEC_UI, &job, segment_job, (void *)(uintptr_t)at);
 }
 static void purge_start(void);
-static void draw_segments(lv_obj_t *root) {
+static void draw_segments(void) { /* in their own box: a new row redraws that box, not the whole screen */
     const char *labels[] = {TR("全部"), TR("相簿"), TR("日期")};
-    if (G.segments) lv_obj_delete(G.segments);
-    G.segments = ink_ui_segments(root, labels, 3, G.view, INK_MARGIN, INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S,
-                                 INK_CANVAS_W - 2 * INK_MARGIN, segment_clicked, NULL);
+    lv_obj_clean(G.segments);
+    ink_ui_segments(G.segments, labels, 3, G.view, INK_MARGIN, 0, INK_CANVAS_W - 2 * INK_MARGIN, segment_clicked, NULL);
 }
 static void gallery_create(lv_obj_t *root, void *arg) {
     (void)arg;
@@ -731,14 +731,14 @@ static void gallery_create(lv_obj_t *root, void *arg) {
     if (drop && ink_exec_post(INK_EXEC_MEDIA, drop, release_job, drop)) osal_free(drop);
     ink_shell_statusbar(root, true); ink_shell_topbar(root, TR("相册"));
     top_button(root, TR("相册"), TR("拍照"), TR("拍照"), "app.open", "{\"id\":\"camera\"}");
-    G.segments = NULL; draw_segments(root);
+    G.segments = ink_ui_box(root, 0, INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S, INK_CANVAS_W, INK_SEGMENT, 0, INK_SURFACE_WHITE, false); draw_segments();
     int y = INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S + INK_SEGMENT + INK_GAP;
     G.content = ink_ui_box(root, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
     G.message[0] = 0; G.fresh = false; filtered(); place_last(); build_content(); load(0, 0); purge_start();
 }
 static void view_changed(void) { /* the segments and what is under them, nothing else */
     if (!G.content) { ink_ui_redraw(); return; }
-    draw_segments(lv_obj_get_parent(G.content)); build_content();
+    draw_segments(); build_content();
     ink_ui_hint_obj(G.segments, INK_REFRESH_UI); ink_ui_hint_obj(G.content, INK_REFRESH_UI); ink_ui_content_changed();
 }
 static void photo_create(lv_obj_t *root, void *arg) {
@@ -749,8 +749,8 @@ static void photo_create(lv_obj_t *root, void *arg) {
     lv_obj_set_style_text_color(G.name, ink_ui_secondary(), 0);
     int y = INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
     G.body = ink_ui_box(root, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
-    if (id != G.photo || !G.view_photo) { /* a new photo; coming back from its details keeps how it was shown */
-        G.path[0] = G.caption[0] = 0; clear_status(); G.photo = id; G.last_photo = id; G.v = (view_t){.zoom = 1, .cx = -1, .cy = -1};
+    if (id != G.opened || !G.view_photo) { /* a new photo; back from its details (the page keeps the id it opened with) it stays as it was */
+        G.path[0] = G.caption[0] = 0; clear_status(); G.photo = G.opened = id; G.last_photo = id; G.v = (view_t){.zoom = 1, .cx = -1, .cy = -1};
         G.dw = G.dh = 0; G.seen = SEEN_OK; ink_image_free(&G.shown); G.view_photo = 0; G.info = (ink_image_info_t){0};
         build_body(); photo_target(&G.v); load(id, 0);
         lv_label_set_text(G.name, TR("正在读取照片"));
@@ -813,24 +813,27 @@ static void info_create(lv_obj_t *root, void *arg) {
 static void list_destroy(void) { G.list = NULL; }
 
 static size_t trash_order[INK_FS_INDEX_MAX] INK_PSRAM_BSS;
-static void trash_line(const ink_gallery_item_t *it, char *out, size_t cap) {
-    char day[16], origin[INK_FS_PATH_MAX];
-    if (!trash_parts(it->path, day, sizeof day, origin, sizeof origin)) { snprintf(out, cap, "%s", TR("日期不详")); return; }
-    int y = 0, m = 0, d = 0, since = days_since(day);
-    if (sscanf(day, "%d-%d-%d", &y, &m, &d) != 3) snprintf(out, cap, "%s", TR("删除日期不详，不会自动删除"));
-    else if (since < 0 || !ink_time_valid()) snprintf(out, cap, TR("%d月%d日删除"), m, d);
-    else snprintf(out, cap, TR("%d月%d日删除 · 还剩 %d 天"), m, d, TRASH_DAYS - since > 0 ? TRASH_DAYS - since : 0);
+static void trash_line(const ink_gallery_item_t *it, char *when, size_t when_cap, char *left, size_t left_cap) { /* deleted when, days left */
+    char day[16] = "", origin[INK_FS_PATH_MAX]; int y = 0, m = 0, d = 0, since = -1;
+    left[0] = 0;
+    if (trash_parts(it->path, day, sizeof day, origin, sizeof origin) && sscanf(day, "%d-%d-%d", &y, &m, &d) == 3) since = days_since(day);
+    if (!m) { snprintf(when, when_cap, "%s", TR("删除日期不详")); snprintf(left, left_cap, "%s", TR("不会自动删除")); return; }
+    snprintf(when, when_cap, TR("%d月%d日删除"), m, d);
+    if (since >= 0 && ink_time_valid()) snprintf(left, left_cap, TR("还剩 %d 天"), TRASH_DAYS - since > 0 ? TRASH_DAYS - since : 0);
 }
 static void bind_trash(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx; unsigned at = index % LIST_SLOTS; int w = INK_CANVAS_W - 2 * INK_MARGIN; lv_obj_clean(slot);
     const ink_gallery_item_t *it = &G.data->trash[trash_order[index]];
-    snprintf(G.labels[at], sizeof G.labels[at], "%s", it->name); trash_line(it, G.values[at], sizeof G.values[at]);
+    char when[48], left[48]; trash_line(it, when, sizeof when, left, sizeof left);
+    snprintf(G.labels[at], sizeof G.labels[at], "%s", it->name); snprintf(G.values[at], sizeof G.values[at], "%s%s%s", when, left[0] ? " · " : "", left);
     ink_jw_t j; ink_jw_init(&j, G.args[at], sizeof G.args[at]); ink_jw_raw(&j, "{\"path\":"); ink_jw_str(&j, it->path); ink_jw_raw(&j, "}");
     snprintf(G.objects[at], sizeof G.objects[at], "trash:%u", (unsigned)it->id);
     if (index % LIST_SLOTS) ink_ui_group_divider(slot, 0, w);
-    lv_obj_remove_flag(ink_ui_list_row(slot, "trash", G.labels[at], G.values[at], 0, 0, w, true, NULL, NULL), LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_remove_flag(ink_ui_list_row(slot, "trash", G.labels[at], when, 0, 0, w, true, NULL, NULL), LV_OBJ_FLAG_CLICKABLE);
     lv_obj_remove_flag(slot, LV_OBJ_FLAG_CLICKABLE);
     int y = ink_ui_row_double(), bw = (w - INK_GAP_S) / 2;
+    lv_obj_t *days = ink_ui_line(slot, left, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CIRCLE_SMALL + INK_GAP_XL, y - INK_GAP_XS, w - INK_CIRCLE_SMALL - INK_GAP_XL);
+    lv_obj_set_style_text_color(days, ink_ui_secondary(), 0); y += ink_ui_line_height(INK_FONT_NOTE);
     ink_shell_bind(ink_ui_pill(slot, TR("恢复"), 0, y, bw, INK_CONTROL, false, NULL, NULL), "photo.restore", G.args[at]);
     ink_shell_bind(ink_ui_text_button(slot, TR("永久删除"), bw + INK_GAP_S, y, bw, NULL, NULL), "photo.delete_forever", G.args[at]);
     *field = (ink_ui_field_spec_t){.id = G.objects[at], .role = "text", .label = G.labels[at], .value = G.values[at], .object = {G.objects[at], 1}};
@@ -851,7 +854,7 @@ static void trash_create(lv_obj_t *root, void *arg) {
     int y = INK_STATUS_BAR + INK_GAP_S + INK_CONTROL + INK_GAP_S;
     lv_obj_t *note = ink_ui_notice(root, TR("照片在这里留 30 天，之后自动删除"), y);
     lv_obj_update_layout(note); y += lv_obj_get_height(note) * INK_CANVAS_H / ink_ui_px(INK_CANVAS_H) + INK_GAP;
-    int h = INK_CANVAS_H - INK_MARGIN - y, row = ink_ui_row_double() + INK_CONTROL;
+    int h = INK_CANVAS_H - INK_MARGIN - y, row = ink_ui_row_double() + ink_ui_line_height(INK_FONT_NOTE) + INK_CONTROL;
     int capacity = LV_MAX(1, LV_MIN(LIST_SLOTS, (h - INK_GAP - INK_CONTROL) / (row + INK_GAP_M)));
     lv_obj_t *box = ink_ui_box(root, 0, y, INK_CANVAS_W, h, 0, INK_SURFACE_WHITE, false);
     if (!n) { G.list = NULL; empty_state(box, TR("最近删除里没有照片"), NULL, NULL); }
@@ -901,7 +904,8 @@ static int photo_snapshot(char *out, size_t cap) {
         {.id = "file", .role = "image", .label = TR("照片文件"), .value = G.path}, {.id = "name", .role = "text", .label = TR("当前照片"), .value = G.caption},
         {.id = "album", .role = "text", .label = TR("相簿"), .value = where}, {.id = "date", .role = "text", .label = TR("日期"), .value = day},
         {.id = "index", .role = "text", .label = TR("第几张"), .value = index}, {.id = "zoom", .role = "text", .label = TR("缩放"), .value = zoom},
-        {.id = "rotation", .role = "text", .label = TR("旋转"), .value = rot}, {.id = "status", .role = "status", .label = TR("提示"), .value = G.message}
+        {.id = "rotation", .role = "text", .label = TR("旋转"), .value = rot}, {.id = "status", .role = "status", .label = TR("提示"), .value = G.message},
+        {.id = "notice", .role = "status", .label = TR("照片"), .value = G.notice}
     };
     size_t n = 0; ink_ui_action_spec_t *a = G.photo_actions;
     bool ready = G.path[0] != 0;
@@ -917,7 +921,7 @@ static int photo_snapshot(char *out, size_t cap) {
     a[n++] = (ink_ui_action_spec_t){.id = "undo", .label = TR("撤销"), .capability = "photo.restore", .args_json = G.undo_args, .enabled = G.undo_args[0] != 0};
     a[n++] = (ink_ui_action_spec_t){.id = "forever", .label = TR("永久删除"), .capability = "photo.delete_forever", .args_json = G.forever_args, .enabled = G.forever_args[0] != 0};
     a[n++] = (ink_ui_action_spec_t){.id = "back", .label = TR("返回"), .capability = "shell.back", .enabled = true};
-    const ink_ui_page_spec_t page = {.id = "Photo", .title = TR("照片"), .object = {G.path, G.revision}, .fields = f, .field_count = 8, .actions = a, .action_count = n};
+    const ink_ui_page_spec_t page = {.id = "Photo", .title = TR("照片"), .object = {G.path, G.revision}, .fields = f, .field_count = 9, .actions = a, .action_count = n};
     return ink_ui_semantics_snapshot(&page, out, cap);
 }
 static int info_snapshot(char *out, size_t cap) {
@@ -1262,8 +1266,10 @@ static const ink_cap_t GALLERY_CAPS[] = {
 };
 static bool relevant(const char *path, const char *kind) { /* a change this page shows: an image here, or the whole card */
     if (!path[0] || (!strcmp(path, "/") && strcmp(kind, "indexed")) || !strcmp(kind, "rescan") || !strcmp(kind, "cleaned")) return true; /* our own reading indexes */
-    if (!is_image(path)) return false;
-    return !strcmp(ink_ui_page_name(), "GalleryTrash") ? in_trash(path) : (under(path, "/me") && !in_trash(path)) || under(path, LOCK_ALBUM);
+    if (!is_image(path) && strchr(base_name(path), '.')) return false; /* another kind of file; a folder may hold photos */
+    char me[32], family[40]; trash_root("/me", me, sizeof me); trash_root("/family", family, sizeof family);
+    if (!strcmp(ink_ui_page_name(), "GalleryTrash")) return in_trash(path) || !strcmp(path, me) || !strcmp(path, family);
+    return (under(path, "/me") && !in_trash(path) && strcmp(path, me)) || under(path, LOCK_ALBUM);
 }
 static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id;
@@ -1275,7 +1281,7 @@ static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {
 }
 static void card_state(void *ctx, int h, const char *id) { /* the card came back or the index is ready: read again by itself */
     (void)ctx; (void)h; (void)id;
-    if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), "Gallery") && (!G.data || G.data->err || !G.data->count)) load(0, 0);
+    if (ink_ui_page_current() && (!strcmp(ink_ui_page_name(), "Gallery") || !strcmp(ink_ui_page_name(), "GalleryTrash"))) load(0, 0); /* unchanged lists draw nothing */
 }
 int ink_gallery_init(void) {
     static const ink_app_def_t app = {.id = "gallery", .title = TR_NOOP("相册"), .icon = INK_UI_ICON(gallery), .entry = &GALLERY, .system_app = true, .child_ok = true};
