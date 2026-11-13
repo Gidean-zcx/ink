@@ -1,4 +1,5 @@
 #include "ink/probe.h"
+#include "ink/sys/json.h"
 #include <zip_reader.h>
 #include <book_epub.h>
 static book_shelf_entry_t *ink_mogo_shelf;
@@ -7,6 +8,8 @@ static char ink_mogo_error[160];
 static ink_mogo_card_t ink_mogo_card_written;
 static size_t ink_mogo_anchor=SIZE_MAX, ink_mogo_anchor_chapter=SIZE_MAX; /* the reading place a reflow keeps */
 static char ink_mogo_last_set[BOOK_STORE_PATH_MAX]; /* the book to continue, as written last */
+/* The bookmark rows as last drawn (BG): a tap (UI) finds its mark here, without reading the member's records. */
+static struct { int rows; EpdRect rect[BOOKMARK_MAX]; uint32_t id[BOOKMARK_MAX]; } ink_mogo_mark_hits;
 enum { INK_MOGO_SHELF_ROWS=4, INK_MOGO_TOOL_COUNT=6 };
 enum { INK_MOGO_TOOLS=10, INK_MOGO_MARKS, INK_MOGO_SETTINGS };
 const char *const ink_mogo_layout_keys[INK_MOGO_LAYOUT_COUNT]={"font_size","line_spacing","paragraph_spacing","margins","weight","indent","header","footer"};
@@ -60,22 +63,40 @@ static int ink_mogo_shelf_list(const ink_member_identity_t *owner,book_shelf_ent
         }
     return count;
 }
-static int ink_mogo_shelf_json(const book_shelf_entry_t *b,int count,char *json,size_t cap) {
-    int n=snprintf(json,cap,"[");
-    for (int i=0;i<count && n>0 && (size_t)n<cap;++i) {
-        char title[300]; size_t k=0;
-        for (const char *s=b[i].name;*s && k+2<sizeof title;++s) { if (*s=='"' || *s=='\\') title[k++]='\\'; title[k++]=*s; }
-        title[k]=0;
-        n+=snprintf(json+n,cap-(size_t)n,"%s{\"index\":%d,\"title\":\"%s\",\"place\":\"%s\",\"percent\":%u}",i?",":"",i,title,TR(ink_mogo_place(b[i].path)),b[i].pct);
+/* A result for the AI: book text is escaped (a quote in a title is a quote, not the end of a field). */
+static void ink_mogo_jw_field(ink_jw_t *w,const char *key,const char *text) { ink_jw_raw(w,key); ink_jw_str(w,text); }
+static void ink_mogo_jw_number(ink_jw_t *w,const char *key,int64_t v) { ink_jw_raw(w,key); ink_jw_int(w,v); }
+static int ink_mogo_jw_end(ink_jw_t *w) { return w->overflow?-2:(int)w->len; }
+/* Write a result in `*json` (cap `*cap`), in a bigger buffer from ink_app_alloc when it does not fit (*json then
+ * points at it: the caller frees it if it is not its own). A list of hundreds of chapters is still one answer. */
+static int ink_mogo_json_fit(char **json,size_t *cap,size_t guess,int (*write)(char *,size_t,const void *),const void *arg) {
+    char *own=*json;
+    for (size_t size=guess>*cap?guess:*cap;size<=(size_t)4<<20;size*=2) {
+        char *buf=size<=*cap?own:ink_app_alloc(size,true);
+        if (!buf) return -1;
+        int n=write(buf,size,arg);
+        if (n>=0) { *json=buf; *cap=size; return n; }
+        if (buf!=own) ink_app_free(buf);
+        if (n!=-2) return -1;
     }
-    if (n>0 && (size_t)n+2<cap) { json[n++]=']'; json[n]=0; return n; }
     return -1;
 }
-int ink_mogo_shelf_query(const ink_member_identity_t *owner,char *json,size_t cap,const char *title,int index,char *path,size_t path_cap) {
+typedef struct { const book_shelf_entry_t *b; int count; } ink_mogo_shelf_rows_t;
+static int ink_mogo_shelf_json(char *json,size_t cap,const void *arg) {
+    const ink_mogo_shelf_rows_t *r=arg; ink_jw_t w; ink_jw_init(&w,json,cap); ink_jw_raw(&w,"[");
+    for (int i=0;i<r->count;++i) {
+        ink_mogo_jw_number(&w,i?",{\"index\":":"{\"index\":",i); ink_mogo_jw_field(&w,",\"title\":",r->b[i].name);
+        ink_mogo_jw_field(&w,",\"place\":",TR(ink_mogo_place(r->b[i].path))); ink_mogo_jw_number(&w,",\"percent\":",r->b[i].pct); ink_jw_raw(&w,"}");
+    }
+    ink_jw_raw(&w,"]");
+    return ink_mogo_jw_end(&w);
+}
+int ink_mogo_shelf_query(const ink_member_identity_t *owner,char **json,size_t *cap,const char *title,int index,char *path,size_t path_cap) {
     book_shelf_entry_t *books; bool no_card; int count=ink_mogo_shelf_list(owner,&books,&no_card), found=-1;
     for (int i=0;i<count && found<0;++i)
         if (index>=0 ? i==index : title && title[0] && (strstr(books[i].name,title) || strstr(title,books[i].name))) found=i;
-    if (json && ink_mogo_shelf_json(books,count,json,cap)<0) json[0]=0;
+    ink_mogo_shelf_rows_t rows={books,count};
+    if (json && ink_mogo_json_fit(json,cap,(size_t)count*(sizeof books->name*2+96)+16,ink_mogo_shelf_json,&rows)<0) found=-3;
     if (path && found>=0) copy_text(path,path_cap,books[found].path);
     free(books);
     return no_card?-2:found;
@@ -235,27 +256,32 @@ static bool ink_mogo_fallback_toc(void) {
     }
     return true;
 }
-static int ink_mogo_json_chapters(char *json,size_t cap) {
-    char name[96]="", author[96]="";
+static int ink_mogo_json_chapters(char *json,size_t cap,const void *arg) {
+    (void)arg; char name[96]="", author[96]=""; ink_jw_t w; ink_jw_init(&w,json,cap);
     if (book_kind()==BOOK_KIND_EPUB) (void)book_epub_metadata(s_reader_session.book.path,name,sizeof name,author,sizeof author);
-    int n=snprintf(json,cap,"{\"title\":\"%s\",\"author\":\"%s\",\"chapter_count\":%u,\"fallback\":%s,\"entries\":[",s_reader_session.book.title,author,(unsigned)book_chapter_count(),ink_mogo_fallback_toc()?"true":"false");
-    for (size_t i=0;i<book_navigation_count() && n>0 && (size_t)n<cap;++i) {
+    ink_mogo_jw_field(&w,"{\"title\":",s_reader_session.book.title); ink_mogo_jw_field(&w,",\"author\":",author);
+    ink_mogo_jw_number(&w,",\"chapter_count\":",(int64_t)book_chapter_count()); ink_jw_raw(&w,ink_mogo_fallback_toc()?",\"fallback\":true,\"entries\":[":",\"fallback\":false,\"entries\":[");
+    for (size_t i=0;i<book_navigation_count() && !w.overflow;++i) {
         char title[96]=""; (void)book_navigation_title(i,title,sizeof title);
-        n+=snprintf(json+n,cap-(size_t)n,"%s{\"title\":\"%s\",\"chapter\":%u,\"entry\":%u}",i?",":"",title,(unsigned)book_navigation_chapter(i)+1,(unsigned)i+1);
+        ink_mogo_jw_field(&w,i?",{\"title\":":"{\"title\":",title); ink_mogo_jw_number(&w,",\"chapter\":",(int64_t)book_navigation_chapter(i)+1);
+        ink_mogo_jw_number(&w,",\"entry\":",(int64_t)i+1); ink_jw_raw(&w,"}");
     }
-    return n>0 && (size_t)n+3<cap?n+snprintf(json+n,cap-(size_t)n,"]}"):-1;
+    ink_jw_raw(&w,"]}");
+    return ink_mogo_jw_end(&w);
 }
-static int ink_mogo_json_marks(char *json,size_t cap) {
-    reader_bookmarks_t marks; int n=snprintf(json,cap,"{\"bookmarks\":[");
+static int ink_mogo_json_marks(char *json,size_t cap,const void *arg) {
+    (void)arg; reader_bookmarks_t marks; ink_jw_t w; ink_jw_init(&w,json,cap); ink_jw_raw(&w,"{\"bookmarks\":[");
     if (!bookmark_load(&marks)) marks.count=0;
-    for (int i=(int)marks.count-1;i>=0 && n>0 && (size_t)n<cap;--i) {
+    for (int i=(int)marks.count-1;i>=0 && !w.overflow;--i) {
         const reader_bookmark_entry_t *m=&marks.entries[i]; char label[96], excerpt[40];
         if (book_chapter_title(m->chapter,label,sizeof label)!=ESP_OK) snprintf(label,sizeof label,TR_NOOP("第 %u 节"),(unsigned)m->chapter+1);
         ink_mogo_mark_excerpt(m,excerpt,sizeof excerpt);
-        n+=snprintf(json+n,cap-(size_t)n,"%s{\"id\":%u,\"chapter\":%u,\"percent\":%u,\"added_at\":%u,\"label\":\"%s\",\"excerpt\":\"%s\"}",
-            i+1<(int)marks.count?",":"",(unsigned)ink_mogo_mark_id(m),(unsigned)m->chapter+1,ink_mogo_mark_percent(m),(unsigned)m->saved_s,label,excerpt);
+        ink_mogo_jw_number(&w,i+1<(int)marks.count?",{\"id\":":"{\"id\":",ink_mogo_mark_id(m)); ink_mogo_jw_number(&w,",\"chapter\":",m->chapter+1);
+        ink_mogo_jw_number(&w,",\"percent\":",ink_mogo_mark_percent(m)); ink_mogo_jw_number(&w,",\"added_at\":",m->saved_s);
+        ink_mogo_jw_field(&w,",\"label\":",label); ink_mogo_jw_field(&w,",\"excerpt\":",excerpt); ink_jw_raw(&w,"}");
     }
-    return n>0 && (size_t)n+3<cap?n+snprintf(json+n,cap-(size_t)n,"]}"):-1;
+    ink_jw_raw(&w,"]}");
+    return ink_mogo_jw_end(&w);
 }
 static bool ink_mogo_list_turn(int direction) {
     int *page=s_view==TOC?NULL:s_reader_panel==INK_MOGO_MARKS?&s_bookmark_page:s_view==SHELF?&ink_mogo_shelf_page:NULL;
@@ -315,10 +341,11 @@ int ink_mogo_page_command(ink_mogo_request_t *r) {
         ok=v>=1 && (size_t)v<=book_layout_page_count();
         if (ok) { s_reader_session.position.page=(size_t)v-1; skip_hidden_image_pages(&ink_mogo_context,1); s_view=READING; s_reader_panel=READER_PANEL_NONE; r->revision=(uint32_t)s_reader_session.position.page+1; }
         break;
-    case INK_MOGO_OP_CHAPTERS: return r->json && ink_mogo_json_chapters(r->json,r->cap)>0?0:-1;
+    case INK_MOGO_OP_CHAPTERS: /* about 6 bytes a title character at worst; grown when a list does not fit */
+        return r->json && ink_mogo_json_fit(&r->json,&r->cap,book_navigation_count()*160+640,ink_mogo_json_chapters,NULL)>0?0:-1;
     case INK_MOGO_OP_MARKS:
         if (v) { s_view=READING; s_reader_panel=INK_MOGO_MARKS; s_bookmark_page=0; return 0; }
-        return r->json && ink_mogo_json_marks(r->json,r->cap)>0?0:-1;
+        return r->json && ink_mogo_json_fit(&r->json,&r->cap,BOOKMARK_MAX*400+64,ink_mogo_json_marks,NULL)>0?0:-1;
     case INK_MOGO_OP_TOC: s_view=TOC; ink_mogo_context.leaf=current_toc_position()/BOOK_TOC_ROWS; s_reader_panel=READER_PANEL_NONE; break;
     case INK_MOGO_OP_TOC_PERCENT: ink_mogo_context.leaf=(size_t)book_toc_page_from_percent(v,book_toc_pages(book_navigation_count())); break;
     case INK_MOGO_OP_ENTRY: case INK_MOGO_OP_CHAPTER: {
@@ -379,7 +406,15 @@ void ink_mogo_page_draw(uint8_t *pixels) {
         for (int row=0;row<INK_MOGO_SHELF_ROWS && ink_mogo_shelf_page*INK_MOGO_SHELF_ROWS+row<ink_mogo_shelf_count;++row)
             ui_draw_button(pixels,(EpdRect){36,210+row*190,612,164},ink_mogo_shelf[ink_mogo_shelf_page*INK_MOGO_SHELF_ROWS+row].name,false);
         ui_text_box(pixels,(EpdRect){36,1000,612,80},28,TR("‹ 上一页                     下一页 ›"),EPD_DRAW_ALIGN_CENTER,false);
-    } else if (s_reader_panel==INK_MOGO_MARKS) draw_reader_bookmarks(pixels);
+    } else if (s_reader_panel==INK_MOGO_MARKS) {
+        draw_reader_bookmarks(pixels);
+        reader_bookmarks_t marks; ink_mogo_mark_hits.rows=0;
+        if (bookmark_load(&marks)) for (int i=0;i<bookmark_rows() && i<BOOKMARK_MAX;++i) {
+            int index=(int)marks.count-1-(s_bookmark_page*bookmark_rows()+i);
+            if (index<0) break;
+            ink_mogo_mark_hits.rect[i]=bookmark_row_rect(i); ink_mogo_mark_hits.id[i]=ink_mogo_mark_id(&marks.entries[index]); ink_mogo_mark_hits.rows=i+1;
+        }
+    }
     else if (s_reader_panel==INK_MOGO_SETTINGS) {
         draw_sheet(pixels,180,TR("阅读设置"));
         ui_draw_button(pixels,(EpdRect){36,280,612,72},TR("返回正文"),false);
@@ -410,14 +445,11 @@ const char *ink_mogo_page_hit(int x,int y,char *args,size_t cap) {
         if (hit==BOOK_TOC_PREV || hit==BOOK_TOC_SKIP_PREV) return "reader.list_prev";
         if (hit==BOOK_TOC_NEXT || hit==BOOK_TOC_SKIP_NEXT) return "reader.list_next";
         if (hit==BOOK_TOC_JUMP) { snprintf(args,cap,"{\"value\":%d}",x*100/684); return "reader.toc_percent"; }
-    } else if (s_reader_panel==INK_MOGO_MARKS) {
-        reader_bookmarks_t marks;
+    } else if (s_reader_panel==INK_MOGO_MARKS) { /* UI: the rows as drawn, no flash read here */
         if (y<650) return "reader.back";
         if (y>=1120) return x<342?"reader.list_prev":"reader.list_next";
-        for (int i=0;i<bookmark_rows() && bookmark_load(&marks);++i) {
-            int index=(int)marks.count-1-(s_bookmark_page*bookmark_rows()+i);
-            if (index>=0 && ui_rect_hit(bookmark_row_rect(i),x,y)) { snprintf(args,cap,"{\"id\":%u}",(unsigned)ink_mogo_mark_id(&marks.entries[index])); return "reader.goto_bookmark"; }
-        }
+        for (int i=0;i<ink_mogo_mark_hits.rows;++i)
+            if (ui_rect_hit(ink_mogo_mark_hits.rect[i],x,y)) { snprintf(args,cap,"{\"id\":%u}",(unsigned)ink_mogo_mark_hits.id[i]); return "reader.goto_bookmark"; }
     } else if (s_reader_panel==INK_MOGO_SETTINGS) {
         if (y<180 || (y>=280 && y<352)) return "reader.back";
         if (y>=380 && y<1132) {
@@ -445,7 +477,7 @@ void ink_mogo_page_close(void) {
     free(ink_mogo_shelf); ink_mogo_shelf=NULL; ink_mogo_shelf_count=ink_mogo_shelf_page=0; ink_mogo_reason=0; ink_mogo_error[0]=0; ink_mogo_anchor=SIZE_MAX;
     memset(&ink_mogo_settings,0,sizeof ink_mogo_settings); /* the card written stays readable until the next session starts */
     s_reader_panel=READER_PANEL_NONE; s_reader_slider=-1; s_view=SHELF;
-    s_bookmark_page=0; s_bookmark_selected=0; s_bookmark_edit=s_bookmark_delete_confirm=s_bookmark_delete_error=false;
+    s_bookmark_page=0; s_bookmark_selected=0; ink_mogo_mark_hits.rows=0; s_bookmark_edit=s_bookmark_delete_confirm=s_bookmark_delete_error=false;
     s_save_failed=false; s_message[0]=s_reader_notice[0]=0;
 }
 static const char *ink_mogo_panel(void) {

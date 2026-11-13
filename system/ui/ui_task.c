@@ -53,6 +53,7 @@ typedef struct {
 typedef struct {
     const ink_activity_t *a;
     void *arg;
+    bool shown; /* built before: a page above it closed, or a redraw */
 } frame_t;
 
 static struct {
@@ -92,6 +93,7 @@ static struct {
     int depth;
     const ink_activity_t *locked_activity; /* atomic: also read by the input task */
     void (*top_hook)(const char *app);
+    bool again; /* the activity being created was on the stack already */
     lv_obj_t *screen;
     ink_member_identity_t page_owner;
     const ink_ui_overlay_t *overlays[MAX_OVERLAYS];
@@ -552,7 +554,9 @@ static void show_top(void) {
     UI.frame_intent = INK_REFRESH_FLASH_UI;
     ink_log_page(f->a->app, f->a->name);
     if (UI.top_hook) UI.top_hook(f->a->app);
+    UI.again = f->shown; f->shown = true;
     f->a->create(UI.screen, f->arg);
+    UI.again = false;
     lv_screen_load(UI.screen);
     if (old) lv_obj_delete(old);
     /* drop LVGL's pointer state from the previous screen */
@@ -563,7 +567,7 @@ static void show_top(void) {
 void ink_ui_push(const ink_activity_t *a, void *arg) {
     if (UI.depth >= MAX_ACTIVITIES) return;
     if (UI.depth && UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
-    UI.stack[UI.depth++] = (frame_t){a, arg};
+    UI.stack[UI.depth++] = (frame_t){a, arg, false};
     show_top();
 }
 
@@ -597,6 +601,8 @@ void ink_ui_restart(void (*between)(void)) {
 }
 
 bool ink_ui_full(void) { return UI.depth >= MAX_ACTIVITIES; }
+
+bool ink_ui_shown_again(void) { return UI.again; }
 
 void ink_ui_set_top_hook(void (*fn)(const char *app)) { UI.top_hook = fn; }
 

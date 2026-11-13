@@ -53,9 +53,9 @@ add_test(NAME reader-settings COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/
 add_test(NAME reader-settings-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_settings/run.py --build ${CMAKE_BINARY_DIR} --reverse)
 add_test(NAME reader-more COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_more/run.py --build ${CMAKE_BINARY_DIR})
 add_test(NAME reader-more-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_more/run.py --build ${CMAKE_BINARY_DIR} --reverse)
-foreach(phase migrate migrate-reverse states bookmarks)
+foreach(phase migrate migrate-reverse states bookmarks review late)
   add_test(NAME reader-one-${phase} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_one/run.py --build ${CMAKE_BINARY_DIR} --phase ${phase})
 endforeach()
 set_tests_properties(mogo-page mogo-flow reader-epub reader-epub-reverse reader-epub-segments reader-epub-toc-save-reverse reader-settings
-  reader-settings-reverse reader-more reader-more-reverse reader-one-migrate reader-one-migrate-reverse reader-one-states reader-one-bookmarks PROPERTIES TIMEOUT 600)
+  reader-settings-reverse reader-more reader-more-reverse reader-one-migrate reader-one-migrate-reverse reader-one-states reader-one-bookmarks reader-one-review reader-one-late PROPERTIES TIMEOUT 600)
 endif()

@@ -32,6 +32,9 @@ static struct {
     ink_json_t json;
     html_text_t chapter;
     size_t chapter_no;
+    ink_dir_t *dir; /* the book walk: the folder being read (0 the family books, 1 the inbox, 2 past both) */
+    int dir_root, dir_seen;
+    struct { char member[16]; uint32_t epoch; } looked[8]; /* found done since boot: a reader open does not look again */
 } R INK_PSRAM_BSS;
 
 static int ink_mogo_old_read(const char *member, const char *name, char *out, size_t cap) {
@@ -42,27 +45,30 @@ static int ink_mogo_old_read(const char *member, const char *name, char *out, si
     return n;
 }
 static int ink_mogo_old_number(const char *text, const char *key) { const char *p = strstr(text, key); return p ? atoi(p + strlen(key)) : -1; }
-/* The books the old reader listed, in its folders on the card (read like it did: no file index scan). */
+static void ink_mogo_books_end(void) { ink_dir_close(R.dir); R.dir = NULL; R.dir_root = R.dir_seen = 0; }
+/* The books the old reader listed, in its folders on the card (read like it did: no file index scan). Asked in order
+ * (0, 1, 2...), each call reads on from where the last one stopped: one pass over the folders, not one per book. */
 static bool ink_mogo_book_at(int index, ink_mogo_book_t *b) {
-    char *inbox = R.inbox, *name = R.name; bool dir; int seen = 0;
+    char *inbox = R.inbox, *name = R.name; bool dir;
+    if (!index || index < R.dir_seen) ink_mogo_books_end();
     if (ink_layout_member_files(R.files, sizeof R.files, R.member) < 0) return false;
     snprintf(inbox, sizeof R.inbox, "%s/%s", R.files, TR_NOOP("收件箱"));
-    for (int r = 0; r < 2; r++) {
-        ink_dir_t *d = ink_dir_open(r ? inbox : "/content/books");
-        while (d && ink_dir_next(d, name, sizeof R.name, &dir) == 1) {
+    for (; R.dir_root < 2; R.dir_root++) {
+        int r = R.dir_root;
+        if (!R.dir) R.dir = ink_dir_open(r ? inbox : "/content/books");
+        while (R.dir && ink_dir_next(R.dir, name, sizeof R.name, &dir) == 1) {
             const char *dot = strrchr(name, '.');
-            if (dir || !dot || (strcmp(dot, ".txt") && strcmp(dot, ".epub")) || seen++ != index) continue;
+            if (dir || !dot || (strcmp(dot, ".txt") && strcmp(dot, ".epub")) || R.dir_seen++ != index) continue;
             if (r) snprintf(b->key, sizeof b->key, "inbox/%.89s", name);
             else snprintf(b->key, sizeof b->key, "%.*s", strcmp(dot, ".epub") ? (int)(dot - name) : (int)strlen(name), name);
             snprintf(b->old, sizeof b->old, "%s/%s", r ? inbox : "/content/books", name);
             if (r) snprintf(b->path, sizeof b->path, "/me/%s/%s", TR_NOOP("收件箱"), name);
             else snprintf(b->path, sizeof b->path, "/family/books/%s", name);
-            ink_dir_close(d);
             return true;
         }
-        ink_dir_close(d);
+        ink_dir_close(R.dir); R.dir = NULL;
     }
-    if (seen != index) return false;
+    if (index != R.dir_seen) return false; /* past both folders: the sample is the one after their books */
     snprintf(b->key, sizeof b->key, "%s", TR_NOOP("夜邮（示例）"));
     snprintf(b->old, sizeof b->old, "sample/welcome.txt");
     snprintf(b->path, sizeof b->path, "asset:sample/welcome.txt");
@@ -228,6 +234,18 @@ static bool ink_mogo_marker(bool write) {
     nvs_close(h);
     return same;
 }
+/* set: remember the member as looked at; clear: forget them (a background run looks again); else: are they? */
+static bool ink_mogo_looked(const ink_member_identity_t *owner, bool set, bool clear) {
+    for (unsigned i = 0; i < sizeof R.looked / sizeof *R.looked; i++)
+        if (!strcmp(R.looked[i].member, owner->member) && R.looked[i].epoch == owner->epoch) {
+            if (clear) memset(&R.looked[i], 0, sizeof R.looked[i]);
+            return !clear;
+        }
+    if (!set) return false;
+    memmove(&R.looked[1], &R.looked[0], sizeof R.looked - sizeof *R.looked);
+    snprintf(R.looked[0].member, sizeof R.looked[0].member, "%s", owner->member); R.looked[0].epoch = owner->epoch;
+    return true;
+}
 /* Start a run: read reader.last, open the old marks, take the fingerprint; false when the marker already has it. */
 static bool ink_mogo_begin(const ink_member_identity_t *owner) {
     ink_db_close(R.marks);
@@ -245,29 +263,37 @@ static bool ink_mogo_begin(const ink_member_identity_t *owner) {
     ink_mogo_layout_read();
     R.print.layout_crc = R.layout[0] ? ink_crc32(0, R.layout, strlen(R.layout)) : 0;
     if (!R.print.last_crc && !R.print.marks_count && !R.print.layout_crc) return false; /* nothing of the old reader: not even the card is read */
+    ink_probe_count("reader.migration_looked"); /* each walk of the old folders: once per member and boot, not per open */
     for (int i = 0; ink_mogo_book_at(i, &R.book); i++) R.print.pos_found += ink_mogo_pos(R.book.key, R.pos, sizeof R.pos) > 0;
+    ink_mogo_books_end();
     return !ink_mogo_marker(false);
 }
 int ink_mogo_migrate_step(const ink_member_identity_t *owner, const char *only) {
     int64_t card = 0;
     ink_mogo_owner(owner);
     if (!ink_state_get_int(ink_state_find("storage.card"), &card) || !card) return -1; /* the card is out: not "the book is gone" */
-    if ((only || strcmp(R.member, owner->member) || R.epoch != owner->epoch || !R.next) && !ink_mogo_begin(owner)) return 0;
+    /* Found done since boot: opening a book does not walk the old folders again (the old files are never deleted). */
+    if (only && ink_mogo_looked(owner, false, false)) return 0;
+    bool fresh = strcmp(R.member, owner->member) || R.epoch != owner->epoch || !R.next;
+    if (!only && fresh) (void)ink_mogo_looked(owner, false, true); /* a background run (boot, a card, a member) looks again */
+    if ((only || fresh) && !ink_mogo_begin(owner)) { (void)ink_mogo_looked(owner, true, false); return 0; }
     ink_mogo_book_t *b = &R.book, *other = &R.other;
     if (only) { /* this session's book and the last one now; the rest and the marker in the background run */
         for (int i = 0; ink_mogo_book_at(i, b); i++)
             if (!strcmp(b->key, R.last_key) || !strcmp(b->path, only)) (void)ink_mogo_book(b);
+        ink_mogo_books_end();
         R.next = 0;
         return 0;
     }
     if (ink_mogo_book_at(R.next, b)) {
+        ink_mogo_books_end(); /* nothing is held open between two passes */
         R.failed += !ink_mogo_book(b);
         R.next++;
         return 1;
     }
     if (R.last_key[0]) { /* the book read last is gone */
         bool there = false;
-        for (int i = 0; ink_mogo_book_at(i, other); i++) there = there || !strcmp(other->key, R.last_key);
+        for (int i = 0; !there && ink_mogo_book_at(i, other); i++) there = !strcmp(other->key, R.last_key);
         if (!there) ink_probe_count("reader.migration_skipped");
     }
     ink_db_cursor_t c = {0}; ink_rec_t rec; /* marks whose book is gone */
@@ -277,8 +303,10 @@ int ink_mogo_migrate_step(const ink_member_identity_t *owner, const char *only) 
         for (int i = 0; !there && ink_mogo_book_at(i, other); i++) there = !strcmp(other->old, R.scratch);
         if (!there) ink_probe_count("reader.migration_skipped");
     }
+    ink_mogo_books_end();
     R.failed += !ink_mogo_layout_old();
     bool ok = !R.failed && ink_mogo_marker(true);
+    if (ok) (void)ink_mogo_looked(owner, true, false);
     ink_db_close(R.marks); R.marks = NULL; R.next = 0;
     return ok ? 0 : -1;
 }

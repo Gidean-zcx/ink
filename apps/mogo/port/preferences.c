@@ -3,6 +3,8 @@
 #include <nvs.h>
 #include <book_bookmark_format.h>
 #include <page.h>
+#include "ink/probe.h"
+#include "ink/sys/ui.h"
 #define INK_MOGO_VALUE_MAX 1024
 typedef struct { char space[16], key[16]; uint8_t type, data[INK_MOGO_VALUE_MAX]; } ink_mogo_value_t;
 _Static_assert(sizeof(reader_bookmarks_t) <= INK_MOGO_VALUE_MAX, "native bookmarks fit NVS value");
@@ -13,6 +15,7 @@ static const ink_db_def_t INK_MOGO_PREFS = {.name="mogo.preferences",.title="阅
     .scope=INK_DB_MEMBER,.schema=1,.max_records=256,.max_bytes=131072};
 esp_err_t nvs_open(const char *space, int mode, nvs_handle_t *out) {
     *out = NULL;
+    if (ink_ui_is_current()) ink_probe_count("reader.ui_records"); /* BG only (graft.h): the tests count that it stays 0 */
     if (strlen(space) >= sizeof ((nvs_handle_t)0)->space) return ESP_ERR_INVALID_ARG;
     nvs_handle_t h = ink_mogo_calloc(1,sizeof *h);
     if (!h) return ESP_ERR_NO_MEM;

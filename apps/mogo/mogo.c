@@ -32,8 +32,10 @@ static struct {
     uint64_t opened_us, saved_us; /* saved_us: the place was last written (or the book opened) */
     ink_mogo_card_t card;
     lv_obj_t *back_button, *note, *screen; /* screen: the page's, while the activity lives */
-    char screen_member[16], book[288];      /* whose page it is and the book on it, to come back after a member gate */
-    char description[3072], explanation[400], json[4096];
+    char screen_member[16], book[288];      /* whose page it is and the book on it: built again (a page above closed, a
+                                             * redraw, a member gate) the page shows that book, not what it was opened with */
+    char want[288];                         /* the book the page opens when it is built next (reader.open_book and the like) */
+    char description[3072], explanation[400], json[4096]; /* json: a longer result is in M.req.json (ink_mogo_json_free) */
 } M INK_PSRAM_BSS;
 /* list_books, continue and open by title run without the page: their own node, member and buffers. */
 static struct {
@@ -42,7 +44,8 @@ static struct {
     ink_member_identity_t owner;
     bool busy, cont, alone, layout_op;
     int index, found, layout[INK_MOGO_LAYOUT_COUNT];
-    char title[96], path[288], json[4096];
+    char title[96], path[288], json[4096], *list; /* list: list_books' result, S.json or a bigger one */
+    size_t list_cap;
 } S INK_PSRAM_BSS;
 /* The home card mirrors each member's last book, read ahead on BG: .card runs on UI and never reads flash, and the
  * lock screen shows the right book at once after a member switch. */
@@ -64,6 +67,8 @@ static ink_mogo_slot_t *ink_mogo_slot(const char *member, bool take) {
 }
 
 static void ink_mogo_reply(ink_call_t *call, ink_rc_t status) { if (call) { call->rc.status = status; ink_cap_done(call); } }
+/* A result that did not fit its 4 KB is in a buffer of its own until the reply has copied it. */
+static void ink_mogo_json_free(char **json, char *own) { if (*json && *json != own) ink_app_free(*json); *json = NULL; }
 static bool ink_mogo_start(const ink_mogo_request_t *req, ink_call_t *call);
 static void ink_mogo_reattach(void);
 /* The place is written after a pause in reading (8 s, as the old reader did), not on every turn. */
@@ -120,7 +125,7 @@ static void ink_mogo_finished(void *arg) {
             ink_ui_content_changed();
         }
         int op = M.req.op;
-        if (!M.status && (op == INK_MOGO_OP_LOAD || op == INK_MOGO_OP_OPEN)) snprintf(M.book, sizeof M.book, "%s", M.req.text);
+        if (op == INK_MOGO_OP_LOAD || op == INK_MOGO_OP_OPEN) snprintf(M.book, sizeof M.book, "%s", M.req.text); /* an explanation too */
         if (M.root && !M.reason) M.book[0] = 0; /* on the shelf */
         if (!M.status && ink_mogo_idle && (op == INK_MOGO_OP_TURN || op == INK_MOGO_OP_GOTO_PAGE || op == INK_MOGO_OP_ENTRY || op == INK_MOGO_OP_CHAPTER ||
             op == INK_MOGO_OP_GOTO_MARK || op == INK_MOGO_OP_LAYOUT || op == INK_MOGO_OP_OPEN || op == INK_MOGO_OP_LOAD)) {
@@ -143,7 +148,7 @@ static void ink_mogo_finished(void *arg) {
     M.busy = false;
     if (call) {
         call->rc.revision = M.req.revision;
-        if (M.req.json && M.json[0] && !M.status) ink_cap_result(call, M.json);
+        if (M.req.json && M.req.json[0] && !M.status) ink_cap_result(call, M.req.json);
         if (M.status) { /* the explanation, as much of it as the reply holds, never half a character */
             snprintf(call->rc.say, sizeof call->rc.say, "%.*s", (int)sizeof call->rc.say - 1, M.reason ? M.explanation : TR("现在做不了，请稍后再试"));
             ink_mogo_whole(call->rc.say);
@@ -151,6 +156,7 @@ static void ink_mogo_finished(void *arg) {
         else if (M.req.say[0]) snprintf(call->rc.say, sizeof call->rc.say, "%s", M.req.say);
         ink_mogo_reply(call, M.status ? INK_RC_FAILED : INK_RC_DONE);
     }
+    ink_mogo_json_free(&M.req.json, M.json);
     if (M.reattach && !M.busy && M.screen && !M.active) { M.reattach = false; ink_mogo_reattach(); }
     if (M.has_next && M.active && !M.busy) {
         M.has_next = false;
@@ -264,7 +270,7 @@ static bool ink_mogo_input(void *ctx, const ink_graft_input_t *e) {
 }
 static const ink_graft_client_t INK_MOGO_CLIENT = {.app = "mogo", .open = ink_mogo_opened, .close = ink_mogo_closed,
     .input = ink_mogo_input, .snapshot = ink_mogo_snapshot};
-static void ink_mogo_create(lv_obj_t *screen, void *arg) {
+static void ink_mogo_build(lv_obj_t *screen, const char *path) {
     ink_call_t *call = M.opening;
     M.opening = NULL; M.screen = screen; snprintf(M.screen_member, sizeof M.screen_member, "%s", ink_member_current()->id);
     if (ink_graft_attach(screen, &INK_MOGO_CLIENT)) { ink_mogo_reply(call, INK_RC_FAILED); return; }
@@ -278,9 +284,19 @@ static void ink_mogo_create(lv_obj_t *screen, void *arg) {
     lv_timer_set_repeat_count(ink_mogo_idle, 1); lv_timer_set_auto_delete(ink_mogo_idle, false); lv_timer_pause(ink_mogo_idle);
     M.reason = 0; M.root = true; M.back = false; M.description[0] = 0; M.opened_us = ink_now_us();
     ink_mogo_request_t req = {.op = INK_MOGO_OP_LOAD};
-    snprintf(req.text, sizeof req.text, "%s", arg ? (const char *)arg : "");
+    snprintf(req.text, sizeof req.text, "%s", path);
     if (M.busy && M.closing) { M.next = req; M.next_call = call; M.has_next = true; if (call) ink_cap_defer(call); return; } /* after the old page's cleanup */
     if (!ink_mogo_start(&req, call)) ink_mogo_reply(call, INK_RC_FAILED);
+}
+/* Opened: the book asked for, else the shelf. Built again: the book that was on the page for the same member. The
+ * frame's arg is not used: it would outlive what it pointed at. */
+static void ink_mogo_create(lv_obj_t *screen, void *arg) {
+    (void)arg;
+    char path[288];
+    bool same = ink_ui_shown_again() && !strcmp(M.screen_member, ink_member_current()->id);
+    snprintf(path, sizeof path, "%s", M.want[0] ? M.want : same ? M.book : "");
+    M.want[0] = 0;
+    ink_mogo_build(screen, path);
 }
 /* Open a path in the page (opening the app first): the call is answered when the first page is on the screen. */
 static void ink_mogo_open_path(ink_call_t *call, const char *path) {
@@ -292,8 +308,8 @@ static void ink_mogo_open_path(ink_call_t *call, const char *path) {
         if (!ink_mogo_start(&req, call)) ink_mogo_reply(call, INK_RC_STALE);
         return;
     }
-    M.opening = call;
-    if (ink_app_open("reader", NULL, (void *)path) && M.opening) { M.opening = NULL; ink_mogo_reply(call, INK_RC_FAILED); }
+    M.opening = call; snprintf(M.want, sizeof M.want, "%s", path);
+    if (ink_app_open("reader", NULL, NULL) && M.opening) { M.opening = NULL; M.want[0] = 0; ink_mogo_reply(call, INK_RC_FAILED); }
 }
 static void ink_mogo_shelf_done(void *arg) {
     (void)arg;
@@ -304,10 +320,11 @@ static void ink_mogo_shelf_done(void *arg) {
         ink_cap_result(call, S.json);
         ink_mogo_reply(call, S.found < 0 ? INK_RC_FAILED : INK_RC_DONE);
     } else if (!strcmp(call->cap->id, "reader.list_books")) {
-        ink_cap_result(call, S.json);
-        snprintf(call->rc.say, sizeof call->rc.say, "%s", S.title);
+        if (S.found != -3) ink_cap_result(call, S.list); /* -3: the list could not be written: no half answer */
+        ink_mogo_json_free(&S.list, S.json);
+        snprintf(call->rc.say, sizeof call->rc.say, "%s", S.found == -3 ? TR("现在做不了，请稍后再试") : S.title);
         snprintf(call->rc.object, sizeof call->rc.object, "shelf:books");
-        ink_mogo_reply(call, S.found == -2 ? INK_RC_FAILED : INK_RC_DONE);
+        ink_mogo_reply(call, S.found == -2 || S.found == -3 ? INK_RC_FAILED : INK_RC_DONE);
     } else if (S.found < 0 || !S.path[0]) {
         snprintf(call->rc.detail, sizeof call->rc.detail, S.cont ? "no book to continue" : "no such book on the shelf");
         ink_mogo_reply(call, INK_RC_FAILED);
@@ -342,7 +359,8 @@ static void ink_mogo_shelf_work(void *arg) {
         }
     } else {
         bool list = !strcmp(S.call->cap->id, "reader.list_books");
-        S.found = ink_mogo_shelf_query(&S.owner, list ? S.json : NULL, sizeof S.json, S.title, S.index, S.path, sizeof S.path);
+        S.list = S.json; S.list_cap = sizeof S.json;
+        S.found = ink_mogo_shelf_query(&S.owner, list ? &S.list : NULL, &S.list_cap, S.title, S.index, S.path, sizeof S.path);
         if (list) snprintf(S.title, sizeof S.title, "%s", TR("书架上有这些书"));
         else if (S.found >= 0) ink_mogo_book_title(S.path, S.title, sizeof S.title);
     }
@@ -467,7 +485,7 @@ static bool ink_mogo_key(ink_key_t key, bool held) {
 static void ink_mogo_reattach(void) {
     char book[288]; snprintf(book, sizeof book, "%s", M.book);
     lv_obj_clean(M.screen);
-    ink_mogo_create(M.screen, book[0] ? book : NULL);
+    ink_mogo_build(M.screen, book);
 }
 static const ink_activity_t INK_MOGO_ACTIVITY = {.name = "book", .app = "reader", .create = ink_mogo_create,
     .destroy = ink_mogo_destroy, .on_key = ink_mogo_key, .on_swipe = ink_graft_swipe, .settle = ink_graft_settle, .snapshot = ink_graft_snapshot};

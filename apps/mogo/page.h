@@ -15,7 +15,8 @@ extern const char *const ink_mogo_layout_keys[INK_MOGO_LAYOUT_COUNT];
 typedef struct {
     int op, value, layout[INK_MOGO_LAYOUT_COUNT];
     char text[288];          /* a path to open */
-    char *json; size_t cap;  /* result for the AI, may be NULL */
+    char *json; size_t cap;  /* result for the AI, may be NULL; a result that does not fit comes back in a bigger buffer
+                              * (ink_app_alloc) put here instead: the caller frees it when it is not the one it gave */
     char say[160];           /* one sentence for the receipt */
     uint32_t revision;       /* page in the chapter after a page operation */
 } ink_mogo_request_t;
@@ -36,8 +37,10 @@ bool ink_mogo_page_root(void);
 bool ink_mogo_page_back_shown(void);
 /* What a tap at native page coordinates asks for: a capability name and its JSON, "" swallowed, NULL not a hit. */
 const char *ink_mogo_page_hit(int x, int y, char *args, size_t cap);
-/* BG, no font needed: the member's three book places. JSON [{index,title,place,percent}] and the path of `title`/`index`. */
-int ink_mogo_shelf_query(const ink_member_identity_t *owner, char *json, size_t cap, const char *title, int index, char *path, size_t path_cap);
+/* BG, no font needed: the member's three book places. JSON [{index,title,place,percent}] in *json (a bigger buffer from
+ * ink_app_alloc replaces it when it does not fit, as for a request) and the path of `title`/`index`. The index found,
+ * -1 none, -2 no card, -3 the list could not be written. */
+int ink_mogo_shelf_query(const ink_member_identity_t *owner, char **json, size_t *cap, const char *title, int index, char *path, size_t path_cap);
 /* BG: the book the card continues, if it is still there. */
 typedef struct { char path[288], title[96], chapter[96]; uint16_t chapter_no; uint8_t pct; uint32_t offset; } ink_mogo_card_t;
 bool ink_mogo_card_load(const char *member, ink_mogo_card_t *out);
