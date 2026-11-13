@@ -82,7 +82,7 @@ static void run(void *arg) {
     before = sim_hub_events_seen();
     test_on_hub(test_hub_reconnect);
     CHECK(WAIT_FOR(sim_hub_events_seen() > before, 30000), "unacknowledged event replayed after reconnect");
-    event = sim_hub_event_at(sim_hub_events_seen() - 1);
+    event = sim_hub_event_at(before); /* the oldest unacknowledged event is replayed first; later ones (a file index finishing) may follow it */
     int64_t replay_seq = 0, replay_boot = 0;
     CHECK(event && !ink_json_parse(j, event, strlen(event)) && ink_json_int(j, ink_json_find(j, 0, "params.seq"), &replay_seq) &&
         replay_seq == seq + 1 && ink_json_int(j, ink_json_find(j, 0, "params.boot"), &replay_boot) && replay_boot == boot,
