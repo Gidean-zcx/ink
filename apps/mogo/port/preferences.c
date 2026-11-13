@@ -60,9 +60,11 @@ esp_err_t nvs_erase_key(nvs_handle_t h, const char *k) {
     if (!h->writable) return ESP_ERR_INVALID_STATE;
     return !id ? ESP_ERR_NVS_NOT_FOUND : ink_db_del(h->db,id,INK_SRC_SYSTEM) ? ESP_FAIL : ESP_OK;
 }
+/* Accepted and on its way to the flash, like the old reader's position files: waiting here would hold the shared BG
+ * executor for as long as a recording or a waveform holds the flash back. */
 esp_err_t nvs_commit(nvs_handle_t h) {
     ink_db_flush(h->db);
-    return ink_db_wait(h->db,ink_db_last_ver(h->db),5000000) ? ESP_FAIL : ESP_OK;
+    return ESP_OK;
 }
 esp_err_t nvs_entry_next(nvs_iterator_t *it) {
     nvs_iterator_t i = *it;

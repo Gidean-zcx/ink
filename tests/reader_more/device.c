@@ -88,7 +88,7 @@ static void run(void *arg) {
         tap_native(342,656+40); CHECK(ready("面板=正文") && strstr(view,"本页书签=1"),"touching a list entry jumps to the same source position");
         ok("reader.remove_bookmark",NULL); get(); CHECK(strstr(view,"本页书签=0") && first_mark()==0,"removing the page's mark");
         ok("reader.add_bookmark",NULL); id=first_mark(); close_book();
-        ok("reader.continue",NULL); get(); CHECK(strstr(view,"收件箱来信") && strstr(view,"本页书签=1"),"inbox EPUB continues with bookmarks"); close_book();
+        ok("reader.continue",NULL); get(); CHECK(strstr(view,"收件箱来信") && strstr(view,"本页书签=1"),"inbox EPUB continues with bookmarks: %.200s",view); close_book();
         if (!phase || strcmp(phase,"large")) {
             txt(); CHECK(!ink_member_switch("kid"),"switch to child"); quiet();
             ok("reader.list_books",NULL); CHECK(!strstr(g_result,"收件箱来信") && !strstr(g_result,"随手读"),"AI cannot see another member's inbox");

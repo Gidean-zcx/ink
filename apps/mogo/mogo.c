@@ -25,6 +25,7 @@ static struct {
     int w, h, px, status, reason, turns; /* turns: presses that came while busy, turned in the next pass */
     ink_mogo_request_t req;
     bool active, busy, loaded, root, back, drawn, card_new;
+    char card_member[16]; /* whose card M.card is (kept after the session closes) */
     uint64_t opened_us;
     ink_mogo_card_t card;
     lv_obj_t *back_button, *note;
@@ -59,6 +60,14 @@ static ink_mogo_slot_t *ink_mogo_slot(const char *member, bool take) {
 }
 
 static void ink_mogo_reply(ink_call_t *call, ink_rc_t status) { if (call) { call->rc.status = status; ink_cap_done(call); } }
+static bool ink_mogo_start(const ink_mogo_request_t *req, ink_call_t *call);
+/* The place is written after a pause in reading (8 s, as the old reader did), not on every turn. */
+static lv_timer_t *ink_mogo_idle;
+static void ink_mogo_save(lv_timer_t *t) {
+    ink_mogo_request_t req = {.op = INK_MOGO_OP_SAVE};
+    if (M.busy) { lv_timer_reset(t); lv_timer_resume(t); }
+    else (void)ink_mogo_start(&req, NULL);
+}
 static void ink_mogo_card_read(void);
 static void ink_mogo_work(void *arg);
 static void ink_mogo_unbound(lv_event_t *e) { (void)e; } /* replaced by the transfer.open binding */
@@ -99,16 +108,21 @@ static void ink_mogo_finished(void *arg) {
         }
         ink_mogo_overlays();
         ink_ui_content_changed();
-        if (M.card_new && !strcmp(M.owner.member, ink_member_current()->id)) {
-            ink_mogo_slot_t *slot = ink_mogo_slot(M.owner.member, true);
-            slot->card = M.card; slot->have = true;
-            ink_app_card_changed("reader");
+        int op = M.req.op;
+        if (!M.status && ink_mogo_idle && (op == INK_MOGO_OP_TURN || op == INK_MOGO_OP_GOTO_PAGE || op == INK_MOGO_OP_ENTRY || op == INK_MOGO_OP_CHAPTER ||
+            op == INK_MOGO_OP_GOTO_MARK || op == INK_MOGO_OP_LAYOUT || op == INK_MOGO_OP_OPEN || op == INK_MOGO_OP_LOAD)) {
+            lv_timer_set_repeat_count(ink_mogo_idle, 1); lv_timer_reset(ink_mogo_idle); lv_timer_resume(ink_mogo_idle);
         }
         if (M.drawn && (M.req.op == INK_MOGO_OP_LOAD || M.req.op == INK_MOGO_OP_OPEN) && !M.reason && M.req.text[0]) {
             ink_probe_value("reader.open_ms", (double)(ink_now_us() - M.opened_us) / 1000.0);
             ink_probe_value("reader.restored_page", (double)(M.req.revision ? M.req.revision - 1 : 0));
         }
     } else M.status = -1;
+    if (M.card_new && M.card_member[0]) { /* also from the close: leaving the book writes its place */
+        ink_mogo_slot_t *slot = ink_mogo_slot(M.card_member, true);
+        slot->card = M.card; slot->have = true; M.card_new = false;
+        ink_app_card_changed("reader");
+    }
     M.busy = false;
     if (call) {
         call->rc.revision = M.req.revision;
@@ -138,20 +152,23 @@ static void ink_mogo_work(void *arg) {
             M.status = ink_mogo_page_command(&M.req);
         } else M.status = ink_mogo_page_command(&M.req);
         int op = M.req.op;
-        if (op != INK_MOGO_OP_CHAPTERS && op != INK_MOGO_OP_GET_LAYOUT && op != INK_MOGO_OP_READ && !(op == INK_MOGO_OP_MARKS && !M.req.value)) {
+        if (op != INK_MOGO_OP_CHAPTERS && op != INK_MOGO_OP_GET_LAYOUT && op != INK_MOGO_OP_READ && op != INK_MOGO_OP_SAVE && !(op == INK_MOGO_OP_MARKS && !M.req.value)) {
             ink_mogo_page_draw(M.pixels);
             M.drawn = true;
         }
         ink_mogo_page_snapshot(M.description, sizeof M.description);
         M.reason = ink_mogo_page_reason(); M.root = ink_mogo_page_root(); M.back = ink_mogo_page_back_shown();
         snprintf(M.explanation, sizeof M.explanation, "%s", ink_mogo_page_explanation());
-        ink_mogo_card_t card;
-        if (ink_mogo_page_card(&card) && memcmp(&card, &M.card, sizeof card)) { M.card = card; M.card_new = true; }
         if (op == INK_MOGO_OP_TURN) ink_probe_value("reader.page_render_ms", (double)(ink_now_us() - t0) / 1000.0);
     }
+    if (!M.active) ink_mogo_page_close();
+    ink_mogo_card_t card;
+    if (ink_mogo_page_card(&card) && memcmp(&card, &M.card, sizeof card)) {
+        M.card = card; M.card_new = true; snprintf(M.card_member, sizeof M.card_member, "%s", M.owner.member);
+    }
     if (!M.active) {
-        ink_mogo_page_close(); ink_app_free(M.pixels); M.pixels = NULL; M.loaded = false;
-        memset(&M.owner, 0, sizeof M.owner); memset(&M.card, 0, sizeof M.card); M.turns = 0;
+        ink_app_free(M.pixels); M.pixels = NULL; M.loaded = false;
+        memset(&M.owner, 0, sizeof M.owner); M.turns = 0;
     }
     ink_exec_post(INK_EXEC_UI, &M.done, ink_mogo_finished, NULL);
 }
@@ -179,6 +196,8 @@ static bool ink_mogo_opened(void *ctx, const ink_member_identity_t *owner, int w
 }
 static void ink_mogo_closed(void *ctx) {
     (void)ctx; M.active = false; M.description[0] = 0; M.back_button = M.note = NULL;
+    if (ink_mogo_idle) lv_timer_delete(ink_mogo_idle);
+    ink_mogo_idle = NULL;
     if (!M.busy) {
         M.busy = true;
         ink_exec_post(INK_EXEC_BG, &M.work, ink_mogo_work, NULL);
@@ -227,6 +246,8 @@ static void ink_mogo_create(lv_obj_t *screen, void *arg) {
     lv_obj_set_style_bg_color(M.back_button, ink_ui_paper(), 0);
     ink_shell_bind(M.back_button, "reader.back", NULL);
     lv_obj_add_flag(M.back_button, LV_OBJ_FLAG_HIDDEN);
+    ink_mogo_idle = lv_timer_create(ink_mogo_save, 8000, NULL);
+    lv_timer_set_repeat_count(ink_mogo_idle, 1); lv_timer_set_auto_delete(ink_mogo_idle, false); lv_timer_pause(ink_mogo_idle);
     M.reason = 0; M.root = true; M.back = false; M.description[0] = 0; M.opened_us = ink_now_us();
     ink_mogo_request_t req = {.op = INK_MOGO_OP_LOAD};
     snprintf(req.text, sizeof req.text, "%s", arg ? (const char *)arg : "");

@@ -77,7 +77,8 @@ static void card_matches(void) {
     char name[96] = "", expected[16];
     if (chapter && chapter_end) snprintf(name, sizeof name, "%.*s", (int)(chapter_end - chapter - strlen("》 · ")), chapter + strlen("》 · "));
     snprintf(expected, sizeof expected, "读到 %u%%", shown);
-    on_ui(home); quiet(); on_ui(inspect);
+    on_ui(home); quiet(); /* leaving the book writes its place on BG; the card follows */
+    WAIT_FOR((on_ui(inspect), name[0] && strstr(reading.text, name) && strstr(reading.text, expected)), 5000);
     CHECK(!strcmp(reading.title, "继续读") && name[0] && strstr(reading.text, name) && strstr(reading.text, expected) && reading.value == (int64_t)shown,
           "card title, chapter and percentage: %.95s (%s, %s)", reading.text, name, expected);
     CHECK(strstr(view, expected), "AI sees the same percentage");
@@ -103,7 +104,7 @@ static void first_run(void) {
     on_ui(home); quiet(); call_ok("reader.continue", NULL); back_to_saved("the AI capability");
     call_ok("reader.goto_chapter", "{\"chapter\":20}"); call_ok("reader.next_page", NULL); card_matches(); frame("continue-progress");
     CHECK(!strstr(reading.text, "读到 0%"), "later chapters show nonzero progress");
-    read_to(5); on_ui(home); quiet(); char adult[96]; snprintf(adult, sizeof adult, "%s", reading.text);
+    read_to(5); card_matches(); char adult[96]; snprintf(adult, sizeof adult, "%s", reading.text);
     CHECK(ink_member_switch("kid") == 0, "the child takes the device"); quiet();
     today(NULL);
     read_to(2); card_matches(); char child[96]; snprintf(child, sizeof child, "%s", reading.text);

@@ -55,7 +55,8 @@ static void reader_checks(void) {
     CHECK(strstr(g_rc.say,"第一章 山路") && g_rc.revision>1,"previous chapter last page");
     ok("reader.next_page",NULL); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第二章 海边") && g_rc.revision==1,"forward across chapter returns to first page");
-    ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.show_chapters",NULL); inspect();
+    /* chapter one is the saved place (a close saves it) before the contents jump, which must then be saved itself */
+    ok("reader.goto_chapter","{\"chapter\":1}"); close_book(); ok("reader.open_book","{\"title\":\"山间来信\"}"); ok("reader.show_chapters",NULL); inspect();
     CHECK(!strcmp(ink_ui_top_name(),"book") && strstr(view,"面板=目录") && strstr(view,"3 中途码头"),"contents page and AI snapshot agree: %.200s",view);
     frame("epub-contents");
     ok("reader.chapters",NULL); CHECK(strstr(g_result,"中途码头"),"AI can list chapters while the contents page is open");
