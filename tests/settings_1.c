@@ -186,6 +186,11 @@ static void run(void *arg) {
     /* 5. Wi-Fi off says 已关闭; with airplane mode on, 移动网络 is grayed and says why; a dependent row in search too. */
     CHECK(BY_HAND("wifi.set_enabled", "{\"enabled\":false}") && g_rc.status == INK_RC_DONE, "Wi-Fi off"); quiet();
     CHECK(home_page_with("wifi") && row_is("wifi", "value", "已关闭") && visible("已关闭"), "the Wi-Fi row says 已关闭");
+    /* 移动网络 follows the modem's state (not a setting) while the home is open. */
+    ink_state_set_bool(ink_state_find("cell.registered"), true); quiet();
+    CHECK(row_is("cell", "value", "4G 在线") && visible("4G 在线"), "移动网络 says 4G 在线 once it registers");
+    ink_state_set_bool(ink_state_find("cell.registered"), false); quiet();
+    CHECK(row_is("cell", "value", "4G 还没有连上") && visible("4G 还没有连上"), "and 4G 还没有连上 again");
     CHECK(BY_HAND("net.set_airplane", "{\"enabled\":true}") && g_rc.status == INK_RC_DONE, "airplane mode on"); quiet();
     CHECK(row_is("cell", "state", "dependent") && row_is("cell", "value", "飞行模式开着") && visible("飞行模式开着"),
           "移动网络 is grayed with the reason");

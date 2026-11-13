@@ -35,6 +35,9 @@ cases = [
      "a child's home and search show the parents' rows and values"),
     ('not-located', BODY, '        ink_sr_target = it; /* its page frames the row while it is built */', '',
      'settings.open lands on the page but not on its row'),
+    ('cell-not-live', BODY, 'ink_state_watch("cell.", cell_changed, NULL, INK_EXEC_UI)',
+     'ink_state_watch("cell.nothing.", cell_changed, NULL, INK_EXEC_UI)',
+     "the home's 移动网络 row keeps the old words when the modem registers"),
 ]
 before = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for _, path, *_ in cases}
 flags = (build / 'CMakeFiles/ink_system.dir/flags.make').read_text()

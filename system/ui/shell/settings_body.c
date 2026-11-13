@@ -937,6 +937,7 @@ static const ink_cap_t CAPS[] = {
      .effect = INK_FX_NAVIGATE, .child_ok = true, .run = search_call},
     {.id = "settings.open", .title = "打开一项设置所在的页并定位到那一行；不给 id 打开设置首页",
      .input = OPEN_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = open_call}};
+static void cell_changed(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; ink_settings_home_sync(); } /* 移动网络 */
 int ink_settings_home_init(void) {
     ink_jw_t w; ink_jw_init(&w, OPEN_INPUT, sizeof OPEN_INPUT);
     ink_jw_raw(&w, "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"enum\":[");
@@ -945,7 +946,7 @@ int ink_settings_home_init(void) {
         ink_jw_str(&w, ink_sr_at(i)->id);
     }
     ink_jw_raw(&w, "]}}}");
-    return w.overflow ? -1 : ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS);
+    return w.overflow || ink_state_watch("cell.", cell_changed, NULL, INK_EXEC_UI) ? -1 : ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS);
 }
 
 static const char *const FONT_CHOICES[] = {TR_NOOP("小"), TR_NOOP("中"), TR_NOOP("大"), TR_NOOP("特大"), NULL};
