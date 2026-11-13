@@ -62,8 +62,10 @@ esp_err_t nvs_erase_key(nvs_handle_t h, const char *k) {
 }
 /* Accepted and on its way to the flash, like the old reader's position files: waiting here would hold the shared BG
  * executor for as long as a recording or a waveform holds the flash back. */
+bool ink_mogo_quiet_flush;
 esp_err_t nvs_commit(nvs_handle_t h) {
-    ink_db_flush(h->db);
+    if (ink_mogo_quiet_flush) ink_db_flush_background(h->db);
+    else ink_db_flush(h->db);
     return ESP_OK;
 }
 esp_err_t nvs_entry_next(nvs_iterator_t *it) {

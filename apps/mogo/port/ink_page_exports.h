@@ -124,7 +124,7 @@ static int ink_mogo_open_book(const char *path) {
 }
 static unsigned ink_mogo_mark_percent(const reader_bookmark_entry_t *m) {
     uint32_t total=book_total_bytes(), start=book_chapter_byte_offset(m->chapter);
-    uint32_t end=m->chapter+1<book_chapter_count()?book_chapter_byte_offset(m->chapter+1):total;
+    uint32_t end=(size_t)m->chapter+1<book_chapter_count()?book_chapter_byte_offset(m->chapter+1):total;
     uint32_t at=m->chapter==s_reader_session.position.chapter?book_position_bytes(start,end,m->byte_off,s_text_len):start;
     return total?(unsigned)((uint64_t)at*100/total):0;
 }
@@ -280,7 +280,9 @@ static bool ink_mogo_turn(int pages,ink_mogo_request_t *r) {
 int ink_mogo_page_command(ink_mogo_request_t *r) {
     int v=r->value; bool ok=true;
     r->revision=0; r->say[0]=0;
-    if (r->op==INK_MOGO_OP_SAVE) { ink_mogo_save_all(); return s_save_failed?-1:0; }
+    if (r->op==INK_MOGO_OP_SAVE) { /* a pause in reading: written behind sound and touch, not ahead of them */
+        ink_mogo_quiet_flush=true; ink_mogo_save_all(); ink_mogo_quiet_flush=false; return s_save_failed?-1:0;
+    }
     if (r->op==INK_MOGO_OP_LOAD || r->op==INK_MOGO_OP_OPEN) {
         int status=r->op==INK_MOGO_OP_OPEN || r->text[0]?ink_mogo_open_book(r->text):ink_mogo_scan();
         if (!status && s_text) { /* reader.restored_page: about which page of the whole book (the old reader numbered TXT pages so) */

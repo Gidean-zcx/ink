@@ -41,6 +41,7 @@ int ink_mogo_shelf_query(const ink_member_identity_t *owner, char *json, size_t 
 /* BG: the book the card continues, if it is still there. */
 typedef struct { char path[288], title[96], chapter[96]; uint16_t chapter_no; uint8_t pct; uint32_t offset; } ink_mogo_card_t;
 bool ink_mogo_card_load(const char *member, ink_mogo_card_t *out);
+extern bool ink_mogo_quiet_flush; /* BG: the save in progress is a pause in reading, flushed at background priority */
 /* BG: the open book's place for the card, else the record the session wrote last (empty path: none). */
 bool ink_mogo_page_card(ink_mogo_card_t *out);
 /* BG: which font file the session can use; INK_MOGO_R_*. */

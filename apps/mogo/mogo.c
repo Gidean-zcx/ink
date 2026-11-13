@@ -533,6 +533,8 @@ static void ink_mogo_migrate_work(void *arg) {
     int more = ink_mogo_migrate_step(&C.owner, NULL);
     ink_exec_post(INK_EXEC_UI, &C.migrated, ink_mogo_migrated, (void *)(intptr_t)more);
 }
+static void ink_mogo_kick(void *ctx, int h, const char *id);
+static void ink_mogo_settled(lv_timer_t *t) { (void)t; ink_mogo_kick(NULL, 0, NULL); }
 static void ink_mogo_kick(void *ctx, int h, const char *id) {
     (void)ctx; (void)h;
     if (!ink_member_space_open()) return;
@@ -543,6 +545,13 @@ static void ink_mogo_kick(void *ctx, int h, const char *id) {
     /* A member already looked at since boot: their card is kept current by the page; only the card coming back is news. */
     const ink_mogo_slot_t *slot = ink_mogo_slot(ink_member_current()->id, false);
     if (slot && slot->migrated && (!id || strcmp(id, "storage.card"))) return;
+    /* A member who just came in: the flash is busy with their switch, and a load would hold the BG executor behind it.
+     * Their card and old data are looked at once things have settled. */
+    static lv_timer_t *settle;
+    if (id && !strncmp(id, "member.", 7)) {
+        if (!settle) { settle = lv_timer_create(ink_mogo_settled, 3000, NULL); if (settle) lv_timer_set_auto_delete(settle, false); }
+        if (settle) { lv_timer_set_repeat_count(settle, 1); lv_timer_reset(settle); lv_timer_resume(settle); return; }
+    }
     if (M.active || C.migrating) { ink_mogo_card_read(); return; }
     ink_member_identity(&C.owner);
     C.migrating = true;
