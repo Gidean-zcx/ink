@@ -64,7 +64,7 @@ hub.write_text(json.dumps({'rules': [
     {'method': 'ai.ask', 'think_ms': 50, 'result': {'done': True}},
     {'method': 'ai.listen', 'think_ms': 50,
      'listen': {'stt_ms': 50, 'transcript': 'SYNTHETIC_OWNER_QUESTION', 'tts_first_ms': 50,
-                'tts_chars_per_s': 8, 'tts_speed': 4},
+                'tts_chars_per_s': 8, 'tts_speed': 4, 'lead_ms': 10000},  # a hub far ahead: speech still queued at the end
      'stream': {'notify': 'ai.delta', 'interval_ms': 50,
                 'chunks': ['成人的合成私人回答请勿对其他成员继续播放。这段合成朗读只供当前成员收听。']},
      'result': {'done': True}},

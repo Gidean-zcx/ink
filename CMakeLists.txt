@@ -1561,6 +1561,14 @@ if(INK_HAVE_FONTS)
               --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --seed ${seed}
               --out ${CMAKE_BINARY_DIR}/test-out/ai_ask-seed-${seed} --quiet --no-random-outages)
   endforeach()
+  # voice-stream-1: no gap in the spoken answers over seeds 1-20, audible concealment counted (random loss and the
+  # script's 600 ms mid-answer stall); and the reverse control: with the hub only 5 frames ahead most runs are heard broken.
+  add_test(NAME scenario-ai_ask-seeds
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask_seeds.py --build ${CMAKE_BINARY_DIR})
+  set_tests_properties(scenario-ai_ask-seeds PROPERTIES TIMEOUT 300)
+  add_test(NAME scenario-ai_ask-seeds-without-lead
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask_seeds.py --build ${CMAKE_BINARY_DIR} --without-lead)
+  set_tests_properties(scenario-ai_ask-seeds-without-lead PROPERTIES TIMEOUT 300)
   add_test(NAME scenario-ai_mic_unavailable-metalio-plus
     COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_mic_unavailable.script
