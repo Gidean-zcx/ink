@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument("--build", type=Path, required=True)
 p.add_argument("--binary", type=Path)
-p.add_argument("--scene", choices=("KidHome", "KidToday", "KidApps"))
+p.add_argument("--scene", choices=("KidHome", "KidApps"))
 a = p.parse_args()
 build = a.build.resolve()
 binary = a.binary.resolve() if a.binary else build / "sim-kid-3"
@@ -18,7 +18,7 @@ area = build / "test-out" / ("kid-3-" + binary.name)
 if area.exists():
     shutil.rmtree(area)
 area.mkdir(parents=True)
-for scene in (a.scene,) if a.scene else ("KidHome", "KidToday", "KidApps"):
+for scene in (a.scene,) if a.scene else ("KidHome", "KidApps"):
     target = area / scene
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/kid_3.script"), "--budget", str(ROOT / "tests/ui_scene.budget.json"),
@@ -37,8 +37,6 @@ for scene in (a.scene,) if a.scene else ("KidHome", "KidToday", "KidApps"):
     assert (target / f"snap-{scene}.png").exists()
     text = (target / f"{scene}.txt").read_text()
     assert scene in text
-    if scene == "KidToday":
-        assert json.loads(text)["page"] == scene
     shutil.copy2(target / f"snap-{scene}.png", target / "snap-scene.png")
     print(f'{scene}: PASS checks={counts.get("test.pass")}', flush=True)
 if not os.environ.get("INK_KEEP_EVIDENCE"):

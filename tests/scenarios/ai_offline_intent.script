@@ -1,7 +1,7 @@
 # Offline quick intents (architecture §6.4): with no network at all, "下一页"
 # after the wake word turns the page; the device recognised the command word
 # itself and called reader.next_page. Hands-free profile (front end modelled).
-@3s      tap   68% 92%        # 阅读
+@3s      tap   80% 56%        # 阅读 (favourite)
 +2500ms  tap   50% 160dp          # 星星邮差
 +3s      net   none               # no Wi-Fi, no 4G
 +2s      mic   wake

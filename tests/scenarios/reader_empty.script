@@ -1,7 +1,7 @@
 # A book that cannot be opened (an empty .txt): page turns by key, swipe and tap must be refused
 # safely, then HOME still works. Before the fix (audit AUD-009, 2026-11) the first NEXT crashed the
 # system (page index read through a NULL page table). Content: tests/fixtures/content-bad (one empty book).
-@3s      tap   68% 92%        # 阅读
+@3s      tap   80% 56%        # 阅读 (favourite)
 +2500ms  tap   50% 150dp          # the only book: first 108 px row
 +3s      snap  cannot-open
 +500ms   key   next

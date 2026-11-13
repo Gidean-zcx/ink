@@ -60,7 +60,7 @@ if control:
     link[link.index('-o') + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True, capture_output=True)
 
-for phase in (['kid'] if control else ['lock', 'gate', 'kid']):
+for phase in (['lock'] if control else ['lock', 'gate', 'kid']):
     out = work / phase
     sd = work / (phase + '-sd')
     sd.mkdir()
@@ -87,12 +87,12 @@ for phase in (['kid'] if control else ['lock', 'gate', 'kid']):
         raise SystemExit(json.dumps(metrics.get('warnings', []), ensure_ascii=False) + result.stderr[-3000:])
     shared = list((sd / 'content/锁屏拍的照片').glob('*.png'))
     private = list((sd / 'content/.m/owner/照片').glob('*.png'))
-    assert len(shared) == (4 if phase == 'kid' else 3) and len(private) == 1, 'locked photos escaped their public destination'
+    assert len(shared) == {'lock': 4, 'gate': 3, 'kid': 1}[phase] and len(private) == 1, 'locked photos escaped their public destination'
     assert not list((sd / 'content/.m/kid').rglob('*.png')), 'locked photos belong to a child'
     for photo in shared + private:
         with Image.open(photo) as im:
             assert im.format == 'PNG' and im.mode == 'RGB' and im.size == (640, 480)
-    assert all((out / ('snap-' + name + '.png')).exists() for name in ('lock-entry', 'restricted', 'confirmation'))
+    assert all((out / ('snap-' + name + '.png')).exists() for name in (('lock-entry',) if phase == 'kid' else ('lock-entry', 'restricted', 'confirmation')))
     print(phase, 'persisted PNGs, ownership and screenshots PASS', flush=True)
 if os.environ.get('INK_KEEP_EVIDENCE'):
     print('Evidence:', work.relative_to(ROOT))

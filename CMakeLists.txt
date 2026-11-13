@@ -742,6 +742,10 @@ ink_sim_executable(sim-lock-faces tests/lock_faces.c)
 target_link_libraries(sim-lock-faces PRIVATE ink_apps ink_system)
 add_test(NAME lock-faces COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_faces.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(lock-faces PROPERTIES TIMEOUT 240)
+ink_sim_executable(sim-lock-cover tests/lock_cover.c)
+target_link_libraries(sim-lock-cover PRIVATE ink_apps ink_system)
+add_test(NAME lock-cover COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_cover.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(lock-cover PROPERTIES TIMEOUT 600)
 add_test(NAME ui-scale-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_scale_check_test.py)
 add_test(NAME ui-compare-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_compare_test.py)
 add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py)
@@ -760,10 +764,10 @@ ink_sim_executable(sim-ui-borders tests/ui_borders.c)
 target_link_libraries(sim-ui-borders PRIVATE ink_apps ink_system)
 add_test(NAME ui-borders COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ui_borders.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(ui-borders PROPERTIES TIMEOUT 180)
-set(INK_SHELL_SCENES Main Today Apps Lock LockPage Control Notifications Members MembersBack Pin PinWrong
+set(INK_SHELL_SCENES Main Today Apps AppsSearch Lock LockPage Control Notifications Members MembersBack Pin PinWrong
   ImePinyin ImeCandidates ImeEdit ImePassword ImeVoice Confirm ConfirmDelete ConfirmSecret AiListen AiThink Ai
   Settings SetDisplay SetSound SetNetwork SetVoice SetAbout SetPrivacy ImeSymbols
-  PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
+  PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsPanel)
 foreach(scene ${INK_SHELL_SCENES})
   if(scene STREQUAL "PowerOff")
     set(budget ui_off_scene)
@@ -788,7 +792,7 @@ foreach(scene ${INK_SHELL_SCENES})
       --budget ${CMAKE_SOURCE_DIR}/tests/${budget}.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
       --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-big-${scene} --quiet --no-random-outages)
 endforeach()
-foreach(scene Main Today Apps Control Notifications Ai ImePinyin)
+foreach(scene Main Today Apps AppsSearch Control Notifications Ai ImePinyin)
   add_test(NAME ui-scene-child-${scene}
     COMMAND ${CMAKE_COMMAND} -E env INK_UI_SCENE=${scene} INK_UI_SCENE_MEMBER=kid $<TARGET_FILE:sim-ui-scenes>
       --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell.script
@@ -939,6 +943,13 @@ add_test(NAME ui-cards
   COMMAND sim-ui-cards --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_cards.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-cards --quiet --no-random-outages)
+# D-135, the one-page home: touch and the AI reach the same entries; each member keeps their own six favourites.
+ink_sim_executable(sim-home-one-page tests/home_one_page.c)
+target_link_libraries(sim-home-one-page PRIVATE ink_apps ink_system)
+add_test(NAME home-one-page
+  COMMAND sim-home-one-page --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    --script ${CMAKE_SOURCE_DIR}/tests/ui_cards.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
+    --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/home-one-page --quiet --no-random-outages)
 ink_sim_executable(sim-text-long tests/text_long/editor.c)
 target_link_libraries(sim-text-long PRIVATE ink_apps ink_system)
 add_test(NAME text-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/text_long/run.py --build ${CMAKE_BINARY_DIR})

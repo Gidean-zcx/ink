@@ -13,31 +13,40 @@
 #undef key
 #undef ink_ui_semantics_summary
 
+static lv_obj_t *bound(lv_obj_t *root, const char *cap) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *child = lv_obj_get_child(root, (int)i), *found;
+        if (ink_shell_bound_cap(child) && !strcmp(ink_shell_bound_cap(child), cap)) return child;
+        if ((found = bound(child, cap))) return found;
+    }
+    return NULL;
+}
+
 void ink_test_shell2_home(void) {
-    N.home_page = 1; draw_home_content(); view("home");
-    CHECK(strstr(test_semantic, "shell.resume") && strstr(test_semantic, "home.next"), "main keeps its real capability names");
-    lv_obj_t *dock = NULL;
+    draw_home_content(); view("home");
+    CHECK(strstr(test_semantic, "shell.apps") && strstr(test_semantic, "shell.favorite") && !strstr(test_semantic, "home.next"),
+          "the one page names its real capabilities and none to turn screens");
+    lv_obj_t *bar = NULL;
     for (uint32_t i = 0; i < lv_obj_get_child_count(N.home); i++) {
         lv_obj_t *child = lv_obj_get_child(N.home, (int)i);
-        if (ink_shell_bound_cap(child) && !strcmp(ink_shell_bound_cap(child), "shell.control")) dock = child;
+        if (ink_shell_bound_cap(child) && !strcmp(ink_shell_bound_cap(child), "shell.control")) bar = child;
     }
-    event(dock, LV_EVENT_PRESSED); stale("home", "shell.control"); event(dock, LV_EVENT_CLICKED);
+    event(bar, LV_EVENT_PRESSED); stale("home", "shell.control"); event(bar, LV_EVENT_CLICKED);
     CHECK(!N.control, "stale main control tap does not open the panel");
-    turn(1); view("home"); CHECK(strstr(test_semantic, "工具页=") && strstr(test_semantic, "shell.icon_menu"), "apps keeps paging and menu semantics"); stale("home", "home.prev");
-    lv_obj_t *icon = NULL;
-    for (uint32_t i = 0; i < lv_obj_get_child_count(N.content); i++) {
-        lv_obj_t *child = lv_obj_get_child(N.content, (int)i);
-        const char *cap = ink_shell_bound_cap(child);
-        if (cap && !strcmp(cap, "shell.launch")) { icon = child; break; }
-    }
+    CHECK(bound(N.content, "shell.apps"), "全部应用 is a row bound to its capability");
+    ink_receipt_t opened;
+    CHECK(ink_cap_invoke("shell.apps", NULL, INK_SRC_TOUCH, 0, &opened) == INK_RC_DONE, "全部应用 opens its page");
+    view("Apps"); CHECK(strstr(test_semantic, "工具页=") && strstr(test_semantic, "shell.icon_menu"), "all apps keeps paging and menu semantics");
+    stale("Apps", "shell.apps_next");
+    lv_obj_t *icon = bound(lv_screen_active(), "shell.launch");
     event(icon, LV_EVENT_PRESSED); ink_ui_content_changed(); event(icon, LV_EVENT_SHORT_CLICKED);
-    CHECK(N.home && !strcmp(ink_ui_page_name(), "home"), "stale app icon cannot navigate");
-    turn(-1); turn(-1); view("home"); stale("home", "home.next");
+    CHECK(!strcmp(ink_ui_page_name(), "Apps"), "stale app icon cannot navigate");
+    ink_ui_pop(); view("home"); stale("home", "shell.apps");
     uint32_t before = ink_ui_generation(); changed((void *)1, 0, "db.opened");
     CHECK(ink_ui_generation() == before, "unrelated collection event preserves home controls");
     /* A refusal is a passing note, not a state (trial report 2026-11-11: it stayed on the screen); main.c waits
      * for it to go. */
-    N.home_page = 1; draw_home_content();
+    draw_home_content();
     ink_args_t *args = osal_malloc(sizeof *args, OSAL_MEM_EXTERNAL);
     CHECK(args != NULL, "launch arguments");
     if (!args) return;
@@ -49,4 +58,4 @@ void ink_test_shell2_home(void) {
           N.note_timer, "an app with nothing to open leaves a passing note");
 }
 bool ink_test_shell2_note_left;
-void ink_test_shell2_note_check(void) { ink_test_shell2_note_left = N.result[0] || (N.message && lv_label_get_text(N.message)[0]); }
+void ink_test_shell2_note_check(void) { ink_test_shell2_note_left = N.result[0] || (N.message && strcmp(lv_label_get_text(N.message), idle)); }

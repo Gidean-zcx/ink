@@ -66,16 +66,15 @@ static int page_now(void) {
     CHECK(AI("reader.read_page", NULL) && g_rc.status == INK_RC_DONE, "the book is open (%s, top=%s)", g_rc.detail, ink_ui_top_name());
     return (int)g_rc.revision;
 }
-/* Today, as the person sees it and as the AI reads it. */
+/* The home's card (D-135: today's cards are on the one page), as the person sees it and as the AI reads it.
+ * NULL: no card at all, rather than an empty one. */
 static void today(const char *expect) {
-    on_ui(home); quiet();
-    if (strstr(ink_shell_board(), "Today")) call_ok("home.next", NULL); /* drawn afresh, as when the person comes to it */
-    call_ok("home.prev", NULL); on_ui(inspect);
-    CHECK(strstr(view, expect), "Today shows %s (%.150s)", expect, view);
-    if (strstr(expect, "第")) CHECK(strstr(view, "reader.continue"), "the AI snapshot offers the card's action");
-    else CHECK(!strstr(view, "reader.continue") && !strstr(view, "测试长书"), "no card without the book (%.150s)", view);
+    on_ui(home); quiet(); on_ui(ink_ui_redraw); quiet(); /* drawn afresh, as when the person comes to it */
+    on_ui(inspect);
+    if (expect) CHECK(strstr(view, expect) && strstr(view, "reader.continue"), "the home shows %s and offers the card's action (%.150s)", expect, view);
+    else CHECK(!strstr(view, "reader.continue") && !strstr(view, "测试长书") && !strstr(view, "继续读"), "no card without the book (%.150s)", view);
     call_ok("app.cards", NULL);
-    CHECK(strstr(expect, "第") ? strstr(g_result, expect) != NULL : !strstr(g_result, "测试长书"), "app.cards agrees (%.200s)", g_result);
+    CHECK(expect ? strstr(g_result, expect) != NULL : !strstr(g_result, "测试长书"), "app.cards agrees (%.200s)", g_result);
 }
 static void read_to(int page) {
     char args[32]; snprintf(args, sizeof args, "{\"page\":%d}", page);
@@ -88,11 +87,11 @@ static void card(bool present) {
 }
 
 static void first_run(void) {
-    today("还没有开始读书");
+    today(NULL);
     read_to(5); on_ui(home); quiet();
     today("《测试长书》第 5 页");
     percentage(); frame("continue-reading");
-    touch("《测试长书》第 5 页"); CHECK(page_now() == 5, "tapping the card goes back to page 5");
+    touch("第 5 页"); CHECK(page_now() == 5, "tapping the card goes back to page 5");
     on_ui(home); quiet(); call_ok("shell.resume", NULL); CHECK(page_now() == 5, "the main page's line goes back to page 5");
     on_ui(home); quiet(); call_ok("reader.continue", NULL); CHECK(page_now() == 5, "the AI capability goes back to page 5");
     call_ok("reader.goto_page", "{\"page\":20}"); on_ui(home); quiet();
@@ -100,7 +99,7 @@ static void first_run(void) {
     CHECK(!strstr(reading.text, "· 0%"), "later pages show nonzero progress");
     read_to(5); on_ui(home); quiet();
     CHECK(ink_member_switch("kid") == 0, "the child takes the device"); quiet();
-    today("还没有开始读书");
+    today(NULL);
     read_to(2); on_ui(home); quiet();
     today("《测试长书》第 2 页"); CHECK(!strstr(view, "第 5 页"), "the child does not see the adult's place");
     CHECK(ink_member_switch("owner") == 0, "the adult again"); quiet();
@@ -113,17 +112,17 @@ static void after_restart(void) {
     on_ui(home); quiet(); call_ok("reader.continue", NULL); CHECK(page_now() == 5, "after a restart the card still goes to page 5");
     CHECK(ink_member_switch("kid") == 0, "the child after the restart"); quiet();
     today("《测试长书》第 2 页");
-    touch("《测试长书》第 2 页"); CHECK(page_now() == 2, "the child's card goes to page 2");
+    touch("第 2 页"); CHECK(page_now() == 2, "the child's card goes to page 2");
     CHECK(ink_member_switch("owner") == 0, "the adult again"); quiet();
     today("《测试长书》第 5 页");
     card(false);
-    CHECK(WAIT_FOR(today_has("还没有开始读书"), 3000), "Today updates after card removal without navigation"); frame("continue-removed");
+    CHECK(WAIT_FOR(!today_has("测试长书"), 3000), "the home updates after card removal without navigation"); frame("continue-removed");
     on_ui(home); quiet(); CHECK(AI("reader.continue", NULL) && g_rc.status == INK_RC_FAILED, "nothing to continue without the card");
     card(true);
-    CHECK(WAIT_FOR(today_has("《测试长书》第 5 页"), 3000), "Today updates after card insertion without navigation"); frame("continue-inserted");
+    CHECK(WAIT_FOR(today_has("《测试长书》第 5 页"), 3000), "the home updates after card insertion without navigation"); frame("continue-inserted");
     on_ui(home); quiet();
     CHECK(hal_fs_remove("/content/books/测试长书.txt") == 0, "the book is deleted");
-    today("还没有开始读书");
+    today(NULL);
     on_ui(home); quiet(); CHECK(AI("reader.continue", NULL) && g_rc.status == INK_RC_FAILED, "a deleted book is not opened");
     call_ok("shell.resume", NULL); CHECK(!strcmp(ink_ui_top_name(), "reader"), "the main page's line opens the shelf instead (%s)", ink_ui_top_name());
 }

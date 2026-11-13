@@ -413,7 +413,7 @@ static void home_labels(lv_obj_t *o) {
             if (!strcmp(text, "甲")) {
                 lv_area_t a; lv_obj_update_layout(c); lv_obj_get_coords(c, &a);
                 g_home_x = (a.x1 + a.x2) / 2;
-                g_home_y = a.y1 - ink_ui_px(INK_CIRCLE / 2 + INK_GAP_S);
+                g_home_y = (a.y1 + a.y2) / 2; /* the whole row takes the tap */
             }
             CHECK(strcmp(text, "丙"), "an app with missing capabilities stays hidden");
         }
@@ -421,15 +421,15 @@ static void home_labels(lv_obj_t *o) {
     }
 }
 static void look_at_home(void) {
-    if (strcmp(ink_shell_board(), "Apps")) ink_shell_home_swipe(INK_SWIPE_LEFT);
+    if (strcmp(ink_shell_board(), "Apps")) { ink_receipt_t rc; ink_cap_invoke("shell.apps", NULL, INK_SRC_TOUCH, 0, &rc); } /* D-135 */
     g_home_buttons = 0; home_labels(lv_screen_active());
 }
 
 static void home_by_hand(void) {
     g_home_seen = 0;
     on_ui(look_at_home);
-    for (int page = 0; page < 3 && g_home_seen != 15; page++) {
-        CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "page through the reflowed application grid");
+    for (int page = 0; page < 6 && g_home_seen != 15; page++) {
+        CHECK(AI("shell.apps_next", NULL) && g_rc.status == INK_RC_DONE, "page through the reflowed application list");
         CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "application grid settles"); on_ui(look_at_home);
     }
     CHECK(g_home_seen == 15, "Apps lists alpha, beta, delta and reader across its pages (%u)", g_home_seen);
