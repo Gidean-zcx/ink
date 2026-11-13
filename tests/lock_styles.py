@@ -76,6 +76,12 @@ for case in cases:
         bound = (x0 + 160 * num // den - 3, y0 + 288 * num // den - 3, x0 + 544 * num // den + 3, y0 + 960 * num // den + 3)
         assert box and box[0] >= bound[0] and box[1] >= bound[1] and box[2] <= bound[2] and box[3] <= bound[3], (box, bound)
         print(f'lock-styles[refresh]: the minute changes pixels only inside the clock area {box}', flush=True)
+    if case == 'styles':  # the collage drawn a second time comes from its cache: still the whole frame
+        from PIL import Image
+        for size in (1, 3):
+            low = Image.open(area / f'clean-style-7-size-{size}.png').convert('L').crop((40, 800, 640, 1150))
+            assert low.getextrema()[0] < 128, f'collage at size {size} is blank below the middle (a half-cached frame)'
+        print('lock-styles[styles]: the collage is whole when drawn and when read back from its cache', flush=True)
     keep = os.environ.get('INK_KEEP_EVIDENCE')
     if keep:
         target = Path(keep) / case

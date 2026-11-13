@@ -45,7 +45,7 @@ def link(source_root):
 
 link(ROOT / 'third_party/mogo')       # reader, font, settings and their tools
 link(ROOT / 'third_party/mogo-lock')  # the lock style files win where both have one
-link(ROOT / 'third_party/mogo-lock/test-support')  # Mogo files only these tests use, never built into the product
+link(ROOT / 'third_party/mogo-lock/test-support')  # Mogo files only these tests use (and originals of adapted ones)
 link(ROOT / 'system/services/time/vendor/mogo-calendar')  # almanac-2's one copy of Mogo's calendar
 env = {**os.environ, 'PYTHONPATH': os.pathsep.join([str(Path(__file__).parent), str(tree / 'tools')])}
 if a.test == 'wallpaper_crop':

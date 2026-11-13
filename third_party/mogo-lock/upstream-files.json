@@ -59,7 +59,9 @@
     {
       "path": "main/book/book_lock_collage.c",
       "sha256": "7b3e3367e667ebacb4669b3664c98f2f3ef4e277df9907b48aaef8c8452f1be2",
-      "bytes": 35173
+      "bytes": 35173,
+      "adapted_sha256": "a919f5561d6cd9e959ef8ca8f623aaccefaea7ed59baa1b269384298e19b7d9a",
+      "adapted": "line 47 LOCK_FRAME_BYTES: one byte a pixel (our L8 canvas) instead of two pixels a byte; the cached frame is whole"
     },
     {
       "path": "main/book/book_lock_collage.h",
@@ -177,6 +179,13 @@
       "sha256": "d73f4ff79c5827a6be5bad0dbf1676341160f39c2bfd54f50467302042f0c903",
       "bytes": 404504,
       "upstream": "main/assets/builtin.ttf",
+      "use": "host tests only"
+    },
+    {
+      "path": "test-support/main/book/book_lock_collage.c",
+      "sha256": "7b3e3367e667ebacb4669b3664c98f2f3ef4e277df9907b48aaef8c8452f1be2",
+      "bytes": 35173,
+      "upstream": "main/book/book_lock_collage.c",
       "use": "host tests only"
     },
     {

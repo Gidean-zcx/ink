@@ -44,7 +44,7 @@
 #define LOCK_DEPTH 12
 #define LOCK_RESERVE (1024u * 1024u)
 #define LOCK_IMAGE_PIXELS (128u * 1024u)
-#define LOCK_FRAME_BYTES (684u * 1216u / 2u)
+#define LOCK_FRAME_BYTES (684u * 1216u) /* ink lock-styles-1: one byte a pixel (L8 canvas), Mogo packs two (4bpp) */
 #ifndef BOOK_LOCK_CACHE_PARENT
 #define BOOK_LOCK_CACHE_PARENT "/sdcard/.readpico"
 #endif
