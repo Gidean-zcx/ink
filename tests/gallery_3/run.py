@@ -24,7 +24,7 @@ WAVES = ('GC16', 'GL16', 'DU', 'A2')
 TZ = datetime.timezone(datetime.timedelta(hours=8))
 RUNS = [("walk", "1"), ("walk", "3"), ("ai", "1"), ("kid", "1"), ("more", "1"), ("purge", "1"), ("empty", "1"), ("empty", "3"), ("more", "3")]
 # step: (most refreshes, must there be one, the box name); the box is published by gallery.c
-STEPS = {"open": (3, True), "turn": (3, True), "months": (2, True), "albums": (2, True), "open_photo": (2, True), "tap1": (0, False),
+STEPS = {"open": (3, True), "turn": (3, True), "turn_late": (3, True), "months": (2, True), "albums": (2, True), "open_photo": (2, True), "tap1": (0, False),
          "zoom2": (1, True), "drag": (1, True), "pan": (1, True), "rotate": (1, True), "fit": (1, True), "next": (1, True),
          "info": (1, True), "info_back": (1, True), "trash": (1, True), "undo": (2, True), "restore": (2, True), "book": (0, False)}
 REVERSE = {

@@ -48,8 +48,8 @@ enum { SEEN_OK, SEEN_TOO_BIG, SEEN_FORMAT, SEEN_BROKEN };
 static const char TRASH_DIR[] = "最近删除", UNDATED_DIR[] = "日期不详", LOCK_ALBUM[] = "/family/锁屏拍的照片";
 #define EARLIEST_DATED 1577836800 /* 2020-01-01: older file times come from a clock that was never set */
 #define UNDO_MS 60000
-static uint64_t gallery_batch_us = 1500000;     /* a page's thumbnails are drawn together, or after this */
-static uint64_t gallery_double_tap_us = 400000; /* [估算] two taps closer than this are a double tap */
+enum { GALLERY_BATCH_MS = 1500,     /* a page's thumbnails are drawn together, or after this */
+       GALLERY_DOUBLE_TAP_MS = 400 }; /* [估算] two taps closer than this are a double tap */
 
 typedef struct { char path[INK_FS_PATH_MAX]; uint16_t count; int64_t newest; } album_t;
 typedef struct { char key[8]; uint16_t begin, count; } month_t;
@@ -142,7 +142,7 @@ typedef struct {
     photos_t *data; ink_image_t im; ink_image_info_t info; int64_t size, mtime; view_t v; unsigned dw, dh;
     char path[INK_FS_PATH_MAX];
 } load_t;
-static ink_image_t M_ORIGINAL; /* media executor only: the shown photo, upright, not dithered */
+static ink_image_t M_ORIGINAL INK_PSRAM_BSS; /* media executor only: the shown photo, upright, not dithered */
 
 static void add_photo(photos_t *d, const ink_fs_entry_t *e, bool trash) {
     ink_gallery_item_t *list = trash ? d->trash : d->items; size_t *n = trash ? &d->ntrash : &d->count;
@@ -383,7 +383,7 @@ static void bind_photo(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field,
         G.batch++; G.arrived = 0; memset(G.thumb_state, 0, sizeof G.thumb_state);
         for (unsigned i = 0; i < PHOTO_SLOTS; i++) ink_image_free(&G.thumbs[i]);
         G.expected = (unsigned)(G.count - index < PHOTO_SLOTS ? G.count - index : PHOTO_SLOTS);
-        ink_svc_at(&G.batch_at, osal_now_us() + gallery_batch_us, batch_due, (void *)(uintptr_t)G.batch);
+        ink_svc_at(&G.batch_at, osal_now_us() + GALLERY_BATCH_MS * 1000ull, batch_due, (void *)(uintptr_t)G.batch);
     }
     thumb_t *t = osal_malloc(sizeof *t, OSAL_MEM_EXTERNAL);
     if (t) *t = (thumb_t){G.epoch, ink_ui_generation(), G.ids[index], G.batch, at};
@@ -647,7 +647,7 @@ static void photo_box_event(lv_event_t *e) { /* single taps do nothing; double t
         return;
     }
     uint64_t now = osal_now_us();
-    if (G.tap_us && now - G.tap_us < gallery_double_tap_us && abs(p.x - G.tap_at.x) < 2 * near && abs(p.y - G.tap_at.y) < 2 * near) {
+    if (G.tap_us && now - G.tap_us < GALLERY_DOUBLE_TAP_MS * 1000ull && abs(p.x - G.tap_at.x) < 2 * near && abs(p.y - G.tap_at.y) < 2 * near) {
         G.tap_us = 0;
         if (zoomed() || !G.dw || G.seen) { if (zoomed()) zoom_to(1, -1, -1); return; }
         lv_area_t a; lv_obj_get_coords(G.box, &a);
@@ -711,7 +711,7 @@ static void segment_job(void *arg) { /* after the tap's own event: the segments 
     ink_cap_call("gallery.show", NULL, &o);
 }
 static void segment_clicked(lv_event_t *e) {
-    static ink_exec_job_t job;
+    static ink_exec_job_t job INK_PSRAM_BSS;
     int at = (int)lv_obj_get_index(lv_event_get_target_obj(e));
     if (at >= 0 && at < 3 && at != G.view) ink_exec_post(INK_EXEC_UI, &job, segment_job, (void *)(uintptr_t)at);
 }
@@ -1115,7 +1115,7 @@ static void sweep(void *arg) {
     if (s->call) ink_cap_done(s->call);
     osal_free(s);
 }
-static ink_exec_job_t purge_job;
+static ink_exec_job_t purge_job INK_PSRAM_BSS;
 static void purge_start(void) { /* once per opening, never on a timer */
     sweep_t *s = osal_calloc(1, sizeof *s, OSAL_MEM_EXTERNAL);
     if (!s) return;

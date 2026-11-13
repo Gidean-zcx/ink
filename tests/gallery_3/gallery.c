@@ -138,6 +138,14 @@ static void start(void) {
     ok("settings.set", !strcmp(size_text, "3") ? "{\"id\":\"display.font_size\",\"value\":3}" : "{\"id\":\"display.font_size\",\"value\":1}");
     CHECK(WAIT_FOR(index_ready(), 30000), "the card's index is ready"); quiet();
 }
+static ink_exec_job_t hold_job;
+static void hold_media(void *arg) { (void)arg; osal_task_delay_us(2000000); } /* the media executor busy for 2 s */
+static bool cells_drawn;
+static void inspect_cells(void) {
+    cells_drawn = G.list != NULL;
+    for (unsigned i = 0; i < PHOTO_SLOTS && G.position.page * PHOTO_SLOTS + i < G.count; i++)
+        if (!G.slots[i] || !lv_obj_get_child_count(G.slots[i])) cells_drawn = false;
+}
 static void open_gallery(void) { double n = metric("gallery.page_ready"); ok("app.open", "{\"id\":\"gallery\"}"); page_ready(n); }
 static const char *TEXT_PNG = "/me/旅行/字条.png", *TALL_JPG = "/me/照片/竖拍.jpg", *BIG_JPG = "/me/照片/大图.jpg", *WEBP = "/me/照片/动图.webp";
 
@@ -150,6 +158,12 @@ static void walk(void) {
     shot("all");
     on_ui(area_content); publish("turn"); mark("turn", "before");
     double n = metric("gallery.page_ready"); key(INK_KEY_NEXT); page_ready(n); mark("turn", "after");
+    /* thumbnails late (the media executor busy past the 1.5 s deadline): still at most 1 + 2 refreshes, every cell drawn */
+    n = metric("gallery.page_ready"); key(INK_KEY_PREV); page_ready(n);
+    on_ui(area_content); publish("turn_late"); mark("turn_late", "before");
+    ink_exec_post(INK_EXEC_MEDIA, &hold_job, hold_media, NULL);
+    n = metric("gallery.page_ready"); key(INK_KEY_NEXT); page_ready(n); mark("turn_late", "after");
+    on_ui(inspect_cells); CHECK(cells_drawn, "every cell of the late page is drawn");
     CHECK(G.position.page == 1, "the cover key turns the grid page");
     key(INK_KEY_PREV); quiet();
     on_ui(area_switch); publish("months"); mark("months", "before"); touch("日期"); quiet(); mark("months", "after");
@@ -404,9 +418,8 @@ static void run(void *arg) {
     ink_probe_count("test.finished");
 }
 static void host_options(void *arg) {
-    (void)arg; const char *p = getenv("INK_G3_PHASE"), *s = getenv("INK_G3_SIZE"), *b = getenv("INK_G3_BATCH_US");
+    (void)arg; const char *p = getenv("INK_G3_PHASE"), *s = getenv("INK_G3_SIZE");
     snprintf(phase, sizeof phase, "%s", p ? p : "walk"); snprintf(size_text, sizeof size_text, "%s", s ? s : "1");
-    if (b) gallery_batch_us = strtoull(b, NULL, 10);
 }
 void ink_main(void) {
     vtk_host_call(host_options, NULL); product_main();
