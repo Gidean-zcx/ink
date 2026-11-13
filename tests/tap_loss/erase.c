@@ -6,7 +6,10 @@
  *   2. a waiting (foreground) writer, mostly the tap's own result, is not held after the release, but no write starts
  *      under a finger held down;
  *   3. a press that comes during an erase and lifts after it: arrives once, at its place;
- *   4. a tap that falls whole into an erase that already started: lost (counted, the report says why). */
+ *   4. a tap that falls whole into an erase that already started: lost. This is a known loss, not a pass: nothing
+ *      here can catch it, and the fixes (erase suspend for the Puya chip, or a lift-up frame the controller keeps)
+ *      need facts from the device first (tap-loss-1 report, waiting on the user). The check and the budget's
+ *      test.tap_erase.lost_inside_erase {"min": 1} both fail once it arrives, so the fix has to update them. */
 #include <stdlib.h>
 #include "ink/sys/input.h"
 #include "ink/sys/storage.h"
@@ -168,9 +171,11 @@ static void run(void *arg) {
     clicks = g_clicks; d = delivered();
     CHECK(timed_tap(4), "an erase to tap into");
     /* the controller never reported it: the read after the erase finds no contact (no lift-up frame is modelled) */
-    CHECK(g_clicks == clicks && delivered() == d, "a 30 ms tap whole inside a %.0f ms erase is lost (%d clicks, %.0f events)",
+    bool lost = g_clicks == clicks && delivered() == d;
+    CHECK(lost, "KNOWN LOSS, not fixed: a 30 ms tap whole inside a %.0f ms erase is still lost (%d clicks, %.0f events); if it "
+          "arrives now, the loss is fixed: update this check and the budget",
           (g_hit_t1 - g_hit_t0) / 1e6, g_clicks - clicks, delivered() - d);
-    ink_probe_count("test.tap_erase.lost_inside_erase");
+    if (lost) ink_probe_count("test.tap_erase.lost_inside_erase");
     g_mode = 0;
     ink_probe_count("test.finished");
 }

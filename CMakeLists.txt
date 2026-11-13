@@ -866,7 +866,7 @@ ink_sim_executable(sim-semantics-shell2 tests/semantics_shell2/main.c tests/sema
   tests/semantics_shell2/battery.c tests/semantics_shell2/home.c)
 target_link_libraries(sim-semantics-shell2 PRIVATE ink_apps ink_system)
 # tap-loss-1: a held finger and changes it did not make (redraws, cards, banner, overlays, keyboard suggestions).
-ink_sim_executable(sim-tap-held tests/tap_loss/held.c)
+ink_sim_executable(sim-tap-held tests/tap_loss/held.c tests/tap_loss/held_text.c)
 target_link_libraries(sim-tap-held PRIVATE ink_apps ink_system)
 add_test(NAME tap-held
   COMMAND sim-tap-held --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

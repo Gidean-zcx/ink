@@ -446,16 +446,9 @@ static void flush_composing(void) {
     TS.composing[0] = 0;
 }
 
-void ink_text_pick(int index) {
-    text_voice_clear_notice();
-    if (!TS.session) return;
-    if (!TS.composing[0] && assist_allowed() && index >= 0 && index < AS.n) {
-        char word[sizeof AS.words[0].word]; strcpy(word, AS.words[index].word);
-        ink_text_commit_utf8(word); return;
-    }
-    compute_cands();
-    if (index < 0 || index >= TS.ncands) return;
-    ink_text_cand_t c = TS.cands[index];
+static void pick_cand(ink_text_cand_t c) {
+    if (c.ai) { ink_text_commit_utf8(c.word); return; } /* a continuation goes in as it reads */
+    if (c.consumed > strlen(TS.composing)) return;
     before_edit(EDIT_KEYS);
     put(c.word);
     if (py_google_enabled()) py_google_pick(c.word, c.consumed);
@@ -463,6 +456,19 @@ void ink_text_pick(int index) {
     memmove(TS.composing, TS.composing + c.consumed, strlen(TS.composing + c.consumed) + 1);
     ink_probe_count("text.picks");
     changed();
+}
+
+void ink_text_pick(int index) {
+    text_voice_clear_notice();
+    if (!TS.session) return;
+    if (!TS.composing[0] && assist_allowed() && index >= 0 && index < AS.n) { pick_cand(AS.words[index]); return; }
+    compute_cands();
+    if (index >= 0 && index < TS.ncands) pick_cand(TS.cands[index]);
+}
+
+void ink_text_pick_shown(const ink_text_cand_t *c) {
+    text_voice_clear_notice();
+    if (TS.session) pick_cand(*c);
 }
 
 void ink_text_key(char c) {

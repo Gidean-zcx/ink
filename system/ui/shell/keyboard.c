@@ -30,6 +30,8 @@ static struct {
     lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
     int shown;
+    ink_text_cand_t cand[INK_TEXT_PAGE]; /* what the candidate buttons show */
+    int session;                         /* the input they and the keys are for */
     bool symbols, shift, expanded, secret_present, plain, english, drawn_shift, password;
     const char *map[KEYBOARD_MAP_MAX];
     lv_buttonmatrix_ctrl_t control[KEYBOARD_BUTTON_MAX];
@@ -79,7 +81,10 @@ void ink_shell_keyboard_area_for(ink_text_type_t type, lv_area_t *area) {
 void ink_shell_keyboard_area(lv_area_t *area) { ink_shell_keyboard_area_for(ink_text_type(), area); }
 
 static bool may_edit(ink_call_t *c) {
-    if (c->page_gen && !(c->src == INK_SRC_TOUCH ? ink_ui_touch_current(c->page_gen) : c->page_gen == ink_ui_content_version())) {
+    /* A touch acts on what it came down on; with the finger down the keyboard is not redrawn (sync_later), so another
+     * input focused meanwhile is not the one it showed. */
+    if (c->page_gen && !(c->src == INK_SRC_TOUCH ? ink_ui_touch_current(c->page_gen) && K.session == ink_text_target_session() :
+                                                   c->page_gen == ink_ui_content_version())) {
         c->rc.status = INK_RC_STALE;
         return false;
     }
@@ -107,6 +112,12 @@ static void press_key(ink_call_t *call) {
         sync();
         return;
     case KEY_SHIFT: K.shift = !K.shift; K.revision++; ink_ui_content_changed(); sync(); return;
+    case ' ': /* the space takes the first candidate: the one shown, though the list changed under the finger */
+        if (call->src == INK_SRC_TOUCH && ink_text_composing()[0] && !K.first && K.shown > 0) {
+            ink_text_pick_shown(&K.cand[0]);
+            break;
+        }
+        /* fall through */
     default:
         if (K.shift && c >= 'a' && c <= 'z') c = (char)(c - 'a' + 'A');
         K.shift = false;
@@ -120,9 +131,13 @@ static void press_key(ink_call_t *call) {
 static void pick(ink_call_t *call) {
     int64_t index = 0; ink_args_get_int(&call->args, "index", &index);
     if (!may_edit(call)) return;
+    int at = (int)index - K.first;
     K.first = 0;
     K.expanded = false;
-    ink_text_pick((int)index);
+    /* A touch picks the word it was on: with the finger down the list may have changed (a suggestion came, the
+     * dictionary loaded) and not been redrawn yet; by its place it would be a word the person never saw. */
+    if (call->src == INK_SRC_TOUCH && at >= 0 && at < K.shown && at < INK_TEXT_PAGE) ink_text_pick_shown(&K.cand[at]);
+    else ink_text_pick((int)index);
     ink_ui_cause(osal_now_us(), "text.key_to_visible_ms");
 }
 
@@ -561,6 +576,7 @@ static void sync(void) { /* UI task */
         }
         return;
     }
+    K.session = ink_text_target_session();
     ink_text_type_t type = ink_text_type();
     bool secret = type == INK_TEXT_PASSWORD || ink_text_ai_hidden(), present = ink_text_value()[0] != 0;
     if (!secret && K.edit_revision != ink_text_edit_revision()) {
@@ -600,6 +616,7 @@ static void sync(void) { /* UI task */
     }
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         if (i < n) {
+            K.cand[i] = c[i];
             lv_label_set_text(K.cand_label[i], c[i].word);
             if (c[i].ai && !K.cand_icon[i]) {
                 K.cand_icon[i] = ink_ui_icon(K.cand_btn[i], "ai", INK_ICON_LIST, INK_ICON_SOLID, 0, 0, i == 0);

@@ -4,9 +4,12 @@
  * timer or a watched state changes the page: a page redraw, the home cards (app.cards_rev), the call banner's
  * refresh, an overlay that comes and goes, content changing elsewhere (ink_ui_content_changed), a suggestion for the
  * keyboard (text_presenter_kick). Each tap still acts exactly once, nothing it pressed is deleted under it
- * (ui.press_lost_to_redraw), and the held-back change is drawn once the finger lifts. INK_TAP_HELD_REVERSE=redraw
+ * (ui.press_lost_to_redraw), and the held-back change is drawn once the finger lifts. A candidate or the space acts on
+ * the word the finger came down on although the list changed meanwhile (tests/tap_loss/held_text.c), and a key does not
+ * go into another input focused during the press. INK_TAP_HELD_REVERSE=redraw
  * runs the same with the rule switched off by the test (expected to fail). */
 #include <stdlib.h>
+#include "ink/sys/hub.h"
 #include "ink/sys/input.h"
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
@@ -176,6 +179,107 @@ static void keyboard_case(const char *what, void (*during)(void)) {
     CHECK(g_len == before + 1, "%s during a key press: the key still types (%u -> %u)", what, (unsigned)before, (unsigned)g_len);
 }
 
+/* A candidate pressed while the list changes under the finger: the word on the button goes in, once. */
+void tap_held_suggest(const char *const *words, int n);
+void tap_held_reorder(void);
+static const char *const LATER[] = {"今天下雨", "早点睡觉", "晚安"};
+static void suggest_later(void) { tap_held_suggest(LATER, 3); }
+static int g_count;
+static bool g_ai;
+static void read_cands(void) {
+    ink_text_cand_t w[INK_TEXT_PAGE];
+    g_count = ink_text_candidates(0, w, INK_TEXT_PAGE);
+    g_ai = g_count > 0 && w[0].ai;
+}
+static char g_word[40], g_value[256];
+static int g_cand;
+static void cand_target(void) {
+    lv_obj_update_layout(K.root);
+    if (g_cand < 0) /* the last one that fits on the row */
+        for (int i = 0; i < K.shown && i < INK_TEXT_PAGE; i++) if (lv_obj_is_visible(K.cand_btn[i])) g_cand = i;
+    if (g_cand < 0) g_cand = 0;
+    lv_obj_t *b = K.cand_btn[g_cand];
+    CHECK(lv_obj_is_visible(b), "candidate %d is on the keyboard", g_cand);
+    lv_area_t a; lv_obj_get_coords(b, &a);
+    g_kx = (a.x1 + a.x2) / 2; g_ky = (a.y1 + a.y2) / 2;
+    snprintf(g_word, sizeof g_word, "%s", lv_label_get_text(K.cand_label[g_cand]));
+}
+static void read_value(void) { snprintf(g_value, sizeof g_value, "%s", ink_text_value()); }
+static int occurrences(const char *in, const char *word) {
+    int n = 0;
+    for (const char *p = strstr(in, word); p; p = strstr(p + strlen(word), word)) n++;
+    return n;
+}
+static void press_during(void (*during)(void)) {
+    press(g_kx, g_ky);
+    delay_ms(40);
+    on_ui(during);
+    delay_ms(40);
+    release(g_kx, g_ky);
+}
+
+static void candidate_case(void) {
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online(), 10000), "the hub connects");
+    CHECK(AI("settings.set", "{\"id\":\"text.assist\",\"value\":true}") && g_rc.status == INK_RC_DONE, "continuations on");
+    CHECK(WAIT_FOR((on_ui(read_cands), g_count >= 2 && g_ai), 5000), "the hub's continuations are on the keyboard");
+    quiet();
+    g_cand = -1; on_ui(cand_target);
+    on_ui(read_value);
+    int had = occurrences(g_value, g_word);
+    press_during(suggest_later);
+    on_ui(read_value);
+    CHECK(occurrences(g_value, g_word) == had + 1, "a new continuation during the press: the word pressed (%s) goes in once (%.80s)", g_word, g_value);
+    CHECK(!strstr(g_value, LATER[g_cand]), "and not the one now in its place (%s)", LATER[g_cand]);
+    CHECK(AI("settings.set", "{\"id\":\"text.assist\",\"value\":false}") && g_rc.status == INK_RC_DONE, "continuations off");
+}
+
+static void chinese(void) { if (ink_text_english()) ink_text_key(INK_TEXT_KEY_LANGUAGE); ink_text_key('n'); ink_text_key('i'); }
+static void space_case(void) {
+    on_ui(chinese);
+    CHECK(WAIT_FOR((on_ui(read_cands), g_count >= 2), 5000), "pinyin candidates for ni");
+    quiet();
+    g_cand = 0; on_ui(cand_target);
+    on_ui(read_value);
+    int had = occurrences(g_value, g_word);
+    g_kcode = ' '; on_ui(key_target);
+    press_during(tap_held_reorder);
+    on_ui(read_value);
+    CHECK(occurrences(g_value, g_word) == had + 1, "the list reordered during a space press: the first word shown (%s) goes in (%.80s)", g_word, g_value);
+    /* the second candidate pressed while the first two swap: the second as shown, not the first now in its place */
+    on_ui(chinese);
+    CHECK(WAIT_FOR((on_ui(read_cands), g_count >= 2), 5000), "pinyin candidates for ni again");
+    quiet();
+    g_cand = 1; on_ui(cand_target);
+    on_ui(read_value);
+    had = occurrences(g_value, g_word);
+    size_t len = strlen(g_value);
+    press_during(tap_held_reorder);
+    on_ui(read_value);
+    CHECK(occurrences(g_value, g_word) == had + 1 && strlen(g_value) == len + strlen(g_word),
+          "the list reordered during a candidate press: the second word shown (%s) goes in, alone (%.80s)", g_word, g_value);
+}
+
+/* Another input is focused while a key is down: the key was for the one the keyboard showed, not this one. */
+static int g_other;
+static void focus_other(void) {
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN};
+    g_other = ink_text_focus(&cfg, NULL, NULL);
+}
+static void blur_other(void) { ink_text_blur(g_other); }
+static void other_case(void) {
+    on_ui(english); quiet();
+    g_kcode = 'a'; on_ui(key_target);
+    press_during(focus_other);
+    on_ui(read_value);
+    CHECK(g_other > 0 && !g_value[0], "another input focused during a key press: the key does not go into it (%.80s)", g_value);
+    on_ui(key_target);
+    press(g_kx, g_ky); release(g_kx, g_ky);
+    on_ui(read_value);
+    CHECK(!strcmp(g_value, "a"), "the next key goes into the input now shown (%.80s)", g_value);
+    on_ui(blur_other);
+}
+
 
 static void run(void *arg) {
     (void)arg;
@@ -190,6 +294,9 @@ static void run(void *arg) {
     on_ui(english); quiet();
     keyboard_case("content changing elsewhere", elsewhere_changed);
     keyboard_case("a suggestion arriving", kick);
+    candidate_case();
+    space_case();
+    other_case();
     CHECK(BY_HAND("system.home", NULL) && WAIT_FOR(!ink_text_focused(), 10000), "leave the editor");
     ink_probe_count("test.finished");
 }
