@@ -258,7 +258,12 @@ static void card1(void) {
     CHECK(0, "it should have restarted");
 }
 
-static void card2(void) { /* version 3, and it does not hold (INK_TEST_SELF_CHECK=fails): this comes too late, the restart is first */
+/* Version 3, and it does not hold (INK_TEST_SELF_CHECK=fails). The self-check decides once the panel has drawn and gone
+ * idle, then writes and reads one probe file: counted from there, not from the end of the boot, which comes sooner or
+ * later as the boot's flash reads fall before or behind the first refreshes. Its restart is first; this comes too late. */
+static void card2(void) {
+    CHECK(WAIT_FOR(ink_display_commits() && !ink_display_busy(), 10000), "the panel draws");
+    delay_ms(500);
     CHECK(0, "it should have restarted by now");
 }
 
