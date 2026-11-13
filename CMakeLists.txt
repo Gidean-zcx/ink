@@ -259,7 +259,6 @@ add_library(ink_system STATIC
   system/services/audio/codec_formats.c
   system/services/audio/vendor/kiikoread/metadata.c
   system/services/audio/vendor/kiikoread/music_lyrics.c
-  system/apps/music/music.c
   system/services/bt/bt_service.c
   system/services/text/text_service.c
   system/services/text/google_port.cpp
