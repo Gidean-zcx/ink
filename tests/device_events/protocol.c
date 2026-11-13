@@ -43,6 +43,28 @@ static void hold_ui(void *arg) {
 static void session_closed(void *ctx, int sid, int reason) { (void)ctx; (void)sid; (void)reason; closed++; }
 static void ack_off(void *arg) { (void)arg; sim_hub_event_acks(false); injected = true; }
 static void ack_on(void *arg) { (void)arg; sim_hub_event_acks(true); injected = true; }
+/* Where the first fixture event from `from` on with sequence `seq` (0: any) is among the events the hub saw, or -1. Other
+ * events (an app state, a file index finishing) may go out before or after it. */
+static int fixture_event(ink_json_t *j, int from, int64_t seq) {
+    for (int i = from; i < sim_hub_events_seen(); i++) {
+        const char *e = sim_hub_event_at(i);
+        char id[32] = "";
+        int64_t s = 0;
+        if (e && !ink_json_parse(j, e, strlen(e)) && ink_json_str(j, ink_json_find(j, 0, "params.event"), id, sizeof id) > 0 &&
+            !strcmp(id, "fixture.event") && ink_json_int(j, ink_json_find(j, 0, "params.seq"), &s) && (!seq || s == seq)) return i;
+    }
+    return -1;
+}
+/* The sequence of the first event from `from` on that is not newer than `upto` (0: none): a reconnect replays the oldest
+ * unacknowledged event first; one sent live just before the reconnect is newer than everything replayed. */
+static int64_t first_replayed(ink_json_t *j, int from, int64_t upto) {
+    for (int i = from; i < sim_hub_events_seen(); i++) {
+        const char *e = sim_hub_event_at(i);
+        int64_t s = 0;
+        if (e && !ink_json_parse(j, e, strlen(e)) && ink_json_int(j, ink_json_find(j, 0, "params.seq"), &s) && s <= upto) return s;
+    }
+    return 0;
+}
 static void run(void *arg) {
     (void)arg;
     ink_hub_demand();
@@ -61,8 +83,9 @@ static void run(void *arg) {
     ink_args_init(a); ink_args_str(a, "value", "SYNTHETIC_EVENT");
     int before = sim_hub_events_seen();
     ink_cap_emit("fixture.event", a);
-    CHECK(WAIT_FOR(sim_hub_events_seen() > before, 2000), "event delivered");
-    const char *event = sim_hub_event_at(sim_hub_events_seen() - 1);
+    int at = -1;
+    CHECK(WAIT_FOR((at = fixture_event(j, before, 0)) >= 0, 2000), "event delivered");
+    const char *event = sim_hub_event_at(at);
     int64_t boot = 0, seq = 0;
     char member[16] = "";
     CHECK(event && !ink_json_parse(j, event, strlen(event)) && ink_json_int(j, ink_json_find(j, 0, "params.seq"), &seq) && seq > 0 &&
@@ -78,19 +101,23 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(injected, 1000), "ACK loss enabled");
     before = sim_hub_events_seen();
     ink_cap_emit("fixture.event", a);
-    CHECK(WAIT_FOR(sim_hub_events_seen() > before, 2000) && test_event_acked() == (uint32_t)seq, "unacknowledged event retained");
+    int64_t kept = 0; /* seq + 1, unless another event (a file index finishing) took a number in between */
+    CHECK(WAIT_FOR((at = fixture_event(j, before, 0)) >= 0, 2000) && (event = sim_hub_event_at(at)) && !ink_json_parse(j, event, strlen(event)) &&
+        ink_json_int(j, ink_json_find(j, 0, "params.seq"), &kept) && kept > seq && test_event_acked() == (uint32_t)seq,
+        "unacknowledged event retained");
     before = sim_hub_events_seen();
     test_on_hub(test_hub_reconnect);
-    CHECK(WAIT_FOR(sim_hub_events_seen() > before, 30000), "unacknowledged event replayed after reconnect");
-    event = sim_hub_event_at(before); /* the oldest unacknowledged event is replayed first; later ones (a file index finishing) may follow it */
+    CHECK(WAIT_FOR((at = fixture_event(j, before, kept)) >= 0, 30000), "unacknowledged event replayed after reconnect");
+    event = sim_hub_event_at(at);
     int64_t replay_seq = 0, replay_boot = 0;
     CHECK(event && !ink_json_parse(j, event, strlen(event)) && ink_json_int(j, ink_json_find(j, 0, "params.seq"), &replay_seq) &&
-        replay_seq == seq + 1 && ink_json_int(j, ink_json_find(j, 0, "params.boot"), &replay_boot) && replay_boot == boot,
-        "replay retains the exact event identity");
+        replay_seq == kept && ink_json_int(j, ink_json_find(j, 0, "params.boot"), &replay_boot) && replay_boot == boot &&
+        first_replayed(j, before, kept) == seq + 1, "replay retains the exact event identity, oldest unacknowledged first");
     injected = false; vtk_event_after(SIM_MS(1), ack_on, NULL);
     CHECK(WAIT_FOR(injected, 1000), "ACK delivery restored");
     test_on_hub(test_hub_reconnect);
-    CHECK(WAIT_FOR(test_event_acked() == (uint32_t)replay_seq, 30000), "replayed event can be acknowledged");
+    /* acknowledgements are cumulative: an event replayed after it may be acknowledged right after it */
+    CHECK(WAIT_FOR(test_event_acked() >= (uint32_t)replay_seq, 30000), "replayed event can be acknowledged");
     send_call(NULL);
     CHECK(WAIT_FOR(reply_is("-32023"), 2000) && runs == 0, "missing member metadata rejected");
     send_call("{\"member\":\"kid\",\"epoch\":1}");
