@@ -11,6 +11,7 @@ static const char *query;
 static int session, x, y;
 static bool expanded;
 static lv_obj_t *find_label(lv_obj_t *obj, const char *text) {
+    if (!strcmp(text, "更多")) text = expanded ? "▶" : "▾";
     if (lv_obj_has_flag(obj, LV_OBJ_FLAG_HIDDEN)) return NULL;
     if (lv_obj_check_type(obj, &lv_label_class) && !strcmp(lv_label_get_text(obj), text)) return obj;
     for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) {
