@@ -1,0 +1,140 @@
+# calendar-3：并入 assets/i18n/en.tsv（不带 @name，保留原文件的语言声明）；之后把 system/apps/calendar/cal_*.c 加进
+# CMakeLists.txt 的 INK_I18N_SOURCES 和 ports/esp32s31/components/ink_system/CMakeLists.txt 的 i18n 源清单。
+一周从哪天开始	Week starts on
+新建时的提醒	Reminder for new events
+日历上次的视图	Calendar's last view
+当天 %02d:%02d	On the day at %02d:%02d
+准时	At start
+提前 %d 天	%d day(s) before
+提前 %d 小时	%d hour(s) before
+提前 %d 分钟	%d min before
+天	days
+周	weeks
+个月	months
+每 %d %s	Every %d %s
+的	 on
+第 %d 个%s	the #%d %s
+最后一个%s	the last %s
+最后一天	the last day
+%d 日	day %d
+的 %d 月%s	 in month %d, %s
+的%s	 on %s
+，到 %d月%d日为止	, until %d/%d
+，共 %d 次	, %d times
+老黄历只有 2000–2099 年	The almanac covers 2000–2099 only
+这天的老黄历查不到	No almanac for this day
+已导出 %d 件到 %s	Exported %d events to %s
+还没有日程可以导出	No events to export yet
+没有存储卡，导不出	No storage card: nothing exported
+存储卡借给电脑了，先断开	The card is lent to a computer: disconnect first
+存储卡空间不够	Not enough space on the card
+导出没成功，请稍后再试	Export failed, please try again later
+分钟	minutes
+小时	hours
+当天几点	time of day
+不提醒	No reminder
+这件事已经删掉了	This event was deleted
+%d月%d日 %s 全天	%d/%d %s, all day
+%d月%d日 %s 起，全天\n到 %d月%d日	From %d/%d %s, all day\nuntil %d/%d
+%d月%d日 %s %02d:%02d	%d/%d %s %02d:%02d
+%d月%d日 %s %02d:%02d–%02d:%02d	%d/%d %s %02d:%02d–%02d:%02d
+%d月%d日 %02d:%02d 起\n到 %d月%d日 %02d:%02d	From %d/%d %02d:%02d\nuntil %d/%d %02d:%02d
+已改这一次	This one changed
+改过	Changed
+修改日程	Edit event
+标题，最多 30 个字	Title, up to 30 characters
+输入标题	Enter the title
+到期日	Until
+跳到日期	Go to date
+选的时间	Chosen time
+不要结束时间	No end time
+重复细项	Repeat details
+每周哪几天（位 0 周日）	Days of the week (bit 0 Sunday)
+一直重复	Forever
+好	OK
+重复到什么时候	Repeat until
+到某天为止	Until a date
+选日期	Pick a date
+共几次	A number of times
+共 %d 次	%d times
+点一下删掉	Tap to remove
+加一个提醒	Add a reminder
+没有提醒：到时候不响，只在日历里	No reminder: it stays in the calendar and does not ring
+单位：%s（点一下换）	Unit: %s (tap to change)
+自定义	Custom
+加上这个	Add this one
+删掉哪几次	Delete which ones
+改哪几次	Change which ones
+只改这一次	Only this one
+这次和以后	This and following
+只删这一次	Delete only this one
+删掉这次和以后	Delete this and following
+全部删掉	Delete all
+这是一组重复的日程	This event repeats
+改动还没保存	Changes not saved
+不保存	Discard
+标题不能空	The title cannot be empty
+结束要晚于开始	The end must come after the start
+到期日要晚于开始	The until date must come after the start
+日程已满（最多 128 条）	The calendar is full (128 events at most)
+这组重复的例外已满 16 个，请改成“这次和以后”	16 occurrences of this series are already changed: use “This and following”
+这个时间已经过了	That time has passed
+存储写不进，请稍后再试	Could not save, please try again later
+%d年%d月 · 	%d/%d ·
+今天 · 	Today ·
+明天 · 	Tomorrow ·
+更早的	Earlier
+议程	Agenda
+按标题搜索	Search titles
+按标题搜索（calendar.search）	Search titles (calendar.search)
+输入搜索	Type a search
+清空搜索	Clear search
+搜索“%s”	Search “%s”
+最近 90 天	Last 90 days
+从今天起	From today
+没有找到“%s”	Nothing found for “%s”
+这段时间没有安排	Nothing in this period
+后一天	Next day
+农历%s · %s年 %s月 %s日%s%s	Lunar %s · %s year %s month %s day%s%s
+农历%s · %s年%s%s	Lunar %s · %s year%s%s
+更多老黄历 ›	More almanac ›
+更多老黄历	More almanac
+这天没有安排	Nothing this day
+老黄历 · %d月%d日	Almanac · %d/%d
+冲%s · 煞%s	Clash %s · Sha %s
+冲煞	Clash and sha
+财神 %s · 喜神 %s · 福神 %s	Wealth %s · Joy %s · Fortune %s
+三神方位	Directions of the three gods
+吉神宜趋	Auspicious spirits
+凶煞宜忌	Inauspicious spirits
+值神 %s（%s）	Day guardian %s (%s)
+值神	Day guardian
+建除 %s日	Officer: %s day
+建除	Officer
+日历设置	Calendar settings
+提前 5 分钟	5 min before
+提前 10 分钟	10 min before
+提前 30 分钟	30 min before
+提前 1 小时	1 hour before
+提前 1 天	1 day before
+周日（点一下换成周一）	Sunday (tap for Monday)
+周一（点一下换成周日）	Monday (tap for Sunday)
+%s（点一下换下一个）	%s (tap for the next)
+导出日程（.ics）	Export events (.ics)
+写到我的空间，含过去的	To my space, past ones included
+导入日程（.ics）	Import events (.ics)
+从文件里选	Pick a file
+导入结果	Import result
+没有导入：%s	Nothing imported: %s
+不是日历文件（.ics）	Not a calendar file (.ics)
+文件读不出来	The file cannot be read
+导入 %d 件；跳过 %d 件看不懂的规则；%d 件已存在；日程满了，%d 件没导入	Imported %d; skipped %d with rules not understood; %d already there; calendar full, %d not imported
+%d月%d日 %s · %s%s	%d/%d %s · %s%s
+这天 %d 件事 ›	%d events this day ›
+六周 %d月%d日 到 %d月%d日（不是本月的是上月或下月，浅灰）	Six weeks %d/%d to %d/%d (days of the months around are grey)
+去设置时间	Set the time
+打开这一天	Open this day
+月份	Month
+节气	Solar term
+有事的日子	Days with events
+月格	Month grid
