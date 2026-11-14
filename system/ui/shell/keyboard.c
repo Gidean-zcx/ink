@@ -1026,7 +1026,7 @@ static void sync(void) { /* UI task */
     }
     if (n > 0) lv_obj_remove_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     else lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
-    if (ink_text_voice_possible() && !K.expanded) lv_obj_remove_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
+    if (ink_text_voice_possible() && !K.expanded) lv_obj_remove_flag(K.mic, LV_OBJ_FLAG_HIDDEN); /* fcitx: no voice key on the grid */
     else lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     if (K.shown != n) { K.revision++; ink_ui_content_changed(); }
     K.shown = n;
