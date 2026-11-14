@@ -26,7 +26,7 @@ static lv_obj_t *ink_test_keyboard_label(lv_obj_t *root, const char *text, bool 
 static bool ink_test_matrix_key(lv_obj_t *root, const char *text, lv_area_t *area) {
     lv_obj_t *board = ink_test_matrix(root);
     /* two keys were renamed by keyboard-2: 更多 is the ▾ beside the candidates, 字母 is 26 on the panels */
-    if (!strcmp(text, "更多")) text = "▾";
+    if (!strcmp(text, "更多") && !ink_test_keyboard_label(lv_layer_sys(), "更多", false)) text = "▾";
     else if (!strcmp(text, "字母") && !ink_test_keyboard_label(lv_layer_sys(), "字母", false)) text = "26";
     if (board && root == lv_layer_sys()) { /* the keyboard's own buttons */
         lv_obj_t *button = ink_test_keyboard_label(root, text, false);
@@ -61,8 +61,7 @@ static int ink_test_keyboard_symbol(const char *text, lv_area_t *area) {
     if (strcmp(looking, text)) { snprintf(looking, sizeof looking, "%s", text); backward = 1; }
     lv_obj_update_layout(lv_layer_sys());
     if (ink_test_matrix_key(lv_layer_sys(), text, area)) return 1;
-    lv_obj_t *open = ink_test_keyboard_label(lv_layer_sys(), NULL, true), *next = NULL;
-    if (!open) return -1;
+    lv_obj_t *open = ink_test_keyboard_label(lv_layer_sys(), NULL, true), *next = NULL; /* none: a password's one table */
     int page = 0, pages = 0;
     for (int p = 1; p < 40 && !pages; p++) for (int n = p; n < 40 && !pages; n++) {
         char label[16]; snprintf(label, sizeof label, "%d/%d", p, n);
@@ -72,6 +71,7 @@ static int ink_test_keyboard_symbol(const char *text, lv_area_t *area) {
     else if ((backward = 0), page < pages) next = ink_test_keyboard_label(lv_layer_sys(), "▶", false);
     else {
         int at = -1;
+        if (!open) return -1;
         for (int i = 0; i < 7; i++) if (!strcmp(lv_label_get_text(lv_obj_get_child(open, 0)), TR(TABS[i]))) at = i;
         for (int i = 1; at >= 0 && i < 7 && !next; i++) next = ink_test_keyboard_label(lv_layer_sys(), TR(TABS[(at + i) % 7]), false);
     }

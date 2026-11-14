@@ -100,10 +100,10 @@ static void build_picker(void) {
     lv_obj_set_flex_flow(K.picker, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_row(K.picker, ink_ui_px(gap()), 0);
     lv_obj_update_layout(K.root);
-    int width = lv_obj_get_content_width(K.keys), first = K.password ? 1 : 0, tabs = CATEGORIES - first;
+    int width = lv_obj_get_content_width(K.keys), first = 0, tabs = CATEGORIES;
     int fit = LV_MAX(1, (width + g) / (cell + g)), rows = (tabs + fit - 1) / fit, per_row = (tabs + rows - 1) / rows;
     K.tabs = picker_row(K.picker); /* fcitx PickerData:13: recent first; tabs wrap into even rows instead of scrolling */
-    for (int c = first; c < CATEGORIES; c++) {
+    for (int c = first; c < CATEGORIES && !K.password; c++) { /* a password: ASCII only, no tabs (Mogo ascii_only) */
         char args[24]; snprintf(args, sizeof args, "{\"category\":%d}", c);
         kb_button(K.tabs, TR(CATEGORY_NAMES[c]), ACT_TAB + c - first, "keyboard.category", args, (width - (per_row - 1) * g) / per_row);
     }
@@ -114,7 +114,7 @@ static void build_picker(void) {
         {"", NULL, NULL}, {"▶", "keyboard.symbol_page", "{\"direction\":1}"}, {"123", "keyboard.panel", "{\"panel\":\"number\"}"},
         {TR_NOOP("删除"), "keyboard.key", "{\"code\":8}"}};
     static const char PAGE_SAMPLE[] = "8/8";
-    int page = ink_ui_px(ink_ui_text_width(PAGE_SAMPLE, INK_FONT_LIST, INK_WEIGHT_REGULAR) + 2 * INK_GAP_XS);
+    int page = ink_ui_px(ink_ui_text_width(PAGE_SAMPLE, INK_FONT_LIST, INK_WEIGHT_REGULAR));
     bool one_row = 5 * cell + 5 * g + page <= width; /* at the largest size: 26 ◀ page ▶, then 123 and delete */
     int button = one_row ? (width - page - 5 * g) / 5 : cell;
     for (int i = 0; i < 6; i++) {
@@ -155,7 +155,7 @@ static void panel_action(ink_call_t *call) {
     if (!K.symbols || !K.picker) { call->rc.status = INK_RC_REJECTED; return; }
     if (!strcmp(call->cap->id, "keyboard.category")) {
         int64_t category = 1; ink_args_get_int(&call->args, "category", &category);
-        if (category < (K.password ? 1 : 0) || category >= CATEGORIES) { call->rc.status = INK_RC_REJECTED; return; }
+        if (category < 0 || category >= CATEGORIES || (K.password && category != 2)) { call->rc.status = INK_RC_REJECTED; return; }
         K.category = (int)category; K.symbol_page = 0;
     } else {
         int64_t direction = 0; ink_args_get_int(&call->args, "direction", &direction);
@@ -191,7 +191,7 @@ static void alternate_action(ink_call_t *call) {
     int columns = LV_MIN(INK_KBD_POPUP_COLUMNS, (lv_obj_get_content_width(K.keys) + g) / (cell + g));
     K.popup_letter = letter;
     K.popup = picker_row(K.root);
-    lv_obj_add_flag(K.popup, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING);
+    lv_obj_add_flag(K.popup, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING | LV_OBJ_FLAG_HIDDEN); /* drawn once, in place */
     lv_obj_set_width(K.popup, columns * cell + (columns - 1) * g + 2 * ink_ui_px(INK_STROKE + INK_GAP_XS));
     lv_obj_set_style_pad_all(K.popup, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_style_bg_color(K.popup, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(K.popup, LV_OPA_COVER, 0);
@@ -206,6 +206,8 @@ static void alternate_action(ink_call_t *call) {
     kb_button(K.popup, TR("收起"), ACT_POPUP + n, "keyboard.alternates", "{\"code\":0}", cell);
     lv_obj_update_layout(K.popup);
     lv_obj_align_to(K.popup, K.board, LV_ALIGN_TOP_MID, 0, 0);
+    lv_obj_update_layout(K.popup);
+    lv_obj_remove_flag(K.popup, LV_OBJ_FLAG_HIDDEN);
     ink_ui_hint_obj(K.popup, INK_REFRESH_FAST);
     K.revision++;
 }

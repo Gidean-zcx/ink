@@ -917,6 +917,17 @@ add_test(NAME ime-keyboard1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}
 add_test(NAME keyboard-pages COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ime_keyboard1.py --build ${CMAKE_BINARY_DIR} --pages)
 set_tests_properties(keyboard-pages PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 set_tests_properties(ime-keyboard1 PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+# keyboard-2: the kb_* rows of docs/tasks/keyboard-2/对照表.md; the 108 build only takes the review pictures.
+ink_sim_executable(sim-keyboard2 tests/keyboard2/kb.c tests/tap_loss/held_text.c)
+target_link_libraries(sim-keyboard2 PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-keyboard2-108 tests/keyboard2/kb.c tests/tap_loss/held_text.c)
+target_link_libraries(sim-keyboard2-108 PRIVATE ink_apps ink_system)
+target_compile_definitions(sim-keyboard2-108 PRIVATE INK_KBD_KEY_HEIGHT=108)
+foreach(kb_case refresh reverse-redraw reverse-press pending nine symbols letters delete)
+  add_test(NAME keyboard2-${kb_case} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/keyboard2/run.py
+    --build ${CMAKE_BINARY_DIR} --case ${kb_case})
+  set_tests_properties(keyboard2-${kb_case} PROPERTIES TIMEOUT 300 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+endforeach()
 foreach(scene keyboard ai member kid battery home)
   add_test(NAME semantics-shell2-${scene} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/semantics_shell2/run.py
     --build ${CMAKE_BINARY_DIR} --scene ${scene})
