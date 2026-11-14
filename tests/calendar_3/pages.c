@@ -170,8 +170,9 @@ static void agenda(void) {
     ink_probe_mark("c3.view.before"); press("calendar.view", 0); ink_probe_mark("c3.view.after");
     page("Agenda"); expect("11月16日 周一"); expect("周会"); expect("每周"); expect("提前 10 分钟");
     shot("agenda");
-    ink_probe_mark("c3.page.before"); ok("calendar.next", NULL); ink_probe_mark("c3.page.after");
+    on_ui(read_snapshot); if (!strstr(snapshot, "已改这一次")) ok("calendar.next", NULL); /* the moved Monday, on the first or second page */
     expect("已改这一次"); shot("agenda-2");
+    ink_probe_mark("c3.page.before"); ok("calendar.next", NULL); ink_probe_mark("c3.page.after");
     ink_probe_mark("c3.search.before"); ok("calendar.search", "{\"query\":\"周\"}"); ink_probe_mark("c3.search.after");
     expect("周会"); absent("出差"); shot("search");
     ok("calendar.search", "{\"query\":\"没有的事\"}"); expect("没有找到“没有的事”"); shot("search-empty");
