@@ -98,7 +98,7 @@ static void fast_keys(const int *codes, int n) {
 }
 static void tap_label(const char *label) {
     g_label = label; on_ui(label_center);
-    CHECK(g_found, "the keyboard shows %s", label);
+    CHECK(g_found, "the keyboard shows %.40s", label);
     if (g_found) tap_at(g_x, g_y);
 }
 static int g_step;
@@ -114,11 +114,11 @@ static void tap_symbol(const char *label) { /* the way a person finds it: pages,
         tap_at(g_x, g_y);
         if (g_step == 1) return;
     }
-    CHECK(false, "the symbol panel has %s", label);
+    CHECK(false, "the symbol panel has %.40s", label);
 }
 static void capture(const char *name);
 static void ai(const char *cap, const char *args) {
-    CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "AI %s %s (%d)", cap, args ? args : "", g_rc.status);
+    CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "AI %.40s %.40s (%d)", cap, args ? args : "", g_rc.status);
     quiet();
 }
 static void ai_key(int code) { char args[32]; snprintf(args, sizeof args, "{\"code\":%d}", code); ai("keyboard.key", args); }
@@ -296,12 +296,12 @@ static void pending_case(void) {
     CHECK(WAIT_FOR(py_dict_loaded(), 5000), "the dictionary is in (its arrival would reorder the list by itself)");
     field(INK_TEXT_PLAIN); on_ui(shi); quiet();
     on_ui(read_first); on_ui(read_second); char before[40]; snprintf(before, sizeof before, "%s", g_first);
-    CHECK(g_second[0] && strcmp(g_first, g_second), "two different first words to swap (%s, %s)", g_first, g_second);
+    CHECK(g_second[0] && strcmp(g_first, g_second), "two different first words to swap (%.40s, %.40s)", g_first, g_second);
     g_code = 'a'; on_ui(key_center);
     press_at(g_x, g_y);
     on_ui(tap_held_reorder); /* the list changes under the finger */
     on_ui(read_first);
-    CHECK(!strcmp(g_first, before), "kb_pending_redraw_after_release: nothing moves under the finger (%s)", g_first);
+    CHECK(!strcmp(g_first, before), "kb_pending_redraw_after_release: nothing moves under the finger (%.40s)", g_first);
     lv_area_t c; lv_obj_get_coords(K.cands, &c); hal_rect_t strip = native(&c);
     hw(HW_PRESS, g_x, g_y + ink_ui_px(2 * key_height(false))); /* slide off, downwards (up would be a swipe): no key */
     track(); release_at(g_x, g_y + ink_ui_px(2 * key_height(false))); quiet(); g_tracking = false;
@@ -309,7 +309,7 @@ static void pending_case(void) {
     bool drawn = false;
     for (int i = 0; i < g_nrects; i++) if (meets(&g_rects[i].r, &strip)) drawn = true;
     CHECK(!strcmp(g_first, g_second) && !strcmp(g_first, g_cand0.word) && drawn && g_invalidation,
-          "kb_pending_redraw_after_release: the strip is drawn again after the lift (%s -> %s, drawn %d, second %s, service %s)", before, g_first, drawn, g_second, g_cand0.word);
+          "kb_pending_redraw_after_release: the strip is drawn again after the lift (%.40s -> %.40s, drawn %d, second %.40s, service %.40s)", before, g_first, drawn, g_second, g_cand0.word);
     /* layout changes from a key (symbols, language, nine-key) leave screen invalidation on */
     static const int codes[] = {KEY_SWITCH, KEY_SWITCH, INK_TEXT_KEY_LANGUAGE, INK_TEXT_KEY_LANGUAGE, KEY_LAYOUT, KEY_LAYOUT};
     on_ui(leave); quiet(); field(INK_TEXT_PLAIN); on_ui(chinese); quiet();
@@ -353,11 +353,11 @@ static void nine_case(void) {
     on_ui(mogo_pages);
     g_nlist = 0; on_ui(read_readings); on_ui(read_more_cell);
     CHECK(g_all > 3 && g_more_cell && K.readings_shown == 2, "B2: more than three readings: two and 更多 (%d readings)", g_all);
-    for (int i = 1; i < g_all; i++) CHECK(strlen(g_mogo[i]) <= strlen(g_mogo[i - 1]), "B2: longer readings first (%s, %s)", g_mogo[i - 1], g_mogo[i]);
+    for (int i = 1; i < g_all; i++) CHECK(strlen(g_mogo[i]) <= strlen(g_mogo[i - 1]), "B2: longer readings first (%.40s, %.40s)", g_mogo[i - 1], g_mogo[i]);
     for (int turn = 0; turn < 30 && g_nlist < g_all; turn++) { tap_label(TR("更多")); on_ui(read_readings); }
     bool same = g_nlist == g_all;
     for (int i = 0; same && i < g_all; i++) same = !strcmp(g_list[i], g_mogo[i]);
-    CHECK(same, "kb_readings_none_skipped: 更多 shows every reading once, in Mogo's order (%d of %d: %s %s %s %s / %s %s %s %s)", g_nlist, g_all, g_list[0], g_list[1], g_list[2], g_list[3], g_mogo[0], g_mogo[1], g_mogo[2], g_mogo[3]);
+    CHECK(same, "kb_readings_none_skipped: 更多 shows every reading once, in Mogo's order (%d of %d: %.40s %.40s %.40s %.40s / %.40s %.40s %.40s %.40s)", g_nlist, g_all, g_list[0], g_list[1], g_list[2], g_list[3], g_mogo[0], g_mogo[1], g_mogo[2], g_mogo[3]);
     tap_label(TR("更多"));
     g_nlist = 0; on_ui(read_readings);
     CHECK(K.reading_offset == 0 && g_nlist && !strcmp(g_list[0], g_mogo[0]), "kb_readings_more_wraps: past the last group 更多 starts again");
@@ -365,14 +365,14 @@ static void nine_case(void) {
     tap_key(KEY_RETYPE);
     for (const char *p = "94664"; *p; p++) tap_key(*p);
     on_ui(read_text);
-    CHECK(!has_digit(g_line) && !strcmp(g_line, "[wxyz] [ghi] [mno] [mno] [ghi]"), "kb_nine_no_digits_shown: %s", g_line);
+    CHECK(!has_digit(g_line) && !strcmp(g_line, "[wxyz] [ghi] [mno] [mno] [ghi]"), "kb_nine_no_digits_shown: %.40s", g_line);
     tap_label("zhong"); on_ui(read_text);
     bool china = false;
     for (int i = 0; i < K.shown; i++) if (!strcmp(K.cand[i].word, "中国")) china = true;
-    CHECK(china && !strcmp(g_line, "zhong") && !strcmp(ink_text_preferred_reading(), "zhong"), "kb_nine_prefer_zhong: 中国 on the first page (%s)", g_line);
+    CHECK(china && !strcmp(g_line, "zhong") && !strcmp(ink_text_preferred_reading(), "zhong"), "kb_nine_prefer_zhong: 中国 on the first page (%.40s)", g_line);
     CHECK(lv_color_eq(lv_obj_get_style_bg_color(K.reading[0], 0), ink_ui_ink()) || lv_color_eq(lv_obj_get_style_bg_color(K.reading[1], 0), ink_ui_ink()), "B3: the chosen reading is inverted");
     tap_key('4'); on_ui(read_text);
-    CHECK(!strcmp(ink_text_preferred_reading(), "zhong") && !strcmp(g_line, "zhong [ghi]"), "B3: more digits keep the reading (%s)", g_line);
+    CHECK(!strcmp(ink_text_preferred_reading(), "zhong") && !strcmp(g_line, "zhong [ghi]"), "B3: more digits keep the reading (%.40s)", g_line);
     tap_key(KEY_BACKSPACE);
     CHECK(!ink_text_preferred_reading()[0], "B3: delete forgets the reading");
     ai("keyboard.reading", "{\"text\":\"zhong\"}");
@@ -386,24 +386,24 @@ static void nine_case(void) {
         tap_key(KEY_RETYPE); tap_key('9'); tap_key('9'); tap_key('9'); tap_key('9');
         tap_key(paths[i]); on_ui(read_text);
         CHECK(!has_digit(g_value) && !strcmp(g_comp, "9999") && !strcmp(g_line, TR("先选词或按重输")) && ink_text_nine() && !K.symbols,
-              "kb_nine_digits_never_committed: key %d asks for a word and keeps the digits (%s / %s)", paths[i], g_value, g_line);
+              "kb_nine_digits_never_committed: key %d asks for a word and keeps the digits (%.40s / %.40s)", paths[i], g_value, g_line);
     }
     delay_ms(3000); on_ui(read_text);
     CHECK(!strcmp(g_line, TR("先选词或按重输")), "kb_notice_stays_until_next_key: no timer takes it away");
     tap_key('9'); on_ui(read_text);
-    CHECK(strcmp(g_line, TR("先选词或按重输")) && !has_digit(g_line), "kb_notice_stays_until_next_key: the next key does (%s)", g_line);
+    CHECK(strcmp(g_line, TR("先选词或按重输")) && !has_digit(g_line), "kb_notice_stays_until_next_key: the next key does (%.40s)", g_line);
     on_ui(insert_text); on_ui(read_text);
-    CHECK(!has_digit(g_value) && !g_comp[0] && strstr(g_value, "好"), "kb_nine_digits_never_committed: the AI's text.insert path drops the digits (%s)", g_value);
+    CHECK(!has_digit(g_value) && !g_comp[0] && strstr(g_value, "好"), "kb_nine_digits_never_committed: the AI's text.insert path drops the digits (%.40s)", g_value);
     tap_key('9'); tap_key('9');
     on_ui(leave); quiet(); field(INK_TEXT_PLAIN); on_ui(read_text);
-    CHECK(!has_digit(g_value) && !g_comp[0], "kb_nine_digits_never_committed: another field drops them (%s)", g_value);
+    CHECK(!has_digit(g_value) && !g_comp[0], "kb_nine_digits_never_committed: another field drops them (%.40s)", g_value);
     /* B7: 重输 clears the composition only; B15: too long */
     on_ui(nine_on); quiet();
     tap_key('9'); tap_key('4'); tap_key(KEY_RETYPE); on_ui(read_text);
     CHECK(!g_comp[0], "kb_retype_clears_composing");
     for (int i = 0; i < 41; i++) ai_key('2');
     on_ui(read_text);
-    CHECK(!strcmp(g_line, TR("拼音过长，先选词")) && strlen(g_comp) == 40, "kb_composing_too_long_notice (%zu letters, %s)", strlen(g_comp), g_line);
+    CHECK(!strcmp(g_line, TR("拼音过长，先选词")) && strlen(g_comp) == 40, "kb_composing_too_long_notice (%zu letters, %.40s)", strlen(g_comp), g_line);
     tap_key(KEY_RETYPE); on_ui(nine_off); quiet();
     leave_page();
 }
@@ -440,14 +440,14 @@ static void read_panel(void) { g_category = K.category; g_page = K.symbol_page; 
 static int g_took;
 static void take_snapshot(void) { g_took = ink_ui_context_snapshot(g_snapshot, sizeof g_snapshot, NULL); }
 static void symbols_case(void) {
-    on_ui(glyphs); CHECK(g_ok, "kb_symbol_glyphs: every symbol and alternate has a glyph (%s)", g_bad);
+    on_ui(glyphs); CHECK(g_ok, "kb_symbol_glyphs: every symbol and alternate has a glyph (%.40s)", g_bad);
     on_ui(ids); CHECK(g_ok, "kb_recent_ids_stable: the stored ids keep their symbols");
     field(INK_TEXT_PLAIN); on_ui(chinese); quiet();
     tap_key(KEY_SWITCH); on_ui(read_panel);
     CHECK(K.symbols && g_category == 1, "kb_picker_opens_on_cn: 中文 first, not 最近 (%d)", g_category);
     on_ui(targets); CHECK(g_ok, "kb_tabs_min_108 / kb_symbol_cells_min_108");
     tap_symbol("……"); on_ui(read_text);
-    CHECK(!strcmp(g_value, "……"), "kb_multi_char_symbol: …… goes in whole (%s)", g_value);
+    CHECK(!strcmp(g_value, "……"), "kb_multi_char_symbol: …… goes in whole (%.40s)", g_value);
     tap_label(TR("英文")); tap_symbol("1"); on_ui(read_text);
     tap_label(TR("最近")); on_ui(read_panel);
     CHECK(symbol_at(RECENT, 0) && !strcmp(symbol_at(RECENT, 0), "……") && !symbol_at(RECENT, 1), "kb_recent_skips_digits: 1 is not remembered");
@@ -458,7 +458,7 @@ static void symbols_case(void) {
     tap_symbol("≈"); tap_label(TR("最近"));
     CHECK(symbol_at(RECENT, 0) && !strcmp(symbol_at(RECENT, 0), "≈"), "kb_recent_first_is_last_used");
     tap_label(TR("删除")); on_ui(read_text);
-    CHECK(!strcmp(g_value, "……1"), "kb_picker_delete: the panel's delete (%s)", g_value);
+    CHECK(!strcmp(g_value, "……1"), "kb_picker_delete: the panel's delete (%.40s)", g_value);
     tap_label("26");
     on_ui(leave); quiet();
     int64_t mine = ink_setting_get(RECENT_SETTINGS[0]);
@@ -501,11 +501,11 @@ static void letters_case(void) {
     field(INK_TEXT_PLAIN); on_ui(english); quiet();
     /* A6: once, locked, off */
     tap_key(KEY_SHIFT); tap_key('a'); tap_key('b'); on_ui(read_case_state);
-    CHECK(!strcmp(g_value, "Ab") && !g_ok, "kb_caps_cycle: one tap capitalises one letter (%s)", g_value);
+    CHECK(!strcmp(g_value, "Ab") && !g_ok, "kb_caps_cycle: one tap capitalises one letter (%.40s)", g_value);
     tap_key(KEY_SHIFT); tap_key(KEY_SHIFT); tap_key('c'); tap_key('d'); on_ui(read_case_state);
-    CHECK(!strcmp(g_value, "AbCD") && g_category, "kb_caps_cycle: two taps lock (%s)", g_value);
+    CHECK(!strcmp(g_value, "AbCD") && g_category, "kb_caps_cycle: two taps lock (%.40s)", g_value);
     tap_key(KEY_SHIFT); tap_key('e'); on_ui(read_case_state);
-    CHECK(!strcmp(g_value, "AbCDe") && !g_category && !g_ok, "kb_caps_cycle: a third tap ends it (%s)", g_value);
+    CHECK(!strcmp(g_value, "AbCDe") && !g_category && !g_ok, "kb_caps_cycle: a third tap ends it (%.40s)", g_value);
     tap_key(KEY_SHIFT); tap_key(INK_TEXT_KEY_LANGUAGE); tap_key(INK_TEXT_KEY_LANGUAGE); on_ui(read_case_state);
     CHECK(!g_ok && !g_category, "kb_caps_reset: switching language resets the case");
     CHECK(ink_ui_secondary().red < 0x80, "kb_alt_label_contrast: the swipe hint is dark gray");
@@ -514,16 +514,16 @@ static void letters_case(void) {
     on_ui(leave); quiet(); field(INK_TEXT_PLAIN); on_ui(english); quiet();
     g_code = 'q'; on_ui(key_center);
     press_at(g_x, g_y); hw(HW_PRESS, g_x, g_y - ink_ui_px(key_height(false)) * 3 / 4); release_at(g_x, g_y - ink_ui_px(key_height(false)) * 3 / 4); quiet();
-    on_ui(read_text); CHECK(!strcmp(g_value, "1"), "kb_swipe_up_q: 1 (%s)", g_value);
+    on_ui(read_text); CHECK(!strcmp(g_value, "1"), "kb_swipe_up_q: 1 (%.40s)", g_value);
     int ax, ay; g_code = 'a'; on_ui(key_center); ax = g_x; ay = g_y; g_code = 's'; on_ui(key_center);
     press_at(ax, ay); hw(HW_PRESS, g_x, g_y); release_at(g_x, g_y); quiet(); on_ui(read_text);
-    CHECK(!strcmp(g_value, "1"), "kb_swipe_no_neighbor: a slide from a to s types neither (%s)", g_value);
+    CHECK(!strcmp(g_value, "1"), "kb_swipe_no_neighbor: a slide from a to s types neither (%.40s)", g_value);
     /* A4: hold, then tap a cell */
     g_code = 'u'; on_ui(key_center); press_at(g_x, g_y); delay_ms(700); release_at(g_x, g_y); quiet();
     CHECK(K.popup, "kb_popup_pick: holding u opens its list");
-    on_ui(read_text); CHECK(!strcmp(g_value, "1"), "A4: the release after the hold types nothing (%s)", g_value);
+    on_ui(read_text); CHECK(!strcmp(g_value, "1"), "A4: the release after the hold types nothing (%.40s)", g_value);
     tap_label("ǔ"); on_ui(read_text);
-    CHECK(!K.popup && !strcmp(g_value, "1ǔ"), "kb_popup_pick: ǔ (%s)", g_value);
+    CHECK(!K.popup && !strcmp(g_value, "1ǔ"), "kb_popup_pick: ǔ (%.40s)", g_value);
     /* F3-F5, B13: the grid pages by buttons and the page keys, to the service's last candidate */
     on_ui(chinese); quiet(); tap_key('s'); tap_key('h'); tap_key('i');
     ai("keyboard.candidates", "{}");
@@ -534,16 +534,16 @@ static void letters_case(void) {
     key(INK_KEY_NEXT); quiet();
     CHECK(K.first == 6, "kb_cover_keys_page_grid: the page key turns the grid");
     for (int i = 0; i < pages + 2; i++) tap_label("▶");
-    char want[16]; snprintf(want, sizeof want, "%d/%d", pages, pages);
-    CHECK(K.first == (pages - 1) * 6 && !strcmp(lv_label_get_text(K.cand_page), want) && g_total <= 60, "kb_grid_pages_to_60: the last page says %s (%s)", want, lv_label_get_text(K.cand_page));
+    char want[32]; snprintf(want, sizeof want, "%d/%d", pages, pages);
+    CHECK(K.first == (pages - 1) * 6 && !strcmp(lv_label_get_text(K.cand_page), want) && g_total <= 60, "kb_grid_pages_to_60: the last page says %.40s (%.40s)", want, lv_label_get_text(K.cand_page));
     tap_label(TR("键盘")); ai_key(KEY_RETYPE);
     on_ui(leave); quiet();
     /* D2/D3: the number and phone fields only show keys the field takes; digits have no long press */
-    field(INK_TEXT_NUMBER); on_ui(accepted); CHECK(g_ok && K.built_for == 3, "kb_no_dead_keys: number field (%s)", g_bad);
+    field(INK_TEXT_NUMBER); on_ui(accepted); CHECK(g_ok && K.built_for == 3, "kb_no_dead_keys: number field (%.40s)", g_bad);
     g_code = '5'; on_ui(key_center); press_at(g_x, g_y); delay_ms(700); release_at(g_x, g_y); quiet();
     CHECK(!K.popup, "kb_number_no_popup");
     on_ui(leave); quiet();
-    field(INK_TEXT_PHONE); on_ui(accepted); CHECK(g_ok && K.built_for == 3, "kb_no_dead_keys: phone field (%s)", g_bad);
+    field(INK_TEXT_PHONE); on_ui(accepted); CHECK(g_ok && K.built_for == 3, "kb_no_dead_keys: phone field (%.40s)", g_bad);
     leave_page();
     /* H3: the gaps grow with the keys, by one factor */
     for (int large = 0; large < 2; large++) {
@@ -593,7 +593,7 @@ static void frame(void *arg) { sim_display_snapshot(arg); g_captured = true; }
 static void capture(const char *name) {
     quiet();
     g_captured = false; vtk_event_at(vtk_now() + SIM_US(1), frame, (void *)name);
-    CHECK(WAIT_FOR(g_captured, 2000), "picture %s", name);
+    CHECK(WAIT_FOR(g_captured, 2000), "picture %.40s", name);
 }
 static void nihao(void) { chinese(); for (const char *p = "nihao"; *p; p++) ink_text_key(*p); }
 static void shots_case(void) {
@@ -604,6 +604,13 @@ static void shots_case(void) {
         char name[64];
 #define SHOT(what) do { snprintf(name, sizeof name, "KB-%s-%s", what, SIZES[s]); capture(name); } while (0)
         field(INK_TEXT_PLAIN); on_ui(nihao); quiet(); SHOT("full");
+        if (s == 0) { /* the key centres tools/device/autotest/memo.script taps, in percent of the screen */
+            static const int keys[] = {INK_TEXT_KEY_LANGUAGE, 'h', 'e', 'l', 'o', KEY_BACKSPACE};
+            for (unsigned k = 0; k < sizeof keys / sizeof *keys; k++) {
+                g_code = keys[k]; on_ui(key_center);
+                printf("KEY_CENTRE %d %.1f%% %.1f%%\n", keys[k], 100.0 * g_x / ink_ui_width(), 100.0 * g_y / ink_ui_height());
+            }
+        }
         ai("keyboard.candidates", "{}"); SHOT("expanded"); ai("keyboard.candidates", "{\"fold\":true}");
         ai_key(KEY_RETYPE); on_ui(english); quiet();
         ai("keyboard.alternates", "{\"code\":101}"); SHOT("popup"); ai("keyboard.alternates", "{\"code\":0}");
@@ -638,7 +645,7 @@ static void run(void *arg) {
     else if (!strcmp(g_case, "letters")) letters_case();
     else if (!strcmp(g_case, "delete")) delete_case();
     else if (!strcmp(g_case, "shots")) shots_case();
-    else CHECK(false, "unknown case %s", g_case);
+    else CHECK(false, "unknown case %.40s", g_case);
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

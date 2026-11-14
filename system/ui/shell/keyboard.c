@@ -1086,7 +1086,7 @@ static void sync(void) { /* UI task */
     lv_obj_set_flag(K.previous, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK, K.expanded);
     if (K.expanded) {
         int total = candidate_total(), pages = total ? (total + INK_TEXT_PAGE - 1) / INK_TEXT_PAGE : 1;
-        char page[16]; snprintf(page, sizeof page, "%d/%d", K.first / INK_TEXT_PAGE + 1, pages);
+        char page[32]; snprintf(page, sizeof page, "%d/%d", K.first / INK_TEXT_PAGE + 1, pages);
         set_text(K.cand_page, page);
         lv_obj_set_state(K.previous, LV_STATE_DISABLED, !K.first);
         lv_obj_set_state(K.more, LV_STATE_DISABLED, n <= INK_TEXT_PAGE);

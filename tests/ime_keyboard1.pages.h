@@ -221,5 +221,5 @@ static void keyboard_pages(void) {
         on_ui(pages_check_retyped); pages_capture(ai ? "AI-17-retyped" : "Touch-17-retyped");
         on_ui(end_scene); CHECK(BY_HAND("system.home", NULL) && WAIT_FOR(!ink_text_focused(), 10000), "leave memo");
     }
-    CHECK(!strcmp(pages_value[0], pages_value[1]), "touch and AI end the same: %s / %s", pages_value[0], pages_value[1]);
+    CHECK(!strcmp(pages_value[0], pages_value[1]), "touch and AI end the same: %.60s / %.60s", pages_value[0], pages_value[1]);
 }

@@ -86,7 +86,7 @@ static void sync_picker(void) {
         kb_button(K.symbol_grid, sym, ACT_GRID + i, "keyboard.symbol", args, (width - (columns - 1) * g) / columns);
     }
     if (!count) { lv_obj_t *l = lv_label_create(K.symbol_grid); lv_obj_set_style_text_font(l, font(), 0); lv_label_set_text(l, TR("还没有用过的符号")); }
-    char page[16]; snprintf(page, sizeof page, "%d/%d", K.symbol_page + 1, pages);
+    char page[32]; snprintf(page, sizeof page, "%d/%d", K.symbol_page + 1, pages);
     set_text(lv_obj_get_child(K.picker_nav, 2), page);
     lv_obj_set_state(lv_obj_get_child(K.picker_nav, 1), LV_STATE_DISABLED, K.symbol_page == 0);
     lv_obj_set_state(lv_obj_get_child(K.picker_nav, 3), LV_STATE_DISABLED, K.symbol_page == pages - 1);
