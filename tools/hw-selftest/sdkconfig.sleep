@@ -1,0 +1,3 @@
+# The light-sleep build (HWTEST_SLEEP=1) writes its progress mark into the last sector of ota_1 while it runs from
+# ota_1 (selftest.c, mark_*). That sector is 4.7 MB past the image; IDF aborts any write into the running app by default.
+CONFIG_SPI_FLASH_DANGEROUS_WRITE_ALLOWED=y

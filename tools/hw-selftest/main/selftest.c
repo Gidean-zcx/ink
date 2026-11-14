@@ -988,8 +988,10 @@ static void t_light_sleep(slot_t *s) {
     emit(s, "\"ok\":%s,\"init\":%d,\"rc\":%d,\"slept_ms\":%lld,\"causes\":\"%lx\",\"by_timer\":%s,\"usb_back_after_ms\":%d,"
             "\"usb_connected\":%s",
          tf(s->ok), init, rc, (long long)slept, (unsigned long)causes, tf(by_timer), waited, tf(back));
-    fuse_off();
-    mark_clear();
+    if (back) { /* only then: otherwise the fuse fires and the next boot reports what this one could not say */
+        fuse_off();
+        mark_clear();
+    }
 }
 #endif
 
