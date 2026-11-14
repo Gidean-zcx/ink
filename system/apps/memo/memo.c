@@ -225,7 +225,9 @@ static void sweep(void *arg) { /* BG: a recording a power loss cut off becomes a
     ink_app_free(audio); ink_app_free(n); ink_db_close(db);
 }
 static void after_record(void *arg) { /* UI: the recording page gives way to what became of it */
-    if (strcmp(ink_ui_page_name(), "MemoRecord") || !ink_ui_page_current()) return;
+    /* only that recording's page: this comes after the memo is stored, and by then a new recording may have started
+     * (the record_done event clears the recording first), whose page it must not take away */
+    if (strcmp(ink_ui_page_name(), "MemoRecord") || !ink_ui_page_current() || ink_audio_recording()) return;
     ink_ui_pop(); if (arg) ink_ui_push(&PAGES[PENDING], arg);
 }
 static void kick(void *ctx, int h, const char *id) { (void)ctx; int64_t on = 0; if (!id || (ink_state_get_int(h, &on) && on)) ink_exec_post(INK_EXEC_BG, &T.sweep, sweep, NULL); }
