@@ -393,7 +393,7 @@ static void nine_case(void) {
     CHECK(!has_digit(g_line) && !strcmp(g_line, "[wxyz] [ghi] [mno] [mno] [ghi]"), "kb_nine_no_digits_shown: %.40s", g_line);
     tap_label("zhong"); on_ui(read_text);
     bool china = false;
-    for (int i = 0; i < K.shown; i++) if (!strcmp(K.cand[i].word, "中国")) china = true;
+    for (int i = 0; i < K.shown && i < INK_TEXT_PAGE; i++) if (!strcmp(K.cand[i].word, "中国")) china = true;
     CHECK(china && !strcmp(g_line, "zhong") && !strcmp(ink_text_preferred_reading(), "zhong"), "kb_nine_prefer_zhong: 中国 on the first page (%.40s)", g_line);
     CHECK(lv_color_eq(lv_obj_get_style_bg_color(K.reading[0], 0), ink_ui_ink()) || lv_color_eq(lv_obj_get_style_bg_color(K.reading[1], 0), ink_ui_ink()), "B3: the chosen reading is inverted");
     tap_key('4'); on_ui(read_text);
