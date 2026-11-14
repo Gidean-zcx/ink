@@ -15,12 +15,14 @@ ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
 p.add_argument('--docs', type=Path)
+p.add_argument('--part', choices=('all', 'main', 'pictures'), default='all', help='main: the paths and a restart; pictures: the three sets')
 a = p.parse_args()
 build = a.build.resolve()
-area = build / 'test-out' / 'clock-3'
+area = build / 'test-out' / ('clock-3' if a.part == 'all' else f'clock-3-{a.part}')
 shutil.rmtree(area, ignore_errors=True)
 runs = [('main', '-normal', 'main'), ('restart', '-normal', 'main'), ('shots', '-normal', 'shots-normal'),
         ('shots', '-max', 'shots-max'), ('shots', '-child', 'shots-child')]
+runs = [r for r in runs if a.part == 'all' or (a.part == 'main') == (r[0] != 'shots')]
 failed, refreshes = False, []
 for phase, suffix, flash in runs:
     out = area / f'{phase}{suffix}'
