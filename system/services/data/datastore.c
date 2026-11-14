@@ -41,7 +41,7 @@
 #include "ink/sys/svc.h"
 
 #define MAX_COLLECTIONS 32
-#define MAX_DEFS 32
+#define MAX_DEFS 40 /* clock-3 added clock.timers, the 32nd; the table is PSRAM */
 #define MAX_TOMBSTONES 256
 #define MEM_QUOTA (2u * 1024u * 1024u) /* all collections, PSRAM */
 #define PEND_MAX (256u * 1024u)        /* of one collection, waiting to be written */

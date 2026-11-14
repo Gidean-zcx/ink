@@ -83,7 +83,7 @@ typedef struct {
 
 /** After the storage service, the resource manager and the shared lock and timer. */
 int ink_data_init(void);
-/** List it for data.collections and the AI (the definition must outlive the program). Up to 32. */
+/** List it for data.collections and the AI (the definition must outlive the program). Up to 40. */
 int ink_db_register(const ink_db_def_t *def);
 /** A registered collection by name, or NULL. */
 const ink_db_def_t *ink_db_find_def(const char *name);
