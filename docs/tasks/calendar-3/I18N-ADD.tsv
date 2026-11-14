@@ -97,7 +97,6 @@
 后一天	Next day
 农历%s · %s年 %s月 %s日%s%s	Lunar %s · %s year %s month %s day%s%s
 农历%s · %s年%s%s	Lunar %s · %s year%s%s
-更多老黄历 ›	More almanac ›
 更多老黄历	More almanac
 这天没有安排	Nothing this day
 老黄历 · %d月%d日	Almanac · %d/%d
@@ -130,7 +129,7 @@
 文件读不出来	The file cannot be read
 导入 %d 件；跳过 %d 件看不懂的规则；%d 件已存在；日程满了，%d 件没导入	Imported %d; skipped %d with rules not understood; %d already there; calendar full, %d not imported
 %d月%d日 %s · %s%s	%d/%d %s · %s%s
-这天 %d 件事 ›	%d events this day ›
+这天 %d 件事	%d events this day
 六周 %d月%d日 到 %d月%d日（不是本月的是上月或下月，浅灰）	Six weeks %d/%d to %d/%d (days of the months around are grey)
 去设置时间	Set the time
 打开这一天	Open this day

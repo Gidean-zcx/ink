@@ -113,7 +113,7 @@ static void fill_block(void) {
     int n = cal_events_on(cal_day(K.y, K.m, K.d), items, 8);
     if (!n) snprintf(K.texts[2], sizeof K.texts[2], "%s", TR("这天没有安排"));
     else if (n == 1) snprintf(K.texts[2], sizeof K.texts[2], "%s", items[0].text);
-    else snprintf(K.texts[2], sizeof K.texts[2], TR("这天 %d 件事 ›"), n);
+    else snprintf(K.texts[2], sizeof K.texts[2], TR("这天 %d 件事"), n);
     for (int i = 0; i < 2; i++) /* the same words draw nothing: a new minute leaves the block alone */
         if (K.block_lines[i] && strcmp(lv_label_get_text(K.block_lines[i]), K.texts[1 + i])) lv_label_set_text(K.block_lines[i], K.texts[1 + i]);
     snprintf(K.texts[3], sizeof K.texts[3], "%s", ink_lunar_solar_term(K.y, K.m, K.d) ? ink_lunar_solar_term(K.y, K.m, K.d) : "");

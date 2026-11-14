@@ -205,7 +205,7 @@ static void day_create(lv_obj_t *screen, void *arg) {
     } else text_lines(screen, &y, 1, "almanac", TR("老黄历"), why ? why : TR("这天的老黄历查不到"), true); /* D6, D7: the rest stays */
     osal_free(a);
     if (have) {
-        lv_obj_t *more = ink_ui_list_row(screen, "book", TR("更多老黄历 ›"), NULL, INK_MARGIN, y, w, false, NULL, NULL);
+        lv_obj_t *more = ink_ui_list_row(screen, "book", TR("更多老黄历"), NULL, INK_MARGIN, y, w, false, NULL, NULL);
         ink_shell_bind(more, "calendar.almanac", "{}");
         cal_action(5, "almanac", TR("更多老黄历"), "calendar.almanac", "{}");
         y += INK_CONTROL;
