@@ -9,7 +9,8 @@
 +3s      key   next
 +2s      mic   speech
 +0ms     key   ai 1500ms          # hold to talk, release
-+16s     snap  ai-answer          # text and speech finished
++7s      stall 600ms              # mid-answer the downlink delivers nothing for 0.6 s (a TCP retransmission): no gap heard
++9s      snap  ai-answer          # text and speech finished
 +1s      key   home               # close the sheet (HOME cover key)
 +25s     key   ai 1500ms
 +4s      key   next               # the page turns under the answer; the save waits for the audio

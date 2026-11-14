@@ -232,6 +232,10 @@ int ink_script_line(ink_script_t *s, char *line, int lineno, char *err, size_t e
         uint64_t dur;
         ok = n >= 3 && !parse_dur(tok[2], &dur);
         if (ok) push(s, t, A_OUTAGE)->c = (int)(dur / 1000000ull); /* ms */
+    } else if (!strcmp(cmd, "stall")) {
+        uint64_t dur;
+        ok = n >= 3 && !parse_dur(tok[2], &dur);
+        if (ok) push(s, t, A_STALL)->c = (int)(dur / 1000000ull); /* ms */
     } else if (!strcmp(cmd, "faults")) {
         ok = n >= 3 && (!strcmp(tok[2], "off") || (n >= 4 && atof(tok[3]) >= 0 && atof(tok[3]) <= 1));
         if (ok) {

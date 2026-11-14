@@ -85,7 +85,8 @@ static void seek_to(bool by_touch, int rel, bool check) { /* rel: pixels into th
     if (by_touch) targets();
     unsigned ms = bar_ms(rel);
     if (by_touch) touch(T[BAR].x + rel, T[BAR].y + T[BAR].height / 2);
-    else { char a[32]; snprintf(a, sizeof a, "{\"ms\":%u}", ms); ok("music.seek", a); }
+    else { char a[32]; snprintf(a, sizeof a, "{\"ms\":%u}", ms); ok("music.seek", a); quiet(); } /* the page is presented after
+                                                                * the receipt; by touch, touch() waits the same way */
     if (check) CHECK(WAIT_FOR(status().position_ms >= ms && status().position_ms <= ms + 1500, 3000), "seek lands at %u (%u)", ms, (unsigned)status().position_ms);
 }
 static void seek(bool by_touch, int rel) { seek_to(by_touch, rel, true); }

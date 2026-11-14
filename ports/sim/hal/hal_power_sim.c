@@ -660,7 +660,7 @@ void hal_device_get_info(hal_device_info_t *out) { *out = g_profile.info; }
 
 void hal_random_fill(void *out, size_t n) {
     uint8_t *p = out;
-    for (size_t i = 0; i < n; i++) p[i] = (uint8_t)(sim_rand01() * 256);
+    for (size_t i = 0; i < n; i++) p[i] = (uint8_t)(sim_rand01(SIM_RNG_ENTROPY) * 256);
 }
 
 const char *hal_device_reset_reason(void) { return g_sim.reset_reason ? g_sim.reset_reason : "poweron"; }

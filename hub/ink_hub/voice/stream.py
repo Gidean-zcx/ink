@@ -4,10 +4,17 @@ Copyright (c) 2025 xinnan-tech. MIT; see speech/XIAOZHI-LICENSE.
 """
 import asyncio
 import os
+import time
 from contextlib import aclosing
 
 from ink_hub.gateway.wire import chunks
 from ink_hub.speech.vad import VoiceActivity
+
+FRAME = .06  # one Opus frame of speech
+# Speech kept ahead of the device's playback: it starts at its own prebuffer, so the first sound is no later, and what
+# arrives early fills its jitter buffer to this depth; a downlink stall shorter than this is not heard (4G retransmits
+# hold up to about 0.6 s).
+LEAD = 1.2
 
 
 def split_speech(text, first=True, final=False):
@@ -93,9 +100,14 @@ async def speak(tts, text):
             yield packet
 
 
-def heard_text(session):
+def heard_text(session, now=None):
+    # The device's count of played frames when it sends one; otherwise the frames due by now (the hub sent them LEAD
+    # ahead of their playing time, so up to LEAD of them may still wait in the device's buffer).
     heard = session.heard_frames
-    heard = max(0, session.sent_frames - 5) if heard is None else min(heard, session.sent_frames)
+    if heard is None:
+        ahead = max(0., session.plays_until - (time.monotonic() if now is None else now))
+        heard = max(0, session.sent_frames - round(ahead / FRAME))
+    heard = min(heard, session.sent_frames)
     answer = ""
     for text, start, end in session.spoken:
         count = max(0, heard - start)

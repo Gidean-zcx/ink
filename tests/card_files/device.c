@@ -144,10 +144,14 @@ static void run(void *arg) {
         CHECK(ink_usb_disk_start() == INK_FS_OK, "card lent to the computer");
         notice("存储卡正给电脑用", "notice-lent");
         CHECK(!strstr(view, "没有存储卡"), "not called a missing card: %.200s", view);
-        double checks = sim_metric_value("card_files.check");
+        /* A conclusion, not a started check: while the card is lent no check concludes (it waits, as it was), so one
+         * after the eject read the card after it. A check asked for before the eject may still be waiting for a quiet
+         * screen when the card comes back; it is then the one that reads it, and the eject's own request waits behind
+         * it and the computer's HELLO window, so counting started checks depends on where that one was. */
+        unsigned concluded = ink_card_files_checks();
         lv_obj_t *page = active_screen();
         vtk_event_at(vtk_now() + SIM_MS(1), eject, NULL);
-        CHECK(WAIT_FOR(sim_metric_value("card_files.check") > checks, 10000), "checked again after the eject");
+        CHECK(WAIT_FOR(ink_card_files_checks() > concluded, 10000), "checked again after the eject");
         CHECK(state_is("ready", 60000), "ready after the eject: %s", files);
         CHECK(shows("面板=正文") && !on_screen("存储卡正给电脑用"), "the reader comes back by itself, in the book: %.200s", view);
         CHECK(active_screen() == page, "the same screen: no rebuilt page, no blank one in between");

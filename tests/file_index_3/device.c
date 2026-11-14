@@ -181,11 +181,11 @@ static void run(void *arg) {
         CHECK(identity(after) && !memcmp(before, after, sizeof before), "transient open failure preserves identity bytes");
         CHECK(ink_fs_lookup(id, &e) == 0 && !strcmp(e.path, "/family/SYNTH_0000.txt"), "old file id works after transient failure");
     } else if (!strcmp(mode, "entropy")) {
-        uint32_t expected = sim_rand();
+        uint32_t expected = sim_rand(SIM_RNG_FLASH);
         expected ^= expected << 13; expected ^= expected >> 17; expected ^= expected << 5;
         uint8_t first[16], second[16];
         hal_fs_new_card_id(first); hal_fs_new_card_id(second);
-        CHECK(sim_rand() == expected, "card identity entropy never changes hardware timing or fault randomness");
+        CHECK(sim_rand(SIM_RNG_FLASH) == expected, "card identity entropy never changes hardware timing or fault randomness");
         CHECK(memcmp(first, second, sizeof first), "independent device entropy still changes on each call");
     }
     ink_probe_value("test.index.writes", ink_test_index_writes());

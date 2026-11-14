@@ -148,9 +148,11 @@ def test_split_and_history():
     assert list(split_speech("12345678，尾巴", first=False, final=True)) == ["12345678，尾巴"]
     session = Session("voice.chat", 0, sent_frames=20, spoken=[["一二三四五", 0, 5], ["甲乙丙丁戊己", 5, None]])
     session.heard_frames = 7
-    assert heard_text(session) == "一二三四五"
-    session.heard_frames = None
-    assert heard_text(session) == "一二三四五甲乙丙"
+    session.plays_until = 100.6
+    assert heard_text(session, now=100.) == "一二三四五", "the device's count of played frames wins over the estimate"
+    session.heard_frames = None  # without it: what the hub's pacing says has played by now
+    assert heard_text(session, now=100.) == "一二三四五甲", "the last 10 frames sent still wait in the device's buffer"
+    assert heard_text(session, now=101.) == "一二三四五甲乙丙丁"
 
 
 async def test_first_clause_is_spoken_while_model_still_streams(make_hub, vendors, opus):

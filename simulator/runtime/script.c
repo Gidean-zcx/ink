@@ -18,6 +18,8 @@
  *   +0       wifi  broken               # in range, but joining it never works (a changed password)
  *   +0       cell  on|off [rsrp]        # cellular coverage, e.g. cell on -105
  *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
+ *   +0       stall 600ms               # the downlink delivers nothing for a while, then all of it at once (a TCP
+ *                                      # retransmission, a radio pause); the connection stays up
  *   +0       sim   external|internal none|data|sms|voice  # card in a SIM slot (what its plan allows)
  *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down|reading
  *   +0       shake                    # a movement the accelerometer notices
@@ -122,6 +124,7 @@ static void run_action(void *arg) { /* ISR context */
     case A_END: vtk_stop(); break;
     case A_NET: sim_net_set_link(a->text); break;
     case A_OUTAGE: sim_net_outage(SIM_MS(a->c)); break;
+    case A_STALL: sim_net_stall(SIM_MS(a->c)); break;
     case A_MIC: sim_audio_mic_source(a->text); break;
     case A_MIC_SAY: sim_audio_mic_say(a->text); break;
     case A_SIM: sim_net_set_card(a->a, a->b > 0, a->b >= 2, a->b == 3); break;

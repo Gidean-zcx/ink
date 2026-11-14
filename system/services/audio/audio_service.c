@@ -423,6 +423,7 @@ static bool stage_next(void) {
         return false;
     } else {
         AU.plc_run++;
+        if (AU.plc_run == 2) ink_probe_count("audio.audible_concealments"); /* two in a row (120 ms) can be heard */
         ink_probe_count("audio.play_concealed_frames"); /* the network did not deliver in time */
     }
     unlock();

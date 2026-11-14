@@ -90,21 +90,9 @@ static struct {
 
 void sim_power_input_lost(void);
 
-/* The touch controller's own random stream (like each I2C device's fault stream): a flash or network
- * model drawing once more does not change whether a press is seen in time. */
-static double touch_rand01(void) {
-    static uint32_t x;
-    if (!x) { /* seed through a mixer: neighbouring seeds give unrelated streams */
-        uint32_t z = (g_sim.seed ? g_sim.seed : 1u) ^ 0x7F4A7C15u;
-        z = (z ^ (z >> 16)) * 0x85EBCA6Bu;
-        z = (z ^ (z >> 13)) * 0xC2B2AE35u;
-        x = (z ^ (z >> 16)) | 1u;
-    }
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    return (double)(x >> 8) / (double)(1u << 24);
-}
+/* The touch controller's own random stream: a flash or network model drawing once more does not change
+ * whether a press is seen in time. */
+static double touch_rand01(void) { return sim_rand01(SIM_RNG_TOUCH); }
 
 /* Extra detection delay if the controller has dropped to its monitor scan (--touch-worst: always the
  * full period). ISR context. */

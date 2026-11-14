@@ -1,0 +1,52 @@
+{
+ "_doc": "Reverse control for the mid-answer stall in ai_ask.script: the simulator's default hub, but sending speech only 5 frames (0.24 s) ahead, as the hub did before voice-stream-1. The 600 ms stall must then be heard.",
+ "rules": [
+  {
+   "method": "hello",
+   "think_ms": 40,
+   "result": {
+    "session": "sim",
+    "proto": 1
+   }
+  },
+  {
+   "method": "ping",
+   "think_ms": 5,
+   "result": {}
+  },
+  {
+   "method": "ai.listen",
+   "think_ms": 1400,
+   "listen": {
+    "stt_ms": 300,
+    "transcript": "这一页讲了什么？",
+    "tts_first_ms": 500,
+    "tts_chars_per_s": 4.5,
+    "tts_speed": 2,
+    "lead_ms": 240
+   },
+   "stream": {
+    "notify": "ai.delta",
+    "interval_ms": 450,
+    "chunks": [
+     "小满替吵架多年的朋友送信，说出对不起，让两人重新联系。"
+    ],
+    "chunks_en": [
+     "Xiaoman helps old friends make peace."
+    ]
+   },
+   "result": {
+    "done": true,
+    "source": "page"
+   }
+  },
+  {
+   "method": "*",
+   "think_ms": 30,
+   "error": {
+    "code": -32601,
+    "message": "method not in hub script"
+   }
+  }
+ ]
+}
