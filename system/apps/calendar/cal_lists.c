@@ -48,11 +48,11 @@ static void with_headings(const cal_item_t *in, int n) {
         int32_t day = ink_event_day(in[i].at);
         if (day == last) continue;
         int y, m, d; cal_civil(day, &y, &m, &d);
-        char month[24] = "", note[sizeof it->note];
+        char month[24] = "", note[sizeof it->note], date[48];
         if (last_month >= 0 && y * 12 + m != last_month) snprintf(month, sizeof month, TR("%d年%d月 · "), y, m);
         snprintf(note, sizeof note, "%s", it->note);
-        snprintf(it->note, sizeof it->note, "%s%s%d月%d日 %s%s%.60s", month, day == today ? TR("今天 · ") : day == today + 1 ? TR("明天 · ") : "", m, d,
-                 cal_weekday_name(cal_wday(day)), note[0] ? " · " : "", note);
+        snprintf(date, sizeof date, TR("%d月%d日 %s"), m, d, cal_weekday_name(cal_wday(day)));
+        snprintf(it->note, sizeof it->note, "%s%s%s%s%.60s", month, day == today ? TR("今天 · ") : day == today + 1 ? TR("明天 · ") : "", date, note[0] ? " · " : "", note);
         cal_utf8_trim(it->note);
         last = day; last_month = y * 12 + m;
     }
@@ -270,13 +270,13 @@ static void settings_create(lv_obj_t *screen, void *arg) { /* T1, T2 and the fil
     int64_t start = ink_setting_get("calendar.week_start"), lead = ink_setting_get("calendar.default_reminder");
     K.nrows = 0;
     cal_row_t *r = &K.rows[K.nrows++];
-    *r = (cal_row_t){.label = TR("一周从哪天开始"), .cap = "settings.set", .icon = "calendar"};
+    *r = (cal_row_t){.label = TR("一周从哪天开始"), .cap = "calendar.settings", .icon = "calendar"};
     snprintf(r->value, sizeof r->value, "%s", start ? TR("周日（点一下换成周一）") : TR("周一（点一下换成周日）"));
-    snprintf(r->args, sizeof r->args, "{\"id\":\"calendar.week_start\",\"value\":%d}", start ? 0 : 1);
+    snprintf(r->args, sizeof r->args, "{\"week_start\":%d}", start ? 0 : 1);
     r = &K.rows[K.nrows++];
-    *r = (cal_row_t){.label = TR("新建时的提醒"), .cap = "settings.set", .icon = "bell"};
+    *r = (cal_row_t){.label = TR("新建时的提醒"), .cap = "calendar.settings", .icon = "bell"};
     snprintf(r->value, sizeof r->value, TR("%s（点一下换下一个）"), TR(LEADS[lead % 7]));
-    snprintf(r->args, sizeof r->args, "{\"id\":\"calendar.default_reminder\",\"value\":%d}", (int)((lead + 1) % 7));
+    snprintf(r->args, sizeof r->args, "{\"default_reminder\":%d}", (int)((lead + 1) % 7));
     { /* P11: children too, within their own space and what the picker lets them read */
         r = &K.rows[K.nrows++]; *r = (cal_row_t){.label = TR("导出日程（.ics）"), .cap = "calendar.export_now", .icon = "upload"}; snprintf(r->args, sizeof r->args, "{}");
         snprintf(r->value, sizeof r->value, "%s", K.result[0] ? K.result : TR("写到我的空间，含过去的"));

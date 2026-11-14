@@ -18,7 +18,7 @@ static const char *const VIEWS[] = {"month", "agenda", NULL};
 static const ink_setting_def_t SETTINGS[] = {
     {.id = "calendar.week_start", .title = TR_NOOP("一周从哪天开始"), .type = INK_SET_ENUM, .def = 0, .choices = WEEK_START, .child_may_change = true, .per_member = true},
     {.id = "calendar.default_reminder", .title = TR_NOOP("新建时的提醒"), .type = INK_SET_ENUM, .def = 3, .choices = DEFAULT_LEAD, .child_may_change = true, .per_member = true},
-    {.id = "calendar.view", .title = TR_NOOP("日历上次的视图"), .type = INK_SET_ENUM, .def = 0, .choices = VIEWS, .child_may_change = true, .per_member = true},
+    {.id = "calendar.last_view", .title = TR_NOOP("日历上次的视图"), .type = INK_SET_ENUM, .def = 0, .choices = VIEWS, .child_may_change = true, .per_member = true},
 };
 
 /* ------------------------------------------------------------ dates and words */
@@ -45,14 +45,17 @@ const char *cal_weekday_name(int wday) {
 
 /* Two characters under a day: the lunar day, a month's name on its first, a solar term on its day (lunar.c). */
 void cal_lunar_short(int y, int m, int d, char *out, size_t cap) {
-    static const char *const MONTHS[] = {"正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "冬月", "腊月"};
-    static const char *const LEAP[] = {"闰正", "闰二", "闰三", "闰四", "闰五", "闰六", "闰七", "闰八", "闰九", "闰十", "闰冬", "闰腊"};
+    static const char *const MONTHS[] = {TR_NOOP("正月"), TR_NOOP("二月"), TR_NOOP("三月"), TR_NOOP("四月"), TR_NOOP("五月"), TR_NOOP("六月"), TR_NOOP("七月"),
+                                         TR_NOOP("八月"), TR_NOOP("九月"), TR_NOOP("十月"), TR_NOOP("冬月"), TR_NOOP("腊月")};
+    static const char *const LEAP[] = {TR_NOOP("闰正"), TR_NOOP("闰二"), TR_NOOP("闰三"), TR_NOOP("闰四"), TR_NOOP("闰五"), TR_NOOP("闰六"), TR_NOOP("闰七"),
+                                       TR_NOOP("闰八"), TR_NOOP("闰九"), TR_NOOP("闰十"), TR_NOOP("闰冬"), TR_NOOP("闰腊")};
     ink_lunar_t l;
     out[0] = 0;
     const char *term = ink_lunar_solar_term(y, m, d);
     if (term) { snprintf(out, cap, "%s", term); return; }
     if (!ink_lunar_from_solar(y, m, d, &l)) return;
-    if (l.day == 1) { snprintf(out, cap, "%s", (l.leap ? LEAP : MONTHS)[(l.month - 1) % 12]); return; }
+    if (l.day == 1) { snprintf(out, cap, "%s", TR((l.leap ? LEAP : MONTHS)[(l.month - 1) % 12])); return; }
+    if (strcmp(ink_lang_code(), "zh")) { snprintf(out, cap, "%d", l.day); return; } /* other languages: the lunar day's number */
     char name[32];
     ink_lunar_name(&l, name, sizeof name);
     const char *p = strstr(name, "月");
@@ -130,7 +133,8 @@ void cal_begin(lv_obj_t *screen, const char *title) {
     }
     if (!K.y && ink_time_valid()) { ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t); K.y = t.year; K.m = t.month; K.d = t.day; }
     memset(K.fields, 0, sizeof K.fields); memset(K.actions, 0, sizeof K.actions);
-    K.page = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = title, .object = {"calendar", 1}, .fields = K.fields, .actions = K.actions};
+    snprintf(K.title, sizeof K.title, "%s", title); /* the page's own copy: callers pass a local */
+    K.page = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = K.title, .object = {"calendar", 1}, .fields = K.fields, .actions = K.actions};
     K.list = NULL; K.field = NULL;
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, title);
@@ -245,7 +249,7 @@ static void nav(ink_call_t *call) {
     if (!strcmp(id, "calendar.view")) {
         char view[16] = ""; ink_args_get_str(&call->args, "view", view, sizeof view);
         bool agenda = !strcmp(view, "agenda");
-        ink_receipt_t rc; ink_setting_set("calendar.view", agenda, call->src, &rc);
+        ink_receipt_t rc; ink_setting_set("calendar.last_view", agenda, call->src, &rc);
         if (agenda && on_page("Calendar")) { memset(&K.position, 0, sizeof K.position); K.past = false; ink_ui_push(&CAL_AGENDA, NULL); }
         else if (!agenda && on_page("Agenda")) ink_ui_pop();
         else if (!on_page(agenda ? "Agenda" : "Calendar")) call->rc.status = INK_RC_STALE;
@@ -305,7 +309,14 @@ static void nav(ink_call_t *call) {
         return;
     }
     if (!strcmp(id, "calendar.almanac")) { ink_ui_push(&CAL_ALMANAC, NULL); return; }
-    if (!strcmp(id, "calendar.settings")) { K.result[0] = 0; ink_ui_push(&CAL_SETTINGS, NULL); return; }
+    if (!strcmp(id, "calendar.settings")) { /* the page, or one of its two settings changed in place (T1, T2) */
+        const char *ids[] = {"calendar.week_start", "calendar.default_reminder"}, *keys[] = {"week_start", "default_reminder"};
+        bool set = false;
+        for (int i = 0; i < 2; i++) if (ink_args_get_int(&call->args, keys[i], &v)) { ink_setting_set(ids[i], v, call->src, &call->rc); set = true; }
+        if (set && call->rc.status == INK_RC_DONE && on_page("CalendarSettings")) ink_ui_redraw();
+        else if (!set) { K.result[0] = 0; ink_ui_push(&CAL_SETTINGS, NULL); }
+        return;
+    }
     if (!strcmp(id, "calendar.import_pick")) { if (ink_file_picker_open(INK_FS_OTHER, picked, NULL) < 0) call->rc.status = INK_RC_FAILED; return; }
     if (!strcmp(id, "calendar.export_now") || !strcmp(id, "calendar.import_run")) {
         bool import = !strcmp(id, "calendar.import_run");
@@ -333,6 +344,7 @@ static void nav(ink_call_t *call) {
 #define NAV(id_, title_) {.id = id_, .app = "upcoming", .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = nav}
 #define NAV_IN(id_, title_, input_) {.id = id_, .app = "upcoming", .title = title_, .input = input_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = nav}
 #define EDIT(id_, title_, input_) {.id = id_, .app = "clock", .title = title_, .input = input_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cal_edit_cap}
+#define EDIT_UP(id_, title_, input_) {.id = id_, .app = "upcoming", .title = title_, .input = input_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cal_edit_cap}
 #define DATE_ARG "{\"type\":\"object\",\"properties\":{\"date\":{\"type\":\"string\",\"maxLength\":10}}}"
 static const ink_cap_t CAPS[] = {
     NAV("calendar.open", "打开日历（整月，选中今天）"),
@@ -352,7 +364,8 @@ static const ink_cap_t CAPS[] = {
     NAV("calendar.day_prev", "当天页的前一天"),
     NAV("calendar.day_next", "当天页的后一天"),
     NAV("calendar.almanac", "更多老黄历（冲煞、神位、值神、建除）"),
-    NAV("calendar.settings", "日历设置（一周从哪天开始、新建时的提醒、导入导出）"),
+    NAV_IN("calendar.settings", "日历设置（不给参数就打开；week_start 0 周一 1 周日，default_reminder 0 不提醒 1 准时 2 五分钟 3 十分钟 4 半小时 5 一小时 6 一天）",
+           "{\"type\":\"object\",\"properties\":{\"week_start\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1},\"default_reminder\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":6}}}"),
     NAV("calendar.import_pick", "选一个 .ics 文件导入日程"),
     {.id = "calendar.export_now", .app = "upcoming", .title = "导出我的日程（页面上写结果）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = nav},
     {.id = "calendar.import_run", .app = "upcoming", .title = "导入选好的 .ics 文件并显示结果页", .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}},\"required\":[\"path\"]}",
@@ -368,13 +381,13 @@ static const ink_cap_t CAPS[] = {
          "\"minute\":{\"type\":\"integer\"},\"step\":{\"type\":\"string\"},\"delta\":{\"type\":\"integer\"},\"all_day\":{\"type\":\"boolean\"},\"clear_end\":{\"type\":\"boolean\"},"
          "\"repeat\":{\"type\":\"integer\"},\"interval\":{\"type\":\"integer\"},\"weekday\":{\"type\":\"integer\"},\"monthly\":{\"type\":\"integer\"},\"end_kind\":{\"type\":\"integer\"},"
          "\"count\":{\"type\":\"integer\"},\"lead\":{\"type\":\"integer\"},\"remove_lead\":{\"type\":\"integer\"},\"custom\":{\"type\":\"integer\"}}}"),
-    EDIT("reminder.repeat", "编辑页的重复（频率）", NULL),
-    EDIT("reminder.repeat_detail", "编辑页的重复细项（间隔、星期几、每月哪天）", NULL),
-    EDIT("reminder.repeat_end", "编辑页的重复结束（一直、到某天、共几次）", NULL),
-    EDIT("reminder.reminders", "编辑页的提醒列表", NULL),
-    EDIT("reminder.reminder_add", "编辑页加一个提醒（选项）", NULL),
-    EDIT("reminder.back", "离开编辑页（有没保存的改动就问保存不保存）", NULL),
-    EDIT("reminder.discard", "不保存，离开编辑页", NULL),
+    EDIT_UP("calendar.repeat", "编辑页的重复（频率）", NULL),
+    EDIT("calendar.repeat_detail", "编辑页的重复细项（间隔、星期几、每月哪天）", NULL),
+    EDIT("calendar.repeat_end", "编辑页的重复结束（一直、到某天、共几次）", NULL),
+    EDIT_UP("calendar.reminders", "编辑页的提醒列表", NULL),
+    EDIT_UP("calendar.reminder_add", "编辑页加一个提醒（选项）", NULL),
+    EDIT_UP("calendar.edit_back", "离开编辑页（有没保存的改动就问保存不保存）", NULL),
+    EDIT_UP("calendar.edit_discard", "不保存，离开编辑页", NULL),
     {.id = "reminder.save", .app = "clock", .title = "保存编辑中的日程（重复的给 scope：this following all）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cal_edit_cap,
      .input = "{\"type\":\"object\",\"properties\":{\"scope\":{\"type\":\"string\",\"enum\":[\"this\",\"following\",\"all\"]}}}"},
     {.id = "calendar.delete", .app = "upcoming", .title = "删除正在看的日程（重复的给 scope：this following all；能撤销）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cal_edit_cap,
@@ -382,10 +395,6 @@ static const ink_cap_t CAPS[] = {
 };
 static const ink_app_def_t APP = {.id = "upcoming", .title = TR_NOOP("日历"), .icon = INK_UI_ICON(calendar), .entry = &CAL_MONTH, .system_app = true, .child_ok = true};
 
-static void settings_changed(void *ctx, int handle, const char *id) { /* the settings page shows its new values */
-    (void)ctx; (void)handle; (void)id;
-    if (ink_ui_page_current() && on_page("CalendarSettings")) ink_ui_redraw();
-}
 static void changed(void *ctx, int handle, const char *id) { /* the events or the minute moved: the month redraws what changed */
     (void)ctx; (void)handle; (void)id;
     if (!ink_ui_page_current() || !cal_mine()) return;
@@ -395,7 +404,6 @@ static void changed(void *ctx, int handle, const char *id) { /* the events or th
 }
 int cal_init(void) {
     return ink_settings_define(SETTINGS, (int)(sizeof SETTINGS / sizeof *SETTINGS)) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) ||
-                   ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) || ink_state_watch("time.minute", changed, NULL, INK_EXEC_UI) || cal_edit_init() ||
-                   ink_settings_watch("calendar.", settings_changed, NULL, INK_EXEC_UI)
+                   ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) || cal_edit_init() /* two watches, as before: the shared table is nearly full */
                ? -1 : 0;
 }

@@ -40,7 +40,7 @@ typedef struct {
     size_t count;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
-    char query[96], undo[96], undo_note[64], result[160];
+    char query[96], undo[96], undo_note[64], result[160], title[64];
     bool past, searched, undo_valid;
     /* the page's semantics */
     ink_ui_field_spec_t fields[CAL_FIELDS];

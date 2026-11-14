@@ -158,10 +158,10 @@ static const struct {
     {"photo.delete_forever", "path"}, {"gallery.empty_trash", NULL},
     {"calendar.view", "view"}, {"calendar.today", NULL}, {"calendar.goto", ""}, {"calendar.search", "query"}, {"calendar.search_focus", NULL}, /* calendar-3 */
     {"calendar.search_clear", NULL}, {"calendar.earlier", NULL}, {"calendar.day", ""}, {"calendar.day_prev", NULL}, {"calendar.day_next", NULL},
-    {"calendar.almanac", NULL}, {"calendar.settings", NULL}, {"calendar.import_pick", NULL}, {"calendar.export_now", NULL}, {"calendar.export", NULL},
-    {"calendar.import", "path"}, {"calendar.event", "id"}, {"calendar.delete", ""}, {"calendar.undo", NULL}, {"reminder.repeat", NULL},
-    {"reminder.repeat_detail", NULL}, {"reminder.repeat_end", NULL}, {"reminder.reminders", NULL}, {"reminder.reminder_add", NULL},
-    {"reminder.back", NULL}, {"reminder.discard", NULL},
+    {"calendar.almanac", NULL}, {"calendar.settings", ""}, {"calendar.import_pick", NULL}, {"calendar.export_now", NULL}, {"calendar.export", NULL},
+    {"calendar.import", "path"}, {"calendar.event", "id"}, {"calendar.delete", ""}, {"calendar.undo", NULL}, {"calendar.repeat", NULL},
+    {"calendar.repeat_detail", NULL}, {"calendar.repeat_end", NULL}, {"calendar.reminders", NULL}, {"calendar.reminder_add", NULL},
+    {"calendar.edit_back", NULL}, {"calendar.edit_discard", NULL},
     {NULL, NULL},
 };
 
@@ -191,7 +191,7 @@ static const struct {
     {"shell.pin_submit", "only the person submits the local PIN buffer", NULL},
     {"memo.voice", "the memo app's own step: a finished recording or the hub's words, never typed in by the model", ""},
     {"phone.restore", "the inverse of phone.delete: reached only through system.undo (phone-3)", "token"},
-    {"reminder.restore", "the inverse of reminder.cancel: reached only through system.undo (calendar-3)", "token"},
+    {"calendar.restore", "the inverse of reminder.cancel: reached only through system.undo (calendar-3)", "token"},
     {"calendar.import_run", "the file picker's answer on the page; the AI imports a path with calendar.import (calendar-3)", "path"},
     {NULL, NULL, NULL},
 

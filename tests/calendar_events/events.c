@@ -123,7 +123,7 @@ static void editing(void) {
     char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)a.id); call_ok("reminder.open", args);
     expect("提醒"); expect("结束"); expect("2026-11-13"); capture("editor"); /* an all-day end is its last day */
     press("reminder.draft", 0); /* all-day off */
-    press("reminder.reminders", 0); press("reminder.reminder_add", 0); press("reminder.draft", 2); press("shell.back", 0); /* rings at its start */
+    press("calendar.reminders", 0); press("calendar.reminder_add", 0); press("reminder.draft", 2); press("shell.back", 0); /* rings at its start */
     press("reminder.time", 1); CHECK(!strcmp(ink_ui_page_name(), "ReminderTime"), "end uses existing picker");
     press("reminder.draft", 7); /* hour +1 */
     press("shell.back", 0); press("reminder.save", 0);

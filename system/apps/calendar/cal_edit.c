@@ -119,8 +119,8 @@ static void edit_create(lv_obj_t *screen, void *arg) {
     int w = INK_CANVAS_W - 2 * INK_MARGIN, y = TOP;
     lv_obj_t *back = ink_ui_box(screen, INK_MARGIN, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
     lv_obj_set_style_bg_opa(back, LV_OPA_TRANSP, 0);
-    ink_shell_bind(back, "reminder.back", "{}"); /* E14: leaving asks when something is not saved */
-    cal_action(0, "back", TR("返回"), "reminder.back", "{}");
+    ink_shell_bind(back, "calendar.edit_back", "{}"); /* E14: leaving asks when something is not saved */
+    cal_action(0, "back", TR("返回"), "calendar.edit_back", "{}");
     int tw = INK_CANVAS_W / 3;
     ink_shell_bind(ink_ui_toggle(screen, TR("全天"), E.e.all_day, INK_CANVAS_W - INK_MARGIN - tw, INK_STATUS_BAR + INK_GAP_S, tw, NULL, NULL), "reminder.draft", E.e.all_day ? "{\"all_day\":false}" : "{\"all_day\":true}");
     cal_action(1, "all_day", TR("全天"), "reminder.draft", E.e.all_day ? "{\"all_day\":false}" : "{\"all_day\":true}");
@@ -138,7 +138,7 @@ static void edit_create(lv_obj_t *screen, void *arg) {
     end_text(K.texts[2], sizeof K.texts[2]);
     leads_text(K.texts[3], sizeof K.texts[3]);
     draft_to_event(); cal_rule_text(&E.e, K.texts[4], sizeof K.texts[4]);
-    const char *labels[] = {TR("开始"), TR("结束"), TR("提醒"), TR("重复")}, *caps[] = {"reminder.time", "reminder.time", "reminder.reminders", "reminder.repeat"};
+    const char *labels[] = {TR("开始"), TR("结束"), TR("提醒"), TR("重复")}, *caps[] = {"reminder.time", "reminder.time", "calendar.reminders", "calendar.repeat"};
     const char *args[] = {"{}", "{\"end\":true}", "{}", "{}"}, *ids[] = {"start", "end", "reminders", "repeat"};
     for (int i = 0, ry = 0; i < 4; i++, ry += ink_ui_row_double()) {
         static const char *const ICONS[] = {"calendar", "clock", "bell", "rotate"};
@@ -161,7 +161,7 @@ static bool edit_key(ink_key_t key, bool lng) {
     (void)lng;
     if (key != INK_KEY_BACK) return false;
     ink_receipt_t rc;
-    ink_cap_invoke("reminder.back", NULL, INK_SRC_TOUCH, 0, &rc);
+    ink_cap_invoke("calendar.edit_back", NULL, INK_SRC_TOUCH, 0, &rc);
     return true;
 }
 static void edit_destroy(void) { E.name = NULL; footer = body = NULL; memset(row_values, 0, sizeof row_values); }
@@ -270,7 +270,7 @@ static void choices_create(lv_obj_t *screen, void *arg) {
             if (E.start.day == cal_month_days(E.start.year, E.start.month) && E.e.freq == INK_FREQ_MONTHLY) row(TR("最后一天"), "reminder.draft", "{\"monthly\":3}", NULL, E.e.by == INK_BY_LAST_DAY);
         } else if (E.e.freq == INK_FREQ_LUNAR_YEARLY) { cal_rule_text(&E.e, note, sizeof note); }
         cal_rule_text(&E.e, value, sizeof value);
-        row(TR("结束"), "reminder.repeat_end", "{}", E.e.until_year || E.e.count ? value : TR("一直重复"), false);
+        row(TR("结束"), "calendar.repeat_end", "{}", E.e.until_year || E.e.count ? value : TR("一直重复"), false);
         K.rows[K.nrows] = (cal_row_t){.label = TR("好"), .cap = "shell.back", .primary = true}; snprintf(K.rows[K.nrows++].args, sizeof K.rows[0].args, "{}");
         cal_choices(screen, NULL, note, y);
         return;
@@ -293,7 +293,7 @@ static void choices_create(lv_obj_t *screen, void *arg) {
             snprintf(K.texts[8 + i % 3], sizeof K.texts[8], "%s", value);
             row(K.texts[8 + i % 3], "reminder.draft", args, TR("点一下删掉"), false);
         }
-        if (E.e.nleads < INK_EVENT_LEADS) row(TR("加一个提醒"), "reminder.reminder_add", "{}", NULL, false);
+        if (E.e.nleads < INK_EVENT_LEADS) row(TR("加一个提醒"), "calendar.reminder_add", "{}", NULL, false);
         if (!E.e.nleads) snprintf(note, sizeof note, "%s", TR("没有提醒：到时候不响，只在日历里"));
         K.rows[K.nrows] = (cal_row_t){.label = TR("好"), .cap = "shell.back", .primary = true}; snprintf(K.rows[K.nrows++].args, sizeof K.rows[0].args, "{}");
     } else if (!strcmp(name, "ReminderAdd")) { /* E9: Commons' choices for this device, and one made with − and + */
@@ -317,7 +317,7 @@ static void choices_create(lv_obj_t *screen, void *arg) {
     } else { /* Leave (E14) */
         cal_begin(screen, TR("改动还没保存"));
         row(TR("保存"), "reminder.save", "{}", NULL, false);
-        row(TR("不保存"), "reminder.discard", "{}", NULL, false);
+        row(TR("不保存"), "calendar.edit_discard", "{}", NULL, false);
     }
     cal_choices(screen, NULL, note, TOP);
 }
@@ -457,11 +457,11 @@ void cal_edit_cap(ink_call_t *call) {
     if (strcmp(E.owner, ink_member_current()->id) || !editor_page()) { call->rc.status = INK_RC_STALE; return; }
     if (!strcmp(id, "calendar.delete")) { ink_args_get_str(&call->args, "scope", text, sizeof text); delete_now(call, text[0] ? text : NULL); return; }
     if (!strcmp(id, "reminder.save")) { ink_args_get_str(&call->args, "scope", text, sizeof text); save(call, text[0] ? text : NULL); return; }
-    if (!strcmp(id, "reminder.back")) { if (E.dirty && !strcmp(ink_ui_page_name(), "ReminderEdit")) ink_ui_push(&CAL_LEAVE, NULL); else ink_ui_pop(); return; }
-    if (!strcmp(id, "reminder.discard")) { E.dirty = false; leave_editor(); return; }
+    if (!strcmp(id, "calendar.edit_back")) { if (E.dirty && !strcmp(ink_ui_page_name(), "ReminderEdit")) ink_ui_push(&CAL_LEAVE, NULL); else ink_ui_pop(); return; }
+    if (!strcmp(id, "calendar.edit_discard")) { E.dirty = false; leave_editor(); return; }
     if (!strcmp(id, "reminder.focus")) { if (!E.name || ink_textfield_short_focus(E.name)) call->rc.status = INK_RC_STALE; return; }
-    const struct { const char *cap; const ink_activity_t *page; } OPEN[] = {{"reminder.repeat", &CAL_REPEAT}, {"reminder.repeat_detail", &CAL_DETAIL}, {"reminder.repeat_end", &CAL_END},
-                                                                        {"reminder.reminders", &CAL_REMINDERS}, {"reminder.reminder_add", &CAL_REMINDER_ADD}};
+    const struct { const char *cap; const ink_activity_t *page; } OPEN[] = {{"calendar.repeat", &CAL_REPEAT}, {"calendar.repeat_detail", &CAL_DETAIL}, {"calendar.repeat_end", &CAL_END},
+                                                                        {"calendar.reminders", &CAL_REMINDERS}, {"calendar.reminder_add", &CAL_REMINDER_ADD}};
     for (unsigned i = 0; i < sizeof OPEN / sizeof *OPEN; i++) if (!strcmp(id, OPEN[i].cap)) { draft_to_event(); ink_ui_push(OPEN[i].page, NULL); return; }
     if (!strcmp(id, "reminder.time")) {
         bool end = false, until = false;

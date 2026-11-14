@@ -212,13 +212,13 @@ static void editor(void) {
     char args[160]; snprintf(args, sizeof args, "{\"id\":%u,\"occurrence\":\"2026-11-30 10:00\"}", (unsigned)id_of("周会"));
     ok("calendar.event", args); page("EventInfo"); expect("每周的周一，到 12月31日为止"); shot("event-info-weekly");
     press("reminder.open", 0); page("ReminderEdit"); expect("2026-11-30 10:00"); shot("edit");
-    press("reminder.repeat", 0); page("RepeatRule"); shot("repeat");
+    press("calendar.repeat", 0); page("RepeatRule"); shot("repeat");
     ok("reminder.draft", "{\"repeat\":2}"); CHECK(g_rc.status == INK_RC_DONE, "draft %s %s", ink_rc_name(g_rc.status), g_rc.detail); page("RepeatDetail"); shot("repeat-detail");
     ink_probe_mark("c3.step.before"); press("reminder.draft", 1); ink_probe_mark("c3.step.after"); expect("每 2 周");
     press("reminder.draft", 0); expect("每 1 周");
     press("shell.back", 0); page("ReminderEdit");
-    press("reminder.reminders", 0); page("Reminders"); shot("reminders");
-    press("reminder.reminder_add", 0); page("ReminderAdd"); shot("reminder-add");
+    press("calendar.reminders", 0); page("Reminders"); shot("reminders");
+    press("calendar.reminder_add", 0); page("ReminderAdd"); shot("reminder-add");
     press_text("提前 1 天"); page("Reminders"); expect("提前 1 天");
     press("shell.back", 0);
     press("reminder.time", 0); page("ReminderTime"); shot("picker");
@@ -232,10 +232,10 @@ static void editor(void) {
     CHECK(moved, "touch saved this one apart, at 11:00 with two reminders");
     ok("reminder.new", "{\"date\":\"2026-11-25\"}"); page("ReminderEdit");
     press("reminder.save", 0); expect("标题不能空"); shot("edit-error");
-    press("reminder.back", 0); page("Calendar");
+    press("calendar.edit_back", 0); page("Calendar");
     ok("reminder.new", "{\"date\":\"2026-11-25\"}"); press("reminder.draft", 0); /* all day: a change */
-    press("reminder.back", 0); page("Leave"); shot("leave");
-    press("reminder.discard", 0); page("Calendar");
+    press("calendar.edit_back", 0); page("Leave"); shot("leave");
+    press("calendar.edit_discard", 0); page("Calendar");
 }
 
 static void delete_undo(void) {
@@ -261,7 +261,7 @@ static void settings_files(void) {
     char args[160]; snprintf(args, sizeof args, "{\"path\":\"%s\"}", path);
     ok("calendar.import_run", args); delay_ms(3000); quiet();
     page("ImportResult"); expect("已存在"); shot("import-result");
-    press("shell.back", 0); press("settings.set", 0); expect("周日（点一下换成周一）");
+    press("shell.back", 0); press("calendar.settings", 0); expect("周日（点一下换成周一）");
     press("shell.back", 0); page("Calendar"); on_ui(grid); CHECK(cells == 42, "a Sunday-first month is six weeks too");
     ok("settings.set", "{\"id\":\"calendar.week_start\",\"value\":0}");
 }

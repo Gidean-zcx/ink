@@ -242,7 +242,11 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(minute_changed(), 15000), "the real minute timer reaches 06:02"); quiet();
     ink_probe_mark("calendar.minute.after");
     CHECK(ink_ui_generation() == generation, "a minute-only update keeps the Calendar page (delta=%u)", (unsigned)(ink_ui_generation() - generation));
-    on_ui(read_snapshot); CHECK(!strcmp(before, snapshot), "minute-only updates preserve the selected day and items");
+    on_ui(read_snapshot); size_t at = 0; while (before[at] && before[at] == snapshot[at]) at++;
+    char was[64] = "", now[64] = ""; at = at > 24 ? at - 24 : 0; while (at && (before[at] & 0xC0) == 0x80) at--;
+    for (int i = 0; i < 48 && before[at + i]; i++) was[i] = before[at + i]; for (int i = 0; i < 48 && snapshot[at + i]; i++) now[i] = snapshot[at + i];
+    for (char *q = was; *q; q++) if ((unsigned char)*q >= 0x80) *q = '~'; for (char *q = now; *q; q++) if ((unsigned char)*q >= 0x80) *q = '~';
+    CHECK(!strcmp(before, snapshot), "minute-only updates preserve the selected day and items (%s | %s)", was, now);
     visible("06:02"); capture("MinuteAfter");
     form();
     ink_db_flush_all(); CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "fixture writes complete");

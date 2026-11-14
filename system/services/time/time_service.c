@@ -196,10 +196,15 @@ static void publish_minute(void) {
     ink_state_set_int(T.h_minute, tm.hour * 60 + tm.min);
 }
 
+static int64_t ink_time_zone_offset_s(void) { ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t); return (int64_t)t.offset_min * 60; }
 static void minute_cb(void *arg) { /* timer task; also while locked: the lock faces show the time and redraw only what changed */
     (void)arg;
     if (!ink_time_valid()) return;
     publish_minute();
+    static int32_t day; /* calendar-3: a new day is told like a schedule change, so the calendar moves today's mark (one watch, not two) */
+    int32_t today = (int32_t)((osal_wall_us() / 1000000 + ink_time_zone_offset_s()) / 86400);
+    if (day && today != day) ink_state_set_int(T.h_alarms_rev, __atomic_add_fetch(&T.alarms_rev, 1, __ATOMIC_ACQ_REL));
+    day = today;
     int64_t wall = osal_wall_us();
     ink_svc_at(&T.minute_at, osal_now_us() + (uint64_t)(60000000 - wall % 60000000), minute_cb, NULL);
 }

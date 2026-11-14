@@ -350,7 +350,7 @@ static void cap_reminder_cancel(ink_call_t *c) {
     if (undo) {
         ink_args_init(undo);
         ink_args_int(undo, "token", token);
-        ink_cap_undoable(c, "reminder.restore", undo, UNDO_MS);
+        ink_cap_undoable(c, "calendar.restore", undo, UNDO_MS);
     }
     osal_free(undo);
 }
@@ -668,7 +668,7 @@ static const ink_cap_t TIME_CAPS[] = {
      .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_event_list},
     {.id = "reminder.cancel", .app = "clock", .title = "删提醒或日程（重复的必须给 scope：this 只删这一次、following 删掉这次和以后、all 全部删掉，this 和 following 还要 occurrence）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_reminder_cancel,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}," SCOPE_FIELDS "},\"required\":[\"id\"]}"},
-    {.id = "reminder.restore", .app = "clock", .title = "恢复刚删掉的日程（撤销用）", .input = "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\"}},\"required\":[\"token\"]}",
+    {.id = "calendar.restore", .app = "upcoming", .title = "恢复刚删掉的日程（撤销用）", .input = "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\"}},\"required\":[\"token\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_DIRECT, .run = cap_reminder_restore},
     {.id = "calendar.export", .app = "upcoming", .title = "把我的日程导出成 .ics 文件（到我的空间，含过去的）", .output = "{\"type\":\"object\"}", .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true, .timeout_ms = 30000, .exec = INK_EXEC_BG, .run = cap_export},

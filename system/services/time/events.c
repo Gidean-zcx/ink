@@ -26,7 +26,7 @@
 static const ink_db_def_t EVENTS_DB = {.name = "time.events", .title = "日程", .scope = INK_DB_DEVICE, .schema = 1};
 
 static struct {
-    ink_db_t *db;
+    ink_db_t *db; /* held open, as the alarms' collection is */
     ink_event_t e[INK_EVENT_MAX];
     uint32_t rev[INK_EVENT_MAX], next_rev;
     int64_t due[INK_EVENT_MAX], due_start[INK_EVENT_MAX];
@@ -209,6 +209,7 @@ static int store(const ink_event_t *e) {
     ink_db_write_t w = {.id = e->id, .sort = e->at_utc ? e->at_utc : first_day(e) * 86400LL, .data = e, .len = sizeof *e, .src = e->src};
     return E.db && ink_db_put(E.db, &w, NULL) == INK_DB_OK ? 0 : INK_EVENT_STORAGE;
 }
+static int unstore(uint32_t id, uint8_t src) { return E.db && ink_db_del(E.db, id, src) == INK_DB_OK ? 0 : INK_EVENT_STORAGE; }
 /* Into the table (replacing the same id), planned from now. Under the lock. */
 static uint32_t put(const ink_event_t *e) {
     int i = find(e->id);
@@ -334,7 +335,7 @@ static int rewrite(ink_event_t *e) {
     return 0;
 }
 static int erase(uint32_t id, uint8_t src) {
-    if (ink_db_del(E.db, id, src) != INK_DB_OK) return INK_EVENT_STORAGE;
+    if (unstore(id, src)) return INK_EVENT_STORAGE;
     ink_svc_lock();
     int i = find(id);
     if (i >= 0) remove_at(i);
@@ -489,18 +490,23 @@ static void project(const ink_event_t *e, ink_alarm_t *a, int64_t now) {
     a->silent = !e->nleads; a->all_day = e->all_day; a->duration_s = e->duration_s;
 }
 
+/* Worked out in place under the lock: no 400-byte copy on the caller's stack (the readers run on small executors). */
 int time_events_project(int *cursor, ink_alarm_t *out, const char *member) {
-    ink_event_t e;
-    int hit = ink_time_event_next_for(cursor, &e, member);
-    if (hit == 1) project(&e, out, ink_time_now_s());
+    int hit = 0;
+    int64_t now = ink_time_now_s();
+    ink_svc_lock();
+    for (int i = *cursor; i < E.n && !hit; i++)
+        if (!strcmp(E.e[i].owner, member)) { project(&E.e[i], out, now); *cursor = i + 1; hit = 1; }
+    ink_svc_unlock();
     return hit;
 }
 
 bool time_events_occurrence(uint32_t id, int64_t from, int64_t *out) {
-    ink_event_t e;
-    if (get_unlocked(id, &e, NULL)) return false;
-    *out = ink_event_occurrence(&e, from);
-    return true;
+    ink_svc_lock();
+    int i = find(id);
+    if (i >= 0) *out = ink_event_occurrence(&E.e[i], from);
+    ink_svc_unlock();
+    return i >= 0;
 }
 
 /* An ink_alarm_t reminder as an event: the same time, repeat, ring, all-day and end. */
@@ -561,14 +567,14 @@ bool time_events_adopt(const ink_alarm_t *legacy) {
 /* ------------------------------------------------------------ the service's side */
 
 int time_events_open(void) {
-    E.db = ink_db_open(&EVENTS_DB, NULL);
-    if (!E.db) { ink_probe_count("time.events_unavailable"); return -1; }
+    ink_db_t *db = E.db = ink_db_open(&EVENTS_DB, NULL);
+    if (!db) { ink_probe_count("time.events_unavailable"); return -1; }
     ink_db_cursor_t cur = {0};
     ink_rec_t r;
     while (E.n < INK_EVENT_MAX) {
         ink_event_t *e = &E.e[E.n];
         memset(e, 0, sizeof *e);
-        if (ink_db_next(E.db, &cur, &r, e, sizeof *e) != 1) break;
+        if (ink_db_next(db, &cur, &r, e, sizeof *e) != 1) break;
         if (r.len != sizeof *e || e->id != r.id) { ink_probe_count("time.event_record_skipped"); continue; }
         changed(E.n++);
     }
@@ -645,7 +651,7 @@ void time_events_due(int64_t now) {
         }
         ink_svc_unlock();
         if (!hit) return;
-        if (gone) { if (E.db) ink_db_del(E.db, e.id, e.src); }
+        if (gone) unstore(e.id, e.src);
         else if (store(&e)) ink_probe_count("time.save_failed");
         if (lead == NO_LEAD) continue;
         ink_probe_value("time.reminder_late_ms", (double)(osal_wall_us() - due * 1000000) / 1000.0);

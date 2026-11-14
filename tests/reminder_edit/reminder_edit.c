@@ -99,7 +99,7 @@ static void not_ringing(int day, int hour) {
  * 编辑 opens the editor, the repeat is a page of rows, a repeating one asks which occurrences, the list is the agenda. */
 static void agenda(void) { call_ok("calendar.view", "{\"view\":\"agenda\"}"); CHECK(!strcmp(ink_ui_page_name(), "Agenda"), "the agenda lists what comes"); }
 static void edit(const char *row) { label(row); CHECK(!strcmp(ink_ui_page_name(), "EventInfo"), "a row opens the read-only details"); button("reminder.open"); }
-static void repeat(const char *word) { button("reminder.repeat"); label(word); if (strcmp(ink_ui_page_name(), "ReminderEdit")) button("shell.back"); }
+static void repeat(const char *word) { button("calendar.repeat"); label(word); if (strcmp(ink_ui_page_name(), "ReminderEdit")) button("shell.back"); }
 static void manual_cycle(void) {
     /* calendar-3: new events get the member's default reminder (10 minutes before); these checks ring at the start */
     call_ok("settings.set", "{\"id\":\"calendar.default_reminder\",\"value\":1}");
