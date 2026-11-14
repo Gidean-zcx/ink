@@ -4,6 +4,7 @@
  * repeats and up to three reminders, the three scopes, iCalendar files. Events live in the time service (time.h).
  */
 /* ui-scale-runtime: dimension x,y,w Theme-derived control geometry. */
+#include <stdarg.h>
 #include <stdlib.h>
 #include "cal.h"
 #include "ink/sys/appreg.h"
@@ -68,11 +69,12 @@ void cal_lunar_full(int y, int m, int d, char *out, size_t cap) {
 }
 
 void cal_lead_text(int32_t lead, bool all_day, char *out, size_t cap) {
-    if (all_day && lead <= 0) snprintf(out, cap, TR("当天 %02d:%02d"), -lead / 60, -lead % 60);
-    else if (!lead) snprintf(out, cap, "%s", TR("准时"));
-    else if (lead % 1440 == 0) snprintf(out, cap, TR("提前 %d 天"), lead / 1440);
-    else if (lead % 60 == 0) snprintf(out, cap, TR("提前 %d 小时"), lead / 60);
-    else snprintf(out, cap, TR("提前 %d 分钟"), lead);
+    int v = (int)lead;
+    if (all_day && v <= 0) snprintf(out, cap, TR("当天 %02d:%02d"), -v / 60, -v % 60);
+    else if (!v) snprintf(out, cap, "%s", TR("准时"));
+    else if (v % 1440 == 0) snprintf(out, cap, TR("提前 %d 天"), v / 1440);
+    else if (v % 60 == 0) snprintf(out, cap, TR("提前 %d 小时"), v / 60);
+    else snprintf(out, cap, TR("提前 %d 分钟"), v);
 }
 
 /* "每 2 周的周一、周三，到 12月31日为止" (after Etar's EventRecurrenceFormatter). */
@@ -122,6 +124,15 @@ void cal_utf8_trim(char *s) {
     if (!k || ((unsigned char)s[k - 1] & 0xC0) != 0xC0) return;
     unsigned char b = (unsigned char)s[k - 1];
     if (n - (k - 1) < (size_t)(b >= 0xF0 ? 4 : b >= 0xE0 ? 3 : 2)) s[k - 1] = 0;
+}
+
+/* snprintf for page text: a cut at the end of the buffer never leaves half a character (gcc cannot see the sizes here). */
+void cal_fmt(char *out, size_t cap, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(out, cap, fmt, ap);
+    va_end(ap);
+    cal_utf8_trim(out);
 }
 
 bool cal_mine(void) { return !strcmp(K.member, ink_member_current()->id); }

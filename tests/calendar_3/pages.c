@@ -31,7 +31,7 @@ static void ok(const char *cap, const char *args) {
 }
 static void ai(const char *cap, const char *args) { CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "AI %s (%s): %.80s", cap, ink_rc_name(g_rc.status), g_rc.detail); quiet(); delay_ms(200); }
 static void read_snapshot(void) { CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "the page snapshot fits"); }
-static void expect(const char *text) { on_ui(read_snapshot); CHECK(strstr(snapshot, text) != NULL, "page says %s (%s): %.200s", text, ink_ui_page_name(), snapshot); }
+static void expect(const char *text) { on_ui(read_snapshot); CHECK(strstr(snapshot, text) != NULL, "page says %.40s (%.16s): %.120s", text, ink_ui_page_name(), snapshot); }
 static void absent(const char *text) { on_ui(read_snapshot); CHECK(!strstr(snapshot, text), "page does not say %s", text); }
 static void page(const char *name) { CHECK(!strcmp(ink_ui_page_name(), name), "on %s (%s)", name, ink_ui_page_name()); }
 static void locate(lv_obj_t *root) {

@@ -125,7 +125,7 @@ static void vevent(out_t *o, const ink_event_t *e, ink_event_t *all, int count) 
         line(o, "BEGIN:VALARM");
         line(o, "ACTION:DISPLAY");
         snprintf(text, sizeof text, "DESCRIPTION:%s", title); line(o, text);
-        snprintf(text, sizeof text, "TRIGGER:%sPT%dM", lead > 0 ? "-" : "", lead > 0 ? lead : -lead);
+        snprintf(text, sizeof text, "TRIGGER:%sPT%dM", lead > 0 ? "-" : "", (int)(lead > 0 ? lead : -lead));
         line(o, text);
         line(o, "END:VALARM");
     }

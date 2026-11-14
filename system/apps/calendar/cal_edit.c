@@ -80,7 +80,7 @@ static void info_create(lv_obj_t *screen, void *arg) {
     for (int i = 1; i <= 4; i++) {
         if (!K.texts[i][0]) continue;
         char line[224]; snprintf(line, sizeof line, "%s：%s", labels[i - 1], K.texts[i]);
-        snprintf(K.texts[4 + i], sizeof K.texts[4 + i], "%s", line);
+        cal_fmt(K.texts[4 + i], sizeof K.texts[4 + i], "%s", line);
         ink_ui_label(screen, K.texts[4 + i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
         y += ink_ui_text_height(K.texts[4 + i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_XS;
         cal_field(i, ids[i - 1], "text", labels[i - 1], K.texts[i]);

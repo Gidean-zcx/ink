@@ -76,6 +76,7 @@ int cal_wday(int32_t day);
 int cal_month_days(int y, int m);
 bool cal_mine(void);
 void cal_utf8_trim(char *s);
+void cal_fmt(char *out, size_t cap, const char *fmt, ...);
 void cal_begin(lv_obj_t *screen, const char *title);
 ink_ui_field_spec_t *cal_field(int hint, const char *id, const char *role, const char *label, const char *value);
 ink_ui_action_spec_t *cal_action(int hint, const char *id, const char *label, const char *cap, const char *args);

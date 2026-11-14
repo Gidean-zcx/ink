@@ -103,9 +103,9 @@ static void fill_block(void) {
     ink_almanac_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     const char *why = NULL;
     if (a && cal_almanac(K.y, K.m, K.d, a, &why)) {
-        char words[96]; snprintf(words, sizeof words, "%s", a->yi);
+        char words[96]; cal_fmt(words, sizeof words, "%s", a->yi);
         int spaces = 0; for (char *p = words; *p; p++) if (*p == ' ' && ++spaces == 2) *p = 0;
-        if (words[0]) snprintf(yi, sizeof yi, " · %s %s", TR("宜"), words);
+        if (words[0]) cal_fmt(yi, sizeof yi, " · %s %s", TR("宜"), words);
     }
     osal_free(a);
     snprintf(K.texts[1], sizeof K.texts[1], TR("%d月%d日 %s · %s%s"), K.m, K.d, cal_weekday_name(cal_wday(cal_day(K.y, K.m, K.d))), lunar, yi);

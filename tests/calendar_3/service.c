@@ -50,11 +50,11 @@ static int occurrences(const char *title, int64_t from, int64_t until) {
 /* Every occurrence in [from, until) as sorted text lines: title, start, length, reminders, rule, edited. */
 static int line_cmp(const void *a, const void *b) { return strcmp(*(char *const *)a, *(char *const *)b); }
 static void dump(char *out, size_t cap, int64_t from, int64_t until) {
-    static char lines[400][160]; static char *order[400];
+    static char lines[400][256]; static char *order[400];
     ink_event_t e; int cursor = 0, n = 0;
     while (ink_event_next(&cursor, &e) == 1)
         for (int64_t t = ink_event_occurrence(&e, from); t && t < until && n < 400; t = ink_event_occurrence(&e, t + (e.duration_s > 0 ? e.duration_s : 1))) {
-            snprintf(lines[n], sizeof lines[n], "%s|%lld|%lld|%d:%d,%d,%d|%d/%d/%d-%02d-%02d/%d|%d|%d", e.title, (long long)t, (long long)e.duration_s, e.nleads, e.leads[0], e.leads[1], e.leads[2],
+            snprintf(lines[n], sizeof lines[n], "%s|%lld|%lld|%d:%d,%d,%d|%d/%d/%d-%02d-%02d/%d|%d|%d", e.title, (long long)t, (long long)e.duration_s, e.nleads, (int)e.leads[0], (int)e.leads[1], (int)e.leads[2],
                      e.freq, e.interval, e.until_year, e.until_month, e.until_day, e.count, e.parent != 0, e.all_day);
             order[n] = lines[n]; n++;
         }
@@ -98,7 +98,7 @@ static void this_one(void) {
     ok("reminder.update", args);
     ok("calendar.list", "{\"from\":\"2026-11-23\",\"until\":\"2026-11-25\"}");
     CHECK(!strstr(g_result, "2026-11-23 10:00\",\"repeat") && strstr(g_result, "\"at\":\"2026-11-24 15:00") && strstr(g_result, "\"edited\":true") &&
-          strstr(g_result, "\"occurrence\":\"2026-11-23 10:00\""), "11-23 moved to 11-24 15:00 and says where it came from: %.300s", g_result);
+          strstr(g_result, "\"occurrence\":\"2026-11-23 10:00\""), "11-23 moved to 11-24 15:00 and says where it came from: %.150s", g_result);
     CHECK(listed("2026-11-30", "2026-12-01", "2026-11-30 10:00") && listed("2026-11-16", "2026-11-17", "2026-11-16 10:00"), "the other Mondays stay");
 }
 static void delete_one(void) {
@@ -108,7 +108,7 @@ static void delete_one(void) {
     snprintf(args, sizeof args, "{\"id\":%u,\"scope\":\"this\",\"occurrence\":\"2026-11-30 10:00\"}", (unsigned)id);
     ok("reminder.cancel", args);
     CHECK(g_rc.undo_ms > 0, "the delete can be undone");
-    snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, g_rc.revision);
+    snprintf(undo, sizeof undo, "{\"object\":\"%.48s\",\"revision\":%u}", g_rc.object, (unsigned)g_rc.revision);
     CHECK(!listed("2026-11-30", "2026-12-01", "周会"), "calendar.list has no 11-30");
     CHECK(projected(id, at(2026, 11, 30, 0, 0)) == at(2026, 12, 7, 10, 0), "the lock screen and do-not-disturb skip it");
     ok("system.undo", undo);
@@ -180,7 +180,7 @@ static void ics(void) {
     dump(after, sizeof after, at(2026, 1, 1, 0, 0), at(2028, 12, 31, 0, 0));
     size_t k = 0; while (before[k] && before[k] == after[k]) k++;
     while (k && before[k - 1] != '\n') k--;
-    CHECK(before[0] && !strcmp(before, after), "every occurrence back as before (moved and deleted Mondays, reminders, ends, lunar): before %.110s after %.110s", before + k, after + k);
+    CHECK(before[0] && !strcmp(before, after), "every occurrence back as before (moved and deleted Mondays, reminders, ends, lunar): before %.60s after %.60s", before + k, after + k);
     CHECK(strstr(after, "妈妈生日") && strstr(after, "|1|0\n") && occurrences("周会", at(2026, 11, 30, 0, 0), at(2026, 12, 1, 0, 0)) == 0, "the edit and the deletion are still there");
     ok("calendar.import", args);
     CHECK(strstr(g_result, "\"imported\":0") && !strstr(g_result, "\"existing\":0"), "again: already there: %.150s", g_result);

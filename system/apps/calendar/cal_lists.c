@@ -52,7 +52,7 @@ static void with_headings(const cal_item_t *in, int n) {
         if (last_month >= 0 && y * 12 + m != last_month) snprintf(month, sizeof month, TR("%d年%d月 · "), y, m);
         snprintf(note, sizeof note, "%s", it->note);
         snprintf(date, sizeof date, TR("%d月%d日 %s"), m, d, cal_weekday_name(cal_wday(day)));
-        snprintf(it->note, sizeof it->note, "%s%s%s%s%.60s", month, day == today ? TR("今天 · ") : day == today + 1 ? TR("明天 · ") : "", date, note[0] ? " · " : "", note);
+        cal_fmt(it->note, sizeof it->note, "%s%s%s%s%s", month, day == today ? TR("今天 · ") : day == today + 1 ? TR("明天 · ") : "", date, note[0] ? " · " : "", note);
         cal_utf8_trim(it->note);
         last = day; last_month = y * 12 + m;
     }
@@ -98,7 +98,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     lv_obj_set_style_text_font(title, ink_ui_font_px(it->kind ? INK_FONT_LIST : INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
     ink_tm_t t; ink_time_to_local(it->at, &t);
     snprintf(K.slot_ids[s], sizeof K.slot_ids[s], it->kind == 2 ? "alarm:%u" : it->kind ? "reminder:%u" : "day:%u", it->kind ? (unsigned)it->id : (unsigned)index);
-    snprintf(K.slot_text[s][0], sizeof K.slot_text[s][0], "%s%s%s", it->text, it->note[0] ? " · " : "", it->note);
+    cal_fmt(K.slot_text[s][0], sizeof K.slot_text[s][0], "%s%s%s", it->text, it->note[0] ? " · " : "", it->note);
     if (it->kind == 2) snprintf(K.slot_args[s], sizeof K.slot_args[s], "{}");
     else snprintf(K.slot_args[s], sizeof K.slot_args[s], "{\"id\":%u,\"occurrence\":\"%04d-%02d-%02d %02d:%02d\"}", (unsigned)it->id, t.year, t.month, t.day, t.hour, t.min);
     *field = (ink_ui_field_spec_t){.id = K.slot_ids[s], .role = it->kind ? "listitem" : "heading", .label = it->kind ? TR("日程") : TR("日期"), .value = K.slot_text[s][0], .object = {K.slot_ids[s], 1}};
@@ -200,7 +200,7 @@ static void day_create(lv_obj_t *screen, void *arg) {
     else snprintf(line, sizeof line, TR("农历%s · %s年%s%s"), lunar, gz, term ? " · " : "", term ? term : "");
     text_lines(screen, &y, 0, "lunar", TR("农历"), line, false);
     if (have) {
-        snprintf(line, sizeof line, "%s %s", TR("宜"), a->yi); text_lines(screen, &y, 1, "yi", TR("宜"), line, false);
+        cal_fmt(line, sizeof line, "%s %s", TR("宜"), a->yi); text_lines(screen, &y, 1, "yi", TR("宜"), line, false);
         snprintf(line, sizeof line, "%s %s", TR("忌"), a->ji); text_lines(screen, &y, 2, "ji", TR("忌"), line, false);
     } else text_lines(screen, &y, 1, "almanac", TR("老黄历"), why ? why : TR("这天的老黄历查不到"), true); /* D6, D7: the rest stays */
     osal_free(a);
@@ -235,7 +235,7 @@ static void almanac_create(lv_obj_t *screen, void *arg) {
         snprintf(line, sizeof line, "%s %s", TR("凶煞宜忌"), a->inauspicious); text_lines(screen, &y, 3, "inauspicious", TR("凶煞宜忌"), line, false);
         snprintf(line, sizeof line, TR("值神 %s（%s）"), a->guardian, a->guardian_type); text_lines(screen, &y, 4, "guardian", TR("值神"), line, false);
         snprintf(line, sizeof line, TR("建除 %s日"), a->officer); text_lines(screen, &y, 5, "officer", TR("建除"), line, false);
-        snprintf(line, sizeof line, "%s %s", TR("宜"), a->yi); text_lines(screen, &y, 6, "yi", TR("宜"), line, false);
+        cal_fmt(line, sizeof line, "%s %s", TR("宜"), a->yi); text_lines(screen, &y, 6, "yi", TR("宜"), line, false);
         snprintf(line, sizeof line, "%s %s", TR("忌"), a->ji); text_lines(screen, &y, 7, "ji", TR("忌"), line, false);
     }
     osal_free(a);
@@ -279,7 +279,7 @@ static void settings_create(lv_obj_t *screen, void *arg) { /* T1, T2 and the fil
     snprintf(r->args, sizeof r->args, "{\"default_reminder\":%d}", (int)((lead + 1) % 7));
     { /* P11: children too, within their own space and what the picker lets them read */
         r = &K.rows[K.nrows++]; *r = (cal_row_t){.label = TR("导出日程（.ics）"), .cap = "calendar.export_now", .icon = "upload"}; snprintf(r->args, sizeof r->args, "{}");
-        snprintf(r->value, sizeof r->value, "%s", K.result[0] ? K.result : TR("写到我的空间，含过去的"));
+        cal_fmt(r->value, sizeof r->value, "%s", K.result[0] ? K.result : TR("写到我的空间，含过去的"));
         r = &K.rows[K.nrows++]; *r = (cal_row_t){.label = TR("导入日程（.ics）"), .cap = "calendar.import_pick", .icon = "download"}; snprintf(r->args, sizeof r->args, "{}");
         snprintf(r->value, sizeof r->value, "%s", TR("从文件里选"));
     }

@@ -244,8 +244,10 @@ static void run(void *arg) {
     CHECK(ink_ui_generation() == generation, "a minute-only update keeps the Calendar page (delta=%u)", (unsigned)(ink_ui_generation() - generation));
     on_ui(read_snapshot); size_t at = 0; while (before[at] && before[at] == snapshot[at]) at++;
     char was[64] = "", now[64] = ""; at = at > 24 ? at - 24 : 0; while (at && (before[at] & 0xC0) == 0x80) at--;
-    for (int i = 0; i < 48 && before[at + i]; i++) was[i] = before[at + i]; for (int i = 0; i < 48 && snapshot[at + i]; i++) now[i] = snapshot[at + i];
-    for (char *q = was; *q; q++) if ((unsigned char)*q >= 0x80) *q = '~'; for (char *q = now; *q; q++) if ((unsigned char)*q >= 0x80) *q = '~';
+    for (int i = 0; i < 48 && before[at + i]; i++) was[i] = before[at + i];
+    for (int i = 0; i < 48 && snapshot[at + i]; i++) now[i] = snapshot[at + i];
+    for (char *q = was; *q; q++) if ((unsigned char)*q >= 0x80) *q = '~';
+    for (char *q = now; *q; q++) if ((unsigned char)*q >= 0x80) *q = '~';
     CHECK(!strcmp(before, snapshot), "minute-only updates preserve the selected day and items (%s | %s)", was, now);
     visible("06:02"); capture("MinuteAfter");
     form();

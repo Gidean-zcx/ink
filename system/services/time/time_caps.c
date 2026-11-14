@@ -384,7 +384,7 @@ static void event_json(ink_jw_t *w, const ink_event_t *e, int64_t at, bool first
     if (e->parent) {
         int y, m, d;
         time_civil_from_days(e->orig_day, &y, &m, &d);
-        snprintf(orig, sizeof orig, "%04d-%02d-%02d %02d:%02d", y, m, d, e->orig_min / 60 % 24, e->orig_min % 60);
+        snprintf(orig, sizeof orig, "%04d-%02d-%02d %02d:%02d", y, m, d, (int)(e->orig_min / 60 % 24), (int)(e->orig_min % 60));
     } else snprintf(orig, sizeof orig, "%.16s", next);
     static const int REPEATS[] = {INK_REPEAT_NONE, INK_REPEAT_WEEKDAYS, INK_REPEAT_WEEKDAYS, INK_REPEAT_MONTHLY, INK_REPEAT_YEARLY, INK_REPEAT_LUNAR_YEARLY};
     ink_jw_raw(w, first ? "{\"id\":" : ",{\"id\":"); ink_jw_int(w, e->id);
