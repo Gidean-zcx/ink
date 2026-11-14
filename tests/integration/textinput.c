@@ -601,7 +601,7 @@ static void keyboard(void) {
     look();
     CHECK(!strcmp(g_val, "好中"), "(%s)", g_val);
     /* symbols, and back */
-    CHECK(press("符号") && press("1") && press("字母") && press("q"), "another page of keys");
+    CHECK(press("符号") && press("123") && press("1") && press("字母") && press("q"), "another page of keys"); /* digits: the 123 panel */
     look();
     CHECK(!strcmp(g_val, "好中1") && !strcmp(g_comp, "q"), "(%s, %s)", g_val, g_comp);
     CHECK(press("删除") && press("发送"), "the enter key says what it does");

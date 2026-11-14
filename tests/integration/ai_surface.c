@@ -159,6 +159,7 @@ static const struct {
     {"photo.delete_forever", "path"}, {"gallery.empty_trash", NULL},
     {"keyboard.page", "direction"}, {"keyboard.panel", "panel"}, {"keyboard.category", "category"},
     {"keyboard.symbol_page", "direction"}, {"keyboard.symbol", "text"}, {"keyboard.alternates", "code"},
+    {"keyboard.reading", "text"}, {"keyboard.readings_more", NULL}, /* keyboard-2 */
     {NULL, NULL},
 };
 

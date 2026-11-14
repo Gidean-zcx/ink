@@ -1,8 +1,8 @@
-/* Locate native keyboard buttons without pretending they are child labels. */
+/* Locate native keyboard buttons without pretending they are child labels; only what is visible is found. */
 #ifndef INK_TEST_KEYBOARD_MATRIX_H
 #define INK_TEST_KEYBOARD_MATRIX_H
-#include "ink/sys/cap.h"
-#include "ink/sys/textinput.h"
+#include <stdio.h>
+#include "ink/sys/i18n.h"
 #include "src/widgets/buttonmatrix/lv_buttonmatrix_private.h"
 static lv_obj_t *ink_test_matrix(lv_obj_t *root) {
     if (lv_obj_check_type(root, &lv_keyboard_class)) return root;
@@ -12,49 +12,28 @@ static lv_obj_t *ink_test_matrix(lv_obj_t *root) {
     }
     return NULL;
 }
-static bool ink_test_keyboard_label(lv_obj_t *root, const char *label, lv_area_t *area) {
-    if (!lv_obj_is_visible(root)) return false;
-    if (lv_obj_check_type(root, &lv_label_class) && !strcmp(lv_label_get_text(root), label)) {
-        lv_obj_get_coords(lv_obj_get_parent(root), area);
-        return true;
+/* A visible keyboard button carrying this label (symbol cells, tabs, page buttons, readings, candidates). */
+static lv_obj_t *ink_test_keyboard_label(lv_obj_t *root, const char *text, bool underlined) {
+    if (!lv_obj_is_visible(root)) return NULL;
+    if (lv_obj_check_type(root, &lv_label_class) && (text ? !strcmp(lv_label_get_text(root), text) :
+        underlined && lv_obj_get_style_text_decor(root, 0) == LV_TEXT_DECOR_UNDERLINE)) return lv_obj_get_parent(root);
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) { /* the last one: the page row comes after the symbols */
+        lv_obj_t *found = ink_test_keyboard_label(lv_obj_get_child(root, (int32_t)(lv_obj_get_child_count(root) - 1 - i)), text, underlined);
+        if (found) return found;
     }
-    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++)
-        if (ink_test_keyboard_label(lv_obj_get_child(root, (int32_t)i), label, area)) return true;
-    return false;
+    return NULL;
 }
 static bool ink_test_matrix_key(lv_obj_t *root, const char *text, lv_area_t *area) {
     lv_obj_t *board = ink_test_matrix(root);
-    if (board && !strcmp(text, "更多")) return ink_test_keyboard_label(root, "▾", area);
-    if (board && !strcmp(text, "字母")) {
-        if (ink_test_keyboard_label(root, "26", area)) return true;
-        text = "26";
-    }
-    if (root == lv_layer_sys() && board && lv_obj_is_visible(board) && text[0] && !text[1] &&
-        !strcmp(lv_keyboard_get_button_text(board, 0), "+") && !strcmp(lv_keyboard_get_button_text(board, 1), "1") &&
-        (ink_text_type() == INK_TEXT_URL || ink_text_type() == INK_TEXT_PLAIN) &&
-        strchr("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~", text[0])) {
-        ink_receipt_t rc;
-        if (ink_cap_invoke_json("keyboard.panel", "{\"panel\":\"symbols\"}", INK_SRC_TOUCH, 0, &rc) != INK_RC_DONE) return false;
-        lv_obj_update_layout(root);
-        return ink_test_matrix_key(root, text, area);
-    }
-    lv_area_t navigation;
-    if (board && !lv_obj_is_visible(board) && text[0] && !text[1] &&
-        ink_test_keyboard_label(root, "123", &navigation)) {
-        /* ASCII symbols now live on the English tab's explicit pages. */
-        ink_receipt_t rc;
-        if (text[0] >= '0' && text[0] <= '9') {
-            if (ink_cap_invoke_json("keyboard.panel", "{\"panel\":\"number\"}", INK_SRC_TOUCH, 0, &rc) != INK_RC_DONE) return false;
-            lv_obj_update_layout(root);
-            return ink_test_matrix_key(root, text, area);
+    /* two keys were renamed by keyboard-2: 更多 is the ▾ beside the candidates, 字母 is 26 on the panels */
+    if (!strcmp(text, "更多")) text = "▾";
+    else if (!strcmp(text, "字母") && !ink_test_keyboard_label(lv_layer_sys(), "字母", false)) text = "26";
+    if (board && root == lv_layer_sys()) { /* the keyboard's own buttons */
+        lv_obj_t *button = ink_test_keyboard_label(root, text, false);
+        if (button && !lv_obj_check_type(lv_obj_get_parent(button), &lv_keyboard_class) && lv_obj_check_type(button, &lv_button_class)) {
+            lv_obj_get_coords(button, area);
+            return true;
         }
-        if (ink_cap_invoke_json("keyboard.category", "{\"category\":2}", INK_SRC_TOUCH, 0, &rc) != INK_RC_DONE) return false;
-        for (int page = 0; page < 4; page++) {
-            lv_obj_update_layout(root);
-            if (ink_test_keyboard_label(root, text, area)) return true;
-            if (ink_cap_invoke_json("keyboard.symbol_page", "{\"direction\":1}", INK_SRC_TOUCH, 0, &rc) != INK_RC_DONE) break;
-        }
-        return false;
     }
     if (!board || !lv_obj_is_visible(board)) return false;
     lv_buttonmatrix_t *matrix = (lv_buttonmatrix_t *)board;
@@ -71,5 +50,33 @@ static bool ink_test_matrix_key(lv_obj_t *root, const char *text, lv_area_t *are
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++)
         if (ink_test_matrix_key(lv_obj_get_child(root, (int32_t)i), text, area)) return true;
     return false;
+}
+/* A symbol on the symbol panel, found the way a person finds it: 1 = it is at `area`; 0 = tap `area` first and ask
+ * again (earlier pages of this tab, then later ones, then the next tab); -1 = not on the panel. UI task; the caller
+ * taps with a real touch. */
+static int ink_test_keyboard_symbol(const char *text, lv_area_t *area) {
+    static const char *const TABS[] = {"最近", "中文", "英文", "数学", "单位", "图形", "序号"};
+    static char looking[16];
+    static int backward;
+    if (strcmp(looking, text)) { snprintf(looking, sizeof looking, "%s", text); backward = 1; }
+    lv_obj_update_layout(lv_layer_sys());
+    if (ink_test_matrix_key(lv_layer_sys(), text, area)) return 1;
+    lv_obj_t *open = ink_test_keyboard_label(lv_layer_sys(), NULL, true), *next = NULL;
+    if (!open) return -1;
+    int page = 0, pages = 0;
+    for (int p = 1; p < 40 && !pages; p++) for (int n = p; n < 40 && !pages; n++) {
+        char label[16]; snprintf(label, sizeof label, "%d/%d", p, n);
+        if (ink_test_keyboard_label(lv_layer_sys(), label, false)) { page = p; pages = n; }
+    }
+    if (backward && page > 1) next = ink_test_keyboard_label(lv_layer_sys(), "◀", false);
+    else if ((backward = 0), page < pages) next = ink_test_keyboard_label(lv_layer_sys(), "▶", false);
+    else {
+        int at = -1;
+        for (int i = 0; i < 7; i++) if (!strcmp(lv_label_get_text(lv_obj_get_child(open, 0)), TR(TABS[i]))) at = i;
+        for (int i = 1; at >= 0 && i < 7 && !next; i++) next = ink_test_keyboard_label(lv_layer_sys(), TR(TABS[(at + i) % 7]), false);
+    }
+    if (!next) return -1;
+    lv_obj_get_coords(next, area);
+    return 0;
 }
 #endif

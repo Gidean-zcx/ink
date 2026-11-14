@@ -50,7 +50,8 @@ def c_string(s):
 
 tables = [  # (C name, Chinese name, items) in storage order: append only
     ('SYM_CN', '中文', keep('cn trime.yaml:724-756', yaml_keys(724, 756))),
-    ('SYM_EN', '英文', keep('ascii PickerData.kt:16-26', [s for s in kotlin_strings('\n'.join(lines['picker'][15:26])) if len(s) == 1 and 32 < ord(s) < 127])),
+    # fcitx keeps , and . on its keyboard; the panel is all printable ASCII here, so they follow at the end.
+    ('SYM_EN', '英文', keep('ascii PickerData.kt:16-26', [s for s in kotlin_strings('\n'.join(lines['picker'][15:26])) if len(s) == 1 and 32 < ord(s) < 127] + [',', '.'])),
     ('SYM_MATH', '数学', keep('math trime.yaml:720-723', yaml_keys(720, 723))),
     # "m" is half of "m³", whose ³ the font cannot draw: alone it is no unit.
     ('SYM_UNIT', '单位', keep('unit trime.yaml:761-764', [c for c in yaml_keys(761, 764) if c != 'm'])),

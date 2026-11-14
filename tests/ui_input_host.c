@@ -102,8 +102,24 @@ static void locate_key(void) {
           "the actual key is inside the fixed keyboard: %s", key_label);
     key_point = (lv_point_t){(button.x1 + button.x2) / 2, (button.y1 + button.y2) / 2};
 }
+static int symbol_step;
+static void locate_symbol(void) {
+    lv_area_t a; symbol_step = ink_test_keyboard_symbol(key_label, &a);
+    key_point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
+}
 static void tap_keyboard(const char *label) {
-    key_label = label; on_ui(locate_key);
+    key_label = label;
+    if (label[0] && !label[1] && !(label[0] >= 'a' && label[0] <= 'z')) { /* the symbol panel: pages and tabs by real taps */
+        for (int i = 0; i < 40; i++) {
+            on_ui(locate_symbol);
+            if (symbol_step < 0) break;
+            tap(key_point.x, key_point.y);
+            if (symbol_step == 1) return;
+        }
+        CHECK(false, "the symbol panel has the requested key: %s", label);
+        return;
+    }
+    on_ui(locate_key);
     if (key_visible) tap(key_point.x, key_point.y);
 }
 static void inspect_focus(void) {

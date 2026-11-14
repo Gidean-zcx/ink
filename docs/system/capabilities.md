@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 575 项：可调用能力 533、事件 42；设置 43 项、状态 60 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 577 项：可调用能力 535、事件 42；设置 43 项、状态 60 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -226,15 +226,17 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `interrupt.list` | 现在有什么在打断（来电、闹钟、低电量），各有什么按钮 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s36](#s36) | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
 | `job.cancel` | 停下一件后台在做的事 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s38](#s38) | [system/services/res/task.c](../../system/services/res/task.c) |
 | `job.list` | 后台在做什么、做到哪了、做完的结果 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s38](#s38) | [system/services/res/task.c](../../system/services/res/task.c) |
-| `keyboard.alternates` | 展开字母备选符号，code 为 ASCII，0 收起 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.alternates` | 展开字母的长按备选，code 为字母的 ASCII，0 收起 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.candidates` | 展开候选，或 fold 收回键盘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
-| `keyboard.category` | 符号分类：0 中文、1 数学、2 英文 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.category` | 符号分类：0 最近、1 中文、2 英文、3 数学、4 单位、5 图形、6 序号 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.edit` | 编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
-| `keyboard.key` | 按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
-| `keyboard.page` | 候选翻页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
-| `keyboard.panel` | 切换键盘面板 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.key` | 按输入法的键（1 符号、2 大写、5 数字、6 重输、8 删除、10 回车，其余是 ASCII） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.page` | 展开的候选翻页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.panel` | 切换键盘面板：字母、符号、数字 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.pick` | 选输入法候选（从 0 开始） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
-| `keyboard.symbol` | 选符号或长按备选 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.reading` | 九键：第一个音节只要这个读音（如 zhong），空串取消 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.readings_more` | 九键：下一组读音，到头回第一组 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `keyboard.symbol` | 打出一个符号（符号面板、长按备选和上滑走这里，最多 4 个字） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.symbol_page` | 符号翻页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s56](#s56) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `kid.app_set` | 设置孩子能用的应用 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人；儿童须白名单 | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
 | `kid.period_set` | 设置孩子的禁用时段 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人；儿童须白名单 | [s20](#s20) | [system/policy/members.c](../../system/policy/members.c) |
