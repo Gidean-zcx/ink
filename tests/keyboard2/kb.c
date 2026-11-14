@@ -226,6 +226,31 @@ static void allow_typing(void) {
 static void allow_root(void) { g_allowed.n = g_keys.n = 0; allow(K.root); }
 static void allow_picker(void) { g_allowed.n = g_keys.n = 0; allow(K.picker); }
 static void allow_popup(void) { g_allowed.n = g_keys.n = 0; allow(K.popup); }
+/* How many panel updates each main action costs, for the report (printed, not judged). */
+static void count(const char *what) { untrack(); printf("REFRESHES %s %d\n", what, g_nrects); }
+static void counts(void) {
+    field(INK_TEXT_PLAIN); on_ui(chinese); quiet(); delay_ms(600);
+    track(); tap_key('n'); count("一个字母");
+    tap_key('i'); delay_ms(600); quiet();
+    track(); tap_label(K.cand[0].word); count("选词");
+    for (const char *p = "shi"; *p; p++) tap_key(*p);
+    delay_ms(600); quiet();
+    track(); tap_label("▾"); count("展开候选");
+    track(); tap_label("▶"); count("候选翻页");
+    tap_label(TR("键盘")); on_ui(leave); quiet(); field(INK_TEXT_PLAIN); on_ui(chinese); quiet();
+    track(); tap_key(KEY_SWITCH); count("切到符号面板");
+    track(); tap_label(TR("数学")); count("切分类");
+    track(); tap_label("▶"); count("符号翻页");
+    tap_label("26"); on_ui(english); quiet(); delay_ms(600);
+    g_code = 'u'; on_ui(key_center); track(); press_at(g_x, g_y); delay_ms(700); release_at(g_x, g_y); count("长按弹出");
+    track(); tap_label("ǔ"); count("选备选");
+    on_ui(chinese); on_ui(nine_on); quiet();
+    for (const char *p = "94664"; *p; p++) tap_key(*p);
+    delay_ms(600); quiet();
+    track(); tap_label("zhong"); count("选读音");
+    on_ui(nine_off); quiet();
+    leave_page();
+}
 static void refresh_case(void) {
     field(INK_TEXT_PLAIN); on_ui(english); quiet(); on_ui(reverse);
     /* C3: a press alone draws nothing (D-31): no update while a key is held */
@@ -639,6 +664,7 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(ink_member_space_open() && settled(), 15000), "boot settles");
     test_start_home(); ink_power_hold(INK_NEED_AWAKE); quiet();
     if (!strcmp(g_case, "refresh") || !strncmp(g_case, "reverse", 7)) refresh_case();
+    else if (!strcmp(g_case, "counts")) counts();
     else if (!strcmp(g_case, "pending")) pending_case();
     else if (!strcmp(g_case, "nine")) nine_case();
     else if (!strcmp(g_case, "symbols")) symbols_case();
