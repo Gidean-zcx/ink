@@ -924,9 +924,15 @@ app_redraw_t music_page_changed(const char *what, const char *path) {
     if (!s_show_all && current == s_seen_track && (!strcmp(what, "play") || !strcmp(what, "state")) && music_serial() == s_serial)
         return APP_REDRAW_NONE;  // on_tick drew it
     if (!s_show_all && current == s_seen_track && (!strcmp(what, "state") || !strcmp(what, "seek"))) {
+        // ink: a seek that lands on another lyric line redraws that line too (just above the bar): the line is marked
+        // seen here, so on_tick would never draw it, and the screen kept the old line while paused.
+        char snap[sizeof(s_lyric_seen)];
+        lyric_snapshot(snap, sizeof(snap));
+        const bool lyric = !strcmp(what, "seek") && strcmp(snap, s_lyric_seen) != 0 && !s_message[0];
         s_serial = music_serial();
         sync_lyric();
         s_area = !strcmp(what, "seek") ? L.seek : L.play;
+        if (lyric) s_area = (EpdRect){L.lyric.x, L.lyric.y, L.lyric.width, L.seek.y + L.seek.height - L.lyric.y};
         return APP_REDRAW_AREA;
     }
     if (current != s_seen_track) {  // 换曲时列表跟随到所在页 / follow the list to the playing track's page
