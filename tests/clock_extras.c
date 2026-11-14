@@ -80,14 +80,29 @@ static void check_button_labels(lv_obj_t *o) {
 static void check_labels(void) { lv_obj_update_layout(lv_screen_active()); check_button_labels(lv_screen_active()); }
 static void evidence(const char *name) { quiet(); on_ui(check_labels); vtk_event_at(vtk_now() + SIM_MS(1), capture, (void *)name); delay_ms(5); }
 static void wait_us(uint64_t duration) { uint64_t until = osal_now_us() + duration; CHECK(WAIT_FOR(osal_now_us() >= until, (int)(duration / 1000) + 100), "virtual duration passes"); }
-static uint64_t shown_us(const char *id) {
-    unsigned long long h = 0; unsigned m = 0, s = 0, tenth = 0;
-    CHECK(field_value(id) && sscanf(field, "%llu:%u:%u.%u", &h, &m, &s, &tenth) == 4, "paused or lap value includes tenths: %.100s", field);
-    return ((uint64_t)h * 3600 + m * 60 + s) * 1000000 + tenth * 100000;
+static uint64_t shown_us(const char *id) { /* clock-3: mm:ss.cc (h:mm:ss.cc past an hour); a lap row's total follows 累计 */
+    unsigned long long h = 0; unsigned m = 0, s = 0, hundredth = 0; bool ok_value = field_value(id);
+    const char *v = ok_value && strstr(field, "累计 ") ? strstr(field, "累计 ") + strlen("累计 ") : field;
+    bool parsed = sscanf(v, "%llu:%u:%u.%u", &h, &m, &s, &hundredth) == 4 || (h = 0, sscanf(v, "%u:%u.%u", &m, &s, &hundredth) == 3);
+    CHECK(ok_value && parsed && strlen(strchr(v, '.') ? strchr(v, '.') : "") >= 3, "paused or lap value includes hundredths: %.100s", field);
+    return ((uint64_t)h * 3600 + m * 60 + s) * 1000000 + hundredth * 10000;
 }
 static void in_window(uint64_t value, uint64_t low, uint64_t high, const char *what) {
-    CHECK(value + 100000 >= low && value <= high + 100000, "%s agrees with virtual clock within 0.1 s: %llu in [%llu,%llu]", what,
+    CHECK(value + 10000 >= low && value <= high + 10000, "%s agrees with virtual clock within 0.01 s: %llu in [%llu,%llu]", what,
         (unsigned long long)value, (unsigned long long)low, (unsigned long long)high);
+}
+static void tap_label_at(lv_obj_t *o) {
+    if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), target) && lv_obj_is_visible(o)) {
+        lv_area_t a; lv_obj_get_coords(o, &a); tx = (a.x1 + a.x2) / 2; ty = (a.y1 + a.y2) / 2;
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) tap_label_at(lv_obj_get_child(o, (int32_t)i));
+}
+static void locate_label(void) { tx = ty = -1; lv_obj_update_layout(lv_screen_active()); tap_label_at(lv_screen_active()); }
+static void press_label(const char *label) { /* clock-3: rows of the add-city page are tapped where their names are */
+    quiet(); snprintf(target, sizeof target, "%s", label); on_ui(locate_label);
+    CHECK(tx >= 0 && ty >= 0, "visible label: %s", label);
+    if (tx >= 0) tap(tx, ty);
+    quiet();
 }
 static void stopwatch(void) {
     ok("app.open", "{\"id\":\"clock\"}"); quiet(); on_ui(read_page);
@@ -103,21 +118,21 @@ static void stopwatch(void) {
     for (unsigned i = 1; i <= 3; i++) {
         wait_us(230000); uint64_t lo = osal_now_us();
         if (i == 1) press("clock.stopwatch_lap", 0); else ok("clock.stopwatch_lap", NULL);
-        uint64_t hi = osal_now_us(); char id[24]; snprintf(id, sizeof id, "第 %u 次", i);
+        uint64_t hi = osal_now_us(); char id[24]; snprintf(id, sizeof id, "第 %u 圈", i);
         in_window(shown_us(id), lo - begin_hi, hi - begin_lo, "lap");
     }
     uint64_t pause_lo = osal_now_us(); ok("clock.stopwatch_pause", NULL); uint64_t pause_hi = osal_now_us();
     uint64_t paused = (uint64_t)number("elapsed_ms") * 1000;
     in_window(paused, pause_lo - begin_hi, pause_hi - begin_lo, "pause");
     CHECK(!running() && number("total") == 3, "pause preserves three laps");
-    CHECK(llabs((long long)shown_us("elapsed") - (long long)paused) < 100000, "paused display is accurate to one tenth");
+    CHECK(llabs((long long)shown_us("elapsed") - (long long)paused) < 10000, "paused display is accurate to one hundredth");
     evidence("stopwatch-zh"); setting("system.language", 1); quiet(); on_ui(read_page);
     CHECK(strstr(snapshot, "Stopwatch") && strstr(snapshot, "Resume") && strstr(snapshot, "Lap 3"), "stopwatch is translated"); evidence("stopwatch-en");
     ok("system.home", NULL); ok("app.open", "{\"id\":\"clock\"}"); evidence("clock-home-en"); press("clock.stopwatch", 0);
     setting("system.language", 0); wait_us(1200000);
     CHECK(number("elapsed_ms") * 1000 == (int64_t)paused, "paused time does not advance");
     uint64_t resume_lo = osal_now_us(); press("clock.stopwatch_start", 0); uint64_t resume_hi = osal_now_us();
-    ok("shell.back", NULL); CHECK(!strcmp(ink_ui_page_name(), "Clock"), "leave stopwatch for clock home"); wait_us(2100000);
+    press("clock.world", 0); on_ui(read_page); CHECK(!strcmp(ink_ui_page_name(), "Clock") && !strstr(snapshot, "\"tab\":\"stopwatch\""), "leave the stopwatch tab for another"); wait_us(2100000);
     press("clock.stopwatch", 0); us = (uint64_t)number("elapsed_ms") * 1000;
     in_window(us - paused, sampled_at - resume_hi, sampled_at - resume_lo, "off-page elapsed");
     key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "lock while stopwatch runs"); wait_us(2100000);
@@ -126,9 +141,10 @@ static void stopwatch(void) {
     for (int i = 3; i < 99; i++) ok("clock.stopwatch_lap", NULL);
     CHECK(number("total") == 99, "99 laps accepted");
     CHECK(AI("clock.stopwatch_lap", NULL) && g_rc.status == INK_RC_REJECTED && number("total") == 99, "100th lap rejected without losing data");
-    for (int i = 0; i < 32; i++) ok("clock.extra_next", NULL);
-    CHECK(number("page_number") == 33 && field_value("第 99 次"), "all 99 laps are reachable by paging");
-    ok("clock.extra_prev", NULL); CHECK(number("page_number") == 32 && field_value("第 94 次"), "lap previous page works");
+    int64_t pages = number("pages"); /* clock-3: newest lap first, as many as fit a page */
+    for (int64_t i = 1; i < pages; i++) ok("clock.extra_next", NULL);
+    CHECK(pages > 1 && number("page_number") == pages && field_value("第 1 圈") && !field_value("第 99 圈"), "all 99 laps are reachable by paging");
+    ok("clock.extra_prev", NULL); CHECK(number("page_number") == pages - 1 && !field_value("第 1 圈"), "lap previous page works");
     press("clock.stopwatch_reset", 0); CHECK(number("elapsed_ms") == 0 && number("total") == 0 && !running(), "reset clears time and laps");
     ok("clock.stopwatch_start", NULL); /* Deliberately running at restart. */
 }
@@ -145,28 +161,29 @@ static void world(void) {
     CHECK(number("total") == 0, "world clocks initially empty"); city(7);
     CHECK(number("total") == 1, "AI adds New York through the city capability");
     press("clock.world_pick", 0); CHECK(number("total") == 9, "picker offers all nine cities");
-    press("clock.extra_next", 0); press("clock.world_add", 2); /* London is the third city on page two. */
+    key(INK_KEY_NEXT); quiet(); press_label("英国 · 伦敦"); /* London is on the second page of nine */
     press("clock.world_pick", 0); CHECK(number("total") == 2 && field_value("Europe/London"), "touch adds London through the same capability");
-    transition(utc(2027, 3, 14, 7, 0, 0), "America/New_York", "01:59 · -5 小时", "03:00 · -4 小时");
-    transition(utc(2027, 11, 7, 6, 0, 0), "America/New_York", "01:59 · -4 小时", "01:00 · -5 小时");
-    transition(utc(2027, 3, 28, 1, 0, 0), "Europe/London", "00:59 · +0 小时", "02:00 · +1 小时");
-    transition(utc(2027, 10, 31, 1, 0, 0), "Europe/London", "01:59 · +1 小时", "01:00 · +0 小时");
-    set_utc(utc(2027, 3, 13, 7, 0, 0)); CHECK(field_has("America/New_York", "02:00 · -5 小时"), "same-minute date setup uses standard time");
-    set_utc(utc(2027, 3, 15, 7, 0, 0)); CHECK(field_has("America/New_York", "03:00 · -4 小时"), "same device minute still refreshes the changed date");
+    transition(utc(2027, 3, 14, 7, 0, 0), "America/New_York", "01:59 · 比这里晚 5 小时", "03:00 · 比这里晚 4 小时");
+    transition(utc(2027, 11, 7, 6, 0, 0), "America/New_York", "01:59 · 比这里晚 4 小时", "01:00 · 比这里晚 5 小时");
+    transition(utc(2027, 3, 28, 1, 0, 0), "Europe/London", "00:59 · 和这里同一时间", "02:00 · 比这里早 1 小时");
+    transition(utc(2027, 10, 31, 1, 0, 0), "Europe/London", "01:59 · 比这里早 1 小时", "01:00 · 和这里同一时间");
+    set_utc(utc(2027, 3, 13, 7, 0, 0)); CHECK(field_has("America/New_York", "02:00 · 比这里晚 5 小时"), "same-minute date setup uses standard time");
+    set_utc(utc(2027, 3, 15, 7, 0, 0)); CHECK(field_has("America/New_York", "03:00 · 比这里晚 4 小时"), "same device minute still refreshes the changed date");
     int64_t jan1 = utc(2027, 1, 1, 1, 0, 0), late = utc(2027, 1, 1, 23, 30, 0);
     setting("time.zone", 0); set_utc(jan1);
-    CHECK(field_has("America/New_York", "20:00 · -13 小时 · 前一天"), "previous day handles year boundary relative to device");
+    CHECK(field_has("America/New_York", "20:00 · 昨天 · 比这里晚 13 小时"), "previous day handles year boundary relative to device");
     city(2); setting("time.zone", 8); set_utc(late);
-    CHECK(field_has("Asia/Tokyo", "08:30 · +17 小时 · 第二天"), "next day and positive offset are relative to device");
+    CHECK(field_has("Asia/Tokyo", "08:30 · 明天 · 比这里早 17 小时"), "next day and positive offset are relative to device");
     CHECK(!strcmp(ink_time_zone(), "America/Los_Angeles"), "world conversion leaves device zone unchanged");
     evidence("world-zh"); setting("system.language", 1); quiet(); on_ui(read_page);
-    CHECK(strstr(snapshot, "World Clock") && strstr(snapshot, "Next day") && strstr(snapshot, "+17 hours"), "world page and time descriptions are translated"); evidence("world-en");
-    setting("system.language", 0); press("clock.world_remove", 1); /* Tokyo, London, New York. */
+    CHECK(strstr(snapshot, "Clock") && strstr(snapshot, "Tomorrow") && strstr(snapshot, "17 hours ahead"), "world page and time descriptions are translated"); evidence("world-en");
+    setting("system.language", 0); press("clock.world_edit", 1); press("clock.world_remove", 0); /* Tokyo, London, New York: London's own page */
     CHECK(number("total") == 2 && !field_value("Europe/London"), "touch removes the selected city");
     city(5); city(0); city(1); city(3);
     CHECK(number("total") == 6, "six cities accepted");
     CHECK(AI("clock.world_add", "{\"zone\":4}") && g_rc.status == INK_RC_FAILED && number("total") == 6, "seventh city refused without losing choices");
-    press("clock.extra_next", 0); CHECK(number("page_number") == 2 && field_value("America/New_York"), "world cities can be paged");
+    for (int64_t i = 1, n = number("pages"); i < n; i++) ok("clock.next", NULL); /* clock-3: as many rows as fit under the local time */
+    CHECK(number("page_number") == number("pages") && number("pages") > 1 && field_value("America/New_York"), "world cities can be paged");
 }
 static void member_switch(const char *id) {
     char a[48]; snprintf(a, sizeof a, "{\"id\":\"%s\"}", id);
@@ -186,7 +203,8 @@ static void members(void) {
 static void restart(void) {
     open_page("clock.stopwatch"); CHECK(number("elapsed_ms") == 0 && number("total") == 0 && !running(), "restart clears running adult stopwatch");
     open_page("clock.world"); CHECK(number("total") == 6 && field_value("Asia/Shanghai"), "adult cities survive process restart");
-    ok("clock.extra_next", NULL); CHECK(field_value("Europe/London") && field_value("America/New_York"), "persisted DST cities survive restart");
+    for (int64_t i = 1, n = number("pages"); i < n; i++) ok("clock.extra_next", NULL);
+    CHECK(field_value("Europe/London") && field_value("America/New_York"), "persisted DST cities survive restart");
     member_switch("kid"); open_page("clock.world"); CHECK(number("total") == 2 && field_value("Asia/Singapore") && field_value("America/Los_Angeles"), "child selections survive restart in their own collection");
     open_page("clock.stopwatch"); CHECK(number("elapsed_ms") == 0 && number("total") == 0 && !running(), "restart clears child stopwatch too");
 }

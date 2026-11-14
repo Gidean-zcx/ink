@@ -84,10 +84,10 @@ static void verify_rows(void) {
 }
 static void verify_list(void) {
     read_snapshot();
-    CHECK(strstr(snapshot, edited ? "8:31" : "7:30") && strstr(snapshot, "工作日") && strstr(snapshot, "每天") && strstr(snapshot, "周日 周六"), "the list snapshot contains times and all repeat labels");
+    CHECK(strstr(snapshot, edited ? "8:31" : "7:30") && strstr(snapshot, "工作日") && strstr(snapshot, "每天") && strstr(snapshot, "周六、周日"), "the list snapshot contains times and all repeat labels");
     CHECK(strstr(snapshot, "开启") && strstr(snapshot, "\"total\":3") && strstr(snapshot, "next_alarm"), "the same snapshot includes enabled state, count and next alarm");
     visible(edited ? "8:31" : "7:30"); visible(edited ? "晨起 · 工作日" : "起床 · 工作日");
-    visible("9:00"); visible("周末 · 周日 周六"); visible("21:30"); visible("读书时间 · 每天");
+    visible("9:00"); visible("周末 · 周六、周日"); visible("21:30"); visible("读书时间 · 每天");
     if (edited) CHECK(strstr(snapshot, "关闭"), "AI sees the disabled alarm on the same page");
 }
 static void take_scene(void *arg) {

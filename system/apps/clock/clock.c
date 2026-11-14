@@ -152,7 +152,8 @@ static void clock_destroy(void) {
     tick = NULL; segments = ck_body = NULL;
 }
 static void clock_extra(ink_jw_t *w) {
-    char s[96]; snprintf(s, sizeof s, ",\"tab\":\"%s\",\"page\":%u,\"page_number\":%u,\"pages\":%u,\"total\":%u", TAB_IDS[ck_me->tab], shown_page + 1, shown_page + 1, pages, total);
+    char s[96]; snprintf(s, sizeof s, ",\"tab\":\"%s\",\"page\":%u,\"page_number\":%u,\"pages\":%u,\"total\":%u", TAB_IDS[ck_me->tab], shown_page + 1, shown_page + 1, pages,
+             ck_me->tab == TAB_WATCH ? (unsigned)ck_watch_laps(ck_member()) : total); /* the stopwatch: laps taken, not its rows */
     ink_jw_raw(w, s);
     void (*const extra[TABS])(ink_jw_t *) = {ck_world_extra, ck_alarm_extra, ck_watch_extra, ck_timer_extra};
     extra[ck_me->tab](w);
