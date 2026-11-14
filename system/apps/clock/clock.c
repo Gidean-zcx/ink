@@ -6,11 +6,11 @@
 
 ck_page_t CK INK_PSRAM_BSS;
 static ck_member_t members[INK_MEMBERS_MAX] INK_PSRAM_BSS;
-ck_member_t *ck_me;
-lv_obj_t *ck_body;
-static lv_obj_t *segments;
-static lv_timer_t *tick;
-static unsigned shown_page, pages, total; /* what ck_pager drew last */
+ck_member_t *ck_me INK_PSRAM_BSS; /* nothing of the clock's in internal RAM */
+lv_obj_t *ck_body INK_PSRAM_BSS;
+static lv_obj_t *segments INK_PSRAM_BSS;
+static lv_timer_t *tick INK_PSRAM_BSS;
+static unsigned shown_page INK_PSRAM_BSS, pages INK_PSRAM_BSS, total INK_PSRAM_BSS; /* what ck_pager drew last */
 
 void ck_begin(const char *id, const char *title, const char *object) {
     memset(&CK.spec, 0, sizeof CK.spec); CK.used = 0; CK.name = NULL;
@@ -167,7 +167,7 @@ static bool clock_key(ink_key_t key, bool lng) {
 static const ink_activity_t CLOCK = {.name = "Clock", .app = "clock", .create = clock_create, .destroy = clock_destroy, .snapshot = clock_snapshot, .on_key = clock_key};
 
 /* ---- the editors' counters (InfiniTime's Counter) ---- */
-static lv_obj_t *numbers[3];
+static lv_obj_t *numbers[3] INK_PSRAM_BSS;
 void ck_counter_row(lv_obj_t *p, int part, int y, const char *minus, const char *plus, const char *unit) {
     static const char *const PART[] = {"hour", "minute", "second"};
     int w = INK_CANVAS_W - 2 * INK_MARGIN, bw = LV_MAX(INK_CONTROL, ink_ui_text_width(minus, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP);

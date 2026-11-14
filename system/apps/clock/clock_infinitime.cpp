@@ -29,7 +29,7 @@ namespace PS = Pinetime::Applications::Screens;
 namespace PC = Pinetime::Controllers;
 namespace PW = Pinetime::Applications::Widgets;
 namespace {
-ck_hooks_t hooks;
+ck_hooks_t hooks INK_PSRAM_BSS;
 void expired(TimerHandle_t handle);
 struct Unit {
     PC::Timer timer;
@@ -50,7 +50,7 @@ struct Edit {
 alignas(Unit) unsigned char units[CK_TIMERS][sizeof(Unit)] INK_PSRAM_BSS;
 alignas(PC::StopWatchController) unsigned char watches[CK_WATCHES][sizeof(PC::StopWatchController)] INK_PSRAM_BSS;
 alignas(Edit) unsigned char edit[sizeof(Edit)] INK_PSRAM_BSS;
-bool built[CK_TIMERS], watch_built[CK_WATCHES], edit_built;
+bool built[CK_TIMERS] INK_PSRAM_BSS, watch_built[CK_WATCHES] INK_PSRAM_BSS, edit_built INK_PSRAM_BSS;
 
 Unit &U(int t) {
     if (!built[t]) { new (units[t]) Unit(units[t]); built[t] = true; }

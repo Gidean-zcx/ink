@@ -23,7 +23,7 @@ struct ink_infinitime_timer {
     bool active;
 };
 static ink_infinitime_timer ink_infinitime_pool[INK_INFINITIME_TIMERS] INK_PSRAM_BSS;
-static int ink_infinitime_used;
+static int ink_infinitime_used INK_PSRAM_BSS;
 static inline void ink_infinitime_due(void *arg) {
     ink_infinitime_timer *t = static_cast<ink_infinitime_timer *>(arg);
     ink_svc_lock();
