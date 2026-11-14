@@ -1858,7 +1858,7 @@ static void index_background(void *arg) {
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     if (index_manual) { osal_mutex_unlock(FS.edits); ink_db_close(done); ink_db_close(loaded); ink_svc_at(&FS.index_at, osal_now_us() + 500000ull, index_refresh_cb, NULL); return; }
     uint64_t begin = osal_now_us();
-    int r = ink_fs_card_hold(); bool held = !r;
+    int r = ink_fs_card_hold(); bool held = !r, gave_way = false;
     uint8_t card[16]; ink_db_t *db = NULL;
     if (!r) r = index_open(card, &db);
     if (index_walk && (r || !index_walk->revision || memcmp(index_walk->card, card, 16))) { index_walk_close(index_walk); osal_free(index_walk); index_walk = NULL; }
@@ -1894,7 +1894,7 @@ static void index_background(void *arg) {
                 osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
                 begin = osal_now_us();
             }
-            if (!r && (index_manual || !index_walk->revision)) r = INK_FS_ERR_BUSY;
+            if (!r && (index_manual || !index_walk->revision)) r = INK_FS_ERR_BUSY, gave_way = true;
             if (!r) r = index_walk_step(index_walk, db, card);
         }
     }
@@ -1932,6 +1932,9 @@ static void index_background(void *arg) {
     ink_db_close(done); ink_db_close(db); ink_db_close(loaded);
     if (held) ink_fs_card_release();
     if (!r && more) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
+    /* A page's own scan (index_scan) took over while this pass read the index outside edits: it gave way, and nothing
+     * else resumes it (that scan covers only its root), so it comes back as it does while such a scan runs. */
+    else if (gave_way) ink_svc_at(&FS.index_at, osal_now_us() + 500000ull, index_refresh_cb, NULL);
 }
 
 static int index_query(const file_context_t *c, const char *root, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {
