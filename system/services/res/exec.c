@@ -1,3 +1,6 @@
+#define _GNU_SOURCE
+#include <dlfcn.h>
+#include <stdio.h>
 /*
  * Executors (see ink/sys/exec.h): the UI task, "now", and two system tasks.
  * Jobs are nodes their callers own, linked into a list here: a post cannot
@@ -49,6 +52,9 @@ void ink_exec_run(ink_exec_t e) {
         j = cur->next;
         __atomic_store_n(&cur->queued, 0, __ATOMIC_RELEASE); /* posted from here on: it runs again */
         fn(arg); /* may free the node */
+        { extern void *vtk_self(void); extern int vtk_task_index(const void *); typedef struct { char name[32]; int p, c, st; unsigned long long a, b, cc, d; unsigned tb, used; unsigned long long sw; } ti_t;
+          extern void vtk_task_info(int, void *); static unsigned maxu; ti_t ti; vtk_task_info(vtk_task_index(vtk_self()), &ti);
+          if (e == INK_EXEC_BG && ti.used > maxu) { maxu = ti.used; Dl_info di; dladdr((void *)fn, &di); printf("DIAG bg stack %u after %s\n", ti.used, di.dli_sname ? di.dli_sname : "?"); fflush(stdout); } }
     }
 }
 
