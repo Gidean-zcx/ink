@@ -1,5 +1,6 @@
 /* Copied from LilyPhone (github.com/dparnell/lilyphone1 @de10fc3, src/ui/ui_phone1.cpp, by Daniel Parnell;
  * the repository has no licence file). Whole functions as they are: SOURCE.md lists every changed line. */
+#include "sms_lily.h"
 
 /* Queues a message and logs it as pending in one step. Shared by the composer
  * and by sending a reaction, so both end up watched the same way. */
@@ -69,7 +70,7 @@ static void ui_format_stamp_compact(char *buf, int len, uint32_t ts)
     if(when_tm.tm_year == now_tm.tm_year && when_tm.tm_yday == now_tm.tm_yday) {
         strftime(buf, len, "%H:%M", &when_tm);
     } else {
-        strftime(buf, len, "%d/%m", &when_tm);
+        strftime(buf, len, TR("%m月%d日"), &when_tm);
     }
 }
 
@@ -93,7 +94,7 @@ static void ui_format_stamp(char *buf, int len, uint32_t ts)
     if(when_tm.tm_year == now_tm.tm_year && when_tm.tm_yday == now_tm.tm_yday) {
         strftime(buf, len, "%H:%M", &when_tm);
     } else {
-        strftime(buf, len, "%d/%m %H:%M", &when_tm);
+        strftime(buf, len, TR("%m月%d日 %H:%M"), &when_tm);
     }
 }
 
@@ -110,13 +111,13 @@ static void scr13_populate(void)
         const char      *number = sms_thread_number(i);
         const sms_msg_t *last   = sms_thread_last(i);
         char title[CONTACT_NAME_LEN + 8];
-        char snippet[48];
+        char snippet[96];
         char badge[16];
 
         // An unread marker in the title is easier to spot on e-ink than a
         // separate dot would be.
         lv_snprintf(title, sizeof(title), "%s%s",
-                    sms_thread_unread(number) > 0 ? LV_SYMBOL_ENVELOPE " " : "",
+                    sms_thread_unread(number) > 0 ? "● " : "",
                     contacts_display_name(number));
 
         // A row previews the conversation; the whole message is one tap away.
@@ -131,9 +132,11 @@ static void scr13_populate(void)
             // Without a prefix a thread you last replied to reads as if they
             // said it. The delivery state goes here too: sending returns to
             // this screen, so this is where a failure has to be visible.
-            const char *prefix = (last->status == SMS_ST_FAILED)  ? LV_SYMBOL_WARNING " not sent: "
-                               : (last->status == SMS_ST_PENDING) ? "Sending: "
-                                                                  : "You: ";
+            const char *prefix = (last->status == SMS_ST_FAILED)  ? TR("未发出：")
+                               : (last->status == SMS_ST_UNKNOWN) ? TR("结果未知：")
+                               : (last->status == SMS_ST_DRAFT)   ? TR("草稿：")
+                               : (last->status == SMS_ST_PENDING) ? TR("发送中：")
+                                                                  : TR("我：");
             char line[sizeof(snippet)];
             lv_snprintf(line, sizeof(line), "%s%s", prefix, snippet);
             lv_snprintf(snippet, sizeof(snippet), "%s", line);
@@ -196,20 +199,8 @@ static void scr13_1_do_delete_message(void)
 static lv_coord_t scr13_1_bubble_create(lv_obj_t *parent, const sms_msg_t *m, int log_idx,
                                         lv_coord_t y, const char *badge)
 {
-    char head[48];
-    char stamp[16];
     char body[SMS_TEXT_LEN];
-
-    ui_format_stamp(stamp, sizeof(stamp), m->ts);
-
-    if(m->dir == SMS_DIR_OUT) {
-        const char *mark = (m->status == SMS_ST_PENDING) ? "  sending..."
-                         : (m->status == SMS_ST_FAILED)  ? "  not sent"
-                                                         : "";
-        lv_snprintf(head, sizeof(head), "%s%s", stamp, mark);
-    } else {
-        lv_snprintf(head, sizeof(head), "%s", stamp);
-    }
+    LV_UNUSED(badge);
 
     /* A reaction only lands here when its target is not on screen - normally it
      * is drawn as a badge on the message it refers to instead. Shown as a short
@@ -226,17 +217,18 @@ static lv_coord_t scr13_1_bubble_create(lv_obj_t *parent, const sms_msg_t *m, in
     }
 
     lv_obj_t *bubble = lv_obj_create(parent);
-    lv_obj_set_width(bubble, 180);
+    lv_obj_set_width(bubble, ink_ui_px(SMS_BUBBLE_W));
     lv_obj_set_height(bubble, LV_SIZE_CONTENT);
-    lv_obj_set_style_bg_color(bubble, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(bubble, m->dir == SMS_DIR_OUT ? DECKPRO_COLOR_BG : DECKPRO_COLOR_SHADE, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(bubble, m->dir == SMS_DIR_OUT ? LV_OPA_TRANSP : LV_OPA_30, LV_PART_MAIN);
     lv_obj_set_style_border_color(bubble, DECKPRO_COLOR_FG, LV_PART_MAIN);
     // No outline on a reaction, so it reads as a note against the conversation
     // rather than as another message in it.
-    lv_obj_set_style_border_width(bubble, is_reaction ? 0 : 1, LV_PART_MAIN);
-    lv_obj_set_style_radius(bubble, 8, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(bubble, 5, LV_PART_MAIN);
+    lv_obj_set_style_border_width(bubble, 0, LV_PART_MAIN);
+    lv_obj_set_style_radius(bubble, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(bubble, ink_ui_px(INK_GAP_S), LV_PART_MAIN);
     lv_obj_clear_flag(bubble, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_pos(bubble, m->dir == SMS_DIR_OUT ? 42 : 0, y);
+    lv_obj_set_pos(bubble, m->dir == SMS_DIR_OUT ? ink_ui_px(SMS_CONTENT_W - SMS_BUBBLE_W) : 0, y);
 
     // Tapping a bubble is how a single message gets deleted. A plain object is
     // not clickable by default.
@@ -248,7 +240,7 @@ static lv_coord_t scr13_1_bubble_create(lv_obj_t *parent, const sms_msg_t *m, in
     lv_obj_set_style_text_font(text, FONT_BOLD_SIZE_15, LV_PART_MAIN);
     lv_obj_set_style_text_color(text, DECKPRO_COLOR_FG, LV_PART_MAIN);
     lv_label_set_long_mode(text, LV_LABEL_LONG_WRAP);
-    lv_label_set_text_fmt(text, "%s\n%s", head, body);
+    lv_label_set_text(text, body);
     if(m->dir == SMS_DIR_OUT) {
         lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_RIGHT, LV_PART_MAIN);
     }
@@ -258,34 +250,7 @@ static lv_coord_t scr13_1_bubble_create(lv_obj_t *parent, const sms_msg_t *m, in
     lv_coord_t bubble_h = lv_obj_get_height(bubble);
     lv_coord_t extra    = 0;
 
-    /* The reactions somebody sent for this message, hanging off its lower inner
-     * corner the way a phone shows them. A sibling rather than a child, so it
-     * can overhang the bubble instead of being clipped inside it. */
-    if(badge && badge[0]) {
-        lv_coord_t bubble_x = lv_obj_get_x(bubble);
-        lv_coord_t bubble_w = lv_obj_get_width(bubble);
-
-        lv_obj_t *tag = lv_obj_create(parent);
-        lv_obj_set_size(tag, 26, 20);
-        lv_obj_set_style_bg_color(tag, DECKPRO_COLOR_BG, LV_PART_MAIN);
-        lv_obj_set_style_border_color(tag, DECKPRO_COLOR_FG, LV_PART_MAIN);
-        lv_obj_set_style_border_width(tag, 1, LV_PART_MAIN);
-        lv_obj_set_style_radius(tag, 10, LV_PART_MAIN);
-        lv_obj_set_style_pad_all(tag, 0, LV_PART_MAIN);
-        lv_obj_clear_flag(tag, LV_OBJ_FLAG_SCROLLABLE);
-        lv_obj_set_pos(tag, m->dir == SMS_DIR_OUT ? bubble_x + 2 : bubble_x + bubble_w - 28,
-                       y + bubble_h - 10);
-
-        lv_obj_t *glyph = lv_label_create(tag);
-        lv_obj_set_style_text_font(glyph, FONT_BOLD_SIZE_15, LV_PART_MAIN);
-        lv_obj_set_style_text_color(glyph, DECKPRO_COLOR_FG, LV_PART_MAIN);
-        lv_label_set_text(glyph, badge);
-        lv_obj_center(glyph);
-
-        extra = 12; // room for the part that hangs below the bubble
-    }
-
-    return y + bubble_h + extra + 6;
+    return y + bubble_h + extra + ink_ui_px(INK_GAP_M);
 }
 
 static void scr13_2_send_event(lv_event_t *e)
@@ -295,20 +260,20 @@ static void scr13_2_send_event(lv_event_t *e)
     const char *body = lv_textarea_get_text(scr13_2_body_ta);
 
     if(ui_active_number[0] == '\0') {
-        lv_label_set_text(scr13_2_status, "Choose who to send to first");
+        lv_label_set_text(scr13_2_status, TR("请先写收件人"));
         return;
     }
     if(body == NULL || body[0] == '\0') {
-        lv_label_set_text(scr13_2_status, "Nothing to send");
+        lv_label_set_text(scr13_2_status, TR("还没写内容"));
         return;
     }
     if(ui_send_watch_id != 0) {
-        lv_label_set_text(scr13_2_status, "Still sending the last one");
+        lv_label_set_text(scr13_2_status, TR("上一条还在发"));
         return;
     }
 
     if(!ui_sms_dispatch(ui_active_number, body)) {
-        lv_label_set_text(scr13_2_status, "Modem is busy, try again");
+        lv_label_set_text(scr13_2_status, TR("现在发不出去，请重试"));
         return;
     }
 
@@ -319,5 +284,18 @@ static void scr13_2_send_event(lv_event_t *e)
      * network: the message is already in the log as pending, and the screen
      * behind shows it that way. The outcome is watched centrally, so it lands
      * wherever the user happens to be by then. */
-    scr_mgr_pop(false);
+    lily_sent();
 }
+
+/* Glue (ours, not LilyPhone): the send watch the dispatcher keeps, and the entry points sms.c calls. */
+uint32_t ui_send_watch_id INK_PSRAM_BSS, ui_sms_revision INK_PSRAM_BSS, scr13_built_revision INK_PSRAM_BSS;
+int ui_send_watch_idx INK_PSRAM_BSS;
+lv_obj_t *scr13_2_body_ta INK_PSRAM_BSS, *scr13_2_status INK_PSRAM_BSS;
+bool lily_dispatch(const char *number, const char *text) { return ui_sms_dispatch(number, text); }
+void lily_snippet(char *buf, int len, const char *text) { ui_message_snippet(buf, len, text); }
+void lily_stamp(char *buf, int len, uint32_t ts, bool compact) { if (compact) ui_format_stamp_compact(buf, len, ts); else ui_format_stamp(buf, len, ts); }
+void lily_rows(void) { scr13_populate(); }
+void lily_delete(int idx) { scr13_1_delete_target = idx; scr13_1_do_delete_message(); }
+void lily_delete_thread(void) { scr13_1_do_delete_thread(); }
+lv_coord_t lily_bubble(lv_obj_t *parent, const sms_msg_t *m, int id, lv_coord_t y) { return scr13_1_bubble_create(parent, m, id, y, NULL); }
+void lily_send(void) { scr13_2_send_event(NULL); }

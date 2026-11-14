@@ -2205,3 +2205,38 @@ language english 中文 英文	language english chinese
 （恢复）	(restored)
 大小未知	Size unknown
 不会自动删除	Not deleted automatically
+草稿没存上：短信已满，删掉一些就能存	Draft not saved: messages are full. Delete some to save it
+共 %d 条，第 %d 条还能打 %d 字	%d parts, part %d has room for %d more
+第 1 条，还能打 %d 字	1 part, room for %d more
+重新编辑	Edit again
+再发一次（可能重复）	Send again (may repeat)
+可能已经发到，先问问对方	It may have arrived. Ask them first
+取消选中	Deselect
+选中	Select
+短信没读出来	Messages couldn't be read
+复制号码	Copy number
+删除整个会话	Delete conversation
+会话详情	Conversation details
+搜索短信	Search messages
+内容、名字或号码	Text, name or number
+输入要搜的字	Enter search text
+删除和 %s 的全部 %d 条短信？删除后找不回来	Delete all messages with %s (%d)? They can't be recovered
+已删除，找不回来	Deleted. It can't be recovered
+已删除	Deleted
+已删除这个会话	Conversation deleted
+结果未知的短信只能由本人再发一次	Only you can send a message with an unknown result again
+上一条还在发	Still sending the last one
+现在发不出去，请重试	Can't send now. Try again
+号码已复制	Number copied
+已复制	Copied
+找到 %d 条	%d found
+删除这条短信？删除后找不回来	Delete this message? It can't be recovered
+%m月%d日	%d/%m
+%m月%d日 %H:%M	%d/%m %H:%M
+未发出：	Not sent: 
+结果未知：	Unknown: 
+草稿：	Draft: 
+发送中：	Sending: 
+我：	You: 
+请先写收件人	Choose who to send to first
+还没写内容	Nothing to send

@@ -37,7 +37,7 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     ${root}/system/apps/contacts/contacts.c ${root}/system/apps/gallery/gallery.c
     ${root}/system/apps/memo/memo.c ${root}/system/apps/phone/phone.c ${root}/system/apps/phone/vendor/lilyphone/call_card.c
     ${root}/system/apps/memo/memo_voice.c ${root}/system/apps/memo/vendor/zswatch/voice_memo_ui.c
-    ${root}/system/apps/remote/remote.c ${root}/system/apps/sms/sms.c
+    ${root}/system/apps/remote/remote.c ${root}/system/apps/sms/sms.c ${root}/system/apps/sms/vendor/lilyphone/sms_view.c
     ${root}/system/apps/weather/weather.c ${root}/system/apps/camera/scan.c
   ${root}/system/ui/shell/activity_card.c
   ${root}/system/ui/shell/ai_chat.c

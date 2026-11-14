@@ -25,9 +25,11 @@ static void open_list(void) {
     CHECK(BY_HAND("shell.launch", "{\"id\":\"message\"}") && g_rc.status == INK_RC_DONE, "existing system SMS launcher opens the real page");
     CHECK(WAIT_FOR(S.list != NULL, 10000), "member data loads on the background executor"); quiet(); on_ui(snapshot_page);
 }
-static int stored(const char *member) {
-    ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), member);
-    int count = db ? ink_db_count(db) : -1; ink_db_close(db); return count;
+static int stored(const char *member) { /* messages: a conversation's draft is a record too (sms-3) */
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), member); ink_db_cursor_t cur = {0}; ink_rec_t rec; char raw[1200];
+    int count = db ? 0 : -1;
+    while (db && ink_db_next(db, &cur, &rec, raw, sizeof raw - 1) == 1) { raw[rec.len < sizeof raw - 1 ? rec.len : sizeof raw - 1] = 0; count += !strstr(raw, "\"status\":\"草稿\""); }
+    ink_db_close(db); return count;
 }
 static bool has_status(const char *status) {
     ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), "owner"); ink_db_cursor_t cur = {0}; ink_rec_t rec;
@@ -68,7 +70,7 @@ static bool rendered_text(lv_obj_t *obj, const char *text) {
     if (lv_obj_check_type(obj, &lv_label_class) && !strcmp(lv_label_get_text(obj), text)) {
         lv_area_t label, card; lv_obj_update_layout(obj); lv_obj_get_coords(obj, &label); lv_obj_get_coords(lv_obj_get_parent(obj), &card);
         return label.x1 >= card.x1 && label.x2 <= card.x2 && label.y1 >= card.y1 && label.y2 <= card.y2 &&
-            lv_color_eq(lv_obj_get_style_text_color(obj, 0), ink_ui_paper());
+            lv_color_eq(lv_obj_get_style_text_color(obj, 0), ink_ui_ink()); /* sms-3: black text, no black card */
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) if (rendered_text(lv_obj_get_child(obj, i), text)) return true;
     return false;
@@ -129,7 +131,7 @@ static bool failure_injected;
 static void inject_failure(void *arg) { fail_modem(arg); failure_injected = true; }
 static void check_receipt(void) {
     lv_area_t notice, button; lv_obj_update_layout(S.notice); lv_obj_get_coords(S.notice, &notice);
-    CHECK(!strcmp(ink_ui_page_name(), "SmsThread") ? !strcmp(S.result, "已发出") && S.count > 0 : !strcmp(lv_label_get_text(S.notice), S.result), "final receipt is on the outgoing bubble or composer notice");
+    CHECK(!strcmp(ink_ui_page_name(), "SmsThread") && S.count > 0 && S.visible && strstr(S.states[0], S.result), "final receipt is under the outgoing message in its conversation (sms-3: the composer opens it at once)");
     wanted = "展开"; located = NULL; find_label(lv_screen_active());
     CHECK(located, "long editor button exists");
     if (located) {
@@ -189,16 +191,17 @@ static void inspect_bubbles(void) {
         if (!i && !S.outgoing[i]) CHECK(bubble.y2 == frame.y2 - ink_ui_px(INK_GAP_M), "newest incoming bubble stays at the bottom");
         CHECK(S.outgoing[i] ? bubble.x2 == ink_ui_px(INK_CANVAS_W - INK_MARGIN) - 1 : bubble.x1 == ink_ui_px(INK_MARGIN), "incoming and outgoing keep their own alignment");
         CHECK(!strcmp(S.message_fields[S.visible - 1 - i].value, S.texts[i]) && !strcmp(S.message_fields[S.visible - 1 - i].label, S.labels[i]), "snapshot order and metadata match the visible bubble");
-        if (S.outgoing[i]) {
-            lv_obj_t *state_label = lv_obj_get_child(S.thread_slot, lv_obj_get_index(lv_obj_get_parent(located)) + 1);
+        if (S.outgoing[i] && S.states[i][0]) { /* sms-3: 已发出 under the last one only */
+            lv_obj_t *box = lv_obj_get_parent(lv_obj_get_parent(located)), *state_label = lv_obj_get_child(box, lv_obj_get_index(lv_obj_get_parent(located)) + 1);
             CHECK(state_label && lv_obj_check_type(state_label, &lv_label_class) && !strcmp(lv_label_get_text(state_label), S.states[i]), "outgoing state is rendered separately");
-            if (state_label) { lv_area_t state; lv_obj_get_coords(state_label, &state); CHECK(state.y1 > bubble.y2, "outgoing state is below its own bubble"); if (!i) CHECK(state.y2 == frame.y2 - ink_ui_px(INK_GAP_M), "newest outgoing receipt stays at the bottom"); if (strstr(S.states[i], "发送失败，未发出")) CHECK(ink_shell_bound_cap(state_label) && !strcmp(ink_shell_bound_cap(state_label), "sms.retry"), "the retry hint shares its bubble capability"); }
+            if (state_label) { lv_area_t state; lv_obj_get_coords(state_label, &state); CHECK(state.y1 > bubble.y2, "outgoing state is below its own bubble"); lv_obj_t *after = lv_obj_get_child(box, lv_obj_get_index(state_label) + 1); if (!i && !strstr(S.states[i], "未发出") && !strstr(S.states[i], "结果未知")) CHECK(state.y2 == frame.y2 - ink_ui_px(INK_GAP_M), "newest outgoing receipt stays at the bottom"); if (strstr(S.states[i], "发送失败，未发出")) CHECK(after && ink_shell_bound_cap(after) && !strcmp(ink_shell_bound_cap(after), "sms.retry"), "the retry button follows the not-sent state"); }
         }
     }
     size_t expected_stamps = 0, actual_stamps = 0;
     for (size_t i = 0; i < S.visible; i++) if (S.stamps[i] || i + 1 == S.visible) expected_stamps++;
-    for (uint32_t i = 0; i < lv_obj_get_child_count(S.thread_slot); i++) {
-        lv_obj_t *o = lv_obj_get_child(S.thread_slot, i);
+    lv_obj_t *messages = lv_obj_get_child(S.thread_slot, 1); /* sms-3: the messages' box */
+    for (uint32_t i = 0; i < lv_obj_get_child_count(messages); i++) {
+        lv_obj_t *o = lv_obj_get_child(messages, i);
         if (lv_obj_check_type(o, &lv_label_class)) {
             const char *v = lv_label_get_text(o);
             for (size_t j = 0; j < S.visible; j++) if ((S.stamps[j] || j + 1 == S.visible) && !strcmp(v, S.times[j])) { actual_stamps++; break; }
@@ -241,7 +244,7 @@ static void thread_acceptance(int total, bool large) {
     CHECK(AI("sms.thread", arguments) && g_rc.status == INK_RC_DONE, "open synthetic conversation through the shared capability"); quiet();
     CHECK(S.count == (size_t)total && S.position.page + 1 == S.thread_pages, "thread opens on its latest page");
     if (total == 20) CHECK(S.groups[1] && !S.groups[0], "a gap beyond five minutes starts a new outgoing time group");
-    if (total > 1) CHECK(S.visible > 1, "one page holds multiple actual bubbles");
+    if (total > 1) CHECK(S.visible > 1, "one page holds multiple actual bubbles (h %d body %d below %d %d %d)", S.heights[0], S.body_h, S.below[0], S.below[1], S.below[2]);
     char expected[40]; snprintf(expected, sizeof expected, "合成%d：", total); CHECK(strstr(S.texts[0], expected), "the latest fixture is the bottom-most bubble");
     snprintf(latest_text, sizeof latest_text, "%s", S.texts[0]); thread_scene(large ? "-large" : "");
     if (S.thread_pages > 1) {
@@ -256,7 +259,7 @@ static void thread_acceptance(int total, bool large) {
         size_t failed = SMS_VISIBLE;
         for (size_t i = 0; i < S.visible; i++) if (strstr(S.states[i], "发送失败，未发出")) failed = i;
         CHECK(failed < S.visible, "failure remains available on the latest page");
-        if (failed < S.visible) { CHECK(AI("sms.retry", S.args[failed]) && g_rc.status == INK_RC_DONE, "AI uses the same retry capability"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "SmsCompose") && !strcmp(S.to, fixture_peer) && strstr(ink_textfield_text(S.field), "合成4"), "retry retains the exact failed body and peer"); int before = sim_net_sms_sent(); tap_text("发送"); CHECK(WAIT_FOR(sim_net_sms_sent() == before + 1 && !strcmp(ink_ui_page_name(), "SmsThread"), 10000), "deliberate retry sends once"); quiet(); }
+        if (failed < S.visible) { CHECK(AI("sms.retry", S.args[failed]) && g_rc.status == INK_RC_DONE, "AI uses the same retry capability"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "SmsThread") && !strcmp(S.peer, fixture_peer) && strstr(ink_textfield_text(S.field), "合成4"), "retry puts the exact failed body in this conversation's field (sms-3)"); int before = sim_net_sms_sent(); tap_text("发送"); CHECK(WAIT_FOR(sim_net_sms_sent() == before + 1 && !strcmp(ink_ui_page_name(), "SmsThread"), 10000), "deliberate retry sends once"); quiet(); }
     }
     CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus inline reply"); on_ui(type_short); quiet();
     int before = sim_net_sms_sent(); size_t before_count = S.count; on_ui(start_measure); tap_text("发送");
@@ -274,13 +277,13 @@ static void fixture(const char *peer, const char *text, const char *status, int 
     ink_db_write_t wr = {.sort = sort, .data = raw, .len = n > 0 ? (size_t)n : 0, .src = INK_SRC_SYSTEM};
     CHECK(db && n > 0 && (size_t)n < sizeof raw && ink_db_put(db, &wr, NULL) == INK_DB_OK, "store synthetic date fixture"); ink_db_close(db);
 }
-static const char *const DATE_LABELS[] = {"2025年11月2日 08:00", "11月2日 08:00", "昨天 08:00", "08:00"};
+static const char *const DATE_LABELS[] = {"11月02日 08:00", "11月02日 08:00", "11月11日 08:00", "08:00"}; /* sms-3: LilyPhone's ui_format_stamp */
 static unsigned dates_seen;
 static void inspect_dates(void) {
     snapshot_page();
     for (size_t i = 0; i < S.visible; i++) {
         int which = -1;
-        CHECK(sscanf(S.texts[i], "合成日期%d", &which) == 1 && which >= 0 && which < 4, "visible synthetic date fixture");
+        CHECK(sscanf(S.texts[i], "合成日期%d", &which) == 1 && which >= 0 && which < 4, "visible synthetic date fixture (%.40s)", S.texts[i]);
         if (which < 0 || which >= 4) continue;
         CHECK(!strcmp(S.times[i], DATE_LABELS[which]), "local date label %d is %s, got %.31s", which, DATE_LABELS[which], S.times[i]);
         wanted = DATE_LABELS[which]; located = NULL; find_label(S.thread_slot);
@@ -434,7 +437,7 @@ static void run(void *arg) {
     } else {
         open_list(); CHECK(stored("owner") == 0, "fresh SMS page has no invented data");
         for (int i = 0; i < 17; i++) deliver();
-        open_list(); CHECK(S.count == 1, "17 incoming messages group into one peer conversation"); scene("Sms");
+        open_list(); CHECK(S.count == 1, "17 incoming messages group into one peer conversation (%zu)", S.count); scene("Sms");
         compose(); CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the F2 short host"); on_ui(type_short);
         CHECK(AI("sms.long", NULL) && g_rc.status == INK_RC_DONE, "open F3 long editor");
         on_ui(type_long);

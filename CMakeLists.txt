@@ -474,7 +474,7 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/apps/gallery/gallery.c
   ${CMAKE_SOURCE_DIR}/system/apps/memo/memo.c ${CMAKE_SOURCE_DIR}/system/apps/phone/phone.c ${CMAKE_SOURCE_DIR}/system/apps/phone/vendor/lilyphone/call_card.c
   ${CMAKE_SOURCE_DIR}/system/apps/memo/memo_voice.c ${CMAKE_SOURCE_DIR}/system/apps/memo/vendor/zswatch/voice_memo_ui.c
-  ${CMAKE_SOURCE_DIR}/system/apps/remote/remote.c ${CMAKE_SOURCE_DIR}/system/apps/sms/sms.c
+  ${CMAKE_SOURCE_DIR}/system/apps/remote/remote.c ${CMAKE_SOURCE_DIR}/system/apps/sms/sms.c ${CMAKE_SOURCE_DIR}/system/apps/sms/vendor/lilyphone/sms_view.c
   ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
 file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
 list(APPEND INK_I18N_SOURCES ${INK_I18N_SERVICES})
@@ -1845,7 +1845,7 @@ ink_sim_executable(sim-power-pages tests/power_pages.c)
 target_link_libraries(sim-power-pages PRIVATE ink_apps ink_system)
 add_test(NAME power-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/power_pages.py
   $<TARGET_FILE:sim-power-pages> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/power-pages)
-target_sources(ink_system PRIVATE system/apps/sms/sms.c)
+target_sources(ink_system PRIVATE system/apps/sms/sms.c system/apps/sms/vendor/lilyphone/sms_view.c)
 ink_sim_executable(sim-sms tests/sms/sms.c)
 target_link_libraries(sim-sms PRIVATE ink_apps ink_system)
 add_test(NAME sms COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sms/run.py
