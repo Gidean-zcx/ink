@@ -51,8 +51,19 @@ int cal_events_on(int32_t day, cal_item_t *items, int max) {
             int32_t first = e.nleads ? e.leads[0] : 0;
             for (int i = 1; i < e.nleads; i++) if (e.leads[i] > first) first = e.leads[i];
             if (e.nleads) cal_lead_text(first, e.all_day, lead, sizeof lead);
-            snprintf(it->note, sizeof it->note, "%s%s%.24s%s%.24s", e.parent ? TR("已改这一次") : "", e.parent && (rule[0] || lead[0]) ? " · " : "", rule,
-                     rule[0] && lead[0] ? " · " : "", lead);
+            snprintf(it->note, sizeof it->note, "%s%s%s%s%.40s", e.parent ? TR("已改这一次") : "", e.parent && (rule[0] || lead[0]) ? " · " : "", lead,
+                     rule[0] && lead[0] ? " · " : "", rule);
+            cal_utf8_trim(it->note); cal_utf8_trim(it->text);
+        }
+    ink_alarm_t a; /* the day's alarms too, as the old page listed them (A9) */
+    for (cursor = 0; n < max && ink_alarm_next(&cursor, INK_ALARM, &a) == 1;)
+        for (int64_t t = a.enabled ? ink_alarm_occurrence(&a, from) : 0; n < max && t && t < until; t = ink_alarm_occurrence(&a, t + 1)) {
+            int k = n++;
+            while (k && items[k - 1].at > t) { items[k] = items[k - 1]; k--; }
+            ink_tm_t lt; ink_time_to_local(t, &lt);
+            items[k] = (cal_item_t){.kind = 2, .id = a.id, .at = t};
+            snprintf(items[k].text, sizeof items[k].text, "%02d:%02d  %.47s", lt.hour, lt.min, a.title[0] ? a.title : TR("闹钟"));
+            snprintf(items[k].note, sizeof items[k].note, "%s", TR("闹钟"));
         }
     return n;
 }
@@ -106,7 +117,7 @@ static void fill_block(void) {
     for (int i = 0; i < 2; i++) /* the same words draw nothing: a new minute leaves the block alone */
         if (K.block_lines[i] && strcmp(lv_label_get_text(K.block_lines[i]), K.texts[1 + i])) lv_label_set_text(K.block_lines[i], K.texts[1 + i]);
     snprintf(K.texts[3], sizeof K.texts[3], "%s", ink_lunar_solar_term(K.y, K.m, K.d) ? ink_lunar_solar_term(K.y, K.m, K.d) : "");
-    char args[48]; snprintf(args, sizeof args, "{\"date\":\"%04d-%02d-%02d\"}", K.y, K.m, K.d);
+    char args[48]; snprintf(args, sizeof args, "{\"day\":%d}", K.d);
     cal_action(8, "select", TR("选一天"), "calendar.select", args);
 }
 
@@ -166,7 +177,7 @@ static void create(lv_obj_t *screen, void *arg) {
         int y, m, d; cal_civil(K.first + i, &y, &m, &d);
         int x = col_x(i % 7);
         K.cells[i] = ink_ui_box(screen, x, top + i / 7 * INK_CONTROL, col_x(i % 7 + 1) - x, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
-        char args[48]; snprintf(args, sizeof args, "{\"date\":\"%04d-%02d-%02d\"}", y, m, d);
+        char args[48]; snprintf(args, sizeof args, "{\"day\":%d,\"date\":\"%04d-%02d-%02d\"}", d, y, m, d);
         ink_shell_bind(K.cells[i], "calendar.select", args); /* M9: a neighbouring month's day turns to it */
         fill_cell(i);
     }

@@ -146,8 +146,10 @@ static bool update_ok;
 static void extra_pages(void) {
     open_page("calendar.open", "Calendar"); capture("Calendar-en", "Sun");
     CHECK(strstr(labels, "Mon") && strstr(labels, "Sat"), "calendar weekday abbreviations are translated");
-    CHECK(BY_HAND("system.home", NULL) && BY_HAND("app.open", "{\"id\":\"upcoming\"}") && WAIT_FOR(at("Upcoming"), 10000), "open upcoming");
-    capture("Upcoming-en", "Upcoming");
+    /* calendar-3: the old 接下来 page is the calendar's agenda now */
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("app.open", "{\"id\":\"upcoming\"}") && WAIT_FOR(at("Calendar"), 10000) &&
+          BY_HAND("calendar.view", "{\"view\":\"agenda\"}") && WAIT_FOR(at("Agenda"), 10000), "open the agenda");
+    capture("Agenda-en", "Calendar");
     CHECK(BY_HAND("file.mkdir", "{\"path\":\"/me/i18n-folder\"}") && g_rc.status == INK_RC_DONE, "synthetic folder");
     CHECK(BY_HAND("file.write", "{\"path\":\"/me/i18n-test.txt\",\"text\":\"Synthetic test content.\"}") && g_rc.status == INK_RC_DONE, "synthetic text file");
     CHECK(BY_HAND("system.home", NULL) && BY_HAND("app.open", "{\"id\":\"files\"}") && WAIT_FOR(at("Files"), 10000), "open files");

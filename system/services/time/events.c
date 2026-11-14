@@ -585,7 +585,11 @@ uint32_t time_events_max_id(void) {
 
 void time_events_replan(int64_t now, bool all) {
     ink_svc_lock();
-    for (int i = 0; i < E.n; i++) if (all || !E.due[i] || E.due[i] > now) plan(i, all && E.e[i].done_s > 0 && E.e[i].done_s < now ? E.e[i].done_s : now);
+    for (int i = 0; i < E.n; i++) { /* boot: from where each left off (missed ones come up); the clock moved: never before what already went off */
+        int64_t done = E.e[i].done_s;
+        if (all) plan(i, done > 0 && done < now ? done : now);
+        else if (!E.due[i] || E.due[i] > now) plan(i, done > now ? done : now);
+    }
     ink_svc_unlock();
 }
 

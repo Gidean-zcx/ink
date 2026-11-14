@@ -54,8 +54,8 @@ static const struct {
     {"usb.mount", NULL}, {"usb.unmount", NULL}, {"time.now", NULL}, {"time.set", "utc_s"}, {"time.lunar", ""}, {"alarm.set", "hour,minute"},
     {"alarm.list", NULL}, {"alarm.cancel", "id"}, {"alarm.dismiss", ""}, {"alarm.snooze", ""}, {"reminder.add", "at,title"}, {"reminder.list", NULL},
     {"reminder.cancel", "id"}, {"notify.post", "title"}, {"notify.list", ""}, {"notify.read", ""}, {"notify.dismiss", "id"}, {"notify.clear", NULL},
-    {"reminder.update", "id,at,title,repeat"}, {"reminder.new", NULL}, {"reminder.open", "id"},
-    {"reminder.time", ""}, {"calendar.list", "from,until"}, {"reminder.focus", NULL}, {"reminder.draft", ""}, {"reminder.save", NULL},
+    {"reminder.update", "id"}, {"reminder.new", ""}, {"reminder.open", "id"},
+    {"reminder.time", ""}, {"calendar.list", "from,until"}, {"reminder.focus", NULL}, {"reminder.draft", ""}, {"reminder.save", ""},
     {"notify.channels", NULL}, {"notify.set_channel", "id,enabled"}, {"interrupt.list", NULL}, {"interrupt.ack", NULL}, {"confirm.list", NULL},
     {"confirm.withdraw", "token"}, {"confirm.status", ""}, {"app.list", NULL}, {"app.open", "id"}, {"app.close", "id"}, {"app.cards", NULL}, {"text.state", NULL},
     {"app.page_action", "id"}, {"app.page_turn", "direction"},
@@ -122,7 +122,6 @@ static const struct {
     {"family.prev", NULL}, {"family.next", NULL}, {"wallpaper.choose", NULL}, {"member.rename", "id,name"},
     {"calendar.open", NULL}, {"calendar.prev", NULL}, {"calendar.next", NULL}, {"calendar.month_prev", NULL},
     {"calendar.month_next", NULL}, {"calendar.select", "day"},
-    {"calendar.grid_prev", NULL}, {"calendar.grid_next", NULL},
     {"weather.get", NULL}, {"weather.open", NULL}, {"weather.city", NULL}, {"weather.focus", NULL}, {"weather.find", "name"}, {"weather.set_city", "id"},
     {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
     {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
@@ -157,6 +156,12 @@ static const struct {
     {"gallery.show", "view"}, {"gallery.find", ""}, {"photo.next", NULL}, {"photo.prev", NULL}, {"photo.info", NULL}, /* gallery-3 */
     {"photo.zoom", "step"}, {"photo.pan", "dir"}, {"photo.rotate", "dir"}, {"photo.trash", NULL}, {"photo.restore", "path"},
     {"photo.delete_forever", "path"}, {"gallery.empty_trash", NULL},
+    {"calendar.view", "view"}, {"calendar.today", NULL}, {"calendar.goto", ""}, {"calendar.search", "query"}, {"calendar.search_focus", NULL}, /* calendar-3 */
+    {"calendar.search_clear", NULL}, {"calendar.earlier", NULL}, {"calendar.day", ""}, {"calendar.day_prev", NULL}, {"calendar.day_next", NULL},
+    {"calendar.almanac", NULL}, {"calendar.settings", NULL}, {"calendar.import_pick", NULL}, {"calendar.export_now", NULL}, {"calendar.export", NULL},
+    {"calendar.import", "path"}, {"calendar.event", "id"}, {"calendar.delete", ""}, {"calendar.undo", NULL}, {"reminder.repeat", NULL},
+    {"reminder.repeat_detail", NULL}, {"reminder.repeat_end", NULL}, {"reminder.reminders", NULL}, {"reminder.reminder_add", NULL},
+    {"reminder.back", NULL}, {"reminder.discard", NULL},
     {NULL, NULL},
 };
 
@@ -186,6 +191,8 @@ static const struct {
     {"shell.pin_submit", "only the person submits the local PIN buffer", NULL},
     {"memo.voice", "the memo app's own step: a finished recording or the hub's words, never typed in by the model", ""},
     {"phone.restore", "the inverse of phone.delete: reached only through system.undo (phone-3)", "token"},
+    {"reminder.restore", "the inverse of reminder.cancel: reached only through system.undo (calendar-3)", "token"},
+    {"calendar.import_run", "the file picker's answer on the page; the AI imports a path with calendar.import (calendar-3)", "path"},
     {NULL, NULL, NULL},
 
 };

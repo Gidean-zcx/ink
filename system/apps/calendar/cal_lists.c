@@ -30,29 +30,31 @@ static int collect(int64_t from, int64_t until, const char *query, cal_item_t *o
             int32_t most = e.nleads ? e.leads[0] : 0;
             for (int i = 1; i < e.nleads; i++) if (e.leads[i] > most) most = e.leads[i];
             if (e.nleads) cal_lead_text(most, e.all_day, lead, sizeof lead);
-            snprintf(it->note, sizeof it->note, "%s%s%.24s%s%.24s", e.parent ? TR("已改这一次") : "", e.parent && (rule[0] || lead[0]) ? " · " : "", rule, rule[0] && lead[0] ? " · " : "", lead);
+            snprintf(it->note, sizeof it->note, "%s%s%s%s%.40s", e.parent ? TR("已改这一次") : "", e.parent && (rule[0] || lead[0]) ? " · " : "", lead, rule[0] && lead[0] ? " · " : "", rule);
+            cal_utf8_trim(it->note); cal_utf8_trim(it->text);
         }
     }
     return n;
 }
 
-/* Grey date headings between the days: "今天 · 11月13日 周五", a month's name where it turns (A2, A3). */
+/* The grey date heading rides on the first row of each day ("今天 · 11月13日 周五 · 每周"), a month's name where it turns
+ * (A2, A3): a whole row for a heading would halve what a page holds on this screen. */
 static void with_headings(const cal_item_t *in, int n) {
     K.count = 0;
     int32_t today = ink_time_valid() ? ink_event_day(ink_time_now_s()) : 0, last = INT32_MIN, last_month = -1;
     for (int i = 0; i < n && K.count < CAL_ITEMS; i++) {
+        cal_item_t *it = &K.items[K.count++];
+        *it = in[i];
         int32_t day = ink_event_day(in[i].at);
-        if (day != last && K.count < CAL_ITEMS - 1) {
-            int y, m, d; cal_civil(day, &y, &m, &d);
-            cal_item_t *h = &K.items[K.count++];
-            memset(h, 0, sizeof *h);
-            char month[24] = "";
-            if (last_month >= 0 && y * 12 + m != last_month) snprintf(month, sizeof month, TR("%d年%d月 · "), y, m);
-            snprintf(h->text, sizeof h->text, "%s%s%s%d月%d日 %s", month, day == today ? TR("今天 · ") : day == today + 1 ? TR("明天 · ") : "", "", m, d, cal_weekday_name(cal_wday(day)));
-            h->at = in[i].at;
-            last = day; last_month = y * 12 + m;
-        }
-        K.items[K.count++] = in[i];
+        if (day == last) continue;
+        int y, m, d; cal_civil(day, &y, &m, &d);
+        char month[24] = "", note[sizeof it->note];
+        if (last_month >= 0 && y * 12 + m != last_month) snprintf(month, sizeof month, TR("%d年%d月 · "), y, m);
+        snprintf(note, sizeof note, "%s", it->note);
+        snprintf(it->note, sizeof it->note, "%s%s%d月%d日 %s%s%.60s", month, day == today ? TR("今天 · ") : day == today + 1 ? TR("明天 · ") : "", m, d,
+                 cal_weekday_name(cal_wday(day)), note[0] ? " · " : "", note);
+        cal_utf8_trim(it->note);
+        last = day; last_month = y * 12 + m;
     }
 }
 
@@ -153,6 +155,7 @@ static void agenda_create(lv_obj_t *screen, void *arg) {
         lv_obj_t *box = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
         ink_shell_bind(lv_obj_get_child(ink_ui_empty(box, TR("还没有接下来的事"), TR("加一件"), bound_here, NULL), 1), "reminder.new", "{}");
         cal_action(7, "add", TR("加一件"), "reminder.new", "{}");
+        cal_field(2, "empty", "status", TR("状态"), TR("还没有接下来的事"));
         return;
     }
     snprintf(K.texts[2], sizeof K.texts[2], TR("没有找到“%s”"), K.query);

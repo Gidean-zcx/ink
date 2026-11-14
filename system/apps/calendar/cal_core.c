@@ -112,6 +112,15 @@ __attribute__((weak)) bool cal_almanac(int y, int m, int d, ink_almanac_t *out, 
 
 /* ------------------------------------------------------------ page parts */
 
+/* A cut at the end of a buffer never leaves half a character. */
+void cal_utf8_trim(char *s) {
+    size_t n = strlen(s), k = n;
+    while (k && ((unsigned char)s[k - 1] & 0xC0) == 0x80) k--;
+    if (!k || ((unsigned char)s[k - 1] & 0xC0) != 0xC0) return;
+    unsigned char b = (unsigned char)s[k - 1];
+    if (n - (k - 1) < (size_t)(b >= 0xF0 ? 4 : b >= 0xE0 ? 3 : 2)) s[k - 1] = 0;
+}
+
 bool cal_mine(void) { return !strcmp(K.member, ink_member_current()->id); }
 
 void cal_begin(lv_obj_t *screen, const char *title) {
@@ -171,11 +180,11 @@ int cal_snapshot(char *out, size_t cap) {
     int n = -1;
     size_t actions = K.page.action_count;
     if (K.field && ink_text_focused()) K.page.action_count = 0;
-    if (controls && ink_ui_semantics_snapshot(&K.page, controls, cap) >= 0 && (!K.list || (list && ink_ui_list_snapshot(K.list, list, cap) >= 0))) {
-        ink_jw_t w; ink_jw_init(&w, out, cap);
-        ink_jw_raw(&w, "{\"controls\":"); ink_jw_raw(&w, controls);
-        if (list) { ink_jw_raw(&w, ",\"content\":"); ink_jw_raw(&w, list); }
-        ink_jw_raw(&w, "}");
+    int c = !controls ? -1 : K.field ? ink_textfield_short_snapshot(K.field, controls, cap) : ink_ui_semantics_snapshot(&K.page, controls, cap); /* F2: the input's rectangle too */
+    if (c >= 0 && (!K.list || (list && ink_ui_list_snapshot(K.list, list, cap) >= 0))) {
+        ink_jw_t w; ink_jw_init(&w, out, cap); /* a page without a list is its controls alone, as the shared input's snapshot is */
+        if (list) { ink_jw_raw(&w, "{\"controls\":"); ink_jw_raw(&w, controls); ink_jw_raw(&w, ",\"content\":"); ink_jw_raw(&w, list); ink_jw_raw(&w, "}"); }
+        else ink_jw_raw(&w, controls);
         n = w.overflow ? -1 : (int)w.len;
     }
     K.page.action_count = actions;
@@ -253,7 +262,7 @@ static void nav(ink_call_t *call) {
         int k = K.y * 12 + K.m - 1 + (!strcmp(id, "calendar.month_next") ? 1 : -1);
         if (k < 1901 * 12 || k >= 2101 * 12 || !on_page("Calendar")) { call->rc.status = INK_RC_INVALID; return; }
         y = k / 12; m = k % 12 + 1;
-        cal_month_select(y, m, K.d <= cal_month_days(y, m) ? K.d : cal_month_days(y, m)); return;
+        cal_month_select(y, m, 1); return; /* a new month starts on its first day */
     }
     if (!strcmp(id, "calendar.select")) {
         if (!on_page("Calendar")) { call->rc.status = INK_RC_STALE; return; }
@@ -333,7 +342,7 @@ static const ink_cap_t CAPS[] = {
     NAV("calendar.next", "日历当前页列表的下一页"),
     NAV("calendar.month_prev", "月历上个月"),
     NAV("calendar.month_next", "月历下个月"),
-    NAV_IN("calendar.select", "月历选一天（day 当月几号，或 date YYYY-MM-DD）", "{\"type\":\"object\",\"properties\":{\"day\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":31},\"date\":{\"type\":\"string\",\"maxLength\":10}}}"),
+    NAV_IN("calendar.select", "月历选一天（day 当月几号；给了 date YYYY-MM-DD 就选那天，前后月的也行）", "{\"type\":\"object\",\"properties\":{\"day\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":31},\"date\":{\"type\":\"string\",\"maxLength\":10}},\"required\":[\"day\"]}"),
     NAV_IN("calendar.goto", "日历跳到某天（不给 date 就打开日期选择）", DATE_ARG),
     NAV_IN("calendar.search", "议程里按标题搜日程（一个字起）", "{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":30}},\"required\":[\"query\"]}"),
     NAV("calendar.search_focus", "议程的搜索框输入"),
@@ -347,7 +356,7 @@ static const ink_cap_t CAPS[] = {
     NAV("calendar.import_pick", "选一个 .ics 文件导入日程"),
     {.id = "calendar.export_now", .app = "upcoming", .title = "导出我的日程（页面上写结果）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = nav},
     {.id = "calendar.import_run", .app = "upcoming", .title = "导入选好的 .ics 文件并显示结果页", .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}},\"required\":[\"path\"]}",
-     .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = nav},
+     .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_OWNER, .run = nav},
     {.id = "calendar.undo", .app = "upcoming", .title = "撤销刚才的删除", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = nav},
     EDIT("calendar.event", "看一件日程的详情（只读，可编辑和删除）", "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295},\"occurrence\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"id\"]}"),
     EDIT("reminder.new", "手动加日程（date 默认所选那天）", DATE_ARG),

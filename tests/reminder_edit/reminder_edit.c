@@ -95,56 +95,67 @@ static void not_ringing(int day, int hour) {
     CHECK(WAIT_FOR(ink_time_now_s() >= at(day, hour, 0) + 2, 5000), "cross the exact removed deadline");
     CHECK(__atomic_load_n(&fired, __ATOMIC_ACQUIRE) == before, "the removed deadline does not fire"); quiet();
 }
+/* calendar-3: adding starts from reminder.new (the day page's 加一件 calls it), a row opens the read-only details first,
+ * 编辑 opens the editor, the repeat is a page of rows, a repeating one asks which occurrences, the list is the agenda. */
+static void agenda(void) { call_ok("calendar.view", "{\"view\":\"agenda\"}"); CHECK(!strcmp(ink_ui_page_name(), "Agenda"), "the agenda lists what comes"); }
+static void edit(const char *row) { label(row); CHECK(!strcmp(ink_ui_page_name(), "EventInfo"), "a row opens the read-only details"); button("reminder.open"); }
+static void repeat(const char *word) { button("reminder.repeat"); label(word); if (strcmp(ink_ui_page_name(), "ReminderEdit")) button("shell.back"); }
 static void manual_cycle(void) {
-    button("reminder.new"); CHECK(!strcmp(ink_ui_page_name(), "ReminderEdit"), "manual Add opens the editor");
-    capture("add"); button("reminder.save"); expect("请填写内容");
-    name("手动提醒"); button("reminder.time"); expect("2026-11-11 08:00"); capture("picker");
+    /* calendar-3: new events get the member's default reminder (10 minutes before); these checks ring at the start */
+    call_ok("settings.set", "{\"id\":\"calendar.default_reminder\",\"value\":1}");
+    agenda();
+    call_ok("reminder.new", "{\"date\":\"2026-11-11\"}"); CHECK(!strcmp(ink_ui_page_name(), "ReminderEdit"), "manual Add opens the editor");
+    capture("add"); button("reminder.save"); expect("标题不能空");
+    name("手动提醒"); button("reminder.time"); press("reminder.draft", NULL, 7); expect("2026-11-11 08:00"); capture("picker");
     press("reminder.draft", NULL, 9); expect("08:01"); press("reminder.draft", NULL, 8); expect("08:00");
-    button("shell.back"); button("reminder.save"); CHECK(!strcmp(ink_ui_page_name(), "Upcoming"), "saving returns to Upcoming");
+    button("shell.back"); button("reminder.save"); CHECK(!strcmp(ink_ui_page_name(), "Agenda"), "saving returns to the agenda");
     ink_alarm_t a = reminder("手动提醒"); CHECK(a.next_s == at(11, 8, 0), "touch saved tomorrow at 08:00");
-    label("08:00 手动提醒"); expect("reminder.cancel"); expect("reminder.save"); capture("detail");
+    label("08:00  手动提醒"); expect("calendar.delete"); expect("reminder.open"); capture("detail"); button("shell.back");
     ink_time_set(at(11, 8, 0) - 1, false); rings(1, "手动提醒");
-    ink_time_set(at(10, 6, 0), false); quiet(); button("reminder.new"); name("待改提醒"); button("reminder.save");
-    a = reminder("待改提醒"); uint32_t original = a.id; label("08:00 待改提醒");
+    ink_time_set(at(10, 6, 0), false); quiet(); call_ok("reminder.new", "{\"date\":\"2026-11-11\"}"); button("reminder.time"); press("reminder.draft", NULL, 7); button("shell.back");
+    name("待改提醒"); button("reminder.save");
+    a = reminder("待改提醒"); uint32_t original = a.id; edit("08:00  待改提醒");
     name("改好提醒"); button("reminder.time"); press("reminder.draft", NULL, 7); expect("09:00");
     button("shell.back"); capture("modified"); button("reminder.save");
     a = reminder("改好提醒"); CHECK(a.id == original && a.next_s == at(11, 9, 0), "editing reschedules the same reminder to 09:00");
     not_ringing(11, 8);
-    button("calendar.open"); call_ok("calendar.select", "{\"day\":11}"); expect("09:00"); absent("08:00");
-    label("09:00 改好提醒"); label("每天"); button("reminder.save");
+    call_ok("calendar.view", "{\"view\":\"month\"}"); call_ok("calendar.select", "{\"day\":11}");
+    call_ok("calendar.day", NULL); expect("09:00  改好提醒"); absent("08:00  待改提醒"); edit("09:00  改好提醒"); repeat("每天"); button("reminder.save");
     ink_time_set(at(11, 9, 0) - 1, false); rings(2, "改好提醒"); a = reminder("改好提醒");
     CHECK(a.repeat == INK_REPEAT_WEEKDAYS && a.weekdays == 127 && a.next_s == at(12, 9, 0), "daily uses the existing scheduler and next day");
-    label("09:00 改好提醒"); button("reminder.cancel");
-    CHECK(WAIT_FOR(strcmp(ink_ui_page_name(), "ReminderEdit"), 5000), "deletion returns to the list without an extra confirmation"); quiet();
+    label("09:00  改好提醒"); button("calendar.delete"); label("全部删掉");
+    CHECK(WAIT_FOR(strcmp(ink_ui_page_name(), "EventInfo") && strcmp(ink_ui_page_name(), "Scope"), 5000), "deletion returns to the list without a yes/no card"); quiet();
     ink_alarm_t deleted; CHECK(!get_named("改好提醒", &deleted), "the reminder is deleted"); not_ringing(12, 9);
-    call_ok("shell.back", NULL); CHECK(!strcmp(ink_ui_page_name(), "Upcoming"), "return from Calendar to Upcoming");
+    call_ok("shell.back", NULL); CHECK(!strcmp(ink_ui_page_name(), "Calendar"), "return from the day to the month");
 }
 static void ai_and_members(void) {
+    agenda();
     call_ok("reminder.add", "{\"at\":\"2026-11-13 08:00\",\"title\":\"AI提醒\"}");
-    label("08:00 AI提醒"); name("AI改好"); button("reminder.time"); press("reminder.draft", NULL, 7); button("shell.back");
-    label("每周"); label("工作日"); label("每天"); button("reminder.save");
+    edit("08:00  AI提醒"); name("AI改好"); button("reminder.time"); press("reminder.draft", NULL, 7); button("shell.back");
+    repeat("每周"); repeat("工作日"); repeat("每天"); button("reminder.save");
     ink_alarm_t a = reminder("AI改好");
     CHECK(a.hour == 9 && a.weekdays == 127 && a.next_s == at(13, 9, 0), "AI-created reminder is edited by touch without ringing before the selected date");
     call_ok("reminder.add", "{\"at\":\"2026-11-13 10:00\",\"title\":\"AI待删\"}");
-    label("10:00 AI待删"); button("reminder.cancel"); quiet(); ink_alarm_t removed;
+    label("10:00  AI待删"); button("calendar.delete"); quiet(); ink_alarm_t removed;
     CHECK(!get_named("AI待删", &removed), "AI-created reminder is deleted from the detail");
-    CHECK(ink_member_switch("kid") == 0, "switch to the synthetic child"); quiet(); call_ok("app.open", "{\"id\":\"upcoming\"}");
-    expect("\"total\":0"); absent("AI改好"); char args[192];
-    snprintf(args, sizeof args, "{\"id\":%u,\"at\":\"2026-11-13 09:00\",\"title\":\"越权测试\",\"repeat\":\"none\"}", (unsigned)a.id);
+    CHECK(ink_member_switch("kid") == 0, "switch to the synthetic child"); quiet(); call_ok("app.open", "{\"id\":\"upcoming\"}"); agenda();
+    expect("还没有接下来的事"); absent("AI改好"); char args[192];
+    snprintf(args, sizeof args, "{\"id\":%u,\"at\":\"2026-11-13 09:00\",\"title\":\"越权测试\",\"repeat\":\"none\",\"scope\":\"all\"}", (unsigned)a.id);
     CHECK(AI("reminder.update", args) && g_rc.status == INK_RC_STALE, "the child cannot edit an adult reminder");
     snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)a.id);
     CHECK(AI("reminder.open", args) && g_rc.status == INK_RC_STALE, "the child cannot view an adult detail");
     CHECK(AI("reminder.cancel", args) && g_rc.status != INK_RC_DONE, "the child cannot delete an adult reminder"); quiet();
-    button("reminder.new"); name("孩子事项"); button("reminder.save"); expect("孩子事项");
-    CHECK(ink_member_switch(owner) == 0, "switch back to the original owner"); quiet(); call_ok("app.open", "{\"id\":\"upcoming\"}");
+    call_ok("reminder.new", "{\"date\":\"2026-11-13\"}"); name("孩子事项");
+    button("reminder.save"); agenda(); expect("孩子事项");
+    CHECK(ink_member_switch(owner) == 0, "switch back to the original owner"); quiet(); call_ok("app.open", "{\"id\":\"upcoming\"}"); agenda();
     expect("AI改好"); absent("孩子事项"); a = reminder("AI改好"); CHECK(a.hour == 9 && a.weekdays == 127, "adult data survived child operations");
 }
 static void restored(void) {
-    expect("AI改好"); absent("孩子事项"); absent("AI待删"); absent("改好提醒");
+    agenda(); expect("AI改好"); absent("孩子事项"); absent("AI待删"); absent("改好提醒");
     ink_alarm_t a = reminder("AI改好"); CHECK(a.hour == 9 && a.weekdays == 127 && a.next_s == at(13, 9, 0), "edited title, time, repeat survive restart");
-    label("09:00 AI改好"); expect("每天"); expect("reminder.cancel"); button("shell.back");
-    CHECK(ink_member_switch("kid") == 0, "open the child's persisted data"); quiet(); call_ok("app.open", "{\"id\":\"upcoming\"}");
-    expect("孩子事项"); absent("AI改好"); a = reminder("孩子事项"); CHECK(a.next_s == at(13, 8, 0), "child reminder survives restart");
+    label("09:00  AI改好"); expect("每天"); expect("calendar.delete"); button("shell.back");
+    CHECK(ink_member_switch("kid") == 0, "open the child's persisted data"); quiet(); call_ok("app.open", "{\"id\":\"upcoming\"}"); agenda();
+    expect("孩子事项"); absent("AI改好"); a = reminder("孩子事项"); CHECK(a.next_s >= at(13, 0, 0) && a.next_s < at(14, 0, 0), "child reminder survives restart on the 13th");
 }
 static void host_phase(void *arg) { (void)arg; const char *p = getenv("INK_REMINDER_PHASE"); snprintf(phase, sizeof phase, "%s", p ? p : "create"); }
 static void run(void *arg) {

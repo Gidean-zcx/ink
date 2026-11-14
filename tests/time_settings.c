@@ -140,12 +140,13 @@ static void zones(void) {
     CHECK(alarm.next_s == old + 15 * 3600, "alarm is rescheduled to 02:00 in the new zone");
     CHECK(AI("time.now", NULL) && strstr(g_result, "09:59"), "AI and status time use Tokyo");
     CHECK(AI("calendar.open", NULL) && g_rc.status == INK_RC_DONE, "calendar opens after zone change");
+    /* calendar-3: the alarm and the reminder are listed together in the agenda (the month has no list any more) */
+    CHECK(AI("calendar.view", "{\"view\":\"agenda\"}") && g_rc.status == INK_RC_DONE, "the agenda lists what comes");
     ink_alarm_t reminder = {.kind = INK_REMINDER, .at_utc = local(2026, 11, 10, 12, 0, 0)};
     snprintf(reminder.title, sizeof reminder.title, "SYNTH_UTC");
     CHECK(ink_alarm_add(&reminder) > 0, "seed a UTC reminder for calendar projection");
-    CHECK(WAIT_FOR(page_has("\"total\":2"), 3000), "calendar includes the alarm and UTC reminder");
-    CHECK(AI("calendar.next", NULL) && g_rc.status == INK_RC_DONE, "visit the UTC reminder on its own calendar page");
-    CHECK(WAIT_FOR(page_has("12:00"), 3000), "calendar shows UTC reminder in Tokyo time");
+    CHECK(WAIT_FOR(page_has("SYNTH_UTC") && page_has("闹钟"), 3000), "calendar includes the alarm and UTC reminder");
+    CHECK(WAIT_FOR(page_has("12:00  SYNTH_UTC"), 3000), "calendar shows UTC reminder in Tokyo time");
     setting("time.zone", 0);
     CHECK(WAIT_FOR(page_has("11:00"), 3000), "visible calendar follows changed zone through service notification");
     char cancel[48]; snprintf(cancel, sizeof cancel, "{\"id\":%u}", (unsigned)reminder.id);

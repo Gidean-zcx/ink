@@ -110,6 +110,7 @@ static void focus_changed(void *ctx, int handle, const char *id) { /* the keyboa
     lv_obj_update_layout(footer);
     lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
     lv_obj_set_y(footer, (focused ? keyboard.y1 - ink_ui_px(INK_GAP) : ink_ui_height() - ink_ui_px(INK_MARGIN)) - lv_obj_get_height(footer));
+    lv_obj_set_y(E.name, ink_ui_px(focused ? INK_STATUS_BAR : TOP)); /* the title field up by the bar, clear of the message */
 }
 
 static void edit_create(lv_obj_t *screen, void *arg) {
@@ -131,7 +132,7 @@ static void edit_create(lv_obj_t *screen, void *arg) {
     ink_textfield_bind_short(E.name, &K.page, cal_field(0, "title", "textbox", TR("标题"), E.e.title), cal_action(2, "title", TR("输入标题"), "reminder.focus", "{}"));
     lv_obj_add_event_cb(E.name, editor_name, LV_EVENT_VALUE_CHANGED, NULL);
     y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP_S;
-    int footer_h = INK_PRIMARY + (E.error[0] ? ink_ui_text_height(E.error, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_S : 0);
+    int footer_h = INK_PRIMARY + (E.error[0] ? ink_ui_text_height(E.error, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_L : 0);
     body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y - INK_MARGIN - footer_h, 0, INK_SURFACE_WHITE, false);
     when_text(&E.start, E.e.all_day, K.texts[1], sizeof K.texts[1]);
     end_text(K.texts[2], sizeof K.texts[2]);
@@ -184,6 +185,7 @@ static void part_texts(void) {
         snprintf(K.texts[1 + i], sizeof K.texts[1 + i], "%s %02d", TR(NAMES[i]), v[i]);
         if (E.part_labels[i] && strcmp(lv_label_get_text(E.part_labels[i]), K.texts[1 + i])) lv_label_set_text(E.part_labels[i], K.texts[1 + i]);
     }
+    when_text(t, date_only(), K.texts[6], sizeof K.texts[6]); /* the whole value, for the AI */
 }
 static void time_create(lv_obj_t *screen, void *arg) {
     (void)arg;
@@ -199,6 +201,7 @@ static void time_create(lv_obj_t *screen, void *arg) {
     for (int i = 3; date_only() && i < INK_UI_DATETIME_PARTS; i++) /* a date only: the hour and minute rows are not there */
         for (int k = 0; k < 3 && E.part_labels[i]; k++) lv_obj_add_flag(lv_obj_get_child(box, (int32_t)lv_obj_get_index(E.part_labels[i]) + k), LV_OBJ_FLAG_HIDDEN);
     part_texts();
+    cal_field(0, "value", "text", TR("选的时间"), K.texts[6]);
     for (int i = 0; i < (date_only() ? 3 : 5); i++) cal_field(i, PARTS[i], "text", PARTS[i], K.texts[1 + i]);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, half = (w - INK_GAP) / 2, bottom = INK_CANVAS_H - INK_MARGIN - INK_CONTROL;
     snprintf(K.texts[7], sizeof K.texts[7], "{\"date\":\"%04d-%02d-%02d\"}", t->year, t->month, t->day);
@@ -488,7 +491,10 @@ void cal_edit_cap(ink_call_t *call) {
     int64_t moved = ink_time_from_local(&E.start) - start_before;
     if (moved && E.has_end) ink_time_to_local(ink_time_from_local(&E.end) + moved, &E.end);
     if (E.part_target == 2 && !strcmp(page, "ReminderTime")) { E.e.until_year = (int16_t)E.pick.year; E.e.until_month = (uint8_t)E.pick.month; E.e.until_day = (uint8_t)E.pick.day; E.e.count = 0; }
-    if (ink_args_get_bool(&call->args, "all_day", &flag)) { E.e.all_day = flag; redraw = true; }
+    if (ink_args_get_bool(&call->args, "all_day", &flag)) { /* an all-day end is its last day; a timed end is exclusive */
+        if (E.e.all_day && !flag && E.has_end) ink_time_to_local(ink_time_from_local(&E.end) + 86400, &E.end);
+        E.e.all_day = flag; redraw = true;
+    }
     if (ink_args_get_bool(&call->args, "clear_end", &flag) && flag) { E.has_end = false; if (!strcmp(page, "ReminderTime")) { E.dirty = true; ink_ui_pop(); return; } redraw = true; }
     int64_t check;
     if ((ink_args_get_int(&call->args, "repeat", &check) && (check < 0 || check > 6)) || (ink_args_get_int(&call->args, "weekday", &check) && (check < 0 || check > 6)) ||

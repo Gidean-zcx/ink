@@ -240,7 +240,7 @@ static void editor(void) {
 
 static void delete_undo(void) {
     char args[160]; snprintf(args, sizeof args, "{\"id\":%u,\"occurrence\":\"2026-12-07 10:00\"}", (unsigned)id_of("周会"));
-    ok("calendar.select", "{\"date\":\"2026-12-07\"}");
+    ok("calendar.select", "{\"day\":7,\"date\":\"2026-12-07\"}");
     ok("calendar.event", args);
     ink_probe_mark("c3.delete.before"); press("calendar.delete", 0); page("Scope"); expect("只删这一次"); shot("scope-delete");
     press("calendar.delete", 0); ink_probe_mark("c3.delete.after");

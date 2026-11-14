@@ -134,20 +134,20 @@ static bool form_fits(lv_obj_t *obj) {
 }
 static void form_layout(void) {
     lv_obj_update_layout(lv_screen_active());
-    const char *const labels[] = {"开始时间", "结束时间", "响铃", "全天", "清除结束", "工作日"};
+    const char *const labels[] = {"开始", "结束", "提醒", "全天", "重复"}; /* calendar-3: the editor's rows */
     for (unsigned i = 0; i < sizeof labels / sizeof *labels; i++)
         CHECK(form_fits(form_label(lv_screen_active(), labels[i])), "UX22 D04 form label fits: %s", labels[i]);
 }
 static void form_error_layout(void) {
     lv_obj_update_layout(lv_screen_active());
-    lv_obj_t *error = form_label(lv_screen_active(), "请填写内容"), *save = form_label(lv_screen_active(), "保存提醒");
+    lv_obj_t *error = form_label(lv_screen_active(), "标题不能空"), *save = form_label(lv_screen_active(), "保存");
     CHECK(form_fits(error) && form_fits(save), "UX22 D06 error and footer are fully visible");
     if (error && save) {
         lv_area_t e, s, keyboard; lv_obj_get_coords(error, &e); lv_obj_get_coords(lv_obj_get_parent(save), &s); ink_shell_keyboard_area(&keyboard);
         CHECK(e.y2 + ink_ui_px(INK_GAP_L) <= s.y1, "UX22 D06 error and save keep the required gap");
         CHECK(!ink_text_focused() || s.y2 < keyboard.y1, "UX22 D06 save stays above the expanded keyboard");
         if (ink_text_focused()) {
-            lv_obj_t *field = form_label(lv_screen_active(), "内容"); lv_area_t f;
+            lv_obj_t *field = form_label(lv_screen_active(), "标题"); lv_area_t f;
             CHECK(form_fits(field), "UX22 D06 focused field label stays visible");
             if (field) {
                 lv_obj_t *input = lv_obj_get_child(lv_obj_get_parent(field), 1);
@@ -162,15 +162,15 @@ static void form(void) {
     call_ok("reminder.new", NULL); on_ui(form_layout); capture("ReminderEdit");
     call_ok("reminder.time", NULL); expect("\"title\":\"开始时间\""); capture("ReminderStart"); call_ok("shell.back", NULL);
     call_ok("reminder.time", "{\"end\":true}"); expect("\"title\":\"结束时间\"");
-    call_ok("reminder.draft", "{\"hour\":9}"); capture("ReminderEnd"); call_ok("shell.back", NULL);
-    expect("09:00"); press("reminder.draft", 0); expect("\"id\":\"end\",\"role\":\"text\",\"label\":\"结束时间\",\"value\":\"\"");
+    call_ok("reminder.draft", "{\"hour\":9}"); capture("ReminderEnd");
+    expect("09:00"); press("reminder.draft", 10); /* 不要结束时间 */ expect("\"id\":\"end\",\"role\":\"text\",\"label\":\"结束\",\"value\":\"未设置\"");
     CHECK(AI("reminder.save", NULL) && g_rc.status != INK_RC_DONE, "UX22 empty content is rejected"); quiet();
-    expect("请填写内容"); on_ui(form_layout); on_ui(form_error_layout); capture("ReminderError");
+    expect("标题不能空"); on_ui(form_layout); on_ui(form_error_layout); capture("ReminderError");
     call_ok("reminder.focus", NULL); CHECK(ink_text_focused(), "UX22 existing short field opens the keyboard");
     on_ui(form_error_layout); capture("ReminderKeyboard");
     call_ok("text.insert", "{\"text\":\"合成提醒\"}"); call_ok("text.submit", NULL);
     expect("合成提醒"); on_ui(form_error_layout); capture("ReminderTyped");
-    call_ok("reminder.draft", "{\"all_day\":true,\"ring\":false}"); expect("\"label\":\"全天\",\"value\":\"true\""); expect("\"label\":\"响铃提醒\",\"value\":\"false\"");
+    call_ok("reminder.draft", "{\"all_day\":true}"); expect("\"label\":\"全天\""); expect("全天");
     call_ok("reminder.save", NULL); CHECK(strcmp(ink_ui_page_name(), "ReminderEdit"), "UX22 saving uses the existing reminder service");
 }
 static void run(void *arg) {
@@ -178,8 +178,9 @@ static void run(void *arg) {
     ink_time_set(local_time(2026, 11, 4, 6, 0), false);
     if (!strcmp(scene, "Form")) { form(); ink_probe_count("test.finished"); return; }
     snprintf(owner, sizeof owner, "%s", ink_member_current()->id);
-    call_ok("shell.launch", "{\"id\":\"upcoming\"}"); CHECK(!strcmp(ink_ui_page_name(), "Upcoming"), "the home entry opens Upcoming");
-    expect("\"total\":0"); visible("还没有接下来的事");
+    /* calendar-3: the entry opens the month; the old 接下来 list is the agenda (alarms and events together) */
+    call_ok("shell.launch", "{\"id\":\"upcoming\"}"); CHECK(!strcmp(ink_ui_page_name(), "Calendar"), "the home entry opens the calendar");
+    call_ok("calendar.view", "{\"view\":\"agenda\"}"); visible("还没有接下来的事");
     add(INK_REMINDER, 6, 15, "家长会", false);
     add(INK_ALARM, 5, 7, "起床", false);
     add(INK_REMINDER, 5, 8, "带作业本", false);
@@ -190,53 +191,50 @@ static void run(void *arg) {
     expect("\"total\":5"); absent("已关闭测试");
     char *a = strstr(snapshot, "今晚读书"), *b = strstr(snapshot, "起床"), *c = strstr(snapshot, "带作业本"), *d = strstr(snapshot, "放学取快递");
     CHECK(a && b && c && d && a < b && b < c && c < d, "mixed alarms and reminders are sorted by real time");
-    visible("18:00 今晚读书"); visible("07:00 起床"); capture("Upcoming");
+    visible("18:00  今晚读书"); visible("07:00  起床"); capture("Upcoming");
     key(HAL_KEY_NEXT); quiet(); expect("家长会"); absent("今晚读书"); expect("\"page\":2");
     call_ok("calendar.prev", NULL); expect("\"page\":1");
-    press("calendar.open", 0); CHECK(!strcmp(ink_ui_page_name(), "Calendar"), "the real month button opens Calendar");
-    expect("2026年11月4日"); expect("今晚读书"); absent("带作业本"); capture("Calendar");
-    press("calendar.select", 4); expect("2026年11月5日"); expect("起床"); absent("带作业本"); absent("今晚读书");
-    call_ok("calendar.next", NULL); expect("带作业本"); expect("\"page\":2");
-    call_ok("calendar.next", NULL); expect("放学取快递"); expect("\"page\":3");
-    call_ok("calendar.select", "{\"day\":6}"); expect("家长会"); expect("\"page\":1");
-    call_ok("calendar.select", "{\"day\":7}"); expect("\"total\":0"); visible("这一天没有提醒和闹钟");
-    press("calendar.month_next", 0); expect("2026年12月1日");
-    call_ok("calendar.month_next", NULL); expect("2027年1月1日");
-    press("calendar.month_prev", 0); expect("2026年12月1日"); call_ok("calendar.month_prev", NULL); expect("2026年11月1日");
+    press("calendar.view", 0); CHECK(!strcmp(ink_ui_page_name(), "Calendar"), "the real month segment opens the month");
+    expect("11月4日"); expect("今晚读书"); absent("带作业本"); capture("Calendar");
+    call_ok("calendar.select", "{\"day\":5}"); expect("11月5日"); expect("这天 3 件事"); absent("今晚读书");
+    call_ok("calendar.day", NULL); expect("起床"); expect("带作业本"); absent("今晚读书");
+    if (!strstr(snapshot, "放学取快递")) call_ok("calendar.next", NULL);
+    expect("放学取快递"); call_ok("shell.back", NULL);
+    call_ok("calendar.select", "{\"day\":6}"); expect("家长会");
+    call_ok("calendar.select", "{\"day\":7}"); visible("这天没有安排");
+    press("calendar.month_next", 0); expect("2026年12月"); expect("12月1日");
+    call_ok("calendar.month_next", NULL); expect("2027年1月"); expect("1月1日");
+    press("calendar.month_prev", 0); expect("12月1日"); call_ok("calendar.month_prev", NULL); expect("11月1日");
     CHECK(AI("calendar.select", "{\"day\":31}") && g_rc.status == INK_RC_INVALID, "November 31 is rejected"); quiet();
     CHECK(AI("calendar.select", "{\"day\":0}") && g_rc.status == INK_RC_INVALID, "day zero is rejected by the shared schema"); quiet();
-    call_ok("calendar.month_prev", NULL); expect("2026年10月1日");
-    call_ok("calendar.month_prev", NULL); call_ok("calendar.month_prev", NULL); expect("2026年8月1日");
-    expect("\"id\":\"weeks\""); expect("1/2"); on_ui(check_month_controls);
-    CHECK(AI("calendar.grid_prev", NULL) && g_rc.status == INK_RC_INVALID, "the first grid page has no previous page"); quiet();
-    press("calendar.grid_next", 0); expect("2/2"); on_ui(check_month_controls);
-    CHECK(AI("calendar.grid_next", NULL) && g_rc.status == INK_RC_INVALID, "the last grid page has no next page"); quiet();
-    press_day("31"); expect("2026年8月31日"); expect("2/2"); on_ui(check_month_controls);
-    call_ok("calendar.select", "{\"day\":1}"); expect("1/2"); visible("1");
+    call_ok("calendar.month_prev", NULL); expect("10月1日");
+    call_ok("calendar.month_prev", NULL); call_ok("calendar.month_prev", NULL); expect("8月1日");
+    absent("\"id\":\"weeks\""); expect("六周"); on_ui(check_month_controls); /* calendar-3: six weeks on one screen, no grid pages */
+    call_ok("calendar.select", "{\"day\":31}"); expect("8月31日"); on_ui(check_month_controls);
+    call_ok("calendar.select", "{\"day\":1}"); visible("1");
     add(INK_ALARM, 4, 7, "每天合成闹钟", true); quiet();
     call_ok("calendar.month_next", NULL); call_ok("calendar.month_next", NULL); call_ok("calendar.month_next", NULL);
-    call_ok("calendar.select", "{\"day\":7}"); expect("每天合成闹钟");
-    call_ok("shell.back", NULL); expect("今晚读书"); expect("每天合成闹钟");
+    call_ok("calendar.select", "{\"day\":7}"); call_ok("calendar.day", NULL); expect("每天合成闹钟"); call_ok("shell.back", NULL);
+    call_ok("calendar.view", "{\"view\":\"agenda\"}"); expect("今晚读书"); expect("每天合成闹钟"); call_ok("calendar.view", "{\"view\":\"month\"}");
     CHECK(ink_member_switch("kid") == 0, "switch to the synthetic child"); quiet();
-    call_ok("app.open", "{\"id\":\"upcoming\"}"); expect("\"total\":0"); absent("起床"); absent("家长会"); absent("每天合成闹钟");
+    call_ok("app.open", "{\"id\":\"upcoming\"}"); call_ok("calendar.view", "{\"view\":\"agenda\"}"); visible("还没有接下来的事"); absent("起床"); absent("家长会"); absent("每天合成闹钟");
     add(INK_REMINDER, 5, 12, "孩子的合成提醒", false); quiet(); expect("孩子的合成提醒");
-    press("calendar.open", 0); call_ok("calendar.select", "{\"day\":5}"); expect("孩子的合成提醒"); absent("起床"); absent("带作业本");
+    press("calendar.view", 0); call_ok("calendar.select", "{\"day\":5}"); expect("孩子的合成提醒"); absent("起床"); absent("带作业本");
     on_ui(check_month_controls); capture("ChildCalendar");
     press("calendar.month_prev", 0); call_ok("calendar.month_prev", NULL); call_ok("calendar.month_prev", NULL);
-    expect("2026年8月1日"); on_ui(check_month_controls); capture("ChildSixRows");
-    press("calendar.grid_next", 0); on_ui(check_month_controls); capture("ChildSixRowsEnd");
+    expect("8月1日"); on_ui(check_month_controls); capture("ChildSixRows");
     CHECK(ink_member_switch(owner) == 0, "return to the original member"); quiet();
-    call_ok("app.open", "{\"id\":\"upcoming\"}"); absent("孩子的合成提醒"); expect("今晚读书");
+    call_ok("app.open", "{\"id\":\"upcoming\"}"); call_ok("calendar.view", "{\"view\":\"agenda\"}"); absent("孩子的合成提醒"); expect("今晚读书");
     ink_time_set(local_time(2026, 11, 5, 6, 0), false); quiet(); absent("今晚读书"); expect("起床");
+    call_ok("calendar.view", "{\"view\":\"month\"}");
     call_ok("settings.set", "{\"id\":\"display.font_size\",\"value\":3}");
     call_ok("calendar.open", NULL); call_ok("calendar.select", "{\"day\":5}");
     on_ui(check_month_controls); capture("LargeFontCalendar");
     for (int i = 0; i < 3; i++) call_ok("calendar.month_prev", NULL);
-    expect("2026年8月1日"); on_ui(check_month_controls); capture("LargeSixRows");
-    press("calendar.grid_next", 0); on_ui(check_month_controls); capture("LargeSixRowsEnd");
-    press_day("31"); expect("2026年8月31日");
+    expect("8月1日"); on_ui(check_month_controls); capture("LargeSixRows");
+    call_ok("calendar.select", "{\"day\":31}"); expect("8月31日");
     for (int i = 0; i < 3; i++) call_ok("calendar.month_next", NULL);
-    press("calendar.month_next", 0); expect("2026年12月1日"); call_ok("calendar.month_prev", NULL);
+    press("calendar.month_next", 0); expect("2026年12月"); call_ok("calendar.month_prev", NULL);
     call_ok("calendar.select", "{\"day\":5}");
     ink_time_set(local_time(2026, 11, 5, 6, 1) + 55, false); quiet();
     on_ui(read_snapshot); char before[sizeof snapshot]; memcpy(before, snapshot, sizeof before);

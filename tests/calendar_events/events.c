@@ -82,12 +82,12 @@ static void ai_queries(void) {
     CHECK(strstr(g_result, "2026-11-14 08:00") && strstr(g_result, "2026-11-15 08:00"), "range expands recurring events");
     CHECK(!strstr(g_result, "全天日程"), "exclusive all-day end does not enter next date");
 }
-static void month(void) {
-    call_ok("calendar.open", NULL); call_ok("calendar.select", "{\"day\":11}");
-    expect("跨天日程"); expect("日程"); absent("响铃对照"); on_ui(check_markers); capture("month");
-    call_ok("calendar.next", NULL); expect("响铃对照");
-    call_ok("calendar.select", "{\"day\":12}"); expect("跨天日程"); absent("响铃对照"); capture("cross-day");
-    call_ok("calendar.select", "{\"day\":13}"); expect("全天日程"); absent("跨天日程"); capture("all-day");
+static void month(void) { /* calendar-3: a day's events are listed on its own page (the month shows marks and a count) */
+    call_ok("calendar.open", NULL); call_ok("calendar.select", "{\"day\":11}"); expect("这天 2 件事"); on_ui(check_markers); capture("month");
+    call_ok("calendar.day", NULL); expect("跨天日程"); expect("日程"); expect("响铃对照");
+    call_ok("calendar.day_next", NULL); expect("跨天日程"); absent("响铃对照"); capture("cross-day");
+    call_ok("calendar.day_next", NULL); expect("全天日程"); absent("跨天日程"); capture("all-day");
+    call_ok("shell.back", NULL);
 }
 static void silent_deadline(void) {
     CHECK(ink_cap_subscribe("reminder.fired", event, NULL, INK_EXEC_DIRECT) == 0, "observe real reminder events");
@@ -100,7 +100,7 @@ static void silent_deadline(void) {
     char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)a.id); call_ok("reminder.open", args);
     expect("2026-11-11 23:00"); expect("2026-11-11 23:01"); call_ok("reminder.save", NULL);
     CHECK(get("响铃对照", &a) && a.next_s == 0 && a.duration_s == 60, "saving fired reminder preserves its date without ringing again");
-    ink_time_set(at(12, 1, 0), false); quiet(); call_ok("calendar.select", "{\"day\":12}"); expect("跨天日程");
+    ink_time_set(at(12, 1, 0), false); quiet(); call_ok("calendar.day", "{\"date\":\"2026-11-12\"}"); expect("跨天日程"); call_ok("shell.back", NULL);
     range("2026-11-12", "2026-11-13"); CHECK(strstr(g_result, "跨天日程"), "ongoing event remains queryable after start");
 }
 static void isolation(void) {
@@ -108,7 +108,7 @@ static void isolation(void) {
     CHECK(ink_member_switch("kid") == 0, "switch to synthetic child"); quiet();
     call_ok("app.open", "{\"id\":\"upcoming\"}"); range("2026-11-10", "2026-11-16");
     CHECK(!strstr(g_result, "跨天日程") && !strstr(g_result, "全天日程"), "child range excludes adult records");
-    call_ok("calendar.open", NULL); call_ok("calendar.select", "{\"day\":12}"); absent("跨天日程");
+    call_ok("calendar.open", NULL); call_ok("calendar.day", "{\"date\":\"2026-11-12\"}"); absent("跨天日程"); call_ok("shell.back", NULL);
     char args[192]; snprintf(args, sizeof args, "{\"id\":%u,\"at\":\"2026-11-12 23:00\",\"title\":\"越权\",\"repeat\":\"none\",\"ring\":false}", (unsigned)id);
     CHECK(AI("reminder.update", args) && g_rc.status == INK_RC_STALE, "child cannot change adult event");
     snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)id);
@@ -121,15 +121,15 @@ static void editing(void) {
     call_ok("reminder.add", "{\"at\":\"2026-11-13 09:00\",\"title\":\"编辑日程\",\"ring\":false,\"all_day\":true}");
     ink_alarm_t a = {0}; CHECK(get("编辑日程", &a), "event exists for shared editor");
     char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)a.id); call_ok("reminder.open", args);
-    expect("响铃提醒"); expect("结束时间"); expect("2026-11-14 00:00"); capture("editor");
-    press("reminder.draft", 0); press("reminder.draft", 1); /* clear end, then enable ringing */
-    press("reminder.draft", 2); /* disable all-day */
+    expect("提醒"); expect("结束"); expect("2026-11-13"); capture("editor"); /* an all-day end is its last day */
+    press("reminder.draft", 0); /* all-day off */
+    press("reminder.reminders", 0); press("reminder.reminder_add", 0); press("reminder.draft", 2); press("shell.back", 0); /* rings at its start */
     press("reminder.time", 1); CHECK(!strcmp(ink_ui_page_name(), "ReminderTime"), "end uses existing picker");
     press("reminder.draft", 7); /* hour +1 */
     press("shell.back", 0); press("reminder.save", 0);
     CHECK(get("编辑日程", &a) && !a.silent && !a.all_day && a.duration_s == 90000, "touch edits ring, all-day and end on same record");
     snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)a.id); call_ok("reminder.open", args);
-    press("reminder.draft", 0); press("reminder.save", 0);
+    press("reminder.time", 1); press("reminder.draft", 10); press("reminder.save", 0); /* 不要结束时间 */
     CHECK(get("编辑日程", &a) && a.duration_s == 0, "touch can clear optional end");
     snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)a.id); call_ok("reminder.cancel", args);
     CHECK(!get("编辑日程", &a), "same cancel capability deletes event");

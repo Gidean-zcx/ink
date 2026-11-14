@@ -20,7 +20,7 @@ typedef struct { /* one agenda or day line: a date heading, an event's occurrenc
     uint8_t kind;  /* 0 heading, 1 event, 2 alarm */
     uint32_t id;
     int64_t at, orig;
-    char text[96], note[64];
+    char text[96], note[96];
 } cal_item_t;
 
 typedef struct { /* one row of a choices page */
@@ -75,6 +75,7 @@ void cal_civil(int32_t day, int *y, int *m, int *d);
 int cal_wday(int32_t day);
 int cal_month_days(int y, int m);
 bool cal_mine(void);
+void cal_utf8_trim(char *s);
 void cal_begin(lv_obj_t *screen, const char *title);
 ink_ui_field_spec_t *cal_field(int hint, const char *id, const char *role, const char *label, const char *value);
 ink_ui_action_spec_t *cal_action(int hint, const char *id, const char *label, const char *cap, const char *args);
