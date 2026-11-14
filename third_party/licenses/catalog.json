@@ -148,5 +148,14 @@
     "file": "system/apps/files/vendor/flipper/LICENSE",
     "source": "https://github.com/flipperdevices/flipperzero-firmware/tree/3060cee9bac71d332dc7629191ae1aeb1edaac33/applications/main/archive",
     "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+  },
+  {
+    "id": "infinitime-clock",
+    "name": "InfiniTime stopwatch and timer controllers, timer and counter functions",
+    "version": "9ad1630",
+    "license": "GPL-3.0",
+    "file": "system/apps/clock/vendor/infinitime/LICENSE",
+    "source": "https://github.com/InfiniTimeOrg/InfiniTime/tree/9ad16304f5fd526b781a760cf1313813d232645e/src",
+    "sha256": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b"
   }
 ]

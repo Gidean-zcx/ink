@@ -142,6 +142,7 @@ static void world(bool ai) { /* APPS.md A04: a city in another day */
     ok("clock.world_add", "{\"zone\":1}"); ok("clock.world_add", "{\"zone\":3}"); ok("clock.world_add", "{\"zone\":4}"); ok("clock.world_add", "{\"zone\":5}");
     CHECK(AI("clock.world_add", "{\"zone\":6}") && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "full"), "a seventh city is refused");
     for (int z = 1; z <= 5; z++) { char a[16]; snprintf(a, sizeof a, "{\"zone\":%d}", z); if (z != 2) ok("clock.world_remove", a); }
+    ok("clock.world_title", "{\"zone\":7,\"title\":\"老妹家\"}"); /* kept for the restart */
 }
 static void alarm(bool ai) { /* a weekday alarm seen on Friday evening, ringing on Monday, snoozed */
     set_time(utc(2026, 11, 20, 21, 0)); open_clock();
@@ -328,13 +329,14 @@ static void members(void) { /* the child sees none of the adult's; the adult's t
 static void restart(void) {
     open_clock(); CHECK(has("\"tab\":\"alarm\""), "after a restart the clock opens on the alarms");
     ok("clock.timer", NULL);
-    CHECK(has("\"title\":\"泡面\",\"seconds\":65,\"remaining_seconds\":65,\"state\":\"idle\"") && has("\"title\":\"煮蛋\",\"seconds\":180"), "names and durations kept, nothing running");
+    CHECK(has("\"title\":\"泡面\",\"seconds\":65,\"remaining_seconds\":65,\"state\":\"idle\"") && has("\"title\":\"煮蛋\",\"seconds\":12,") &&
+          !has("\"state\":\"running\""), "names and durations kept (煮蛋 was last set to 12 s), nothing running");
     CHECK(strcmp(active_state(), "alarm"), "no old timer rings");
     ok("clock.world", NULL); CHECK(has("\"label\":\"老妹家\""), "the renamed city kept");
     ok("clock.stopwatch", NULL); CHECK(number("elapsed_ms") == 0, "the stopwatch starts cleared");
 }
 static void shots(void) { /* the same pages at the largest text or as a child: everything fits */
-    set_time(utc(2026, 11, 20, 21, 0)); open_clock(); shot("Clock-alarm-empty");
+    open_clock(); shot("Clock-alarm-empty");
     press("+ 加闹钟"); shot("ClockAlarm-new"); press("工作日"); ok("clock.save", NULL); shot("Clock-alarm");
     tap_switch(); press("7:00"); shot("ClockAlarm");
     ok("shell.back", NULL); tab_world(); shot("Clock-world-empty");
@@ -362,6 +364,7 @@ static void run(void *arg) {
     setting("time.auto", 0); setting("time.zone", 0);
     if (!strcmp(phase, "restart")) restart();
     else if (!strcmp(phase, "shots")) {
+        set_time(utc(2026, 11, 20, 21, 0)); /* before the child's turn: children cannot set the clock */
         if (!strcmp(suffix, "-max")) setting("display.font_size", 3);
         if (!strcmp(suffix, "-child")) { CHECK(ink_member_switch("kid") == 0, "the child's set"); quiet(); }
         shots();

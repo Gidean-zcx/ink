@@ -46,9 +46,10 @@ variants = {
     'vibration-switch': ('system/services/audio/audio_service.c', 'if (ink_setting_get("audio.vibration"))', 'if (true)', 'sound'),
     'ring-choice': ('system/services/audio/audio_service.c', 'int tone = (int)ink_setting_get(AU.ring_call ? "audio.call_ring" : "audio.alarm_ring");', 'int tone = 0;', 'sound'),
     'persistence': ('system/policy/settings.c', 'if (valid(&defs[i], SE.saved[k].v)) v = SE.saved[k].v;', 'if (valid(&defs[i], SE.saved[k].v)) v = defs[i].def;', None),
-    'pause': ('system/apps/clock/clock.c', 't->left = !strcmp(c->cap->id, "clock.timer_pause") ? left : 300000000;', 't->left = !strcmp(c->cap->id, "clock.timer_pause") ? left - left : 300000000;', 'timer'),
-    'expiry': ('system/apps/clock/clock.c', 'if (ink_member_exists(t->owner)) t->ringing = ink_interrupt_raise(&it);', '(void)it;', 'timer'),
-    'member': ('system/apps/clock/clock.c', 'static countdown_t *my_timer(void) { /* UI task */', 'static countdown_t *my_timer(void) { /* UI task */ return &timers[0];', 'timer'),
+    'pause': ('system/apps/clock/clock_infinitime.cpp', '    u.screen.ToggleRunning(); /* copied */\n    u.state = u.timer.IsRunning()',
+              '    u.screen.ToggleRunning(); /* copied */\n    if (was) { u.screen.hourCounter.SetValue(0); u.screen.minuteCounter.SetValue(0); u.screen.secondCounter.SetValue(0); }\n    u.state = u.timer.IsRunning()', 'timer'),
+    'expiry': ('system/apps/clock/clock_timer.c', 'return ink_member_exists(ck_member_id(t / CK_PER_MEMBER)) ? ink_interrupt_raise(&it) : -1;', 'return (void)it, -1;', 'timer'),
+    'member': ('system/apps/clock/clock.c', 'const char *id = ink_member_current()->id; int free = -1;', 'const char *id = members[0].id[0] ? members[0].id : ink_member_current()->id; int free = -1;', 'timer'),
     'touch-feedback-order': ('system/ui/ui_task.c', 'UI.click_tone = true;', 'ink_audio_key_tone();', 'sound'),
     'preserve-preview': ('system/services/audio/audio_service.c', ' || (tone == INK_TONE_KEY && AU.tone_pending)', '', 'sound'),
     'input-priority': ('ports/sim/hal/hal_input_sim.c', '#define INPUT_PRIO OSAL_PRIO_MAX', '#define INPUT_PRIO 12', 'input'),
@@ -77,8 +78,12 @@ for name, (file, old, new, phase) in variants.items():
             if ' = ' in line:
                 key, value = line.split(' = ', 1)
                 source_flags[key] = shlex.split(value)
-    subprocess.run([link[0], *source_flags['C_DEFINES'], *source_flags['C_INCLUDES'], *source_flags['C_FLAGS'],
-        '-I', str(source_path.parent), '-x', 'c', '-c', '-', '-o', str(obj)],
+    cxx = file.endswith('.cpp') /* clock-3: the copied InfiniTime unit, with its shims first */
+    language = ['-x', 'c++', '-I', str(ROOT / 'system/apps/clock/vendor/infinitime/port'), '-I', str(ROOT / 'system/apps/clock/vendor/infinitime/src'),
+                '-fno-exceptions', '-fno-rtti'] if cxx else ['-x', 'c']
+    prefix = 'CXX_' if cxx else 'C_'
+    subprocess.run([link[0], *language, *source_flags[prefix + 'DEFINES'], *source_flags[prefix + 'INCLUDES'], *source_flags[prefix + 'FLAGS'],
+        '-I', str(source_path.parent), '-c', '-', '-o', str(obj)],
         input=source.replace(old, new), text=True, cwd=build, check=True)
     link.insert(next(i for i, value in enumerate(link) if value.endswith('.a')), str(obj))
     link[link.index('-o') + 1] = str(binary)

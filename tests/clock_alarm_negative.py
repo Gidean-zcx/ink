@@ -21,19 +21,21 @@ for line in (build / "CMakeFiles/ink_system.dir/flags.make").read_text().splitli
         key, value = line.split(" = ", 1)
         flags[key] = shlex.split(value)
 variants = {
-    "input-snapshot": ("if (C.name && ink_text_focused()) EDIT.action_count = 0;", "if (C.name && ink_text_focused()) EDIT.action_count = actions;"),
-    "editing": ("static void draft(ink_call_t *c) {", "static void draft(ink_call_t *c) { if (C.draft.id) return;"),
+    "input-snapshot": ("if (CK.name && ink_text_focused()) CK.spec.action_count = 0;", "if (CK.name && ink_text_focused()) CK.spec.action_count = actions;"),
+    "editing": ("    bool was = A.draft.enabled; A.error[0] = 0;", "    if (A.draft.id) return;\n    bool was = A.draft.enabled; A.error[0] = 0;"),
     "toggle": ('ink_cap_invoke_json("alarm.update", args, INK_SRC_TOUCH, ink_ui_content_version(), &rc);', "(void)rc;"),
-    "input-error": ('snprintf(C.error, sizeof C.error, "%s", c->rc.status == INK_RC_INVALID ? "名称最多15个字，请缩短后保存" : "没能保存，请重试");', "C.error[0] = 0;"),
-    "input-bytes": (".max = sizeof C.draft.title - 1", ".max = sizeof C.draft.title"),
-    "minus": ('{"时-", "时＋", "分-", "分＋"}', '{"时−", "时＋", "分−", "分＋"}'),
-    "list-labels": ('lv_label_set_text(lv_obj_get_child(slot, 1), time); lv_label_set_text(lv_obj_get_child(slot, 2), note);',
-                    'lv_label_set_text(lv_obj_get_child(slot, 1), ""); lv_label_set_text(lv_obj_get_child(slot, 2), "");'),
+    "input-error": ('if (c->rc.status == INK_RC_INVALID) snprintf(A.error, sizeof A.error, TR("名称最多%d个字，请缩短后保存"), title_max());',
+                    "if (c->rc.status == INK_RC_INVALID) A.error[0] = 0;"),
+    "input-bytes": ('sizeof A.draft.title - 1, "clock.focus"', 'sizeof A.draft.title, "clock.focus"'),
+    "minus": ('ck_counter_row(s, CK_HOUR, y, TR("时-"), TR("时＋"), TR("时"));', 'ck_counter_row(s, CK_HOUR, y, TR("时−"), TR("时＋"), TR("时"));'),
+    "list-labels": ('ck_text(lv_obj_get_child(s, 1), time, false); ck_text(lv_obj_get_child(s, 2), note, false);',
+                    'ck_text(lv_obj_get_child(s, 1), "", false); ck_text(lv_obj_get_child(s, 2), "", false);'),
     "persistence": ("if (ink_db_put(T.db, &w, NULL) == INK_DB_OK) {", "if ((void)w, true) {"),
 }
 summaries = []
 for variant in variants if a.variant == "all" else (a.variant,):
-    source_path = ROOT / ("system/services/time/time_service.c" if variant == "persistence" else "system/apps/clock/clock.c")
+    source_path = ROOT / ("system/services/time/time_service.c" if variant == "persistence" else
+                          "system/apps/clock/clock.c" if variant == "input-snapshot" else "system/apps/clock/clock_alarm.c")
     source = source_path.read_text()
     old, new = variants[variant]
     assert source.count(old) == 1, variant
