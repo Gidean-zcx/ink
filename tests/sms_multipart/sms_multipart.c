@@ -195,10 +195,10 @@ static void compose(void) {
     CHECK(AI("sms.recipient", arguments) && WAIT_FOR(S.field != NULL, 10000), "recipient chosen"); quiet();
     CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the text");
     han(text, 60, "短"); on_ui(type_text); quiet();
-    CHECK(!strcmp(lv_label_get_text(S.parts), ""), "one part: nothing to say (%s)", lv_label_get_text(S.parts));
+    CHECK(!strcmp(lv_label_get_text(S.parts), "第 1 条，还能打 10 字"), "one part: what is left of it, 70 - 60 (sms-3) (%s)", lv_label_get_text(S.parts));
     han(text, 90, "短"); on_ui(type_text); quiet();
-    CHECK(!strcmp(lv_label_get_text(S.parts), "将按 3 条发送"), "150 characters: 3 parts (%s)", lv_label_get_text(S.parts));
-    on_ui(snap_compose); CHECK(strstr(g_result, "发送短信，将按 3 条发送") != NULL, "the AI's snapshot says it too (%d bytes)", (int)strlen(g_result));
+    CHECK(!strcmp(lv_label_get_text(S.parts), "共 3 条，第 3 条还能打 51 字"), "150 characters: 3 parts, 3 x 67 - 150 left (sms-3) (%s)", lv_label_get_text(S.parts));
+    on_ui(snap_compose); CHECK(strstr(g_result, "发送短信，共 3 条，第 3 条还能打 51 字") != NULL, "the AI's snapshot says it too (%d bytes)", (int)strlen(g_result));
     vtk_event_at(vtk_now() + SIM_MS(1), capture_parts, NULL); delay_ms(5);
     on_ui(finish_text); quiet(); on_ui(locate_send); int before = sim_net_sms_sent();
     tap(g_btn_x[0], g_btn_y[0]);
@@ -207,8 +207,8 @@ static void compose(void) {
     CHECK(sim_net_sms_sent() == before && ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "no part before the person's yes");
     CHECK(WAIT_FOR(sim_net_sms_sent() == before + 3 && messages("00000000001", NULL) == 1, 10000) && strlen(got) == 450,
           "after the yes the composer sends and stores all 150 characters"); quiet();
-    CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the remaining draft");
-    han(text, 190, "短"); on_ui(type_text); quiet();
+    CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the field the send emptied (sms-3: Fossify clears it at once)");
+    han(text, 340, "短"); on_ui(type_text); quiet();
     CHECK(!strcmp(lv_label_get_text(S.parts), "太长了，最多分 5 条发送"), "340 characters: too long (%s)", lv_label_get_text(S.parts));
 }
 

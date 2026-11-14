@@ -2240,3 +2240,5 @@ language english 中文 英文	language english chinese
 我：	You: 
 请先写收件人	Choose who to send to first
 还没写内容	Nothing to send
+等你确认后发出	Sends after you confirm
+没有发出	Not sent

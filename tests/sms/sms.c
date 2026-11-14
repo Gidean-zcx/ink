@@ -349,7 +349,7 @@ static void polish_acceptance(void) {
         CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the real SMS body"); quiet();
         CHECK(AI("text.insert", inline_reply ? "{\"text\":\"合成回车回复\"}" : "{\"text\":\"合成回车新建\"}") && g_rc.status == INK_RC_DONE, "fill synthetic enter-send text");
         int before = sim_net_sms_sent(), logical = sim_net_sent_sms(-1, NULL, 0, NULL, 0); on_ui(press_enter);
-        CHECK(WAIT_FOR(sim_net_sms_sent() == before + 1 && !strcmp(ink_ui_page_name(), "SmsThread") && S.result[0] && settled(), 10000), "keyboard enter sends exactly once and shows its result"); quiet();
+        CHECK(WAIT_FOR(sim_net_sms_sent() == before + 1 && !strcmp(ink_ui_page_name(), "SmsThread") && S.result[0] && settled(), 10000), "keyboard enter sends exactly once and shows its result (sent %d/%d page %s result %.60s say %.60s draft %.30s)", sim_net_sms_sent(), before + 1, ink_ui_page_name(), S.result, S.say, S.draft); quiet();
         CHECK(sim_net_sent_sms(logical, sent_number, sizeof sent_number, sent_text, sizeof sent_text) == logical + 1 && !strcmp(sent_number, "00000000992") && !strcmp(sent_text, inline_reply ? "合成回车回复" : "合成回车新建"), "keyboard enter preserves exact recipient and body");
         CHECK(!strcmp(S.result, "已发出") && !ink_text_focused(), "enter-send uses the existing receipt and ends input");
     }

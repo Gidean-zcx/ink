@@ -53,7 +53,8 @@ static inline bool ui_reaction_parse(const char *text, ui_reaction_t *out) { (vo
 
 /* its screens: our pages (sms.c) */
 extern lv_obj_t *scr13_2_body_ta, *scr13_2_status; /* the shared reply field and the line above it */
-#define lv_textarea_get_text(ta) ink_textfield_text(ta)
+#define lv_textarea_get_text(ta) sms_field_text(ta)
+const char *sms_field_text(lv_obj_t *field);
 #define lv_textarea_set_text(ta, text) sms_field_set(text) /* the shared field has no setter: rebuilt */
 void sms_field_set(const char *text);
 void lily_sent(void);

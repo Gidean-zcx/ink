@@ -43,13 +43,13 @@ static struct {
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     lv_obj_t *field, *recipient, *suggestion, *notice, *send, *parts, *undo_btn, *info_btn, *thread_slot;
-    bool selecting, failed, undoable;
+    bool selecting, failed, undoable, entered;
     ink_source_t src;
     char match_name[97], match_number[25], match_args[48], list_snapshot[6144], extra[1024];
     char member[16], peer[24], to[24], dpeer[24], query[64], draft[INK_SMS_TEXT_MAX], stored[INK_SMS_TEXT_MAX], result[160], say[160], hint[64], ask[160], undo[48], undo_args[80];
     char scratch[INK_SMS_TEXT_MAX], row[INK_SMS_TEXT_MAX], send_args[3 * INK_SMS_TEXT_MAX], send_label[128], info_args[4][64];
     struct { char to[24]; uint32_t id; } draft_ref;
-    uint32_t rows[SMS_LIMIT], ats[SMS_LIMIT], selected, resend, resend_pending, seq, rc_id; size_t count;
+    uint32_t rows[SMS_LIMIT], ats[SMS_LIMIT], selected, resend, resend_pending, seq, rc_id, confirm; size_t count;
     uint8_t kinds[SMS_LIMIT], resend_kind, pending_kind; uint16_t page_of[SMS_LIMIT];
     uint32_t pages[SMS_LIMIT + 1]; int16_t below[SMS_LIMIT]; int body_h, capacity;
     bool groups[SMS_LIMIT], stamps[SMS_VISIBLE], outgoing[SMS_VISIBLE], last[SMS_VISIBLE], rc_to;
@@ -64,7 +64,7 @@ static struct {
     ink_ui_action_spec_t actions[8];
     ink_ui_page_spec_t form;
     sms_msg_t msg;
-    ink_exec_job_t refresh, settle;
+    ink_exec_job_t refresh, settle, enter;
 } S INK_PSRAM_BSS;
 
 /* ---- the member's records: LilyPhone's log over sms.messages ---- */
@@ -195,7 +195,7 @@ void sms_pop(void) { show(&LIST); }
 static void member_ready(void) {
     if (!strcmp(S.member, ink_member_current()->id)) return;
     memset(&S.position, 0, sizeof S.position); memset(&S.draft_ref, 0, sizeof S.draft_ref); S.selecting = false; U.n = 0; X.pending = false; ui_send_watch_id = 0;
-    S.to[0] = S.peer[0] = S.dpeer[0] = S.draft[0] = S.stored[0] = S.result[0] = S.say[0] = S.undo[0] = S.query[0] = 0; S.selected = S.resend = 0; X.nfound = 0;
+    S.confirm = 0; S.to[0] = S.peer[0] = S.dpeer[0] = S.draft[0] = S.stored[0] = S.result[0] = S.say[0] = S.undo[0] = S.query[0] = 0; S.selected = S.resend = 0; X.nfound = 0;
     snprintf(S.member, sizeof S.member, "%s", ink_member_current()->id);
 }
 static void loaded(void *ctx, const ink_receipt_t *rc) { /* a collection came into memory: the page draws it */
@@ -260,10 +260,19 @@ static void settle(void *arg) { /* the send's receipt, after the dispatcher has 
     if (!S.rc_to) snprintf(S.say, sizeof S.say, "%s", S.result); /* nothing stored: why, until the next action */
     if (on(&THREAD) && S.list) scr13_1_populate(); else if (on(&LIST)) ink_ui_redraw();
 }
-static void sent(void *ctx, const ink_receipt_t *rc) {
-    S.rc_id = (uint32_t)(uintptr_t)ctx; S.rc_status = rc->status; S.rc_to = !strncmp(rc->object, "message:to:", 11);
+static void sent(void *ctx, const ink_receipt_t *rc) { /* waiting for a person's yes: still in flight, the card's result settles it */
+    unsigned token = 0; S.rc_id = (uint32_t)(uintptr_t)ctx; S.rc_status = rc->status; S.rc_to = !strncmp(rc->object, "message:to:", 11);
     snprintf(S.rc_say, sizeof S.rc_say, "%s", rc->say); ink_shell_airplane_card(rc);
-    ink_exec_post(INK_EXEC_UI, &S.settle, settle, NULL);
+    if (rc->status == INK_RC_PENDING_CONFIRMATION && sscanf(rc->object, "confirm:%u", &token) == 1) { S.confirm = token; if (on(&THREAD) && S.list) scr13_1_populate(); }
+    else ink_exec_post(INK_EXEC_UI, &S.settle, settle, NULL);
+}
+static void send_confirmed(void *ctx, const char *event, const ink_args_t *a) {
+    (void)ctx; (void)event; int64_t token = 0; char status[16] = "", object[48] = "";
+    if (!S.confirm || !ink_args_get_int(a, "token", &token) || token != S.confirm) return;
+    ink_args_get_str(a, "status", status, sizeof status); ink_args_get_str(a, "object", object, sizeof object); S.rc_say[0] = 0; ink_args_get_str(a, "say", S.rc_say, sizeof S.rc_say);
+    S.confirm = 0; S.rc_id = ui_send_watch_id; S.rc_status = !strcmp(status, "done") ? INK_RC_DONE : INK_RC_FAILED; S.rc_to = !strncmp(object, "message:to:", 11);
+    if (!S.rc_say[0] && !S.rc_to) snprintf(S.rc_say, sizeof S.rc_say, "%s", TR("没有发出"));
+    settle(NULL);
 }
 uint32_t ui_sms_send(const char *number, const char *text) { /* message.send; a long text goes as the text service's draft */
     ink_args_t *a = ink_app_alloc(sizeof *a, true); uint32_t id = 0;
@@ -285,13 +294,15 @@ uint32_t ui_sms_send(const char *number, const char *text) { /* message.send; a 
     if (ink_cap_call("message.send", a, &o) == 0) id = S.seq; else S.resend_pending = 0;
     ink_app_free(a); return id;
 }
+const char *sms_field_text(lv_obj_t *field) { return S.entered ? S.draft : ink_textfield_text(field); } /* the keyboard's send: what was entered */
 static void send_with(ink_source_t src) {
     if (S.page == &COMPOSE) snprintf(S.to, sizeof S.to, "%s", ink_textfield_text(S.recipient));
     S.src = src; next_action(); scr13_2_body_ta = S.field; scr13_2_status = S.notice; lily_send(); /* LilyPhone's send key */
     if (S.notice && strcmp(lv_label_get_text(S.notice), S.hint)) { snprintf(S.say, sizeof S.say, "%s", lv_label_get_text(S.notice)); }
 }
 static void send_clicked(lv_event_t *e) { (void)e; send_with(INK_SRC_TOUCH); }
-static void entered(void *ctx, const char *value) { (void)ctx; S.draft_ref.id = 0; snprintf(S.draft, sizeof S.draft, "%s", value); send_with(ink_shell_keyboard_enter_source()); }
+static void enter_later(void *arg) { (void)arg; S.entered = S.field && (on(&THREAD) || on(&COMPOSE)); if (S.entered) send_with(ink_shell_keyboard_enter_source()); S.entered = false; }
+static void entered(void *ctx, const char *value) { (void)ctx; S.draft_ref.id = 0; snprintf(S.draft, sizeof S.draft, "%s", value); ink_exec_post(INK_EXEC_UI, &S.enter, enter_later, NULL); } /* not inside the field's own event: sending rebuilds it */
 static int button_w(const char *text) { return LV_MAX(INK_CONTROL, ink_ui_text_width(text, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)); }
 static int reply_button_w(void) { return LV_MAX(button_w(TR("展开")), button_w(TR("发送"))); }
 static void reply_field(lv_obj_t *screen) {
@@ -301,7 +312,6 @@ static void reply_field(lv_obj_t *screen) {
     S.field = ink_textfield_create(screen, &cfg, entered, NULL, false); lv_obj_set_pos(S.field, ink_ui_px(INK_MARGIN + button + INK_GAP), ink_ui_px(bottom));
     lv_obj_set_width(S.field, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - 2 * button - 2 * INK_GAP));
     ink_textfield_bind_short(S.field, &S.form, &S.fields[0], &S.actions[0]); lv_obj_add_event_cb(S.field, parts_note, LV_EVENT_VALUE_CHANGED, NULL);
-    ink_textfield_style(S.field, INK_FIELD_SINGLE, ""); /* its label's place holds the parts line */
     lv_display_enable_invalidation(display, true); lv_obj_invalidate(S.field);
 }
 static void undo_clicked(lv_event_t *e) { (void)e; request("system.undo", S.undo_args); }
@@ -392,7 +402,7 @@ static size_t text_end(const char *text, size_t start, size_t row) { /* a bubble
 static void state_of(size_t row, const char *status, char *out, size_t cap) { /* what is written under it: Lineage's words, 已发出 under the last one only (Fossify ThreadSent) */
     int k = S.kinds[row]; bool newest_out = true;
     for (size_t i = 0; i < row; i++) newest_out &= S.kinds[i] == K_IN;
-    snprintf(out, cap, "%s%s%s", k == K_IN || (k == K_SENT && !newest_out) ? "" : k == K_PENDING ? TR("发送中") : TR(status),
+    snprintf(out, cap, "%s%s%s", k == K_IN || (k == K_SENT && !newest_out) ? "" : k == K_PENDING ? (S.confirm ? TR("等你确认后发出") : TR("发送中")) : TR(status),
         k == K_UNKNOWN ? "\n" : "", k == K_UNKNOWN ? TR("可能已经发到，先问问对方") : "");
 }
 static void thread_layout(size_t wanted) { /* pack from the newest fragment back; page_of: where each message ends */
@@ -603,7 +613,7 @@ static void create(lv_obj_t *screen, void *arg) {
     S.actions[1] = (ink_ui_action_spec_t){.id = "long", .label = TR("展开"), .capability = "sms.long", .enabled = true};
     S.actions[3] = (ink_ui_action_spec_t){.id = "to", .label = TR("输入收件人"), .capability = "sms.to", .enabled = S.page == &COMPOSE};
     S.actions[4] = (ink_ui_action_spec_t){.id = "pick", .label = TR("从联系人选择"), .capability = "sms.pick", .enabled = S.page == &COMPOSE};
-    S.actions[6] = (ink_ui_action_spec_t){.id = "info", .label = TR("详情"), .capability = "sms.info", .args_json = S.info_args[2], .enabled = S.page == &THREAD};
+    S.actions[6] = (ink_ui_action_spec_t){.id = "info", .label = TR("详情"), .capability = "sms.info", .args_json = S.page == &THREAD ? S.info_args[2] : "{}", .enabled = S.page == &THREAD};
     S.actions[7] = (ink_ui_action_spec_t){.id = "undo", .label = TR("撤销"), .capability = "system.undo", .args_json = S.undo_args, .enabled = S.undo[0] && S.undoable};
     S.fields[0] = (ink_ui_field_spec_t){.id = "text", .role = "textbox", .label = TR("短信内容")};
     S.form.field_count = S.page == &COMPOSE ? 2 : 1; S.form.action_count = 8;
@@ -812,5 +822,5 @@ static const ink_cap_t CAPS[] = {
 };
 int ink_sms_init(void) {
     return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG) ||
-        ink_cap_subscribe("confirm.result", received, NULL, INK_EXEC_BG) || ink_cap_subscribe("contacts.selected", contact_selected, NULL, INK_EXEC_UI) ? -1 : 0;
+        ink_cap_subscribe("confirm.result", received, NULL, INK_EXEC_BG) || ink_cap_subscribe("confirm.result", send_confirmed, NULL, INK_EXEC_UI) || ink_cap_subscribe("contacts.selected", contact_selected, NULL, INK_EXEC_UI) ? -1 : 0;
 }
