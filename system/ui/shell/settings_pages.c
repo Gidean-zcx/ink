@@ -24,7 +24,7 @@ static const struct { const char *name, *title, *cap; } PAGES[] = {
     {"SetAbout", TR_NOOP("关于和更新"), "shell.about"}, {"SetPrivacy", TR_NOOP("隐私"), "shell.privacy"},
     {"DeviceDetails", TR_NOOP("设备详情"), "shell.device"}, {"Licenses", TR_NOOP("开源许可"), "shell.licenses"}};
 /* Every page's rows fit the per-row buffers below: a ninth About row once wrote past them. */
-#define ROWS_MAX 16
+#define ROWS_MAX 20 /* clock-3: InfiniTime is the 17th licence */
 _Static_assert(sizeof LICENSE_ROWS / sizeof *LICENSE_ROWS <= ROWS_MAX, "Licenses exceeds ROWS_MAX");
 static struct {
     int page;
