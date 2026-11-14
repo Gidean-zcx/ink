@@ -151,7 +151,7 @@
   },
   {
     "id": "infinitime-clock",
-    "name": "InfiniTime stopwatch and timer controllers, timer and counter functions",
+    "name": "InfiniTime stopwatch and timer",
     "version": "9ad1630",
     "license": "GPL-3.0",
     "file": "system/apps/clock/vendor/infinitime/LICENSE",
