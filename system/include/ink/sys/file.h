@@ -55,11 +55,11 @@ typedef struct ink_fs_dir ink_fs_dir_t;
 typedef struct {
     char name[INK_FS_NAME_MAX];
     bool is_dir;
-    int64_t size;
+    int64_t size; int64_t mtime; /* mtime: seconds from the card's directory entry (ink_fs_dir_next only; 0 elsewhere), -1 unknown */
 } ink_fs_stat_t;
 
 typedef enum { INK_FS_ANY = -1, INK_FS_OTHER, INK_FS_IMAGE, INK_FS_AUDIO, INK_FS_TEXT } ink_fs_type_t;
-typedef struct { uint32_t id; ink_fs_type_t type; char path[INK_FS_PATH_MAX]; int64_t size; } ink_fs_entry_t;
+typedef struct { uint32_t id; ink_fs_type_t type; char path[INK_FS_PATH_MAX]; int64_t size; int64_t mtime; /* seconds, -1 unknown */ } ink_fs_entry_t;
 #define INK_FS_INDEX_MAX 1024
 /** BG only. First page scans this tree (up to 8 directories deep); cursor is the last id, initially 0. */
 int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out);
@@ -152,6 +152,11 @@ bool ink_usb_disk_active(void);
 int ink_fs_card_hold(void);
 void ink_fs_card_release(void);
 void ink_fs_changed_outside(void); /* the system changed the card past these paths (card files): index, revisions hear of it */
+/** Card files (D-138): the whole file at the physical path part takes the place of phys. A file there goes first, and
+ *  only while nobody has it open through this service and no copy or delete runs; no open slips in between. Hold the
+ *  card (ink_fs_card_hold) around it. 0; INK_FS_ERR_BUSY when phys is open or a job runs (nothing changed); else an
+ *  error from the card (the old file may be gone, part stays). */
+int ink_fs_card_replace(const char *part, const char *phys);
 
 #ifdef __cplusplus
 }

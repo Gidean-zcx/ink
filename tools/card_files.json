@@ -1,7 +1,7 @@
 {
   "version": 1,
   "entries": [
-    {"path": "/content/fonts/InkSC.ttf", "app": "reader", "make": "mogo_font"},
-    {"path": "/content/fonts/InkSC.OFL.txt", "app": "reader", "make": "mogo_font_ofl"}
+    {"path": "/content/fonts/InkSC.ttf", "app": "reader,music", "make": "mogo_font"},
+    {"path": "/content/fonts/InkSC.OFL.txt", "app": "reader,music", "make": "mogo_font_ofl"}
   ]
 }

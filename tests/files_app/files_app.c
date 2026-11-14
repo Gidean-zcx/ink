@@ -100,9 +100,10 @@ static void fixture(void) {
     kept = file_id("/me/SYNTH_FILES/SYNTH_A.txt"); removed = file_id("/me/SYNTH_FILES/SYNTH_C.txt"); picture_id = file_id("/me/SYNTH_FILES/SYNTH_B.png");
     CHECK(kept && removed && picture_id, "stable service identifiers");
 }
-static unsigned visible_rows = 4;
+static unsigned visible_rows = 3;
 static void first_page(void) {
-    CHECK(F.count == expected_total && F.list && F.position.page == 0, "only %u direct children, not the nested file", expected_total);
+    CHECK(F.rows == expected_total && F.list && F.position.page == 0, "only %u direct children, not the nested file", expected_total);
+    CHECK(F.capacity == visible_rows, "%u rows fit this text size (%zu)", visible_rows, F.capacity);
     char pages[32], visible[32]; snprintf(pages, sizeof pages, "\"pages\":%u", (expected_total + visible_rows - 1) / visible_rows);
     snprintf(visible, sizeof visible, "\"visible\":%u", visible_rows);
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, pages) && strstr(g_snap, visible), "F4 has the exact capacity for this text size");
@@ -119,7 +120,7 @@ static void ai_page(void) {
     CHECK(F.position.page == 1, "AI can turn the underlying file page with its panel open");
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "FileList"), "AI context still describes its underlying file page");
 }
-static void third_page(void) { CHECK(F.position.page == 2 && ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "\"visible\":2"), "last page has two entries"); }
+static void third_page(void) { CHECK(F.position.page == 2 && ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "\"visible\":3") && strstr(g_snap, "\"pages\":4"), "the third of four pages has three entries"); }
 static void thumb_check(void) {
     bool visible = false;
     for (unsigned i = 0; i < 4; i++) if (F.images[i] && !lv_obj_has_flag(F.images[i], LV_OBJ_FLAG_HIDDEN) && lv_image_get_src(F.images[i]) == &F.thumbs[i]) {
@@ -130,7 +131,7 @@ static void thumb_check(void) {
     CHECK(visible, "a picture row displays file.thumb pixels");
 }
 static unsigned picture_page;
-static void find_picture_page(void) { for (size_t i = 0; i < F.count; i++) if (F.items[i].id == picture_id) picture_page = (unsigned)i / visible_rows; }
+static void find_picture_page(void) { for (size_t i = 0; i < F.rows; i++) if (F.items[F.view[i]].id == picture_id) picture_page = (unsigned)i / visible_rows; }
 static void check_list_thumb(void) {
     picture_page = 0; on_ui(find_picture_page);
     for (unsigned i = 0; i < picture_page; i++) { command("files.next", NULL); quiet(); }
@@ -158,8 +159,8 @@ static void notice_check(void) {
 }
 static void name_selected(void) { ink_text_select(0, ink_text_char_offset(ink_text_value(), strlen(ink_text_value()))); }
 static void move_contract(void) {
-    CHECK(F.mode == MOVE && !strcmp(F.actions[2].capability, "file.move") && F.actions[2].enabled, "destination button calls the same file.move as AI");
-    CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "SYNTH_DEST") && strstr(g_snap, "file.move"), "move snapshot describes the actual target");
+    CHECK(F.mode == MOVE && !strcmp(F.actions[3].capability, "files.place") && F.actions[3].enabled, "destination button calls the same files.place as AI");
+    CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "SYNTH_DEST") && strstr(g_snap, "files.place"), "move snapshot describes the actual target");
 }
 static void child_roots(void) {
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && !strstr(g_snap, "/members/"), "child roots hide every other member's private directory");
@@ -182,20 +183,20 @@ static void browse_path(const char *path, const char *page) {
     command("files.browse", args); wait_page(page);
 }
 static void long_rows(void) {
-    CHECK(F.count == 4, "all four legal long directory names are listed");
+    CHECK(F.rows == 4, "all four legal long directory names are listed");
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0, "long directory names fit the 3072-byte production AI buffer");
     CHECK(strstr(g_snap, "名称已截断"), "AI snapshot explains shortened directory names");
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     CHECK(j != NULL, "allocate action argument parser");
     if (!j) return;
-    size_t offset = F.position.page * 3, visible = F.count - offset;
-    if (visible > 3) visible = 3;
+    size_t offset = F.position.page * F.capacity, visible = F.rows - offset;
+    if (visible > F.capacity) visible = F.capacity;
     char count[32]; snprintf(count, sizeof count, "\"visible\":%zu", visible);
     CHECK(strstr(g_snap, count), "large text shows the exact long-name page capacity");
     for (size_t i = offset; i < offset + visible; i++) {
         char path[INK_FS_PATH_MAX];
-        CHECK(ink_json_parse(j, F.args[i % 4], strlen(F.args[i % 4])) == 0 &&
-              ink_json_str(j, ink_json_find(j, 0, "path"), path, sizeof path) > 0 && !strcmp(path, F.items[i].path),
+        CHECK(ink_json_parse(j, F.args[i % F.capacity], strlen(F.args[i % F.capacity])) == 0 && /* a row is kept by its place on the page */
+              ink_json_str(j, ink_json_find(j, 0, "path"), path, sizeof path) > 0 && !strcmp(path, F.items[F.view[i]].path),
               "shortened row retains its complete browse path");
     }
     osal_free(j);
@@ -257,11 +258,11 @@ static void exercise(void) {
     command("files.name", NULL); quiet(); on_ui(name_selected); command("text.insert", "{\"text\":\"SYNTH_RENAMED.txt\"}"); command("text.submit", NULL); quiet(); touch("改名"); wait_page("FileActions");
     ink_fs_entry_t e;
     CHECK(ink_fs_lookup(kept, &e) == 0 && !strcmp(e.path, "/me/SYNTH_FILES/SYNTH_RENAMED.txt"), "real rename button preserves stable id");
-    touch("移动"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_FILES/SYNTH_DEST\"}"); wait_page("FileMove"); on_ui(move_contract); snap("FileMove"); touch("放到这里"); wait_page("FileActions");
+    touch("移动"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_FILES/SYNTH_DEST\"}"); wait_page("FileMove"); on_ui(move_contract); snap("FileMove"); touch("放到这里"); wait_page("FileBatch"); CHECK(WAIT_FOR(F.bstate == B_DONE, 15000), "the move finishes"); touch("完成"); wait_page("FileList");
     CHECK(ink_fs_lookup(kept, &e) == 0 && !strcmp(e.path, "/me/SYNTH_FILES/SYNTH_DEST/SYNTH_RENAMED.txt"), "real target button moves the same object");
-    command("file.move", "{\"from\":\"/me/SYNTH_FILES/SYNTH_DEST/SYNTH_RENAMED.txt\",\"to\":\"/me/SYNTH_FILES/SYNTH_DEST/SYNTH_FINAL.txt\"}"); wait_page("FileActions");
+    command("file.move", "{\"from\":\"/me/SYNTH_FILES/SYNTH_DEST/SYNTH_RENAMED.txt\",\"to\":\"/me/SYNTH_FILES/SYNTH_DEST/SYNTH_FINAL.txt\"}"); wait_page("FileList");
     CHECK(ink_fs_lookup(kept, &e) == 0 && !strcmp(e.path, "/me/SYNTH_FILES/SYNTH_DEST/SYNTH_FINAL.txt"), "AI uses the same mutation capability");
-    command("files.up", NULL); wait_page("FileList"); select_id(removed); touch("删除"); quiet();
+    select_id(removed); touch("删除"); quiet();
     ink_confirm_view_t confirm[4]; int count = ink_confirm_list(confirm, 4); ink_fs_stat_t st;
     CHECK(count == 1 && !strcmp(confirm[0].cap, "file.delete") && strstr(confirm[0].detail, "SYNTH_C.txt"), "touch deletion asks exactly what will be lost");
     CHECK(ink_fs_stat("/me/SYNTH_FILES/SYNTH_C.txt", &st) == 0, "pending confirmation has not deleted anything");

@@ -11,6 +11,8 @@
 #include "../../system/services/audio/vendor/kiikoread/codec_formats.h"
 #include "../../system/services/audio/vendor/kiikoread/music_lyrics.h"
 void ink_music_tags(const char *, char *, char *, char *, size_t);
+void music_tags_read(const char *, char *, size_t, char *, size_t, uint32_t *);
+size_t music_tags_lyrics(const char *, char *, size_t);
 struct ink_fs_file { FILE *file; };
 typedef union { max_align_t align; size_t size; } allocation_t;
 static size_t live, peak;
@@ -70,6 +72,10 @@ static void check_file(const char *root, const char *name, int tolerance) {
     char title[96], artist[96], album[96]; ink_music_tags(path, title, artist, album, sizeof title);
     if (!strstr(name, ".wav")) {
         assert(!strcmp(title, "合成音调")); assert(!strcmp(artist, "测试歌手")); assert(!strcmp(album, "原创测试"));
+    }
+    if (strstr(name, ".flac")) { /* music-3: the STREAMINFO duration, and embedded lyrics asked without a title buffer */
+        uint32_t ms = 0; char lyrics[256]; music_tags_read(path, title, sizeof title, artist, sizeof artist, &ms);
+        assert(ms >= 2900 && ms <= 3100); (void)music_tags_lyrics(path, lyrics, sizeof lyrics);
     }
     music_lyrics_load(path, 3000); assert(!strcmp(music_lyrics_at(0), "第一句")); assert(!strcmp(music_lyrics_at(1500), "第二句")); assert(!strcmp(music_lyrics_at(2500), "第三句"));
     music_lyrics_clear(); assert(!music_lyrics_at(1000)[0]);

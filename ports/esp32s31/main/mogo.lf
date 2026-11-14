@@ -4,3 +4,9 @@
 archive: libink_mogo_native.a
 entries:
     * (extram_bss)
+
+# lock-styles-1: Mogo's lock style statics (the mini library's model, about 9 KB) and their glue, the same way.
+[mapping:ink_mogo_lock_native]
+archive: libink_mogo_lock_native.a
+entries:
+    * (extram_bss)

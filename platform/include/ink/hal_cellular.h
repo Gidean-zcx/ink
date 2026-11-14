@@ -33,10 +33,18 @@ typedef enum {
     HAL_CELL_EV_REG,        /* registration changed: query status */
 } hal_cell_ev_type_t;
 
+/* Why HAL_CELL_EV_CALL_ENDED came: the modem's own words (LilyPhone peri_modem.cpp:508-510, 615-616). */
+typedef enum {
+    HAL_CELL_END_HANGUP = 0, /* NO CARRIER: either side hung up, or the call failed for a reason not given */
+    HAL_CELL_END_BUSY,       /* BUSY: the far end is busy or rejected the call */
+    HAL_CELL_END_NO_ANSWER,  /* NO ANSWER: nobody answered */
+} hal_cell_end_t;
+
 typedef struct {
     hal_cell_ev_type_t type;
     int sms_index;
     char number[24];
+    hal_cell_end_t end; /* HAL_CELL_EV_CALL_ENDED */
 } hal_cell_event_t;
 
 /** False when there is no modem, or it does not answer. Task context. */
@@ -64,9 +72,13 @@ int hal_cell_sms_parts(const char *utf8);
 int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent);
 /** Read a waiting message or part and remove it from the modem's store. Text length, or < 0. */
 int hal_cell_sms_take(int index, hal_cell_sms_t *out);
+/** 0: placed. A call the modem ends at once (BUSY, NO ANSWER, NO CARRIER as ATD's result) also counts as placed: its
+ *  HAL_CELL_EV_CALL_ENDED follows with the reason. */
 int hal_cell_dial(const char *number);
 int hal_cell_answer(void);
-int hal_cell_hangup(void);
+int hal_cell_hangup(void); /* 0 also when the modem answers with the call's NO CARRIER */
+/** 1: the outgoing call has been answered (AT+CLCC), 0: not yet, < 0 unknown. The modem may not say so by itself. */
+int hal_cell_call_active(void);
 int hal_cell_mute(bool on, bool *muted); /* Read back the modem's actual mute state. */
 int hal_cell_dtmf(char key);
 /** The next modem event (one reader). 1 got one, 0 none within the timeout. Task context. */

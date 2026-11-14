@@ -112,6 +112,19 @@ size_t ink_mogo_fread(void *p, size_t s, size_t n, FILE *f) {
     return got > 0 ? (size_t)got / s : 0;
 }
 size_t ink_mogo_fwrite(const void *p, size_t s, size_t n, FILE *f) { (void)p; (void)s; (void)n; (void)f; return 0; }
+/* The lock styles' "wb" files (apps/mogo_lock/port): the same stream, so fread/fseek/fclose above take them too. */
+FILE *ink_mogo_stream_wrap(ink_fs_file_t *f) {
+    ink_mogo_stream_t *stream = ink_mogo_malloc(sizeof *stream);
+    if (stream) *stream = (ink_mogo_stream_t){.file = f};
+    return (FILE *)stream;
+}
+size_t ink_mogo_stream_write(const void *p, size_t s, size_t n, FILE *f) {
+    ink_mogo_stream_t *stream = (ink_mogo_stream_t *)f;
+    if (!s || n > SIZE_MAX / s || stream->mem) return 0;
+    int64_t put = ink_fs_write(stream->file, p, s * n);
+    if (put < 0) { stream->error = true; return 0; }
+    return (size_t)put / s;
+}
 int ink_mogo_fclose(FILE *f) { ink_mogo_stream_t *s = (ink_mogo_stream_t *)f; int r = s->mem ? 0 : ink_fs_close(s->file); ink_app_free(s->mem); ink_app_free(s); return r; }
 int ink_mogo_ferror(FILE *f) { return ((ink_mogo_stream_t *)f)->error; }
 void ink_mogo_clearerr(FILE *f) { ((ink_mogo_stream_t *)f)->error = false; }
@@ -181,3 +194,4 @@ static void ink_mogo_host_sort(void *arg) { ink_mogo_sort_t *s=arg; qsort(s->bas
 void ink_mogo_qsort(void *base,size_t count,size_t size,int (*compare)(const void *,const void *)) {
     ink_mogo_sort_t sort={base,count,size,compare}; ink_mogo_host_call(ink_mogo_host_sort,&sort);
 }
+void ink_mogo_dimensions_get(int *w, int *h, int *px) { *w = ink_mogo_w; *h = ink_mogo_h; *px = ink_mogo_px; } /* lock-styles-1: the lock styles put the page's size back */

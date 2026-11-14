@@ -23,6 +23,8 @@ typedef enum {
     NT26_AT_FAILED = -1,     /* a command failed or timed out (the radio is turned back on) */
     NT26_NO_MODEM = -2,
     NT26_NOT_SENT = 2,       /* a text message part was not tried: too little time was left */
+    NT26_CALL_ENDED = 3,     /* ATD's final result was BUSY, NO ANSWER or NO CARRIER: placed and over at once (V.250
+                              * §6.3.1); the same line also went to the URC queue, which says why */
 } nt26_result_t;
 
 /** The modem's slot setting (AT+ECSIMCFG?). */
@@ -57,9 +59,12 @@ nt26_result_t nt26_sms_send(const char *number, const char *utf8, uint32_t timeo
 nt26_result_t nt26_sms_read_part(int index, char *number, int number_cap, char *utf8, int text_cap, int concat[3]);
 nt26_result_t nt26_sms_read(int index, char *number, int number_cap, char *utf8, int text_cap);
 nt26_result_t nt26_sms_delete(int index);
-nt26_result_t nt26_dial(const char *number); /* voice call (VoLTE) */
+nt26_result_t nt26_dial(const char *number); /* voice call (VoLTE); NT26_CALL_ENDED when it ended at once */
 nt26_result_t nt26_answer(void);
-nt26_result_t nt26_hangup(void);
+nt26_result_t nt26_hangup(void); /* NT26_OK also when the modem's answer is the call's NO CARRIER (it ended) */
+/** AT+CLCC (TS 27.007 §7.18): *answered when an outgoing call is active (dir 0, stat 0). The modem need not report
+ *  that unsolicited, so an outgoing call is polled until it connects (LilyPhone peri_modem.cpp:1352-1398). */
+nt26_result_t nt26_outgoing_active(bool *answered);
 nt26_result_t nt26_mute(bool on, bool *muted);
 nt26_result_t nt26_dtmf(char key);
 /* UTF-8 <-> UCS2 hex (UTF-16BE units) */

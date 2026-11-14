@@ -58,6 +58,8 @@ static void close_book(void) {
     ink_exec_post(INK_EXEC_BG, &cleanup_barrier, after_cleanup, NULL);
     CHECK(WAIT_FOR(cleanup_done, 15000), "reader cleanup finished");
 }
+static ink_app_state_t music_state;
+static void read_music_state(void) { music_state = ink_app_state_of("music"); }
 static void open_book(void) { (void)AI("reader.open_book", "{\"title\":\"\",\"path\":\"/me/books/书.txt\"}"); }
 static void eject(void *arg) { (void)arg; sim_usb_eject(); }
 static void stop(void *arg) { (void)arg; vtk_stop(); }
@@ -101,7 +103,7 @@ static void run(void *arg) {
     (void)arg;
     ink_power_hold(INK_NEED_AWAKE);
     ink_power_hold(INK_NEED_NO_LOCK);
-    bool plug = strcmp(phase, "E3") && strcmp(phase, "I") && strcmp(phase, "J"); /* I, J: the computer comes later */
+    bool plug = strcmp(phase, "E3") && strcmp(phase, "I") && strcmp(phase, "J") && strcmp(phase, "K"); /* I, J, K: the computer comes later */
     if (plug) hw(HW_USB_ON, 0, 0);
     if (!strcmp(phase, "A")) { /* a computer, no install tool */
         CHECK(state_is("missing", 20000), "missing without the tool: %s", files);
@@ -169,6 +171,19 @@ static void run(void *arg) {
         close_book();
         CHECK(AI("card.files_check", "{}") && g_rc.status == INK_RC_DONE, "check again: rc=%d", g_rc.status);
         CHECK(state_is("ready", 60000), "the whole .part goes in once the reader is closed: %s", files);
+    } else if (!strcmp(phase, "K")) { /* the font is shared: music used since boot and left (not stopped) holds none of it */
+        CHECK(state_is("missing", 20000), "a wrong-sized font is missing: %s", files);
+        CHECK(AI("app.open", "{\"id\":\"music\"}") && g_rc.status == INK_RC_DONE, "open music: rc=%d", g_rc.status);
+        CHECK(WAIT_FOR(on_screen("还没放到存储卡上"), 20000), "music explains the font as the reader does");
+        notice("还没放到存储卡上", NULL); /* the reader opens over it: music leaves the screen and closes the font */
+        on_ui(read_music_state);
+        CHECK(music_state != INK_APP_STOPPED, "music is left in the background, not stopped: %d", (int)music_state);
+        lv_obj_t *page = active_screen();
+        hw(HW_USB_ON, 0, 0);
+        CHECK(state_is("ready", 120000), "replaced under the reader's notice with music in the background: %s", files);
+        CHECK(shows("面板=正文") && !on_screen("还没放到存储卡上"), "the reader opens the book: %.200s", view);
+        CHECK(active_screen() == page, "the same screen: no rebuilt page, no blank one in between");
+        close_book();
     }
     sim_note("card files: phase %s finished", phase);
     ink_probe_count("test.finished");

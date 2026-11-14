@@ -1,14 +1,14 @@
 # 卡上必需文件（D-138）
 
-应用要的东西如果放在存储卡上（现在是阅读（应用 id `reader`）的字体），由系统自动放进去，用户不用进 U 盘模式、不用拷文件。固件带一份清单，开机核对；插着装机电脑时经 USB 串口自动补齐；缺的时候应用页面说清楚原因，不白屏。任务书：auto-provision-1。
+应用要的东西如果放在存储卡上（现在是阅读（应用 id `reader`）和音乐（`music`）共用的字体），由系统自动放进去，用户不用进 U 盘模式、不用拷文件。固件带一份清单，开机核对；插着装机电脑时经 USB 串口自动补齐；缺的时候应用页面说清楚原因，不白屏。任务书：auto-provision-1。
 
 ## 1. 清单
 
-- 唯一的手写来源 `tools/card_files.json`：每项 `path`（卡上物理路径）、`app`（要它的应用 id）、`make`（怎么做出来）。现在两项：`/content/fonts/InkSC.ttf`（`mogo_font`，由 `tools/mogo_font.py` 的 `convert()` 从 `INK_CJK_FONT` 转出）和旁边的 `/content/fonts/InkSC.OFL.txt`（`mogo_font_ofl`，字体许可）。
+- 唯一的手写来源 `tools/card_files.json`：每项 `path`（卡上物理路径）、`app`（要它的应用 id；几个应用都要时用逗号连起来，最多四个，如 `reader,music`。核对状态按其中每个应用算，缺的时候这些应用的页面都显示说明）、`make`（怎么做出来）。现在两项：`/content/fonts/InkSC.ttf`（`mogo_font`，由 `tools/mogo_font.py` 的 `convert()` 从 `INK_CJK_FONT` 转出）和旁边的 `/content/fonts/InkSC.OFL.txt`（`mogo_font_ofl`，字体许可）。
 - 构建时生成，不提交哈希（不同机器的 fontTools 可能做出不同字节）：
   - `tools/card_files.py bundle` 做出文件，写 `build/card-files/files/<序号>` 和 `build/card-files/manifest.json`：`{"version":1,"digest":"<16位十六进制>","entries":[{"path","size","sha256","app","file"}]}`。
   - `tools/card_files.py header` 写 `build/generated/ink/card_files_manifest.h`（C 表 `INK_CARD_FILES[]`、`INK_CARD_FILES_COUNT`、`INK_CARD_FILES_DIGEST`）；内容没变就不改文件。
-  - `tools/card_files.py verify` 核对二者一致。S31 构建从主机构建的 `build/card-files/manifest.json` 生成同一个头文件，`ports/esp32s31/build.sh` 把整个装机包拷到 `build-s31/card-files/` 并 verify，保证固件里的清单和旁边的装机包是同一份。
+  - `tools/card_files.py verify` 核对二者一致。S31 构建从主机构建的 `build/card-files/manifest.json` 生成同一个头文件（`header --spec tools/card_files.json`：主机构建比清单旧、路径或应用对不上时直接停下，不会把旧清单编进固件），`ports/esp32s31/build.sh` 把整个装机包拷到 `build-s31/card-files/` 并 verify，保证固件里的清单和旁边的装机包是同一份。
 - 做字体要 fontTools。CMake 的 `INK_FONT_PYTHON` 没给时，依次试 `Python3_EXECUTABLE`、PATH 里的 `python3`，取第一个能 `import fontTools` 的（`card_files.py python`），都不行就停下并写明装法。
 - **digest**：按清单顺序把每项写成 `"<path> <size> <sha256十六进制> <app>\n"`，整段取 sha256，取前 16 位十六进制。固件直接用编进去的字符串，不在设备上算。
 - 构建时就拒绝（`bundle`、`header` 都查）：不在 `/content/fonts/` 或 `/content/.system/` 下；含 `..`、`//`、反斜杠、控制字符；以 `.part` 或 `/` 结尾；路径重复；单个文件超过 5 MiB；超过 8 项（`card_files.c` 里有同样的静态检查）。固件启动时再查一遍前缀和这些字符，不合格的条目当作不存在并记日志。
@@ -24,7 +24,7 @@
   - 只在写文件时占着卡；卡要借给电脑时（`ink_fs_on_release`），读串口按 200 ms 一段，看到就关掉 `.part`、放手，`.part` 留着下次续传。
   - 写之前查剩余空间，不够就这一项判 `io`（日志 `no_space`）。
   - 写到 `<path>.part`：已有且不比清单大，从“大小向下取整到 64 KiB”处接着写（不截断）；比清单大就删掉从 0 开始。每 64 KiB 同步一次。写完整份重读算 sha256，和清单相等才改名；不等就删 `.part`，如果这次是续传的，就在同一次传输里从 0 再来一次（可能是旧清单留下的 `.part`），从 0 开始的还不对就判失败（`bad_hash`）。
-  - **换文件**：正式路径上没有文件时直接改名。已有文件（内容不对）时，先在界面任务上确认要它的应用放开了它：应用是 `STOPPED`，或者它的页面正显示缺文件说明（第 5 节：显示说明时应用不开着它的任何文件）；再在后台执行器上删旧文件、改名。应用开着它（比如正在用旧版本字体读书）就这次不换，日志一行 `not replaced yet`，`.part` 留着，下次核对时在本机换上。改名后调 `ink_fs_changed_outside()`，文件索引和按版本的条件操作知道卡变了。
+  - **换文件**：在后台执行器上调文件服务的 `ink_fs_card_replace(part, path)`：正式路径上没有文件时直接改名；已有文件（内容不对）时，只有没人经文件服务开着它、也没有复制或删除在跑，才删旧文件、改名。查“有没有人开着”和删、改名都在文件服务的编辑锁里做，所有打开文件都要拿这把锁，中间插不进新的打开。看的是文件有没有被打开，不看应用状态：阅读的字体音乐和锁屏样式也在用（同一个字体引擎），离开屏幕的应用已经关掉了它（页面关闭时 `ink_mogo_font_shutdown`），可它的状态是后台或冻结，不是 `STOPPED`；页面显示缺文件说明时也不开着它（第 5 节）。有人开着它（比如正在用旧版本字体读书）就这次不换，日志一行 `not replaced yet`，`.part` 留着，下次核对时在本机换上。改名后调 `ink_fs_changed_outside()`，文件索引和按版本的条件操作知道卡变了。
   - **结果照实说**：一项只有真的改名到正式路径才回 `DONE <idx> ok`、算进 `BYE` 的 ok。整份对了但这次没换上（应用开着旧文件、改名失败）回 `DONE <idx> io`、算 failed，接着做下一项；卡被借走就结束这次传输。
 - **安全边界**（同时成立）：
   1. 写的路径只来自固件里的清单（启动时再查一遍）；电脑那边根本没有办法说出一个路径。写到卡上的只有清单路径和它旁边的 `<path>.part`。
@@ -68,7 +68,7 @@ CRC 是 `ink_crc32`（初值 0），和 `zlib.crc32` 相同（单元测试用固
 
 ## 5. 应用缺文件时
 
-`ink_card_files_notice(screen, app, what, reopen)` 在应用页上画一段说明（`ink_ui_empty`，不加按钮），只随状态改那一段文字（进度按 10% 一档）。约定：显示说明期间应用不开着它要的任何文件（阅读打不开字体时会把字体卸掉），所以系统可以在这时换掉内容不对的文件。状态变成 `ready` 且这页还在最上面时，说明调一次 `reopen()`：应用在同一个屏幕上重新打开原来的内容（阅读回到原来那本书或书架），画好后自己把说明拿掉；说明的文字一直留到页面画好，不重建页面、中间没有空白页、不整屏闪刷。`reopen` 为 NULL 的页面改为重画一次。`ink_card_files_notice_snapshot(app, out, cap)` 给 AI 的快照写出应用名、说明和状态词；这个应用没有显示说明时返回 0。阅读的判断依据是“它真要用的字体打不开”（家人自己的 `/me/fonts/InkSC.ttf` 照旧优先；它打不开时改用全家那份），不是“清单说缺”。清单说齐了、应用却打不开时，说明先写“现在打不开，正在重新检查”并调一次 `card.files_check`；这次核对有了结论还是齐的，就改成“检查过是好的，但现在打不开。请返回后再打开试试”，不再重开、不再核对（`ink_card_files_checks()` 数的是有了结论的核对次数，说明靠它认出“我要的那次核对已经完了”）。阅读重开后还是打不开，会重新放一份说明，再核对一次。 阅读自己的说明页只管书本身的问题（书打不开、书架空、文件损坏或格式不支持）；字体和存储卡的问题只走这段说明，同一个原因不会有两种页面。
+`ink_card_files_notice(screen, app, what, reopen)` 在应用页上画一段说明（`ink_ui_empty`，不加按钮），只随状态改那一段文字（进度按 10% 一档）。约定：显示说明期间应用不开着它要的任何文件（阅读、音乐打不开字体时会把字体卸掉），所以系统可以在这时换掉内容不对的文件（换不换只看有没有人开着它，第 2 节）。状态变成 `ready` 且这页还在最上面时，说明调一次 `reopen()`：应用在同一个屏幕上重新打开原来的内容（阅读回到原来那本书或书架），画好后自己把说明拿掉；说明的文字一直留到页面画好，不重建页面、中间没有空白页、不整屏闪刷。`reopen` 为 NULL 的页面改为重画一次。`ink_card_files_notice_snapshot(app, out, cap)` 给 AI 的快照写出应用名、说明和状态词；这个应用没有显示说明时返回 0。阅读的判断依据是“它真要用的字体打不开”（家人自己的 `/me/fonts/InkSC.ttf` 照旧优先；它打不开时改用全家那份），不是“清单说缺”。清单说齐了、应用却打不开时，说明先写“现在打不开，正在重新检查”并调一次 `card.files_check`；这次核对有了结论还是齐的，就改成“检查过是好的，但现在打不开。请返回后再打开试试”，不再重开、不再核对（`ink_card_files_checks()` 数的是有了结论的核对次数，说明靠它认出“我要的那次核对已经完了”）。阅读重开后还是打不开，会重新放一份说明，再核对一次。 阅读自己的说明页只管书本身的问题（书打不开、书架空、文件损坏或格式不支持）；字体和存储卡的问题只走这段说明，同一个原因不会有两种页面。
 
 ## 6. 以后从中枢取（只设计，没有代码）
 

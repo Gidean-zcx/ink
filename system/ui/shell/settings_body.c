@@ -958,12 +958,12 @@ int ink_settings_home_init(void) {
 }
 
 static const char *const FONT_CHOICES[] = {TR_NOOP("小"), TR_NOOP("中"), TR_NOOP("大"), TR_NOOP("特大"), NULL};
-static const char *const LOCK_CHOICES[] = {TR_NOOP("这一页"), TR_NOOP("时钟和待办"), TR_NOOP("壁纸"), TR_NOOP("简约时钟"), TR_NOOP("待机时钟"), TR_NOOP("月历"), NULL};
+extern const char *const ink_lock_face_choices[]; /* the one list of lock styles, in lock_faces/faces.c (lock-styles-1) */
 const ink_setting_def_t SETTINGS[] = {
     {.id = "display.font_size", .title = TR_NOOP("字号"), .type = INK_SET_ENUM, .def = 1, .choices = FONT_CHOICES},
     {.id = "display.lock_style",
      .title = TR_NOOP("锁屏画面"),
      .type = INK_SET_ENUM,
      .def = 0,
-     .choices = LOCK_CHOICES,
+     .choices = ink_lock_face_choices,
      .child_may_change = true}};

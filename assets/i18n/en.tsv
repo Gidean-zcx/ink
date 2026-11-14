@@ -1932,3 +1932,276 @@ language english 中文 英文	language english chinese
 %s要用的%s现在打不开，正在重新检查	%s cannot open its %s right now; checking again
 %s要用的%s检查过是好的，但现在打不开。请返回后再打开试试	%s: its %s checks out, but cannot be opened right now. Go back and open it again
 字体	font
+请先校准时间	Please set the clock first
+日期请用 YYYY-MM-DD	Use YYYY-MM-DD for the date
+不在范围（2000—2099 年）	Outside the supported range (2000-2099)
+日期无效	Invalid date
+这些是民俗说法	These are folk traditions
+历法结果过长	The almanac result is too long
+%s%.36s，宜%.*s，忌%.*s。这些是民俗说法。	%s %.36s; Yi: %.*s; Ji: %.*s. These are folk traditions.
+这天	On this day,
+内存不足	Out of memory
+时钟和通知	Clock and notifications
+票根	Ticket
+拼贴	Collage
+数字时钟	Digital clock
+老黄历	Almanac
+万年历	Perpetual calendar
+迷你书库	Mini library
+时间、今天的安排、未读通知和家人	Time, today's plans, unread notifications and the family
+时间、下一个闹钟和通知数	Time, the next alarm and how many notifications
+选好的图片铺满屏幕	The chosen picture fills the screen
+上下两行的大时间	Large time on two lines
+时间、农历、待办和继续读	Time, lunar date, to-dos and continue reading
+这个月的日历和农历	This month's calendar with lunar dates
+正在读的书和今天读了多久	The book you are reading and how long you read today
+书架上的封面拼在一起	Covers from your shelf put together
+大号数字时间、日期和电量	Large digital time, date and battery
+今天的宜忌、冲煞和农历	Today's do's and don'ts, clash and lunar date
+整月日历、农历和宜忌	The whole month with lunar dates and do's and don'ts
+最近读的五本书，点一本接着读	The five books read last; tap one to go on reading
+封面	Cover
+随机	Random
+票根背景	Ticket background
+迷你书库显示	Mini library shows
+第 %d/%d 页	Page %d of %d
+页	Page
+解锁后显示	Shown after unlocking
+读书内容	Reading
+画面上写着	On the screen
+这个锁屏样式没画出来，先显示默认锁屏	This lock style could not be drawn; the default lock screen shows instead
+这个锁屏样式在这台设备上用不了	This lock style is not available on this device
+锁屏样式要用的字体还没放到卡上	The font the lock styles use is not on the card yet
+解锁一次后才能显示这个锁屏样式	Unlock once and this lock style can show
+公历	Gregorian
+干支	Stems and branches
+宜	Do
+忌	Avoid
+冲	Clash
+煞	Sha
+书名	Title
+作者	Author
+已读 %u%% · 第 %u 章	%u%% read · chapter %u
+书摘	Excerpt
+还没有读过的书，读过一本后这里显示票根	Nothing read yet; the ticket appears once you have read a book
+今日阅读	Read today
+书架拼贴没画出来，先显示默认锁屏	The shelf collage could not be drawn; the default lock screen shows instead
+书库暂不可用，请稍后重试	The library is not available; try again later
+还没有阅读记录	No reading yet
+书匣等你放入第一本书	Put your first book on the shelf
+%d月%d日 %s	%d/%d %s
+农历	Lunar
+无	None
+日历	Calendar
+%d 分 %02d 秒	%d:%02d
+%d 秒	%d s
+%d/%d 翻页	%d/%d More
+%d月%d日	%d/%d
+今天 %02d:%02d	%02d:%02d
+候选	Suggestions
+再打一次	Call again
+删除这一组	Delete these
+加为联系人	Add contact
+卡 1	SIM 1
+卡和网络	SIM and network
+填上最近一次的号码	Fill in the last number
+填入这个号码	Use this number
+对方	Caller
+对方忙或拒接	Busy or declined
+已删除这一组通话记录	Calls deleted
+已拒接	Declined
+已清空通话记录	Call history cleared
+拨打	Call
+未知号码	Unknown number
+没人接	No answer
+没有信号	No signal
+没有卡	No SIM
+没有接通	Not connected
+清空	Clear
+清空全部通话记录？清空后找不回来	Clear all call history? It cannot be brought back
+清空通话记录	Clear call history
+用的卡	SIM used
+结束原因	How it ended
+联系人暂时读不到	Contacts cannot be read now
+详情	Details
+这一组通话记录已经不在了	These calls are no longer there
+通话结束	Call ended
+通话记录暂时读不到	Call history cannot be read now
+通话详情	Call details
+# memo-3
+%d月%d日 %d:%02d	%d/%d %d:%02d
+%s 到期	Due %s
+%u 分钟	%u min
+%u/%u 已完成	%u/%u done
+上一个	Previous
+不到 1 分钟	Under 1 min
+全部取消勾选	Uncheck all
+共 %d 处	%d matches
+删掉已完成	Delete done
+删除这一项	Delete item
+到期	Due
+加一项	Add item
+已删掉已完成的项 · 撤销	Done items deleted · Undo
+已完成 %u 项	%u done
+已清除搜索	Search cleared
+已过期	Overdue
+录于 %d月%d日 %02d:%02d · 连上网后整理成文字	Recorded %d/%d %02d:%02d · Turned into text once online
+找到 %u 条	%u found
+提醒没设上，点这里重试	Reminder not set, tap to retry
+搜索备忘	Search notes
+改	Edit
+改文字	Edit text
+新清单	New list
+昨天	Yesterday
+正在保存录音	Saving recording
+没有到期	No due date
+没有找到	Not found
+清单是空的	The list is empty
+清单最多 32 项	At most 32 items
+清除到期	Clear due date
+清除搜索	Clear search
+移到最上	Move to top
+移到最下	Move to bottom
+第 %d 处，共 %d 处	%d of %d
+设到期时间	Set due date
+设好了	Done
+还能录约 %u 分钟	About %u min left
+这一项	This item
+连上网后整理成文字	Turned into text once online
+提醒没设上	Reminder not set
+有一条备忘没存上 · 重试	A memo was not saved · Retry
+%d年%d月%d日	%d-%d-%d
+今天 %d:%02d	Today %d:%02d
+保留两个	Keep both
+保留两个的放成了：%s	Kept both as: %s
+倒序	Descending
+先选一个文件夹	Choose a folder first
+先选文件	Select files first
+其它	Other
+刚放进来的文件可能要等几秒才搜得到	Files just added may take a few seconds to show up
+删除这 %zu 个文件（%s%s），找不回来	Delete these %zu files (%s%s)? They cannot be recovered
+到它所在的文件夹	Go to its folder
+压缩包	Archive
+原有的：%s · %s	Existing: %s · %s
+只列出前 1024 个	Only the first 1024 are listed
+同名文件	Same name
+同名文件已存在	A file with this name exists
+名字	Name
+名字不合法	Invalid name
+后面的同名都这样	Same for the rest
+图片	Picture
+在 %s	In %s
+在这个文件夹和里面的文件夹里找	Searches this folder and the folders inside
+大小	Size
+失败	Failed
+存储卡借给电脑了	Card lent to the computer
+存储卡借给电脑了，拔线或在电脑上推出后自动回来	The card is lent to a computer; it comes back when you unplug or eject it
+已处理 %zu/%zu	Done %zu/%zu
+已经在这个文件夹里	Already in this folder
+成功 %zu 个，跳过 %zu 个，失败 %zu 个	%zu done, %zu skipped, %zu failed
+找不到了	Not found
+找到 · 	Found · 
+排序	Sort
+收藏 · %s	Favorite · %s
+放到：%s	Into: %s
+文件夹总在文件前面；名字里的数字按大小排	Folders come first; numbers in names sort by value
+文本	Text
+新的：%s · %s	New: %s · %s
+暂时读不了这个文件夹	Cannot read this folder now
+替换	Replace
+替换 %zu 个同名文件（%s%s），原来的找不回来	Replace %zu files with the same name (%s%s)? The old ones cannot be recovered
+替换同名文件 {replace_ids}，原来的找不回来	Replace same-name files {replace_ids}? The old ones cannot be recovered
+正在做别的拷贝	Another copy is running
+正在整理文件编号，好了自动重读	Indexing files; this reloads when done
+正在检查同名文件	Checking for same names
+正序	Ascending
+没找到名字里有“%s”的文件	No file name contains "%s"
+没有存储卡	No card
+没有权限	Not allowed
+没能打开，请重试	Could not open; try again
+没能检查目标文件夹，请返回后重试	Could not check the folder; go back and try again
+用阅读打开	Open in reader
+空间不够	Not enough space
+第 %zu 个，共 %zu 个	%zu of %zu
+编辑名称	Edit name
+至少输入 2 个字母或数字，或 1 个汉字	Type at least 2 letters or digits, or 1 Chinese character
+请在设备上确认替换	Confirm the replacement on the device
+读写出错	Read or write error
+这个文件夹	This folder
+选的文件太多，请分几次做	Too many files selected; do it in parts
+都跳过了，没有改动	All skipped; nothing changed
+需要 %s，还剩 %s，放得下的先做，放不下的会列出来	Needs %s, %s left: what fits goes first, the rest is listed
+，停下了，没做 %zu	, stopped, %zu not done
+，没做 %zu 个	, %zu not done
+，跳过 %zu	, %zu skipped
+文件夹 · %zu 项	Folder · %zu items
+这里没有别的文件夹	No folders inside
+没有替换，什么都没动	Nothing was replaced or changed
+%.*s（恢复%d）%s	%.*s (restored %d)%s
+%d 倍	%d×
+%d年%d月%d日 %s	%d-%d-%d %s
+%d年%d月%d日 %s（文件时间）	%d-%d-%d %s (file time)
+%d年%s	%d %s
+%d月%d日删除	Deleted %d/%d
+还剩 %d 天	%d days left
+%d月—%d月	%d–%d
+%s · %zu 张	%s · %zu photos
+%s · 第%zu/%zu张 · %s	%s · %zu of %zu · %s
+%u 张	%u photos
+%u 张 · 最新 %s	%u photos · newest %s
+%zu 张	%zu photos
+上一张	Previous
+下一张	Next
+下移	Down
+不详	Unknown
+信息	Details
+其他照片	Other photos
+删除日期不详	Deletion date unknown
+原来的地方同名的照片太多，照片还在最近删除里	Too many photos with that name where it was; it stays in Recently deleted
+右移	Right
+存储卡借给了电脑，拔线或在电脑上推出后自动回来	The storage card is lent to a computer; it comes back by itself when you unplug or eject it there
+存储卡满了，照片还在原处	The storage card is full; the photo stays where it was
+存储卡读写出错，照片还在原处	The storage card failed; the photo stays where it was
+尺寸	Dimensions
+左移	Left
+已移到最近删除	Moved to Recently deleted
+恢复	Restore
+拍摄时间	Taken
+放大	Zoom in
+文件太多，有些照片没列出来	Too many files; some photos are not listed
+旋转	Rotate
+日期不详	Undated
+最近删除	Recently deleted
+最近删除里已经有同名的照片，照片还在原处	Recently deleted already has a photo with that name; the photo stays where it was
+最近删除里没有照片	No photos in Recently deleted
+格式	Format
+正在整理照片，好了会自动出来	Organizing photos; they appear by themselves when ready
+正在看	Showing
+永久删除	Delete forever
+永久删除这张照片（{name}），不能恢复	Delete this photo ({name}) forever? It cannot be restored
+没插存储卡，插上后照片会自动出来	No storage card; photos appear by themselves when one is inserted
+没有权限挪这张照片	Not allowed to move this photo
+清空 %zu 张	Empty %zu
+清空最近删除里的全部照片，不能恢复	Empty all photos in Recently deleted? They cannot be restored
+照片在这里留 30 天，之后自动删除	Photos stay here for 30 days, then are deleted automatically
+没有清空：正在处理别的文件，稍后再试	Not emptied: other files are being worked on. Try again shortly
+没有清空，照片还在，请再试一次	Not emptied; the photos are still here. Try again
+照片已恢复	Photo restored
+相簿	Albums
+相簿：%s	Album: %s
+看不了预览	No preview
+第%zu/%zu张	%zu of %zu
+第几张	Position
+缩小	Zoom out
+缩放	Zoom
+转了 %d 度	Turned %d°
+这个相簿里没有照片了	No photos here any more
+这张照片刚刚变了，请重新打开	This photo just changed; open it again
+这张照片太大（%u×%u），设备只能看 100 万像素以内的	This photo is too large (%u×%u); the device shows photos up to 1 megapixel
+这张照片的路径太长，放不进最近删除，只能永久删除	This photo's path is too long for Recently deleted; it can only be deleted forever
+这张照片读不出来，文件可能坏了	This photo cannot be read; the file may be damaged
+这种格式（%s）还看不了	This format (%s) cannot be shown yet
+适合屏幕	Fit to screen
+（恢复）	(restored)
+大小未知	Size unknown
+不会自动删除	Not deleted automatically

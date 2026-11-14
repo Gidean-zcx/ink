@@ -35,6 +35,20 @@ def compile_baseline(commit, name):
         old_source += '\n' + wrapper
     if 'void ink_fs_changed_outside(' not in old_source:  # today's card files tell the index this way (auto-provision-1)
         old_source += '\nvoid ink_fs_changed_outside(void) { on_card(NULL); }\n'
+    if 'int ink_fs_card_replace(' not in old_source:  # today's card files replace their files through this one
+        # the old table keeps no card path: any open file counts as holding it (the comparison never replaces one)
+        old_source += ('\nint ink_fs_card_replace(const char *part, const char *phys) {\n'
+                       '    if (FS.ready) osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);\n'
+                       '    bool open = false;\n'
+                       '    if (FS.ready) { ink_svc_lock(); open = FS.job_active; for (int i = 0; i < MAX_OPEN; i++) open |= FS.files[i].used; ink_svc_unlock(); }\n'
+                       '    int r = open ? INK_FS_ERR_BUSY : hal_fs_size(phys) >= 0 && hal_fs_remove(phys) ? card_error() : hal_fs_rename(part, phys) ? card_error() : 0;\n'
+                       '    if (FS.ready) osal_mutex_unlock(FS.edits);\n'
+                       '    return r;\n}\n')
+    if 'int fs_place_for(' not in old_source:  # files-3: today's file.batch places files through this one
+        current = (ROOT / 'system/services/file/file_service.c').read_text()
+        place = 'int fs_place_for(' + current.split('int fs_place_for(', 1)[1].split('\nstatic int job_begin(', 1)[0]
+        # the old move and job take no "replace" flag; the index comparison never replaces
+        old_source += '\n' + place.replace(', how == 2)', ')')
     source.write_text(old_source)
     link = shlex.split((build / 'CMakeFiles/sim-index-durable.dir/link.txt').read_text())
     obj = area / (name + '.o')

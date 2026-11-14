@@ -1,6 +1,6 @@
 /* Decode on the media executor; keep only dithered pixels in PSRAM. */
 /* ui-scale-runtime: dimension x,y,w,h Theme-sized preview rows and widget controls. */
-/* ui-scale-runtime: dimension INK_LOCK_FACE_COUNT Number of face tiles in the two-column grid. */
+/* ui-scale-runtime: dimension room,used Page room in canvas pixels, from the box the page gave the list. */
 #include "ink/sys/i18n.h"
 #include <limits.h>
 #include <stdio.h>
@@ -14,50 +14,107 @@
 #include "ink/ui_shell.h"
 #include "../lock_faces/faces.h"
 
-enum { FACE_SETTINGS_MAX = INK_LOCK_FACE_COUNT + 3 };
+/* The style list (lock-styles-1): shared list rows in pages, one line each saying what the style shows, the chosen one
+ * ticked; a style's own setting appears under the list only when that style is chosen. No pretend previews. */
+enum { OPTION_ROWS = 2, TOGGLES = 3, FACE_SETTINGS_MAX = INK_LOCK_FACE_COUNT + OPTION_ROWS + TOGGLES + 1, FACE_ITEMS = FACE_SETTINGS_MAX };
+static const char *const TICKET_BG[] = {TR_NOOP("封面"), TR_NOOP("壁纸"), NULL};
+static const char *const LIBRARY_MODE[] = {TR_NOOP("最近"), TR_NOOP("随机"), NULL};
+static const char *const TOGGLE_IDS[TOGGLES] = {"display.lock_todo", "display.lock_reading", "display.lock_background"};
+static const char *const TOGGLE_TITLES[TOGGLES] = {TR_NOOP("锁屏显示待办"), TR_NOOP("锁屏继续读"), TR_NOOP("表盘叠在壁纸上")};
+static const char *const FACE_ICONS[] = {"bell", "clock", "gallery", "clock", "moon", "calendar", "bookmark", "grid", "clock", "news", "calendar", "book"};
+_Static_assert(sizeof FACE_ICONS / sizeof *FACE_ICONS == INK_LOCK_FACE_COUNT, "one icon a style");
 static struct {
     ink_ui_field_spec_t fields[FACE_SETTINGS_MAX];
     ink_ui_action_spec_t actions[FACE_SETTINGS_MAX];
-    char args[FACE_SETTINGS_MAX][96];
+    char args[FACE_SETTINGS_MAX][96], option_args[2][96], page_text[32], page_args[2][48];
     ink_ui_page_spec_t model;
+    int page, pages;
 } P INK_PSRAM_BSS;
 
-void ink_lock_face_settings(lv_obj_t *parent) {
-    int w = INK_CANVAS_W - 2 * INK_MARGIN, cell = (w - INK_GAP_M) / 2;
-    int preview_h = 2 * ink_ui_line_height(INK_FONT_STATUS) + 2 * INK_STROKE;
-    int h = preview_h + ink_ui_line_height(INK_FONT_LIST) + 2 * INK_GAP_XS;
-    static const char *const previews[] = {"", "08:30", "", "08\n30", "08:30\n-- --", "1 2 3\n4 5 6"};
-    _Static_assert(sizeof previews / sizeof *previews == INK_LOCK_FACE_COUNT, "previews match");
+static const char *const *option_choices(int i) { return i == 0 ? TICKET_BG : LIBRARY_MODE; }
+static const char *option_id(int i) { return i == 0 ? "display.lock_ticket_bg" : "display.lock_library"; }
+static const char *option_title(int i) { return i == 0 ? TR("票根背景") : TR("迷你书库显示"); }
+static bool option_shown(int i) { return ink_setting_get("display.lock_style") == (i == 0 ? INK_LOCK_TICKET : INK_LOCK_LIBRARY); }
+/* What the list holds, in order: the styles, the chosen style's own setting right under it, then the switches of the
+ * older faces. */
+static int items(int *kind, int *index) {
+    int n = 0;
     for (int i = 0; i < INK_LOCK_FACE_COUNT; i++) {
-        const char *title = TR(ink_lock_face_choices[i]);
-        bool selected = ink_setting_get("display.lock_style") == i;
-        lv_obj_t *p = ink_ui_box(parent, INK_MARGIN + i % 2 * (cell + INK_GAP_M), i / 2 * h, cell, h, 0, INK_SURFACE_WHITE, false);
-        lv_obj_t *preview = ink_ui_box(p, (cell - INK_PRIMARY) / 2, 0, INK_PRIMARY, preview_h, INK_RADIUS_KEY, INK_SURFACE_STATIC, true);
-        lv_obj_t *label = ink_ui_label(preview, previews[i], INK_FONT_STATUS, INK_WEIGHT_REGULAR, 0, 0, INK_PRIMARY);
-        lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0); lv_obj_center(label);
-        if (i == 0 || i == 2) lv_obj_center(ink_ui_icon(preview, i == 0 ? "page" : "gallery", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false));
-        lv_obj_t *caption = ink_ui_line(p, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, 0, preview_h + INK_GAP_XS, cell);
-        lv_obj_set_style_text_align(caption, LV_TEXT_ALIGN_CENTER, 0);
-        if (selected) ink_ui_icon(p, "check", INK_ICON_SMALL, INK_ICON_LINE, cell - INK_ICON_SMALL, 0, false);
-        snprintf(P.args[i], sizeof P.args[i], "{\"id\":\"display.lock_style\",\"value\":%d}", i);
-        P.fields[i] = (ink_ui_field_spec_t){.id = ink_lock_face_choices[i], .role = "option", .label = title, .value = selected ? TR("已选择") : ""};
-        P.actions[i] = (ink_ui_action_spec_t){.id = ink_lock_face_choices[i], .label = title, .capability = "settings.set", .args_json = P.args[i], .enabled = true};
-        ink_shell_bind(p, "settings.set", P.args[i]);
+        kind[n] = 0; index[n++] = i;
+        for (int o = 0; o < OPTION_ROWS; o++)
+            if (option_shown(o) && i == (o == 0 ? INK_LOCK_TICKET : INK_LOCK_LIBRARY)) { kind[n] = 1; index[n++] = o; }
     }
-    static const char *const ids[] = {"display.lock_todo", "display.lock_reading", "display.lock_background"};
-    static const char *const titles[] = {TR_NOOP("锁屏显示待办"), TR_NOOP("锁屏继续读"), TR_NOOP("表盘叠在壁纸上")};
-    _Static_assert(sizeof ids / sizeof *ids == sizeof titles / sizeof *titles, "widget settings match");
-    _Static_assert(INK_LOCK_FACE_COUNT + sizeof ids / sizeof *ids <= FACE_SETTINGS_MAX, "face setting rows fit");
-    for (size_t i = 0; i < sizeof ids / sizeof *ids; i++) {
-        int k = INK_LOCK_FACE_COUNT + (int)i; bool on = ink_setting_get(ids[i]) != 0;
-        snprintf(P.args[k], sizeof P.args[k], "{\"id\":\"%s\",\"value\":%d}", ids[i], !on);
-        P.fields[k] = (ink_ui_field_spec_t){.id = ids[i], .role = "setting", .label = TR(titles[i]), .value = on ? TR("开") : TR("关")};
-        P.actions[k] = (ink_ui_action_spec_t){.id = ids[i], .label = TR(titles[i]), .capability = "settings.set", .args_json = P.args[k], .enabled = true};
-        ink_shell_bind(ink_ui_toggle(parent, TR(titles[i]), on, INK_MARGIN,
-            ((INK_LOCK_FACE_COUNT + 1) / 2) * h + (int)i * INK_CONTROL, w, NULL, NULL), "settings.set", P.args[k]);
+    for (int i = 0; i < TOGGLES; i++) { kind[n] = 2; index[n++] = i; }
+    return n;
+}
+static int item_h(int kind) {
+    return kind == 0 ? ink_ui_row_double() : kind == 1 ? ink_ui_line_height(INK_FONT_LIST) + INK_SEGMENT + INK_GAP : INK_CONTROL;
+}
+static void page_clicked(lv_event_t *e) {
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .args_json = P.page_args[lv_event_get_user_data(e) == (void *)(intptr_t)1]};
+    ink_cap_call("shell.lock_faces", NULL, &o);
+}
+void ink_lock_face_settings(lv_obj_t *parent) {
+    lv_obj_update_layout(parent);
+    int w = INK_CANVAS_W - 2 * INK_MARGIN;
+    int room = lv_obj_get_height(parent) * INK_CANVAS_W / LV_MAX(ink_ui_width(), 1) - INK_CONTROL - INK_GAP;
+    int kind[FACE_ITEMS], index[FACE_ITEMS], n = items(kind, index), first[FACE_ITEMS + 1], pages = 0;
+    for (int i = 0, used = room; i < n; used += item_h(kind[i]), i++)
+        if (used + item_h(kind[i]) > room) { first[pages++] = i; used = 0; }
+    first[pages] = n;
+    P.pages = pages;
+    if (P.page >= pages) P.page = pages - 1;
+    if (P.page < 0) P.page = 0;
+    size_t f = 0, nf = 0, na = 0;
+    int y = 0;
+    for (int i = 0; i < n; i++, f++) {
+        bool here = i >= first[P.page] && i < first[P.page + 1];
+        if (kind[i] == 0) {
+            int s = index[i];
+            const char *title = TR(ink_lock_face_choices[s]);
+            bool selected = ink_setting_get("display.lock_style") == s;
+            snprintf(P.args[f], sizeof P.args[f], "{\"id\":\"display.lock_style\",\"value\":%d}", s);
+            if (here) {
+                lv_obj_t *row = ink_ui_list_row(parent, FACE_ICONS[s], title, TR(ink_lock_face_notes[s]), INK_MARGIN, y, w, true, NULL, NULL);
+                if (selected) ink_ui_icon(row, "check", INK_ICON_SMALL, INK_ICON_LINE, w - INK_READING_MARGIN, (ink_ui_row_double() - INK_ICON_SMALL) / 2, false);
+                ink_shell_bind(row, "settings.set", P.args[f]);
+            }
+            if (selected) /* the AI's context is small: the chosen style is one field, the rows on this page its actions */
+                P.fields[nf++] = (ink_ui_field_spec_t){.id = "display.lock_style", .role = "setting", .label = TR("已选择"), .value = title};
+            if (here) P.actions[na++] = (ink_ui_action_spec_t){.id = ink_lock_face_choices[s], .label = title, .capability = "settings.set", .args_json = P.args[f], .enabled = true};
+        } else if (kind[i] == 1) {
+            int o = index[i], value = ink_setting_get(option_id(o)) ? 1 : 0;
+            const char *labels[2] = {TR(option_choices(o)[0]), TR(option_choices(o)[1])};
+            snprintf(P.args[f], sizeof P.args[f], "{\"id\":\"%s\",\"value\":%d}", option_id(o), !value);
+            if (here) {
+                ink_ui_line(parent, option_title(o), INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
+                lv_obj_t *seg = ink_ui_segments(parent, labels, 2, value, INK_MARGIN, y + ink_ui_line_height(INK_FONT_LIST), w, NULL, NULL);
+                for (int k = 0; seg && k < 2; k++) {
+                    snprintf(P.option_args[k], sizeof P.option_args[k], "{\"id\":\"%s\",\"value\":%d}", option_id(o), k);
+                    if (k != value) ink_shell_bind(lv_obj_get_child(seg, k), "settings.set", P.option_args[k]);
+                }
+            }
+            P.fields[nf++] = (ink_ui_field_spec_t){.id = option_id(o), .role = "setting", .label = option_title(o), .value = labels[value]};
+            if (here) P.actions[na++] = (ink_ui_action_spec_t){.id = option_id(o), .label = option_title(o), .capability = "settings.set", .args_json = P.args[f], .enabled = true};
+        } else {
+            int t = index[i];
+            bool on = ink_setting_get(TOGGLE_IDS[t]) != 0;
+            snprintf(P.args[f], sizeof P.args[f], "{\"id\":\"%s\",\"value\":%d}", TOGGLE_IDS[t], !on);
+            if (here) ink_shell_bind(ink_ui_toggle(parent, TR(TOGGLE_TITLES[t]), on, INK_MARGIN, y, w, NULL, NULL), "settings.set", P.args[f]);
+            P.fields[nf++] = (ink_ui_field_spec_t){.id = TOGGLE_IDS[t], .role = "setting", .label = TR(TOGGLE_TITLES[t]), .value = on ? TR("开") : TR("关")};
+            if (here) P.actions[na++] = (ink_ui_action_spec_t){.id = TOGGLE_IDS[t], .label = TR(TOGGLE_TITLES[t]), .capability = "settings.set", .args_json = P.args[f], .enabled = true};
+        }
+        if (here) y += item_h(kind[i]);
     }
-    P.model = (ink_ui_page_spec_t){.id = "LockFaces", .title = TR("锁屏画面"), .object = {"display.lock_style", 0}, .fields = P.fields, .field_count = FACE_SETTINGS_MAX,
-        .actions = P.actions, .action_count = FACE_SETTINGS_MAX};
+    snprintf(P.page_args[0], sizeof P.page_args[0], "{\"page\":%d}", P.page);
+    snprintf(P.page_args[1], sizeof P.page_args[1], "{\"page\":%d}", P.page + 2);
+    snprintf(P.page_text, sizeof P.page_text, TR("第 %d/%d 页"), P.page + 1, P.pages);
+    P.fields[nf++] = (ink_ui_field_spec_t){.id = "page", .role = "text", .label = TR("页"), .value = P.page_text};
+    if (P.page > 0) P.actions[na++] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "shell.lock_faces", .args_json = P.page_args[0], .enabled = true};
+    if (P.page + 1 < P.pages) P.actions[na++] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "shell.lock_faces", .args_json = P.page_args[1], .enabled = true};
+    if (P.pages > 1) ink_ui_pagebar(parent, P.page + 1, P.pages, room + INK_GAP, page_clicked);
+    P.model = (ink_ui_page_spec_t){.id = "LockFaces", .title = TR("锁屏画面"), .object = {"display.lock_style", 0}, .fields = P.fields,
+        .field_count = nf, .actions = P.actions, .action_count = na};
 }
 static void face_create(lv_obj_t *screen, void *arg) {
     (void)arg;
@@ -66,8 +123,26 @@ static void face_create(lv_obj_t *screen, void *arg) {
     ink_lock_face_settings(ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false));
 }
 static int face_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&P.model, out, cap); }
-static const ink_activity_t FACE_PAGE = {.name = "LockFaces", .create = face_create, .snapshot = face_snapshot};
-static void face_open(ink_call_t *c) { (void)c; ink_shell_close(); ink_ui_push(&FACE_PAGE, NULL); }
+static void face_turn(int page) {
+    if (page < 0 || page >= P.pages || page == P.page) return;
+    P.page = page; ink_ui_hint_frame(INK_REFRESH_UI); ink_ui_redraw();
+}
+static bool face_key(ink_key_t key, bool long_press) { /* the cover's page keys turn the list */
+    if (long_press || (key != INK_KEY_NEXT && key != INK_KEY_PREV)) return false;
+    face_turn(P.page + (key == INK_KEY_NEXT ? 1 : -1));
+    return true;
+}
+static const ink_activity_t FACE_PAGE = {.name = "LockFaces", .create = face_create, .snapshot = face_snapshot, .on_key = face_key};
+static void face_open(ink_call_t *c) { /* {"page":n} turns the open list to page n (from 1), as the page buttons do */
+    int64_t page = 0;
+    bool turn = ink_args_get_int(&c->args, "page", &page);
+    if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), FACE_PAGE.name)) {
+        if (turn) face_turn((int)page - 1);
+        return;
+    }
+    P.page = turn && page >= 1 ? (int)page - 1 : 0;
+    ink_shell_close(); ink_ui_push(&FACE_PAGE, NULL);
+}
 static void face_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
     if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), FACE_PAGE.name)) ink_ui_redraw();
@@ -81,6 +156,17 @@ void ink_wallpaper_draw(lv_obj_t *parent) {
     lv_obj_t *im = lv_image_create(parent); lv_image_set_src(im, &W.dsc);
     lv_obj_set_size(im, ink_ui_px(INK_CANVAS_W), ink_ui_px(INK_CANVAS_H));
     lv_image_set_inner_align(im, LV_IMAGE_ALIGN_COVER); lv_obj_move_background(im);
+}
+bool ink_wallpaper_fill(uint8_t *canvas, int w, int h) {
+    if (!ink_wallpaper_ready() || !canvas || w <= 0 || h <= 0) return false;
+    unsigned sw = W.image.width, sh = W.image.height, cw = sw, ch = sh, cx = 0, cy = 0; /* cover, as the image object does */
+    if ((uint64_t)sw * (unsigned)h > (uint64_t)sh * (unsigned)w) { cw = (unsigned)((uint64_t)sh * (unsigned)w / (unsigned)h); cx = (sw - cw) / 2; }
+    else { ch = (unsigned)((uint64_t)sw * (unsigned)h / (unsigned)w); cy = (sh - ch) / 2; }
+    for (int y = 0; y < h; y++) {
+        const uint8_t *row = W.image.pixels + (size_t)(cy + (unsigned)y * ch / (unsigned)h) * sw + cx;
+        for (int x = 0; x < w; x++) canvas[(size_t)y * (unsigned)w + (unsigned)x] = row[(unsigned)x * cw / (unsigned)w];
+    }
+    return true;
 }
 static void install(void *arg) {
     loaded_t *result = arg;
@@ -126,7 +212,9 @@ int ink_wallpaper_init(void) {
     static const ink_setting_def_t widgets[] = {
         {.id = "display.lock_todo", .title = TR_NOOP("锁屏显示待办"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
         {.id = "display.lock_reading", .title = TR_NOOP("锁屏继续读"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
-        {.id = "display.lock_background", .title = TR_NOOP("表盘叠在壁纸上"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true}};
+        {.id = "display.lock_background", .title = TR_NOOP("表盘叠在壁纸上"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
+        {.id = "display.lock_ticket_bg", .title = TR_NOOP("票根背景"), .type = INK_SET_ENUM, .choices = TICKET_BG, .per_member = true, .child_may_change = true},
+        {.id = "display.lock_library", .title = TR_NOOP("迷你书库显示"), .type = INK_SET_ENUM, .choices = LIBRARY_MODE, .per_member = true, .child_may_change = true}};
     if (ink_settings_define(widgets, sizeof widgets / sizeof *widgets)) return -1;
     static const ink_setting_def_t setting = {.id = "display.wallpaper_file", .title = TR_NOOP("壁纸图片编号"), .type = INK_SET_INT, .max = UINT32_MAX};
     static const ink_cap_t cap = {.id = "wallpaper.choose", .title = "选择锁屏壁纸", .effect = INK_FX_NAVIGATE, .run = choose};

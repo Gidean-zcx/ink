@@ -45,7 +45,10 @@ bool ink_s31_at_urc(const char *s) {
         ink_s31_cell_update(false, 0);
         s = "+CEREG: 0";
     }
-    bool urc = !strcmp(s, "RING") || !strcmp(s, "NO CARRIER") || !strcmp(s, "ECRDY") || !strcmp(s, "+ECRDY") ||
+    /* BUSY and NO ANSWER are queued like NO CARRIER and, like it, still end a pending command (ATD's final result):
+     * the AT reader skips the lines this returns true for (uart_eth_modem.cc HandleAtResponse). */
+    bool ends = !strcmp(s, "BUSY") || !strcmp(s, "NO ANSWER");
+    bool urc = !strcmp(s, "RING") || !strcmp(s, "NO CARRIER") || ends || !strcmp(s, "ECRDY") || !strcmp(s, "+ECRDY") ||
         !strncmp(s, "+CMTI:", 6) || !strncmp(s, "+CLIP:", 6) || !strncmp(s, "+CLCC:", 6) ||
         !strncmp(s, "+CEREG:", 7) || !strncmp(s, "+ECNETDEVCTL:", 13);
     if (urc && ink_urcs && strlen(s) < 160) {
@@ -53,7 +56,7 @@ bool ink_s31_at_urc(const char *s) {
         memcpy(item, s, strlen(s));
         osal_queue_send(ink_urcs, item, 0);
     }
-    return urc;
+    return urc && !ends;
 }
 int hal_modem_urc(char *buf, size_t cap, uint32_t ms) {
     char item[160];
