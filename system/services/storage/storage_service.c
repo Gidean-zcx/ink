@@ -52,13 +52,12 @@
 #define BG_MAX_WAIT_US 10000000ull
 #define MAX_DEFER_US 30000000ull /* writes held off longer than this are forced (counted) */
 /* A 4 KiB erase stops both cores for 50-240 ms (Puya PY25Q128HA; IDF 6.1 enables erase suspend only for XMC and FM
- * chips, spi_flash_chip_generic.c:675-718): a tap that falls whole into one is never read. So background work does not
- * start while a finger or key is down or within TAP_GAP_US of the last release (taps in a row keep it waiting, at most
- * TAP_WAIT_BG_US). A waiting writer is mostly the tap's own result (a form saved): only a finger still down holds it,
- * at most TAP_WAIT_FG_US. A finger held on longer than TAP_HELD_US holds nothing back (all estimates). */
-#define TAP_GAP_US 300000ull
-#define TAP_WAIT_FG_US 1000000ull
-#define TAP_WAIT_BG_US 10000000ull
+ * chips, spi_flash_chip_generic.c:675-718): a tap that falls whole into one is never read. Any write may erase (LittleFS
+ * copies a file's last block on every append), and typing queues one per key (the text draft). So no write starts while
+ * a finger or key is down or within TYPING_US of the last release: at 1 key/s the gaps are 0.9 s, 2 s covers them twice
+ * (write-defer-1). Typing holds a write off for at most MAX_DEFER_US; a finger held longer than TAP_HELD_US (not a tap)
+ * holds nothing back. */
+#define TYPING_US 2000000ull
 #define TAP_HELD_US 2000000ull
 /* direct-drive panels (async) can pause between drive phases for a flash operation: a write waits
  * this long for a quiet panel, then goes ahead and pauses the drive (a hiccup, no garbage) instead
@@ -116,7 +115,7 @@ static struct {
     int failed; /* writes that failed (e.g. /user full) since boot */
     int holds;
     uint64_t audio_until;
-    uint64_t tap_wait_from, held_from; /* writes started waiting for taps to pass, a finger was seen down (0: none) */
+    uint64_t held_from; /* a finger was seen down (0: none) */
     uint32_t seq, order;
     centry_t *cache; /* CACHE_MAX, external RAM */
     uint32_t clock;
@@ -408,6 +407,11 @@ static void serve_read(void) {
     osal_sem_give(ST.read_done);
 }
 
+static bool typing(uint64_t now) {
+    uint64_t rel = ink_input_last_release_us();
+    return ink_input_touch_held() || (rel && now - rel < TYPING_US);
+}
+
 static bool foreground(const job_t *j) {
     return j->waiters ? __atomic_load_n(j->waiters, __ATOMIC_ACQUIRE) > 0 : j->done != NULL;
 }
@@ -437,13 +441,12 @@ static int take_job(job_t *out, bool panel_ready, bool audio_busy, uint64_t acti
         *forced = ST.holds > 0 && now - ST.jobs[best].queued_us > MAX_DEFER_US;
         bool quiet = (now >= activity + BG_QUIET_US && now >= ST.audio_until) ||
                      now - ST.jobs[best].queued_us > BG_MAX_WAIT_US || ST.pending > MAX_JOBS / 2;
-        bool held = ink_input_touch_held(), near_tap = held || (!best_fg && now - ink_input_last_release_us() < TAP_GAP_US);
+        bool held = ink_input_touch_held();
         if (!held) ST.held_from = 0;
         else if (!ST.held_from) ST.held_from = now;
-        if (!near_tap) ST.tap_wait_from = 0;
-        else if (!ST.tap_wait_from) ST.tap_wait_from = now;
-        bool tap_wait = near_tap && !*forced && (!held || now - ST.held_from < TAP_HELD_US) &&
-                        now - ST.tap_wait_from < (best_fg ? TAP_WAIT_FG_US : TAP_WAIT_BG_US);
+        bool tap_wait = typing(now) && !*forced && now - ST.jobs[best].queued_us < MAX_DEFER_US && (!held || now - ST.held_from < TAP_HELD_US);
+        { static int lastwhy = -1; int why = (tap_wait ? 1 : 0) | ((!best_fg && !quiet) ? 2 : 0) | (ST.holds > 0 ? 4 : 0) | (!panel_ready ? 8 : 0) | (best_fg ? 16 : 0);
+          if (why != lastwhy) { printf("DBGST %llu why=%d path=%s queued=%llu\n", (unsigned long long)now, why, ST.jobs[best].path, (unsigned long long)ST.jobs[best].queued_us); lastwhy = why; } }
         if (tap_wait || (!best_fg && !quiet) || (!*forced && (ST.holds > 0 || !panel_ready))) best = -2;
         else {
             ST.jobs[best].inflight = true;
@@ -508,7 +511,8 @@ static void storage_task(void *arg) {
             osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
             bool jobs = ST.pending > 0;
             osal_mutex_unlock(ST.lock);
-            if (!jobs) ink_log_poll(ink_display_busy() <= 0 && osal_now_us() >= ink_power_last_activity() + BG_QUIET_US);
+            uint64_t now = osal_now_us(); /* the log's flush erases too (it prepares its next sector) */
+            if (!jobs) ink_log_poll(ink_display_busy() <= 0 && now >= ink_power_last_activity() + BG_QUIET_US && !typing(now));
             prefetch_one();
             job_t job;
             /* wait for a quiet panel and no write hold (reads are still served meanwhile) */

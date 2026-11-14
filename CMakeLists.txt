@@ -910,6 +910,11 @@ add_test(NAME tap-erase
           --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/tap-erase --quiet
           --no-random-outages --flash-timing max)
 set_tests_properties(tap-erase PROPERTIES TIMEOUT 180)
+# write-defer-1: typing at 3 and 1 keys a second while the draft and the log wait; a power cut while typing.
+ink_sim_executable(sim-write-defer tests/write_defer/typing.c)
+target_link_libraries(sim-write-defer PRIVATE ink_apps ink_system)
+add_test(NAME write-defer COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/write_defer/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(write-defer PROPERTIES TIMEOUT 300)
 ink_sim_executable(sim-ime-keyboard1 tests/ime_keyboard1.c)
 target_link_libraries(sim-ime-keyboard1 PRIVATE ink_apps ink_system)
 add_test(NAME ime-keyboard1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ime_keyboard1.py

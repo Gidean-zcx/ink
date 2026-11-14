@@ -550,6 +550,7 @@ static void timeout_cb(void *arg) { /* timer task: answer the overdue, re-arm fo
             ink_receipt_t rc = {.status = INK_RC_FAILED};
             snprintf(rc.detail, sizeof rc.detail, "%s", p->started ? "timed out, it may still finish" : "timed out before it started");
             settle(p, &rc);
+            printf("DBGCAP timeout %s at %llu\n", p->id, (unsigned long long)now);
             due[n++] = p;
         } else if (!next || p->deadline_us < next) next = p->deadline_us;
     }

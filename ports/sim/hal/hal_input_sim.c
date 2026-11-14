@@ -502,6 +502,7 @@ static void deliver_touch(int id, hal_touch_phase_t phase, int lx, int ly, uint6
     e.touch.phase = phase;
     ink_logical_to_native(g_profile.panel.width, g_profile.panel.height, g_profile.panel.rotation_deg, lx, ly, &e.touch.x, &e.touch.y);
     sim_metric_sample("input.touch_delivery_ms", (vtk_now() / 1000 - e.t_us) / 1e3);
+    sim_note("DBG touch %d phase %d at %llu", id, (int)phase, (unsigned long long)e.t_us);
     deliver(&e);
 }
 

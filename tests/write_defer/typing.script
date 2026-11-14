@@ -1,0 +1,3 @@
+# write-defer-1: typing while drafts and logs wait (tests/write_defer/typing.c).
+@0 net wifi
+@120s end

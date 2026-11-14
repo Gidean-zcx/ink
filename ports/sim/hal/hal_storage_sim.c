@@ -62,6 +62,7 @@ static uint64_t sample_us(uint32_t typ, uint32_t max) {
     }
 }
 
+static char g_dbg_path[128];
 static uint64_t g_erase_t0, g_erase_t1; /* the last erase's stall window (tests) */
 void sim_flash_last_erase(uint64_t *t0, uint64_t *t1) { *t0 = g_erase_t0; *t1 = g_erase_t1; }
 
@@ -208,6 +209,7 @@ static int bd_erase(const struct lfs_config *c, lfs_block_t block) {
     FL.op_t0 = vtk_now();
     FL.op_t1 = FL.op_t0 + ns;
     maybe_cut_during_op();
+    sim_note("DBG erase block %u %.1f ms path=%s", (unsigned)block, ns / 1e6, g_dbg_path);
     flash_busy(ns, "erase"); /* one sector per call: IDF yields only before a later erase of a multi-sector call */
     if (FL.cut) return LFS_ERR_IO;
     FL.op = OP_NONE;
@@ -410,6 +412,7 @@ hal_file_t *hal_fs_open(const char *path, int flags) {
         if (flags & HAL_O_CREATE) lf |= LFS_O_CREAT;
         if (flags & HAL_O_TRUNC) lf |= LFS_O_TRUNC;
         if (flags & HAL_O_APPEND) lf |= LFS_O_APPEND;
+        if (flags & HAL_O_WRITE) { snprintf(g_dbg_path, sizeof g_dbg_path, "%s", p); sim_note("DBG open-w %s", p); }
         lock_user();
         int r = lfs_file_opencfg(&U.lfs, &f->lf, p, lf, &f->fcfg);
         unlock_user();

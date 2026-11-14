@@ -44,6 +44,7 @@ bool hal_log_program(uint32_t off, const void *data, size_t n) {
     return q.ok;
 }
 bool hal_log_erase(uint32_t off) {
+    sim_note("DBG log erase %u", (unsigned)off);
     uint8_t *erased = sim_host_malloc(INK_LOG_SECTOR);
     if (!erased) return false;
     memset(erased, 255, INK_LOG_SECTOR);
