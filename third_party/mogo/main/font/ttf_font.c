@@ -14,7 +14,8 @@
  * User revision: titles reuse the active outlines/cache; coverage checks read the existing cmap without switching or loading another face.
  */
 
-/* ink adaptation, 2026-11-12: complete member-session font shutdown. */
+/* ink adaptation, 2026-11-12: complete member-session font shutdown.
+ * ink adaptation, 2026-11-14: the font scan skips a file whose full path does not fit the catalog path. */
 #include "../diagnostics/reader_memory.h"
 #include "ttf_font.h"
 #include "ttf_stroke_filter.h"
@@ -398,10 +399,13 @@ int ttf_font_scan(void) {
                 closedir(dir);
                 goto scan_done;
             }
-            snprintf(
+            int path_len = snprintf(
                 s_catalog[s_catalog_n].path, sizeof(s_catalog[s_catalog_n].path),
                 "%s/%s", font_dir, ent->d_name
             );
+            if (path_len < 0 || (size_t)path_len >= sizeof(s_catalog[s_catalog_n].path)) {
+                continue; // A path cut short would name no file: skip this font.
+            }
             strlcpy(s_catalog[s_catalog_n].name, name, sizeof(s_catalog[0].name));
             s_catalog_n++;
         }

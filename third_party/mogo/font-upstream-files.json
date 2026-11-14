@@ -4,7 +4,7 @@
     {
       "path": "main/font/ttf_font.c",
       "sha256": "855e01b0be9b4425d813fa2ffad71a6f4936740ebf65c8fdbc62ff84de58d351",
-      "adapted_sha256": "e61813a56992b52d01892b0d08986dc17cb2498f133ec1c47640181d28f3e39f"
+      "adapted_sha256": "9543064980b70d53153b8277c09a021d8a7595b08693fc74ace61ef6e981e7d2"
     },
     {
       "path": "main/font/ttf_font.h",
