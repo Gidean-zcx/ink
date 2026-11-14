@@ -813,7 +813,7 @@ static void navigate(ink_call_t *c) {
     if (!strcmp(id, "files.new")) {
         const char *dir = F.mode == MOVE ? F.dest : F.mode == NAME ? F.name_dir : F.path;
         if ((F.mode != LIST && F.mode != MOVE && F.mode != NAME) || !dir[0] || !writable(dir)) { c->rc.status = INK_RC_REJECTED; return; }
-        F.new_text = false; ink_args_get_bool(&c->args, "text", &F.new_text); F.new_text &= F.mode != MOVE; snprintf(F.name_dir, sizeof F.name_dir, "%s", dir);
+        F.new_text = false; ink_args_get_bool(&c->args, "text", &F.new_text); F.new_text &= F.mode != MOVE; if (dir != F.name_dir) snprintf(F.name_dir, sizeof F.name_dir, "%s", dir); /* not into itself (the name page): glibc empties it */
         if (F.mode == NAME) ink_ui_redraw(); else ink_ui_push(&PAGES[NAME], NULL); return;
     }
     if (!strcmp(id, "files.edit")) { const char *ext = strrchr(F.selected.path, '.'); if (F.mode != ACTIONS || !ext || strcmp(ext, ".txt") || !writable(F.selected.path)) { c->rc.status = INK_RC_REJECTED; return; } memcpy(F.edit_path, F.selected.path, sizeof F.edit_path); ink_ui_push(&PAGES[EDIT], NULL); return; }
