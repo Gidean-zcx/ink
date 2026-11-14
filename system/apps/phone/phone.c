@@ -57,7 +57,7 @@ static struct {
     char member[16], number[24], call_member[16], calling[24], status[32], end_text[64], reason[16], dial_args[64];
     char ids[ROWS][32], numbers[ROWS][24], titles[ROWS][128], details[ROWS][128], args[ROWS][64], detail_args[ROWS][32];
     char tones[65], tone_count[12], route[80], tone_args[12][16], card[48], call_sim[12];
-    char duration_text[32], say[160], undo[48], undo_args[80], sms_args[64], view_args[32], delete_args[48];
+    char duration_text[32], say[160], undo[48], undo_args[80], sms_args[64], view_args[32], delete_args[48], add_args[64];
     char cand_values[SLOTS][128], cand_args[SLOTS][64], pager[32], extra[3072];
     uint64_t started;
     int64_t minutes, seconds;
@@ -175,23 +175,18 @@ void ink_shell_emergency_button(lv_obj_t *root, bool strip) {
 
 /* ---- this member's contacts and history ---- */
 static int64_t local_day(int64_t at) { ink_tm_t t; ink_time_to_local(at, &t); return (at + t.offset_min * 60) / 86400; }
-/* The one place that reads phone.contacts records (contacts-3 will change their shape): LilyPhone's table, by name. */
+extern int ink_contacts_each(const char *member, void (*fn)(void *ctx, uint32_t id, const char *name, const char *type, const char *number, bool star), void *ctx);
+static void book_row(void *ctx, uint32_t id, const char *name, const char *type, const char *number, bool star) { /* one number a row */
+    (void)ctx; (void)type; (void)star;
+    if (X.nbook == CONTACTS_MAX) return;
+    snprintf(X.book[X.nbook].name, sizeof X.book[0].name, "%s", name); snprintf(X.book[X.nbook].number, sizeof X.book[0].number, "%s", number);
+    X.book_id[X.nbook++] = id;
+}
+/* LilyPhone's table from contacts' one reading of phone.contacts (contacts-3): every number, by name, already sorted. */
 static int load_contacts(void) {
-    const ink_db_def_t *def = ink_db_find_def("phone.contacts");
-    ink_db_t *db = def ? ink_db_open_cached_member(def, P.member) : NULL;
-    ink_json_t *j = db ? ink_app_alloc(sizeof *j, true) : NULL;
-    ink_db_cursor_t cur = {0}; ink_rec_t rec; char raw[1024];
-    X.nbook = 0;
-    while (j && X.nbook < CONTACTS_MAX && ink_db_next(db, &cur, &rec, raw, sizeof raw - 1) == 1) {
-        contact_t c = {0};
-        if (ink_json_parse(j, raw, rec.len < sizeof raw - 1 ? rec.len : sizeof raw - 1) || ink_json_str(j, ink_json_find(j, 0, "name"), c.name, sizeof c.name) < 0 ||
-            ink_json_str(j, ink_json_find(j, 0, "number"), c.number, sizeof c.number) <= 0) continue;
-        int at = X.nbook++;
-        while (at && strcmp(X.book[at - 1].name, c.name) > 0) { X.book[at] = X.book[at - 1]; X.book_id[at] = X.book_id[at - 1]; at--; }
-        X.book[at] = c; X.book_id[at] = rec.id;
-    }
-    ink_app_free(j); ink_db_close(db); lily_contacts_bind(X.book, X.nbook);
-    return db ? 1 : 0;
+    X.nbook = 0; int got = ink_contacts_each(P.member, book_row, NULL);
+    lily_contacts_bind(X.book, X.nbook);
+    return got >= 0 ? 1 : 0;
 }
 /* Fossify's groups (RecentsHelper.kt:90-125): consecutive, same card, same day, same number. */
 static bool same_group(const call_t *head, const call_t *c) {
@@ -355,7 +350,8 @@ static void cands_show(void) {
     show_if(P.add_btn, add); show_if(P.pager_btn, P.pages > 1);
     if (add) {
         set_y(P.add_btn, P.cand_y + say * INK_CONTROL);
-        P.actions[P.model.action_count++] = (ink_ui_action_spec_t){.id = "add", .label = TR("加为联系人"), .capability = "contacts.edit", .enabled = true};
+        number_args(P.add_args, sizeof P.add_args, P.number); /* the number goes along (contacts-3) */
+        P.actions[P.model.action_count++] = (ink_ui_action_spec_t){.id = "add", .label = TR("加为联系人"), .capability = "contacts.add_to", .args_json = P.add_args, .enabled = true};
     }
     if (P.pages > 1) {
         snprintf(P.pager, sizeof P.pager, TR("%d/%d 翻页"), P.cpage + 1, P.pages); /* the last page turns back to the first */
@@ -483,7 +479,7 @@ static void pick(lv_event_t *e) { /* a candidate fills the number; only 拨打 d
 }
 static void dial(lv_event_t *e) { (void)e; request(P.actions[1].capability, P.dial_args); }
 static void page_next(lv_event_t *e) { (void)e; request("phone.next", NULL); }
-static void add_contact(lv_event_t *e) { (void)e; request("contacts.edit", NULL); } /* the number cannot go along yet (contacts-3) */
+static void add_contact(lv_event_t *e) { (void)e; number_args(P.add_args, sizeof P.add_args, P.number); request("contacts.add_to", P.add_args); }
 static void create_dial(lv_obj_t *screen, void *arg) {
     static const char *const keys[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"};
     static const char *const letters[] = {"", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ", "", "", ""};
@@ -798,7 +794,7 @@ static void create_detail(lv_obj_t *screen, void *arg) {
     P.actions[0] = (ink_ui_action_spec_t){.id = "call", .label = TR("打电话"), .capability = "call.dial", .args_json = P.dial_args, .enabled = true};
     P.actions[1] = (ink_ui_action_spec_t){.id = "sms", .label = TR("发短信"), .capability = "sms.compose", .args_json = P.sms_args, .enabled = true};
     P.actions[2] = contact >= 0 ? (ink_ui_action_spec_t){.id = "contact", .label = TR("查看联系人"), .capability = "contacts.view", .args_json = P.view_args, .enabled = true}
-        : (ink_ui_action_spec_t){.id = "contact", .label = TR("加为联系人"), .capability = "contacts.edit", .enabled = true};
+        : (ink_ui_action_spec_t){.id = "contact", .label = TR("加为联系人"), .capability = "contacts.add_to", .args_json = P.dial_args, .enabled = true};
     P.actions[3] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除这一组"), .capability = "phone.delete", .args_json = P.delete_args, .enabled = true};
     for (int i = 0; i < 4; i++) ink_ui_pill(screen, P.actions[i].label, INK_MARGIN + (i % 2) * (half + INK_GAP_M), y + (i / 2) * (INK_CONTROL + INK_GAP_M), half, INK_CONTROL, i == 0, control, (void *)(intptr_t)i);
     y += 2 * INK_CONTROL + INK_GAP_M + INK_GAP;

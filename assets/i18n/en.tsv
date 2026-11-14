@@ -2205,3 +2205,71 @@ language english 中文 英文	language english chinese
 （恢复）	(restored)
 大小未知	Size unknown
 不会自动删除	Not deleted automatically
+ · 默认	 · default
+%.40s 也用这个号码：%.24s	%.40s also has this number: %.24s
+%d 位没有号码，没导入	%d without a number not imported
+%d 条看不懂	%d not readable
+%s · 现在是	%s · current
+%s 等 %d 个号码	%s and more, %d numbers
+不保存	Don't save
+从存储卡导入（.vcf）	Import from the card (.vcf)
+保存号码：保存联系人之后调，id 和 if_revision 用它回执里的	Save numbers: after saving the contact, with id and if_revision from its receipt
+其他	Other
+加一个号码	Add a number
+加到联系人	Add to a contact
+可能重复	Possible duplicate
+号码 %d · %s%s	Number %d · %s%s
+号码 %d 的类型	Type of number %d
+号码 · 默认	Number · default
+号码只能有数字、空格、-()，+ 只能在开头	Digits, spaces and -() only; + only at the start
+号码要 1 到 5 个，各不相同，只能有数字、空格、-()，+ 只能在开头	1 to 5 different numbers; digits, spaces and -() only, + only at the start
+合并到这位	Merge into this one
+合并后超过 5 个号码，请先删掉几个再合并	Merged it would have more than 5 numbers; delete some first
+同名	Same name
+和上面的号码重复了	Same as a number above
+回到列表	Back to the list
+回到联系人	Back to contacts
+多出的 %d 个号码没导入	%d extra numbers not imported
+姓名已存，号码没存上，请重试	Name saved, numbers not saved; try again
+存储卡不在	No storage card
+存储卡满了，没有导出	The card is full; not exported
+家里	Home
+导入 %d 位	%d imported
+导入导出	Import and export
+导出到我的文件	Export to My files
+工作	Work
+已保存号码	Numbers saved
+已取消收藏	Removed from favorites
+已合并联系人	Contacts merged
+已导出 %d 位到 我的文件 > %.60s	%d exported to My files > %.60s
+手机	Mobile
+找不到要合并的联系人	The contact to merge is not found
+把号码加给这位	Add the number to this contact
+搜索姓名、号码或备注	Search names, numbers or notes
+收藏不写进去	Favorites are not written
+改动还没保存	Changes not saved
+文件太大，读不出来	The file is too large to read
+文件读不出来	The file cannot be read
+文件里没有联系人	No contacts in the file
+最多 5 个号码	At most 5 numbers
+最多 5 个号码 · 清空就删掉这个号码	At most 5 numbers · clear a number to delete it
+有 %d 个号码：%.120s，请说用哪一个	%d numbers: %.120s; say which one
+正在导入，请稍候	Importing, please wait
+没有写进去，请重试	Not written; try again
+清空就删掉这个号码	Clear a number to delete it
+满了，%d 位没导入	Full, %d not imported
+用哪个号码	Which number
+用这个号码	Use this number
+继续编辑	Keep editing
+至少要有一个号码	At least one number
+设为默认号码	Make default
+请填写姓名	Enter a name
+跳过 %d 位（号码都已在通讯录里）	%d skipped (their numbers are already saved)
+还有一位同名的联系人：%.40s · %.24s	Another contact has this name: %.40s · %.24s
+还没有联系人，没有可导出的	No contacts to export yet
+这不是联系人文件（.vcf）	This is not a contacts file (.vcf)
+这个号码不是%.40s的，有：%.100s	Not a number of %.40s; there are: %.100s
+选一个 .vcf 文件	Pick a .vcf file
+选号码类型	Choose the number type
+选联系人	Pick a contact
+选这位联系人	Pick this contact

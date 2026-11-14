@@ -30,6 +30,7 @@ static const ink_db_def_t PREFS = {.name = "notify.prefs", .title = "通知偏�
 static const char *const DEFAULTS[] = {TR_NOOP("好的"), TR_NOOP("是"), TR_NOOP("不是"), TR_NOOP("给我回个电话"), TR_NOOP("我晚点给你回电话")};
 _Static_assert(sizeof DEFAULTS / sizeof *DEFAULTS == REPLIES, "reply count");
 extern int ink_contacts_match(const char *query, bool exact, char *name, char *number);
+extern bool ink_contacts_starred(const char *number);
 
 static int64_t value(const ink_json_t *j, int obj, const char *key) {
     int64_t v = 0; ink_json_int(j, ink_json_find(j, obj, key), &v); return v;
@@ -113,7 +114,8 @@ bool notify_allowed(const char *number) { /* Contact storage is touched only by 
     if (!number) return false;
     if ((repeats && repeat) || calls == INK_NOTIFY_CALL_ANY) return true;
     char name[97], matched[25];
-    return calls == INK_NOTIFY_CALL_CONTACTS && ink_contacts_match(number, true, name, matched) > 0;
+    return (calls == INK_NOTIFY_CALL_CONTACTS && ink_contacts_match(number, true, name, matched) > 0)
+        || (calls == INK_NOTIFY_CALL_STARRED && ink_contacts_starred(number));
 }
 void notify_actions_write(ink_jw_t *w, const ink_notify_action_t *actions, int count, const char *cap, const char *args) {
     ink_jw_raw(w, ",\"actions\":[");

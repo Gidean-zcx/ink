@@ -63,8 +63,8 @@
 
 ## 胶水（我们写的，算产品代码）
 
-- `lily_compat.h`：`phone_store.h` 的替身（`contact_t` 长度改成 `phone.contacts` 的 97 和 25，`CONTACTS_MAX` 200），`modem_call_state_t` 和 `ui_phone_*`、`scr_*` 的声明，字体、颜色换成主题令牌。
-- `phone_store.c` 末尾的 `lily_contacts_bind`：表放在 `phone.c` 的 PSRAM 里，读联系人只在 `phone.c` 的 `load_contacts` 一个函数里做。
+- `lily_compat.h`：`phone_store.h` 的替身（`contact_t` 长度改成 `phone.contacts` 的 97 和 25；contacts-3 起表里一个号码一行，`CONTACTS_MAX` 是 200 人 × 5 个号码 = 1000），`modem_call_state_t` 和 `ui_phone_*`、`scr_*` 的声明，字体、颜色换成主题令牌。
+- `phone_store.c` 末尾的 `lily_contacts_bind`：表放在 `phone.c` 的 PSRAM 里，由 `phone.c` 的 `load_contacts` 一个函数填；contacts-3 起它经联系人的 `ink_contacts_each` 读（按姓名排好，同一人的号码相邻，默认号码在前），不再自己解析记录。
 - `call_card.c` 末尾的 `lily_call_card`、`lily_call_card_render`、`lily_call_card_gone`：代替原文的 `entry8_1`、3 秒定时器和屏幕管理器。
 - `phone.c` 里的 `ui_phone_get_call_state/number`、`ui_phone_end_text`、`ui_phone_answer/hang_up`（接到 `call.answer`、`call.hangup`）、`scr_action_bar_create`、`scr_bar_btn_create`（`ink_ui_pill`，“挂断”是这一页唯一的主按钮）。
 

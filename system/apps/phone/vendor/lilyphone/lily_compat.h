@@ -10,10 +10,10 @@
 #include "ink/sys/i18n.h"
 #include "ink/ui_theme.h"
 
-/* include/phone_store.h, with this system's sizes: phone.contacts names and numbers, and its 200-record limit */
+/* include/phone_store.h, with this system's sizes: phone.contacts names and numbers; a row per number (contacts-3), 200 people x 5 */
 #define CONTACT_NAME_LEN 97
 #define CONTACT_NUMBER_LEN 25
-#define CONTACTS_MAX 200
+#define CONTACTS_MAX 1000
 typedef struct {
     char name[CONTACT_NAME_LEN];
     char number[CONTACT_NUMBER_LEN];

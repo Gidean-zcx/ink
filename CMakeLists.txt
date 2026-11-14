@@ -1752,7 +1752,7 @@ add_test(NAME ui-file-picker COMMAND sim-ui-file-picker --profile ${CMAKE_SOURCE
   --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-file-picker --quiet --no-random-outages)
 add_test(NAME ui-file-picker-frames COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ui_file_picker_frames.py ${CMAKE_BINARY_DIR}/test-out/ui-file-picker)
 set_tests_properties(ui-file-picker-frames PROPERTIES DEPENDS ui-file-picker)
-target_sources(ink_system PRIVATE system/apps/contacts/contacts.c)
+target_sources(ink_system PRIVATE system/apps/contacts/contacts.c system/apps/contacts/contacts_vcf.c)
 ink_sim_executable(sim-contacts tests/contacts/contacts.c)
 target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py

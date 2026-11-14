@@ -19,6 +19,13 @@ static void observed_result(ink_call_t *c, const char *json) {
 #include "../../system/boot/main.c"
 #undef ink_main
 #include "../integration/whole_product.h"
+/* contacts-3: a person now has several numbers; the stored (default) number is what these checks read */
+static uint32_t read_contact(ink_db_t *db, uint32_t id, char *name, char *number) {
+    person_t p; uint32_t ver = read_person(db, id, &p);
+    if (ver) { snprintf(name, 97, "%s", p.name); snprintf(number, 25, "%s", default_of(&p)); }
+    return ver;
+}
+static lv_obj_t *edit_field(unsigned i) { return i == 0 ? P.name_field : i == 1 ? P.num_fields[0] : P.note_field; } /* name, first number, note */
 
 static char phase[16], snap[4096], case_name[24], call_args[256], contact_name[97], contact_number[25];
 static uint32_t first_id, deleted_id;
@@ -78,7 +85,7 @@ static void tap_label(const char *label) {
 }
 static unsigned field_at;
 static void locate_field(void) {
-    lv_area_t a; lv_obj_update_layout(P.fields[field_at]); lv_obj_get_coords(P.fields[field_at], &a);
+    lv_area_t a; lv_obj_update_layout(edit_field(field_at)); lv_obj_get_coords(edit_field(field_at), &a);
     g_btn_x[0] = (a.x1 + a.x2) / 2; g_btn_y[0] = (a.y1 + a.y2) / 2;
 }
 static void inspect_short_focus(void) {
@@ -98,7 +105,8 @@ static void inspect_short_focus(void) {
 static void type_field(unsigned index, const char *text) {
     field_at = index; on_ui(locate_field); tap(g_btn_x[0], g_btn_y[0]); quiet();
     CHECK(ink_text_focused(), "physical touch focuses the F2 short input");
-    on_ui(inspect_short_focus);
+    if (index == 1) CHECK(ink_text_type() == INK_TEXT_PHONE, "the number field opens the phone keyboard"); /* contacts-3: not a bound short field */
+    else on_ui(inspect_short_focus);
     snprintf(call_args, sizeof call_args, "{\"text\":\"%s\"}", text);
     CHECK(AI("text.insert", call_args) && g_rc.status == INK_RC_DONE, "shared text service edits the field");
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "finish the same input session"); quiet();
@@ -156,13 +164,13 @@ static void write_phase(void) {
     CHECK(put("改过的测试家人", "00000000003", first_id), "AI updates by id"); quiet();
     CHECK(!put("不存在测试", "00000000004", 999), "updating a missing id does not create a contact");
     snprintf(call_args, sizeof call_args, "{\"id\":%u}", (unsigned)first_id);
-    CHECK(AI("contacts.edit", call_args) && g_rc.status == INK_RC_DONE, "open the selected contact"); quiet();
-    tap_label("选择这个号码");
+    CHECK(BY_HAND("contacts.pick", NULL) && g_rc.status == INK_RC_DONE, "open the picking list"); quiet(); /* contacts-3: picking is a tap on the row */
+    tap_label("改过的测试家人");
     char touched[128]; snprintf(touched, sizeof touched, "%s", selected_result);
     CHECK(selected_source == INK_SRC_TOUCH && strstr(touched, "00000000003"), "the number selection button returns the stored number");
     CHECK(AI("contacts.select", call_args) && g_rc.status == INK_RC_DONE && selected_source == INK_SRC_AI && !strcmp(touched, g_result), "AI and physical touch use the same selection provider and result");
     CHECK(result_id() == first_id, "selection returns the stable contact id");
-    CHECK(BY_HAND("shell.back", NULL), "return from the editor"); quiet();
+    CHECK(BY_HAND("contacts.open", NULL), "return to the contact list"); quiet();
     snprintf(call_args, sizeof call_args, "{\"id\":%u}", (unsigned)deleted_id);
     CHECK(AI("contacts.edit", call_args) && g_rc.status == INK_RC_DONE, "open the synthetic contact to delete"); quiet();
     tap_label("删除联系人");
@@ -191,7 +199,7 @@ static void verify_phase(void) {
     CHECK(strstr(snap, "\"total\":1") && strstr(snap, "孩子测试") && !strstr(snap, "测试家人"), "child's isolated contacts survive reboot too");
 }
 static uint32_t editor_revision, confirmation_token;
-static char saved_args[sizeof P.save_args], confirmed_status[24];
+static char saved_args[sizeof P.put_args], confirmed_status[24];
 static volatile bool confirmation_finished;
 static void confirmed(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id;
@@ -205,13 +213,13 @@ static void inspect_editor(void) {
     ink_rec_t record;
     CHECK(ink_db_get(P.db, first_id, &record, NULL, 0) == INK_DB_OK, "editor fixture exists");
     editor_revision = record.ver;
-    CHECK(P.form.object.revision == editor_revision, "editor snapshot targets the loaded record revision");
+    CHECK(P.model.object.revision == editor_revision, "editor snapshot targets the loaded record revision");
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0, "versioned editor fits the production AI context");
-    snprintf(saved_args, sizeof saved_args, "%s", P.save_args);
+    snprintf(saved_args, sizeof saved_args, "%s", P.put_args);
 }
 static void inspect_stale_editor(void) {
-    CHECK(!strcmp(ink_ui_page_name(), "ContactEdit") && P.fields[0] &&
-          strstr(ink_textfield_text(P.fields[0]), "草稿"), "stale save retains the editor and unsaved draft");
+    CHECK(!strcmp(ink_ui_page_name(), "ContactEdit") && P.name_field &&
+          strstr(ink_textfield_text(P.name_field), "草稿"), "stale save retains the editor and unsaved draft");
     CHECK(P.notice && strstr(lv_label_get_text(P.notice), "重新打开"), "stale save explains how to reload");
 }
 static void answer(const ink_confirm_view_t *pending, const char *status) {
