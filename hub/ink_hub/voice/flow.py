@@ -66,10 +66,21 @@ async def run_turn(self, rid, method, params):
     first, question, completed = True, "", False
     sentences, speaker, END = asyncio.Queue(), None, object()
 
+    async def pause(delay):
+        if delay > 0:
+            future = loop.create_future()
+            timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
+            try:
+                await future
+            finally:
+                timer.cancel()
+
     def fetch(sentence):
         # Start a sentence's speech now; its packets wait in a queue until the one before it has been sent.
         if sentence is None:
             return END
+        if isinstance(sentence, asyncio.Future):
+            return sentence  # a mark (spoken): no speech of its own
         packets = asyncio.Queue()
         async def run():
             try:
@@ -88,6 +99,9 @@ async def run_turn(self, rid, method, params):
         try:
             while (current := ahead if ahead is not None else fetch(await sentences.get())) is not END:
                 ahead = None
+                if isinstance(current, asyncio.Future):  # all before it has been sent
+                    current.done() or current.set_result(None)
+                    continue
                 sentence, packets, _ = current
                 marker = [sentence, count, None]
                 session.spoken.append(marker)
@@ -97,14 +111,7 @@ async def run_turn(self, rid, method, params):
                     if ahead is None and not sentences.empty():
                         ahead = fetch(sentences.get_nowait())
                     target = max(target, loop.time() - LEAD)
-                    delay = target - loop.time()
-                    if delay > 0:
-                        future = loop.create_future()
-                        timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
-                        try:
-                            await future
-                        finally:
-                            timer.cancel()
+                    await pause(target - loop.time())
                     await self.send(frame(2, sid, count, packet), guard=guard)
                     count += 1
                     session.sent_frames = count
@@ -119,6 +126,19 @@ async def run_turn(self, rid, method, params):
             for task in tasks:
                 task.cancel()
             await asyncio.gather(*tasks, return_exceptions=True)
+
+    async def spoken():
+        # Before the device acts on a tool call, the words before it are heard first, as when the hub sent at 1x: every
+        # sentence so far sent, then the lead played out by the pacing. The device must not turn the page or start
+        # something that sounds while the speech introducing it is still queued on the device, or before it.
+        if not speaker:
+            return
+        mark = loop.create_future()
+        sentences.put_nowait(mark)
+        await asyncio.wait((mark, speaker), return_when=asyncio.FIRST_COMPLETED)
+        if speaker.done():
+            await speaker  # the speech failed: its error ends the turn now
+        await pause(session.plays_until - loop.time())
 
     async def hush():
         # Stop the speech and what was fetched ahead (abort, error, end of the turn).
@@ -224,6 +244,7 @@ async def run_turn(self, rid, method, params):
                                          action=part.tool, arguments=part.arguments, now=loop.time(),
                                          effect=descriptor.get("effect", "read"))
                         meta["request_id"] = secrets.token_hex(16)
+                        await spoken()
                         receipt = await self.request("tools/call", {"name": part.tool, "arguments": part.arguments,
                                                                    "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
                         if not isinstance(receipt, dict) or "status" not in receipt:
@@ -250,6 +271,8 @@ async def run_turn(self, rid, method, params):
             logging.getLogger(__name__).info("语音阶段时间：%s", session.times)
         if session and question and self.valid_output(scope, epoch):
             self.voice_history = session.history = (question, text if completed else heard_text(session))
+            # Up to the lead of it is still to play after "done"; talking over it then cuts it (Connection.speech_cut).
+            self.voice_session = session if completed else None
         if guard() and not asyncio.current_task().cancelling():
             try:
                 if session:

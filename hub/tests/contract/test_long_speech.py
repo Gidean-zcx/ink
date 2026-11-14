@@ -206,3 +206,65 @@ async def test_lead_is_sent_at_once_then_real_time(make_hub):
     assert len(sent) == 60 and LEAD == 1.2
     assert sent[20] - sent[0] < 0.1, "the lead goes out at once"
     assert sent[59] - sent[20] >= 39 * FRAME - 0.05, "then real time"
+
+
+async def test_talking_over_the_answer_after_done_cuts_what_was_heard(make_hub):
+    # The hub's last frame and "done" come up to the lead before the answer has played, and the device then closes the
+    # session without a reason or a count. A new voice turn in that time stops the rest on the device: not heard.
+    text = "一二三四五六七八九十甲乙丙丁戊己庚辛。"  # 19 characters, 3.6 s of speech at 5 a second
+    hub, client, url = await make_hub(model=FakeModel(text=text), tts=RecordingTTS(60))
+    device = FakeDevice(client, url)
+    await device.connect()
+    connection = hub.connections["example-device"]
+    loop = asyncio.get_running_loop()
+    await device.voice()
+    await device.call("caps/list")  # its rt.close is handled
+    assert connection.voice_history[1] == text and loop.time() < connection.voice_session.plays_until
+    await device.call("rt.open", {"sid": 8, "cap": "voice.chat", "params": {}})
+    heard = connection.voice_history[1]
+    assert text.startswith(heard) and 6 <= len(heard) < len(text), heard
+
+    # Control: a new turn once the pacing says it has all played keeps the whole answer.
+    await device.send("rt.close", {"sid": 8}, rid=False)
+    await device.voice()
+    await device.call("caps/list")
+    played = asyncio.Event()
+    timer = loop.call_at(connection.voice_session.plays_until, played.set)  # the answer's playing time, not a guess
+    try:
+        await played.wait()
+    finally:
+        timer.cancel()
+    await device.call("rt.open", {"sid": 9, "cap": "voice.chat", "params": {}})
+    assert connection.voice_history[1] == text
+
+
+async def test_device_acts_after_the_words_before_the_tool_are_heard(make_hub):
+    # "好的，我帮你翻到下一页。" then the page turn: the device acts once that sentence is sent and, by the pacing, played,
+    # not while it waits in the device's buffer (the hub keeps up to the lead ahead) or before its speech is fetched.
+    tool = {"name": "reader.next_page", "title": "下一页", "effect": "navigate", "confirm": "none",
+            "inputSchema": {"type": "object", "properties": {}}}
+    tts = RecordingTTS(30)  # 1.8 s a sentence: longer than the lead
+    hub, client, url = await make_hub(model=FakeModel(text="好的，我帮你翻到下一页。", tool="reader.next_page"), tts=tts)
+    device = FakeDevice(client, url, [tool])
+    await device.connect()
+    connection = hub.connections["example-device"]
+    loop = asyncio.get_running_loop()
+    sent, called = [], []
+    original_send, original_request = connection.send, connection.request
+
+    async def send(message, **kwargs):
+        await original_send(message, **kwargs)
+        if isinstance(message, bytes):
+            sent.append(loop.time())
+
+    async def request(method, params, **kwargs):
+        if method == "tools/call":
+            called.append((loop.time(), len(sent)))
+        return await original_request(method, params, **kwargs)
+
+    connection.send, connection.request = send, request
+    _, result = await device.voice()
+    assert result["result"]["done"] and tts.texts == ["好的，我帮你翻到下一页。", "已完成。"] and len(sent) == 60
+    (at, frames), = called
+    assert frames == 30, "the sentence before the call is sent whole, the receipt's words after it"
+    assert at >= sent[0] + 30 * FRAME - 0.03, "and played by the pacing before the device acts"

@@ -64,6 +64,7 @@ class Connection:
         self.calls = {}
         self.turn_sessions = {}
         self.voice_history = None
+        self.voice_session = None  # the last answered voice turn, for what of it was heard (speech_cut)
         self.pending = {}
         self.rid = 1000
         self.queue = asyncio.PriorityQueue(maxsize=128)
@@ -192,7 +193,7 @@ class Connection:
         self.turns.clear()
         self.calls.clear()
         self.turn_sessions.clear()
-        self.voice_history = None
+        self.voice_history = self.voice_session = None
         self.sessions.clear()
         for task in tasks:
             task.cancel()
@@ -317,6 +318,8 @@ class Connection:
                 interim = pp.get("interim_ms", 800)
                 if type(interim) is not int or not 0 <= interim <= 10000:
                     raise ProtocolError("中间结果间隔无效")
+                if cap == "voice.chat":
+                    self.speech_cut()
                 self.sessions[sid] = Session(cap, self.epoch, interim_ms=interim)
                 await self.send(response(rid, {"sid": sid}))
                 if cap == "asr.stream":
@@ -456,6 +459,16 @@ class Connection:
         if (session and session.history is not None and self.voice_history is session.history
                 and (interrupted or session.heard_frames is not None)):
             self.voice_history = (session.history[0], heard_text(session))
+
+    def speech_cut(self):
+        # A new voice turn stops the answer still playing on the device (talking over it, ai_service's
+        # ink_audio_stop_all). The hub sends up to the lead ahead, so after its last frame and "done" (when the device
+        # closes the session, without a reason or a count) part of the answer may not have played yet: what was heard
+        # is what the pacing says had played when the new turn began, not the whole answer.
+        last, self.voice_session = self.voice_session, None
+        now = asyncio.get_running_loop().time()
+        if last and last.history is not None and self.voice_history is last.history and now < last.plays_until:
+            self.voice_history = last.history = (last.history[0], heard_text(last, now))
 
     def forget_turn(self, key):
         self.turns.pop(key, None)
