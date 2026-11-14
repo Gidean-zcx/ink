@@ -1,6 +1,6 @@
 /* LVGL keyboard maps feed the existing text capabilities; the service owns all edits. Pages after fcitx5-android,
  * symbol tables after Trime, nine-key readings and refresh rules after Mogo (docs/tasks/keyboard-2/SOURCE.md). */
-/* ui-scale-runtime: dimension area.y1,key_height,candidates_height,candidate_band_height,keyboard_height,keyboard_height_for,make_board,height,gap,cell,width,column,kbd_scaled,lv_obj_get_content_width Theme-derived keyboard geometry scales with the current text line. */
+/* ui-scale-runtime: dimension area.y1,key_height,candidates_height,candidate_band_height,keyboard_height,keyboard_height_for,make_board,height,gap,cell,width,column,kbd_scaled,lv_obj_get_content_width,pill_width Theme-derived keyboard geometry scales with the current text line. */
 /* ui-scale-runtime: dimension keyboard.y1 The keyboard safe area includes the wrapped edit toolbar. */
 /* ui-scale-runtime: dimension candidate_width Candidate text or grid width with the keyboard's minimum touch width. */
 #include <stdio.h>
@@ -67,6 +67,7 @@ static const lv_font_t *font(void) { return ink_ui_font_px(INK_FONT_LIST, INK_WE
 static void sync(void);
 static void picker_snapshot(char *out, size_t cap);
 static const char *category_name(void);
+static int symbol_count(int category);
 static void set_text(lv_obj_t *label, const char *text);
 static const ink_call_t *enter_call;
 /* Text clients have no source argument; unknown submissions keep the AI policy. */
@@ -385,11 +386,12 @@ static int semantic_snapshot(char *buf, size_t cap) {
     snprintf(selection, sizeof selection, "选区=%zu..%zu", start, end);
     snprintf(cursor, sizeof cursor, "光标=%zu", ink_text_cursor());
     int total = candidate_total();
-    snprintf(mode, sizeof mode, "模式=%s；输入=%s；展开=%d；候选起点=%d；更多候选=%d；候选页=%d/%d；大写=%s；分类=%s；符号页=%d",
+    int symbol_pages = K.page_size ? LV_MAX(1, (symbol_count(K.category) + K.page_size - 1) / K.page_size) : 1;
+    snprintf(mode, sizeof mode, "模式=%s；输入=%s；展开=%d；候选起点=%d；更多候选=%d；候选页=%d/%d；大写=%s；分类=%s；符号页=%d/%d",
              K.built_for == 4 ? "九宫格" : K.built_for == 3 ? "数字" : K.symbols ? "符号" : K.caps ? "大写锁定" : K.shift ? "大写" : "字母",
              K.plain && !K.english ? "中文" : "英文", K.expanded, K.first, K.more && lv_obj_is_visible(K.more),
              K.first / INK_TEXT_PAGE + 1, total ? (total + INK_TEXT_PAGE - 1) / INK_TEXT_PAGE : 1,
-             K.caps ? "锁定" : K.shift ? "一次" : "关", category_name(), K.symbol_page + 1);
+             K.caps ? "锁定" : K.shift ? "一次" : "关", category_name(), K.symbol_page + 1, symbol_pages);
     snprintf(undo, sizeof undo, "撤销=%d；重做=%d", ink_text_can_undo(), ink_text_can_redo());
     ink_ui_field_spec_t base[] = {
         {.id = "value", .role = "textbox", .label = secret ? "密码输入；内容=******" : "内容", .value = ink_text_draft_id() ? "" : ink_text_value(), .secret = secret},
@@ -403,7 +405,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
         {.id = "keys", .role = "text", .label = "按键", .value = K.built_for == 3 ? "删除=keyboard.key(8)；回车=keyboard.key(10)" : K.plain ?
             "符号=keyboard.key(1)；大写=keyboard.key(2)；删除=keyboard.key(8)；中英切换=keyboard.key(3)；全键/九键=keyboard.key(4)；数字=keyboard.key(5)；重输=keyboard.key(6)；回车=keyboard.key(10)" :
             "符号=keyboard.key(1)；大写=keyboard.key(2)；删除=keyboard.key(8)；数字=keyboard.key(5)；回车=keyboard.key(10)"},
-        {.id = "symbols", .role = "text", .label = "可见符号", .value = symbols},
+        {.id = "symbols", .role = "text", .label = K.popup_letter >= 0 ? "长按备选" : "可见符号", .value = symbols},
         {.id = "voice", .role = "status", .label = "听写", .value = K.status ? lv_label_get_text(K.status) : ""},
         {.id = "heard", .role = "text", .label = "听到", .value = K.heard ? lv_label_get_text(K.heard) : ""}
     };
@@ -663,6 +665,9 @@ static void settle_candidates(lv_timer_t *timer) {
         lv_obj_invalidate(K.cands);
     }
 }
+static int pill_width(const char *label) { /* the grid row's words fit their buttons at every text size */
+    return LV_MAX(candidates_height(), ink_ui_text_width(label, INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE));
+}
 static void build(int kind) {
     K.revision++;
     K.layout_revision++;
@@ -771,12 +776,12 @@ static void build(int kind) {
     K.more_icon = ink_ui_icon(K.more, "next", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false);
     lv_obj_center(K.more_icon);
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
-    K.cand_delete = ink_ui_pill(K.cands, TR("删除"), 0, 0, candidates_height(), candidates_height(), false, on_action,
+    K.cand_delete = ink_ui_pill(K.cands, TR("删除"), 0, 0, pill_width(TR("删除")), candidates_height(), false, on_action,
                                 action_at(ACT_CAND_DELETE, "keyboard.key", "{\"code\":8}"));
     lv_obj_set_style_radius(K.cand_delete, 0, 0);
     lv_obj_add_event_cb(K.cand_delete, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_add_flag(K.cand_delete, LV_OBJ_FLAG_HIDDEN);
-    K.fold = ink_ui_pill(K.cands, TR("键盘"), 0, 0, INK_PRIMARY, candidates_height(), false, on_fold, NULL);
+    K.fold = ink_ui_pill(K.cands, TR("键盘"), 0, 0, pill_width(TR("键盘")), candidates_height(), false, on_fold, NULL);
     lv_obj_set_style_radius(K.fold, 0, 0);
     lv_obj_add_event_cb(K.fold, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
@@ -815,6 +820,8 @@ static void build(int kind) {
         for (int i = 0; i < 3; i++) {
             K.reading[i] = kb_button(K.readings, "", ACT_READING + i, NULL, NULL, column);
             lv_obj_set_height(K.reading[i], ink_ui_px(key_height(false)));
+            /* Mogo draws readings smaller than the groups (22 against 30 px, ui_keyboard.c:213): zhuang keeps one line */
+            lv_obj_set_style_text_font(lv_obj_get_child(K.reading[i], 0), ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
         }
         K.reading_for[0] = 1; /* nothing yet: the first sync sets the cells */
     }

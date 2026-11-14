@@ -222,14 +222,11 @@ static void show_alternates(lv_event_t *e) {
 static void picker_snapshot(char *out, size_t cap) {
     size_t used = 0; out[0] = 0;
     char text[16];
-    if (K.popup_letter >= 0) {
-        used = (size_t)snprintf(out, cap, "长按备选=");
+    if (K.popup_letter >= 0) { /* the long-press list; the snapshot names it */
         for (int i = 0; alternate(K.popup_letter, i, text) && used + 20 < cap; i++) used += (size_t)snprintf(out + used, cap - used, "%s%s", i ? " " : "", text);
         return;
     }
     if (!K.symbols || !K.page_size) return;
-    int count = symbol_count(K.category);
-    used = (size_t)snprintf(out, cap, "分类=%s；第%d/%d页：", category_name(), K.symbol_page + 1, LV_MAX(1, (count + K.page_size - 1) / K.page_size));
     for (int i = 0; i < K.page_size && used + 20 < cap; i++) {
         const char *sym = symbol_at(K.category, K.symbol_page * K.page_size + i);
         if (!sym) break;
