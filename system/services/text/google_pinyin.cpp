@@ -14,6 +14,8 @@ extern "C" {
 #include "vendor/googlepinyin/include/pinyinime.h"
 #include "vendor/googlepinyin/include/spellingtrie.h"
 #include "vendor/kiikoread/nine_key.h"
+#include "vendor/mogo/preferred.h"
+#include "ink/sys/textinput.h"
 using namespace ime_pinyin;
 static constexpr int CANDIDATES = 60, BEAM = 8, LETTERS = 40;
 struct Choice { char word[40], roman[LETTERS + 1]; uint8_t consumed; int id; uint16_t rank; };
@@ -87,6 +89,7 @@ static void nine(const char *digits) {
             char spelling[8]; const char *source = trie.get_spelling_str((uint16)id);
             size_t n = strlen(source); for (size_t i = 0; i <= n; i++) spelling[i] = (char)std::tolower((unsigned char)source[i]);
             size_t used = std::min(n, length - pos); char part[8]; memcpy(part, spelling, used); part[used] = 0;
+            if (!preferred_ok(part, ink_text_preferred_reading(), pos)) continue;
             if (!prefix(digits + pos, part, true)) continue;
             Path next = before; memcpy(next.roman + pos, part, used + 1);
             im_reset_search(); size_t choices = im_search(next.roman, pos + used), decoded = 0; im_get_sps_str(&decoded);

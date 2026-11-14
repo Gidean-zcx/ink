@@ -100,6 +100,11 @@ bool ink_text_can_redo(void);
 
 const char *ink_text_value(void);
 const char *ink_text_composing(void);
+/** Nine-key: the reading chosen for the first syllable ("" none); kept while digits are added, gone on pick or delete. */
+void ink_text_prefer_reading(const char *roman);
+const char *ink_text_preferred_reading(void);
+/** The composition goes, the text stays ("重输"). */
+void ink_text_clear_composing(void);
 /** Candidates from `first` on: how many (up to max). */
 int ink_text_candidates(int first, ink_text_cand_t *out, int max);
 

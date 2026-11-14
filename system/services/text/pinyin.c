@@ -22,6 +22,8 @@
 #include "ink/sys/svc.h"
 #include "text_internal.h"
 #include "vendor/kiikoread/nine_key.h"
+#include "vendor/mogo/preferred.h"
+#include "ink/sys/textinput.h"
 
 #define DICT_MAX (1024u * 1024u)
 
@@ -236,6 +238,7 @@ int py_lookup_nine(const char *composing, py_cand_t *out, int max) {
         char roman[41];
         if (!n || n >= sizeof roman) continue;
         memcpy(roman, key, n); roman[n] = 0;
+        if (!preferred_ok(roman, ink_text_preferred_reading(), 0)) continue;
         if (!prefix(composing, roman, true)) continue;
         if (PY.block) {
             const dict_key_t *k = &PY.keys[i];

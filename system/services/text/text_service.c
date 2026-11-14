@@ -438,9 +438,29 @@ int ink_text_candidates(int first, ink_text_cand_t *out, int max) {
     return n;
 }
 
-/* What is being composed goes in as typed. */
+/* keyboard-2: the nine-key reading the person chose for the first syllable (Mogo ui_keyboard.c:339-341), held for
+ * this composition; picking, deleting and starting again forget it. */
+static char preferred[9];
+static int preferred_session;
+void ink_text_prefer_reading(const char *roman) {
+    snprintf(preferred, sizeof preferred, "%s", roman ? roman : "");
+    preferred_session = TS.session;
+    TS.cands_valid = false;
+    text_presenter_kick();
+}
+const char *ink_text_preferred_reading(void) { return preferred_session == TS.session && TS.composing[0] ? preferred : ""; }
+void ink_text_clear_composing(void) {
+    preferred[0] = 0;
+    if (!TS.session || !TS.composing[0]) return;
+    TS.composing[0] = 0;
+    changed();
+}
+
+/* What is being composed goes in as typed; nine-key digits never do (Mogo: "never display internal T9 codes"). */
 static void flush_composing(void) {
     if (!TS.composing[0]) return;
+    preferred[0] = 0;
+    if (TS.composing[0] >= '2' && TS.composing[0] <= '9') { TS.composing[0] = 0; return; }
     before_edit(EDIT_KEYS);
     put(TS.composing);
     TS.composing[0] = 0;
@@ -454,6 +474,7 @@ static void pick_cand(ink_text_cand_t c) {
     if (py_google_enabled()) py_google_pick(c.word, c.consumed);
     learn(&c);
     memmove(TS.composing, TS.composing + c.consumed, strlen(TS.composing + c.consumed) + 1);
+    preferred[0] = 0;
     ink_probe_count("text.picks");
     changed();
 }
@@ -531,7 +552,7 @@ void ink_text_backspace(void) {
     text_voice_clear_notice();
     if (!TS.session) return;
     size_t n = strlen(TS.composing);
-    if (n) TS.composing[n - 1] = 0;
+    if (n) { TS.composing[n - 1] = 0; preferred[0] = 0; }
     else if (TS.cursor != TS.anchor) {
         before_edit(EDIT_OTHER);
         put("");

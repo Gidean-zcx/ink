@@ -44,9 +44,8 @@ static int key_index(int code) {
 static lv_obj_t *button(lv_obj_t *root, int code) { (void)root; return key_index(code) < 0 ? NULL : K.board; }
 static bool labeled(int code, const char *text) {
     if (K.symbols && code >= 32) {
-        char symbol[8];
-        int category = K.english ? 2 : 0;
-        for (int i = 0; symbol_at(category, i, symbol); i++) if (!strcmp(symbol, text)) return true;
+        int category = K.english ? 2 : 1; /* 英文 or 中文 */
+        for (int i = 0; symbol_at(category, i); i++) if (!strcmp(symbol_at(category, i), text)) return true;
         return false;
     }
     int i = key_index(code);
@@ -116,12 +115,12 @@ static void functional(void) {
     touch(','); touch('.');
     CHECK(!strcmp(ink_text_value(), "，。"), "Chinese punctuation is full width");
     touch(KEY_SWITCH);
-    CHECK(labeled('?', "？") && labeled(';', "；"), "Chinese symbols match insertion");
+    CHECK(labeled('?', "？") && labeled(':', "："), "Chinese symbols match insertion");
     touch('?');
     CHECK(!strcmp(ink_text_value(), "，。？"), "Chinese symbol key inserts full width");
     CHECK(ai_key(INK_TEXT_KEY_LANGUAGE) == INK_RC_DONE, "switch while symbols are visible");
     expect_mode(true);
-    CHECK(labeled(',', ",") && labeled('.', ".") && labeled('?', "?"), "English symbols use ASCII labels");
+    CHECK(labeled(':', ":") && labeled(';', ";") && labeled('?', "?"), "English symbols use ASCII labels");
     touch(','); touch('.'); touch('?');
     CHECK(!strcmp(ink_text_value(), "，。？,.?"), "English punctuation is half width");
     CHECK(ink_text_focus(&cfg, NULL, NULL) > 0, "move to a different plain field");
@@ -232,7 +231,7 @@ static void inspect(void) {
         CHECK(text.x <= width && text.y <= lv_area_get_height(&a), "label fits native key: %s / %.23s", picture, K.legends[i]);
     }
     /* Every layout keeps the same key height and four rows. */
-    CHECK(lv_obj_get_height(K.board) == ink_ui_px((K.footer ? 3 : 4) * key_height(K.built_for == 3) + (K.footer ? 2 : 3) * INK_KB_GAP), "height comes from keyboard tokens and font scale");
+    CHECK(lv_obj_get_height(K.board) == ink_ui_px((K.footer ? 3 : 4) * key_height(K.built_for == 3) + (K.footer ? 2 : 3) * gap()), "height comes from keyboard tokens and font scale");
     CHECK(lv_obj_get_width(K.mic) == ink_ui_px(INK_KB_FUNCTION_WIDTH) && lv_obj_get_height(K.mic) == ink_ui_px(key_height(false)), "voice uses function-key dimensions");
 
 }
@@ -330,7 +329,9 @@ static void nine_owner(void) {
     int china = nine_find("中国");
     snprintf(unlearned_word, sizeof unlearned_word, "%s", nine_candidates[0].word);
     CHECK(china >= 0 && nine_candidates[china].consumed == 5, "94664 offers the phrase 中国");
-    CHECK(ink_ui_context_snapshot(snapshot, sizeof snapshot, NULL) > 0 && strstr(snapshot, "94664") && strstr(snapshot, "九宫格"), "nine-key composition and layout are visible to AI");
+    /* The keyboard's own snapshot shows the letter groups, never digits (the text service's raw status is outside this task). */
+    CHECK(ink_ui_context_snapshot(snapshot, sizeof snapshot, NULL) > 0 && strstr(snapshot, "keyboard_ui") && !strstr(strstr(snapshot, "keyboard_ui"), "94664") &&
+          strstr(snapshot, "[wxyz] [ghi] [mno] [mno] [ghi]") && strstr(snapshot, "九宫格"), "nine-key composition (letter groups, never digits) and layout are visible to AI");
     nine_query("946644862"); china = nine_find("中国");
     CHECK(china >= 0 && nine_candidates[china].consumed == 8, "phrase selection consumes its full numeric prefix");
     if (china >= 0) {
@@ -354,13 +355,13 @@ static void nine_child(void) {
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN}; ink_text_focus(&cfg, NULL, NULL);
     touch(KEY_LAYOUT); nine_query("94664"); nine_find("中国");
     CHECK(!strcmp(nine_candidates[0].word, unlearned_word), "owner learning is absent from the child's candidates");
-    touch(KEY_LAYOUT); ink_text_blur(0);
+    touch(KEY_RETYPE); touch(KEY_LAYOUT); ink_text_blur(0); /* nine-key switches only without digits waiting */
 }
 static void nine_return(void) {
     CHECK(ink_text_nine(), "returning member retains nine-key preference");
     nine_query("94664"); nine_find("中国");
     CHECK(!strcmp(nine_candidates[0].word, learned_word), "returning member retains their learned candidates");
-    touch(KEY_LAYOUT); ink_text_blur(0);
+    touch(KEY_RETYPE); touch(KEY_LAYOUT); ink_text_blur(0);
 }
 static void benchmark(void *arg) {
     (void)arg;
