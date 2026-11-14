@@ -180,12 +180,12 @@ static void test_apps(void) {
     test_ok("clock.new", NULL); test_capture("ClockAlarm-new", "保存闹钟", "Save alarm");
     test_ok("clock.save", NULL); test_open("clock"); test_capture("Clock", "查看闹钟", "View alarm");
     test_ok("clock.open", "{\"id\":1}"); test_capture("ClockAlarm", "删除闹钟", "Delete alarm");
-    test_open("clock"); test_ok("clock.timer", NULL); test_capture("ClockTimer", "设定时长", "Set duration");
+    test_open("clock"); test_ok("clock.timer", NULL); test_capture("ClockTimer", "加计时器", "Add timer");
     test_ok("clock.stopwatch", NULL); test_capture("ClockStopwatch", "秒表", "Stopwatch");
-    test_ok("clock.world", NULL); test_capture("ClockWorld-empty", "世界时钟", "World Clock");
-    test_ok("clock.world_pick", NULL); test_capture("ClockWorld-pick", "选好了", "Done");
+    test_ok("clock.world", NULL); test_capture("ClockWorld-empty", "加城市", "Add City");
+    test_ok("clock.world_pick", NULL); test_capture("ClockWorld-pick", "完成", "Done");
     test_ok("clock.world_add", "{\"zone\":7}"); test_ok("clock.world_pick", NULL);
-    test_capture("ClockWorld", "世界时钟", "World Clock");
+    test_capture("ClockWorld", "本地时间", "Local time");
     test_open("phone"); test_ok("phone.contacts", NULL);
     CHECK(WAIT_FOR(!ink_ui_busy() && ink_db_idle(), 15000), "contacts loaded"); test_capture("PhoneContacts-empty", "联系人", "Contacts");
     test_ok("contacts.edit", NULL); test_capture("ContactEdit-new", "姓名", "Name");
@@ -248,8 +248,8 @@ static void run_test(void *arg) {
     test_open("calculator"); test_ok("settings.set", "{\"id\":\"system.language\",\"value\":0}");
     english = false; test_capture("Calculator-back-zh", "不能除以 0", "Can't divide by 0");
     test_open("clock"); test_capture("Clock-back-zh", "时钟", "Clock");
-    test_ok("clock.timer", NULL); test_capture("ClockTimer-back-zh", "设定时长", "Set duration");
-    test_ok("clock.world", NULL); test_capture("ClockWorld-back-zh", "世界时钟", "World Clock");
+    test_ok("clock.timer", NULL); test_capture("ClockTimer-back-zh", "加计时器", "Add timer");
+    test_ok("clock.world", NULL); test_capture("ClockWorld-back-zh", "本地时间", "Local time");
     test_open("phone"); test_ok("phone.contacts", NULL); test_capture("PhoneContacts-back-zh", "联系人", "Contacts");
     test_open("phone"); test_capture("Phone-back-zh", "拨号", "Dial");
     test_open("message"); test_capture("Sms-back-zh", "短信", "Messages");

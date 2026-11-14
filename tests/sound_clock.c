@@ -92,11 +92,11 @@ static void sound(void) {
 }
 static void timer(void) {
     call_ok("app.open", "{\"id\":\"clock\"}"); press("计时");
-    on_ui(snapshot); CHECK(strstr(snap, "clock.timer_set") && strstr(snap, "clock.timer_start"), "timer exposes controls to AI");
-    capture("timer-idle"); press("1 分钟"); press("开始"); press("暂停");
+    on_ui(snapshot); CHECK(strstr(snap, "clock.timer_edit") && strstr(snap, "clock.timer_start"), "timer exposes controls to AI");
+    capture("timer-idle"); press("5:00"); press("1 分钟"); press("保存"); press("开始"); press("暂停"); /* clock-3: the duration on the timer's own page */
     on_ui(snapshot); CHECK(strstr(snap, "已暂停"), "touch pauses the countdown");
     delay_ms(1200); on_ui(snapshot); CHECK(strstr(snap, "已暂停"), "paused timer remains paused");
-    press("继续"); press("取消"); on_ui(snapshot); CHECK(strstr(snap, "设定时长"), "touch cancels to the duration picker");
+    press("继续"); press("重置"); on_ui(snapshot); CHECK(strstr(snap, "\"seconds\":60,\"remaining_seconds\":60,\"state\":\"idle\""), "touch resets to the set duration");
     call_ok("clock.timer_set", "{\"seconds\":5}"); call_ok("clock.timer_start", NULL); call_ok("clock.timer_pause", NULL);
     delay_ms(6000); CHECK(strcmp(active_state(), "alarm"), "a paused deadline never rings");
     call_ok("clock.timer_start", NULL);
@@ -112,17 +112,19 @@ static void timer(void) {
     delay_ms(60000); quiet(); on_ui(snapshot); CHECK(strstr(snap, "1:5"), "remaining time includes elapsed seconds after a minute");
     CHECK(ink_member_switch("kid") == 0, "child has an independent timer"); quiet();
     call_ok("app.open", "{\"id\":\"clock\"}"); press("计时"); on_ui(snapshot);
-    CHECK(strstr(snap, "设定时长") && strstr(snap, "5:00"), "child snapshot contains no adult timer state");
+    CHECK(strstr(snap, "\"state\":\"idle\"") && strstr(snap, "5:00") && !strstr(snap, "\"state\":\"running\""), "child snapshot contains no adult timer state");
     call_ok("clock.timer_set", "{\"seconds\":3}"); call_ok("clock.timer_start", NULL);
+    on_ui(snapshot); const char *cur = strstr(snap, "\"current_timer\":"); char dismiss[32];
+    snprintf(dismiss, sizeof dismiss, "{\"id\":%d}", cur ? atoi(cur + 16) : -1); /* clock-3: a timer's own id, not the member's slot */
     CHECK(WAIT_FOR(!strcmp(active_state(), "alarm"), 10000), "child countdown can ring"); quiet();
     CHECK(sim_metric_last("audio.ring.alarm") == 1, "child countdown uses the selected alarm tone");
-    call_ok("clock.timer_dismiss", "{\"id\":1}");
+    call_ok("clock.timer_dismiss", dismiss);
     call_ok("clock.timer_set", "{\"seconds\":300}"); call_ok("clock.timer_start", NULL);
 }
 static void restart(void) {
     CHECK(ink_setting_get("audio.key_tone") == 1 && ink_setting_get("audio.vibration") == 1 && ink_setting_get("audio.call_ring") == 2 && ink_setting_get("audio.alarm_ring") == 1, "all four sound choices survive a real process restart");
     call_ok("app.open", "{\"id\":\"clock\"}"); press("计时"); on_ui(snapshot);
-    CHECK(strstr(snap, "设定时长") && strstr(snap, "之前的计时已取消"), "restart explicitly cancels previous countdowns");
+    CHECK(strstr(snap, "\"state\":\"idle\"") && !strstr(snap, "\"state\":\"running\"") && strstr(snap, "\"seconds\":180"), "restart cancels previous countdowns, the duration stays");
     CHECK(strcmp(active_state(), "alarm"), "no old countdown rings after restart"); capture("timer-restart");
 }
 static void host_phase(void *arg) { (void)arg; const char *p = getenv("INK_SOUND_PHASE"); snprintf(phase, sizeof phase, "%s", p ? p : "sound"); }

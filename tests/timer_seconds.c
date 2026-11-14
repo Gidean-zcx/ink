@@ -33,6 +33,7 @@ static const char *wanted;
 static lv_obj_t *found;
 static int px, py;
 static bool large, numeric_target;
+static const char *wanted_id = "";
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "clock frame settles"); }
 /* A turning minute redraws the status bar's time and the lock screen's clock (lock-1): count frames clear of it. */
@@ -50,7 +51,7 @@ static int64_t number(const char *name) {
 }
 static void find_label(lv_obj_t *o) {
     if (!lv_obj_is_visible(o)) return;
-    if (lv_obj_check_type(o, &lv_label_class) && (numeric_target ? lv_obj_get_style_text_font(o, 0) == ink_ui_font_px(INK_FONT_NUMBER, INK_WEIGHT_REGULAR) : !strcmp(lv_label_get_text(o), wanted))) found = o;
+    if (lv_obj_check_type(o, &lv_label_class) && (numeric_target ? lv_obj_get_style_text_font(o, 0) == ink_ui_font_px(strncmp(wanted_id, "timer:", 6) ? INK_FONT_NUMBER : INK_FONT_HEADING, INK_WEIGHT_REGULAR) : !strcmp(lv_label_get_text(o), wanted))) found = o;
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) find_label(lv_obj_get_child(o, (int32_t)i));
 }
 static void locate(void) {
@@ -71,7 +72,7 @@ static void current_digits(const char *id) {
     on_ui(read_page); char key[64]; snprintf(key, sizeof key, "\"id\":\"%s\"", id);
     const char *at = strstr(snapshot, key); at = at ? strstr(at, "\"value\":\"") : NULL;
     CHECK(at && sscanf(at, "\"value\":\"%127[^\"]", field_text) == 1, "digit field exists: %s", id);
-    numeric_target = !strcmp(id, "remaining") || !strcmp(id, "elapsed");
+    numeric_target = !strncmp(id, "timer:", 6) || !strcmp(id, "elapsed"); wanted_id = id;
     if (at) shown(field_text);
     numeric_target = false;
 }
@@ -91,15 +92,18 @@ static void check_ticks(void) {
     CHECK(!outside && !slow, "only digits fast-refresh: outside=%u slow=%u area=%d,%d,%d,%d update=%d,%d,%d,%d", outside, slow, bad_area.x, bad_area.y, bad_area.w, bad_area.h, bad_update.x, bad_update.y, bad_update.w, bad_update.h);
 }
 static void timer_test(void) {
-    open_timer(); press("1 分钟");
+    open_timer(); char row[16], tid[16]; int64_t start_left = number("remaining_seconds");
+    snprintf(row, sizeof row, "%lld:%02lld", (long long)(start_left / 60), (long long)(start_left % 60));
+    press(row); press("1 分钟"); /* clock-3: the duration is set on the timer's own page */
     for (int i = 0; i < 30; i++) press("秒＋");
+    press("保存"); snprintf(tid, sizeof tid, "timer:%lld", (long long)number("current_timer"));
     CHECK(number("remaining_seconds") == 90, "touch selects ninety seconds"); shown("1:30");
     capture(large ? "timer-select-120" : "timer-select-normal");
-    ok("clock.timer_set", "{\"seconds\":31}"); quiet(); press("秒－");
+    ok("clock.timer_set", "{\"seconds\":31}"); quiet(); press("0:31"); press("秒－"); press("保存");
     CHECK(number("remaining_seconds") == 30, "touch selects thirty seconds"); shown("0:30");
     ok("clock.timer_set", "{\"seconds\":3601}"); quiet(); shown("1:00:01");
     ok("clock.timer_set", "{\"seconds\":90}"); quiet(); shown("1:30");
-    uint64_t low = osal_now_us(); ok("clock.timer_start", NULL); uint64_t high = osal_now_us(); quiet(); current_digits("remaining");
+    uint64_t low = osal_now_us(); ok("clock.timer_start", NULL); uint64_t high = osal_now_us(); quiet(); current_digits(tid);
     check_ticks();
     CHECK(number("remaining_seconds") <= 87 && number("remaining_seconds") >= 86, "AI countdown agrees with seconds");
     capture(large ? "timer-running-120" : "timer-running-normal");
@@ -126,8 +130,8 @@ static void stopwatch_test(void) {
     int64_t seconds = number("elapsed_seconds");
     CHECK(seconds >= (int64_t)((sampled_at - high) / 1000000) && seconds <= (int64_t)((sampled_at - low) / 1000000), "stopwatch exposes elapsed seconds");
     ok("clock.stopwatch_lap", NULL); quiet(); on_ui(read_page);
-    current_digits("第 1 次"); unsigned h, m, s, tenth;
-    CHECK(sscanf(field_text, "%u:%u:%u.%u", &h, &m, &s, &tenth) == 4 && h == 0 && m == 0 && s >= (unsigned)seconds && s <= (unsigned)seconds + 2, "lap includes seconds");
+    current_digits("第 1 圈"); unsigned m, s, hundredth; const char *total = strstr(field_text, "累计 ");
+    CHECK(total && sscanf(total + strlen("累计 "), "%u:%u.%u", &m, &s, &hundredth) == 3 && m == 0 && s >= (unsigned)seconds && s <= (unsigned)seconds + 2, "lap includes seconds");
     capture(large ? "stopwatch-120" : "stopwatch-normal");
     ok("shell.back", NULL); quiet(); clear_of_minute(); uint32_t commits = ink_display_commits(); delay_ms(2100);
     CHECK(ink_display_commits() == commits, "stopwatch does not redraw off page");
