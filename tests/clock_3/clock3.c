@@ -195,7 +195,7 @@ static void stopwatch(bool ai) { /* start, three laps of different length, pause
     else { ok("clock.lap_sort", "{\"by\":\"lap\"}"); CHECK(has("\"sort\":\"lap_desc\""), "a new column starts descending"); }
 }
 static bool visible_time(int seconds) { /* m:ss within a second either way */
-    for (int d = -1; d <= 1; d++) { char t[8]; snprintf(t, sizeof t, "%d:%02d", (seconds + d) / 60, (seconds + d) % 60); if (visible(t)) return true; }
+    for (int d = -1; d <= 1; d++) { char t[32]; snprintf(t, sizeof t, "%d:%02d", (seconds + d) / 60, (seconds + d) % 60); if (visible(t)) return true; }
     return false;
 }
 static bool timer_is(int t, const char *what) { /* in the timers list of the snapshot */
@@ -233,7 +233,7 @@ static void timer(bool ai) { /* A04: 1:05, pause at 30 s, ten seconds, resume, r
     uint64_t start = osal_now_us();
     if (ai) ok("clock.timer_start", a); else press_nth("开始", 1);
     ok("clock.timer_start", b);
-    { char want[48]; snprintf(want, sizeof want, "\"remaining_seconds\":%d,\"state\":\"running\"", 65 - (int)((osal_now_us() - start) / 1000000));
+    { char want[80]; snprintf(want, sizeof want, "\"remaining_seconds\":%d,\"state\":\"running\"", 65 - (int)((osal_now_us() - start) / 1000000));
       CHECK(timer_is(t, want), "1:05 running: %s", text); }
     wait_us(30000000 - (osal_now_us() - start));
     if (ai) ok("clock.timer_pause", a); else press("暂停");

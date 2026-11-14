@@ -92,7 +92,7 @@ static void check_ticks(void) {
     CHECK(!outside && !slow, "only digits fast-refresh: outside=%u slow=%u area=%d,%d,%d,%d update=%d,%d,%d,%d", outside, slow, bad_area.x, bad_area.y, bad_area.w, bad_area.h, bad_update.x, bad_update.y, bad_update.w, bad_update.h);
 }
 static void timer_test(void) {
-    open_timer(); char row[16], tid[16]; int64_t start_left = number("remaining_seconds");
+    open_timer(); char row[48], tid[32]; int64_t start_left = number("remaining_seconds");
     snprintf(row, sizeof row, "%lld:%02lld", (long long)(start_left / 60), (long long)(start_left % 60));
     press(row); press("1 分钟"); /* clock-3: the duration is set on the timer's own page */
     for (int i = 0; i < 30; i++) press("秒＋");
